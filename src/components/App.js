@@ -3365,6 +3365,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                         lang = i["lang"]
                         if(!lang) lang = i["xml:lang"]
                      }
+                     if(langval.lang) lang = langval.lang
+                     else if(langval["xml:lang"]) lang = langval["xml:lang"]
                   } else {
                      if(val?.value) val = val.value
                      else val = i.value
