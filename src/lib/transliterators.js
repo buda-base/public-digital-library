@@ -61,9 +61,19 @@ export const transliterators = {
       "pi-khmr": (val) => Sanscript.t(val.toLowerCase(),"iast","khmer") 
    },
    
-   "zh-hans":{ "zh-latn-pinyin" : (val) => pinyin4js.convertToPinyinString(val, ' ', pinyin4js.WITH_TONE_MARK) , "zh-hant" : (val) => hanziConv.sc2tc(val) },
-   "zh-hant":{ "zh-latn-pinyin" : (val) => pinyin4js.convertToPinyinString(val, ' ', pinyin4js.WITH_TONE_MARK) , "zh-hans" : (val) => hanziConv.tc2sc(val) },
-   "zh-hani":{ "zh-latn-pinyin" : (val) => pinyin4js.convertToPinyinString(val, ' ', pinyin4js.WITH_TONE_MARK) , "zh-hant" : (val) => hanziConv.sc2tc(val) , "zh-hans" : (val) => hanziConv.tc2sc(val) },
+   "zh-hans":{ 
+      "zh-latn-pinyin" : (val) => pinyin4js.convertToPinyinString(val, ' ', pinyin4js.WITH_TONE_MARK) , 
+      "zh-hant" : (val) => hanziConv.sc2tc(val) 
+   },
+   "zh-hant":{ 
+      "zh-latn-pinyin" : (val) => pinyin4js.convertToPinyinString(val, ' ', pinyin4js.WITH_TONE_MARK) , 
+      "zh-hans" : (val) => hanziConv.tc2sc(val) 
+   },
+   "zh-hani":{ 
+      "zh-latn-pinyin" : (val) => pinyin4js.convertToPinyinString(val, ' ', pinyin4js.WITH_TONE_MARK) , 
+      "zh-hant" : (val) => hanziConv.sc2tc(val) , 
+      "zh-hans" : (val) => hanziConv.tc2sc(val) 
+   },
 
    "km":{ "km-x-iast": (val) => Sanscript.t(val,"khmer","iast") },
    "km-x-iast":{ "km": (val) => Sanscript.t(val,"iast","khmer") },
@@ -157,7 +167,7 @@ export function sortLangScriptLabels(data,preset,translit,mergeXs = false)
       if(!k) k = e["xml:lang"]
       if(!k) k = e["@language"]
       if(!k) k = ""
-      if(mergeXs) k = k.replace(/-x-.*$/,"-x.*")
+      if(mergeXs) k = k.replace(/-x-.*$/,"-x")
       let v = e["value"]
       if(!v) v = e["@value"]
       if(!v) v = ""
@@ -180,12 +190,12 @@ export function sortLangScriptLabels(data,preset,translit,mergeXs = false)
 
       //console.log("k v",k,v,translit[k],e) //,transliterators)
 
-      let tLit, transL = k && translit[k] ? translitHelper(k,translit[k]) : false
-      if (transL) {
+      let tLit
+      if (translit[k]) {
          tLit = { ...e }
          let val = "@value", lan = "@language"
          if(!e["@value"]) {  val = "value" ; lan = "lang" ; tLit["type"] = "literal" ; }
-         tLit[val] = transL(v)
+         tLit[val] = translitHelper(k,translit[k])(v)
          tLit[lan] = translit[k]
          if(tLit["xml:lang"]) delete tLit["xml:lang"]
       } else if (k.endsWith("ewts")) {
@@ -198,7 +208,7 @@ export function sortLangScriptLabels(data,preset,translit,mergeXs = false)
       }
 
       //console.log("tLit",tLit,i)
-
+      
       return {e,tLit,i,k}
    })
 
