@@ -41,6 +41,7 @@ type Props = {
 }
 
 type State = {
+   custom:[]
 }
 
 const bdou  = "http://purl.bdrc.io/ontology/ext/user/" ;
@@ -59,7 +60,7 @@ class LanguageSidePane extends Component<Props,State> {
    constructor(props : Props) {
       super(props);
 
-      this.state = { collapse: {} }
+      this.state = { collapse: {}, custom: [] }
    }
 
    handleCheckUI = (ev:Event,prop:string,lab:string,val:boolean,list:string[]) => {
@@ -85,6 +86,12 @@ class LanguageSidePane extends Component<Props,State> {
       }
    }
 
+   static getDerivedStateFromProps(props,state) {
+      if(props.langIndex === "custom" && Array.isArray(props.langPriority?.presets["custom"]) && !state.custom?.length) { //.toString() !== props.langPriority?.presets["custom"]?.toString())
+         return ({...state, custom: [ ...props.langPriority?.presets["custom"] ]})
+      }
+   }
+
    prefTree() {
       if(!this._refs) this._refs = {}
 
@@ -93,7 +100,8 @@ class LanguageSidePane extends Component<Props,State> {
 
          let list = this.props.langPriority.presets[k]
          if(k == "custom") { 
-            let customlist = this.props.langPriority.presets[k]
+            let customlist = this.state.custom
+            if(!customlist?.length) customlist = this.props.langPriority.presets[k]            
             if(customlist[this.props.locale]) customlist = customlist[this.props.locale]
             if(customlist) list = customlist
             else list = list[this.props.locale]
@@ -177,6 +185,7 @@ class LanguageSidePane extends Component<Props,State> {
 
                <span id={"resetCustom"} title={I18n.t("search.reset")} onClick={()=>{                  
                   const newList = [ ...this.props.config.language.data.presets.custom[this.props.locale] ]
+                  this.setState({custom: newList})
                   this.props.onSetLangPreset(newList,"custom"); 
                   if(this.props.that) this.props.that.setState({ needsUpdate: true}); 
                }} ><RefreshIcon/></span>,               
@@ -190,6 +199,7 @@ class LanguageSidePane extends Component<Props,State> {
                         onSortEnd={({oldIndex, newIndex}) => { 
                            $(".subcollapse.custom-lang").removeClass("sorting"); 
                            let newList = arrayMove(list, oldIndex, newIndex)
+                           this.setState({custom: newList})
                            this.props.onSetLangPreset(newList,"custom"); 
                            if(this.props.that) this.props.that.setState({ needsUpdate: true}); 
                         }} />

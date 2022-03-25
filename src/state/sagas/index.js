@@ -617,11 +617,20 @@ export async function updateConfigFromProfile() {
       let locale = res[bdou+"preferredUiLang"][0]?.value
       if(locale) locale = locale.replace(/^zh.*$/,"zh")
       const litLangs = toArray(state.data.resources[id], res[bdou+"preferredUiLiteralLangs"])
-      let preset = locale
-      const isCustom = litLangs.toString() != state.data.config.language.data.presets.custom[locale].toString() // longest object path ever :-)
+      let preset = locale, allPresets = Object.keys(state.data.config.language.data.presets).reduce( (acc,k) => { 
+         let ret = k != "custom" ? state.data.config.language.data.presets[k].toString() : ""
+         if(ret) return acc.concat(ret)
+         else return acc
+      }, [])      
+      const litLangsStr = litLangs.toString(), isCustom = litLangsStr != state.data.config.language.data.presets.custom[locale].toString() // longest object path ever :-)
+         && !allPresets.includes(litLangsStr)
       if(isCustom) { 
          preset = "custom"
          localStorage.setItem('customlangpreset', litLangs)
+      } else {
+         Object.keys(state.data.config.language.data.presets).map( (k,i) => {
+            if(allPresets[i] === litLangsStr) preset = k
+         })
       }
 
       localStorage.setItem('uilang', locale);
@@ -633,7 +642,7 @@ export async function updateConfigFromProfile() {
       store.dispatch(uiActions.langPreset(litLangs, preset));
 
 
-      console.log("state:", state, res, litLangs, locale, isCustom)
+      console.log("state:", state, res, litLangs, locale, isCustom,litLangs.toString(),state.data.config.language.data.presets[locale])
    }
 
    if (!userProfile) {
