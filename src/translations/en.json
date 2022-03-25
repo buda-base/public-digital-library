@@ -512,7 +512,8 @@
    "Rsidebar": {
       "title": "Display Preferences",
       "UI": {
-         "title": "UI Language"
+         "title": "User Interface Language",
+         "help": "Please select the language you want to have the user interface displayed in"
       },
       "results": {
          "title": "Results Preferred Language"

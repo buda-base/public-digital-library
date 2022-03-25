@@ -650,7 +650,7 @@ export function getFacetUrl(filters,dic){
    loggergen.log("gFu",str,filters,dic)
    return str
 }
-export function lang_selec(that,black:boolean = false,inPopup:false)
+export function lang_selec(that,black:boolean = false,inPopup:false, useCheckbox: false, callback: false)
 {
    let prio = ["zh", "en", "bo" ]
    if(that.props.config && that.props.config.language && that.props.config.language.menu) prio = that.props.config.language.menu
@@ -669,35 +669,53 @@ export function lang_selec(that,black:boolean = false,inPopup:false)
 
                         // TODO add link to user profile / language preferences
 
-                        return ( <MenuItem
+                        const onClick = (event) => { 
+
+                           localStorage.setItem('uilang', i);
+                           localStorage.setItem('langpreset', i);
+                           const list = that.props.config.language.data.presets.custom[i]
+                           
+                           if(list && that.props.langIndex != "custom") localStorage.setItem("customlangpreset",list)
+
+                           that.setState({...that.state,anchorLang:null,collapse: {...that.state.collapse, lang:false, uiLangPopup:true }, titles:false, ldspdi:false }); 
+                           document.documentElement.lang = i
+
+                           that.props.onSetLocale(i);
+                           if(that.props.langIndex != "custom") {
+                              if(i === "bo") that.props.onSetLangPreset(["bo","zh-hans"], "bo")
+                              else if(i === "en") that.props.onSetLangPreset(["bo-x-ewts","inc-x-iast"], "en")
+                              else if(i === "zh") that.props.onSetLangPreset(["zh-hant","bo"], "zh")
+                           }
+
+                           let loca = { ...that.props.history.location }
+                           if(loca.search.includes("uilang")) loca.search = loca.search.replace(/uilang=[^&]+/,"uilang="+i)
+                           else loca.search += (loca.search&&loca.search.match(/[?]./)?"&":"?")+"uilang="+i
+                           that.props.history.push(loca)
+
+                           if(callback) callback()
+                        }
+
+                        if(useCheckbox) {
+                           return (<div key={i} style={{width:"310px",textAlign:"left"}} class="dataWidget widget">
+                               <FormControlLabel
+                                 control={
+                                    <Checkbox
+                                       checked={ that.props.locale===i }
+                                       disabled={disab}
+                                       className={"checkbox "+ (disab?"disabled":"") + (that.props.locale===i?" is-locale":"")}
+                                       icon={<PanoramaFishEye/>}
+                                       checkedIcon={<CheckCircle/>}
+                                       onChange={onClick}
+                                          /> }
+                                 label={label}
+                            />
+                           </div>)
+                        } else return ( <MenuItem
                                     className={that.props.locale===i?"is-locale":""}     
                                     value={i}
                                     lang={i}
                                     disabled={disab}
-                                    onClick={(event) => { 
-
-                                       localStorage.setItem('uilang', i);
-                                       localStorage.setItem('langpreset', i);
-                                       const list = that.props.config.language.data.presets.custom[i]
-                                       
-                                       if(list) localStorage.setItem("customlangpreset",list)
-                                       else {
-                                          console.log("WHAT??",that.props.config)
-                                       }
-
-                                       that.setState({...that.state,anchorLang:null,collapse: {...that.state.collapse, lang:false, uiLangPopup:true }, titles:false, ldspdi:false }); 
-                                       document.documentElement.lang = i
-
-                                       that.props.onSetLocale(i);
-                                       if(i === "bo") that.props.onSetLangPreset(["bo","zh-hans"], "bo")
-                                       else if(i === "en") that.props.onSetLangPreset(["bo-x-ewts","inc-x-iast"], "en")
-                                       else if(i === "zh") that.props.onSetLangPreset(["zh-hant","bo"], "zh")
-
-                                       let loca = { ...that.props.history.location }
-                                       if(loca.search.includes("uilang")) loca.search = loca.search.replace(/uilang=[^&]+/,"uilang="+i)
-                                       else loca.search += (loca.search&&loca.search.match(/[?]./)?"&":"?")+"uilang="+i
-                                       that.props.history.push(loca)
-                                    }} >{label}</MenuItem> ) 
+                                    onClick={onClick} >{label}</MenuItem> ) 
                   } ) } 
                   
             </FormControl>

@@ -111,6 +111,7 @@ const mapStateToProps = (state,ownProps) => {
 
    let locale = state.i18next.lang
    let langPreset = state.ui.langPreset
+   let langIndex = state.ui.langIndex
    let langExt = state.ui.langExt
 
    let highlight = state.ui.highlight
@@ -156,7 +157,7 @@ const mapStateToProps = (state,ownProps) => {
 
    let props = { logged,config,resources, ontology, dictionary, keyword, language, datatype, assocResources, prefLang, failures, loading,
       imageAsset,firstImage,canvasID,collecManif,manifests,manifestError,pdfVolumes,createPdf,pdfUrl, manifestWpdf, monovolume,
-      annoCollec,rightPanel,locale,langPreset,langExt,imgData, nextChunk, nextPage, resourceManifest, imageVolumeManifests, imageLists, userEditPolicies, highlight,
+      annoCollec,rightPanel,locale,langPreset,langIndex,langExt,imgData, nextChunk, nextPage, resourceManifest, imageVolumeManifests, imageLists, userEditPolicies, highlight,
       outline,outlines,outlineKW,      
       eTextRefs,
       assocTypes,

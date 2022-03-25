@@ -23,7 +23,7 @@ import WarningIcon from '@material-ui/icons/Warning';
 
 import bdrcApi from '../lib/api' ;
 import renderPatch from '../lib/rdf-patch.js' ; 
-import { top_right_menu, report_GA, getGDPRconsent } from './App'
+import { top_right_menu, report_GA, getGDPRconsent, lang_selec } from './App'
 import { top_left_menu } from './ResourceViewer'
 import LanguageSidePaneContainer,{LangPrefTreeContainer} from '../containers/LanguageSidePaneContainer';
 import Footer from "./Footer" 
@@ -251,7 +251,7 @@ export class Profile extends Component<Props,State> {
       let that = { state: { resource:props.profile, updates:mods}, props:{ dictionary:props.dictionary, IRI:props.userID, locale:props.locale } }
             
       let user = { ...that.state.resource, ...mods, 
-          [bdou+"preferredUiLang"]:[{ "type": "literal", "value": props.locale.replace(/zh/,"zh-Hans") }],
+          [bdou+"preferredUiLang"]:[{ "type": "literal", "value": props.locale.replace(/zh/,"zh-hans") }],
           [bdou+"preferredUiLiteralLangs"]: props.langPreset.map(p => ({ "type": "literal", "value": p })) 
         }      
 
@@ -624,8 +624,19 @@ export class Profile extends Component<Props,State> {
                 </div>
 
             </div>
-                <div class="data" id="outline">
+              <div class="data" id="outline">
                   <h2 id="display">{I18n.t("Rsidebar.title")}</h2>
+                  <div class="search">
+                    <div>
+                      <h3>{I18n.t("Rsidebar.UI.title")}</h3>
+                    </div>
+                  </div>
+                  <div>
+                    <div class="help">{I18n.t('Rsidebar.UI.help')}{I18n.t("punc.colon")}</div>
+                    <div>{ lang_selec(this, false, true, true, () => { this.setState({ needsUpdate: true }) }) }</div>
+                  </div>
+                </div>
+                <div class="data" id="outline">
                   <div class="search">
                     <div>
                       <h3>{I18n.t("Rsidebar.priority.title")}</h3>
@@ -665,6 +676,17 @@ export class Profile extends Component<Props,State> {
               }}>Back</h5> 
               */}
 
+              <div class="data profile-area">
+                <div data-props>
+                  <div class="group">
+                      <div id="validate" style={{position:"relative", "marginTop":30}}>
+                        { hasError && <WarningIcon/>}
+                        <a class={"ulink "+(this.state.newUserValues&&(!hasError||byPass)&&!this.state.updating?"on":"")} id="upd" {... this.state.newUserValues?{onClick:this.handlePatch.bind(this)}:{}}>{this.state.updating?I18n.t("user.updating"):I18n.t("user.update")}</a>
+                        { servErr }
+                      </div>
+                  </div>
+                </div>
+              </div>
           </div>]}
           </div>
         </div>

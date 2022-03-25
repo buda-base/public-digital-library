@@ -50,7 +50,6 @@ const langSettings = {
    "zh":  [ "hans", "hant", "latn-pinyin" ],
    "inc": [ "deva", "newa", "sinh", "x-iast" ],
    "km":  [ "-", "x-twktt", "x-iast" ],  
-   "en":  [ "-" ]
 }
 
 
@@ -123,30 +122,32 @@ class LanguageSidePane extends Component<Props,State> {
                   <div class={"ol-li-lang"+(this.state.collapse[value]?" active":"")}>
                      <a title="Reorder"><DragIndicator className="drag"/></a>
                      <li>
-                        <label><span>{makeLangScriptLabel(value,true,true)}</span></label>
-                        <a title="Modify" onClick={(ev) => {  
-                           //this.props.onToggleCollapse("popover-lang",$(ev.currentTarget).closest(".widget")[0])  
-                           this.setState({ collapse:{ ...this.state.collapse, [value]:!this.state.collapse[value]} })
-                        } } ><Settings className="modify"/></a>
+                        <label><span>{makeLangScriptLabel(value,true,true)}</span></label>                        
                         {/* <a title="Delete"><Delete className="delete" onClick={(ev) => this.props.onSetLangPreset(this.props.langPriority.presets[k].filter(v=>v!==value),"custom")}/></a> */}
-                        <Popover 
-                           id="translitPopup"
-                           transformOrigin={{ vertical: 'bottom', horizontal: -30}} 
-                           anchorOrigin={{vertical: 'bottom', horizontal: 'left'}} 
-                           open={this.state.collapse[value] }
-                           anchorEl={() => $(".ol-li-lang.active svg.modify")[0] }               
-                           onClose={ (ev) => this.setState({  collapse:{ ...this.state.collapse, [value]:false }}) }
-                           >
-                              {langSettings[part[0]].map(p => <MenuItem className={ p === value.replace(/^([^-]+)(-(.+))?$/, (m,g1,g2,g3) => g1&&!g2 ? "-" : g3 ) ? "selected" : ""} onClick={() => {
-                                 const newList = [ ...list ]
-                                 let lang = part[0]
-                                 if(p != '-') lang += "-" + p
-                                 newList[index] = lang
-                                 this.props.onSetLangPreset(newList, "custom")
-                                 this.setState({  collapse:{ ...this.state.collapse, [value]:false }})
-                                 if(this.props.that) this.props.that.setState({ needsUpdate: true}); 
-                              }}>{ makeLangScriptLabel(p, false, true, part[0]) }</MenuItem>)}
-                        </Popover>
+                        { langSettings[part[0]] && <>
+                           <a title="Modify" onClick={(ev) => {  
+                              //this.props.onToggleCollapse("popover-lang",$(ev.currentTarget).closest(".widget")[0])  
+                              this.setState({ collapse:{ ...this.state.collapse, [value]:!this.state.collapse[value]} })
+                           } } ><Settings className="modify"/></a>
+                           <Popover 
+                              id="translitPopup"
+                              transformOrigin={{ vertical: 'bottom', horizontal: -30}} 
+                              anchorOrigin={{vertical: 'bottom', horizontal: 'left'}} 
+                              open={this.state.collapse[value] }
+                              anchorEl={() => $(".ol-li-lang.active svg.modify")[0] }               
+                              onClose={ (ev) => this.setState({  collapse:{ ...this.state.collapse, [value]:false }}) }
+                              >
+                                 {langSettings[part[0]].map(p => <MenuItem className={ p === value.replace(/^([^-]+)(-(.+))?$/, (m,g1,g2,g3) => g1&&!g2 ? "-" : g3 ) ? "selected" : ""} onClick={() => {
+                                    const newList = [ ...list ]
+                                    let lang = part[0]
+                                    if(p != '-') lang += "-" + p
+                                    newList[index] = lang
+                                    this.props.onSetLangPreset(newList, "custom")
+                                    this.setState({  collapse:{ ...this.state.collapse, [value]:false }})
+                                    if(this.props.that) this.props.that.setState({ needsUpdate: true}); 
+                                 }}>{ makeLangScriptLabel(p, false, true, part[0]) }</MenuItem>)}
+                           </Popover> 
+                        </>}
                      </li> 
                   </div>
                   )

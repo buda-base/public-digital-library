@@ -43,8 +43,9 @@ const mapStateToProps = (state,ownProps) => {
    }
 
    let langPreset = state.ui.langPreset
+   let langIndex = state.ui.langIndex
 
-   let props = { userID, profile, dictionary, rightPanel, resetLink, config, locale, profileName, langPreset }
+   let props = { userID, profile, dictionary, rightPanel, resetLink, config, locale, profileName, langPreset, langIndex }
 
    return props
 

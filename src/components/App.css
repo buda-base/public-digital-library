@@ -4481,7 +4481,9 @@ body > .ol-li-lang:last-child li::before,
 .ol-li-lang label { text-transform: none;}
 .ol-li-lang svg { color:rgba(161, 161, 161, 0.95); font-size:17px; opacity:0;vertical-align:middle;margin-left:5px;cursor:pointer;display:inline-block;}
 .ol-li-lang svg.drag { position:absolute; margin-left:-36px;font-size:17px;margin-top:-1px;  padding-right: 5px;}
+.subcollapse.custom-lang:not(.sorting) .ol-li-lang.active svg,
 .subcollapse.custom-lang:not(.sorting) .ol-li-lang:hover svg { opacity:1; }
+.subcollapse.custom-lang:not(.sorting) .ol-li-lang.active svg.drag,
 .subcollapse.custom-lang:not(.sorting) .ol-li-lang:hover svg.drag { opacity:1; cursor: row-resize; }
 .subcollapse.custom-lang.sorting, .subcollapse.custom-lang.sorting * { cursor:row-resize; }
 .ol-li-lang { z-index:100 !important;height:26px;color:rgba(0,0,0,0.87);position:relative;}
@@ -4512,7 +4514,9 @@ body > .ol-li-lang:last-child li::before { content:'(--)';}
 #outline  .dataWidget > label > span:first-child { margin-right:5px;}
 #outline  .dataWidget:last-child > label { margin-right:5px;}
 #outline .widget ol { margin-left:4px;}
+body > .ol-li-lang label span:not(#a),
 #outline .widget label span:not(#a) { font-weight:700; }
+body > .ol-li-lang  label span:not(#a) .lang-info,
 #outline .widget label span:not(#a) .lang-info { font-weight:400; text-transform:none; }
 #outline .widget label > span:last-child > span + span::before { content:" + "; font-weight:400;}
 #outline .widget label .checkbox:not(.disabled) { opacity:0.8;}
