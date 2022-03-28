@@ -681,7 +681,7 @@ export function lang_selec(that,black:boolean = false,inPopup:false, useCheckbox
                            document.documentElement.lang = i
 
                            that.props.onSetLocale(i);
-                           if(that.props.langIndex != "custom") {
+                           if(that.props.langIndex != "custom") { // && !callback) {
                               if(i === "bo") that.props.onSetLangPreset(["bo","zh-hans"], "bo")
                               else if(i === "en") that.props.onSetLangPreset(["bo-x-ewts","inc-x-iast"], "en")
                               else if(i === "zh") that.props.onSetLangPreset(["zh-hant","bo"], "zh")

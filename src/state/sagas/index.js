@@ -603,6 +603,7 @@ export async function updateConfigFromProfile() {
    const { userProfile, getProfile } = auth;
 
    const toArray = (allNodes, node) => {
+      if(!node?.length) return []
       let head = allNodes[node[0]?.value], rest = []
       if(head[rdf+"rest"] && head[rdf+"rest"][0].value !== rdf + "nil") rest = toArray(allNodes, head[rdf+"rest"])
       if(head[rdf+"first"]) head = head[rdf+"first"][0].value
@@ -622,9 +623,9 @@ export async function updateConfigFromProfile() {
          if(ret) return acc.concat(ret)
          else return acc
       }, [])      
-      const litLangsStr = litLangs.toString(), isCustom = litLangsStr != state.data.config.language.data.presets.custom[locale].toString() // longest object path ever :-)
+      const litLangsStr = litLangs.toString(), isCustom = litLangsStr && litLangsStr != state.data.config.language.data.presets.custom[locale].toString() // longest object path ever :-)
          && !allPresets.includes(litLangsStr)
-      if(isCustom) { 
+      if(litLangsStr && isCustom) { 
          preset = "custom"
          localStorage.setItem('customlangpreset', litLangs)
       } else {

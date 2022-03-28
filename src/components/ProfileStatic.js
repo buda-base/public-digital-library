@@ -402,6 +402,10 @@ export class Profile extends Component<Props,State> {
         if(profile.picture && !profile.picture.match(/gravatar.*cdn[.]auth0/)) picUrl = profile.picture
         if(val.picture && !this.state.errors.picture) picUrl = val.picture
 
+        let pictureLabel = this.state.profile.sub.match(/^(.+)-o?auth[02][|]/)
+        if(pictureLabel) pictureLabel = I18n.t("user.photo.info", { google: pictureLabel[1][0]?.toUpperCase() + pictureLabel[1]?.substring(1) }) 
+        else pictureLabel = ""
+
         let title = "User Profile"
         if(this.props.profile && this.props.profile[skos+"prefLabel"]) title =  this.props.profile[skos+"prefLabel"][0].value
 
@@ -497,7 +501,7 @@ export class Profile extends Component<Props,State> {
                     <FormControl className="FC text">
                       <TextField
                         className="FC"
-                        label={I18n.t("user.photo.label")}
+                        label={ pictureLabel }
                         value={val.picture}
                         onChange={(e,v1,v2) => handleChange(e,v1,v2,true)}
                         onBlur={async (e) => {
