@@ -41,8 +41,9 @@ var transinfos = {
 
 function guessFromRange(char) {
 	var cp = char.codePointAt(0);
+	//console.log("cp:",Number(cp).toString(16))
 	for (const nl of nativeranges) {
-		if (cp > nl['range'][0] && cp < nl['range'][1]) {
+		if (cp >= nl['range'][0] && cp <= nl['range'][1]) {
 			return nl['lt'];
 		}
 	}

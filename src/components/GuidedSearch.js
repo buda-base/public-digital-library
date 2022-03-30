@@ -362,7 +362,7 @@ class GuidedSearch extends Component<Props,State> {
  
     const renderSelector = (k, unique, props, noTitle) => {
       return <div class="selector" id={k}>
-          {!noTitle && <h2>{getLocaleLabel(settings[k])}{ unique !== undefined && <span>{I18n.t("search."+(unique?"one":"any"))}</span>}<Tooltip key={"tip"} placement="bottom-end" title={
+          {!noTitle && <h2>{getLocaleLabel(settings[k])}{ unique !== undefined && <span>{I18n.t("search."+(unique==="kw"?"kw":(unique?"one":"any")))}</span>}<Tooltip key={"tip"} placement="bottom-end" title={
                                             <div style={{margin:"10px"}}>{getLocaleLabel(settings[k], "tooltip")}</div>
                                           } > 
                                           <img src="/icons/help.svg"/>
@@ -476,61 +476,88 @@ class GuidedSearch extends Component<Props,State> {
                   <div>
                     {/* { !this.props.dictionary && <Loader />}
                     { this.props.dictionary && selectors } */}
-                    { (settings?.direct && this.props.type === "work") && renderSelector("direct", true, <>
-                      <Select
-                        styles={selectStyles}
-                        options={this.state.titles}
-                        onChange={(v) => { 
-                          console.log("val:",v)
-                          this.props.history.push("/show/"+v.value)
-                        }}
-                        placeholder={I18n.t("search.choose")}
-                        noOptionsMessage={() => I18n.t(!this.state.titles?.length?"search.loading":"search.nothing")}
-                      />
-                    </>) }
+
+                    { this.props.type === "work" && <div class="flex">
+                      { settings?.keyword && renderSelector("keyword", "kw", <>
+                        <TextField 
+                          placeholder={"Search..."}
+                          InputProps={{ classes: { input: classes.input } }}
+                          value={this.state.keyword}
+                          onKeyDown={(event)=>{
+                            if(event.key == "Enter") this.props.history.push(this.state.searchRoute)
+                          }}
+                          onChange={(event) => {
+                            let keyword = event.target.value, language = "pi-x-ndia", detec
+                            if(keyword) {
+                              detec = narrowWithString(keyword)
+                              console.log("detec:",detec) 
+                              if(detec.length && detec[0] === "khmr") language = "km"
+                            } else {
+                              language = ""
+                              keyword = ""
+                            }
+                            this.setState({keyword, language})
+                          }}
+                        />
+                      </>) }
+                      { settings?.direct && renderSelector("direct", true, <>
+                        <Select
+                          styles={selectStyles}
+                          options={this.state.titles}
+                          onChange={(v) => { 
+                            console.log("val:",v)
+                            this.props.history.push("/show/"+v.value)
+                          }}
+                          placeholder={I18n.t("search.choose")}
+                          noOptionsMessage={() => I18n.t(!this.state.titles?.length?"search.loading":"search.nothing")}
+                        />
+                      </>) }
+                      </div>
+                    }
                     { this.props.type === "instance" && <div class="flex">
-                    { settings?.keyword && renderSelector("keyword", true, <>
-                      <TextField 
-                        placeholder={"Search..."}
-                        InputProps={{ classes: { input: classes.input } }}
-                        value={this.state.keyword}
-                        onKeyDown={(event)=>{
-                          if(event.key == "Enter") this.props.history.push(searchRoute)
-                        }}
-                        onChange={(event) => {
-                          let keyword = event.target.value, language = "pi-x-ndia", detec
-                          if(keyword) {
-                            detec = narrowWithString(keyword)
-                            //console.log("detec:",detec) 
-                            if(detec.length && detec[0] === "khmr") language = "km"
-                          } else {
-                            language = ""
-                            keyword = ""
-                          }
-                          this.setState({keyword, language})
-                        }}
-                      />
-                    </>) }
-                    { settings?.direct && renderSelector("direct", true, <>
-                      <Select
-                        styles={selectStyles}
-                        options={this.state.codes}
-                        filterOption={ ({label}, input) => {
-                          //console.log("input",input)
-                          if(input.length < 2) return false
-                          else return label.includes(input)
-                        }}
-                        onChange={(v) => { 
-                          console.log("val:",v)
-                          this.props.history.push("/show/"+v.value)
-                        }}
-                        placeholder={I18n.t("search.choose")}
-                        noOptionsMessage={(input) => { 
-                          if(input.length >= 2) return I18n.t("search.nothing") 
-                          else return I18n.t("search.more") 
-                        }}
-                      />
-                    </>) }
+                      { settings?.keyword && renderSelector("keyword", "kw", <>
+                        <TextField 
+                          placeholder={"Search..."}
+                          InputProps={{ classes: { input: classes.input } }}
+                          value={this.state.keyword}
+                          onKeyDown={(event)=>{
+                            if(event.key == "Enter") this.props.history.push(searchRoute)
+                          }}
+                          onChange={(event) => {
+                            let keyword = event.target.value, language = "pi-x-ndia", detec
+                            if(keyword) {
+                              detec = narrowWithString(keyword)
+                              console.log("detec:",detec) 
+                              if(detec.length && detec[0] === "khmr") language = "km"
+                            } else {
+                              language = ""
+                              keyword = ""
+                            }
+                            this.setState({keyword, language})
+                          }}
+                        />
+                      </>) }
+                      { settings?.direct && renderSelector("direct", true, <>
+                        <Select
+                          styles={selectStyles}
+                          options={this.state.codes}
+                          filterOption={ ({label}, input) => {
+                            //console.log("input",input)
+                            if(input.length < 2) return false
+                            else return label.includes(input)
+                          }}
+                          onChange={(v) => { 
+                            console.log("val:",v)
+                            this.props.history.push("/show/"+v.value)
+                          }}
+                          placeholder={I18n.t("search.choose")}
+                          noOptionsMessage={(input) => { 
+                            if(input.length >= 2) return I18n.t("search.nothing") 
+                            else return I18n.t("search.more") 
+                          }}
+                        />
+                      </>) 
+                    }
                     </div>}
                     { selectors }
                   </div>

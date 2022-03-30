@@ -7,7 +7,7 @@
 
 @import url('//fonts.googleapis.com/css2?family=Noto+Sans+TC&display=swap');
 
-@import url('//fonts.googleapis.com/css2?family=Noto+Sans+Khmer:wght@400;700;900&display=swap');
+@import url('//fonts.googleapis.com/css2?family=Noto+Serif+Khmer:wght@400;700;900&display=swap');
 
 
 @import url('//fonts.googleapis.com/earlyaccess/notosanstibetan.css');
@@ -146,7 +146,7 @@ footer#site-footer.no-syncs > div.head::before { background-color:#efefef; }
 
 [role='tooltip'] *, .App *,.nav *,.App *::before,.App *::after, .react-tabs *, .resource *:not(.fa):not(.material-icons), .resource + * *,
 .inRes *, #popDL.cite *, #menu-citationLang * { 
-   font-family:"Noto Sans", "Noto Sans Khmer", "Roboto", "Helvetica", "Arial", sans-serif !important;
+   font-family:"Noto Sans", "Noto Serif Khmer", "Roboto", "Helvetica", "Arial", sans-serif !important;
 }
 
 .SearchPane { width:1000px; margin:auto;margin-top:80px;max-width:90%; z-index:0;background:white;padding:50px; padding-bottom:0;
@@ -554,7 +554,7 @@ footer #donate,
 .App.home.khmerServer .SearchPane #logo > div { justify-content: flex-start; padding-left:calc(135px + (100% - 1440px) / 2); box-sizing: border-box;}
 .App.home.khmerServer .SearchPane #logo > div > div { padding:50px; height:auto; }
 .App.home.khmer.static h1,
-.App.home.khmerServer .SearchPane #logo > div > div h1 { font-family:"Noto Sans", "Noto Sans Khmer" !important; font-weight:900; font-size:46px; line-height:53px;text-align:left;} 
+.App.home.khmerServer .SearchPane #logo > div > div h1 { font-family:"Noto Sans", "Noto Serif Khmer" !important; font-weight:900; font-size:46px; line-height:53px;text-align:left;} 
 .App.home.khmerServer .SearchPane #logo > div > div p { text-align: left; font-size:16px;margin-bottom: 0;}
 
 .App.home.khmerServer #data-checkbox { display:none; }
@@ -1268,7 +1268,7 @@ p.no-result {
 
 .no-result #clear-filters { margin-left:0; margin-top:5px; display:flex;align-items: center;}
 .no-result #clear-filters * { color:#d73449; }
-.no-result + .no-result { margin-top:0px;}
+/* .no-result + .no-result { margin-top:0px;} */
 
 .no-result .reset-khmer { display:flex; align-items: baseline;}
 .no-result .reset-khmer #clear-filters { display: inline-flex; }
@@ -2788,7 +2788,7 @@ body > [id^="menu-"] > div:last-child,
 #popHoverM li,
 #popLang li,
 #popSame a li,
-#popDL a li { font-family:"Noto Sans", "Noto Sans Tibetan", "Noto Sans Khmer";color:#4a4a4a;font-weight:600;font-size:12px;  }
+#popDL a li { font-family:"Noto Sans", "Noto Sans Tibetan", "Noto Serif Khmer";color:#4a4a4a;font-weight:600;font-size:12px;  }
 
 #popSame a b { font-weight:900; }
 #popSame a img { display: inline-block; margin-bottom:2px;margin-left:2px;}

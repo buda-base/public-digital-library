@@ -1955,6 +1955,8 @@ function rewriteAuxMain(result,keyword,datatype,sortBy,language)
    let reverse = sortBy && sortBy.endsWith("reverse")
    let canPopuSort = false, isScan, isTypeScan = datatype.includes("Scan"), inRoot, partType, context, unreleased
 
+   let mergeLeporello = state.data.config.khmerServer
+
    result = Object.keys(result).reduce((acc,e)=>{
       if(e === "main") {
 
@@ -1991,7 +1993,9 @@ function rewriteAuxMain(result,keyword,datatype,sortBy,language)
             }
             
             let res = result[e][k].map(e => { 
-               if(e.type === bdo+"isComplete" && e.value=="true") {
+               if(mergeLeporello && e.type === bdo+"binding") {
+                  return({type:bdo+"format", value:e.value})
+               } else if(e.type === bdo+"isComplete" && e.value=="true") {
                   return ({type:_tmp+"completion", value:_tmp+"complete"})
                } else if(asset.includes(e.type) && e.value == "true") {
                   if(isTypeScan && e.type === _tmp+"hasImage") isScan = true ; 

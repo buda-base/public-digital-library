@@ -5,8 +5,8 @@ let iiifpres = "//iiifpres.bdrc.io"
 
 const onKhmerUrl = (
       window.location.host.startsWith("khmer-manuscripts")
-   //|| window.location.host.startsWith("library-dev")
-   //|| window.location.host.startsWith("localhost")
+   || window.location.host.startsWith("library-dev")
+   || window.location.host.startsWith("localhost")
 )
 
 let jQ,extendedPresets,sortLangScriptLabels,getMainLabel,getMainLabels,__
