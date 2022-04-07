@@ -2,5 +2,5 @@ filters:
   - filter_type: file
     file_format: JSON
     source_language: en
-    source_file: src/translations/en.json
+    source_file: https://github.com/buda-base/public-digital-library/tree/master/src/translations/en.json
     translation_files_expression: 'https://github.com/buda-base/public-digital-library/tree/master/src/translations/other/<lang>.json'
