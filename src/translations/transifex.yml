@@ -3,5 +3,5 @@ git:
     - filter_type: file
       file_format: JSON
       source_language: en
-      source_file: https://github.com/buda-base/public-digital-library/tree/master/src/translations/en.json
-      translation_files_expression: 'https://github.com/buda-base/public-digital-library/tree/master/src/translations/<lang>.json'
+      source_file: src/translations/en.json
+      translation_files_expression: 'src/translations/<lang>.json'
