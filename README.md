@@ -33,3 +33,7 @@ There is a `config-defauls.json` located in `/public` directory. It contains:
 * an index in the list to use on startup.
 
 Default settings can be overridden using a separate `/public/config.json`.
+
+## Translation
+Use our [transifex project](https://www.transifex.com/bdrc/buda-library/dashboard/) to do translations. Source strings for every language are automatically updated from the English source file.
+
