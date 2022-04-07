@@ -1,7 +1,7 @@
 {
    "punc": {
-      "point": "",
-      "colon": " ",
+      "point": ".",
+      "colon": ":",
       "num": "{{num,counttobo}}",
       "lpar": "（",
       "rpar": "）"
@@ -25,15 +25,32 @@
       "subsubmessage": "ངེད་ཚོགས་པའི་ལས་རིགས་ཀྱི་སྤུས་ཀ་ཇེ་ལེགས་སུ་གཏོང་བར་བསམ་ཚུལ་དང་སློབ་སྟོན་རེ་ཡོད་ཚེ་འདི་ནས་འགོད་རོགས།",
       "subsubmessage_afteremail": ".",
       "subsubmessage_account1": "བུདྡྷ་དཔེ་མཛོད་ནང་གི་དཔེ་ཆ་ཚང་མ་བལྟ་ཀློག་དང་ཕབ་ལེན་ཆེད་ཐོ་འགོད་བྱེད་དགོས། འདིར་སྣུན།",
-      "subsubmessage_account2": "",
-      "subsubmessage_account3": "",
+      "subsubmessage_account2": " for a free BDRC account for full access. Click on the ",
+      "subsubmessage_account3": " link above to create a new account.",
       "subsubmessage_account4": "ཐོ་འགོད།",
-      "subsubmessage_account5": "",
+      "subsubmessage_account5": "register",
       "subsubmessage_auth": "All users, including users with existing accounts on tbrc.org, will need to register for a free BDRC account for full access.",
       "search": "འཚོལ།",
       "choose": "སྐད་རིགས་འདེམ།",
       "start": "དཔེ་མཛོད་སྔོགས།",
-      "new": "བདུན་ཕྲག་འདིའི་ནང་སྤེལ་བའི་དཔེ་ཆ།"
+      "new": "བདུན་ཕྲག་འདིའི་ནང་སྤེལ་བའི་དཔེ་ཆ།",
+      "khmer":{
+         "title":"Khmer<newline/>Manuscript<newline/>Heritage Project",
+         "subtitle":"Explore Cambodia's traditional literature.",
+         "anchor": "Learn more about the project",
+         "section1":{
+            "title":"The Khmer Manuscript Heritage Project",
+            "text":"<parag>The Buddhist Digital Resource Center launched the Khmer Manuscript Heritage Project in 2019 to safeguard the literary heritage of Cambodia through the digitization of surviving traditional palm-leaf manuscripts. In two and a half years, in collaboration with Digital Divide Data, The Brechin Group Inc., the Fonds pour l'Édition des Manuscrits du Cambodge, and the École française d’Extrême-Orient, BDRC sought out significant collections in Phnom Penh and surrounding provinces. Trained by manuscript and digitization experts, local Cambodian youth cleaned, organized, and digitized the manuscript collections, and the digital files were archived in BDRC’s repository for long-term preservation.</parag><parag>The resulting digital collection <nbsp>—56</nbsp> terabytes consisting of 1,456,341 <nbsp>pages—</nbsp> represents the majority of manuscripts known to have survived to the present in Cambodia. The project provides the world with free access to an unparalleled collection of traditional Cambodian literature.</parag><parag>The Khmer Manuscript Heritage Project was made possible with generous support from <lk target='_blank' href='https://www.akhmerbuddhistfoundation.org/'>A Khmer Buddhist Temple Foundation</lk>.</parag>",
+            "noteA":"<note>[a]</note> Lorem ipsum dolor sit amet",
+            "noteB":"<note>[b]</note> Consectetur adipiscing elit.",
+            "caption":"Illustrated leporello manuscript from Siem Reap (<lk to='/show/bdr:W1FEMC039097'>link</lk>)"
+         }, 
+         "section2":{
+            "title": "Resources",
+            "text":"<parag>Relevant bibliographies and secondary sources concerning Cambodian manuscripts <nbsp>—coming soon</nbsp>. </parag>"
+         }
+      },
+      "help":"<bold>Please consult the <lk href='https://www.bdrc.io/buda-user-guide/'>user guide</lk> and <lk href='https://www.bdrc.io/buda-user-guide/frequently-asked-questions/'>FAQ</lk> to learn more about BUDA</bold>"
    },
    "types": {
       "any": "གང་རུང་།",
@@ -44,20 +61,30 @@
       "item": "དཔེ་ཆ།",
       "item_plural": "དཔེ་ཆ།",
       "lineage": "ཆོས་བརྒྱུད།",
+      "lineage_plural": "Lineages",
       "person": "མི་སྣ།",
+      "person_plural": "Persons",
       "place": "ས་གནས།",
+      "place_plural": "Places",
       "role": "ལས་འགན།",
+      "role_plural": "Roles",
       "topic": "བརྗོད་གཞི།",
+      "topic_plural": "Topics",
       "work": "བརྩམས་ཆོས།",
+      "work_plural": "Works",
       "instance": "དཔེ་རྒྱུན།",
+      "instance_plural": "Versions",
       "images": "བཤེར་པར།",
       "volume": "བཤེར་པར།",
       "volume_num": "པོད། {{num,counttobo}} [{{id}}]",
+      "volume_num_noid": "པོད། {{num,counttobo}}",
       "searchIn": "{{type}}",
       "product": "Product",
+      "product_plural": "Collections",
       "scan": "བཤེར་པར།",
-      "match": "match",
-      "volume_num_noid": "པོད། {{num,counttobo}}"
+      "scan_plural": "Scans",
+      "serial": "Series",
+      "match": "match"
    },
    "topbar": {
       "about": "ང་ཚོའི་སྐོར།",
@@ -72,7 +99,11 @@
       "bookmarks": "དཔེ་རྟགས།",
       "results": "བཙལ་འབྲས་ནང་འཚོལ།",
       "instances": "བརྩམས་ཆོས།",
-      "proxied":"This is a proxied version provided by your institution's library subscription; login is disabled. If you are part of a subscribing institution, you can download PDFs of texts in the subscribed collections. If you have an account and wish to use it, please go to <tag href='https://library.bdrc.io' target='_blank'>https://library.bdrc.io<\/tag>"
+      "proxied":"This is a proxied version provided by your institution's library subscription; login is disabled. If you are part of a subscribing institution, you can download PDFs of texts in the subscribed collections. If you have an account and wish to use it, please go to <tag href='https://library.bdrc.io' target='_blank'>https://library.bdrc.io<\/tag>",
+      "resources":"resources",
+      "guided":"Guided search",
+      "browse":"browse",
+      "home":"home"      
    },
    "Lsidebar": {
       "sortBy": {
@@ -97,7 +128,8 @@
          "instanceOf": "བརྩམས་ཆོས།",
          "reset": "ཚགས་སྒྲིག་སུབ་ཆས།",
          "include": "བཙལ་འབྲས་ནང་ཚུད་དགོས་པ། ",
-         "exclude": "བཙལ་འབྲས་ནང་ཚུད་མི་དགོས་པ། "
+         "exclude": "བཙལ་འབྲས་ནང་ཚུད་མི་དགོས་པ། ",
+         "try": "Try another search"
       },
       "activeF": {
          "title": "རྟགས་བརྒྱབ་པའི་ཚགས་སྒྲིག",
@@ -143,9 +175,6 @@
       "tmp:nameMatch_plural": "མིང་རྙེད་ཚད།",
       "tmp:otherTitle": "མཚན་བྱང་གཞན།",
       "tmp:otherTitle_plural": "མཚན་བྱང་གཞན།",
-      "bdo:instanceExtentStatement": "ཤོག་གྲངས་གསལ་བཤད།",
-      "bdo:serialHasInstance": "དཔེ་ཚོགས་ཀྱི་དཔེ་རྒྱུན།",
-      "bdo:inRootInstance": "",
       "tmp:otherName": "མིང་གཞན།",
       "tmp:otherName_plural": "མིང་གཞན།",
       "tmp:otherMatch": "རྙེད་པ་གཞན། ({{count,counttobo}})",
@@ -159,7 +188,6 @@
       "tmp:entityScore": "ཐོབ་སྐར།",
       "tmp:instanceLabel": "དཔེ་རྒྱུན་གྱི་མཆན་བྱང་།",
       "tmp:dimensions": "བོངས་ཚད།",
-      "tmp:publisherLocation": "པར་གནས།",
       "tmp:publisherName": "པར་མཁན།",
       "tmp:forWork": "བརྩམས་ཆོས།",
       "tmp:provider": "མཁོ་འདོན་པ།",
@@ -179,12 +207,12 @@
       "bdo:biblioNote": "དཔེ་ཐོའི་ཟུར་མཆན།",
       "bdo:biblioNote_plural": "དཔེ་ཐོའི་ཟུར་མཆན།",
       "tmp:propHasScans": "བཤེར་པར།",
+      "bdo:CorporationMemberNotSpecified": "ཚོགས་མི།",
       "tmp:propHasEtext": "འཕྲུལ་ཡིག",
       "bf:identifiedBy": "ཨང་རྟགས།",
       "rdfs:subClassOf": "དབྱེ་གཞི།",
       "tmp:isCreator": "མཛད་མཁན།",
       "tmp:hasImage": "བཤེར་པར།",
-      "bdo:CorporationMemberNotSpecified": "ཚོགས་མི།",
       "tmp:hasEtext": "འཕྲུལ་ཡིག",
       "unspecified": "རིགས་མ་དགར་བ།",
       "true": "ཡིན།",
@@ -217,14 +245,19 @@
       "tmp:possibleAccess": "བལྟ་ཀློག་ཐུབ་པ།",
       "tmp:catalogOnly": "དཀར་ཆག་ཁོ་ན།",
       "tmp:nonReleasedItems": "ད་དུང་སྤེལ་མེད་པ་ཁག",
+      "tmp:FEMCManuscriptCode": "FEMC Manuscript Code",
+      "tmp:completion":"Completion",
+      "tmp:complete":"Complete",
+      "tmp:incomplete":"Incomplete",
+      "tmp:scans":"scans",
       "tmp:colophonMatch":"Colophon Match"
    },
    "result": {
       "open": "ཁ་ཕྱེ།",
       "resource": "དཔེ་ཆ།",
-      "in": " ",
+      "in": "in",
       "available": "དཔེ་ཆ་ཡོད་ས།",
-      "inRootInstance": "",
+      "inRootInstance": "In",
       "workBy": "རྩོམ་པ་པོ།",
       "eTextIsForWork": "བརྩམས་ཆོས།",
       "year": "ལོ།",
@@ -319,9 +352,9 @@
       "seeO": "མ་དཔེ་སྟོན།"
    },
    "misc": {
-      "colon": " ",
+      "colon": ":",
       "datatype": "གཞི་གྲངས་ལ་ཕྱིར་ལོག",
-      "has": "",
+      "has": "Has",
       "or": "ཡང་ན།",
       "seeA": "ཚང་མ་སྟོན།",
       "seeAnum": "ཚང་མར་གཟིགས། {{count}}",
@@ -333,10 +366,10 @@
       "preview": "སྔོན་ལྟ།",
       "permalink": "དྲ་ཐག",
       "clipboard": "དྲ་ཐག་བཤུས་ཡོད།\nCTRL+V བཀོལ་ནས་ཕོབ།",
-      "from": "",
-      "in": "",
-      "of": "",
-      "please": "",
+      "from": "from",
+      "in": "in",
+      "of": "of",
+      "please": "Please",
       "seeO": "See on",
       "ord": "{{num,ordinal}}",
       "all": "ཡོངས།",
@@ -354,7 +387,11 @@
       "seeM_plural": "{{count}} more versions available",
       "card": "{{num,counttobo}}",
       "inter": "{{min,counttobo}}~{{max,counttobo}}",
-      "ordInter": "དུས་རབས་{{min,counttobo}} ནས་{{max,counttobo}} བར།"
+      "ordInter": "དུས་རབས་{{min,counttobo}} ནས་{{max,counttobo}} བར།",
+      "see10More": "See 10 More",
+      "showR": "Show {{count}} reproductions",
+      "hideR": "Hide reproductions",
+      "previewN": "preview {{count}}"
    },
    "lang": {
       "en": "ཨིན་སྐད།",
@@ -395,7 +432,8 @@
          "xDts": "DTS",
          "alalc97": "ALA-LC",
          "latnPinyin": "ཕིན་ཡིག",
-         "piXNdia": "Pali / Burmese / Khmer (transliterated)"
+         "piXNdia": "Pali / Burmese / Khmer (transliterated)",
+         "piKhmr": "Pali in Khmer"
       },
       "tip": {
          "zh": "རྒྱ་ཡིག",
@@ -427,7 +465,8 @@
          "xDts": "DTS",
          "xIast": "IAST",
          "alalc97": "ALA-LC",
-         "latnPinyin": "ཕིན་ཡིག"
+         "latnPinyin": "ཕིན་ཡིག",
+         "xTwktt":"Trent Walker Khmer-Tai Translit."
       },
       "x": "སྒྲ་ཐད་བསྒྱུར།",
       "latn": "སྒྲ་ཐད་བསྒྱུར།"
@@ -437,6 +476,7 @@
       "result": "བཙལ་འབྲས། {{count,counttobo}}",
       "result_plural": "བཙལ་འབྲས། {{count,counttobo}}",
       "filters": {
+         "noresult-": "No result",
          "noresults": "འདེམས་སྒྲུག་བྱས་པའི་བཙལ་འབྲས་མི་འདུག",
          "noresultsAsso": "འདི་དང་འབྲེལ་བའི་བཙལ་འབྲས་མི་འདུག {{keyword}} {{type}}",
          "facets":" with the filters you set",
@@ -445,9 +485,21 @@
       },
       "seeO": "གཞི་གྲངས་རིགས་གཞན་པའི་བཙལ་འབྲས་ལ་ལྟོས།",
       "backToW": "བརྩམས་ཆོས་སྟེང་ཕྱིར་ལོག",
+      "any":"(Select any)",
+      "one":"(Select one)",
+      "reset":"Reset",
+      "nothing":"No match",
+      "choose":"Choose...",
+      "more":"Enter at least 2 characters...",
+      "many": "Too many results ({{count}})",
+      "load": "Loading {{count}} results<newline/>Please wait...",
+      "no": "No result",
+      "cancel":"Cancel",
+      "loading":"Loading...",
       "hidden":"Some results were hidden because they currently are not released.",
       "showU":"Show non-released items",
-      "toggleM": "Toggle Map"
+      "toggleM": "Toggle Map",
+      "kw":"(Search any)"
    },
    "Rsidebar": {
       "title": "རྣམ་པ་སྒྲིག་ས།",
@@ -498,8 +550,8 @@
       "start": "འཚོལ།",
       "reset": "བཙལ་བྱ་སུབ།",
       "otherN": "ནང་གསེས་ཆ་ཤས་དང་མི་མཐུན་པ་ལོངས།",
-      "scanF": "",
-      "etextF": "",
+      "scanF": "Scans for",
+      "etextF": "Etext for",
       "openR": "དཔེ་ཐོ།",
       "loadP": "ཤོག་གྲངས་སྔོན་མ་ཀློག",
       "sameL": "དྲ་ཚིགས་གཞན་ནང་ཡོད་པའི་དཔེ་ཆ།",
@@ -507,6 +559,7 @@
       "gener1pdf": "PDF བཟོས།",
       "gener2pdf": "PDF བཟོ་བཞིན་ཡོད་་་་་་་།",
       "gener3pdf": "PDF ཕབ་ལེན།",
+      "gener0zip": "Image files",
       "gener1zip": "ZIP PDF བཟོས།",
       "gener2zip": "ZIP བཟོ་བཞིན་ཡོད་་་་་་་།",
       "gener3zip": "ZIP ཕབ་ལེན།",
@@ -600,16 +653,16 @@
       "tooltip": "No image indication found.<newL/>You might have to find the right page by yourself."
    },
    "footer": {
-         "BDRC": "Buddhist Digital Resource Center",
-         "adr1": "1430 Massachusetts Ave., 5th floor",
-         "adr2": "Cambridge, MA, USA 02138",
-         "adr": "Mailing address:<br/>198 Tremont St. #421<br/>Boston, MA, USA 02116",
-         "contact": "འབྲེལ་གཏུགས་བྱ་ཡུལ།",
-         "connect": "སྤྱི་ཚོགས་དྲ་ལམ་བརྒྱུད་ནས་ང་ཚོར་འབྲེལ་ཡུལ།",
-         "print": "ང་ཚོའི་དྲ་ཐོག་ཏུ་ཡོད་པའི་དཔེ་ཆ་ཁག་དགོས་ཚེ་འདི་ནས་མངགས།",
-         "order": "མངགས་ཉོ།",
-         "join": "ང་ཚོའི་སྐོར་ཀྱི་གནས་ཚུལ་གསར་ཤོས་ཤེས་འདོད་ན་ནང་འཛུལ་བྱོས།",
-         "subscribe": "མངགས་ཉོ།",
-         "support": "ངེད་ཚོགས་པའི་ལས་རིགས་ལ་རྒྱབ་སྐྱོར།"
+      "BDRC": "Buddhist Digital Resource Center",
+      "adr1": "1430 Massachusetts Ave., 5th floor",
+      "adr2": "Cambridge, MA, USA 02138",
+      "adr": "Mailing address:<br/>198 Tremont St. #421<br/>Boston, MA, USA 02116",
+      "contact": "འབྲེལ་གཏུགས་བྱ་ཡུལ།",
+      "connect": "སྤྱི་ཚོགས་དྲ་ལམ་བརྒྱུད་ནས་ང་ཚོར་འབྲེལ་ཡུལ།",
+      "print": "ང་ཚོའི་དྲ་ཐོག་ཏུ་ཡོད་པའི་དཔེ་ཆ་ཁག་དགོས་ཚེ་འདི་ནས་མངགས།",
+      "order": "མངགས་ཉོ།",
+      "join": "ང་ཚོའི་སྐོར་ཀྱི་གནས་ཚུལ་གསར་ཤོས་ཤེས་འདོད་ན་ནང་འཛུལ་བྱོས།",
+      "subscribe": "མངགས་ཉོ།",
+      "support": "ངེད་ཚོགས་པའི་ལས་རིགས་ལ་རྒྱབ་སྐྱོར།"
    }
 }
