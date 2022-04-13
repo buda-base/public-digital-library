@@ -608,7 +608,9 @@
       "pdferror2":"Server error",
       "range":"range",
       "full":"Full",
-      "ok":"ok"
+      "ok":"ok",
+      "firstP": "First page",
+      "lastP": "Last page"
    },
    "mirador": {
       "return": "བུདྡྷ་ལ་ཕྱིར་ལོག",

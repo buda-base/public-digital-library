@@ -5950,6 +5950,21 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
       let unpag = this.unpaginated()
 
+      let firstPageUrl 
+      let loca = { ...this.props.history.location }
+      //if(prev!==-1) {
+         loca.search = loca.search.replace(/(^[?])|(&*startChar=[^&]+)&*/g,"")
+         firstPageUrl = "?startChar=0"+(loca.search?"&"+loca.search:"") + "#open-viewer"
+      //}
+
+      let last = this.getResourceElem(tmp+"lastChunk");
+      let lastPageUrl 
+      loca = { ...this.props.history.location }
+      if(last?.length) { //} && next <= Number(last[0].value)) {
+         loca.search = loca.search.replace(/(^[?])|(&*startChar=[^&]+)&*/g,"")
+         lastPageUrl = "?startChar="+last[0].value+(loca.search?"&"+loca.search:"") + "#open-viewer"
+      }
+
       return (
          
          [<InfiniteScroll
@@ -5967,7 +5982,11 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          }
          //loader={<Loader loaded={false} />}
          >
-         { prev!==-1 && <h3 style={{marginBottom:"20px",width:"100%",textAlign:"right"}}><a onClick={(e) => this.props.onGetPages(this.props.IRI,prev)} class="download" style={{fontWeight:700,border:"none",textAlign:"right"}}>{I18n.t("resource.loadP")} &lt;</a></h3>}
+         <div style={{display:"flex", justifyContent:"space-between", width:"100%" }}>
+            <h3 style={{marginBottom:"20px",textAlign:"right"}}>{ firstPageUrl && <Link to={firstPageUrl}>{I18n.t("resource.firstP")}</Link>}</h3>
+            <h3 style={{marginBottom:"20px",textAlign:"right"}}>{ prev!==-1 && <a onClick={(e) => this.props.onGetPages(this.props.IRI,prev)} class="download" style={{fontWeight:700,border:"none",textAlign:"right"}}>{I18n.t("resource.loadP")}</a>}</h3>
+            <h3 style={{marginBottom:"20px",textAlign:"right"}}>{ lastPageUrl && <Link to={lastPageUrl}>{I18n.t("resource.lastP")}</Link>}</h3>
+         </div>
          {/* {this.hasSub(k)?this.subProps(k):tags.map((e)=> [e," "] )} */}
          { elem.map( e => { 
 
