@@ -183,8 +183,8 @@ console.log("loca:",window.location.hostname)
 
 const onKhmerUrl = (
       window.location.host.startsWith("khmer-manuscripts")
-   || window.location.host.startsWith("library-dev")
-   || window.location.host.startsWith("localhost")
+   //|| window.location.host.startsWith("library-dev")
+   //|| window.location.host.startsWith("localhost")
 )
 
 
@@ -455,9 +455,10 @@ export function highlight(val,k,expand,newline,force)
       //loggergen.log("e:",_idx,e,e.length,newline,force)
 
       const prepNewL = (w) => {
+         //console.log("split:",w,w.split("\n"))
          return w.split("\n").reduce( (acc,k) => {
             let ret = [ ]
-            if(acc.length && k?.match(/[^ \n\r]/)) ret.push(<br/>)
+            if(acc.length && (!k || k?.match(/[^ \n\r]/))) ret.push(<br/>) // fix for https://youtu.be/Qmxr-p-7Od8?t=4090
             ret.push(k)
             return acc.concat(ret)
          },[])
