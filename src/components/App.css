@@ -2761,6 +2761,24 @@ span[lang^='sa-']:not([lang$='-ewts']) { text-transform: capitalize;}
 #popHoverM.fixW { left:403px !important; }
 #popHoverM.fixW[data-id*='/workHasInstance'] { left:399px !important; }
 
+#popHoverM.etext { left:-50px !important; }
+
+#popHoverM[data-id$="etextMoreInfo"] svg,
+#popHoverM[data-id$="etextMoreInfo"] .lang { display:none; }
+
+#popHoverM[data-id$="etextMoreInfo"] .multiple,
+#popHoverM[data-id$="etextMoreInfo"] .ulink,
+#popHoverM[data-id$="etextMoreInfo"] .urilink { margin:0; }
+
+#popHoverM[data-id$="etextMoreInfo"] .multiple { cursor:auto; pointer-events: none; display:block; }
+
+#popHoverM[data-id$="etextMoreInfo"] .multiple a span { cursor:pointer !important; }
+#popHoverM[data-id$="etextMoreInfo"] .multiple a span:hover { text-decoration: underline;}
+
+#popHoverM[data-id$="etextMoreInfo"] .multiple a { pointer-events: auto;}
+
+#popHoverM[data-id$="etextMoreInfo"] h4 h5 { display:inline-block; padding-right:0; font-size:14px; font-weight: 400; margin:0; }
+
 #popSame a li emph { padding:0 5px; font-weight:800; }
 
 #popSame { margin-top:-10px; z-index:1000000; }
@@ -3095,6 +3113,9 @@ line-height:12px; }
 
 .hover-menu span#anchor a:hover { border:none;}
 
+:not(#etext-scroll) > h5:last-of-type { position: relative; padding-right:20px; }
+
+:not(#etext-scroll) > h5:hover .hover-menu,
 .hover-menu.on,
 .resource .data [data-prop="bdo:note"] .sub:hover .hover-menu,
 :not(#etext-scroll) > h4:hover .hover-menu {  opacity:1 !important; pointer-events: auto !important; }

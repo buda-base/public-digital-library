@@ -3242,7 +3242,7 @@ class ResourceViewer extends Component<Props,State>
 
    toggleHoverM(ID,noSame,wTip,dontClose) { 
       return (ev) => { 
-         let elem = $(ev.target).closest(".propCollapseHeader,.propCollapse,[data-prop='bdo:workHasInstance']")
+         let elem = $(ev.target).closest(".propCollapseHeader,.propCollapse,[data-prop='bdo:workHasInstance'],.etextPage")
          let popperFix 
          if(elem.length > 0) {
             let i = $(ev.target).closest("h4").index() 
@@ -3251,11 +3251,14 @@ class ResourceViewer extends Component<Props,State>
             let p = elem.closest(".ext-props")
             let h = elem.closest("[data-prop='bdo:workHasInstance']")
             
-            //console.log("i/n",i,n)
+            let etext = $(ev.target).closest("h5.withHoverM").index() 
+            //console.log("i/n",i,n,etext)
             
             if(/*!p.length &&*/ (elem.hasClass("propCollapse") && !elem.closest("[data-prop]") === "adm:logEntry" 
                || x.length || h.length) && (i < Math.floor(n/2) || (n%2 == 1 && i == Math.floor(n/2)) || i === 0 && n === 1)) 
                   popperFix = true
+            else if(etext >= 0) 
+               popperFix = "etext"
          }
          let target = $(ev.currentTarget).closest("h4")
          if(target.length) target = target.find(".hover-menu")[0]  
@@ -3263,6 +3266,8 @@ class ResourceViewer extends Component<Props,State>
             target = $(ev.currentTarget).closest(".sub")
             if(target.length) target = target.find(".hover-menu")[0]
             else target = ev.currentTarget
+
+            if(popperFix === "etext") target = $(ev.currentTarget).closest("h5").prev()
 
             //console.log("tg:",target)
          }
@@ -3371,6 +3376,17 @@ class ResourceViewer extends Component<Props,State>
          loca.search = "?startChar="+e.start+(loca.search?"&"+loca.search:"")
       }
 
+      let repro 
+      if(e.value === "etextMoreInfo") { 
+         repro = <span class="etextMoreInfo" onClick={(ev) => { 
+               //console.log("repro:",ID,this.state.collapse,ev.target)
+               if($(ev.target).closest("a").length) this.setState({collapse:{...this.state.collapse, ["hover"+ID]:false }}) 
+            }}>
+               {this.format("span",bdo+"instanceReproductionOf","",false,"sub")}
+            </span>
+         //console.log("repro:",repro)
+      }
+
       return (
          <div class="hover-menu">
             { /*
@@ -3399,13 +3415,13 @@ class ResourceViewer extends Component<Props,State>
             <Popper
                data-ID={ID}
                id="popHoverM"
-               className={this.state.collapse.popperFix?"fixW":""}
+               className={this.state.collapse.popperFix===true?"fixW":this.state.collapse.popperFix?this.state.collapse.popperFix:""}
                data-class={(e.start !== undefined?"in-etext":"")}
                marginThreshold={0}
                open={this.state.collapse["hover"+ID]}
                //anchorOrigin={{horizontal:"right",vertical:"top"}}
                //transformOrigin={{horizontal:"right",vertical:"top"}}
-               placement={"bottom-end"}
+               placement={this.state.collapse.popperFix==="etext"?"bottom-start":"bottom-end"}
                anchorEl={this.state.anchorEl["hover"+ID]}
                //onClose={() => this.setState({...this.state,collapse:{...this.state.collapse,["hover"+ID]:false} } ) }
                TransitionComponent={Fade}
@@ -3434,7 +3450,7 @@ class ResourceViewer extends Component<Props,State>
                         </span>
                         <div data-prop={shortUri(prop)}>
                            {!parent && [
-                              <h3>{this.proplink(prop)}{I18n.t("punc.colon")}</h3>,
+                              prop != " " && <h3>{this.proplink(prop)}{I18n.t("punc.colon")}</h3>,
                               <div class="group"><h4>{current}</h4></div>
                            ]}
                            { grandPa && <h3>{this.proplink(grandPa)}{I18n.t("punc.colon")}</h3>}
@@ -3462,6 +3478,7 @@ class ResourceViewer extends Component<Props,State>
                               { (e.end !== undefined) &&  <div><span class='first'>{this.proplink(bdo+"endChar")}</span><span>{I18n.t("punc.colon")}&nbsp;</span><span>{e.end}</span></div>  }
                               { (comment !== undefined) &&  <div><span class='first'>{this.proplink(rdfs+"comment")}</span><span>{I18n.t("punc.colon")}&nbsp;</span><span>{comment.value}</span></div>  }
                               { (ontolink !== undefined) &&  <div><span class='first'>{I18n.t("prop.tmp:ontologyProperty")}</span><span>{I18n.t("punc.colon")}&nbsp;</span><Link class="ontolink" to={"/show/"+ontolink}>{ontolink}</Link></div>  }
+                              { (e.value === "etextMoreInfo") && <div><span class='first'>{this.proplink(bdo+"instanceReproductionOf")}</span><span>{I18n.t("punc.colon")}&nbsp;</span>{repro}</div>  }
                               </TabPanel>
                               <TabPanel selected>
                               {fromSame && e.allSameAs.map(f => { 
@@ -6030,6 +6047,12 @@ perma_menu(pdfLink,monoVol,fairUse,other)
             let imgErr = that.state.errors[that.props.IRI]
             if(imgErr) imgErr = imgErr[e.seq]
 
+            const imgElem = !unpag && !imgErr && <h5><a title={I18n.t("misc."+(!showIm?"show":"hide"))+" "+I18n.t("available scans for this page")} onClick={(eve) => {
+               let id = "image-"+this.props.IRI+"-"+e.seq
+               this.setState({...this.state, collapse:{...this.state.collapse, [id]:!showIm}}) 
+            }}>{I18n.t("resource.page",{num:e.seq})}</a>                                             
+            </h5>
+
             return (
             <div class={"etextPage"+(this.props.manifestError&&!imageLinks?" manifest-error":"")+ (!e.value.match(/[\n\r]/)?" unformated":"") + (e.seq?" hasSeq":"")/*+(e.language === "bo"?" lang-bo":"")*/ }>
                {/*                                          
@@ -6075,17 +6098,17 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                      <img src="/icons/image.svg"/>
                   </span> }
                   {/* { <h5><a title="Open image+text view in Mirador" onClick={eve => { openMiradorAtPage(imageLinks[e.seq].id) }}>p.{e.seq}</a></h5> } */}
-                  {   !unpag && !imgErr && <h5><a title={I18n.t("misc."+(!showIm?"show":"hide"))+" "+I18n.t("available scans for this page")} onClick={(eve) => {
-                        let id = "image-"+this.props.IRI+"-"+e.seq
-                        this.setState({...this.state, collapse:{...this.state.collapse, [id]:!showIm}}) 
-                     }}>{I18n.t("resource.page",{num:e.seq})}</a>                                             
-                     </h5> }
+                  {   !unpag && !imgErr && imgElem }
                      { (unpag || imgErr ) && <h5><a class="unpag" title={I18n.t("resource.unpag")}>{I18n.t("resource.pageN",{num:e.seq})}</a></h5>}
                      &nbsp;
                      { Object.keys(imageLinks).sort().map(id => {
+                        const withHoverM = <>{I18n.t("misc.from")} {this.uriformat(null,{noid:true,value:id.replace(/bdr:/,bdr).replace(/[/]V([^_]+)_I.+$/,"/W$1")})} </>
                         if( /* !this.state.collapse["imageVolume-"+id] &&*/ imageLinks[id][e.seq]) 
                            return (
-                                 <h5>{I18n.t("misc.from")} {this.uriformat(null,{noid:true,value:id.replace(/bdr:/,bdr).replace(/[/]V([^_]+)_I.+$/,"/W$1")})}</h5>
+                                 <h5 className="withHoverM">
+                                    {withHoverM}
+                                    {this.hoverMenu(" ",{ value:"etextMoreInfo" },[ imgElem, <>&nbsp;</>, withHoverM ])}
+                                 </h5>
                            )
                      })}
                      {imgErr &&  Object.values(imgErr).some(v => [401,403].includes(v)) && <span class="copyrighted">{I18n.t("access.imageN")}</span>}
