@@ -8028,7 +8028,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          let msg = "IRI undefined" ;
          if(this.props.IRI) msg = "Resource "+this.props.IRI+" does not exist."
          return (
-            <Redirect404  history={this.props.history} message={msg}/>
+            <Redirect404 propid={this.props.propid} from={this.props.IRI} simple={this.props.simple} history={this.props.history} message={msg}/>
          )
       }
 
@@ -8039,7 +8039,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          if(redir[adm+"replaceWith"]) {
             redir = shortUri(redir[adm+"replaceWith"][0].value)            
             return (
-               <Redirect404  history={this.props.history} message={"Record withdrawn in favor of "+redir} to={"/show/"+redir}/>
+               <Redirect404 history={this.props.history} message={"Record withdrawn in favor of "+redir} to={(this.props.simple?"/simple/":"/show/")+redir+this.props.history.location.search} />
             )
          }
          else if(this.props.auth && this.props.auth.isAuthenticated() && redir[adm+"status"] && (redir = redir[adm+"status"]).length && redir[0].value === bda+"StatusWithdrawn"){
@@ -8675,12 +8675,16 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                
                // TODO add altLabel/prefLabel from sameAs (related to #438)
                let labels = this.getResourceElem(skos+"prefLabel")
+               let alt = this.getResourceElem(skos+"altLabel")
                if(!labels) labels = []
                let msg = 
                   '{"@id":"'+prettId+'"'
                   +',"skos:prefLabel":'+JSON.stringify(labels
                      .filter(p => !p.fromSameAs || p.allSameAs && p.allSameAs.length && p.allSameAs.filter(a => a.startsWith(bdr)).length)
                      .map(p => ({"@value":p.value,"@language":p.lang})))
+                  +(alt?.length?',"skos:altLabel":'+JSON.stringify(alt
+                        .filter(p => !p.fromSameAs || p.allSameAs && p.allSameAs.length && p.allSameAs.filter(a => a.startsWith(bdr)).length)
+                        .map(p => ({"@value":p.value,"@language":p.lang}))):"")
                   +',"tmp:keyword":{"@value":"'+this.props.IRI+'","@language":""}'
                   +',"tmp:propid":"'+this.props.propid+'"'
                   +(otherData?',"tmp:otherData":'+JSON.stringify(otherData):'')

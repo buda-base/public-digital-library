@@ -109,11 +109,23 @@ export class Redirect404 extends Component<Props>
    {
       super(props);
 
-      // console.log("props404",props)
+      console.log("props404",props,to)
+
       let to = "/"
       if(props.to) to = props.to
 
-      setTimeout((function(that) { return function() { that.props.history.push(to) } })(this), 3000) ;
+      setTimeout((function(that) { return function() { 
+         if(that.props.simple && that.props.from  && that.props.propid) {
+            const msg = {
+               "@id":that.props.from,
+               "tmp:propid":that.props.propid,
+               "tmp:notFound":true
+            }
+            window.top.postMessage(JSON.stringify(msg), "*")
+         } else {
+            that.props.history.push(to) 
+         }
+      } })(this), 3000) ;
    }
 
    render()
