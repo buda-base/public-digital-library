@@ -1,6 +1,6 @@
 git:
   filters:
-    - filter_type: file
+    - filter_type: dir
       file_format: HTML
       source_language: en
       source_file_dir: public/static/
