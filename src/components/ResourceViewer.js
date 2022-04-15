@@ -5105,6 +5105,7 @@ class ResourceViewer extends Component<Props,State>
       let expand
       let maxDisplay = 9
       if(k === bdo+"workHasInstance") maxDisplay = 10 ;
+      if(k === bdo+"placeContains") maxDisplay = 6 ;
       if(hasMaxDisplay) maxDisplay = hasMaxDisplay ;
 
       let n = 0
@@ -5118,6 +5119,11 @@ class ResourceViewer extends Component<Props,State>
          linkToVersions = <span class="expand linkToVersions"><Link to={"/search?i="+this.props.IRI+"&t=Work"}>{I18n.t("misc.browseA",{count: ret.length})}</Link></span>
       }
       
+      let linkToPlaces
+      if(k === bdo+"placeContains" && ret.length >= 2) {
+         linkToPlaces = <span class="expand linkToPlaces"><Link to={"/search?r="+this.props.IRI+"&t=Place&f=relation,inc,bdo:placeLocatedIn"}>{I18n.t("misc.browseA",{count: ret.length})}</Link></span>
+      }
+
       if(!isSub && n > maxDisplay) {      
          /* CSS columns won't balance evenly
          let nb = Math.ceil(maxDisplay / 2)
@@ -5130,7 +5136,7 @@ class ResourceViewer extends Component<Props,State>
          if(hasMaxDisplay === -1 /*&& ![bf+"identifiedBy",bdo+"note"].includes(k)*/ && this.state.collapse[k] === undefined) show = true ; 
 
          return (
-            <div data-prop={shortUri(k)} class={"has-collapse custom max-"+(maxDisplay)+" "+(n%2===0?"even":"odd") }>
+            <div data-prop={shortUri(k)} class={"has-collapse custom max-"+(maxDisplay)+" "+(n%2===0?"even":"odd") + (linkToPlaces?" withLinkTo":"")}>
                <h3><span>{this.proplink(k,null,n)}{I18n.t("punc.colon")}</span></h3>
                <div className={"propCollapseHeader in-"+(this.state.collapse[k]===true)}>
                   {ret.slice(0,maxDisplay)}
@@ -5144,10 +5150,13 @@ class ResourceViewer extends Component<Props,State>
                      </span>
                   </span>
                   { linkToVersions }
+                  { linkToPlaces }
                   </> }
                </div> 
                <Collapse timeout={{enter:0,exit:0}} className={"propCollapse in-"+(show===true)} in={show}>
-                  {k === bdo+"workHasInstance"?ret.slice(0,maxVersions):ret}
+                  { k === bdo+"workHasInstance"
+                     ? ret.slice(0,maxVersions)
+                     : ret }
                </Collapse>
                {/* // failure with CSS columns
                <div className={"propCollapseHeader in-"+(this.state.collapse[k]===true)}>
@@ -5168,6 +5177,7 @@ class ResourceViewer extends Component<Props,State>
                   </span>
                </span>
                { linkToVersions }
+               { linkToPlaces }
                </> }               
             </div>
          )
@@ -5181,6 +5191,7 @@ class ResourceViewer extends Component<Props,State>
                {ret}               
                </div>
                { linkToVersions }
+               { linkToPlaces }
             </div>
          )
       }

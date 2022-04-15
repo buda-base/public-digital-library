@@ -4207,50 +4207,55 @@ h3 .expand svg { position:absolute; margin-top:-18px; }*/
 .has-collapse.custom[data-prop="bdo:creator"] .propCollapse .subgroup,
 .has-collapse.custom[data-prop="bdo:creator"] .propCollapseHeader .subgroup { width:100%; }
 
-.resource .data [data-prop="bdo:workHasInstance"] .ellip { text-overflow: ellipsis; white-space: nowrap; overflow: hidden;
+.resource .data :is(.withLinkTo,[data-prop="bdo:workHasInstance"]) .ellip { text-overflow: ellipsis; white-space: nowrap; overflow: hidden;
    width:12px; display:inline-block;vertical-align: bottom; margin-left:0px;
 }
 
-.resource .data [data-prop="bdo:workHasInstance"] .group { column-count:2; }
-#popHoverM .resource .data [data-prop="bdo:workHasInstance"] .group { column-count:1; width:}
-#popHoverM .resource .data [data-prop="bdo:workHasInstance"] .group h4 { width:100% !important;}
+.resource .data :is(.withLinkTo,[data-prop="bdo:workHasInstance"]) .group { column-count:2; }
+#popHoverM .resource .data :is(.withLinkTo,[data-prop="bdo:workHasInstance"]) .group { column-count:1; width:}
+#popHoverM .resource .data :is(.withLinkTo,[data-prop="bdo:workHasInstance"]) .group h4 { width:100% !important;}
 
 
-#popHoverM .resource .data [data-prop="bdo:workHasInstance"] .ellip { white-space: normal; width:auto; display:inline; margin-left:0;} 
+#popHoverM .resource .data :is(.withLinkTo,[data-prop="bdo:workHasInstance"]) .ellip { white-space: normal; width:auto; display:inline; margin-left:0;} 
 
-#popHoverM .resource .data [data-prop="bdo:workHasInstance"] h4 .urilink:hover .ellip { text-decoration: underline;}
+#popHoverM .resource .data :is(.withLinkTo,[data-prop="bdo:workHasInstance"]) h4 .urilink:hover .ellip { text-decoration: underline;}
 
-[data-prop="bdo:workHasInstance"] h4.multiple { line-height:20px; }
-.resource .data [data-prop="bdo:workHasInstance"] .group h4 { top:0px; } /* TODO CSS column hover bug ... */
-.resource .data [data-prop="bdo:workHasInstance"] .propCollapseHeader.in-false { margin-bottom:30px;}
-.resource .data [data-prop="bdo:workHasInstance"] .propCollapseHeader .expand { position:absolute;left:0;bottom:-30px;top:auto;}
+:is(.withLinkTo,[data-prop="bdo:workHasInstance"]) h4.multiple { line-height:20px; }
+.resource .data :is(.withLinkTo,[data-prop="bdo:workHasInstance"]) .group h4 { top:0px; } /* TODO CSS column hover bug ... */
+.resource .data :is(.withLinkTo,[data-prop="bdo:workHasInstance"]) .propCollapseHeader.in-false { margin-bottom:30px;}
+.resource .data :is(.withLinkTo,[data-prop="bdo:workHasInstance"]) .propCollapseHeader .expand { position:absolute;left:0;bottom:-30px;top:auto;}
 
-.resource .data [data-prop="bdo:workHasInstance"] .expand.linkToVersions,
-.resource .data [data-prop="bdo:workHasInstance"] .expand + .expand { right:0; left:auto; text-align: right; position: absolute; bottom:-25px; border:none; cursor:auto;}
+.resource .data :is(.withLinkTo,[data-prop="bdo:workHasInstance"]) .expand.linkToVersions,
+.resource .data :is(.withLinkTo,[data-prop="bdo:workHasInstance"]) .expand + .expand { right:0; left:auto; text-align: right; position: absolute; bottom:-25px; border:none; cursor:auto;}
 
-.resource .data [data-prop="bdo:workHasInstance"] .expand.linkToVersions a,
-.resource .data [data-prop="bdo:workHasInstance"] .expand + .expand a { color:white; background-color: #d73449; font-weight: 500; padding:10px 15px; border-radius: 5px; border:none;}
+.resource .data .withLinkTo .expand.linkToVersions,
+.resource .data .withLinkTo .expand + .expand { bottom:-20px; }
 
+.resource .data :is(.withLinkTo,[data-prop="bdo:workHasInstance"]) .expand.linkToVersions a,
+.resource .data :is(.withLinkTo,[data-prop="bdo:workHasInstance"]) .expand + .expand a { color:white; background-color: #d73449; font-weight: 500; padding:10px 15px; border-radius: 5px; border:none;}
+
+.resource .data .withLinkTo .propCollapse + .expand + .expand { bottom:60px; }
 .resource .data [data-prop="bdo:workHasInstance"] .propCollapse + .expand + .expand { bottom:22px; }
 
-.resource .data [data-prop="bdo:workHasInstance"] .group + .expand.linkToVersions:last-child { position: relative; margin-bottom: 30px; width:100%; margin-top:-22px;}
+.resource .data :is(.withLinkTo,[data-prop="bdo:workHasInstance"]) .group + .expand.linkToVersions:last-child { position: relative; margin-bottom: 30px; width:100%; margin-top:-22px;}
 
-.resource .data [data-prop="bdo:workHasInstance"] span.in { margin-left:0;  }
-/* .resource .data [data-prop="bdo:workHasInstance"] span.in::before { content:'';display:block;} */
-.resource .data [data-prop="bdo:workHasInstance"] .over-in { white-space:normal; margin-top:10px; position: relative; display:block; z-index:0} 
+.resource .data :is(.withLinkTo,[data-prop="bdo:workHasInstance"]) span.in { margin-left:0;  }
+/* .resource .data :is(.withLinkTo,[data-prop="bdo:workHasInstance"]) span.in::before { content:'';display:block;} */
+.resource .data :is(.withLinkTo,[data-prop="bdo:workHasInstance"]) .over-in { white-space:normal; margin-top:10px; position: relative; display:block; z-index:0} 
 
-.resource .data [data-prop="bdo:workHasInstance"] h4.multiple { margin-bottom:15px;}
+.resource .data :is(.withLinkTo,[data-prop="bdo:workHasInstance"]) h4.multiple { margin-bottom:15px;}
 
 /*
    position:absolute;background:white;top:40px;padding-top:5px; 
    display:block; left:112px;z-index:1;
 */
 
-.resource .data [data-prop="bdo:workHasInstance"] .images-thumb::after { content:'';height:10px;display:block;top:100%; }
+.resource .data :is(.withLinkTo,[data-prop="bdo:workHasInstance"]) .images-thumb::after { content:'';height:10px;display:block;top:100%; }
 
 .has-collapse.custom .expand { position:relative; bottom:auto; color:#d73449; font-weight:700;font-size:13px;margin-top:10px; }
 .has-collapse.custom .expand:hover { border-color:#d73449; }
 
+.has-collapse.custom.max-6 .propCollapseHeader.in-true ~ .expand,
 .has-collapse.custom:not(.max-10) .propCollapseHeader.in-true ~ .expand,
 .has-collapse.custom .propCollapseHeader.in-true ~ .expand { margin-top:20px; }
 
