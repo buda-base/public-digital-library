@@ -2,6 +2,7 @@ git:
   filters:
     - filter_type: dir
       file_format: HTML
+      source_file_extension: html
       source_language: en
-      source_file_dir: public/static/
+      source_file_dir: public/static
       translation_files_expression: 'public/static/about.<lang>.html'
