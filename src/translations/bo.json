@@ -103,7 +103,8 @@
       "resources":"resources",
       "guided":"Guided search",
       "browse":"browse",
-      "home":"home"      
+      "home":"home",
+      "collections":"Browse collections subscribed to by your institution" 
    },
    "Lsidebar": {
       "sortBy": {

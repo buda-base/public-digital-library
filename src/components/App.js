@@ -975,8 +975,14 @@ export function top_right_menu(that,etextTitle,backUrl,etextres)
                },350)
                ev.preventDefault()
             } }><span>{I18n.t("topbar.search")}</span></Link> }         
-         
+
          { onKhmerServer && khmerLinks }
+
+         { proxied &&   
+            <Tooltip placement="center" title={<span style={{ whiteSpace:"normal" }}><Trans i18nKey="topbar.collections" /></span>}  >
+               <Link id="collections" to={"/search?r=tmp:subscriptions&t=Product"} >{I18n.t("types.product",{ count:2 })}</Link>
+            </Tooltip>
+         }
 
          <div class="history">
             <span title={I18n.t("topbar.history")}><img src="/icons/histo.svg"/></span>
@@ -1752,7 +1758,7 @@ class App extends Component<Props,State> {
 
       
       // TODO deprecate in favor of query modification      
-      if(props.language == "" && (!props.resources || !props.resources[props.keyword]))
+      if(props.language == "" && props.keyword !== "tmp:subscriptions" && (!props.resources || !props.resources[props.keyword]))
       {
          loggergen.log("gRes?",props.resources,props.keyword);
          props.onGetResource(props.keyword);
@@ -5145,7 +5151,9 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             loggergen.log("other:",other)
             
             //if(other && other.length) 
-            if(this.props.loading && this.state.filters.datatype[0] !== "Any" || !this.props.datatypes || !this.props.datatypes.hash) {
+            if(this.props.keyword==="tmp:subscriptions") {
+               message.push(<Typography className="no-result"><span class="noR">Empty list of subscriptions<br/>(work in progress)</span></Typography>)
+            } else if(this.props.loading && this.state.filters.datatype[0] !== "Any" || !this.props.datatypes || !this.props.datatypes.hash) {
                message.push(<Typography className="loading"></Typography>)
             } else {
                message.push(<Typography className="no-result">
@@ -6493,7 +6501,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       if(tags && tags.props?.children?.length && !tags.props?.children?.some(e=>e)) tags = null
 
 
-      //console.log("tags:",tags)
+      //console.log("tags:",tags,message)
 
       const requestSearchOnClick = (tab,i) => {
 

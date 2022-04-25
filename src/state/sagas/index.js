@@ -427,6 +427,7 @@ else if(params && params.q) {
 else if(params && params.r) {
    let t = getEntiType(params.r)
    if(["Instance", "Images", "Volume", "Scan"].includes(t) || ["bdo:SerialWork"].includes(params.r) ) t = "Work"
+   if(params.r === "tmp:subscriptions") t = "Product"
 
    loggergen.log("state r",t,state.data.searches,params,iri)
 
@@ -440,9 +441,9 @@ else if(params && params.r) {
    }
    else {
       store.dispatch(uiActions.loading(params.r, false));
-      if(state.data.searches[params.t] && state.data.searches[params.t][params.r+"@"] && state.data.searches[params.t][params.r+"@"].metadata) {
+      if(state.data.searches[params.t] && state.data.searches[params.t][params.r+"@"]) { 
          store.dispatch(dataActions.foundResults(params.r,"", state.data.searches[params.t][params.r+"@"], params.t));
-         store.dispatch(dataActions.foundFacetInfo(params.r,"", [params.t],state.data.searches[params.t][params.r+"@"].metadata ));
+         if(state.data.searches[params.t][params.r+"@"].metadata) store.dispatch(dataActions.foundFacetInfo(params.r,"", [params.t],state.data.searches[params.t][params.r+"@"].metadata ));
       }
    }
 }

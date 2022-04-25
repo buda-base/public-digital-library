@@ -870,7 +870,15 @@ export default class API {
                   ...(
                      config.khmerServer && styp === "Product" && dtyp === "Work"
                      ?{"searchType":"worksInCollection","R_RES":"bdr:PR1KDPP00"}
-                     :{"searchType":"associated"+(!simple?dtyp:(styp=="Product"&&dtyp=="Scan"?"IInstance":"SimpleType"))+"s"}
+                     :{"searchType":"associated"+
+                        (!simple
+                           ? dtyp
+                           : (styp=="Product" && dtyp=="Scan"
+                              ? "IInstance"
+                              // TODO: case of subscriptions list when proxied (key == tmp:subscriptions / styp == Product)
+                              : "SimpleType"
+                           )
+                        )+"s"} 
                   ),
                   ...(simple?{R_TYPE:(["Product"].includes(dtyp)?"bdo:Collection":"bdo:"+dtyp)}:{}),
                   "L_NAME":"","LG_NAME":"", "I_LIM":"" }

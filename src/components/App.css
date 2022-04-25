@@ -477,10 +477,13 @@ body { overflow:auto !important;padding-right:0 !important; /*font-family:"Robot
 .nav #logo.khmer + .links a,
 footer #donate,
 .nav a#about,
+.nav a#collections,
 .nav a > span,
 .nav #donate, 
 .nav #login { font-weight:700; font-size:14px;letter-spacing: 0.29px; text-transform: uppercase; text-decoration: none; }
 
+
+.nav a#collections { margin-left:50px; }
 
 .nav #logo.khmer + .links  { margin-left:15px; }
 
@@ -497,9 +500,11 @@ footer #donate,
 
 
 .nav #login.proxied > * { opacity:0.5; pointer-events:none; }
+.nav #login.proxied > div > :first-child { display: none;}
 
 .nav #logo #by span { padding-top:7px; text-transform:none; letter-spacing: 1px; font-weight:600;}
 
+.nav a#collections,
 .nav a#about { color: #192229;} 
 
 #login { top:0;right:0;z-index:1; display:inline-block; margin-left:auto;  color:#d73449; }
@@ -4787,7 +4792,7 @@ a.result .contenu ul > div:last-child h3[lang=bo] span { font-size:18px;}
    */
 
    .nav { padding-left:24px;padding-right:24px; max-width:100%; box-sizing: border-box;} 
-   #about, #about+a { display:none;}
+   #about, #about + a:not(#collections) { display:none;}
 
    .nav .history { margin-left:auto;}
 
