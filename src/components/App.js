@@ -183,8 +183,8 @@ console.log("loca:",window.location.hostname)
 
 const onKhmerUrl = (
       window.location.host.startsWith("khmer-manuscripts")
-   || window.location.host.startsWith("library-dev")
-   || window.location.host.startsWith("localhost")
+   //|| window.location.host.startsWith("library-dev")
+   //|| window.location.host.startsWith("localhost")
 )
 
 
@@ -934,10 +934,11 @@ export function top_right_menu(that,etextTitle,backUrl,etextres)
       </div>
 
       if(proxied) {
+         const dot = '.'
          login = <Tooltip id="hoverLogin" open={that.state.collapse.hoverLogin === undefined?false:that.state.collapse.hoverLogin} 
                      placement="center" 
                      onOpen={(e)=>toggleHoverLogin(true,e)} onClose={(e)=>toggleHoverLogin(false,e)} 
-                     title={<span style={{ whiteSpace:"normal" }} onMouseEnter={(e)=>toggleHoverLogin(true, e)} onMouseLeave={(e)=>toggleHoverLogin(false,e)}><Trans i18nKey="topbar.proxied" components={{ tag: <a /> }} /></span>}  >{login}</Tooltip>
+                     title={<span style={{ whiteSpace:"normal" }} onMouseEnter={(e)=>toggleHoverLogin(true, e)} onMouseLeave={(e)=>toggleHoverLogin(false,e)}><Trans i18nKey="topbar.proxied" values={{library: "library"+dot+"bdrc"+dot+"io"}} components={{ tag: <a /> }} /></span>}  >{login}</Tooltip>
       }
 
       let khmerLinks 

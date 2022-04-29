@@ -7,8 +7,8 @@ import {shortUri} from '../components/App';
 
 const onKhmerUrl = (
       window.location.host.startsWith("khmer-manuscripts")
-   || window.location.host.startsWith("library-dev")
-   || window.location.host.startsWith("localhost")
+   //|| window.location.host.startsWith("library-dev")
+   //|| window.location.host.startsWith("localhost")
 )
 
 require('formdata-polyfill')
