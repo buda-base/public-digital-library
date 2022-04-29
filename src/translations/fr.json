@@ -99,11 +99,12 @@
       "bookmarks": "Bookmarks",
       "results": "Search results for",
       "instances": "versions of",
-      "proxied":"This is a proxied version provided by your institution's library subscription; login is disabled. If you are part of a subscribing institution, you can download PDFs of texts in the subscribed collections. If you have an account and wish to use it, please go to <tag href='https://library.bdrc.io' target='_blank'>https://library.bdrc.io<\/tag>",
+      "proxied":"This is a proxied version provided by your institution's library subscription; login is disabled. If you are part of a subscribing institution, you can download PDFs of texts in the subscribed collections. If you have an account and wish to use it, please go to <tag href='https://{{library}}' target='_blank'>https://{{library}}<\/tag>",
       "resources":"resources",
       "guided":"Guided search",
       "browse":"browse",
-      "home":"home"      
+      "home":"home",
+      "collections":"Browse collections subscribed to by your institution"
    },
    "Lsidebar": {
       "sortBy": {
@@ -608,7 +609,9 @@
       "pdferror2":"Server error",
       "range":"range",
       "full":"Full",
-      "ok":"ok"
+      "ok":"ok",
+      "firstP": "First page",
+      "lastP": "Last page"
    },
    "mirador": {
       "return": "return to BUDA",
