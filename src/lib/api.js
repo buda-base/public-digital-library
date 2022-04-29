@@ -866,7 +866,9 @@ export default class API {
             let url = config.ldspdi.endpoints[config.ldspdi.index]+"/lib" ;
             let simple = !["Work","Person","Place","Instance"].includes(dtyp)              
             
+            // case of proxied site
             let subscrip = key == "tmp:subscriptions" && styp == "Product"
+            if(subscrip) url = "https://ldspdi.bdrc.io"
             
             let param = {
                "R_RES":key,
