@@ -3790,6 +3790,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                let msg = 
                   '{"@id":"'+prettId+'"'
                   +',"skos:prefLabel":'+JSON.stringify(allProps.filter(p => p.type === skos+"prefLabel").map(p => ({"@value":p.value,"@language":p["xml:lang"]})))
+                  +',"skos:altLabel":'+JSON.stringify(allProps.filter(p => p.type === skos+"altLabel").map(p => ({"@value":p.value,"@language":p["xml:lang"]})))
                   +',"tmp:keyword":{"@value":"'+lucenequerytokeyword(this.props.keyword)+'","@language":"'+this.props.language+'"}'
                   +',"tmp:propid":"'+this.props.propid+'"'
                   +(otherData?',"tmp:otherData":'+JSON.stringify(otherData):'')
