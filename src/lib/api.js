@@ -862,33 +862,44 @@ export default class API {
 
       async _getAssocResultsData(key: string,styp:string,dtyp:string): Promise<{} | null> {
          try {
-              let config = store.getState().data.config
-              let url = config.ldspdi.endpoints[config.ldspdi.index]+"/lib" ;
-              let simple = !["Work","Person","Place","Instance"].includes(dtyp)              
-              let param = {
-                 "R_RES":key,
-                  ...(
-                     config.khmerServer && styp === "Product" && dtyp === "Work"
-                     ?{"searchType":"worksInCollection","R_RES":"bdr:PR1KDPP00"}
-                     :{"searchType":"associated"+
-                        (!simple
-                           ? dtyp
-                           : (styp=="Product" && dtyp=="Scan"
-                              ? "IInstance"
-                              // TODO: case of subscriptions list when proxied (key == tmp:subscriptions / styp == Product)
-                              : "SimpleType"
-                           )
-                        )+"s"} 
-                  ),
-                  ...(simple?{R_TYPE:(["Product"].includes(dtyp)?"bdo:Collection":"bdo:"+dtyp)}:{}),
-                  "L_NAME":"","LG_NAME":"", "I_LIM":"" }
-               console.log("param:",param, key, styp, dtyp)
-              let data = this.getQueryResults(url, key, param,"GET");
-              // let data = this.getSearchContents(url, key);
+            let config = store.getState().data.config
+            let url = config.ldspdi.endpoints[config.ldspdi.index]+"/lib" ;
+            let simple = !["Work","Person","Place","Instance"].includes(dtyp)              
+            
+            let subscrip = key == "tmp:subscriptions" && styp == "Product"
+            
+            let param = {
+               "R_RES":key,
+               ...(
+                  config.khmerServer && styp === "Product" && dtyp === "Work"
+                  ?{"searchType":"worksInCollection","R_RES":"bdr:PR1KDPP00"}
+                  : subscrip
+                     ? {"searchType":"subscribedCollectionsGraph"}
+                     : {"searchType": "associated"+
+                           (!simple
+                              ? dtyp
+                              : (styp=="Product" && dtyp=="Scan"
+                                 ? "IInstance"
+                                 : "SimpleType"
+                              )
+                           )+"s"
+                        } 
+               ),
+               ...(simple?{R_TYPE:(["Product"].includes(dtyp)?"bdo:Collection":"bdo:"+dtyp)}:{}),
+               "L_NAME":"","LG_NAME":"", "I_LIM":"" }
+         
+            if(subscrip) { 
+               delete param["R_RES"]
+               delete param["R_TYPE"] 
+            }
 
-              return data ;
+            console.log("param:",param, key, styp, dtyp)
+            let data = this.getQueryResults(url, key, param,"GET");
+            // let data = this.getSearchContents(url, key);
+
+            return data ;
          } catch(e) {
-              throw e;
+            throw e;
          }
      }
 
