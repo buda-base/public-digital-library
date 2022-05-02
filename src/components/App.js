@@ -3778,10 +3778,16 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             if(this.props.simple) {
                let otherData =  {} ;
                if(T === "Person") {
+                  //console.log("allP:",allProps)
                   otherData = allProps.filter(e => [bdo+"personEvent"].includes(e.type)).map(e => this.props.assoRes[e.value]).reduce( (acc,e) =>{
                      let t = e.filter(f => f.type === rdf+"type")
-                     if(t.length) return { ...acc, [shortUri(t[0].value, true)]:e.filter(e => [bdo+"onYear", bdo+"notBefore", bdo+"notAfter", bdo+"eventWhere"].includes(e.type))
-                        .reduce( (subacc,p)=>( {...subacc, [shortUri(p.type, true)]: shortUri(p.value, true) }),{}) }
+                     let k = shortUri(t[0].value, true)
+                     //console.log("t,k",t,k)
+                     if(t.length) return { ...acc, 
+                        [k]:[ ...acc[k]?acc[k]:[],
+                           e.filter(e => [bdo+"onYear", bdo+"notBefore", bdo+"notAfter", bdo+"eventWhere"].includes(e.type))
+                            .reduce( (subacc,p)=>( {...subacc, [shortUri(p.type, true)]: shortUri(p.value, true) }),{}) 
+                        ] }
                      else return acc
                   },{}) 
                }

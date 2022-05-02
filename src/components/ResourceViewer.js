@@ -8677,8 +8677,12 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                            [bdo+"onYear", bdo+"notBefore", bdo+"notAfter", bdo+"eventWhere"].map(e => {
                               if(!data) data = {}
                               if(elem[e] && elem[e].length) data[shortUri(e,true)] = shortUri(elem[e][0].value)
+                              //console.log("data?",JSON.stringify(data))
                            })
-                           if(data) otherData[prop] = data
+                           if(data) { 
+                              if(!otherData[prop]) otherData[prop] = []
+                              otherData[prop].push(data)
+                           }
                         }
                      }
                   }
@@ -8716,7 +8720,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          } else {
             // DONE: automatically select when close popup
          
-            if(this.props.simple && !this.props.onlyView && !this.state.onlyView) { 
+            if(this.props.simple /*&& !this.props.onlyView*/ && !this.state.onlyView) { 
                
                window.addEventListener("message",(mesg) => {
                   console.log("MSG:",mesg)
