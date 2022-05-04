@@ -2693,6 +2693,8 @@ class ResourceViewer extends Component<Props,State>
 
          //loggergen.log("uriformat",prop,elem.value,elem,dic,withProp,show)
          
+         if(elem?.value?.startsWith("bdr:")) elem.value = elem.value.replace(/^bdr:/,bdr)
+
          if(!elem.value.match(/^http:\/\/purl\.bdrc\.io/) /* && !hasExtPref */ && ((!dic || !dic[elem.value]) && !prop.match(/[/#]sameAs/))) {
             let link = elem.value
 
