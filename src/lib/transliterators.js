@@ -38,7 +38,7 @@ export const transliterators = {
    "bo-x-ewts":{ "bo": (val) => jsEWTS.fromWylie(val) },
    "dz": { "bo-x-ewts": (val) => jsEWTS.toWylie(val) },
    "dz-x-ewts": { "bo": (val) => jsEWTS.fromWylie(val) },
-   "sa-x-ewts": { "bo": (val) => jsEWTS.toWylie(val) },
+   "sa-x-ewts": { "bo": (val) => jsEWTS.fromWylie(val) },
    
    "sa-deva":{ "sa-x-iast": (val) => Sanscript.t(val,"devanagari","iast") },
    "sa-x-iast":{ "sa-deva": (val) => Sanscript.t(val.toLowerCase(),"iast","devanagari") },
@@ -269,6 +269,7 @@ export function getMainLabel(data,extpreset)
    }
    // no need, data should not have entities
    // val = htmlEntitiesDecode(val) 
+
    return {"value": val, "lang": bestlt}
 }
 
