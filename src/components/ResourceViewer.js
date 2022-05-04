@@ -3952,9 +3952,9 @@ class ResourceViewer extends Component<Props,State>
                {
                   keys.push(tmp+"noteFinal")
                   keys = _.orderBy(keys,function(elem) {
-                     const rank = { [bdo+"noteText"]:3, [bdo+"contentLocationStatement"]:2, [bdo+"noteSource"]:1 }
+                     const rank = { [bdo+"noteText"]:4, [bdo+"contentLocationStatement"]:3, [bdo+"contentLocation"]:2, [bdo+"noteSource"]:1 }
                      if(rank[elem]) return rank[elem]
-                     else return 4 ;
+                     else return 5 ;
                   })
 
                   noteVol = true
@@ -3983,17 +3983,25 @@ class ResourceViewer extends Component<Props,State>
 
                   if(f === tmp+"noteFinal")
                   {
-                     //loggergen.log("noteData",noteData)
-                     if(noteData[bdo+"noteText"])
+
+                     let workuri, loca
+                     if(noteData[bdo+"noteSource"] && noteData[bdo+"contentLocationStatement"])
                      {
-                        let workuri ;
-                        if(noteData[bdo+"noteSource"])
+                        loca = [" @ ", noteData[bdo+"contentLocationStatement"].value ]
+                     }
+                     if(noteData[bdo+"contentLocation"])
+                     {
+                        if(loca) loca.push(<br/>)
+                        else loca = [" @ "]
+                        loca.push(this.getWorkLocation([ noteData[bdo+"contentLocation"] ]))
+                     }
+                     
+
+                     //loggergen.log("noteData",noteData)
+                     if(noteData[bdo+"noteText"]) // case when source and text
+                     {
+                        if(noteData[bdo+"noteSource"]) 
                         {
-                           let loca ;
-                           if(noteData[bdo+"contentLocationStatement"])
-                           {
-                              loca = [" @ ",noteData[bdo+"contentLocationStatement"].value]
-                           }
                            workuri = <div><Tag style={{fontSize:"14px"}}>(from {this.uriformat(bdo+"noteSource",noteData[bdo+"noteSource"])}{loca})</Tag></div>
                         }
 
@@ -4028,15 +4036,9 @@ class ResourceViewer extends Component<Props,State>
                            </div>
                         )
                      }
-                     else if(noteData[bdo+"noteSource"])
+                     else if(noteData[bdo+"noteSource"]) // case when only source, no text
                      {
-                        let loca
-                        if(noteData[bdo+"contentLocationStatement"])
-                        {
-                           loca = [" @ ",noteData[bdo+"contentLocationStatement"].value]
-                        }
-                        let workuri = <div><Tag style={{fontSize:"14px"}}>({I18n.t("misc.from")} {this.uriformat(bdo+"noteSource",noteData[bdo+"noteSource"])}{loca})</Tag></div>
-
+                        workuri = <div><Tag style={{fontSize:"14px"}}>({I18n.t("misc.from")} {this.uriformat(bdo+"noteSource",noteData[bdo+"noteSource"])}{loca})</Tag></div>
 
                         let sav = [
                            <Tag  className="first type">{I18n.t("punc.num",{num:nbN++}) /*this.proplink(bdo+"noteSource","Note")*/}</Tag>,
@@ -4106,8 +4108,9 @@ class ResourceViewer extends Component<Props,State>
                      {
                         //loggergen.log("v",v,f,subProp);
 
-                        if(f == bdo+"contentLocationStatement" || f == bdo+"noteSource" || f == bdo+"noteText") {
+                        if(f == bdo+"contentLocation" || f == bdo+"contentLocationStatement" || f == bdo+"noteSource" || f == bdo+"noteText") {
                            noteData[f] = v
+                           console.log("nD:",f,v,noteData)
                         }
                         else if(f.match(/([Ll]ineage)/) && elem[f][0] && elem[f][0].value && this.props.resources && this.props.resources[this.props.IRI] && this.props.resources[this.props.IRI][elem[f][0].value])
                         {
@@ -4220,7 +4223,7 @@ class ResourceViewer extends Component<Props,State>
                         }
                      }
                   }
-                  if(!noVal && !f.match(/[/]note[^F]/) && f !== bdo+"contentLocationStatement") {
+                  if(!noVal && !f.match(/[/]note[^F]/) && f !== bdo+"contentLocationStatement" && f !== bdo+"contentLocation") {
                      //loggergen.log("push?sub+",subsub)
                      group.push(<div className={div+"sub "+(hasBnode?"full":"")}>{subsub}</div>)
                   }
@@ -4231,7 +4234,7 @@ class ResourceViewer extends Component<Props,State>
                         sub.push(subsub) //<div className="sub">{subsub}</div>)
                      }
 
-                     if(f == bdo+"contentLocationStatement" || f == bdo+"noteSource" || f == bdo+"noteText") {
+                     if(f == bdo+"contentLocation" || f == bdo+"contentLocationStatement" || f == bdo+"noteSource" || f == bdo+"noteText") {
                         // wait noteFinal
                         /*
                         if(f == bdo+"noteText") {

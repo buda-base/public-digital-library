@@ -3516,7 +3516,7 @@ html[lang="en"] .resource .data > [data-prop="bdo:creator"] h4[data-prop="bdo:ro
 .resource .data > [data-prop="bdo:note"] > div {  width:calc(100% - 190px); display:inline-block; }
 
 .resource .data > [data-prop="bdo:note"]  .sub { display:inline-block; line-height:22px; width:calc(100% - 10px); padding-right:20px;}
-.resource .data > [data-prop="bdo:note"]  .sub > h4 + div:not(.subsub) { display:inline; /*letter-spacing:0.25px;*/color:#777;font-size:13px; }
+.resource .data > [data-prop="bdo:note"]  .sub > h4 + div:not(.subsub) { display:inline-block; /*letter-spacing:0.25px;*/color:#777;font-size:13px; }
 .resource .data > [data-prop="bdo:note"]  .sub > h4 + div + .subsub h4 { font-size:14px; /*letter-spacing:0.5px;*/}
 .resource .data > [data-prop="bdo:note"]  .sub > h4.first { font-size:13px; padding-right:5px;}
 .resource .data > [data-prop="bdo:note"]  .sub > h4 + div.subsub,
@@ -3525,7 +3525,7 @@ html[lang="en"] .resource .data > [data-prop="bdo:creator"] h4[data-prop="bdo:ro
 .resource .data > [data-prop="bdo:note"]  .sub:not(:last-child) { margin-bottom:25px; }
 .resource .data > [data-prop="bdo:note"] .expand { top:-10px; display:inline-block; margin-left:0; line-height:15px;} 
 .resource .data > [data-prop="bdo:note"] .expand .toggle-expand { margin-top:-2px;  } 
-.resource .data > [data-prop="bdo:note"]  .sub  h4 { display:inline; }
+.resource .data > [data-prop="bdo:note"]  .sub h4 { display:inline; }
 
 .resource .data .sub.hoy { flex-wrap: nowrap;  }
 /* .resource .data .sub .subsub:last-child { margin-bottom:6px; } */
