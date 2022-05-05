@@ -5,6 +5,8 @@ import qs from 'query-string'
 import history from '../history';
 import {shortUri} from '../components/App';
 
+const urlParams = qs.parse(history.location.search)
+
 const onKhmerUrl = (
       window.location.host.startsWith("khmer-manuscripts")
    //|| window.location.host.startsWith("library-dev")
@@ -155,6 +157,9 @@ export default class API {
          }
 
          //console.log("access:",{id_token,access_token,isAuth:isAuthenticated(),url,minSize,acc,cookie,xhrArgs,head});
+
+         // force refresh if ?v=... in url
+         if(urlParams.v) url += (url.includes("?")?"&":"?")+"v="+urlParams.v
 
          let response = await this._fetch( url, { method:"GET",headers:new Headers(head), ...xhrArgs } )
 
@@ -689,6 +694,9 @@ export default class API {
 
       // let body = Object.keys(param).map( (k) => k+"="+param[k] ).join('&') +"&L_NAME="+key
       //searchType=Res_withFacet&"+param+"L_NAME=\""+key+"\"",
+
+      // force refresh if ?v=... in url
+      if(urlParams.v) param["v"] = urlParams.v
 
       var formData = new FormData();
       for (var k in param) {
