@@ -17,7 +17,7 @@
       "auth0-js": "^9.6.1",
       "citation-js": "^0.5.1",
       "downloadjs": "^1.4.7",
-      "edtf": "^4.1.0",
+      "edtf": "https://github.com/buda-base/edtf.js",
       "formdata-polyfill": "^3.0.11",
       "google-maps": "^3.3.0",
       "google-maps-react": "^2.0.0",

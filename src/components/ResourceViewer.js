@@ -102,7 +102,8 @@ import HTMLparse from 'html-react-parser';
 
 import logdown from 'logdown'
 
-import edtf, { parse } from "edtf/dist/../index.js" // finally got it to work!!  
+//import edtf, { parse } from "edtf/dist/../index.js" // finally got it to work!! not in prod...
+import edtf, { parse } from "edtf" // see https://github.com/inukshuk/edtf.js/issues/36#issuecomment-1073778277
 
 // error when using after build: "Uncaught ReferenceError: s is not defined"
 // => fixed by upgrading react-scripts
