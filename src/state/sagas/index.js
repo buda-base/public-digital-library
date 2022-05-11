@@ -507,11 +507,16 @@ function extractAssoRes(iri,res) {
    for(let k of Object.keys(res)) {                  
       _res[k] = { ...res[k], ..._res[k] }
       if(_res[k][bdo+"instanceEvent"]) {
-         _res[k][bdo+"instanceEvent"] = _res[k][bdo+"instanceEvent"].reduce( (acc,e) => { 
-            if(res[e.value] && res[e.value][bdo+"eventWho"]) {
-               return ([...acc,...res[e.value][bdo+"eventWho"].map(f => ({fromEvent:e.value,type:'uri',value:f.value}) ) ])
+         _res[k][bdo+"instanceEvent"] = _res[k][bdo+"instanceEvent"].reduce( (acc,e) => {             
+            if(res[e.value] && res[e.value][bdo+"eventWho"]?.length) {
+               // DONE: must also check what's in eventWho (ok for bdr:MW23703_4150 but not bdr:MW3KG19)
+               let who = res[res[e.value][bdo+"eventWho"][0].value]
+               //console.log("who:",who)
+               if(who[rdf+"type"]?.some(t => t.value === bdo+"AgentAsCreator")) {
+                  return ([...acc,...res[e.value][bdo+"eventWho"].map(f => ({fromEvent:e.value,type:'uri',value:f.value}) ) ])
+               }
             }
-            else return ([...acc, e])
+            return ([...acc, e])
          },[])
          /*
          _res[k][bdo+"instanceEvent"] = _res[k][bdo+"instanceEvent"].map(e => {

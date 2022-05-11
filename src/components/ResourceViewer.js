@@ -2028,6 +2028,9 @@ class ResourceViewer extends Component<Props,State>
                      let k = ''
                      let d
                      if(assoR[w.value]) {
+
+                        //console.log("sBeD:",w,assoR[w.value])
+
                         if(assoR[w.value][rdf+"type"]) {
                            for(let t of assoR[w.value][rdf+"type"]) { 
                               let p = this.props.dictionary[t.value]
@@ -2058,7 +2061,7 @@ class ResourceViewer extends Component<Props,State>
 
                               assoR[w.value][bdo+"eventWhen"][0].parsed = true
                               
-                              console.log("eW:",JSON.stringify(assoR[w.value][bdo+"eventWhen"][0], null,3))
+                              //console.log("eW:",JSON.stringify(assoR[w.value][bdo+"eventWhen"][0], null,3))
                               
                               let value = assoR[w.value][bdo+"eventWhen"][0].value, obj, edtfObj, readable = value
                               try {
@@ -2128,7 +2131,7 @@ class ResourceViewer extends Component<Props,State>
                         } 
                         */
                         
-                     }  
+                     } 
                      if(!d) d = 100000
                      if(w.type!=='bnode'||!assoR[w.value]) return w
                      else return { ...w, d, n, k, bnode:w.value }
@@ -3837,7 +3840,7 @@ class ResourceViewer extends Component<Props,State>
                }
             }
 
-            //loggergen.log("bnode",prop,e.value,elem)
+            //loggergen.log("bnode:",e,prop,e.value,elem)
 
             if(!elem) continue ;
 
@@ -3848,7 +3851,7 @@ class ResourceViewer extends Component<Props,State>
 
             if(prop === bdo+"instanceEvent")  {
                let from = e.fromEvent
-               loggergen.log("from",from,this.getResourceBNode(from)        )
+               //loggergen.log("fromE:",from,this.getResourceBNode(from)        )
                if(from) from = this.getResourceBNode(from)        
                if(from && from[rdf+"type"]) val = from[rdf+"type"]
             }
