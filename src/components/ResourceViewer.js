@@ -3584,6 +3584,8 @@ class ResourceViewer extends Component<Props,State>
 
          if(prop === bdo+"workHasInstance" && e.value && e.value.match(new RegExp(bdr+"W"))) continue ;
 
+
+
          //loggergen.log("iK",iKeep,e,elem,elem.length)
 
          // #562 skip circular property value
@@ -3606,6 +3608,9 @@ class ResourceViewer extends Component<Props,State>
             e.type = "bnode" 
 
             //loggergen.log("aRes",this.props.assocResources[value])
+         } else {
+            // case of note with no content
+            if(prop === bdo+"note") continue
          }
 
 
@@ -4116,7 +4121,7 @@ class ResourceViewer extends Component<Props,State>
 
                         if(f == bdo+"contentLocation" || f == bdo+"contentLocationStatement" || f == bdo+"noteSource" || f == bdo+"noteText") {
                            noteData[f] = v
-                           console.log("nD:",f,v,noteData)
+                           //console.log("nD:",f,v,noteData)
                         }
                         else if(f.match(/([Ll]ineage)/) && elem[f][0] && elem[f][0].value && this.props.resources && this.props.resources[this.props.IRI] && this.props.resources[this.props.IRI][elem[f][0].value])
                         {
@@ -5110,6 +5115,9 @@ class ResourceViewer extends Component<Props,State>
          ret = this.subProps(k)
       }
       if(!ret || ret.length === 0) ret = tags.reduce((acc,e)=> [...acc, e /*," "*/], [] )
+
+      // case when every note has empty content
+      if(tags.length === 0 && k == bdo+"note") return
 
       let expand
       let maxDisplay = 9
