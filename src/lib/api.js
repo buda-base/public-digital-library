@@ -849,7 +849,8 @@ export default class API {
                 }
                 else searchType = "etextContentFacet" //chunksFacet"
              }
-             else if(["Work","Person","Place","Instance"].includes(typ[0]))  searchType = typ[0].toLowerCase()+(["Work","Instance"].includes(typ[0])?"Facet":"")              
+             else if(["SerialWork","Work","Person","Place","Instance"].includes(typ[0]))  searchType = typ[0].toLowerCase().replace(/serialwork/,"serialWork")
+               +(["SerialWork","Work","Instance"].includes(typ[0])?"Facet":"")              
              else if(["Product"].includes(typ[0])) R_TYPE = "bdo:Collection"
              else R_TYPE = "bdo:"+typ[0]
              if(!inEtext) searchType+="Graph"

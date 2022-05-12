@@ -376,7 +376,7 @@ else if(params && params.q) {
 
    let dontGetDT = false
    let pt = params.t
-   if(pt && !pt.match(/,/) && ["Place", "Person","Work","Etext", "Topic","Role","Corporation","Lineage","Instance","Product", "Scan"].indexOf(pt) !== -1)  {
+   if(pt && !pt.match(/,/) && ["Place", "Person","SerialWork","Work","Etext", "Topic","Role","Corporation","Lineage","Instance","Product", "Scan"].indexOf(pt) !== -1)  {
 
       let inEtext
       if(params.r && pt === "Etext") inEtext = params.r

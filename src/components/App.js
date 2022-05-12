@@ -3771,6 +3771,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             // DONE: check compliance with BLMP
             if(t === "Images") return "bdo:ImageInstance"
             else if(t === "Etext") return "bdo:EtextInstance"
+            else if(t === "Work" && isSerial) return "bdo:SerialWork"            
             return "bdo:"+t
          }
 
