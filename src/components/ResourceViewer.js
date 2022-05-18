@@ -5063,7 +5063,7 @@ class ResourceViewer extends Component<Props,State>
 
       const coords = this.getResourceElem(tmp+"GISCoordinates") 
       let accu = this.getResourceElem(bdo+"placeAccuracy") 
-      if(accu.length) accu = accu[0].value
+      if(accu?.length) accu = accu[0].value
       else accu = false
       
 
