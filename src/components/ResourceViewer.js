@@ -379,6 +379,8 @@ let propOrder = {
       "bdo:placeEvent",
       "bdo:placeLat",
       "bdo:placeLong",
+      "tmp:GISCoordinates",
+      "bdo:placeAccuracy",
       "bdo:placeRegionPoly",
       "bdo:placeType",
       "bdo:placeLocatedIn",
@@ -470,7 +472,6 @@ propOrder["Etext"] = propOrder["Work"]
 propOrder["Volume"] = propOrder["Work"]
 propOrder["Instance"] = propOrder["Work"]
 propOrder["Images"] = propOrder["Work"]
-
 
 const topProperties = {
    "Person": [ 
@@ -1697,6 +1698,13 @@ class ResourceViewer extends Component<Props,State>
       }
       else if(h && h[0] && !h[0].value.match(/cm/)) {
          prop[bdo+"dimHeight"] = [ { ...h[0], value:h[0].value+"cm" } ]
+      }
+
+
+      let lon = prop[bdo+"placeLat"]
+      let lat = prop[bdo+"placeLong"]
+      if(lon?.length && lat?.length) {
+         prop[tmp+"GISCoordinates"] = [ { type:"literal", value:lat[0].value+","+lon[0].value } ]
       }
 
       //loggergen.log("w h",w,h,prop)
@@ -3756,7 +3764,11 @@ class ResourceViewer extends Component<Props,State>
 
             if([bdo+"placeLat", bdo+"placeLong"].includes(prop)) { 
                tmp = <span>{Decimal2DMS(value, prop == bdo+"placeLong" ? "longitude" : "latitude")}</span>
+            } else if(_tmp+"GISCoordinates" === prop) { 
+               const coords = value.split(/ *, */)
+               tmp = <span>{ Decimal2DMS(coords[0], "latitude") }, { Decimal2DMS(coords[1], "longitude") }</span>
             }
+
 
             // else  return ( <Link to={"/resource?IRI="+pretty}>{pretty}</Link> ) ;
 
@@ -6246,7 +6258,8 @@ perma_menu(pdfLink,monoVol,fairUse,other)
             //for(let e of elem) loggergen.log(e.value,e.label1);
 
             //if(!k.match(new RegExp("Revision|Entry|prefLabel|"+rdf+"|toberemoved"))) {
-            if(elem && 
+               if(elem && 
+               (![bdo+"placeLong",bdo+"placeLat"].includes(k) || !kZprop.includes(tmp+"GISCoordinates")) &&
                (!k.match(new RegExp(adm+"|adm:|isRoot$|SourcePath|"+rdf+"|toberemoved|entityScore|associatedCentury|lastSync|dateCreated|qualityGrade|digitalLendingPossible|inRootInstance|workPagination|partIndex|partTreeIndex|legacyOutlineNodeRID|sameAs|thumbnailIIIFSe|instanceOf|instanceReproductionOf|instanceHasReproduction|seeOther|(Has|ction)Member$|serialHasInstance|withSameAs|hasNonVolumeParts|hasPartB|first(Text|Vol)N?"+(this._dontMatchProp?"|"+this._dontMatchProp:"")))
                ||k.match(/(metadataLegal|contentProvider|replaceWith)$/)
                //||k.match(/([/]see|[/]sameAs)[^/]*$/) // quickfix [TODO] test property ancestors
