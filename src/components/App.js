@@ -2094,6 +2094,70 @@ class App extends Component<Props,State> {
             }
             if(time && s.results[s.id].results) s.results[s.id].results.time = time    
 
+
+
+            const t = s.filters.datatype[0].toLowerCase()
+            if(t === "place") {
+               const markers = [], latLongs = []
+               const sublist = s.results[s.id]?.results?.results?.bindings[t+"s"];
+               const keys = Object.keys(sublist?sublist:{})
+               //console.log("keys:",keys,s.results[s.id])
+               for(let n in keys) {
+                  let o = keys[n]
+                  let lat = sublist[o].filter(k => k.type === bdo+"placeLat"),
+                    long = sublist[o].filter(k => k.type === bdo+"placeLong")
+                  if(lat.length && long.length) { 
+                     lat = lat[0].value;
+                     long = long[0].value                           
+                     const latLong = [lat,long].map(n => {
+                        if(n.match(/ [WS]$/)) n = "-" + n
+                        return n.replace(/ [EWSN]$/,"")
+                     })
+                     latLongs.push(latLong)
+                     
+                     var redIcon = new L.Icon({
+                        iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
+                        shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+                        iconSize: [25, 41],
+                        iconAnchor: [12, 41],
+                        popupAnchor: [1, -34],
+                        shadowSize: [41, 41]
+                     });
+
+                     let sUri = shortUri(o), url = "/show/"+sUri+"?s="+ encodeURIComponent(window.location.href.replace(/^https?:[/][/][^?]+[?]?/gi,"").replace(/(&n=[^&]*)/g,"")+"&n="+(1+n))
+                     
+                     const sendMsgMap = (ev) => {
+                        if(this.props.simple) {
+                           let otherData =  {}, allProps = sublist[o] ;                              
+                           otherData["tmp:type"] = "bdo:Place"
+                           //if(!prettId.startsWith("bdr:")) otherData["tmp:externalUrl"] = resUrl
+                           let msg = 
+                              '{"@id":"'+sUri+'"'
+                              +',"skos:prefLabel":'+JSON.stringify(allProps.filter(p => p.type === skos+"prefLabel").map(p => ({"@value":p.value,"@language":p["xml:lang"]})))
+                              +',"tmp:keyword":{"@value":"'+lucenequerytokeyword(this.props.keyword)+'","@language":"'+this.props.language+'"}'
+                              +',"tmp:propid":"'+this.props.propid+'"'
+                              +(otherData?',"tmp:otherData":'+JSON.stringify(otherData):'')
+                              +'}'
+                           console.log("(MSG)",this.props.propid,JSON.stringify(otherData,null,3),msg)
+                           window.top.postMessage(msg, "*") // TODO set target url for message
+                           ev.preventDefault()
+                           ev.stopPropagation()
+                           return false
+                        }
+                     }
+
+                     let lit = getLangLabel({props,state:s},"",sublist[o].filter(p => [skos+"prefLabel"].includes(p.type)))
+                     markers.push(<Marker position={latLong} permanent icon={redIcon}> 
+                           <MapPopup direction="top"><Link onClick={(ev) => sendMsgMap(ev)} to={url}>{ lit.value }<br/><span className="RID">{sUri}</span></Link></MapPopup>
+                     </Marker>)
+
+                     s.markers = markers
+                     s.latLongs = latLongs
+                  }
+               }
+            }
+
+            
             if(needRefresh && results.results && results.results.bindings && Object.keys(results.results.bindings).length) { 
                s.repage = true
                
@@ -4509,7 +4573,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
 
 
-   handleResults(types,counts,message,results,paginate,bookmarks,resLength) 
+   handleResults(types,counts,message,results,paginate,bookmarks,resLength, markers = [], latLongs = []) 
    {
       this._menus = {}
 
@@ -4582,8 +4646,6 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          
          let h5
 
-         const markers = [], latLongs = []
-
          let hasUnreleased = false
 
          if(sublist) { for(let o of Object.keys(sublist))
@@ -4623,9 +4685,9 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   const { BaseLayer} = LayersControl;
                   
                   this._refs["map"] = React.createRef()
-                  this._refs["markers"] = latLongs                                    
+                  this._refs["markers"] = latLongs     
 
-                  console.log("latlongs:",latLongs)
+                  console.log("latlongs:",latLongs, markers)
                   
                   // latLongs.length && 
                   const map =  (this.props.config && <> 
@@ -4693,6 +4755,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             absi ++ ;
 
             //loggergen.log("cpt",absi,cpt,n,begin,findFirst,findNext,o) //,sublist[o])
+
 
             if(absi < begin && findFirst) { cpt++ ; m++ ;  continue; }
             else if(cpt == begin && !findNext && findFirst) {
@@ -5069,55 +5132,6 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      nMax = n
                      //loggergen.log("lastN",lastN)
                      message.push(this.makeResult(id,n,t,lit,lang,tip,Tag,null,r.match,k,sublist[o],r.lit.value))
-
-                     if(t === "Place") {
-                        let lat = sublist[o].filter(k => k.type === bdo+"placeLat"),
-                            long = sublist[o].filter(k => k.type === bdo+"placeLong")
-                        if(lat.length && long.length) { 
-                           lat = lat[0].value;
-                           long = long[0].value                           
-                           const latLong = [lat,long].map(n => {
-                              if(n.match(/ [WS]$/)) n = "-" + n
-                              return n.replace(/ [EWSN]$/,"")
-                           })
-                           latLongs.push(latLong)
-
-                           var redIcon = new L.Icon({
-                              iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
-                              shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
-                              iconSize: [25, 41],
-                              iconAnchor: [12, 41],
-                              popupAnchor: [1, -34],
-                              shadowSize: [41, 41]
-                           });
-
-                           let sUri = shortUri(o), url = "/show/"+sUri+"?s="+ encodeURIComponent(window.location.href.replace(/^https?:[/][/][^?]+[?]?/gi,"").replace(/(&n=[^&]*)/g,"")+"&n="+n)
-
-                           const sendMsgMap = (ev) => {
-                              if(this.props.simple) {
-                                 let otherData =  {}, allProps = sublist[o] ;                              
-                                 otherData["tmp:type"] = "bdo:Place"
-                                 //if(!prettId.startsWith("bdr:")) otherData["tmp:externalUrl"] = resUrl
-                                 let msg = 
-                                    '{"@id":"'+sUri+'"'
-                                    +',"skos:prefLabel":'+JSON.stringify(allProps.filter(p => p.type === skos+"prefLabel").map(p => ({"@value":p.value,"@language":p["xml:lang"]})))
-                                    +',"tmp:keyword":{"@value":"'+lucenequerytokeyword(this.props.keyword)+'","@language":"'+this.props.language+'"}'
-                                    +',"tmp:propid":"'+this.props.propid+'"'
-                                    +(otherData?',"tmp:otherData":'+JSON.stringify(otherData):'')
-                                    +'}'
-                                 console.log("(MSG)",this.props.propid,JSON.stringify(otherData,null,3),msg)
-                                 window.top.postMessage(msg, "*") // TODO set target url for message
-                                 ev.preventDefault()
-                                 ev.stopPropagation()
-                                 return false
-                              }
-                           }
-
-                           markers.push(<Marker position={latLong} permanent icon={redIcon}> 
-                                 <MapPopup direction="top"><Link onClick={(ev) => sendMsgMap(ev)} to={url}>{lit}<br/><span className="RID">{sUri}</span></Link></MapPopup>
-                           </Marker>)
-                        }
-                     }
                   }
                   else {
                      if(unreleased) n --
@@ -5326,6 +5340,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          }
          */
 
+
+
          /*
          loggergen.log("sta?",sta.id !== id,sta.repage,"=repage",
             !sta.results,
@@ -5353,7 +5369,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             //loggergen.log("paginate?",JSON.stringify(paginate))
 
             if(!results) results = { results:{bindings:{}}}
-            this.handleResults(types,counts,message,results,paginate,bookmarks,resLength);
+            this.handleResults(types,counts,message,results,paginate,bookmarks,resLength, this.state.markers, this.state.latLongs);
             
             //loggergen.log("bookM:",results,JSON.stringify(paginate,null,3))
             
