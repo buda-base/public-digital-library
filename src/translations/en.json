@@ -251,7 +251,8 @@
       "tmp:complete":"Complete",
       "tmp:incomplete":"Incomplete",
       "tmp:scans":"scans",
-      "tmp:colophonMatch":"Colophon Match"
+      "tmp:colophonMatch":"Colophon Match",
+      "tmp:placeContainsDesc":"Located in (descendents)"
    },
    "result": {
       "open": "Open",
