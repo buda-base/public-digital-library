@@ -4845,6 +4845,11 @@ discontinuous-range@1.0.0:
   resolved "https://registry.yarnpkg.com/discontinuous-range/-/discontinuous-range-1.0.0.tgz#e38331f0844bba49b9a9cb71c771585aab1bc65a"
   integrity sha1-44Mx8IRLukm5qctxx3FYWqsbxlo=
 
+dms-to-decimal@^0.0.6:
+  version "0.0.6"
+  resolved "https://registry.yarnpkg.com/dms-to-decimal/-/dms-to-decimal-0.0.6.tgz#3b2515158640a4b9dbbc6c7d4bf364d45676b4bc"
+  integrity sha512-LLkYPdchqCMh2I55RWppvVckFtrqTbKZNqWd5U559MZ78iDaolhBuixthE7TNlOVgOO/UEluSXcygGK8CGaGew==
+
 dns-equal@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/dns-equal/-/dns-equal-1.0.0.tgz#b39e7f1da6eb0a75ba9c17324b34753c47e0654d"

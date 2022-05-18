@@ -89,7 +89,8 @@ import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import MenuItem from '@material-ui/core/MenuItem';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
-import L from 'leaflet';
+import L from 'leaflet';    
+import { Decimal2DMS } from 'dms-to-decimal';
 
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
@@ -3751,6 +3752,10 @@ class ResourceViewer extends Component<Props,State>
                && (nbT=this.props.assocResources[e.value].filter(f => f.type === _tmp+"nbTranslations")).length > 0)
             {
                tmp = [tmp,<span class="nbTrans">{I18n.t("resource.nbTrans",{count:Number(nbT[0].value)})}</span>]
+            }
+
+            if([bdo+"placeLat", bdo+"placeLong"].includes(prop)) { 
+               tmp = <span>{Decimal2DMS(value, prop == bdo+"placeLong" ? "longitude" : "latitude")}</span>
             }
 
             // else  return ( <Link to={"/resource?IRI="+pretty}>{pretty}</Link> ) ;
