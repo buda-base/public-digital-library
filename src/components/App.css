@@ -4410,8 +4410,7 @@ h2.on .lang, .propCollapseHeader .lang, .propCollapse .lang { position:absolute 
    display: inline-block;
    font-size:12px;
    text-align: center;
-   width:80%;
-   padding:3px;
+   padding:3px 10px;
 }
 
 .placeMap .gmnoprint { display:none;}
