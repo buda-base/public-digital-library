@@ -1704,7 +1704,8 @@ class ResourceViewer extends Component<Props,State>
       let lon = prop[bdo+"placeLat"]
       let lat = prop[bdo+"placeLong"]
       if(lon?.length && lat?.length) {
-         prop[tmp+"GISCoordinates"] = [ { type:"literal", value:lat[0].value+","+lon[0].value } ]
+         const val = Decimal2DMS(lat[0].value, "latitude")+", "+Decimal2DMS(lon[0].value, "longitude") 
+         prop[tmp+"GISCoordinates"] = [ { type:"literal", value: val } ]
       }
 
       //loggergen.log("w h",w,h,prop)
@@ -3764,11 +3765,7 @@ class ResourceViewer extends Component<Props,State>
 
             if([bdo+"placeLat", bdo+"placeLong"].includes(prop)) { 
                tmp = <span>{Decimal2DMS(value, prop == bdo+"placeLong" ? "longitude" : "latitude")}</span>
-            } else if(_tmp+"GISCoordinates" === prop) { 
-               const coords = value.split(/ *, */)
-               tmp = <span>{ Decimal2DMS(coords[0], "latitude") }, { Decimal2DMS(coords[1], "longitude") }</span>
-            }
-
+            } 
 
             // else  return ( <Link to={"/resource?IRI="+pretty}>{pretty}</Link> ) ;
 
@@ -5064,6 +5061,12 @@ class ResourceViewer extends Component<Props,State>
          shadowSize: [41, 41]
       });
 
+      const coords = this.getResourceElem(tmp+"GISCoordinates") 
+      let accu = this.getResourceElem(bdo+"placeAccuracy") 
+      if(accu.length) accu = accu[0].value
+      else accu = false
+      
+
       return ( 
          <div data-prop={shortUri(k)}>
             <h3><span>{this.proplink(k)}{I18n.t("punc.colon")}</span>&nbsp;</h3>
@@ -5108,6 +5111,10 @@ class ResourceViewer extends Component<Props,State>
                   </LayersControl>
                   <Marker position={doMap} icon={redIcon}>
                         {/* <ToolT direction="top">{title}</ToolT> */}
+
+                     { coords.length && <ToolT direction="bottom" /*offset={[0, 20]}*/ opacity={1} permanent className="GIS"> 
+                        { coords[0].value }
+                     </ToolT> }
                   </Marker>
                   {doRegion && <GeoJSON data={doRegion} style={ {color: '#006699', weight: 5, opacity: 0.65} }/>}
                   <Portal position="bottomleft">
@@ -5118,6 +5125,7 @@ class ResourceViewer extends Component<Props,State>
                      </div>
                   </Portal>
                </Map> }
+               <div class="accu"><span>{accu}</span></div>
             </div>
          </div> 
       )
