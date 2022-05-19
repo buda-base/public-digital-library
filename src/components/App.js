@@ -1368,33 +1368,23 @@ class App extends Component<Props,State> {
       if(this._refs.map && this._refs.map.current) {
          
          if(this._refs.markers) {
+            const currentMarkers = []
             const vals = Object.values(this.state.mapInfo)
             for(let v of vals) {
                if(this.hasAllFacets(v.data)) {
                   //console.log("on map:",v)
                   if(v.ref?.current?.leafletElement) v.ref.current.leafletElement.addTo(v.ref.current.leafletElement.options.leaflet.map) 
-                  /* // not needed because everything is in latLong by default
-                  const idx = this._refs.markers.findIndex(m => m && m[0] === v.latLong[0] && m[1] === v.latLong[1])
-                  if(idx === -1) { 
-                     console.log("should add",v.ref?.current?.leafletElement)
-                     this._refs.markers.push(v.latLong)
-                  }
-                  */
-               } else {
+                  currentMarkers.push(v.latLong)
+               } else {                  
                   //console.log("not on map:",v,v.ref?.current?.leafletElement)
-                  const idx = this._refs.markers.findIndex(m => m && m[0] === v.latLong[0] && m[1] === v.latLong[1])
-                  if(idx !== -1) { 
-                     if(v.ref?.current?.leafletElement) this._refs.map.current.leafletElement.removeLayer(v.ref.current.leafletElement)
-                     delete this._refs.markers[idx]
-                  }
+                  if(v.ref?.current?.leafletElement) this._refs.map.current.leafletElement.removeLayer(v.ref.current.leafletElement)
                }
             }
 
-
-            this._refs.markers = this._refs.markers.filter(m => m)
-            
-            $(".resultsMap").attr("data-nb-markers", this._refs["markers"].length)
-            if(this._refs["markers"].length) this._refs.map.current.leafletElement.fitBounds(this._refs["markers"], this._refs["markers"].length === 1 ? {maxZoom: 10}:{padding:[50,50]})
+            $(".resultsMap").attr("data-nb-markers", currentMarkers.length)
+            if(currentMarkers.length) { 
+               this._refs.map.current.leafletElement.fitBounds(currentMarkers, currentMarkers.length === 1 ? {maxZoom: 10}:{padding:[50,50]})
+            }
          }
       }
       
