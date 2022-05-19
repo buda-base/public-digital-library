@@ -1,11 +1,11 @@
 //@flow
 //import {Mirador, m3core} from 'mirador'
 //import diva from "diva.js" //v6.0, not working
-import Portal from 'react-leaflet-portal';
+//import Portal from 'react-leaflet-portal';
 import bbox from "@turf/bbox"
-import {Map,TileLayer,LayersControl,Marker,Popup,GeoJSON,Tooltip as ToolT} from 'react-leaflet' ;
+import {MapContainer as Map,TileLayer,LayersControl,Marker,Popup,GeoJSON,Tooltip as ToolT} from 'react-leaflet' ;
 import 'leaflet/dist/leaflet.css';
-import { GoogleLayer } from "react-leaflet-google" ;
+import { ReactLeafletGoogleLayer as GoogleLayer } from "react-leaflet-google-layer" ;
 //import { GoogleMutant, GoogleApiLoader } from 'react-leaflet-googlemutant';
 // import {GoogleLayer} from 'react-leaflet-google'
 // const { BaseLayer} = LayersControl;
@@ -968,7 +968,7 @@ class OutlineSearchBar extends Component<Props,State>
 class ResourceViewer extends Component<Props,State>
 {
    _annoPane = [] ;
-   _leafletMap = null ;
+   //_leafletMap = null ;
    _properties = {} ;
    _dontMatchProp = "" ;
    _mouseover = {}
@@ -5072,7 +5072,7 @@ class ResourceViewer extends Component<Props,State>
             <h3><span>{this.proplink(k)}{I18n.t("punc.colon")}</span>&nbsp;</h3>
             { k == bdo+"placeLong" && tags }
             <div class="map"> {/* style={ {width:"100%",marginTop:"10px"} }> */}
-               {  <Map ref={m => { this._leafletMap = m; }}
+               {  <Map //ref={m => { this._leafletMap = m; }}
                   className={"placeMap"} // + (this.state.largeMap?" large":"")}
                   // style={{boxShadow: "0 0 5px 0px rgba(0,0,0,0.5)"}}
                   center={doMap} zoom={5} bounds={doRegion?regBox:null}
@@ -5086,19 +5086,19 @@ class ResourceViewer extends Component<Props,State>
                      { this.props.config.googleAPIkey && [
                         <BaseLayer name='Satellite+Roadmap'>
 
-                           <GoogleLayer googlekey={this.props.config.googleAPIkey} maptype='HYBRID'
+                           <GoogleLayer apiKey={this.props.config.googleAPIkey} type='hybrid'
                                  //attribution="&amp;copy <a href=&quot;http://osm.org/copyright&quot;></a> contributors"
-                                 attribution="&amp;copy 2018 Google"
+                                 //attribution="&amp;copy 2018 Google"
                            />
                         </BaseLayer>,
                         <BaseLayer checked name='Terrain'>
-                           <GoogleLayer googlekey={this.props.config.googleAPIkey} maptype='TERRAIN'/>
+                           <GoogleLayer apiKey={this.props.config.googleAPIkey} type='terrain'/>
                         </BaseLayer>,
                         <BaseLayer name='Satellite'>
-                           <GoogleLayer googlekey={this.props.config.googleAPIkey} maptype='SATELLITE'/>
+                           <GoogleLayer apiKey={this.props.config.googleAPIkey} type='satellite'/>
                         </BaseLayer>,
                         <BaseLayer name='Roadmap'>
-                           <GoogleLayer googlekey={this.props.config.googleAPIkey} maptype='ROADMAP'/>
+                           <GoogleLayer apiKey={this.props.config.googleAPIkey} type='roadmap'/>
                         </BaseLayer>]
                      }
                      { !this.props.config.googleAPIkey && <BaseLayer checked name='OpenStreetMap'>
@@ -5117,13 +5117,13 @@ class ResourceViewer extends Component<Props,State>
                      </ToolT> }
                   </Marker>
                   {doRegion && <GeoJSON data={doRegion} style={ {color: '#006699', weight: 5, opacity: 0.65} }/>}
-                  <Portal position="bottomleft">
+                  {/* <Portal position="bottomleft">
                      <div class="leaflet-control-attribution leaflet-control" >
                         <a onClick={ e => { setTimeout(((map)=> () => {map.leafletElement.invalidateSize();})( this._leafletMap), 200); this.setState({...this.state,largeMap:!this.state.largeMap}); } }>
                            {!this.state.largeMap?"Enlarge":"Shrink"} Map
                         </a>
                      </div>
-                  </Portal>
+                  </Portal> */}
                </Map> }
                <div class="accu"><span>{accu}</span></div>
             </div>

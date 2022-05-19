@@ -67,10 +67,11 @@ import $ from 'jquery' ;
 import {CopyToClipboard} from 'react-copy-to-clipboard' ;
 import LazyLoad from 'react-lazyload';
 
-import {Map,TileLayer,LayersControl,Marker,Popup,GeoJSON,Popup as MapPopup} from 'react-leaflet' ;
-import { GoogleLayer } from "react-leaflet-google" ;
+import {MapContainer,TileLayer,LayersControl,Marker,Popup,GeoJSON,Popup as MapPopup} from 'react-leaflet' ;
+import { ReactLeafLetGoogleLayer as GoogleLayer } from "react-leaflet-google-layer" ;
 import L from 'leaflet';
 import { GestureHandling } from "leaflet-gesture-handling";
+import MarkerClusterGroup from 'react-leaflet-cluster';
 
 import 'leaflet/dist/leaflet.css';
 import "leaflet-gesture-handling/dist/leaflet-gesture-handling.css";
@@ -1247,8 +1248,7 @@ class App extends Component<Props,State> {
    _refs = {}
    _scrollTimer = null
    _get = null
-
-   static _markerefs = {}
+   _map = null
 
 
    constructor(props : Props) {
@@ -1362,10 +1362,10 @@ class App extends Component<Props,State> {
       if(this._refs["filters-UI"].current) this._refs["filters-UI"].current.recalculate()
       if(this._refs["filters-UI-scrollable"].current) this._refs["filters-UI-scrollable"].current.scrollTop = 500
 
-      loggergen.log("didU:",this.state,this.state.uriPage,this._refs["markers"]) //,this._refs)
+      loggergen.log("didU:",this.state,this.state.uriPage,this._refs["maps"],this._refs["cluster"]) //,this._refs)
 
       
-      if(this._refs.map && this._refs.map.current) {
+      if(this._map && this._refs["cluster"]?.current) {
          
          if(this._refs.markers) {
             const currentMarkers = []
@@ -1373,17 +1373,21 @@ class App extends Component<Props,State> {
             for(let v of vals) {
                if(this.hasAllFacets(v.data)) {
                   //console.log("on map:",v)
-                  if(v.ref?.current?.leafletElement) v.ref.current.leafletElement.addTo(v.ref.current.leafletElement.options.leaflet.map) 
+                  
+                  if(v.ref?.current) v.ref.current.addTo(this._refs["cluster"].current) 
+
                   currentMarkers.push(v.latLong)
                } else {                  
-                  //console.log("not on map:",v,v.ref?.current?.leafletElement)
-                  if(v.ref?.current?.leafletElement) this._refs.map.current.leafletElement.removeLayer(v.ref.current.leafletElement)
+                  //console.log("not on map:",v)
+                  if(v.ref?.current) this._refs["cluster"].current.removeLayer(v.ref.current)
                }
             }
 
+            this._refs["cluster"].current.refreshClusters()
+
             $(".resultsMap").attr("data-nb-markers", currentMarkers.length)
             if(currentMarkers.length) { 
-               this._refs.map.current.leafletElement.fitBounds(currentMarkers, currentMarkers.length === 1 ? {maxZoom: 10}:{padding:[50,50]})
+               this._map.fitBounds(currentMarkers, currentMarkers.length === 1 ? {maxZoom: 10}:{padding:[50,50]})
             }
          }
       }
@@ -4776,16 +4780,20 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
                   const { BaseLayer} = LayersControl;
                   
-                  this._refs["map"] = React.createRef()
+                  
                   this._refs["markers"] = latLongs     
-                  App._markerefs["map"] = this._refs["map"]
+                  this._refs["cluster"] = React.createRef()
+                  
 
                   console.log("latlongs:",latLongs, markers)
                   
                   // latLongs.length && 
                   const map =  (this.props.config && <> 
                      
-                     { (!this.props.simple || this.state.collapse.placeMap) && <><Map ref={this._refs["map"]}
+                     { (!this.props.simple || this.state.collapse.placeMap) && <><MapContainer 
+                        whenCreated={ mapInstance => { 
+                           this._map = mapInstance ;                           
+                        }}
                         center={[0,0]} zoom={18} 
                         // attempt to fix #584 (see https://github.com/Leaflet/Leaflet/issues/7255 + https://stackoverflow.com/questions/67406533/react-leaflet-popups-not-working-on-mobile-devices/67422057#67422057)
                         tap={false} 
@@ -4800,12 +4808,15 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                         }}
                         whenReady={ () => {                            
                            let timeo = setInterval(() => {
+                              console.log("timeo:",this._map)
                               latLongs = latLongs.filter(m => m)
-                              if(this._refs["map"].current && latLongs.length) {                                                         
-                                 //console.log("map:",this._refs["map"].current,latLongs)
+                              if(this._map) {
                                  clearInterval(timeo)
-                                 this._refs["map"].current.leafletElement.fitBounds(latLongs, latLongs.length === 1 ?{maxZoom: 10}:{padding:[50,50]})
-                                 //$(".resultsMap").attr("data-nb-markers", latLongs.length)
+                                 if( latLongs.length) {                                                         
+                                    console.log(":map:",this._map,latLongs)
+                                    this._map.fitBounds(latLongs, latLongs.length === 1 ?{maxZoom: 10}:{padding:[50,50]})
+                                    //$(".resultsMap").attr("data-nb-markers", latLongs.length)
+                                 }
                               }
                            }, 10);
                         }}
@@ -4814,19 +4825,19 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                            { this.props.config.googleAPIkey && [
                               <BaseLayer name='Satellite+Roadmap'>
 
-                                 <GoogleLayer googlekey={this.props.config.googleAPIkey} maptype='HYBRID'
+                                 <GoogleLayer apiKey={this.props.config.googleAPIkey} type='hybrid'
                                        //attribution="&amp;copy <a href=&quot;http://osm.org/copyright&quot;></a> contributors"
-                                       attribution="&amp;copy 2018 Google"
+                                       //attribution="&amp;copy 2018 Google"
                                  />
                               </BaseLayer>,
                               <BaseLayer checked name='Terrain'>
-                                 <GoogleLayer googlekey={this.props.config.googleAPIkey} maptype='TERRAIN'/>
+                                 <GoogleLayer apiKey={this.props.config.googleAPIkey} type='terrain'/>
                               </BaseLayer>,
                               <BaseLayer name='Satellite'>
-                                 <GoogleLayer googlekey={this.props.config.googleAPIkey} maptype='SATELLITE'/>
+                                 <GoogleLayer apiKey={this.props.config.googleAPIkey} type='satellite'/>
                               </BaseLayer>,
                               <BaseLayer name='Roadmap'>
-                                 <GoogleLayer googlekey={this.props.config.googleAPIkey} maptype='ROADMAP'/>
+                                 <GoogleLayer apiKey={this.props.config.googleAPIkey} type='roadmap'/>
                               </BaseLayer>]
                            }
                            { !this.props.config.googleAPIkey && <BaseLayer checked name='OpenStreetMap'>
@@ -4837,8 +4848,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                               />
                            </BaseLayer> }
                         </LayersControl>
-                        { markers } 
-                     </Map>
+                        <MarkerClusterGroup ref={this._refs["cluster"]} chunkedLoading>{ markers }</MarkerClusterGroup>
+                     </MapContainer>
                   </>}</>)
                   
                   if(map) message.push(map)
