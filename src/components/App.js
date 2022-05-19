@@ -1362,10 +1362,13 @@ class App extends Component<Props,State> {
 
       loggergen.log("didU:",this.state,this.state.uriPage,this._refs["markers"]) //,this._refs)
 
+      
       if(this._refs.map && this._refs.map.current) {
+         if(this._refs.markers) this._refs.markers = this._refs.markers.filter(m => m)
          if(this._refs.markers) $(".resultsMap").attr("data-nb-markers", this._refs["markers"].length)
          if(this._refs["markers"].length) this._refs.map.current.leafletElement.fitBounds(this._refs["markers"], this._refs["markers"].length === 1 ? {maxZoom: 10}:{padding:[50,50]})
       }
+      
 
       report_GA(this.props.config,this.props.history.location);
 
@@ -2098,7 +2101,7 @@ class App extends Component<Props,State> {
 
             const t = s.filters.datatype[0].toLowerCase()
             if(t === "place") {
-               const markers = [], latLongs = []
+               const mapInfo = {}
                const sublist = s.results[s.id]?.results?.results?.bindings[t+"s"];
                const keys = Object.keys(sublist?sublist:{})
                //console.log("keys:",keys,s.results[s.id])
@@ -2107,13 +2110,15 @@ class App extends Component<Props,State> {
                   let lat = sublist[o].filter(k => k.type === bdo+"placeLat"),
                     long = sublist[o].filter(k => k.type === bdo+"placeLong")
                   if(lat.length && long.length) { 
+                     mapInfo[o] = {}
+
                      lat = lat[0].value;
                      long = long[0].value                           
                      const latLong = [lat,long].map(n => {
                         if(n.match(/ [WS]$/)) n = "-" + n
                         return n.replace(/ [EWSN]$/,"")
                      })
-                     latLongs.push(latLong)
+                     mapInfo[o].latLong = (latLong)
                      
                      var redIcon = new L.Icon({
                         iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
@@ -2147,14 +2152,13 @@ class App extends Component<Props,State> {
                      }
 
                      let lit = getLangLabel({props,state:s},"",sublist[o].filter(p => [skos+"prefLabel"].includes(p.type)))
-                     markers.push(<Marker position={latLong} permanent icon={redIcon}> 
+                     mapInfo[o].marker = (<Marker position={latLong} permanent icon={redIcon}> 
                            <MapPopup direction="top"><Link onClick={(ev) => sendMsgMap(ev)} to={url}>{ lit.value }<br/><span className="RID">{sUri}</span></Link></MapPopup>
                      </Marker>)
 
-                     s.markers = markers
-                     s.latLongs = latLongs
                   }
                }
+               s.mapInfo = mapInfo
             }
 
             
@@ -4573,7 +4577,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
 
 
-   handleResults(types,counts,message,results,paginate,bookmarks,resLength, markers = [], latLongs = []) 
+   handleResults(types,counts,message,results,paginate,bookmarks,resLength, mapInfo) 
    {
       this._menus = {}
 
@@ -4648,6 +4652,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
          let hasUnreleased = false
 
+         const markers = [], latLongs = []
+
          if(sublist) { for(let o of Object.keys(sublist))
          {
             if(!iniTitle) {
@@ -4681,6 +4687,12 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                
                if(t === "Place") {
 
+                  if(mapInfo) {
+                     for(let k of Object.keys(mapInfo)) {
+                        markers.push(mapInfo[k].marker)
+                        latLongs.push(mapInfo[k].latLong)                     
+                     }
+                  }
 
                   const { BaseLayer} = LayersControl;
                   
@@ -4707,6 +4719,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                         }}
                         whenReady={ () => {                            
                            let timeo = setInterval(() => {
+                              latLongs = latLongs.filter(m => m)
                               if(this._refs["map"].current && latLongs.length) {                                                         
                                  //console.log("map:",this._refs["map"].current,latLongs)
                                  clearInterval(timeo)
@@ -5000,6 +5013,20 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   //if(isExclu) filtered = false
 
                   //loggergen.log("hP",o, hasProp,withProp,isExclu,filtered) //,k,v) //,sublist[o])
+               }
+
+               if(mapInfo && mapInfo[o]) { 
+                  mapInfo[o].filtered = filtered
+                  //console.log("mI:",mapInfo[o],o)
+                  const pos = mapInfo[o].latLong
+                  if(!filtered && pos.length) {
+                     const idx = latLongs.findIndex(m => m?.length && m[0] === pos[0] && m[1] === pos[1])
+                     if(idx !== -1) {
+                        delete markers[idx]
+                        delete latLongs[idx]
+                        delete this._refs["markers"][idx]
+                     }
+                  }
                }
 
                //loggergen.log("typ",typ,t,filtered)
@@ -5369,7 +5396,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             //loggergen.log("paginate?",JSON.stringify(paginate))
 
             if(!results) results = { results:{bindings:{}}}
-            this.handleResults(types,counts,message,results,paginate,bookmarks,resLength, this.state.markers, this.state.latLongs);
+            this.handleResults(types,counts,message,results,paginate,bookmarks,resLength, this.state.mapInfo);
             
             //loggergen.log("bookM:",results,JSON.stringify(paginate,null,3))
             
