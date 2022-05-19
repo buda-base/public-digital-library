@@ -4850,7 +4850,11 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                               />
                            </BaseLayer> }
                         </LayersControl>
-                        <MarkerClusterGroup ref={this._refs["cluster"]} chunkedLoading maxClusterRadius={120}>{ markers }</MarkerClusterGroup>
+                        <MarkerClusterGroup ref={this._refs["cluster"]} chunkedLoading maxClusterRadius={(zLevel) => {
+                           //console.log("zoom:",zLevel)
+                           if(zLevel >= 9) return 0
+                           else return 80
+                        }} >{ markers }</MarkerClusterGroup>
                      </MapContainer>
                   </>}</>)
                   
