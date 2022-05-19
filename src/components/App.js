@@ -1248,6 +1248,8 @@ class App extends Component<Props,State> {
    _scrollTimer = null
    _get = null
 
+   static _markerefs = {}
+
 
    constructor(props : Props) {
       super(props);      
@@ -1364,9 +1366,36 @@ class App extends Component<Props,State> {
 
       
       if(this._refs.map && this._refs.map.current) {
-         if(this._refs.markers) this._refs.markers = this._refs.markers.filter(m => m)
-         if(this._refs.markers) $(".resultsMap").attr("data-nb-markers", this._refs["markers"].length)
-         if(this._refs["markers"].length) this._refs.map.current.leafletElement.fitBounds(this._refs["markers"], this._refs["markers"].length === 1 ? {maxZoom: 10}:{padding:[50,50]})
+         
+         if(this._refs.markers) {
+            const vals = Object.values(this.state.mapInfo)
+            for(let v of vals) {
+               if(this.hasAllFacets(v.data)) {
+                  //console.log("on map:",v)
+                  if(v.ref?.current?.leafletElement) v.ref.current.leafletElement.addTo(v.ref.current.leafletElement.options.leaflet.map) 
+                  /* // not needed because everything is in latLong by default
+                  const idx = this._refs.markers.findIndex(m => m && m[0] === v.latLong[0] && m[1] === v.latLong[1])
+                  if(idx === -1) { 
+                     console.log("should add",v.ref?.current?.leafletElement)
+                     this._refs.markers.push(v.latLong)
+                  }
+                  */
+               } else {
+                  //console.log("not on map:",v,v.ref?.current?.leafletElement)
+                  const idx = this._refs.markers.findIndex(m => m && m[0] === v.latLong[0] && m[1] === v.latLong[1])
+                  if(idx !== -1) { 
+                     if(v.ref?.current?.leafletElement) this._refs.map.current.leafletElement.removeLayer(v.ref.current.leafletElement)
+                     delete this._refs.markers[idx]
+                  }
+               }
+            }
+
+
+            this._refs.markers = this._refs.markers.filter(m => m)
+            
+            $(".resultsMap").attr("data-nb-markers", this._refs["markers"].length)
+            if(this._refs["markers"].length) this._refs.map.current.leafletElement.fitBounds(this._refs["markers"], this._refs["markers"].length === 1 ? {maxZoom: 10}:{padding:[50,50]})
+         }
       }
       
 
@@ -2110,7 +2139,7 @@ class App extends Component<Props,State> {
                   let lat = sublist[o].filter(k => k.type === bdo+"placeLat"),
                     long = sublist[o].filter(k => k.type === bdo+"placeLong")
                   if(lat.length && long.length) { 
-                     mapInfo[o] = {}
+                     mapInfo[o] = { data: sublist[o] }
 
                      lat = lat[0].value;
                      long = long[0].value                           
@@ -2152,8 +2181,10 @@ class App extends Component<Props,State> {
                      }
 
                      let lit = getLangLabel({props,state:s},"",sublist[o].filter(p => [skos+"prefLabel"].includes(p.type)))
-                     mapInfo[o].marker = (<Marker position={latLong} permanent icon={redIcon}> 
-                           <MapPopup direction="top"><Link onClick={(ev) => sendMsgMap(ev)} to={url}>{ lit.value }<br/><span className="RID">{sUri}</span></Link></MapPopup>
+                     if(!lit) console.warn("EMPTY lit:",o,sublist[o])
+                     mapInfo[o].ref = React.createRef()
+                     mapInfo[o].marker = (<Marker ref={mapInfo[o].ref} position={latLong} permanent icon={redIcon}> 
+                           <MapPopup direction="top"><Link onClick={(ev) => sendMsgMap(ev)} to={url}>{ lit?.value }<br/><span className="RID">{sUri}</span></Link></MapPopup>
                      </Marker>)
 
                   }
@@ -4575,6 +4606,63 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
    }
    */
 
+   hasAllFacets(elem) {
+      let filtered = true
+
+      if(this.state.filters.datatype.indexOf("Any") === -1 && this.state.filters && this.state.filters.facets) {
+         for(let k of Object.keys(this.state.filters.facets)) {
+
+            let v = this.state.filters.facets[k]
+
+            let exclude = this.state.filters.exclude
+            if(exclude) exclude = exclude[k]
+
+            //loggergen.log("k",k,v,exclude)
+
+            let withProp = false, hasProp = false, isExclu = false                   
+            for(let e of elem) {
+
+               if(v.alt) { 
+                  for(let a of v.alt) {
+                     if(e.type === a) { 
+                        hasProp = true ;
+                        //loggergen.log("e sub",e)
+                        if( v.val.indexOf("Any") !== -1 || e.value === v.val || v.val.indexOf(e.value) !== -1 )  withProp = true ;                              
+                        if(exclude && exclude.indexOf(e.value) !== -1) isExclu = true
+                     }
+                  }
+               }
+               else if(e.type === k) {
+                  hasProp = true ;
+                  if(v.indexOf("Any") !== -1 || e.value === v || v.indexOf(e.value) !== -1)  withProp = true ;                                                                       
+                  if(exclude && exclude.indexOf(e.value) !== -1) isExclu = true
+               }
+            }
+
+            if(!exclude || !exclude.length) {
+               if((v.alt && v.val.indexOf("unspecified") !== -1) || (!v.alt && v.indexOf("unspecified") !== -1)) {
+                  if( hasProp && !withProp ) filtered = false
+               }
+               else if((v.alt && v.val.indexOf("Any") === -1) || (!v.alt && v.indexOf("Any") === -1)) {
+                  if( !withProp ) filtered = false
+               } 
+            }
+            else {
+               if((v.alt && v.val.indexOf("unspecified") !== -1) || (!v.alt && v.indexOf("unspecified") !== -1)) {
+                  if( exclude.indexOf("unspecified") !== -1 && !hasProp ) filtered = false
+                  if((v.alt && v.val.indexOf("Any") === -1) || (!v.alt && v.indexOf("Any") === -1)) {
+                     if( withProp && isExclu ) filtered = false
+                  } 
+               }                     
+               else if((v.alt && v.val.indexOf("Any") === -1) || (!v.alt && v.indexOf("Any") === -1)) {
+                  if( withProp && isExclu ) filtered = false
+               } 
+            }
+         }
+      }
+
+      return filtered ;
+   }
 
 
    handleResults(types,counts,message,results,paginate,bookmarks,resLength, mapInfo) 
@@ -4687,17 +4775,20 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                
                if(t === "Place") {
 
+                  
                   if(mapInfo) {
                      for(let k of Object.keys(mapInfo)) {
                         markers.push(mapInfo[k].marker)
                         latLongs.push(mapInfo[k].latLong)                     
                      }
                   }
+                  
 
                   const { BaseLayer} = LayersControl;
                   
                   this._refs["map"] = React.createRef()
                   this._refs["markers"] = latLongs     
+                  App._markerefs["map"] = this._refs["map"]
 
                   console.log("latlongs:",latLongs, markers)
                   
@@ -4955,79 +5046,13 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
             //loggergen.log("sublist:",o,sublist[o],r,label,lit);
 
-            let filtered = true ;
-
-            if(this.state.filters.datatype.indexOf("Any") === -1 && this.state.filters && this.state.filters.facets)
-
-               for(let k of Object.keys(this.state.filters.facets)) {
-
-                  let v = this.state.filters.facets[k]
-
-                  let exclude = this.state.filters.exclude
-                  if(exclude) exclude = exclude[k]
-
-                  //loggergen.log("k",k,v,exclude)
-
-                  let withProp = false, hasProp = false, isExclu = false                   
-                  for(let e of sublist[o]) {
-
-                     if(v.alt) { 
-                        for(let a of v.alt) {
-                           if(e.type === a) { 
-                              hasProp = true ;
-                              //loggergen.log("e sub",e)
-                              if( v.val.indexOf("Any") !== -1 || e.value === v.val || v.val.indexOf(e.value) !== -1 )  withProp = true ;                              
-                              if(exclude && exclude.indexOf(e.value) !== -1) isExclu = true
-                           }
-                        }
-                     }
-                     else if(e.type === k) {
-                        hasProp = true ;
-                        if(v.indexOf("Any") !== -1 || e.value === v || v.indexOf(e.value) !== -1)  withProp = true ;                                                                       
-                        if(exclude && exclude.indexOf(e.value) !== -1) isExclu = true
-                     }
-                  }
-
-                  if(!exclude || !exclude.length) {
-                     if((v.alt && v.val.indexOf("unspecified") !== -1) || (!v.alt && v.indexOf("unspecified") !== -1)) {
-                        if( hasProp && !withProp ) filtered = false
-                     }
-                     else if((v.alt && v.val.indexOf("Any") === -1) || (!v.alt && v.indexOf("Any") === -1)) {
-                        if( !withProp ) filtered = false
-                     } 
-                  }
-                  else {
-                     if((v.alt && v.val.indexOf("unspecified") !== -1) || (!v.alt && v.indexOf("unspecified") !== -1)) {
-                        if( exclude.indexOf("unspecified") !== -1 && !hasProp ) filtered = false
-                        if((v.alt && v.val.indexOf("Any") === -1) || (!v.alt && v.indexOf("Any") === -1)) {
-                           if( withProp && isExclu ) filtered = false
-                        } 
-                     }                     
-                     else if((v.alt && v.val.indexOf("Any") === -1) || (!v.alt && v.indexOf("Any") === -1)) {
-                        if( withProp && isExclu ) filtered = false
-                     } 
-                  }
-
-
+            let filtered = this.hasAllFacets(sublist[o])
 
                   //if(isExclu) filtered = false
 
                   //loggergen.log("hP",o, hasProp,withProp,isExclu,filtered) //,k,v) //,sublist[o])
-               }
+               
 
-               if(mapInfo && mapInfo[o]) { 
-                  mapInfo[o].filtered = filtered
-                  //console.log("mI:",mapInfo[o],o)
-                  const pos = mapInfo[o].latLong
-                  if(!filtered && pos.length) {
-                     const idx = latLongs.findIndex(m => m?.length && m[0] === pos[0] && m[1] === pos[1])
-                     if(idx !== -1) {
-                        delete markers[idx]
-                        delete latLongs[idx]
-                        delete this._refs["markers"][idx]
-                     }
-                  }
-               }
 
                //loggergen.log("typ",typ,t,filtered)
 
