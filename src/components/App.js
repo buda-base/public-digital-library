@@ -68,7 +68,7 @@ import {CopyToClipboard} from 'react-copy-to-clipboard' ;
 import LazyLoad from 'react-lazyload';
 
 import {MapContainer,TileLayer,LayersControl,Marker,Popup,GeoJSON,Popup as MapPopup} from 'react-leaflet' ;
-import { ReactLeafLetGoogleLayer as GoogleLayer } from "react-leaflet-google-layer" ;
+import { ReactLeafletGoogleLayer as GoogleLayer } from "react-leaflet-google-layer" ;
 import L from 'leaflet';
 import { GestureHandling } from "leaflet-gesture-handling";
 import MarkerClusterGroup from 'react-leaflet-cluster';
