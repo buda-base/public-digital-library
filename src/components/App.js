@@ -68,7 +68,7 @@ import {CopyToClipboard} from 'react-copy-to-clipboard' ;
 import LazyLoad from 'react-lazyload';
 
 import {MapContainer,TileLayer,LayersControl,Marker,Popup,GeoJSON,Popup as MapPopup} from 'react-leaflet' ;
-import { ReactLeafletGoogleLayer as GoogleLayer } from "react-leaflet-google-layer" ;
+import ReactLeafletGoogleLayer from "react-leaflet-google-layer" ;
 import L from 'leaflet';
 import { GestureHandling } from "leaflet-gesture-handling";
 import MarkerClusterGroup from 'react-leaflet-cluster';
@@ -1389,8 +1389,10 @@ class App extends Component<Props,State> {
             if(currentMarkers.length) { 
                this._map.fitBounds(currentMarkers, currentMarkers.length === 1 ? {maxZoom: 10}:{padding:[50,50]})
             }
+         } else {
+            $(".resultsMap").attr("data-nb-markers", 0)
          }
-      }
+      } 
       
 
       report_GA(this.props.config,this.props.history.location);
@@ -4814,9 +4816,9 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                                  clearInterval(timeo)
                                  if( latLongs.length) {                                                         
                                     console.log(":map:",this._map,latLongs)
-                                    this._map.fitBounds(latLongs, latLongs.length === 1 ?{maxZoom: 10}:{padding:[50,50]})
-                                    //$(".resultsMap").attr("data-nb-markers", latLongs.length)
+                                    this._map.fitBounds(latLongs, latLongs.length === 1 ?{maxZoom: 10}:{padding:[50,50]})                                    
                                  }
+                                 $(".resultsMap").attr("data-nb-markers", latLongs.length)
                               }
                            }, 10);
                         }}
@@ -4825,19 +4827,19 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                            { this.props.config.googleAPIkey && [
                               <BaseLayer name='Satellite+Roadmap'>
 
-                                 <GoogleLayer apiKey={this.props.config.googleAPIkey} type='hybrid'
+                                 <ReactLeafletGoogleLayer apiKey={this.props.config.googleAPIkey} type='hybrid'
                                        //attribution="&amp;copy <a href=&quot;http://osm.org/copyright&quot;></a> contributors"
                                        //attribution="&amp;copy 2018 Google"
                                  />
                               </BaseLayer>,
                               <BaseLayer checked name='Terrain'>
-                                 <GoogleLayer apiKey={this.props.config.googleAPIkey} type='terrain'/>
+                                 <ReactLeafletGoogleLayer apiKey={this.props.config.googleAPIkey} type='terrain'/>
                               </BaseLayer>,
                               <BaseLayer name='Satellite'>
-                                 <GoogleLayer apiKey={this.props.config.googleAPIkey} type='satellite'/>
+                                 <ReactLeafletGoogleLayer apiKey={this.props.config.googleAPIkey} type='satellite'/>
                               </BaseLayer>,
                               <BaseLayer name='Roadmap'>
-                                 <GoogleLayer apiKey={this.props.config.googleAPIkey} type='roadmap'/>
+                                 <ReactLeafletGoogleLayer apiKey={this.props.config.googleAPIkey} type='roadmap'/>
                               </BaseLayer>]
                            }
                            { !this.props.config.googleAPIkey && <BaseLayer checked name='OpenStreetMap'>

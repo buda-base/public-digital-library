@@ -5,7 +5,7 @@
 import bbox from "@turf/bbox"
 import {MapContainer as Map,TileLayer,LayersControl,Marker,Popup,GeoJSON,Tooltip as ToolT} from 'react-leaflet' ;
 import 'leaflet/dist/leaflet.css';
-import { ReactLeafletGoogleLayer as GoogleLayer } from "react-leaflet-google-layer" ;
+import ReactLeafletGoogleLayer from "react-leaflet-google-layer" ;
 //import { GoogleMutant, GoogleApiLoader } from 'react-leaflet-googlemutant';
 // import {GoogleLayer} from 'react-leaflet-google'
 // const { BaseLayer} = LayersControl;
@@ -5086,19 +5086,19 @@ class ResourceViewer extends Component<Props,State>
                      { this.props.config.googleAPIkey && [
                         <BaseLayer name='Satellite+Roadmap'>
 
-                           <GoogleLayer apiKey={this.props.config.googleAPIkey} type='hybrid'
+                           <ReactLeafletGoogleLayer apiKey={this.props.config.googleAPIkey} type='hybrid'
                                  //attribution="&amp;copy <a href=&quot;http://osm.org/copyright&quot;></a> contributors"
                                  //attribution="&amp;copy 2018 Google"
                            />
                         </BaseLayer>,
                         <BaseLayer checked name='Terrain'>
-                           <GoogleLayer apiKey={this.props.config.googleAPIkey} type='terrain'/>
+                           <ReactLeafletGoogleLayer apiKey={this.props.config.googleAPIkey} type='terrain'/>
                         </BaseLayer>,
                         <BaseLayer name='Satellite'>
-                           <GoogleLayer apiKey={this.props.config.googleAPIkey} type='satellite'/>
+                           <ReactLeafletGoogleLayer apiKey={this.props.config.googleAPIkey} type='satellite'/>
                         </BaseLayer>,
                         <BaseLayer name='Roadmap'>
-                           <GoogleLayer apiKey={this.props.config.googleAPIkey} type='roadmap'/>
+                           <ReactLeafletGoogleLayer apiKey={this.props.config.googleAPIkey} type='roadmap'/>
                         </BaseLayer>]
                      }
                      { !this.props.config.googleAPIkey && <BaseLayer checked name='OpenStreetMap'>
