@@ -5178,7 +5178,7 @@ class ResourceViewer extends Component<Props,State>
          if(hasMaxDisplay === -1 /*&& ![bf+"identifiedBy",bdo+"note"].includes(k)*/ && this.state.collapse[k] === undefined) show = true ; 
 
          return (
-            <div data-prop={shortUri(k)} class={"has-collapse custom max-"+(maxDisplay)+" "+(n%2===0?"even":"odd") + (linkToPlaces?" withLinkTo":"")}>
+            <div data-prop={shortUri(k)} class={"has-collapse custom max-"+(maxDisplay)+" "+(n%2===0?"even":"odd") + (linkToPlaces||linkToVersions?" withLinkTo":"")}>
                <h3><span>{this.proplink(k,null,n)}{I18n.t("punc.colon")}</span></h3>
                <div className={"propCollapseHeader in-"+(this.state.collapse[k]===true)}>
                   {ret.slice(0,maxDisplay)}
@@ -5225,8 +5225,13 @@ class ResourceViewer extends Component<Props,State>
          )
       }
       else {
+         let classN = k===bdo+"note"
+            ? "has-collapse custom"
+            :  linkToPlaces
+               ? "withLinkTo"
+               : ""
          return (
-            <div  data-prop={shortUri(k)} {...(k===bdo+"note"?{class:"has-collapse custom"}:{})}>               
+            <div  data-prop={shortUri(k)} className={classN}>               
                <h3><span>{this.proplink(k,null,n)}{I18n.t("punc.colon")}</span> </h3>
                {this.preprop(k,0,n)}
                <div className={k === bdo+"personTeacherOf" || k === bdo + "personStudentOf" ? "propCollapseHeader in-false":"group"}>
