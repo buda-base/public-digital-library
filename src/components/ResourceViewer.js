@@ -4605,10 +4605,10 @@ class ResourceViewer extends Component<Props,State>
       if(k === bdo+'note') txt = I18n.t("popover.notes") ;
       else if(k === skos+'altLabel') { 
          const t = getEntiType(this.props.IRI)
-         if(t === "Person") {
-            txt = I18n.t("prop.tmp:altLabelName") ;
-         } else if(["Work","Instance","Images","Etext"].includes(t)){
+         if(["Work","Instance","Images","Etext"].includes(t)){
             txt = I18n.t("prop.tmp:altLabelTitle") ;
+         } else {
+            txt = I18n.t("prop.tmp:altLabelName") ;
          }
       }
 

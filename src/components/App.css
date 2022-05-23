@@ -4417,6 +4417,8 @@ h2.on .lang, .propCollapseHeader .lang, .propCollapse .lang { position:absolute 
    padding:3px 10px;
 }
 
+.placeMap + .accu > span:empty { display: none;}
+
 .placeMap .gmnoprint { display:none;}
 .gm-style > iframe + div {  margin-bottom:20px; }
 .placeMap.large .gm-style > iframe + div {  margin-bottom:25px; }
