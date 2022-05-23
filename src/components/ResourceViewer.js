@@ -1712,7 +1712,7 @@ class ResourceViewer extends Component<Props,State>
             if(sec > 30) min++
             return parts[0]+"°"+min+"'"+parts[3] 
          } 
-         return str
+         return res
       }
 
       let lon = prop[bdo+"placeLat"]
