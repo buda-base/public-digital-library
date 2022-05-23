@@ -253,7 +253,9 @@
       "tmp:scans":"scans",
       "tmp:colophonMatch":"Colophon Match",
       "tmp:placeContainsDesc":"Located in (descendents)",
-      "tmp:GISCoordinates":"GIS Coordinates"
+      "tmp:GISCoordinates":"GIS Coordinates",
+      "tmp:altLabelName":"Variant Name",
+      "tmp:altLabelTitle":"Variant Title"
    },
    "result": {
       "open": "ཁ་ཕྱེ།",

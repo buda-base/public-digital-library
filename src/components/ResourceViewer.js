@@ -4603,6 +4603,14 @@ class ResourceViewer extends Component<Props,State>
       if(tooltip) tooltip = getLangLabel(this, "", tooltip, false, true)
 
       if(k === bdo+'note') txt = I18n.t("popover.notes") ;
+      else if(k === skos+'altLabel') { 
+         const t = getEntiType(this.props.IRI)
+         if(t === "Person") {
+            txt = I18n.t("prop.tmp:altLabelName") ;
+         } else if(["Work","Instance","Images","Etext"].includes(t)){
+            txt = I18n.t("prop.tmp:altLabelTitle") ;
+         }
+      }
 
       let ret = (<a class="propref" {...(k.match(/purl[.]bdrc[.]io/) && !k.match(/[/]tmp[/]/) ? {"href":k}:{})} target="_blank">{txt?txt:this.fullname(k,false,false,true,true,count)}</a>)
 
