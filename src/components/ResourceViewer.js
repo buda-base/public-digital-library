@@ -7660,6 +7660,20 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                                  if(showDetails) {
                                     if(nav.length) nav.push(<span>|</span>)
                                     nav.push(<Link to={"/show/"+g["@id"]} class="ulink">{I18n.t("resource.openR")}</Link>)
+
+                                    let id = this.props.IRI.replace(/^(bdr:M?)|(_[A-Z0-9]+)$/g,""), vid = "", pid = "", loca = mapElem(g.contentLocation)
+                                    if(loca?.length) loca = loca[0]
+                                    if(loca?.contentLocationVolume) { 
+                                       vid = "bdrc-"+ id 
+                                       if(loca.contentLocationVolume > 1) vid += "-" + (loca.contentLocationVolume - 1) 
+                                       vid += "/"
+                                    }
+                                    if(loca?.contentLocationPage) { 
+                                       pid = "page/n"+(loca.contentLocationPage)+"/"
+                                    }
+                                    if(nav.length) nav.push(<span>|</span>)                                    
+                                    nav.push(<a target="_blank" rel="noopener noreferrer" href={"https://archive.org/details/bdrc-"+id+"/"+vid+pid} class="ulink">{I18n.t("resource.openIA")}</a>)
+
                                  }
                               }
 

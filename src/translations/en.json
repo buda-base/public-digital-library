@@ -615,7 +615,8 @@
       "full":"Full",
       "ok":"ok",
       "firstP": "First page",
-      "lastP": "Last page"
+      "lastP": "Last page",
+      "openIA": "Open on Internet Archive"
    },
    "mirador": {
       "return": "return to BUDA",
