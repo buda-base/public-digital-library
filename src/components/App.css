@@ -3142,7 +3142,7 @@ h4:hover a.no-bdrc img { opacity:1; }
 /* ------------------------------------------------------------------------------------------------------------------------ properties/misc */
 
 .resource .data.access { text-align:center; padding-bottom:80px;}
-.resource .data.access h3 { display:flex ; margin:auto; margin-bottom:15px; max-width:720px; justify-content: center; align-items: center; }
+.resource .data.access h3 { display:flex ; margin:auto; margin-bottom:15px; max-width:740px; justify-content: center; align-items: center; }
 .resource .data.access h3 span { padding:0 10px; }
 .resource .data.access h3::before { content:''; width:50px; height:50px; background-image:url("/icons/unknown.svg"); background-size:contain; background-repeat:no-repeat;flex-shrink:0;
    background-position: center right;  
