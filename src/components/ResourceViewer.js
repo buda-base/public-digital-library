@@ -1702,8 +1702,10 @@ class ResourceViewer extends Component<Props,State>
 
       const customDMS = (val, tag, obj) => {
          const res = Decimal2DMS(val, tag)
-         if(obj.res) obj.res += ", " 
-         obj.res += res
+         if(obj) {
+            if(obj.res) obj.res += ", " 
+            obj.res += res
+         }
          const str = ""+val
          if(str.match(/[.][0-9][0-9]$/)) {
             const parts = res.split(/[°'"]/)
@@ -1718,8 +1720,9 @@ class ResourceViewer extends Component<Props,State>
       let lon = prop[bdo+"placeLat"]
       let lat = prop[bdo+"placeLong"]
       if(lon?.length && lat?.length) {      
-         const obj = {res:""}, val = customDMS(lat[0].value, "latitude", obj)+", "+customDMS(lon[0].value, "longitude", obj) 
-         prop[tmp+"GISCoordinates"] = [ { type:"literal", value: val, decimalValue:lat[0].value+", "+lon[0].value,tmpUnrounded:obj.res } ]
+         const obj = null, // = { res:"" }, 
+            val = customDMS(lat[0].value, "latitude", obj)+", "+customDMS(lon[0].value, "longitude", obj) 
+         prop[tmp+"GISCoordinates"] = [ { type:"literal", value: val, decimalValue:lat[0].value+", "+lon[0].value }] //, tmpUnrounded:obj.res } ]
       }
 
       //loggergen.log("w h",w,h,prop)
@@ -3510,7 +3513,7 @@ class ResourceViewer extends Component<Props,State>
                               { (ontolink !== undefined) &&  <div><span class='first'>{I18n.t("prop.tmp:ontologyProperty")}</span><span>{I18n.t("punc.colon")}&nbsp;</span><Link class="ontolink" to={"/show/"+ontolink}>{ontolink}</Link></div>  }
                               { (e.value === "etextMoreInfo") && <div><span class='first'>{this.proplink(bdo+"instanceReproductionOf")}</span><span>{I18n.t("punc.colon")}&nbsp;</span>{repro}</div>  }
                               { (e.decimalValue) &&  <div><span class='first'>{this.proplink(tmp+"decimalValue")}</span><span>{I18n.t("punc.colon")}&nbsp;</span>{e.decimalValue}</div>  }
-                              { (e.tmpUnrounded) &&  <div><span class='first'>{this.proplink(tmp+"unrounded")}</span><span>{I18n.t("punc.colon")}&nbsp;</span>{e.tmpUnrounded}</div>  }
+                              {/* { (e.tmpUnrounded) &&  <div><span class='first'>{this.proplink(tmp+"unrounded")}</span><span>{I18n.t("punc.colon")}&nbsp;</span>{e.tmpUnrounded}</div>  } */}
                               </TabPanel>
                               <TabPanel selected>
                               {fromSame && e.allSameAs.map(f => { 
