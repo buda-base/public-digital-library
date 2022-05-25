@@ -1717,8 +1717,8 @@ class ResourceViewer extends Component<Props,State>
          return res
       }
 
-      let lon = prop[bdo+"placeLat"]
-      let lat = prop[bdo+"placeLong"]
+      let lat = prop[bdo+"placeLat"]
+      let lon = prop[bdo+"placeLong"]
       if(lon?.length && lat?.length) {      
          const obj = null, // = { res:"" }, 
             val = customDMS(lat[0].value, "latitude", obj)+", "+customDMS(lon[0].value, "longitude", obj) 
