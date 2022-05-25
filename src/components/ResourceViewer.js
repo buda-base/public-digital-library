@@ -7172,31 +7172,14 @@ perma_menu(pdfLink,monoVol,fairUse,other)
    }
 
 
-   hasLinkToIA() {
-      
-      let fairUse = false, hasIA = false
-      let repro = this.getResourceElem(bdo+"instanceHasReproduction", this.props.IRI, this.props.assocResources), images
-      if(repro?.length) for(const v of repro) {
-         if(v.type !== "uri") continue ;
-         let id = shortUri(v.value)
-         let elem = this.getResourceElem(adm+"access", id, this.props.assocResources)
-         if(elem?.some(e => e.value.match(/(AccessFairUse)$/))) { 
-            fairUse = true   
-            images = id
-            break ;
-         }
-         console.log("hasIA:", images, fairUse, hasIA, elem)
-      }
-      
-      if(fairUse) {
-         let elem = this.getResourceElem(bdo+"digitalLendingPossible", images, this.props.assocResources);
-         if(this.props.config && !this.props.config.chineseMirror) {
-            if(!elem || elem.length && elem[0].value == "true" ) { 
-               hasIA = true
-            }
+   hasLinkToIA() {      
+      let hasIA = false
+      let elem = this.getResourceElem(tmp+"addIALink");
+      if(this.props.config && !this.props.config.chineseMirror) {
+         if(elem.length && elem[0].value == "true" ) { 
+            hasIA = true
          }
       }
-
       return hasIA
    }
 
@@ -7212,7 +7195,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
       let page = loca[prefix+"contentLocationPage"]
       if(page?.length && page[0].value) page = page[0].value
       if(page) { 
-         pid = "page/n"+(page)+"/"
+         if(page > 1) pid = "page/n"+(page - 1)+"/"
       }
       //console.log("loca:",loca,vol,page,prefix)
       return "https://archive.org/details/bdrc-"+id+"/"+vid+pid      
@@ -7223,7 +7206,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
       if(this.props.outline && this.props.outline !== true) {
 
-         let hasIA = true // this.hasLinkToIA()            
+         let hasIA = this.hasLinkToIA()            
    
          let outline = [], title
          let root = this.props.IRI
