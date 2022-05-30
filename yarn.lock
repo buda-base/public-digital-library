@@ -4621,7 +4621,7 @@ cyclist@^1.0.1:
 d3@^3.5.17:
   version "3.5.17"
   resolved "https://registry.yarnpkg.com/d3/-/d3-3.5.17.tgz#bc46748004378b21a360c9fc7cf5231790762fb8"
-  integrity sha1-vEZ0gAQ3iyGjYMn8fPUjF5B2L7g=
+  integrity sha512-yFk/2idb8OHPKkbAL8QaOaqENNoMhIaSHZerk3oQsECwkObkCpJyjYwCe+OHiq6UEdhe1m8ZGARRRO3ljFjlKg==
 
 d@1, d@^1.0.1:
   version "1.0.1"
@@ -6091,7 +6091,7 @@ follow-redirects@^1.0.0:
 font-awesome@^4.7.0:
   version "4.7.0"
   resolved "https://registry.yarnpkg.com/font-awesome/-/font-awesome-4.7.0.tgz#8fa8cf0411a1a31afd07b06d2902bb9fc815a133"
-  integrity sha1-j6jPBBGhoxr9B7BtKQK7n8gVoTM=
+  integrity sha512-U6kGnykA/6bFmg1M/oT9EkFeIYv7JlX3bozwQJWiiLz6L0w3F5vBVPxHlwyX/vtNq1ckcpRKOB9f2Qal/VtFpg==
 
 for-each@^0.3.3:
   version "0.3.3"
@@ -6940,7 +6940,7 @@ hyphenate-style-name@^1.0.2:
 i18next-browser-languagedetector@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/i18next-browser-languagedetector/-/i18next-browser-languagedetector-1.0.1.tgz#73e43aa46fc1c909cac6178b9d1b803d02610faa"
-  integrity sha1-c+Q6pG/ByQnKxheLnRuAPQJhD6o=
+  integrity sha512-5Dqhct2pP9Wz7jB0PJEQ41AXk1GCcwdv7zQsGJZ8DKIrCFNRwKJ2K7kq8T7fhCWi3Cw+gm9jBfeJGngKDZn67w==
 
 "i18next-redux-saga@git+https://github.com/alexiusp/i18next-redux-saga.git":
   version "1.1.0"
@@ -6963,7 +6963,7 @@ i18next@^19.4.5:
 i18next@^4.2.0:
   version "4.2.0"
   resolved "https://registry.yarnpkg.com/i18next/-/i18next-4.2.0.tgz#e0cbeea638c8dd8adc14137577c40fff00756963"
-  integrity sha1-4MvupjjI3YrcFBN1d8QP/wB1aWM=
+  integrity sha512-bH48MSqFyANVkdtxD8V47hKnMnGTaiueSMk0QmGiOjs7QMXezcVntIvCY4uhsyklwVIUOsG6jlLpDrlHhVE4qw==
 
 iconv-lite@0.4.24, iconv-lite@^0.4.24:
   version "0.4.24"
@@ -7032,7 +7032,7 @@ ignore@^4.0.6:
 iiif-layout-functions@0.0.2-alpha:
   version "0.0.2-alpha"
   resolved "https://registry.yarnpkg.com/iiif-layout-functions/-/iiif-layout-functions-0.0.2-alpha.tgz#403974cbe720115c6d38ca0062f4dff8f839dd62"
-  integrity sha1-QDl0y+cgEVxtOMoAYvTf+Pg53WI=
+  integrity sha512-aBRCgbCEmqJayR72HfiAAnCrgjdhVdkNMQDekrFnTYbVYf3ncyACUx9CpvcFUS6WXacBelKTgUgvnU0lmYvT6g==
 
 imagesloaded@>=3.0.0:
   version "5.0.0"
@@ -7823,7 +7823,7 @@ isurl@^1.0.0-alpha5:
 javascript-state-machine@^2.3.4:
   version "2.4.0"
   resolved "https://registry.yarnpkg.com/javascript-state-machine/-/javascript-state-machine-2.4.0.tgz#d8be31ec38f24ac1a1832f0b672fc3cd5f79c96e"
-  integrity sha1-2L4x7DjySsGhgy8LZy/DzV95yW4=
+  integrity sha512-N5ebPfbgUPBQgu+Q3km/EAxFdG7sS9b+upP3917F/xvH+QES55ba9TfayJJqUQ1OdEuHqwqdadiyqYfalucBvw==
 
 jest-changed-files@^24.9.0:
   version "24.9.0"
@@ -8248,7 +8248,7 @@ jquery-ui-dist@^1.12.1:
 jquery.scrollto@^1.4.12:
   version "1.4.14"
   resolved "https://registry.yarnpkg.com/jquery.scrollto/-/jquery.scrollto-1.4.14.tgz#f5b84eeaddaa8828d9a33c4d2253a8d13526bd2b"
-  integrity sha1-9bhO6t2qiCjZozxNIlOo0TUmvSs=
+  integrity sha512-HCebNshMQSH2sqJGj3i9NA59KgSJh6NvK4XSRjgGW1A6+DHeC8iE02rCmmRmEpNBmXzJhzr0c+I/7t1sYhvqlA==
   dependencies:
     jquery ">=1.4"
 
@@ -9309,7 +9309,7 @@ minipass@^3.0.0, minipass@^3.1.1:
 
 "mirador@https://github.com/buda-base/mirador#2.7.0-bdrc":
   version "2.7.0"
-  resolved "https://github.com/buda-base/mirador#23e984a0df95a3a19258785ded7839f0b8937126"
+  resolved "https://github.com/buda-base/mirador#7c9a3387c865ed7fdba09d5ebd12889cd07a5aec"
   dependencies:
     bootbox "^4.4.0"
     bootstrap "^3.3.7"
