@@ -7176,7 +7176,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
       let hasIA = false
       let elem = this.getResourceElem(tmp+"addIALink");
       if(this.props.config && !this.props.config.chineseMirror) {
-         if(elem.length && elem[0].value == "true" ) { 
+         if(elem?.length && elem[0].value == "true" ) { 
             hasIA = true
          }
       }
