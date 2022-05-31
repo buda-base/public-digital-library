@@ -7244,7 +7244,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
          let rootClick = (e) => {
 
-            loggergen.log("rootC?")
+            //loggergen.log("rootC?")
 
             toggle(null,root,root)            
 
@@ -7290,7 +7290,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          else if(root !== this.props.IRI) opart = this.props.IRI
          else opart = root
 
-         loggergen.log("renderO?",osearch,opart,title)
+         //loggergen.log("renderO?",osearch,opart,title)
          
          let get = qs.parse(this.props.history.location.search)
 
@@ -7450,7 +7450,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
             } else {
                let parent_nodes = nodes.filter(n => n.hasPart && (n.hasPart === opart || n.hasPart.includes(opart)))
-               //console.log("parent:",parent_nodes)
+               console.log("parent:",parent_nodes)
                if(parent_nodes.length) { 
                   let update = false
                   for(let n of parent_nodes) {
@@ -7538,6 +7538,15 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
                   if(node.length && node[0].hasPart) { 
                      if(!Array.isArray(node[0].hasPart)) node[0].hasPart = [ node[0].hasPart ]
+
+                     // expand node when it's an only child and it's a inserted volume
+                     if(node[0].hasPart.length === 1 && node[0].hasPart[0].includes(";") && this.state.collapse["outline-"+root+"-"+node[0].hasPart[0]] === undefined) { 
+                        let vol = mapElem(node[0].hasPart[0])
+                        this.setState({collapse:{...this.state.collapse, ["outline-"+root+"-"+node[0].hasPart[0]]:true }})
+                        this.props.onGetOutline(node[0].hasPart[0], vol[0], top)
+                        
+                        //toggle(null,top,node[0].hasPart[0])
+                     }
 
                      let subparts = [], sorted = _.orderBy(node[0].hasPart.map(n => {
                         const e = mapElem(n)
