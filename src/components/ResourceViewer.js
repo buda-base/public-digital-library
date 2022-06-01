@@ -7540,10 +7540,15 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                      if(!Array.isArray(node[0].hasPart)) node[0].hasPart = [ node[0].hasPart ]
 
                      // expand node when it's an only child and it's a inserted volume
-                     if(node[0].hasPart.length === 1 && node[0].hasPart[0].includes(";") && this.state.collapse["outline-"+root+"-"+node[0].hasPart[0]] === undefined) { 
-                        let vol = mapElem(node[0].hasPart[0])
-                        this.setState({collapse:{...this.state.collapse, ["outline-"+root+"-"+node[0].hasPart[0]]:true }})
-                        this.props.onGetOutline(node[0].hasPart[0], vol[0], top)
+                     if(node[0].hasPart.length === 1 && node[0].hasPart[0].includes(";")) { 
+                        if(this.state.collapse["outline-"+root+"-"+node[0].hasPart[0]] === undefined) { 
+                           let vol = mapElem(node[0].hasPart[0])
+                           this.setState({collapse:{...this.state.collapse, ["outline-"+root+"-"+node[0].hasPart[0]]:true }})
+                           this.props.onGetOutline(node[0].hasPart[0], vol[0], top)
+                        } else {
+                           return makeNodes(node[0].hasPart[0],top)
+                        }
+
                         
                         //toggle(null,top,node[0].hasPart[0])
                      }
