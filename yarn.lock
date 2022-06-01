@@ -9042,7 +9042,7 @@ material-colors@^1.2.5:
 material-design-icons@^3.0.1:
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/material-design-icons/-/material-design-icons-3.0.1.tgz#9a71c48747218ebca51e51a66da682038cdcb7bf"
-  integrity sha1-mnHEh0chjrylHlGmbaaCA4zct78=
+  integrity sha512-t19Z+QZBwSZulxptEu05kIm+UyfIdJY1JDwI+nx02j269m6W414whiQz9qfvQIiLrdx71RQv+T48nHhuQXOCIQ==
 
 material-ui-search-bar@^1.0.0-beta.14:
   version "1.0.0-beta.14"
@@ -9309,7 +9309,7 @@ minipass@^3.0.0, minipass@^3.1.1:
 
 "mirador@https://github.com/buda-base/mirador#2.7.0-bdrc":
   version "2.7.0"
-  resolved "https://github.com/buda-base/mirador#9dfd986c9fa69cbd79429baa3a7c7cefa2fae09c"
+  resolved "https://github.com/buda-base/mirador#3575a5cfd7f13389dc1e39c0a16170cdcc715016"
   dependencies:
     bootbox "^4.4.0"
     bootstrap "^3.3.7"
@@ -9833,7 +9833,7 @@ open@^7.0.2:
 
 "openseadragon@https://github.com/openseadragon/openseadragon#master":
   version "3.0.0"
-  resolved "https://github.com/openseadragon/openseadragon#995be3c37cb762e92521f2b7af58cb55b1e992fa"
+  resolved "https://github.com/openseadragon/openseadragon#2007ba7ea5a003661c0412d0a83f848bbb0df2ff"
 
 opn@^5.5.0:
   version "5.5.0"
