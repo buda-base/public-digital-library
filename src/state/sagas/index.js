@@ -676,11 +676,11 @@ async function getContext(iri,start,end,nb:integer = 1000) {
 
    let state = store.getState()
 
-   store.dispatch(dataActions.gotAssocResources(state.data.keyword, { data: dict }))
-
-
    let results, t = "Etext", uri = fullUri(iri), chunk
    if(state.data.searches[t] && state.data.searches[t][state.data.keyword+"@"+state.data.language]) results = state.data.searches[t][state.data.keyword+"@"+state.data.language]
+
+   if(results) store.dispatch(dataActions.gotAssocResources(state.data.keyword, { data: dict }))
+
    if(results && results.results && results.results.bindings && results.results.bindings['etexts'] && results.results.bindings['etexts'][uri]) { 
       
       results.results.bindings['etexts'][uri] = results.results.bindings['etexts'][uri].concat(inInst.filter(e => results.results.bindings['etexts'][uri].filter(f => f.type === tmp+"inInstance" && f.value === fullUri(e["id"])).length === 0).map(e => ({value:fullUri(e["id"]),type:tmp+"inInstance"})))      
@@ -693,8 +693,35 @@ async function getContext(iri,start,end,nb:integer = 1000) {
 
    //loggergen.log("ctx",chunk,results.results.bindings['etexts'][uri],results,inInst,inInstP,data)
    
-   store.dispatch(dataActions.foundResults(state.data.keyword, state.data.language, results,["Etext"]))
-   store.dispatch(dataActions.gotContext(state.data.keyword+"@"+state.data.language,iri,start,end,data))
+   if(results) { 
+      store.dispatch(dataActions.foundResults(state.data.keyword, state.data.language, results,["Etext"]))
+   } else {
+      const inP = sav.filter(e => e.seqNum !== undefined)
+      const labels = sav.filter(e => inP.some(f => f["tmp:inInstancePart"]?.some(g => g.id === e.id)))
+      console.log("inPart:", iri, inP, labels)
+      let data = {} 
+      inP.map(e => {
+         let iIp = e["tmp:inInstancePart"]
+         if(iIp) {
+            if(!Array.isArray(iIp)) iIp = [ iIp ] 
+            data[fullUri(e.id)] = [
+               ...iIp.map(i => ({ type: _tmp+"inInstancePart", value: i.id }))
+            ]
+         } else data[fullUri(e.id)] = []
+      })
+      labels.map( e => {
+         let label = e["skos:prefLabel"]
+         if(!Array.isArray(label)) label = [ label]
+         data[fullUri(e.id)] = label.map(l =>({ 
+            type:skos+"prefLabel",
+            value:l["@value"],
+            lang:l["@language"]
+         }))
+      })      
+      
+      store.dispatch(dataActions.gotAssocResources(iri, { data }))
+      
+   }
    store.dispatch(uiActions.loading(null, false));
 
 }
@@ -705,7 +732,7 @@ export function* watchGetContext() {
       dataActions.TYPES.getContext,
       (action) => { 
          store.dispatch(uiActions.loading(null, true));
-         getContext(action.payload,action.meta.start,action.meta.end)
+         getContext(action.payload,action.meta.start,action.meta.end,action.meta.nb)
       }
    );
 }
@@ -745,7 +772,7 @@ async function getChunks(iri,next,nb = 10000,useContext = false) {
 
          if(hilight && hilight.lang === clang && cval) cval = cval.replace(new RegExp("("+hilight.value+")","g"),"↦$1↤")
 
-         return ({ value:cval, lang:clang, start:e.sliceStartChar, end:e.sliceEndChar}) 
+         return ({ value:cval, lang:clang, start:e.sliceStartChar, end:e.sliceEndChar, id:fullUri(e.id)}) 
       }); //+ " ("+e.seqNum+")" }))
 
       //loggergen.log("dataC",iri,next,data)
@@ -848,7 +875,8 @@ async function getPages(iri,next) {
                language:lang,
                seq:e.seqNum,
                start:e.sliceStartChar,
-               end:e.sliceEndChar        
+               end:e.sliceEndChar,
+               id: fullUri(e.id)
             }
          
       }).filter(e => e); //+ " ("+e.seqNum+")" }))

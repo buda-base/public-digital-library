@@ -3409,7 +3409,7 @@ class ResourceViewer extends Component<Props,State>
          loca.search = "?startChar="+e.start+(loca.search?"&"+loca.search:"")
       }
 
-      let repro 
+      let repro, inPart = [] //[ this.uriformat("", { type:"uri", value:fullUri("bdr:MW4CZ5369_0001-1") }) ]
       if(e.value === "etextMoreInfo") { 
          repro = <span class="etextMoreInfo" onClick={(ev) => { 
                //console.log("repro:",ID,this.state.collapse,ev.target)
@@ -3417,7 +3417,8 @@ class ResourceViewer extends Component<Props,State>
             }}>
                {this.format("span",bdo+"instanceReproductionOf","",false,"sub")}
             </span>
-         //console.log("repro:",repro)
+         //console.log("repro:",repro,e.elem)
+         if(e.elem?.id && this.props.assocResources[e.elem.id]) inPart = this.props.assocResources[e.elem.id]?.filter(v => v.type === _tmp+"inInstancePart").map(e => this.uriformat("",e))
       }
 
       return (
@@ -3483,7 +3484,7 @@ class ResourceViewer extends Component<Props,State>
                         </span>
                         <div data-prop={shortUri(prop)}>
                            {!parent && [
-                              prop != " " && <h3>{this.proplink(prop)}{I18n.t("punc.colon")}</h3>,
+                              !prop.startsWith(" ") && <h3>{this.proplink(prop)}{I18n.t("punc.colon")}</h3>,
                               <div class="group"><h4>{current}</h4></div>
                            ]}
                            { grandPa && <h3>{this.proplink(grandPa)}{I18n.t("punc.colon")}</h3>}
@@ -3512,6 +3513,7 @@ class ResourceViewer extends Component<Props,State>
                               { (comment !== undefined) &&  <div><span class='first'>{this.proplink(rdfs+"comment")}</span><span>{I18n.t("punc.colon")}&nbsp;</span><span>{comment.value}</span></div>  }
                               { (ontolink !== undefined) &&  <div><span class='first'>{I18n.t("prop.tmp:ontologyProperty")}</span><span>{I18n.t("punc.colon")}&nbsp;</span><Link class="ontolink" to={"/show/"+ontolink}>{ontolink}</Link></div>  }
                               { (e.value === "etextMoreInfo") && <div><span class='first'>{this.proplink(bdo+"instanceReproductionOf")}</span><span>{I18n.t("punc.colon")}&nbsp;</span>{repro}</div>  }
+                              { (e.value === "etextMoreInfo" && inPart.length) && <div><span class='first'>{this.proplink(tmp+"inInstancePart")}</span><span>{I18n.t("punc.colon")}&nbsp;</span><div class="inPart">{inPart}</div></div>  }
                               { (e.decimalValue) &&  <div><span class='first'>{this.proplink(tmp+"decimalValue")}</span><span>{I18n.t("punc.colon")}&nbsp;</span>{e.decimalValue}</div>  }
                               {/* { (e.tmpUnrounded) &&  <div><span class='first'>{this.proplink(tmp+"unrounded")}</span><span>{I18n.t("punc.colon")}&nbsp;</span>{e.tmpUnrounded}</div>  } */}
                               </TabPanel>
@@ -6187,12 +6189,19 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                      { (unpag || imgErr ) && <h5><a class="unpag" title={I18n.t("resource.unpag")}>{I18n.t("resource.pageN",{num:e.seq})}</a></h5>}
                      &nbsp;
                      { Object.keys(imageLinks).sort().map(id => {
+                        //console.log("id:",id,e)
+                        let iIp = this.props.assocResources[e.id]
                         const withHoverM = <>{I18n.t("misc.from")} {this.uriformat(null,{noid:true,value:id.replace(/bdr:/,bdr).replace(/[/]V([^_]+)_I.+$/,"/W$1")})} </>
                         if( /* !this.state.collapse["imageVolume-"+id] &&*/ imageLinks[id][e.seq]) 
                            return (
                                  <h5 className="withHoverM">
                                     {withHoverM}
-                                    {this.hoverMenu(" ",{ value:"etextMoreInfo" },[ imgElem, <>&nbsp;</>, withHoverM ])}
+                                    <span onClick={() => { 
+                                       //console.log("elem:",e,iIp)
+                                       if(!iIp) this.props.onGetContext(this.props.IRI,e.start,e.end, 1650)	
+                                    }}>
+                                       {this.hoverMenu(" "+e.id,{ value:"etextMoreInfo", elem: e },[ imgElem, <>&nbsp;</>, withHoverM ])}
+                                    </span>
                                  </h5>
                            )
                      })}
@@ -6218,6 +6227,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                         else if(label) label = label.split(/[\n\r]/).map(e =>([e,<br/>]))
                         //label = f
                         let size = this.state.etextSize
+                        //console.log("page:",pageVal,e,current)
                         if(lang === "bo") { size += 0.4 ; }
                         return ([<span lang={lang} {...this.state.etextSize?{style:{ fontSize:size+"em", lineHeight:(size * 1.0)+"em" }}:{}}>{label}</span>,<br/>])})}
                         {this.hoverMenu(bdo+"EtextHasPage",{value:pageVal,lang:pageLang,start:e.start,end:e.end},current)}

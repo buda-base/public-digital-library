@@ -2706,6 +2706,9 @@ span[lang^='sa-']:not([lang$='-ewts']) { text-transform: capitalize;}
 #popHoverM .resource .data .sub > .subgroup > .subsub > h4::before,
 #popHoverM .resource .data .group h4::before { opacity:1 !important; }
 
+#popHoverM .resource .data .inPart .lang { display:none; }
+#popHoverM .resource .data .inPart .ulink:not(:first-child)::before { content : " / "; }
+
 
 #popHoverM > div:last-child { width:953px; box-shadow:0 3px 4px #cecece,0 -1px 4px #cecece; max-width:1000px;
    left:calc((100vw - 1440px)/2 + 324px) !important; /* TODO fix when width under ~1250px */

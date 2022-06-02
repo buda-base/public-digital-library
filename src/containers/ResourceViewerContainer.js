@@ -213,6 +213,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       onGetPages:(IRI:string,next:number=0) => {
          dispatch(data.getPages(IRI,next));
       },
+      onGetContext:(iri:string,start:integer,end:integer,nb:integer) => {
+         dispatch(data.getContext(iri,start,end,nb));
+      },
       onGetOutline:(IRI:string,node?:{},volFromUri?:string) => {
          dispatch(data.getOutline(IRI,node,volFromUri));
       },
