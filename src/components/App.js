@@ -3630,14 +3630,14 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
          if(inPart && inPart.length) {	
 
-            //loggergen.log("inPart",inPart)	
+            //loggergen.log("inPart:",inPart)	
 
             inPart = <div class="inPart">{[ <span>[ from part </span>, inPart.map( (p,i) => { 	
                let label = getPropLabel(this,p,false,true)	
                let ret = [getUrilink(p,label.value,label.lang)]	
                if(i > 0) ret = [ " / ", ret ]	
                return ret 	
-            }), " ]" ]}</div>	
+            }), " ]" ]}<br/><br/></div>	
          }	
 
          return (<div className={"match "+prop}>	

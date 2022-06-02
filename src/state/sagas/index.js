@@ -686,7 +686,8 @@ async function getContext(iri,start,end,nb:integer = 1000) {
       results.results.bindings['etexts'][uri] = results.results.bindings['etexts'][uri].concat(inInst.filter(e => results.results.bindings['etexts'][uri].filter(f => f.type === tmp+"inInstance" && f.value === fullUri(e["id"])).length === 0).map(e => ({value:fullUri(e["id"]),type:tmp+"inInstance"})))      
 
       chunk = results.results.bindings['etexts'][uri].filter(e => e.startChar == start && e.endChar == end)
-      if(chunk.length) chunk[0].inPart = inInstP.map(e => fullUri(e["id"]))
+      //console.log("iIP:",inInstP,sav)
+      if(chunk.length && inInstP.length) chunk[0].inPart = [...new Set(inInstP.map(e => fullUri(e["id"])))].sort()
 
    }
 
