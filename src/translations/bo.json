@@ -255,7 +255,10 @@
       "tmp:placeContainsDesc":"(descendents) འདིའི་ནང་ཡོད་པ།",
       "tmp:GISCoordinates":"GIS Coordinates",
       "tmp:altLabelName":"མཚན་གཞན།",
-      "tmp:altLabelTitle":"མཚན་བྱང་གཞན།"
+      "tmp:altLabelTitle":"མཚན་བྱང་གཞན།",
+      "tmp:hasMatch":"Exact Match",
+      "tmp:hasExactMatch":"Exact Match",
+      "tmp:isExactMatch":"Exact Full Match"
    },
    "result": {
       "open": "ཁ་ཕྱེ།",

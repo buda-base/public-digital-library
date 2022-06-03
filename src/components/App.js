@@ -5334,7 +5334,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                <Typography className="no-result">
                   <span>
                      {I18n.t("search.hidden")}<br/>
-                     <a onClick={(event) => this.handleCheckFacet(event,f?.nonReleased,["tmp:show"],true)} class="uri-link" style={{marginLeft:0}}>{I18n.t("search.showU")}</a>
+                     <a onClick={(event) => this.handleCheckFacet(event,f?.nonReleased,[_tmp+"show"],true)} class="uri-link" style={{marginLeft:0}}>{I18n.t("search.showU")}</a>
                   </span>
                </Typography>
             )

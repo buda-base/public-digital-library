@@ -1988,7 +1988,8 @@ function rewriteAuxMain(result,keyword,datatype,sortBy,language)
    let langPreset = state.ui.langPreset
    if(!sortBy) sortBy = state.ui.sortBy
    let reverse = sortBy && sortBy.endsWith("reverse")
-   let canPopuSort = false, isScan, isTypeScan = datatype.includes("Scan"), inRoot, partType, context, unreleased
+   let canPopuSort = false, isScan, isTypeScan = datatype.includes("Scan"), inRoot, partType, context, unreleased, hasExactM, isExactM, hasM
+   const _kw = keyword.replace(/^"|"$/g,"")
 
    let mergeLeporello = state.data.config.khmerServer
 
@@ -2016,6 +2017,9 @@ function rewriteAuxMain(result,keyword,datatype,sortBy,language)
             partType = ""
             context = []
             unreleased = false
+            hasExactM = false
+            isExactM = false
+            hasM = false
 
             if(auth && !auth.isAuthenticated() || !isAdmin(auth)) {	
                let status = result[e][k].filter(k => k.type === adm+"status" || k.type === tmp+"status")	
@@ -2049,6 +2053,23 @@ function rewriteAuxMain(result,keyword,datatype,sortBy,language)
                   } else {
                      if(!context.includes(e.type)) context.push(e.type)
                   } 
+
+                  hasM = true
+
+                  // #718 check if match is full/exact
+                  if(e.value.includes("↦"+_kw+"↤")) {                                          
+                     //console.log("exact:",e)
+                     hasExactM = true
+                     if(e.value === "↦"+_kw+"↤") {
+                        //console.log("full exact")
+                        isExactM = true
+                     } 
+                  } else {
+                     //console.log("exact?",e,_kw)
+                  }
+                  // TODO case of tibetan unicode vs wylie
+
+
                } else if(e.type === _tmp+"status" && e.value) {
                   if(!e.value.match(/Released/)) { 
                      unreleased = true
@@ -2071,6 +2092,11 @@ function rewriteAuxMain(result,keyword,datatype,sortBy,language)
 
             if(unreleased) {
                res.push({type:_tmp+"nonReleasedItems", value:_tmp+"show"})
+            }
+
+            if(hasM) {
+               if(hasExactM) res.push({type:_tmp+"hasMatch", value:_tmp+"hasExactMatch"})
+               if(isExactM) res.push({type:_tmp+"hasMatch", value:_tmp+"isExactMatch"})
             }
 
 

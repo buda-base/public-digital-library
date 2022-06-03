@@ -9309,7 +9309,7 @@ minipass@^3.0.0, minipass@^3.1.1:
 
 "mirador@https://github.com/buda-base/mirador#2.7.0-bdrc":
   version "2.7.0"
-  resolved "https://github.com/buda-base/mirador#3575a5cfd7f13389dc1e39c0a16170cdcc715016"
+  resolved "https://github.com/buda-base/mirador#13a2d034ab6996b6fbacaad8fd9660d6748ce80d"
   dependencies:
     bootbox "^4.4.0"
     bootstrap "^3.3.7"
@@ -11260,7 +11260,7 @@ qs@~6.5.2:
 qtip2@^3.0.3:
   version "3.0.3"
   resolved "https://registry.yarnpkg.com/qtip2/-/qtip2-3.0.3.tgz#7df088ae4412c24a4064de69e824cb3cf76210dc"
-  integrity sha1-ffCIrkQSwkpAZN5p6CTLPPdiENw=
+  integrity sha512-vfSEVYg1teA4g3RhT9fnBXzEQrkgyU5CrQE8j6WzZs5LBupG+Nq97mFq4BmDKcA6mGSMFiIqm70+ydvWW1KnGg==
   dependencies:
     imagesloaded ">=3.0.0"
     jquery ">=1.6.0"
