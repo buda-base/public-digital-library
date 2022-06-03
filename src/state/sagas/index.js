@@ -9,7 +9,7 @@ import * as uiActions from '../ui/actions';
 import selectors from '../selectors';
 import store from '../../index';
 import bdrcApi, { getEntiType, ResourceNotFound } from '../../lib/api';
-import {sortLangScriptLabels, extendedPresets} from '../../lib/transliterators';
+import {sortLangScriptLabels, extendedPresets, getMainLabel} from '../../lib/transliterators';
 import {auth} from '../../routes';
 import {shortUri,fullUri,isAdmin,sublabels,subtime} from '../../components/App'
 import {getQueryParam, GUIDED_LIMIT} from '../../components/GuidedSearch'
@@ -1989,7 +1989,18 @@ function rewriteAuxMain(result,keyword,datatype,sortBy,language)
    if(!sortBy) sortBy = state.ui.sortBy
    let reverse = sortBy && sortBy.endsWith("reverse")
    let canPopuSort = false, isScan, isTypeScan = datatype.includes("Scan"), inRoot, partType, context, unreleased, hasExactM, isExactM, hasM
-   const _kw = keyword.replace(/^"|"$/g,"")
+   let _kw = keyword.replace(/^"|"(~1)?$/g,"")
+
+   // DONE case of tibetan unicode vs wylie
+   if(language === "bo") { 
+      let translit = getMainLabel([ { lang: language, value: _kw } ], extendedPresets([ "bo-x-ewts" ]))
+      _kw = "(("+_kw+")|("+translit.value+"))"
+   } else if(language === "bo-x-ewts") { 
+      let translit = getMainLabel([ { lang: language, value: _kw } ], extendedPresets([ "bo" ]))
+      _kw = "(("+_kw+")|("+translit.value+"))"
+   }
+   console.log("_kw:",_kw,keyword)
+   let _kwRegExpFullM = new RegExp("^↦"+_kw+"↤/?$","iu"), _kwRegExpM = new RegExp("↦"+_kw+"↤","iu")
 
    let mergeLeporello = state.data.config.khmerServer
 
@@ -2057,17 +2068,16 @@ function rewriteAuxMain(result,keyword,datatype,sortBy,language)
                   hasM = true
 
                   // #718 check if match is full/exact
-                  if(e.value.includes("↦"+_kw+"↤")) {                                          
+                  if(e.value.match(_kwRegExpM)) {                                          
                      //console.log("exact:",e)
                      hasExactM = true
-                     if(e.value === "↦"+_kw+"↤") {
+                     if(e.value.match(_kwRegExpFullM)) {
                         //console.log("full exact")
                         isExactM = true
                      } 
                   } else {
                      //console.log("exact?",e,_kw)
                   }
-                  // TODO case of tibetan unicode vs wylie
 
 
                } else if(e.type === _tmp+"status" && e.value) {

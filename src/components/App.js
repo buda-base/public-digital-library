@@ -3448,17 +3448,16 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   */
                   val = getLangLabel(this,prop,[i])
                   let kw = lucenequerytokeywordmulti(this.props.keyword).map(v => v.trim().replace(/[་༌།]+$/,""))                  
+                  lang = val.lang
+                  if(!lang) lang = val["xml:lang"]
                   // join by "EEEE" as it won't be affected in wylie from/to conversion 
                   if(this.props.language) {
                      kw = getLangLabel(this,"",[ { "value":kw.join("EEEE"), "lang": this.props.language } ])
                      if(val && kw.value !== undefined) {
                         val = highlight(val.value,kw.value.replace(/ *\[?EEEE\]? */g,"|"))
-                        lang = val.lang
                      } else { 
                         if(!Array.isArray(kw)) kw = [ kw ]
                         val = highlight(i.value,kw.join("|"))
-                        lang = i["lang"]
-                        if(!lang) lang = i["xml:lang"]
                      }
                   } else {
                      if(val?.value) val = val.value
