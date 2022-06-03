@@ -1989,18 +1989,21 @@ function rewriteAuxMain(result,keyword,datatype,sortBy,language)
    if(!sortBy) sortBy = state.ui.sortBy
    let reverse = sortBy && sortBy.endsWith("reverse")
    let canPopuSort = false, isScan, isTypeScan = datatype.includes("Scan"), inRoot, partType, context, unreleased, hasExactM, isExactM, hasM
-   let _kw = keyword.replace(/^"|"(~1)?$/g,"")
+   let _kw = keyword.replace(/^"|"(~1)?$/g,"").replace(/[“”]/g,'"').replace(/[`‘’]/g,"'") // normalize quotes in user input
 
    // DONE case of tibetan unicode vs wylie
+   let flags = "iu"
    if(language === "bo") { 
       let translit = getMainLabel([ { lang: language, value: _kw } ], extendedPresets([ "bo-x-ewts" ]))
-      _kw = "(("+_kw+")|("+translit.value+"))"
+      _kw = "(("+_kw+")|("+translit.value+"))"      
+      flags = "u" // case sensitive in Tibetan/Wylie
    } else if(language === "bo-x-ewts") { 
       let translit = getMainLabel([ { lang: language, value: _kw } ], extendedPresets([ "bo" ]))
-      _kw = "(("+_kw+")|("+translit.value+"))"
+      _kw = "(("+_kw+")|("+translit.value+"))"      
+      flags = "u" // case sensitive in Tibetan/Wylie
    }
    console.log("_kw:",_kw,keyword)
-   let _kwRegExpFullM = new RegExp("^↦"+_kw+"↤/?$","iu"), _kwRegExpM = new RegExp("↦"+_kw+"↤","iu")
+   let _kwRegExpFullM = new RegExp("^↦"+_kw+"↤/?$", flags), _kwRegExpM = new RegExp("↦"+_kw+"↤", flags)
 
    let mergeLeporello = state.data.config.khmerServer
 
