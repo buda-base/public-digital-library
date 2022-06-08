@@ -2107,12 +2107,6 @@ function rewriteAuxMain(result,keyword,datatype,sortBy,language)
                res.push({type:_tmp+"nonReleasedItems", value:_tmp+"show"})
             }
 
-            if(hasM) {
-               if(hasExactM) res.push({type:_tmp+"hasMatch", value:_tmp+"hasExactMatch"})
-               if(isExactM) res.push({type:_tmp+"hasMatch", value:_tmp+"isExactMatch"})
-            }
-
-
 
             canPopuSort = canPopuSort || (res.filter(e => e.type === tmp+"entityScore").length > 0)            
             let chunks = res.filter(e => e.type === bdo+"eTextHasChunk")
@@ -2143,6 +2137,15 @@ function rewriteAuxMain(result,keyword,datatype,sortBy,language)
                   //loggergen.log("full",content.value)
                   //loggergen.log("expand",expand.value)
 
+                  // #718 check if match is exact
+                  if(content?.value && content.value.match &&  content.value.match(/[↦↤]/)) {
+                     hasM = true   
+                     if(content.value.match(_kwRegExpM)) {                                          
+                        //console.log("exact:",e)
+                        hasExactM = true
+                     }
+                  }
+
                   return { e, n, m, p, content, expand }
                })
                chunks = _.orderBy(chunks, ['n','m'], ['desc','asc'])
@@ -2154,6 +2157,13 @@ function rewriteAuxMain(result,keyword,datatype,sortBy,language)
 
                if(chunks.length > 1) res = res.concat(chunks.slice(1).map(e => ({...e.e, expand:e.expand, startChar:e.m, endChar:e.p})))
             }
+
+            if(hasM) {
+               if(hasExactM) res.push({type:_tmp+"hasMatch", value:_tmp+"hasExactMatch"})
+               if(isExactM) res.push({type:_tmp+"hasMatch", value:_tmp+"isExactMatch"})
+            }
+
+
 
             
             //if(isTypeScan && !isScan) return ({...acc})
