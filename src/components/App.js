@@ -158,7 +158,7 @@ export const prefixes = Object.values(prefixesMap) ;
 export const sameAsMap = { wd:"WikiData", ol:"Open Library", ola:"Open Library", bdr:"BDRC", mbbt:"Marcus Bingenheimer", eftr:"84000" }
 
 // TODO: example C1 P1 G10 W1 WA1 MW1 R37 IE23703 I1KG9127 UT4CZ5369_I1KG9127_0000 (with bda:)PR0ET003
-export const RIDregexp = /(^([^:]+:)?([cpgwrti]|mw|wa|ws|ut|ie|pr)(\d|eap)[^ ]*$)/i
+export const RIDregexp = /(^([^:]+:)?([cpgwrti]|mw|was?|ws|ut|ie|pr)(\d|eap)[^ ]*$)/i
 
 export function fullUri(id:string, force:boolean=false) {   
    if(id && !id.replace) {
