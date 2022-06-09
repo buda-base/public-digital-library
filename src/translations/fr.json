@@ -16,10 +16,10 @@
       "titleBDRC1": "Buddhist",
       "titleBDRC2": "Digital Resource",
       "titleBDRC3": "Center",
-      "archives1": "The Buddhist",
-      "archives2": "Digital Archives",
-      "by": "by the Buddhist Digital Resource Center",
-      "subtitle": "A cooperative platform for expanding access to Buddhist literature. Explore the millions of pages of texts contributed by BDRC and its many partners.",
+      "archives1": "",
+      "archives2": "",
+      "by": "",
+      "subtitle": "",
       "message": "",
       "submessage": "",
       "subsubmessage": "",
@@ -33,7 +33,7 @@
       "search": "Search",
       "choose": "Choose language",
       "start": "Start typing then select search language",
-      "new": "New Scans Released This Week",
+      "new": "",
       "khmer":{
          "title":"Khmer<newline/>Manuscript<newline/>Heritage Project",
          "subtitle":"Explore Cambodia's traditional literature.",
@@ -50,7 +50,7 @@
             "text":"<parag>Relevant bibliographies and secondary sources concerning Cambodian manuscripts <nbsp>—coming soon</nbsp>. </parag>"
          }
       },
-      "help":"<bold>Please consult the <lk href='https://www.bdrc.io/buda-user-guide/'>user guide</lk> and <lk href='https://www.bdrc.io/buda-user-guide/frequently-asked-questions/'>FAQ</lk> to learn more about BUDA</bold>"
+      "help":""
    },
    "types": {
       "any": "Any",
@@ -99,12 +99,12 @@
       "bookmarks": "Bookmarks",
       "results": "Search results for",
       "instances": "versions of",
-      "proxied":"This is a proxied version provided by your institution's library subscription; login is disabled. If you are part of a subscribing institution, you can download PDFs of texts in the subscribed collections. If you have an account and wish to use it, please go to <tag href='https://{{library}}' target='_blank'>https://{{library}}<\/tag>",
+      "proxied":"",
       "resources":"resources",
       "guided":"Guided search",
       "browse":"browse",
       "home":"home",
-      "collections":"Browse collections subscribed to by your institution"
+      "collections":""
    },
    "Lsidebar": {
       "sortBy": {
