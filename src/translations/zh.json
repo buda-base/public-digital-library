@@ -50,7 +50,7 @@
             "text":"<parag>Relevant bibliographies and secondary sources concerning Cambodian manuscripts <nbsp>—coming soon</nbsp>. </parag>"
          }
       },
-      "help":"<bold>Please consult the <lk href='https://www.bdrc.io/buda-user-guide/'>user guide</lk> and <lk href='https://www.bdrc.io/buda-user-guide/frequently-asked-questions/'>FAQ</lk> to learn more about BUDA</bold>"
+      "help":""
    },
    "types": {
       "any": "任意",
@@ -99,12 +99,12 @@
       "bookmarks": "收藏夹",
       "results": "的搜索结果",
       "instances": "实例所属作品",
-      "proxied":"This is a proxied version provided by your institution's library subscription; login is disabled. If you are part of a subscribing institution, you can download PDFs of texts in the subscribed collections. If you have an account and wish to use it, please go to <tag href='https://{{library}}' target='_blank'>https://{{library}}<\/tag>",
+      "proxied":"",
       "resources":"resources",
       "guided":"Guided search",
       "browse":"browse",
       "home":"home",
-      "collections":"Browse collections subscribed to by your institution"
+      "collections":""
    },
    "Lsidebar": {
       "sortBy": {
