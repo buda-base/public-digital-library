@@ -9309,7 +9309,7 @@ minipass@^3.0.0, minipass@^3.1.1:
 
 "mirador@https://github.com/buda-base/mirador#2.7.0-bdrc":
   version "2.7.0"
-  resolved "https://github.com/buda-base/mirador#3575a5cfd7f13389dc1e39c0a16170cdcc715016"
+  resolved "https://github.com/buda-base/mirador#cd65e6eb470faecb64a8553614f51ee0bb03b7ed"
   dependencies:
     bootbox "^4.4.0"
     bootstrap "^3.3.7"
@@ -9832,8 +9832,8 @@ open@^7.0.2:
     is-wsl "^2.1.1"
 
 "openseadragon@https://github.com/openseadragon/openseadragon#master":
-  version "3.0.0"
-  resolved "https://github.com/openseadragon/openseadragon#2007ba7ea5a003661c0412d0a83f848bbb0df2ff"
+  version "3.1.0"
+  resolved "https://github.com/openseadragon/openseadragon#c20b2bbab9799fb49f7e6770b9687fbbadc78647"
 
 opn@^5.5.0:
   version "5.5.0"
@@ -11260,7 +11260,7 @@ qs@~6.5.2:
 qtip2@^3.0.3:
   version "3.0.3"
   resolved "https://registry.yarnpkg.com/qtip2/-/qtip2-3.0.3.tgz#7df088ae4412c24a4064de69e824cb3cf76210dc"
-  integrity sha1-ffCIrkQSwkpAZN5p6CTLPPdiENw=
+  integrity sha512-vfSEVYg1teA4g3RhT9fnBXzEQrkgyU5CrQE8j6WzZs5LBupG+Nq97mFq4BmDKcA6mGSMFiIqm70+ydvWW1KnGg==
   dependencies:
     imagesloaded ">=3.0.0"
     jquery ">=1.6.0"
@@ -12037,7 +12037,7 @@ regex-parser@2.2.10:
 regexp-quote@0.0.0:
   version "0.0.0"
   resolved "https://registry.yarnpkg.com/regexp-quote/-/regexp-quote-0.0.0.tgz#1e0f4650c862dcbfed54fd42b148e9bb1721fcf2"
-  integrity sha1-Hg9GUMhi3L/tVP1CsUjpuxch/PI=
+  integrity sha512-R9elSUXyJeACXh7raO50vvfZyTdQ1bxYm0KlN2XD8eEzPAnedJTHMk4F7lCaggu9DrfUWP3CDUjAgyW1f2DpgA==
 
 regexp.prototype.flags@^1.2.0, regexp.prototype.flags@^1.3.1:
   version "1.3.1"
@@ -12669,7 +12669,7 @@ signal-exit@^3.0.0, signal-exit@^3.0.2:
 simple-pagination.js@^1.6.0:
   version "1.6.0"
   resolved "https://registry.yarnpkg.com/simple-pagination.js/-/simple-pagination.js-1.6.0.tgz#aecbcbffeb951bdc33e48556f4a8e9bc55768741"
-  integrity sha1-rsvL/+uVG9wz5IVW9KjpvFV2h0E=
+  integrity sha512-S+BjdhieLjMhfMiQDOOpvt5VgrAvSIH+k62tVaqzqhLz6vr+pTLd7SUUsRHrir8gTzBc18N7czhC86AdFyC2nQ==
 
 simple-swizzle@^0.2.2:
   version "0.2.2"
@@ -13696,9 +13696,9 @@ ua-parser-js@^0.7.18:
   integrity sha512-6Gurc1n//gjp9eQNXjD9O3M/sMwVtN5S8Lv9bvOYBfKfDNiIIhqiyi01vMBO45u4zkDE420w/e0se7Vs+sIg+g==
 
 uglify-js@^3.1.4:
-  version "3.15.5"
-  resolved "https://registry.yarnpkg.com/uglify-js/-/uglify-js-3.15.5.tgz#2b10f9e0bfb3f5c15a8e8404393b6361eaeb33b3"
-  integrity sha512-hNM5q5GbBRB5xB+PMqVRcgYe4c8jbyZ1pzZhS6jbq54/4F2gFK869ZheiE5A8/t+W5jtTNpWef/5Q9zk639FNQ==
+  version "3.16.0"
+  resolved "https://registry.yarnpkg.com/uglify-js/-/uglify-js-3.16.0.tgz#b778ba0831ca102c1d8ecbdec2d2bdfcc7353190"
+  integrity sha512-FEikl6bR30n0T3amyBh3LoiBdqHRy/f4H80+My34HOesOKyHfOsxAPAxOoqC0JUnC1amnO0IwkYC3sko51caSw==
 
 unbox-primitive@^1.0.1:
   version "1.0.1"
