@@ -48,6 +48,7 @@ import makeMainRoutes from './routes'
 const enTranslation = require("./translations/en.json") ;
 const zhTranslation = require("./translations/zh.json") ;
 const boTranslation = require("./translations/bo.json") ;
+const kmTranslation = require("./translations/km.json") ;
 
 
 //derprecated
@@ -55,6 +56,7 @@ const translationsObject = {
    bo:boTranslation,
    en:enTranslation,
    zh:zhTranslation,
+   km:zhTranslation,
 }
 
 
@@ -63,11 +65,12 @@ const i18nextConfig = {
    nsSeparator: '|', // so we can use ':' for prefixes in properties
    fallbackLng: 'en', // set to false to display missing keys (+debug:true)
    //debug: true,   
-   whitelist: [ 'bo', 'en', 'zh'],
+   whitelist: [ 'bo', 'en', 'zh', 'km' ],
    resources: {
       en: { translation: enTranslation },
       bo: { translation: boTranslation },
       zh: { translation: zhTranslation },
+      km: { translation: kmTranslation },
    },
    interpolation: {
       format: function(value, format, lng) {

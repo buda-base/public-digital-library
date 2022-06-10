@@ -819,6 +819,7 @@ footer #donate,
 .App.guidedsearch.khmer .static-container.sticky + div nav .buttons .reset { margin-left:20px; }
 .App.guidedsearch.khmer .static-container.sticky + div nav .buttons > button {min-height:31px; vertical-align: middle; box-sizing: border-box;}
 .App.guidedsearch.khmer .static-container.sticky + div nav .buttons button[disabled] { /*background-color: #d7344990;*/ pointer-events:none; overflow: hidden; }
+.App.guidedsearch.khmer .static-container.sticky + div nav .buttons button { width:84px; }
 
 .App.guidedsearch.khmer .buttons button.reset  { color:#2f2f2f; font-weight: 600; cursor:pointer;
    border-radius: 2px;  background-color: #fbfafa;  border: 1px solid #e7e7e7; padding:7px 12px; font-size:12px; text-transform: uppercase;
