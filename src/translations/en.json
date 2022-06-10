@@ -257,6 +257,30 @@
       "tmp:altLabelName":"Variant Name",
       "tmp:altLabelTitle":"Variant Title"
    },
+   "guided":{
+      "keyword":"keyword",
+      "direct":{ 
+         "work":"work title",
+         "instance":"FEMC manuscript code"
+      },
+      "language":"language",
+      "style":"style",
+      "format":"format",
+      "completion":"completeness",
+      "tooltip":{
+         "keyword":"tooltip keyword",
+         "direct":{ 
+            "work":"tooltip work title",
+            "instance":"tooltip FEMC manuscript code"
+         },
+         "language":"tooltip language",
+         "style":"tooltip style",
+         "format":"tooltip format",
+         "completion":"tooltip completeness"
+      },
+      "tmp:complete":"Complete version only",
+      "search":"Search..."
+   },
    "result": {
       "open": "Open",
       "resource": "resource",
@@ -471,7 +495,9 @@
          "xIast": "IAST",
          "alalc97": "ALA-LC",
          "latnPinyin": "Pinyin",
-         "xTwktt":"Trent Walker Khmer-Tai Translit."
+         "xTwktt":"Trent Walker Khmer-Tai Translit.",
+         "xBdrc":"BDRC Translit.",
+         "xFemc":"FEMC Translit."
       },
       "x": "Transliterated",
       "latn": "Transliterated"

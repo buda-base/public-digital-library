@@ -348,12 +348,31 @@ class GuidedSearch extends Component<Props,State> {
 
     // if(topics.length) settings["topic"].values = topics // better dump it then copy-paste (+hand sort?)
 
-    const getLocaleLabel = (o, arg = "label", withLang = false) => {
-
-      if(o[arg]) {
-        const label = getLangLabel(this, "", Object.keys(o[arg]).map(k => ({lang:k, value:o[arg][k]})))
-        console.log("label:",label,o,this.props.langPreset)
-        return label.value
+    const getLocaleLabel = (o, arg = "label", withLang = false, override = false) => {
+      let res, lang
+      if(typeof o === 'string') {
+        let tag = "guided."
+        if(arg != "label") tag += arg + "."
+        let tr = I18n.t(tag+o,{ returnObjects: true})
+        //console.log("tr:",tr)
+        if(typeof tr === 'object') res = tr[this.props.type]        
+        else res = tr
+        lang = this.props.locale
+      } else if(o[arg]) {
+        if(override) {
+          res = I18n.t("guided."+override,{ returnObjects: true})
+          lang = this.props.locale
+        }
+        if(!res || res.startsWith("guided.")) {
+          const label = getLangLabel(this, "", Object.keys(o[arg]).map(k => ({lang:k, value:o[arg][k]})))
+          //console.log("label:",label,o,this.props.langPreset)
+          res = label.value
+          lang = label.lang
+        }
+      }
+      if(res) {
+        if(withLang) return <span lang={lang}>{res}</span>
+        else return res
       }
       /*
       if(o[arg] && o[arg][this.props.locale]) { 
@@ -369,8 +388,8 @@ class GuidedSearch extends Component<Props,State> {
  
     const renderSelector = (k, unique, props, noTitle) => {
       return <div class="selector" id={k}>
-          {!noTitle && <h2>{getLocaleLabel(settings[k])}{ unique !== undefined && <span>{I18n.t("search."+(unique==="kw"?"kw":(unique?"one":"any")))}</span>}<Tooltip key={"tip"} placement="bottom-end" title={
-                                            <div style={{margin:"10px"}}>{getLocaleLabel(settings[k], "tooltip")}</div>
+          {!noTitle && <h2>{getLocaleLabel(k)}{ unique !== undefined && <span>{I18n.t("search."+(unique==="kw"?"kw":(unique?"one":"any")))}</span>}<Tooltip key={"tip"} placement="bottom-end" title={
+                                            <div style={{margin:"10px"}}>{getLocaleLabel(k, "tooltip")}</div>
                                           } > 
                                           <img src="/icons/help.svg"/>
                                        </Tooltip></h2>}
@@ -388,7 +407,7 @@ class GuidedSearch extends Component<Props,State> {
                         this.setState({mustRecheck: true, checked:{...this.state.checked, [k]:{...(this.state.checked[k]?this.state.checked[k]:{}), [i]:checked}}})
                       }}
                     />}
-                  label={getLocaleLabel(o,"label",true)}
+                  label={getLocaleLabel(o, "label", true, o.facet.value)}
                 />            
               </span>))}
             { props }
@@ -400,7 +419,7 @@ class GuidedSearch extends Component<Props,State> {
       return <Link to={"#"+k} onClick={event => {
         document.querySelector("#"+k).scrollIntoView({block: "start", inline: "nearest", behavior:"smooth"})
         event.stopPropagation()
-      }}>{getLocaleLabel(settings[k])}</Link>
+      }}>{getLocaleLabel(k)}</Link>
     }
 
     const selectors = settings.filters.map(k => renderSelector(k, false))     
@@ -487,7 +506,7 @@ class GuidedSearch extends Component<Props,State> {
                     { this.props.type === "work" && <div class="flex">
                       { settings?.keyword && renderSelector("keyword", "kw", <>
                         <TextField 
-                          placeholder={"Search..."}
+                          placeholder={I18n.t("guided.search")}
                           InputProps={{ classes: { input: classes.input } }}
                           value={this.state.keyword}
                           onKeyDown={(event)=>{

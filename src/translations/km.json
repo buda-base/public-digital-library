@@ -257,6 +257,30 @@
       "tmp:altLabelName":"ឈ្មោះផ្សេងទៀត",
       "tmp:altLabelTitle":"ចំណងជើងផ្សេងទៀត"
    },
+   "guided":{
+      "keyword":"keyword",
+      "direct":{ 
+         "work":"work title",
+         "instance":"FEMC manuscript code"
+      },
+      "language":"language",
+      "style":"style",
+      "format":"format",
+      "completion":"completeness",
+      "tooltip":{
+         "keyword":"tooltip keyword",
+         "direct":{ 
+            "work":"tooltip work title",
+            "instance":"tooltip FEMC manuscript code"
+         },
+         "language":"tooltip language",
+         "style":"tooltip style",
+         "format":"tooltip format",
+         "completion":"tooltip completeness"
+      },
+      "tmp:complete":"Complete version only",
+      "search":"Search..."
+   },
    "result": {
       "open": "បើក",
       "resource": "ធនធាន",
@@ -471,7 +495,9 @@
          "xIast": "IAST",
          "alalc97": "ALA-LC",
          "latnPinyin": "ភីងអ៊ីង",
-         "xTwktt":"ការសរសេរជាសូរស័ព្ទថៃខ្មែរ Trent Walker"
+         "xTwktt":"ការសរសេរជាសូរស័ព្ទថៃខ្មែរ Trent Walker",
+         "xBdrc":"BDRC Translit.",
+         "xFemc":"FEMC Translit."
       },
       "x": "បានសរសេរជាសូរស័ព្ទ",
       "latn": "បានសរសេរជាសូរស័ព្ទ"

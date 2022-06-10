@@ -49,6 +49,7 @@ const enTranslation = require("./translations/en.json") ;
 const zhTranslation = require("./translations/zh.json") ;
 const boTranslation = require("./translations/bo.json") ;
 const kmTranslation = require("./translations/km.json") ;
+const frTranslation = require("./translations/fr.json") ;
 
 
 //derprecated
@@ -65,12 +66,13 @@ const i18nextConfig = {
    nsSeparator: '|', // so we can use ':' for prefixes in properties
    fallbackLng: 'en', // set to false to display missing keys (+debug:true)
    //debug: true,   
-   whitelist: [ 'bo', 'en', 'zh', 'km' ],
+   whitelist: [ 'bo', 'en', 'zh', 'km', 'fr' ],
    resources: {
       en: { translation: enTranslation },
       bo: { translation: boTranslation },
       zh: { translation: zhTranslation },
       km: { translation: kmTranslation },
+      fr: { translation: frTranslation },
    },
    interpolation: {
       format: function(value, format, lng) {
