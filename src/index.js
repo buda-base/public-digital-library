@@ -51,7 +51,7 @@ const boTranslation = require("./translations/bo.json") ;
 const kmTranslation = require("./translations/km.json") ;
 const frTranslation = require("./translations/fr.json") ;
 
-
+/*
 //derprecated
 const translationsObject = {
    bo:boTranslation,
@@ -59,7 +59,9 @@ const translationsObject = {
    zh:zhTranslation,
    km:zhTranslation,
 }
+*/
 
+I18n.on('languageChanged', (lng) => {document.documentElement.setAttribute('lang', lng);})
 
 // simple example i18next config with preloaded translations
 const i18nextConfig = {

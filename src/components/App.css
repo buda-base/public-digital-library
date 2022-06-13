@@ -1253,6 +1253,9 @@ a.result .contenu ul > div:last-child h3:is([lang$="-khmr"],[lang="km"]) { font-
    #root div .App .resultPage #filters-UI > div { margin-left:0px; padding-top:15px; max-height:80px; padding-right:15px;}
 }
 
+[lang='km'][data-browser='Firefox'] .home ~ footer :is(p,div),
+[lang='km'][data-browser='Firefox'] .home .static-container :is(h1,h2,p,a),
+[lang='km'][data-browser='Firefox'] .home #learn p { word-break:break-all;}
 
 
 /* ----------------------------------------------------------------------------------------------------------------------- samples/results */
