@@ -711,8 +711,9 @@ export function lang_selec(that,black:boolean = false,inPopup:false)
          </Popover>
    ]
 }
-export function etext_lang_selec(that,black:boolean = false)
+export function etext_lang_selec(that,black:boolean = false, elem, DL)
 {
+   if(!elem) elem = <span id="lang" title={I18n.t("home.choose")} onClick={(e) => that.setState({...that.state,anchorLang:e.currentTarget, collapse: {...that.state.collapse, lang:!that.state.collapse.lang } } ) }><img src={"/icons/LANGUE"+(black?"b":"")+".svg"}/></span>
    
    let text = { "bo":"lang.tip.bo","bo-x-ewts":"lang.tip.boXEwts" }, prio = ["bo", "bo-x-ewts" ]
 
@@ -722,16 +723,19 @@ export function etext_lang_selec(that,black:boolean = false)
       else current = "bo"
    }
 
+   const anchor = "anchorLang"+(DL?"DL":"")
+   const lang = "lang"+(DL?"DL":"")
+
    return [
-         <span id="lang" title={I18n.t("home.choose")} onClick={(e) => that.setState({...that.state,anchorLang:e.currentTarget, collapse: {...that.state.collapse, lang:!that.state.collapse.lang } } ) }><img src={"/icons/LANGUE"+(black?"b":"")+".svg"}/></span>
+         elem
          ,
          <Popover
             id="popLang"
-            open={that.state.collapse&&that.state.collapse.lang?true:false}
+            open={that.state.collapse&&that.state.collapse[lang]?true:false}
             transformOrigin={{vertical:(!black?'top':'bottom'),horizontal:(!black?'right':'left')}}
             anchorOrigin={{vertical:(!black?'bottom':'top'),horizontal:(!black?'right':'left')}}
-            anchorEl={that.state.anchorLang}
-            onClose={e => { that.setState({...that.state,anchorLang:null,collapse: {...that.state.collapse, lang:false } } ) }}
+            anchorEl={that.state[anchor]}
+            onClose={e => { that.setState({...that.state,[anchor]:null,collapse: {...that.state.collapse, [lang]:false } } ) }}
             className={black?"black":""}
             >
 
@@ -744,16 +748,21 @@ export function etext_lang_selec(that,black:boolean = false)
 
                         // TODO add link to user profile / language preferences
 
-                        return ( <MenuItem
+                        if(DL) return (
+                           <a target="_blank" rel="alternate" type="text" download /*={DL.split(/[/]/).pop().split(/[.]/)[0]+"_"+i} // can't bypass 'Content-Disposition: attachment; filename=' in response header */
+                              style={{color:"#4a4a4a",textDecoration:"none", display:"block"}} href={DL+"?prefLangs="+i}>
+                              <MenuItem className={current===i?"is-locale":""}>
+                                 {label}
+                              </MenuItem> 
+                           </a> )
+                        else return ( <MenuItem
                                     className={current===i?"is-locale":""}     
                                     value={i}
                                     onClick={(event) => { 
-
                                        localStorage.setItem('etextlang', i);
-
-                                       that.setState({...that.state,anchorLang:null,collapse: {...that.state.collapse, lang:false } }); 
-
+                                       that.setState({...that.state,[anchor]:null,collapse: {...that.state.collapse, [lang]:false } }); 
                                        that.props.onSetEtextLang(i)
+                                    
 
                                        /*
                                        // not sure we need a url param
