@@ -5314,11 +5314,88 @@ a.result + #matches.mobile,
    #root .App .SearchPane, #root > div > .resource { position:static;}
 
    .infoPanel + .resource > .ariane { top:18px; }
+   
+   .nav #logo.khmer ~ #login > div.logged > span:first-child {
+      margin-bottom: 0px;
+   }
+  .nav #logo.khmer ~ #login > div.logged > span {
+      margin-left: 35px; 
+  }
+
+  .nav #logo.khmer ~ #login > div.logged { flex-direction:row; }
 }
 
 
+
+.not-logged svg,
+.logged svg { display:none; }
+
+@media (max-width:665px)
+{
+   .not-logged svg { display:block; }
+   .not-logged > span { font-size:0; }
+
+   .logged svg { display:block; }
+   .logged > span { font-size:0; }
+
+   .nav #logo a#BDRC span, 
+   .nav #logo a:last-child span, 
+   .nav #logo a:first-child span { font-size: 22px; }
+
+   .nav #logo.khmer + .links a { margin-left:0; margin-right:0px;}
+
+   
+   
+   .nav.khmerServer > div > #lang,
+   .nav.khmerServer > div > #login > div > span, 
+   .nav.khmerServer > div > :is(a,div,span) { margin:0 0 0 25px !important; }
+   
+   .nav.khmerServer > div > #login { margin-left:auto !important; }
+   
+   .nav.khmerServer > div > #logo { margin-left:10px !important;}
+   
+   .nav #logo.khmer + .links { width:130px; flex-shrink:0;   margin-left:15px !important;}
+}
+
+
+@media (max-width:535px)
+{
+   .nav.khmerServer > div > #logo { display:none; }
+   
+}
+
+@media (max-width:480px)
+{
+   .nav #logo.khmer + .links { flex-shrink:1; }
+   .nav > div { justify-content: flex-end; }
+
+   
+   .nav #logo a#BDRC span, 
+   .nav #logo a:last-child span, 
+   .nav #logo a:first-child span { display:none; }
+   
+   .nav > div > #lang,
+   .nav > div > #login,
+   .nav > div > #login > div > span, 
+   .nav > div > :is(a,div,span) { margin:0 0 0 25px !important; }
+     
+   .nav > div > .close { margin-right:10px !important;  }
+
+   .nav > div > #logo { position:absolute; left:10px; margin-left:0 !important; }
+}
+
+@media (max-width:360px)
+{
+   .nav > div > #lang,
+   .nav > div > #login,
+   .nav > div > #login > div > span, 
+   .nav > div > :is(a,div,span) { margin:0 0 0 17px !important; }
+}
+
 @media only screen and (orientation:portrait) and (max-device-width:767px) and (max-width:480px) {
 
+   
+   /*
    html:not(.auto_rela) {
       overflow:hidden;
    }
@@ -5329,9 +5406,12 @@ a.result + #matches.mobile,
      transform: rotate(90deg) translateY(-100vw);
      transform-origin: 0px 0px;
    }
-   
 
    .fond-logo img { height:100vw;}
+
+   */
+   
+
 
    #root .App #res-container,
    #search-bar > div:first-child > div:first-child { width:calc(100vh - 80px) !important; }

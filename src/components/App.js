@@ -28,6 +28,7 @@ import WarnIcon from '@material-ui/icons/Warning';
 import SearchIcon from '@material-ui/icons/Search';
 import Settings from '@material-ui/icons/SettingsSharp';
 import TranslateIcon from '@material-ui/icons/Translate';
+import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import Apps from '@material-ui/icons/Apps';
 import Close from '@material-ui/icons/Close';
 import Cancel from '@material-ui/icons/Cancel';
@@ -927,16 +928,28 @@ export function top_right_menu(that,etextTitle,backUrl,etextres)
       if(that.props.auth) login = <div id="login" {...(proxied?{class:"proxied"}:{})}>
          {
             !that.props.auth.isAuthenticated() && // TODO check redirection
-               <div>
-               <span onClick={() => that.props.auth.login(that.props.history.location,true)} >{I18n.t("topbar.register")}</span>
-               <span onClick={() => that.props.auth.login(that.props.history.location)} >{I18n.t("topbar.login")}</span>
+               <div class="not-logged">
+                  <span onClick={() => that.props.auth.login(that.props.history.location,true)} >
+                     {I18n.t("topbar.register")}
+                     <svg style={{fill:"#d73449", width:"22px", padding:"1px", border: "2px solid #d73449", borderRadius:"50%"}} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" ><path d="M0 0h24v24H0z" fill="none"/><path d="M15 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm-9-2V7H4v3H1v2h3v3h2v-3h3v-2H6zm9 4c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                  </span>
+                  <span onClick={() => that.props.auth.login(that.props.history.location)} >
+                     {I18n.t("topbar.login")}
+                     <svg style={{fill:"#d73449", width:"28px"}} xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 24 24" viewBox="0 0 24 24"><g><rect fill="none" height="24" width="24"/></g><g><path d="M11,7L9.6,8.4l2.6,2.6H2v2h10.2l-2.6,2.6L11,17l5-5L11,7z M20,19h-8v2h8c1.1,0,2-0.9,2-2V5c0-1.1-0.9-2-2-2h-8v2h8V19z"/></g></svg>
+                  </span>
                </div>
          }
          {
             that.props.auth.isAuthenticated() && 
                <div class="logged">
-               <span onClick={(e) => { that.props.onUserProfile(that.props.history.location); that.props.history.push("/user");    }}>{profileName}</span>
-               <span onClick={(e) => { that.props.auth.logout(that.props.history.location.pathname!=="/user"?window.location.href:window.location.origin) }} >{I18n.t("topbar.logout")}</span>
+                  <span onClick={(e) => { that.props.onUserProfile(that.props.history.location); that.props.history.push("/user");    }}>
+                     {profileName}
+                     <AccountCircleIcon style={{ fontSize:"28px" }}/>
+                  </span>
+                  <span onClick={(e) => { that.props.auth.logout(that.props.history.location.pathname!=="/user"?window.location.href:window.location.origin) }} >
+                     {I18n.t("topbar.logout")}
+                     <svg style={{fill:"#d73449", width:"28px"}} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M0 0h24v24H0z" fill="none"/><path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/></svg>
+                  </span>
                </div>
          }
       </div>

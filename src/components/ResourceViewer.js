@@ -4655,8 +4655,9 @@ class ResourceViewer extends Component<Props,State>
       }
 
       //loggergen.log("tabs?",_T,other,tabs)
+      let get = qs.parse(this.props.history.location.search)
 
-      if(tabs.length) return "?tabs="+tabs.join(",")
+      if(tabs.length) return "?tabs="+tabs.join(",")+(get.v?"&v="+get.v:"")
       else return ""
    }
 
