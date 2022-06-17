@@ -186,8 +186,8 @@ console.log("loca:",window.location.hostname)
 
 const onKhmerUrl = (
       window.location.host.startsWith("khmer-manuscripts")
-   || window.location.host.startsWith("library-dev")
-   || window.location.host.startsWith("localhost")
+   //|| window.location.host.startsWith("library-dev")
+   //|| window.location.host.startsWith("localhost")
 )
 
 
@@ -3254,6 +3254,41 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       return ret
    }
 
+   getSeriesNumber(allProps)  {
+
+      if(!allProps || !this.props.assoRes) return 
+
+      let res = [], 
+         number = allProps.filter(a => a.type === bdo+"seriesNumber"),
+         series = allProps.filter(a => a.type === bdo+"serialInstanceOf"),
+         label = this.props.assoRes[series[0]?.value]?.filter(l => l.fromKey === skos+"prefLabel")
+      
+      if(number?.length) { 
+         number = <span>{number[0].value /*?.replace(/v. ?/g,"")*/ }</span>
+      }
+      
+      if(series?.length) {
+         const qname = shortUri(series[0]?.value)
+         if (qname && label?.length) {
+            label = getLangLabel(this, bdo+"serialInstanceOf", label)
+            if(label?.value) {
+               label = <Link to={"/show/"+qname} lang={label.lang}>{label.value}</Link>
+            } else {
+               label = <Link to={"/show/"+qname}>{qname}</Link>
+            }
+         } else {
+            label = <Link to={"/show/"+qname}>{qname}</Link>
+         }
+      }
+      
+      res.push(<div class="match">
+         <span class="label">{this.fullname(bdo+"seriesNumber",[],true)}{I18n.t("punc.colon")}&nbsp;</span>
+         <div class="multi"><span>{number}&nbsp;{I18n.t("misc.in")}&nbsp;{label}</span></div>
+      </div>)
+
+      return res
+   }
+
    getPublisher(allProps)  {
 
       //if (this.state.filters.datatype[0] !== "Instance")
@@ -4342,6 +4377,9 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
             { type === "Place" && this.getResultProp(bdo+"placeLocatedIn",allProps,false) }
             {/* { this.getResultProp(bdo+"placeType",allProps) } */}
+
+            { (type === "Instance") && this.getSeriesNumber(allProps) }            
+
 
             {/* { this.getResultProp(bdo+"publisherName",allProps,false,false) }
             { this.getResultProp(bdo+"publisherLocation",allProps,false,false) } */}
