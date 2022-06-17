@@ -5355,6 +5355,23 @@ a.result + #matches.mobile,
    .nav.khmerServer > div > #logo { margin-left:10px !important;}
    
    .nav #logo.khmer + .links { width:130px; flex-shrink:0;   margin-left:15px !important;}
+
+   footer#site-footer > .body > div > div, footer#site-footer > .foot > div > div { width: 100%; text-align:center;}
+
+   footer#site-footer > .body #b1 #f2 { text-align:center; } 
+
+   footer#site-footer > .body #b2 { margin-top:20px; } 
+   footer#site-footer > .body #b2 #f2 { margin-top:20px; } 
+   footer#site-footer > .body #b2 #f2 > div { float:none; }
+   footer#site-footer > .body #b2 #f2 #s1 { justify-content: center; }
+   
+   footer#site-footer > div.foot #t1 > :is(#p1,#p2) { justify-content: flex-start; width:250px; display:flex; margin:auto; margin-bottom:40px;}
+   footer#site-footer > div.foot #p2 img + div, footer#site-footer > div.foot #p1 img + div { width:100%;}
+
+   footer#site-footer > div.foot #t2 #p1 { width:300px; margin:auto; display:block; margin-bottom:10px; max-width:100%;}
+   footer#site-footer > div.foot #t2 #p1 > img { display:block; margin:auto; margin-bottom:20px;}
+
+   footer#site-footer > div.foot #donate { float:none; margin-left:0; }
 }
 
 
@@ -5381,15 +5398,22 @@ a.result + #matches.mobile,
      
    .nav > div > .close { margin-right:10px !important;  }
 
+   .nav.khmerServer > div > .close { position: absolute; top:0; }
+
    .nav > div > #logo { position:absolute; left:10px; margin-left:0 !important; }
 }
 
-@media (max-width:360px)
+@media (max-width:375px)
 {
    .nav > div > #lang,
    .nav > div > #login,
    .nav > div > #login > div > span, 
    .nav > div > :is(a,div,span) { margin:0 0 0 17px !important; }
+
+
+   .nav.khmerServer > div > #lang,
+   .nav.khmerServer > div > #login > div > span, 
+   .nav.khmerServer > div > :is(a,div,span) { margin:0 0 0 15px !important; }
 }
 
 @media only screen and (orientation:portrait) and (max-device-width:767px) and (max-width:480px) {

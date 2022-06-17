@@ -990,7 +990,7 @@ export function top_right_menu(that,etextTitle,backUrl,etextres)
          { !onKhmerServer && <Link to="/"  onClick={(ev) => { 
                that.props.history.push({pathname:"/",search:""}); 
                if(that.props.keyword) { that.props.onResetSearch();}
-               setTimeout(() => {
+               if(window.innerWidth > 800)  setTimeout(() => {
                   $("#search-bar input").click()
                   document.querySelector("#search-bar input").focus()
                   document.querySelector("#search-bar").scrollIntoView({block: "start", inline: "nearest", behavior:"smooth"})
@@ -1350,7 +1350,7 @@ class App extends Component<Props,State> {
       if(!this.state.blurSearch) {
          $("#search-bar input[type=text][placeholder]").attr("placeholder",I18n.t("home.start"));
          let elem = document.querySelector("#search-bar input")
-         if(elem) elem.focus()
+         if(elem && window.innerWidth > 800) elem.focus()
       }
 
       // TODO check how this behave with smaller screen width/height
