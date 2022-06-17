@@ -5323,9 +5323,17 @@ a.result + #matches.mobile,
   }
 
   .nav #logo.khmer ~ #login > div.logged { flex-direction:row; }
+
+
 }
 
 
+@media (max-width:800px)
+{
+   .App.home.khmerServer #search-bar > div { width:calc(100vw - 100px);}
+   .App.home.khmerServer #search-bar > div > div { width:100% !important; }
+
+}
 
 .not-logged svg,
 .logged svg { display:none; }
@@ -5372,12 +5380,39 @@ a.result + #matches.mobile,
    footer#site-footer > div.foot #t2 #p1 > img { display:block; margin:auto; margin-bottom:20px;}
 
    footer#site-footer > div.foot #donate { float:none; margin-left:0; }
+
+   .App.home.khmerServer .SearchPane #logo > div { padding-left:0; } 
+
+   .SearchPane #logo > div > div { height:auto; padding:50px 50px;}
+
+   #samples h3 { padding:0 20px;}
+
+   #search-bar { position: relative;}
+   #search-bar > div:first-child > div:first-child { height:85px !important;}
+   #search-bar > div:first-child > div:first-child > div:first-child { margin-top:10px; width:calc(100% - 48px - 15px); margin-right:0;}
+
+   .SearchPane .formControl {
+      bottom: 40px;
+      left: 56px;
+      right: auto;
+      margin-left: 0;
+      width:auto;
+   }
+
+   .SearchPane .formControl > div > div > div { text-align: left;}
+
+   #search-bar button { margin-top:20px;}
+
+   .App.home.khmerServer #search-bar button { margin-top:6px; }
 }
 
 
 @media (max-width:535px)
 {
    .nav.khmerServer > div > #logo { display:none; }
+
+
+   #latest h3 { max-width:65%; margin:0; }
    
 }
 
@@ -5401,6 +5436,40 @@ a.result + #matches.mobile,
    .nav.khmerServer > div > .close { position: absolute; top:0; }
 
    .nav > div > #logo { position:absolute; left:10px; margin-left:0 !important; }
+
+   #root .App #res-container, #search-bar > div:first-child > div:first-child { width:100%; }
+
+   .App.home:not(.khmerServer) #search-bar { padding:15px; width:auto;}
+   #search-bar > div:first-child > div:first-child  { width:calc(100vw - 30px) !important;  box-sizing: border-box;}
+   .SearchPane .formControl { left:31px; bottom:25px; }
+
+   #suggestions li .maxW { display:none; }
+   #suggestions li { padding-left:0; }
+
+   #root .App #res-container { width:calc(100% - 30px) !important; box-sizing: border-box; padding:15px 0px;}
+
+   #samples { padding:15px 0; }
+
+   #latest { padding:15px; }
+   #latest .seeAll { right:15px; top:20px; }
+
+   .App.home.khmerServer .SearchPane #logo > div > div,
+   .SearchPane #logo > div > div { padding:25px; }
+
+   .App.home.khmerServer #search-bar { padding:15px; box-sizing: border-box;}
+
+   .App.home.khmerServer #search-bar > div { width:calc(100vw);}
+   .App.home.khmerServer #search-bar > div > div { width:calc(100% - 30px) !important; }
+
+   .App.home.khmerServer #search-bar .links { padding-right:0; position: relative; width:100%;}
+   .App.home.khmerServer #search-bar .links a { margin: 0px;}
+   .App.home.khmerServer #search-bar .links span { width: 50%; }
+   .App.home.khmerServer #search-bar .links span:first-child { justify-content: flex-end;}
+   .App.home.khmerServer #search-bar .links span:first-child a { margin-right:20px; }
+   .App.home.khmerServer #search-bar .links span:last-child { justify-content: flex-start;}
+   .App.home.khmerServer #search-bar .links span:last-child a { margin-left:20px; }
+
+
 }
 
 @media (max-width:375px)
@@ -5433,12 +5502,13 @@ a.result + #matches.mobile,
 
    .fond-logo img { height:100vw;}
 
-   */
    
-
-
+   
+   
    #root .App #res-container,
-   #search-bar > div:first-child > div:first-child { width:calc(100vh - 80px) !important; }
+   #search-bar > div:first-child > div:first-child 
+   { width:calc(100vh - 80px) !important; }
+   */
 
    #latest .slide-bg > div {
       width: calc((100vh - 2*40px - 30px - 2*15px) / 3);
