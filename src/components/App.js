@@ -83,6 +83,8 @@ import ReactGA from 'react-ga';
 import I18n from 'i18next';
 import { Trans } from 'react-i18next'
 
+import axios from "axios"
+
 
 import LanguageSidePaneContainer from '../containers/LanguageSidePaneContainer';
 import ResourceViewerContainer from '../containers/ResourceViewerContainer';
@@ -749,12 +751,48 @@ export function etext_lang_selec(that,black:boolean = false, elem, DL)
                         // TODO add link to user profile / language preferences
 
                         if(DL) return (
-                           <a target="_blank" rel="alternate" type="text" download /*={DL.split(/[/]/).pop().split(/[.]/)[0]+"_"+i} // can't bypass 'Content-Disposition: attachment; filename=' in response header */
-                              style={{color:"#4a4a4a",textDecoration:"none", display:"block"}} href={DL+"?prefLangs="+i}>
-                              <MenuItem className={current===i?"is-locale":""}>
+                           // better use a file request to send a token
+                           //<a target="_blank" rel="alternate" type="text" download /*={DL.split(/[/]/).pop().split(/[.]/)[0]+"_"+i} // can't bypass 'Content-Disposition: attachment; filename=' in response header */
+                           //   style={{color:"#4a4a4a",textDecoration:"none", display:"block"}} href={DL+"?prefLangs="+i}>
+                           //</a> 
+                              <MenuItem className={current===i?"is-locale":""} onClick={async (event) => { 
+
+                                 const token = localStorage.getItem('id_token');
+                                 
+                                 that.props.onLoading("etextDL",true)
+
+                                 await axios
+                                 .request({
+                                   method: "get",
+                                   responseType: "blob",
+                                   timeout: 4000,
+                                   baseURL: DL.replace(/^(https:..[^/]+).*$/,"$1"),
+                                   url: DL.replace(/^https:..[^/]+(.*)$/,"$1")+"?prefLangs="+i,
+                                   ...token?{headers: {Authorization: `Bearer ${token}`}}:{},
+                                 })
+                                 .then(function (response) {
+                                   //console.log("loaded:", response.data)
+                         
+                                   // download file
+                                   const temp = window.URL.createObjectURL(new Blob([response.data]))
+                                   const link = document.createElement("a")
+                                   link.href = temp
+                                   let filename = DL.split(/[/]/).pop().split(/[.]/)[0]+"_"+i+".txt"
+                                   //debug("filename:",filename)
+                                   link.setAttribute("download", filename)
+                                   link.click()
+                                   window.URL.revokeObjectURL(link)
+                         
+                                 })
+                                 .catch(function (error) {
+                                   //console.error("error:", error.message)
+                                 })
+
+                                 that.props.onLoading("etextDL",false)
+                              }}>
                                  {label}
                               </MenuItem> 
-                           </a> )
+                        )
                         else return ( <MenuItem
                                     className={current===i?"is-locale":""}     
                                     value={i}
