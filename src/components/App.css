@@ -5324,7 +5324,9 @@ a.result + #matches.mobile,
 
   .nav #logo.khmer ~ #login > div.logged { flex-direction:row; }
 
+  .App.home.khmerServer section .abs div { padding-right: 0;}
 
+  .App.home.khmerServer section .float img { object-position: center -14vw; }
 }
 
 
@@ -5404,6 +5406,25 @@ a.result + #matches.mobile,
    #search-bar button { margin-top:20px;}
 
    .App.home.khmerServer #search-bar button { margin-top:6px; }
+
+   .App.home.khmerServer section > div:not(#a), .App.home.khmer.static section.footnote > div, .App.home.khmer.static section > div {
+      padding:30px;
+   }
+
+   .App.home.khmerServer section { padding:30px 0; }
+
+   .App.home.khmerServer section p { max-width:100%; }
+
+   .App.home:is(.khmerServer,.static.khmer) section .noteText:first-child { margin-top:0px; }
+
+   .App.home.khmerServer section#learn > div { display: flex; flex-direction: column;}
+
+   .App.home.khmerServer section .float { order:10; }
+   .App.home.khmerServer section .float img { width:60vw;height:60vw; margin-left:0; object-position: center -18vw; }
+
+   .App.home.khmerServer section .abs { order:11; margin-top:50px;}
+
+   .App.home.khmerServer section > .imgs { text-align: center; }
 }
 
 
@@ -5468,6 +5489,14 @@ a.result + #matches.mobile,
    .App.home.khmerServer #search-bar .links span:first-child a { margin-right:20px; }
    .App.home.khmerServer #search-bar .links span:last-child { justify-content: flex-start;}
    .App.home.khmerServer #search-bar .links span:last-child a { margin-left:20px; }
+
+   .App.home.khmerServer section .float img {  width:80vw;height:80vw; object-position: center -28vw; }
+
+   .App.home.khmerServer section .imgs a { display:block; text-align: center;}
+   .App.home.khmerServer section .imgs a img { margin-right:0; margin-bottom:30px;}
+
+   .App.home.khmerServer #learn + section + section { display: flex; flex-direction: column;}
+   .App.home.khmerServer #learn + section + section > div:first-child { order:1; }
 
 
 }
