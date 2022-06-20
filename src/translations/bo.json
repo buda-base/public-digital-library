@@ -396,7 +396,9 @@
       "see10More": "༡༠ ལས་མང་བར་གཟིགས།",
       "showR": "བསྐྱར་དཔར་གྱི་ {{count}} གྲངས་ལ་གཟིགས།",
       "hideR": "བསྐྱར་དཔར་སྐུང་།",
-      "previewN": "སྡོན་བལྟའི་ {{count}}"
+      "previewN": "སྡོན་བལྟའི་ {{count}}",
+      "tilt1":"Please rotate your device",
+      "tilt2":"This content is optimised for landscape mode"
    },
    "lang": {
       "en": "ཨིན་སྐད།",

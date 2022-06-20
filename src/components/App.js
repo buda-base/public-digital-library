@@ -853,9 +853,11 @@ export function top_right_menu(that,etextTitle,backUrl,etextres)
       </div>
    }
 
+   const portrait = <div class="portrait-warn" onClick={()=>that.setState({collapse:{...that.state.collapse,portrait:true}})}><div><span></span><p data-tilt1={I18n.t("misc.tilt1")} data-tilt2={I18n.t("misc.tilt2")}></p></div></div>
 
    if(etextTitle)
       return (<>
+      {!that.state.collapse.portrait && portrait}
       <div class="mobile-button top" onClick={()=>that.setState({collapse:{...that.state.collapse,navMenu:!that.state.collapse.navMenu}})}><img src="/icons/burger.svg" /></div>
       <div class={"nav"+(onZhMirror?" zhMirror":"")+(that.state.collapse.navMenu?" on":"")}>
          {uiLangPopup}
@@ -975,8 +977,9 @@ export function top_right_menu(that,etextTitle,backUrl,etextres)
       }
 
       return ([
-      <div class="mobile-button top" onClick={()=>that.setState({collapse:{...that.state.collapse,navMenu:!that.state.collapse.navMenu}})}><img src="/icons/burger.svg" /></div>,
-         <div class={"nav"+(onZhMirror?" zhMirror":"")+ (that.state.collapse.navMenu?" on":"")+(onKhmerServer||onKhmerUrl?" khmerServer":"")}>
+      !that.state.collapse.portrait? portrait:null,
+      <div class="mobile-button top" onClick={() => that.setState({collapse:{...that.state.collapse,navMenu:!that.state.collapse.navMenu}})}><img src="/icons/burger.svg" /></div>,
+      <div class={"nav"+(onZhMirror?" zhMirror":"")+ (that.state.collapse.navMenu?" on":"")+(onKhmerServer||onKhmerUrl?" khmerServer":"")}>
          {uiLangPopup}
           <div>
          {logo}

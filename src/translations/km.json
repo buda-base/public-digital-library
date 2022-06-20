@@ -420,7 +420,9 @@
       "see10More": "មើល 10 បន្ថែម",
       "showR": "បង្ហាញ {{count}} ការផលិតជាថ្មី",
       "hideR": "លាក់ការផលិតជាថ្មី",
-      "previewN": "មើលជាមុន {{count}}"
+      "previewN": "មើលជាមុន {{count}}",
+      "tilt1":"Please rotate your device",
+      "tilt2":"This content is optimised for landscape mode"
    },
    "lang": {
       "en": "អង់គ្លេស",

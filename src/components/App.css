@@ -5425,6 +5425,9 @@ a.result + #matches.mobile,
    .App.home.khmerServer section .abs { order:11; margin-top:50px;}
 
    .App.home.khmerServer section > .imgs { text-align: center; }
+
+   #uiLangPopup .bg,
+   #uiLangPopup .fg { margin-left:0 !important; }
 }
 
 
@@ -5436,6 +5439,25 @@ a.result + #matches.mobile,
    #latest h3 { max-width:65%; margin:0; }
    
 }
+
+
+.portrait-warn { display: none;}
+@media (orientation:portrait) and (max-width:480px) {
+   .portrait-warn { display: flex; position: fixed; left:0;top:0;bottom:0;right:0;background-color: rgba(0,0,0,0.5);z-index:100001; justify-content: center; align-items: center;}
+
+   .portrait-warn > div  { background-color:white; border-radius:5px; width:50vw;margin:auto; }
+   .portrait-warn > div > span { background-image: url(/icons/tilt.png); width:35vw;height:35vw;background-size:80% auto; display: block;border-radius: 50%; 
+      background-position: center; background-repeat: no-repeat; margin:auto; animation:3s portrait infinite;
+   }
+   .portrait-warn > div > p { margin-top:0; }
+   .portrait-warn > div > p::before { content:attr(data-tilt1); text-align: center; display: block; font-size:20px; padding:0 10px 5px 10px;}
+   .portrait-warn > div > p::after { content:attr(data-tilt2); text-align: center; display: block; font-size:14px;padding:0 10px;}
+}
+@keyframes portrait {
+   0%    { transform: rotate(0); }
+   65%,100%  { transform: rotate(90deg); }
+ }
+
 
 @media (max-width:480px)
 {

@@ -420,7 +420,9 @@
       "see10More": "See 10 More",
       "showR": "Show {{count}} reproductions",
       "hideR": "Hide reproductions",
-      "previewN": "preview {{count}}"
+      "previewN": "preview {{count}}",
+      "tilt1":"Please rotate your device",
+      "tilt2":"This content is optimised for landscape mode"
    },
    "lang": {
       "en": "English",
