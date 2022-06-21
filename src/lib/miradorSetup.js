@@ -5,6 +5,7 @@ let iiifpres = "//iiifpres.bdrc.io"
 
 const onKhmerUrl = (
       window.location.host.startsWith("khmer-manuscripts")
+   || window.location.search.includes("forceCambodia=true")
    || window.location.host.startsWith("library-dev")
    || window.location.host.startsWith("localhost")
 )

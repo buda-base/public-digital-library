@@ -38,6 +38,7 @@ export class StaticRouteNoExt extends Component<State, Props>
                 this.updateContent();
             } 
         }, 10);
+        /*
         const isMobile = window.matchMedia("only screen and (max-width: 800px)").matches;
         if (isMobile) {
             var viewport = document.querySelector('meta[name="viewport"]');
@@ -46,13 +47,20 @@ export class StaticRouteNoExt extends Component<State, Props>
                 viewport.content = "width=800";
             }
         }
+        */
     }
 
     componentDidUpdate() { 
         this._urlParams = qs.parse(history.location.search) 
         //console.log("u:", I18n.language, this.state.locale, this.props.locale)
         if(I18n.language && this.state.locale !== this.props.locale || this.state.route != this.props.dir+"/"+this.props.page ) {
-            if(this.state.route != this.props.dir+"/"+this.props.page) this.setState({ route: this.props.dir+"/"+this.props.page })
+            if(this.state.route != this.props.dir+"/"+this.props.page) { 
+                this.setState({ route: this.props.dir+"/"+this.props.page, 
+                    collapse:{ ...this.state.collapse, navMenu: false }
+                })
+                window.scrollTo(0,0);
+            }
+
             this.updateContent();  
         }
         /* // impossible to get iframe content height without js code server-side
