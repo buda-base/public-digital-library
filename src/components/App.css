@@ -913,7 +913,21 @@ footer #donate,
 
    /* .App.home.khmer.static h1, .App.home.khmerServer .SearchPane #logo > div > div h1 { font-size:42px; line-height: 48px;} */
 
-   .App.home.khmer.static header { height:50vh; }
+   .App.home.khmer.static header h1 { margin-top:0; font-size:46px; line-height: 53px;}
+
+   .App.home.khmer.static header { display:flex; justify-content: center; align-items: center; }
+   .App.home.khmer.static header img,
+   .App.home.khmer.static header { height:100vh !important; }
+   .App.home.khmer.static header > * { width:100%;}
+   .App.home.khmer.static header img + div { 
+      position: absolute;
+      padding: 25px;
+      box-sizing: border-box;
+      background: white;
+      transform: scale(0.75);
+      transform-origin: 100% 50%;
+    }
+   .App.home.khmer.static header img { position: absolute; }
 
 
 
@@ -5475,7 +5489,75 @@ a.result + #matches.mobile,
    .App.browse.khmer .SearchPane { overflow:auto; }
    
 
+   .resource .data > div > h3 { width:100%; margin-bottom:5px;}
+
+   .resource .data .propCollapse.in-true,
+   .resource .data > div > h3 + * h4.first + *,
+   .resource .data > div > h3 + * { padding-left: 20px; }
+
+   .resource .data:not(#perma) > div:not(.firstImage):not(.browse):not(.header)::after { width:100%; margin:25px 0 25px -10px; box-sizing: border-box;}
+
+   .resource .data > :not([data-prop="bdo:note"]) .sub:not(:first-of-type) { border-top:none; }
+
+   .resource .data > [data-prop="bdo:note"] > div,
+   .resource .data > div .sub > .subgroup > .subsub > h4.first,
+   .resource .data .propCollapseHeader > .sub > h4.first, 
+   .resource .data .propCollapse > div > div > .sub > h4.first, 
+   .resource .data > [data-prop="bdo:creator"] .subgroup .subsub:first-child, 
+   .resource .data > div > .group > .sub > h4.first { width:100%; margin-bottom:5px;}
+
+   .resource .data > [data-prop="bdo:creator"] h4 + .subgroup,
+   .resource .data > [data-prop="bdo:creator"] .subgroup .subsub:first-child > h4 + * { padding-left:0; }
+
+   .resource .data > :not([data-prop="bdo:note"]) .sub:not(:first-of-type) { padding-top:0; }
+
+   .resource .data .propCollapseHeader, 
+   .resource .data .propCollapse.in-true,
+   .resource .data > div:not([data-prop="bdo:creator"]):not([data-prop="bf:identifiedBy"]):not([data-prop="bdo:corporationHasMember"]) .sub > .subgroup > .subsub > h4.first + *,
+   .resource .data .group,
+   .resource .data > div > .group > .sub > .subgroup { width:100%; box-sizing: border-box;}
+   .resource .data .subsub.hoyoh { flex-wrap: wrap;}
+
+   .resource .data > [data-prop="bdo:note"] .sub > h4 + div:not(.subsub) { display: inline; padding-left:0; }
+
+   /* .resource .data.top-props, .resource .data.bot-props { padding-left:30px;} */
+
+   .browse-by { margin-left:20px; margin-top:20px; }
+
+   .resource .title + .data + .data { padding-bottom: 30px; }
+
+   .resource .data .sub.willK:not(.keep) > h4.first { position: relative; }
+   .resource .data [data-prop="bf:identifiedBy"] .sub.keep > h4.first + .subgroup, 
+   .resource .data .sub.willK:not(.keep) > h4.first + .subgroup, 
+   .resource .data .sub.willK:not(.keep) > h4.first + h4.label { margin-left:0; }
+
+   .resource .data .sub.keep > h4.first { display:none; }
+
+   .resource .sub > h4.label:not(:first-of-type) { max-width:100%; box-sizing: border-box;}
+
+   .resource .data.images-title, 
+   .resource .data h2.intro + h2, 
+   .resource .data h2.on, 
+   .resource .data h2.on + h2 a span, 
+   .resource .data.related > div h2, 
+   .resource .data.ext-props > div h2, 
+   .resource .data h2 { line-height:32px; }
+
+   .resource .data#outline > h2, 
+   .resource .data.related > div h2, 
+   .resource .data.ext-props > div h2, 
+   .resource .data h2.on, 
+   .resource .data h2.on + h2 a span, 
+   .resource .data h2.on span:not(.T):not(.lang):not(#a) { font-size:26px; }
+
+   .resource .data h2 + .date { margin-top:10px; display: block; }
+
+   .has-collapse.custom.max-6 .propCollapseHeader.in-true ~ .expand, 
+   .has-collapse.custom:not(.max-10) .propCollapseHeader.in-true ~ .expand, 
+   .has-collapse.custom .propCollapseHeader.in-true ~ .expand { margin-left:20px; margin-top:8px; }
+
 }
+
 
 
 @media (max-width:535px)
@@ -5570,21 +5652,18 @@ a.result + #matches.mobile,
    .App.guidedsearch.khmer .static-container.sticky > div:first-child h1 { max-height:100px;overflow:hidden; transition:max-height 400ms ease-in-out; }
    .App.guidedsearch.khmer.scrolled .static-container.sticky > div:first-child h1 { max-height:0; }
 
-   .App.home.khmer.static header h1 { margin-top:0; font-size:46px; line-height: 53px;}
 
-   .App.home.khmer.static header img,
-   .App.home.khmer.static header { height:100vh !important; }
-   .App.home.khmer.static header > * { width:100%;}
-   .App.home.khmer.static header img + div { 
-      position: absolute;
-      padding: 25px;
-      box-sizing: border-box;
-      background: white;
-      transform: scale(0.75);
-      transform-origin: 100% 50%;
-      top: calc(50vh - 170px);
-    }
+   .App.home.khmer.static section.orange-gradient > div { height:auto; }
+   .App.home.khmer.static section.orange-gradient > div > div { justify-content: center; height:auto; margin-top:15px;}
+   .App.home.khmer.static section.orange-gradient > div > div > div {
+      width: 100%;
+      text-align: center;
+      margin:10px 0 ;
+      padding-left:0;
+   }
+   .App.home.khmer.static section.orange-gradient > div > div + div { margin-top:40px;}
 
+   .App.home.khmer.static section.orange-gradient > div > div > div a { align-self: center; margin-top:15px;}
 }
 
 @media (max-width:375px)

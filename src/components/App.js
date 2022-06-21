@@ -186,8 +186,8 @@ console.log("loca:",window.location.hostname)
 const onKhmerUrl = (
       window.location.host.startsWith("khmer-manuscripts")   
    || window.location.search.includes("forceCambodia=true")
-   || window.location.host.startsWith("library-dev")
-   || window.location.host.startsWith("localhost")
+   //|| window.location.host.startsWith("library-dev")
+   //|| window.location.host.startsWith("localhost")
 )
 
 
