@@ -738,7 +738,7 @@ export function etext_lang_selec(that,black:boolean = false, elem, DL)
             anchorOrigin={{vertical:(!black?'bottom':'top'),horizontal:(!black?'right':'left')}}
             anchorEl={that.state[anchor]}
             onClose={e => { that.setState({...that.state,[anchor]:null,collapse: {...that.state.collapse, [lang]:false } } ) }}
-            className={black?"black":""}
+            className={(black?"black":"")+(DL?" DL":"")}
             >
 
               <FormControl className="formControl">
@@ -755,11 +755,11 @@ export function etext_lang_selec(that,black:boolean = false, elem, DL)
                            //<a target="_blank" rel="alternate" type="text" download /*={DL.split(/[/]/).pop().split(/[.]/)[0]+"_"+i} // can't bypass 'Content-Disposition: attachment; filename=' in response header */
                            //   style={{color:"#4a4a4a",textDecoration:"none", display:"block"}} href={DL+"?prefLangs="+i}>
                            //</a> 
-                              <MenuItem className={current===i?"is-locale":""} onClick={async (event) => { 
+                              <MenuItem /*className={current===i?"is-locale":""}*/ onClick={async (event) => { 
 
                                  const token = localStorage.getItem('id_token');
                                  
-                                 that.props.onLoading("etextDL",true)
+                                 that.props.onLoading("outline",true)
 
                                  await axios
                                  .request({
@@ -788,7 +788,7 @@ export function etext_lang_selec(that,black:boolean = false, elem, DL)
                                    //console.error("error:", error.message)
                                  })
 
-                                 that.props.onLoading("etextDL",false)
+                                 that.props.onLoading("outline",false)
                               }}>
                                  {label}
                               </MenuItem> 

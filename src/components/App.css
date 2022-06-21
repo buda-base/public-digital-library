@@ -2670,6 +2670,9 @@ span[lang^='sa-']:not([lang$='-ewts']) { text-transform: capitalize;}
 
 #popLang.black > div:last-child li { padding-left:10px; }
 
+
+#popLang.DL > div:last-child { margin-top:-10px;margin-left:-10px; }
+
 #popHoverM .resource .data {/* width:100%;*/margin-left:0; }
 
 #popHoverM #anchor { position:absolute; right:57px; margin-top:-3px; cursor:pointer;}
