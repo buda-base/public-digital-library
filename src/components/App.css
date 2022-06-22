@@ -3303,7 +3303,7 @@ span.in { font-weight:500;padding-left:0px; padding-right:10px; margin-left:36px
 .resource .sub .sub { padding-left:60px;}
 .resource .subsub.full .subsub .subsubsub h4.first.prop { font-style:normal; }
 
-.resource .data > div:not([data-prop="bdo:note"]):not(.header):not(.firstImage):not(#perma)
+.resource .data:not(#perma) > div:not([data-prop="bdo:note"]):not(.header):not(.firstImage):not(#perma)
 { display:flex !important; /*align-items: baseline;*/ flex-wrap:wrap;}
 
 .resource.user .data > div:not([data-prop="bdo:note"]):not(.header):not(.firstImage):not(#perma) 
@@ -5371,6 +5371,18 @@ a.result + #matches.mobile,
 
    .App.home.khmer.static h1 { font-size:36px; }
 
+   /*
+   .resource .data#perma > div { display: block !important; text-align: center;}
+   .resource .data#perma > div > :is(#permalink,#DL,#cite) { display: inline-flex; vertical-align: middle;}
+   .resource .data#perma > div > #DL { padding-left:0;border-left:none;}
+   
+   
+   */
+
+   .resource .data#perma > div { flex-wrap: wrap; }
+   .resource .data#perma > div > .NL + .NL + .NL { margin:5px; display: block; width:100%;}
+   #perma #DL ~ #same { margin-left:0; }
+   
 }
 
 .not-logged svg,
@@ -5511,6 +5523,7 @@ a.result + #matches.mobile,
 
    .resource .data > :not([data-prop="bdo:note"]) .sub:not(:first-of-type) { padding-top:0; }
 
+   .data:not(.legal-props) > [data-prop='bdo:creator'] .subsub:not(:first-child),
    .resource .data .propCollapseHeader, 
    .resource .data .propCollapse.in-true,
    .resource .data > div:not([data-prop="bdo:creator"]):not([data-prop="bf:identifiedBy"]):not([data-prop="bdo:corporationHasMember"]) .sub > .subgroup > .subsub > h4.first + *,
@@ -5556,6 +5569,19 @@ a.result + #matches.mobile,
    .has-collapse.custom:not(.max-10) .propCollapseHeader.in-true ~ .expand, 
    .has-collapse.custom .propCollapseHeader.in-true ~ .expand { margin-left:20px; margin-top:8px; }
 
+
+   .resource .data#perma > div { justify-content: center; }
+   .resource .data#perma > div > .NL  { margin:5px; display: block; width:100%;}
+   .resource .data#perma > div > #DL { padding-left:0; border-left:none; }
+   .resource .data#perma > div > #rid { padding-right:0; }
+   .resource .data#perma #cite { padding-right:0; }
+   .resource .data#perma #copyright { margin-left:0; padding-right:0; }
+
+   #popDL.cite { flex-wrap: wrap; width:90vw; }
+   #popDL.cite > div { width:100%; box-sizing: border-box; padding:0 0 16px 0 !important; }
+   #popDL.cite li { max-width: 100%;}
+
+
 }
 
 
@@ -5566,6 +5592,10 @@ a.result + #matches.mobile,
 
 
    #latest h3 { max-width:65%; margin:0; }
+
+
+
+   #popDL.print > div { max-width:80vw;width:80vw; }
    
 }
 
@@ -5664,6 +5694,12 @@ a.result + #matches.mobile,
    .App.home.khmer.static section.orange-gradient > div > div + div { margin-top:40px;}
 
    .App.home.khmer.static section.orange-gradient > div > div > div a { align-self: center; margin-top:15px;}
+
+
+   #popDL.print > div > .actions { flex-wrap: wrap; justify-content: flex-start;  }
+   #popDL.print > div > .actions > a { margin-left:0px; }
+   #popDL.print > div > .actions > a + a { margin:20px 0px 20px 0px; }
+
 }
 
 @media (max-width:375px)
@@ -5679,6 +5715,19 @@ a.result + #matches.mobile,
    .nav.khmerServer > div > :is(a,div,span) { margin:0 0 0 15px !important; }
 
    .App.guidedsearch.khmer .static-container.sticky > div:first-child + div { padding:10px 20px 40px 20px; }
+
+   .resource .data#perma > div > #rid { order:-1; margin-left:0; margin-bottom:10px; }
+
+   .resource .data#perma > div { flex-wrap:nowrap; flex-direction: column;}
+
+   .resource .data#perma > div > :is(#DL,#cite) { padding-right:0; margin:5px;}
+
+   .resource .data#perma > div > #cite { padding-left:0; border-left:none; }
+
+   #popDL.cite > div > .actions { flex-wrap: wrap; justify-content: flex-start;  }
+   #popDL.cite > div > .actions > a { margin-left:0px; }
+   #popDL.cite > div > .actions > a + a { margin:20px 20px 20px 0px; }
+
 }
 
 @media only screen and (orientation:portrait) and (max-device-width:767px) and (max-width:480px) {

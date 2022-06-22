@@ -5675,6 +5675,8 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
       { that.props.IRI && <span id="rid">{shortUri(that.props.IRI)}</span> }
 
+      <span class="NL"></span>
+
       <span id="DL" ref={this._refs["perma_DL"]} onClick={(e) => this.setState({...this.state,anchorPermaDL:e.currentTarget, collapse: {...this.state.collapse, permaDL:!this.state.collapse.permaDL } } ) }>
          <img src="/icons/DL_.svg"/>{I18n.t("resource.download")} { this.state.collapse.permaDL ? <ExpandLess/>:<ExpandMore/>}
       </span>
@@ -5689,9 +5691,12 @@ perma_menu(pdfLink,monoVol,fairUse,other)
             <CiteIcon />{I18n.t("resource.cite")} 
          </span> 
       }
-      
+
+      <span class="NL"></span>
 
       { cLegalD && <span id="copyright" title={this.fullname(cLegalD,false,false,true,false)}><img src={"/icons/"+copyR+".png"}/></span> }
+
+      <span class="NL"></span>
 
          {this.samePopup(same,"permalink",noS)}
 
