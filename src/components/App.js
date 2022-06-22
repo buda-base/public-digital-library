@@ -3265,6 +3265,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       
       if(number?.length) { 
          number = <span>{number[0].value /*?.replace(/v. ?/g,"")*/ }</span>
+      } else {
+         number = false
       }
       
       if(series?.length) {
@@ -3279,9 +3281,11 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          } else {
             label = <Link to={"/show/"+qname}>{qname}</Link>
          }
+      } else {
+         label = false
       }
       
-      res.push(<div class="match">
+      if(label && number) res.push(<div class="match">
          <span class="label">{this.fullname(bdo+"seriesNumber",[],true)}{I18n.t("punc.colon")}&nbsp;</span>
          <div class="multi"><span>{number}&nbsp;{I18n.t("misc.in")}&nbsp;{label}</span></div>
       </div>)
