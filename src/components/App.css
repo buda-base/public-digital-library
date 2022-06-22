@@ -3303,8 +3303,10 @@ span.in { font-weight:500;padding-left:0px; padding-right:10px; margin-left:36px
 .resource .sub .sub { padding-left:60px;}
 .resource .subsub.full .subsub .subsubsub h4.first.prop { font-style:normal; }
 
-.resource .data:not(#perma) > div:not([data-prop="bdo:note"]):not(.header):not(.firstImage):not(#perma)
+.resource .data > div:not([data-prop="bdo:note"]):not(.header):not(.firstImage):not(#perma)
 { display:flex !important; /*align-items: baseline;*/ flex-wrap:wrap;}
+
+.resource .data#perma > div { flex-wrap:nowrap !important;}
 
 .resource.user .data > div:not([data-prop="bdo:note"]):not(.header):not(.firstImage):not(#perma) 
 { align-items: baseline; }
@@ -5304,6 +5306,12 @@ a.result + #matches.mobile,
    .resource .data .images-thumb,
    .resource .data [data-prop="bdo:workHasInstance"] .images-thumb { width:115px;height:115px; margin-right:17px;}
 
+
+   .resource .data > [data-prop="bdo:workHasInstance"] .inst-prov {
+      left: 80px;
+      top: 80px;
+   }
+
    .resource .data .images-thumb-links {margin-left:0;}
 
    .resource .data#outline > h2 { margin:0 0px 20px 20px; }
@@ -5379,8 +5387,10 @@ a.result + #matches.mobile,
    
    */
 
-   .resource .data#perma > div { flex-wrap: wrap; }
-   .resource .data#perma > div > .NL + .NL + .NL { margin:5px; display: block; width:100%;}
+   .resource .data#perma > div { flex-wrap: wrap !important; }
+   
+   .resource .data#perma > div > .NL.nl-same  { margin:5px; display: block; width:100%; }
+
    #perma #DL ~ #same { margin-left:0; }
    
 }
@@ -5503,9 +5513,14 @@ a.result + #matches.mobile,
 
    .resource .data > div > h3 { width:100%; margin-bottom:5px;}
 
+   .resource .data.ext-props > div[data-prop="adm:logEntry"]:not(#a) .sub > .subgroup > .subsub > h4.first + *,
+   .resource .data .subgroup,
+   .resource .data.ext-props .propCollapseHeader + div,
    .resource .data .propCollapse.in-true,
    .resource .data > div > h3 + * h4.first + *,
    .resource .data > div > h3 + * { padding-left: 20px; }
+
+   .resource .data.ext-props .propCollapseHeader.in-false .subgroup {padding-left:0; }
 
    .resource .data:not(#perma) > div:not(.firstImage):not(.browse):not(.header)::after { width:100%; margin:25px 0 25px -10px; box-sizing: border-box;}
 
@@ -5522,13 +5537,16 @@ a.result + #matches.mobile,
    .resource .data > [data-prop="bdo:creator"] .subgroup .subsub:first-child > h4 + * { padding-left:0; }
 
    .resource .data > :not([data-prop="bdo:note"]) .sub:not(:first-of-type) { padding-top:0; }
-
+   
+   .resource .data.legal-props > div h3,
+   .resource .data.ext-props > div[data-prop="adm:logEntry"]:not(#a) .sub > .subgroup > .subsub > h4.first + *,
+   .resource .data.ext-props .subgroup,
    .data:not(.legal-props) > [data-prop='bdo:creator'] .subsub:not(:first-child),
    .resource .data .propCollapseHeader, 
    .resource .data .propCollapse.in-true,
    .resource .data > div:not([data-prop="bdo:creator"]):not([data-prop="bf:identifiedBy"]):not([data-prop="bdo:corporationHasMember"]) .sub > .subgroup > .subsub > h4.first + *,
    .resource .data .group,
-   .resource .data > div > .group > .sub > .subgroup { width:100%; box-sizing: border-box;}
+   .resource .data > div > .group > .sub > .subgroup { width:100%; box-sizing: border-box; padding-right:0px;}
    .resource .data .subsub.hoyoh { flex-wrap: wrap;}
 
    .resource .data > [data-prop="bdo:note"] .sub > h4 + div:not(.subsub) { display: inline; padding-left:0; }
@@ -5571,7 +5589,9 @@ a.result + #matches.mobile,
 
 
    .resource .data#perma > div { justify-content: center; }
-   .resource .data#perma > div > .NL  { margin:5px; display: block; width:100%;}
+   
+   .resource .data#perma > div > .NL.nl-dl  { margin:5px; display: block; width:100%; }
+
    .resource .data#perma > div > #DL { padding-left:0; border-left:none; }
    .resource .data#perma > div > #rid { padding-right:0; }
    .resource .data#perma #cite { padding-right:0; }
@@ -5581,6 +5601,22 @@ a.result + #matches.mobile,
    #popDL.cite > div { width:100%; box-sizing: border-box; padding:0 0 16px 0 !important; }
    #popDL.cite li { max-width: 100%;}
 
+
+   .resource .data.ext-props .propCollapseHeader + div .sub,
+   .resource .data.ext-props .propCollapseHeader > .sub { flex-wrap: wrap;}
+
+
+   .resource .data .images-thumb, 
+   .resource .data [data-prop="bdo:workHasInstance"] .images-thumb { width:100px;height:100px;}
+
+
+   .resource .data > [data-prop="bdo:workHasInstance"] .inst-prov {
+      left: 65px;
+      top: 65px;
+   }
+
+   .resource .data [data-prop="bdo:workHasInstance"] .propCollapse,
+   .resource .data [data-prop="bdo:workHasInstance"] .propCollapseHeader { padding-left:0;  }
 
 }
 
@@ -5592,7 +5628,6 @@ a.result + #matches.mobile,
 
 
    #latest h3 { max-width:65%; margin:0; }
-
 
 
    #popDL.print > div { max-width:80vw;width:80vw; }
@@ -5700,6 +5735,7 @@ a.result + #matches.mobile,
    #popDL.print > div > .actions > a { margin-left:0px; }
    #popDL.print > div > .actions > a + a { margin:20px 0px 20px 0px; }
 
+
 }
 
 @media (max-width:375px)
@@ -5720,6 +5756,8 @@ a.result + #matches.mobile,
 
    .resource .data#perma > div { flex-wrap:nowrap; flex-direction: column;}
 
+   .resource .data#perma > div > .NL.nl-cite  { margin:5px; display: block; width:100%; }
+
    .resource .data#perma > div > :is(#DL,#cite) { padding-right:0; margin:5px;}
 
    .resource .data#perma > div > #cite { padding-left:0; border-left:none; }
@@ -5728,6 +5766,14 @@ a.result + #matches.mobile,
    #popDL.cite > div > .actions > a { margin-left:0px; }
    #popDL.cite > div > .actions > a + a { margin:20px 20px 20px 0px; }
 
+
+   .resource .data .images-thumb, 
+   .resource .data [data-prop="bdo:workHasInstance"] .images-thumb { width:80px;height:80px;}
+
+   .resource .data > [data-prop="bdo:workHasInstance"] .inst-prov {
+      left: 45px;
+      top: 45px;
+   }
 }
 
 @media only screen and (orientation:portrait) and (max-device-width:767px) and (max-width:480px) {

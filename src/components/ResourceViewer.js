@@ -5305,6 +5305,8 @@ class ResourceViewer extends Component<Props,State>
 
          return ([
     
+            !noS ? <span class="NL nl-same"></span>:null,
+
             <span id="same" title={I18n.t("resource.sameL",{count:same.length})} class={noS?"PE0":""} onClick={(e) => this.setState({...this.state,anchorPermaSame:e.currentTarget, collapse: {...this.state.collapse, ["permaSame-"+id]:!this.state.collapse["permaSame-"+id] } } ) }>
                { id === "permalink" && <span>{I18n.t("misc.link",{count:mapSame.length})}</span> }
                { mapSame}
@@ -5675,28 +5677,33 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
       { that.props.IRI && <span id="rid">{shortUri(that.props.IRI)}</span> }
 
-      <span class="NL"></span>
+      <span class="NL nl-dl"></span>
 
       <span id="DL" ref={this._refs["perma_DL"]} onClick={(e) => this.setState({...this.state,anchorPermaDL:e.currentTarget, collapse: {...this.state.collapse, permaDL:!this.state.collapse.permaDL } } ) }>
          <img src="/icons/DL_.svg"/>{I18n.t("resource.download")} { this.state.collapse.permaDL ? <ExpandLess/>:<ExpandMore/>}
       </span>
 
       { that.props.IRI && that.props.IRI.match(/bdr:((MW)|(W[0-9])|(IE))/) && 
-         <span id="cite" onClick={ev => {
-            that.setState({
-               collapse:{ ...that.state.collapse, citation:!that.state.collapse.citation },
-               anchorEl:{ ...that.state.anchorEl, citation:({...ev}).currentTarget }
-            })
-         }}>
-            <CiteIcon />{I18n.t("resource.cite")} 
-         </span> 
+         <>
+            <span class="NL nl-cite"></span>
+            <span id="cite" onClick={ev => {
+               that.setState({
+                  collapse:{ ...that.state.collapse, citation:!that.state.collapse.citation },
+                  anchorEl:{ ...that.state.anchorEl, citation:({...ev}).currentTarget }
+               })
+            }}>
+               <CiteIcon />{I18n.t("resource.cite")} 
+            </span> 
+         </>
       }
 
-      <span class="NL"></span>
 
-      { cLegalD && <span id="copyright" title={this.fullname(cLegalD,false,false,true,false)}><img src={"/icons/"+copyR+".png"}/></span> }
+      { cLegalD && <>
+            <span class="NL nl-copy"></span>
+            <span id="copyright" title={this.fullname(cLegalD,false,false,true,false)}><img src={"/icons/"+copyR+".png"}/></span> 
+         </>
+      }
 
-      <span class="NL"></span>
 
          {this.samePopup(same,"permalink",noS)}
 
