@@ -5245,7 +5245,7 @@ a.result + #matches.mobile,
 
    .resource.user .data .header .before, .resource:not(.user) .data .header::before {width:100px;height:100px; background-size: 65%; }
 
-   .firstImage { height: 100vh;}
+   /* .firstImage { height: 100vh;} */
    
    .resource .data.related > div h2,
    .resource .data.ext-props > div h2 { margin:20px 0; }
@@ -5367,7 +5367,16 @@ a.result + #matches.mobile,
   .App.home.khmerServer section .float img { object-position: center -14vw; }
 
   #root > div > .resource > .index { display:none; }
+
+
+  .resource .data .firstImage { height:60vh; min-width:0vw; position:relative; }
+  .resource .data .firstImage img { max-height:100%; max-width:100%;}
+
+  .resource .data h2.intro + h2 span { max-width: 80vw; }
+
+  .resource .data h2.on + h3 { padding-left:20px; }
 }
+
 
 
 @media (max-width:800px)
@@ -5394,7 +5403,20 @@ a.result + #matches.mobile,
    .resource .data#perma > div > .NL.nl-same  { margin:5px; display: block; width:100%; }
 
    #perma #DL ~ #same { margin-left:0; }
-   
+
+   #perma #copyright {
+      position: absolute;
+      right: 20px;
+   }
+
+
+   .resource a.outL {
+     display: block;
+     width: 150px;
+     margin: 20px 0 0 0;
+   }
+
+   .mirador-container .X { margin-left:24px; }
 }
 
 .not-logged svg,
@@ -5522,6 +5544,7 @@ a.result + #matches.mobile,
    .resource .data > div > h3 + * h4.first + *,
    .resource .data > div > h3 + * { padding-left: 20px; }
 
+   .resource .data.ext-props > div[data-prop="bf:identifiedBy"] :not(.propCollapseHeader) .sub > .subgroup > .subsub > h4.first + *,
    .resource .data.ext-props .propCollapseHeader.in-false .subgroup {padding-left:0; }
 
    .resource .data:not(#perma) > div:not(.firstImage):not(.browse):not(.header)::after { width:100%; margin:25px 0 25px -10px; box-sizing: border-box;}
@@ -5594,7 +5617,8 @@ a.result + #matches.mobile,
 
 
    .resource .data#perma > div { justify-content: center; }
-   
+
+   .resource .data#perma > div > .NL.nl-copy,   
    .resource .data#perma > div > .NL.nl-dl  { margin:5px; display: block; width:100%; }
 
    .resource .data#perma > div > #DL { padding-left:0; border-left:none; }
@@ -5620,6 +5644,7 @@ a.result + #matches.mobile,
       top: 65px;
    }
 
+   .resource .data [data-prop="tmp:propHasEtext"] .group,
    .resource .data [data-prop="tmp:propHasScans"] .group,
    .resource .data [data-prop="bdo:workHasInstance"] .group,
    .resource .data [data-prop="bdo:workHasInstance"] .propCollapse,
@@ -5629,8 +5654,16 @@ a.result + #matches.mobile,
 
    .resource .title h2 .T::before { margin-right:10px; }
    .resource .title h2 .RID { left:60px; }
-
    
+
+
+   #perma #copyright { position: relative; right:auto; }
+   
+
+
+   .resource .data.access.hasIA h3 { flex-direction: column; align-items: center;}
+   .resource .data.access h3::before { background-position: center; margin-bottom:10px; }
+
 }
 
 
@@ -5758,7 +5791,7 @@ a.result + #matches.mobile,
    .resource .title h2 .RID { display: none !important;}
 
    .resource .title { top:0; width:calc(100% - 66px); position: fixed; right:5px;z-index:10;flex-wrap: wrap;}
-   .resource .title::before { width:60px; height:100%; background: #efefef; display: block; content:'';margin-left:-60px;position:absolute;top:0;left:0;z-index:-1;}
+   .resource .title::before { width:calc(100% + 60px); height:100%; background: #efefef; display: block; content:'';margin-left:-60px;position:absolute;top:0;left:0;z-index:-1;}
    .resource .title::after { width:calc(100% + 66px); height:10px; background: white; display: block; content:'';margin-left:-56px;}
    #root > div > .resource > .index + div { top:30px;}
    .resource .title h2 { transition:height 200ms; }
@@ -5766,8 +5799,11 @@ a.result + #matches.mobile,
    .resource .title h2 .T { transition:font-size 200ms; }
    .resource.scrolled .title h2 .T { font-size:0;   }
 
-   .resource .data .firstImage { height:60vh; min-width:0vw; position:relative; }
-   .resource .data .firstImage img { max-height:100%; max-width:100%;}
+
+
+   .resource .fairuse-IA-link { flex-direction: column; }
+   .resource .fairuse-IA-link img.ia { margin-right:0; margin-bottom:5px; }
+   .resource .fairuse-IA-link img.link-out { margin-left:0; margin-top:5px; }
 }
 
 @media (max-width:375px)
