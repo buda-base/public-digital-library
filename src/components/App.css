@@ -4898,7 +4898,7 @@ a.result .contenu ul > div:last-child h3[lang=bo] span { font-size:18px;}
 
    #res-header > div { margin-left:24px; width:100%;}
 
-   .nav #donate { width:60px; color:transparent;padding-left:10px;}
+   .nav #donate { width:60px; color:transparent;padding-left:10px; font-size:0; }
    #results, #samples { width:100%;margin:0 auto; padding:30px calc((100vw - 700px) / 2);}
 
    .resource .title h2 .RID { max-width:80%; }
@@ -5365,6 +5365,8 @@ a.result + #matches.mobile,
   .App.home.khmerServer section .abs div { padding-right: 0;}
 
   .App.home.khmerServer section .float img { object-position: center -14vw; }
+
+  #root > div > .resource > .index { display:none; }
 }
 
 
@@ -5538,6 +5540,8 @@ a.result + #matches.mobile,
 
    .resource .data > :not([data-prop="bdo:note"]) .sub:not(:first-of-type) { padding-top:0; }
    
+   .propCollapse, .has-collapse.custom .propCollapseHeader, 
+   .resource .data [data-prop="bdo:workHasInstance"] .group,
    .resource .data.legal-props > div h3,
    .resource .data.ext-props > div[data-prop="adm:logEntry"]:not(#a) .sub > .subgroup > .subsub > h4.first + *,
    .resource .data.ext-props .subgroup,
@@ -5547,6 +5551,7 @@ a.result + #matches.mobile,
    .resource .data > div:not([data-prop="bdo:creator"]):not([data-prop="bf:identifiedBy"]):not([data-prop="bdo:corporationHasMember"]) .sub > .subgroup > .subsub > h4.first + *,
    .resource .data .group,
    .resource .data > div > .group > .sub > .subgroup { width:100%; box-sizing: border-box; padding-right:0px;}
+
    .resource .data .subsub.hoyoh { flex-wrap: wrap;}
 
    .resource .data > [data-prop="bdo:note"] .sub > h4 + div:not(.subsub) { display: inline; padding-left:0; }
@@ -5615,9 +5620,17 @@ a.result + #matches.mobile,
       top: 65px;
    }
 
+   .resource .data [data-prop="tmp:propHasScans"] .group,
+   .resource .data [data-prop="bdo:workHasInstance"] .group,
    .resource .data [data-prop="bdo:workHasInstance"] .propCollapse,
    .resource .data [data-prop="bdo:workHasInstance"] .propCollapseHeader { padding-left:0;  }
+   
+   .resource .data.ext-props > a:first-child { left:35px; }
 
+   .resource .title h2 .T::before { margin-right:10px; }
+   .resource .title h2 .RID { left:60px; }
+
+   
 }
 
 
@@ -5637,6 +5650,9 @@ a.result + #matches.mobile,
 
 .portrait-warn { display: none;}
 @media (orientation:portrait) and (max-width:480px) {
+
+   .resource .data#head .header .loader { z-index:1; } 
+
    .portrait-warn { display: flex; position: fixed; left:0;top:0;bottom:0;right:0;background-color: rgba(0,0,0,0.5);z-index:100001; justify-content: center; align-items: center;}
 
    .portrait-warn > div  { background-color:white; border-radius:5px; width:50vw;margin:auto; }
@@ -5736,6 +5752,22 @@ a.result + #matches.mobile,
    #popDL.print > div > .actions > a + a { margin:20px 0px 20px 0px; }
 
 
+   .resource .title h2 .T { font-size:18px; }
+   .resource .title h2 .T::before { display:block; margin:auto; background-position: center !important; margin-bottom:0px;  }  
+   .resource .title h2 .T.work::before { background-size: auto 40px;}
+   .resource .title h2 .RID { display: none !important;}
+
+   .resource .title { top:0; width:calc(100% - 66px); position: fixed; right:5px;z-index:10;flex-wrap: wrap;}
+   .resource .title::before { width:60px; height:100%; background: #efefef; display: block; content:'';margin-left:-60px;position:absolute;top:0;left:0;z-index:-1;}
+   .resource .title::after { width:calc(100% + 66px); height:10px; background: white; display: block; content:'';margin-left:-56px;}
+   #root > div > .resource > .index + div { top:30px;}
+   .resource .title h2 { transition:height 200ms; }
+   .resource.scrolled .title h2 { height:60px;  }
+   .resource .title h2 .T { transition:font-size 200ms; }
+   .resource.scrolled .title h2 .T { font-size:0;   }
+
+   .resource .data .firstImage { height:60vh; min-width:0vw; position:relative; }
+   .resource .data .firstImage img { max-height:100%; max-width:100%;}
 }
 
 @media (max-width:375px)

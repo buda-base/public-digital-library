@@ -964,6 +964,8 @@ class OutlineSearchBar extends Component<Props,State>
 }
 
 
+let oldScrollTop = 0
+
 
 class ResourceViewer extends Component<Props,State>
 {
@@ -1026,6 +1028,22 @@ class ResourceViewer extends Component<Props,State>
          this.setState({...this.state, openUV:false, openMirador:false, openDiva:false, ...(fromSearch?{fromSearch}:{}) } ); 
 
       }
+
+
+      $(window).off("scroll").on("scroll", (ev) => {
+         if(ev.currentTarget){
+         let down = false
+         if(oldScrollTop < ev.currentTarget.scrollY) down = true
+         
+         if(down) {
+            if(ev.currentTarget.scrollY >= 50) $(".resource").addClass("scrolled")
+         } else {
+            if(ev.currentTarget.scrollY <= 0) $(".resource").removeClass("scrolled")
+         }
+
+         oldScrollTop = ev.currentTarget.scrollY
+         }
+      })
    }
 
    static setTitleFromTabs(props,state) {
@@ -1058,6 +1076,8 @@ class ResourceViewer extends Component<Props,State>
    static getDerivedStateFromProps(props:Props,state:State)
    {
       let s
+
+      $(window).scroll()
 
       if(state.collapse.citation) {
 
@@ -4665,7 +4685,7 @@ class ResourceViewer extends Component<Props,State>
 
       //loggergen.log("H2?",rootC)
 
-      if(other) return <h2 title={title.value} lang={this.props.locale}><Link  {... rootC?{onClick:rootC}:{}}  to={"/show/"+shortUri(other)+this.getTabs(T_,other)}>{_T}<span>{_befo}{title.value}</span>{this.tooltip(title.lang)}</Link></h2>
+      if(other) return <h2 title={title.value} lang={this.props.locale}><Link  {... rootC?{onClick:rootC}:{onClick:() => setTimeout(()=>window.scrollTo(0,0),10)}}  to={"/show/"+shortUri(other)+this.getTabs(T_,other)}>{_T}<span>{_befo}{title.value}</span>{this.tooltip(title.lang)}</Link></h2>
       else return <h2 title={title.value} lang={this.props.locale} class="on">{_T}<span>{_befo}{title.value}</span>{this.tooltip(title.lang)}</h2>
    }
 
@@ -4688,7 +4708,7 @@ class ResourceViewer extends Component<Props,State>
       }
       else {
           let loaded = this.props.resources && this.props.resources[other?other:this.props.IRI] 
-          if(other) title = <h2 lang={this.props.locale}><Link to={"/show/"+shortUri(other)+this.getTabs(T_,other)}>{_T}<span>{loaded && (T_ === "Work" || T_ === "Instance")?I18n.t("resource.noT"):shortUri(other?other:this.props.IRI)}</span></Link></h2>
+          if(other) title = <h2 lang={this.props.locale}><Link onClick={() => setTimeout(()=>window.scrollTo(0,0),10)} to={"/show/"+shortUri(other)+this.getTabs(T_,other)}>{_T}<span>{loaded && (T_ === "Work" || T_ === "Instance")?I18n.t("resource.noT"):shortUri(other?other:this.props.IRI)}</span></Link></h2>
           else  title = <h2 class="on" lang={this.props.locale}>{_T}<span>{loaded && (T_ === "Work" || T_ === "Instance")?I18n.t("resource.noT"):shortUri(other?other:this.props.IRI)}</span></h2>
       }
       
