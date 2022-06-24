@@ -7347,7 +7347,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
             loggergen.log("collapse!",osearch,root,opart,JSON.stringify(collapse,null,3),this.props.outlines[opart])
 
             let nodes = Object.values(this.props.outlines).reduce( (acc,v) => ([...acc, ...(v["@graph"]?v["@graph"]:[v])]), []), matches = []
-            let opart_node = nodes.filter(n => n["@id"] === opart)
+            let opart_node = nodes.filter(n => n["@id"] === opart), path = []
 
             if(!osearch && !get.osearch && !this.props.outlines[opart]) {             
                let parent_nodes = nodes.filter(n => n["@id"] === opart) //n => n.hasPart && (n.hasPart === opart || n.hasPart.includes(opart)))
@@ -7424,9 +7424,10 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                if(root !== opart && nodes && nodes.length) {
                   let head = opart, done_opart = false, parent_head = null, child_node
                   //console.log("opart??",opart,head)
+                  const already = []
                   do {
                      let head_node = nodes.filter(n => n.hasPart && (n.hasPart === head || n.hasPart.includes(head)))
-                     //loggergen.log("head?",head, head_node)
+                     //loggergen.log("head?",head, head_node, child_node)
                      head = head_node
                      if(head && head.length) { 
                         head = head[0]["@id"]
@@ -7440,13 +7441,18 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                               let vol = this.props.outlines[child_node["@id"]]["@graph"].filter(n => n["@id"] === child_node["@id"])
                               if(vol.length) vol = this.props.outlines[child_node["@id"]]["@graph"].filter(n => n["@id"] === vol[0].contentLocation)
                               if(vol.length) vol = vol[0].contentLocationVolume
-                              //console.log("#641",head_node,child_node,vol)
-                              this.props.onGetOutline("tmp:uri", { partType: "bdr:PartTypeVolume", "tmp:hasNonVolumeParts": true, volumeNumber: vol }, head);
+                              if(!already.includes(head)) { // fix side-effect of #729 (prevent opening same text from multiple volumes like bdr:MW3CN27014_K0022-40) 
+                                 this.props.onGetOutline("tmp:uri", { partType: "bdr:PartTypeVolume", "tmp:hasNonVolumeParts": true, volumeNumber: vol }, head);
+                                 already.push(head)
+                              }
                            }
                         }
                         if(collapse["outline-"+root+"-"+head] === undefined) { //} && (opart !== root || head !== root)) {
                            collapse["outline-"+root+"-"+head] = true ;                           
-                           if(!done_opart && head_node["tmp:hasNonVolumeParts"] && (head_node.partType === "bdr:PartTypeSection" || head === root)) {
+                           //console.log("parent_head:",root,head,already) //,JSON.stringify(head_node,null,3),done_opart)
+                           if((!done_opart 
+                                 || head_node["tmp:hasNonVolumeParts"] // #729 need to open virtual volume when page node is a sub sub node of it                                    
+                              ) && (head_node.partType === "bdr:PartTypeSection" || head === root)) {
                               let parent_head = []
                               if(head === root) parent_head = [ head_node ]
                               else parent_head = nodes.filter(n => n.hasPart && (n.hasPart === head || n.hasPart.includes(head)))
@@ -7458,7 +7464,10 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                                     if(vol.length) { 
                                        vol = vol[0].contentLocationVolume
                                        //console.log("ready for vol."+vol+" in "+head,head_node)
-                                       this.props.onGetOutline("tmp:uri", { partType: "bdr:PartTypeVolume", "tmp:hasNonVolumeParts": true, volumeNumber: vol }, head);
+                                       if(!already.includes(head)) { // fix side-effect of #729 (prevent opening same text from multiple volumes like bdr:MW3CN27014_K0022-40)
+                                          this.props.onGetOutline("tmp:uri", { partType: "bdr:PartTypeVolume", "tmp:hasNonVolumeParts": true, volumeNumber: vol }, head);
+                                          already.push(head)
+                                       }
                                     }
                                  }
                                  parent_head = parent_head[0]["@id"]
@@ -7494,7 +7503,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
             } else {
                let parent_nodes = nodes.filter(n => n.hasPart && (n.hasPart === opart || n.hasPart.includes(opart)))
-               console.log("parent:",parent_nodes)
+               //console.log("parent:",parent_nodes,opart_node)
                if(parent_nodes.length) { 
                   let update = false
                   for(let n of parent_nodes) {
@@ -7510,8 +7519,18 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                      } else if(n.parent?.startsWith("bdr:I") && collapse["outline-"+root+"-"+n["@id"]+";"+n.parent] === undefined){
                         collapse["outline-"+root+"-"+n["@id"]+";"+n.parent] = true
                         update = true
+                     } else { // #729 need to open node if page node is a sub node of it
+                        const p = nodes.filter(m => m.hasPart && (m.hasPart === n["@id"] || m.hasPart.includes(n["@id"])))
+                        //console.log("n.p:",n["@id"],n.parent, Object.keys(n),p)
+                        for(const q of p) {
+                           if(collapse["outline-"+root+"-"+n["@id"]+";"+q["@id"]] === undefined) {
+                              collapse["outline-"+root+"-"+n["@id"]+";"+q["@id"]] = true
+                              update = true                              
+                           }
+                        }
                      }
                   }
+
                   if(update) this.setState({ collapse })
                }
             }
@@ -7613,8 +7632,12 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                      const ShowNbChildren = 40
 
                      // TODO: case of a search 
-                     let isParent = sorted.filter(n => n.id === opart || !osearch && opartInVol.includes(n.partIndex) || osearchIds.includes(n.id) ), start = 0, end = start + ShowNbChildren
+
+                     // use opartInVol only when corresponding with page node 
+                     const parentIsVol = nodes.filter(m => m.hasPart && (m.hasPart === opart || m.hasPart.includes(opart))).map(m => m["@id"]).some(o => o && o.startsWith("bdr:I"))
+                     let isParent = sorted.filter(n => n.id === opart || !osearch && parentIsVol && opartInVol.includes(n.partIndex) || osearchIds.includes(n.id) ), start = 0, end = start + ShowNbChildren
                      if(isParent.length) {                                             
+                        //console.log("opIv:",opartInVol,opart_node,parentIsVol)
                         let mustBe = sorted.map( (n,i) => {
                            //console.log("isP?",n,i)
                            if(isParent.some(m => m.id === n.id)) {
