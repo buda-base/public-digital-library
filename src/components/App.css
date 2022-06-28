@@ -5669,6 +5669,17 @@ a.result + #matches.mobile,
    .resource .data.access.hasIA h3 { flex-direction: column; align-items: center;}
    .resource .data.access h3::before { background-position: center; margin-bottom:10px; }
 
+
+   .resource .data#outline > div:last-child { overflow-x:auto; }
+   .resource .data#outline .root + div span.top { min-width:75vw; margin-top:7px; }
+   .resource .data#outline .root + div > .top:first-child { margin-top:5px;}
+   .resource .data#outline .root + div .top + .details { min-width:90vw; }
+   .resource .data#outline .root + div .abs { transform: scale(1.3);  transform-origin: 0 50%; }
+
+   .resource .data#outline .root + div .top + .details .sub h4.first { width:80px; padding-right:0; }
+   .resource .data#outline .root + div .top + .details .sub h4.first + * { width: calc(100% - 80px - 40px); padding-right:0; } 
+
+   .resource .data#outline > .search input { width: calc(100vw - 170px); }
 }
 
 
