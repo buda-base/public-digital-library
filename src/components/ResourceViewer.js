@@ -5306,8 +5306,7 @@ class ResourceViewer extends Component<Props,State>
             viaf = viaf[0].value
             if(viaf && !same.filter(s => s.value.includes("worldcat.org/")).length) same.push({value:viaf.replace(/^.*\/([^/]+)$/,"https://www.worldcat.org/identities/containsVIAFID/$1"),type:"uri"})
          } 
-            
-
+         
          let mapSame = same.map(s => {
             //loggergen.log("s.val:",s.value)
 
@@ -5632,8 +5631,9 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          same = same.concat([{ type:"uri", value:fullUri(this.props.IRI).replace(/admindata/,"resource")}])
          noS = true
       }
+   } else {
+      if(!same.some(s => s.value && !s.value.startsWith(bdr))) noS = true
    }
-   
 
    let isEtextVol = false
    if(this.props.IRI && getEntiType(this.props.IRI) === "Etext") {
@@ -8945,13 +8945,15 @@ perma_menu(pdfLink,monoVol,fairUse,other)
             }
          }
 
+         const hasTabs = [wTitle,iTitle,rTitle].filter(e=>e).length > 1 ? " hasTabs ": ""
+
 
          return (
          [getGDPRconsent(this),   
          <div class={isMirador?"H100vh OF0":""}>
             { ["Images","Instance"].includes(_T) && <abbr class="unapi-id" title={this.props.IRI}></abbr> }
             { infoPanelR }
-            <div className={"resource "+getEntiType(this.props.IRI).toLowerCase() + (this.props.simple?" simple":"")} {...this.props.simple?{onClick:sendMsg}:{}}>                              
+            <div className={"resource "+hasTabs+getEntiType(this.props.IRI).toLowerCase() + (this.props.simple?" simple":"")} {...this.props.simple?{onClick:sendMsg}:{}}>                              
                {searchUrl && <div class="ariane">
                   <Link to={searchUrl.startsWith("latest")?searchUrl:"/search?"+searchUrl} onClick={(ev) => {
                      this.props.onLoading("search",true)                     
