@@ -7020,6 +7020,12 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   }
                   */
 
+                  const etextDL = (qname) => (
+                     <a onClick={(e) => this.setState({...this.state,anchorLangDL:e.currentTarget, collapse: {...this.state.collapse, langDL:!this.state.collapse.langDL } } ) } 
+                        class="ulink" style={{cursor:"pointer"}}>
+                           {etext_lang_selec(this,true,<>{I18n.t("mirador.downloadE")}</>,fullUri(qname).replace(/^http:/,"https:")+".txt")}
+                     </a>
+                  )
 
 
                   if(g.volumeNumber) { 
@@ -7035,7 +7041,8 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                            //nav.push(<span>|</span>)
                            nav.push(<Link to={"/show/"+txt[0].eTextResource+"?backToEtext="+this.props.IRI+"#open-viewer"} class="ulink">{I18n.t("result.openE")}</Link>)
                            nav.push(<span>|</span>)
-                           nav.push(<a href={fullUri(txt[0].eTextResource).replace(/^http:/,"https:")+".txt"} class="ulink"  download type="text" target="_blank">{I18n.t("mirador.downloadE")}</a>)
+                           //nav.push(<a href={fullUri(txt[0].eTextResource).replace(/^http:/,"https:")+".txt"} class="ulink"  download type="text" target="_blank">{I18n.t("mirador.downloadE")}</a>)
+                           nav.push(etextDL(txt[0].eTextResource))
 
                         }
                         else {
@@ -7052,7 +7059,8 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                      //nav.push(<span>|</span>)
                      nav.push(<Link to={"/show/"+g.eTextResource+"?backToEtext="+this.props.IRI+"#open-viewer"} class="ulink">{I18n.t("result.openE")}</Link>)
                      nav.push(<span>|</span>)
-                     nav.push(<a href={fullUri(g.eTextResource).replace(/^http:/,"https:")+".txt"} class="ulink" download type="text" target="_blank">{I18n.t("mirador.downloadE")}</a>)
+                     //nav.push(<a href={fullUri(g.eTextResource).replace(/^http:/,"https:")+".txt"} class="ulink" download type="text" target="_blank">{I18n.t("mirador.downloadE")}</a>)                     
+                     nav.push(etextDL(g.eTextResource))
 
                   }
 
@@ -7130,6 +7138,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
       return (
          <div class="data etextrefs" id="outline">
+            {this.props.loading && <Loader  options={{position:"fixed",left:"calc(50% + 100px)",top:"calc(50% - 20px)"}} loaded={!this.props.loading}/>}
             <h2>{I18n.t("home.search")}</h2>
             <div class="search on">
                <div>

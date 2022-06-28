@@ -16,6 +16,7 @@
       "@turf/meta": "^6.0.2",
       "array-move": "^2.1.0",
       "auth0-js": "^9.6.1",
+      "axios": "^0.27.2",
       "citation-js": "^0.5.1",
       "dms-to-decimal": "^0.0.6",
       "downloadjs": "^1.4.7",

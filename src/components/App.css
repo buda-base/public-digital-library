@@ -2036,6 +2036,8 @@ h4:not(:hover) > .lang
 .resource .data#outline { background-color: #ffffff; padding: 35px; padding-bottom: 0; padding-top:45px; }
 .resource .data#outline > h2 { margin-left:35px; margin-bottom:35px; }
 .resource .data#outline > div { background-color: #fcf5e2; padding: 25px 35px; }
+.resource .data#outline > div.loader { background-color: transparent; padding: 0;  }
+
 .resource .data#outline > .search { background-color: #fce08d; justify-content:center; padding:20px; position:relative; }
 .resource .data#outline > .search > div { display:inline-block; position: relative;}
 .resource .data#outline > .search::after { content:none !important; }
@@ -2685,6 +2687,9 @@ span[lang^='sa-']:not([lang$='-ewts']) { text-transform: capitalize;}
 #popLang > div:last-child li.is-locale { font-weight:900; }
 
 #popLang.black > div:last-child li { padding-left:10px; }
+
+
+#popLang.DL > div:last-child { margin-top:-10px;margin-left:-10px; }
 
 #popHoverM .resource .data {/* width:100%;*/margin-left:0; }
 

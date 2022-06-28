@@ -84,6 +84,8 @@ import ReactGA from 'react-ga';
 import I18n from 'i18next';
 import { Trans } from 'react-i18next'
 
+import axios from "axios"
+
 
 import LanguageSidePaneContainer from '../containers/LanguageSidePaneContainer';
 import ResourceViewerContainer from '../containers/ResourceViewerContainer';
@@ -738,7 +740,7 @@ export function etext_lang_selec(that,black:boolean = false, elem, DL)
             anchorOrigin={{vertical:(!black?'bottom':'top'),horizontal:(!black?'right':'left')}}
             anchorEl={that.state[anchor]}
             onClose={e => { that.setState({...that.state,[anchor]:null,collapse: {...that.state.collapse, [lang]:false } } ) }}
-            className={black?"black":""}
+            className={(black?"black":"")+(DL?" DL":"")}
             >
 
               <FormControl className="formControl">
@@ -751,12 +753,48 @@ export function etext_lang_selec(that,black:boolean = false, elem, DL)
                         // TODO add link to user profile / language preferences
 
                         if(DL) return (
-                           <a target="_blank" rel="alternate" type="text" download /*={DL.split(/[/]/).pop().split(/[.]/)[0]+"_"+i} // can't bypass 'Content-Disposition: attachment; filename=' in response header */
-                              style={{color:"#4a4a4a",textDecoration:"none", display:"block"}} href={DL+"?prefLangs="+i}>
-                              <MenuItem className={current===i?"is-locale":""}>
+                           // better use a file request to send a token
+                           //<a target="_blank" rel="alternate" type="text" download /*={DL.split(/[/]/).pop().split(/[.]/)[0]+"_"+i} // can't bypass 'Content-Disposition: attachment; filename=' in response header */
+                           //   style={{color:"#4a4a4a",textDecoration:"none", display:"block"}} href={DL+"?prefLangs="+i}>
+                           //</a> 
+                              <MenuItem /*className={current===i?"is-locale":""}*/ onClick={async (event) => { 
+
+                                 const token = localStorage.getItem('id_token');
+                                 
+                                 that.props.onLoading("outline",true)
+
+                                 await axios
+                                 .request({
+                                   method: "get",
+                                   responseType: "blob",
+                                   timeout: 4000,
+                                   baseURL: DL.replace(/^(https:..[^/]+).*$/,"$1"),
+                                   url: DL.replace(/^https:..[^/]+(.*)$/,"$1")+"?prefLangs="+i,
+                                   ...token?{headers: {Authorization: `Bearer ${token}`}}:{},
+                                 })
+                                 .then(function (response) {
+                                   //console.log("loaded:", response.data)
+                         
+                                   // download file
+                                   const temp = window.URL.createObjectURL(new Blob([response.data]))
+                                   const link = document.createElement("a")
+                                   link.href = temp
+                                   let filename = DL.split(/[/]/).pop().split(/[.]/)[0]+"_"+i+".txt"
+                                   //debug("filename:",filename)
+                                   link.setAttribute("download", filename)
+                                   link.click()
+                                   window.URL.revokeObjectURL(link)
+                         
+                                 })
+                                 .catch(function (error) {
+                                   //console.error("error:", error.message)
+                                 })
+
+                                 that.props.onLoading("outline",false)
+                              }}>
                                  {label}
                               </MenuItem> 
-                           </a> )
+                        )
                         else return ( <MenuItem
                                     className={current===i?"is-locale":""}     
                                     value={i}
@@ -3235,6 +3273,45 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       return ret
    }
 
+   getSeriesNumber(allProps)  {
+
+      if(!allProps || !this.props.assoRes) return 
+
+      let res = [], 
+         number = allProps.filter(a => a.type === bdo+"seriesNumber"),
+         series = allProps.filter(a => a.type === bdo+"serialInstanceOf"),
+         label = this.props.assoRes[series[0]?.value]?.filter(l => l.fromKey === skos+"prefLabel")
+      
+      if(number?.length) { 
+         number = <span>{number[0].value /*?.replace(/v. ?/g,"")*/ }</span>
+      } else {
+         number = false
+      }
+      
+      if(series?.length) {
+         const qname = shortUri(series[0]?.value)
+         if (qname && label?.length) {
+            label = getLangLabel(this, bdo+"serialInstanceOf", label)
+            if(label?.value) {
+               label = <Link to={"/show/"+qname} lang={label.lang}>{label.value}</Link>
+            } else {
+               label = <Link to={"/show/"+qname}>{qname}</Link>
+            }
+         } else {
+            label = <Link to={"/show/"+qname}>{qname}</Link>
+         }
+      } else {
+         label = false
+      }
+      
+      if(label && number) res.push(<div class="match">
+         <span class="label">{this.fullname(bdo+"seriesNumber",[],true)}{I18n.t("punc.colon")}&nbsp;</span>
+         <div class="multi"><span>{number}&nbsp;{I18n.t("misc.in")}&nbsp;{label}</span></div>
+      </div>)
+
+      return res
+   }
+
    getPublisher(allProps)  {
 
       //if (this.state.filters.datatype[0] !== "Instance")
@@ -4323,6 +4400,9 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
             { type === "Place" && this.getResultProp(bdo+"placeLocatedIn",allProps,false) }
             {/* { this.getResultProp(bdo+"placeType",allProps) } */}
+
+            { (type === "Instance") && this.getSeriesNumber(allProps) }            
+
 
             {/* { this.getResultProp(bdo+"publisherName",allProps,false,false) }
             { this.getResultProp(bdo+"publisherLocation",allProps,false,false) } */}
