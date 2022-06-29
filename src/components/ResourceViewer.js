@@ -95,6 +95,8 @@ import { Decimal2DMS } from 'dms-to-decimal';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
 
+import { useSwipeable } from 'react-swipeable'
+
 import {svgEtextS,svgInstanceS,svgImageS} from "./icons"
 
 import {keywordtolucenequery,lucenequerytokeyword,lucenequerytokeywordmulti, isAdmin} from './App';
@@ -961,6 +963,20 @@ class OutlineSearchBar extends Component<Props,State>
          </div>
       )
    }
+}
+
+function MySwipeable(props) {
+   const handlers = useSwipeable({
+      onSwipedRight: (ev) => {
+         console.log("User Swiped Right!", ev)
+         props.scrollRel(ev)
+      },
+      onSwipedLeft: (ev) => { 
+         console.log("User Swiped Left!", ev)
+         props.scrollRel(ev, true)
+      },
+   });
+   return <div {...handlers}>{props.children}</div>
 }
 
 
@@ -3633,7 +3649,7 @@ class ResourceViewer extends Component<Props,State>
          iKeep++   
          let e = { ..._e } ;
 
-         if(prop === bdo+"workHasInstance" && e.value && e.value.match(new RegExp(bdr+"W"))) continue ;
+         if(prop === bdo+"workHasInstance" && e.value && e.value.match(new RegExp(bdr+"(W|IE)"))) continue ;
 
 
 
@@ -8758,16 +8774,20 @@ perma_menu(pdfLink,monoVol,fairUse,other)
             }
          }
 
-         let scrollRel = (ev,next) => { 
+         let scrollRel = (ev,next,smooth) => { 
+            let rel = $(".resource .data.related > div:first-child > div:last-child") 
+            let div = rel.find(".rel-or-crea > div:first-child")
+            let nb = Math.floor(rel.width()/(div.width()+Number(div.css("margin-right").replace(/[^0-9]+/g,"")))) // 4 = default in desktop
+            //console.log("rel:",nb,rel,div,next,ev)
             let idx = !this.state.relatedTab&&related.length?"rel":"crea"
             let max = !this.state.relatedTab&&related.length?related.length:createdBy.length
             let i = (this.state["i"+idx]!==undefined?this.state["i"+idx]:0)
-            if(next) i+=4 ;
-            else i-=4 ;
+            if(next) i+=nb ;
+            else i-=nb ;
             if(i > max) i = max
             else if(i < 0) i = 0
-            //console.log("i:",next,i,max,idx,this._refs[i],this._refs)
-            if(this._refs[ idx + "-" + i ]) {
+            if(this._refs[ idx + "-" + i ]?.current) {
+               //console.log("i:",next,i,max,idx,this._refs[idx + "-" + i].current,this._refs)
                this._refs[ idx + "-" + i ].current.scrollIntoView({behavior:"smooth",block:"nearest",inline:"start"})
                this.setState({["i"+idx]:i})
             }
@@ -8948,6 +8968,8 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          const hasTabs = [wTitle,iTitle,rTitle].filter(e=>e).length > 1 ? " hasTabs ": ""
 
 
+
+
          return (
          [getGDPRconsent(this),   
          <div class={isMirador?"H100vh OF0":""}>
@@ -9015,11 +9037,12 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   { theDataBot }
                   { ( /*hasRel &&*/ this.props.assocResources && !["Instance","Images","Etext"].includes(_T)) &&
                      <div class="data related" id="resources" data-all={all}>
-                        <div>
+                        <MySwipeable scrollRel={scrollRel}>
                            <div><h2>{I18n.t(true || _T=== "Place"||_T==="Corporation"?"index.relatedR":(_T==="Product"?"index.relatedM":(_T==="Work"&&serial?"index.relatedS":"index.related")))}</h2>{/* ( ( (this.state.relatedTabAll||!related.length&&!createdBy.length)&&t1) || related && related.length > 4 || createdBy && createdBy.length > 4) && <Link to={(this.state.relatedTabAll||!related.length&&!createdBy.length)&&t1?t1:("/search?t="+(_T==="Corporation"&&(this.state.relatedTab||!related.length)?"Person":(_T==="Place"&&this.state.relatedTab?"Instance":(_T==="Product"?"Scan":"Work")))+"&r="+this.props.IRI)}>{I18n.t("misc.seeA")}</Link> */}</div>
                            { /*(related && related.length > 0 && (!createdBy  || !createdBy.length)) && <div class="rel-or-crea">{related}</div>*/}
                            { /*(createdBy && createdBy.length > 0 && (!related  || !related.length)) && <div class={"rel-or-crea"+(_T==="Corporation"?" person":"")}>{createdBy}</div> */}
-                           { /*(related.length > 0 && createdBy.length > 0) && */ <div>
+                           { /*(related.length > 0 && createdBy.length > 0) && */ 
+                           <div>
                               <Tabs>
                                  <TabList>
                                     { (related.length > 0) && <Tab onClick={(ev)=>this.setState({relatedTab:false,relatedTabAll:false,irel:0,icrea:0})}>{I18n.t(_T=== "Place"?"resource.wAbout":"resource.about",{resLabel, count:related.length, interpolation: {escapeValue: false}})} </Tab> }
@@ -9036,8 +9059,9 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                                     </div>
                                  </TabPanel>
                               </Tabs>
-                           </div> }
-                        </div>
+                           </div>
+                           }
+                        </MySwipeable>
                         { 
                            (!this.state.relatedTab && !this.state.relatedTabAll && related.length > 4 || this.state.relatedTab && createdBy.length > 4 || !related.length && createdBy.length > 4) &&
                            <div id="related-nav" >
