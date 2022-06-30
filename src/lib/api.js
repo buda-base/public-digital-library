@@ -385,8 +385,9 @@ export default class API {
             let config = store.getState().data.config.ldspdi
             let url = config.endpoints[config.index]+"/query/graph" ;            
             let searchType = "Outline_root", extraParam, isTaishoNode
-            console.log("loadO:",IRI,node,volFromUri)
+            const initParams = { IRI, searchType } 
             //if(IRI.match(/bdr:MW0T[ST]0/)) isTaishoNode = true; // quickfix for Taisho to keep working
+            //console.log("loadO:",IRI,searchType,node,volFromUri)
             if(node && !isTaishoNode) {
                if(node["tmp:hasNonVolumeParts"] == true) { 
                   if(node.volumeNumber !== undefined && node.partType === "bdr:PartTypeVolume") { 
@@ -397,9 +398,21 @@ export default class API {
                   else if(node["partType"] !== "bdr:PartTypeVolume" && node["partType"] !== "bdr:PartTypeText" && node["partType"] !== "bdr:PartTypeChapter") searchType += "_volumes"
                }
             }
+            //console.log("loadO?",initParams,IRI,searchType)
             let param = {searchType,"R_RES":IRI,"L_NAME":"","LG_NAME":"", "I_LIM":"" }
             if(extraParam) param = { ...param, ...extraParam }
-            let data = await this.getQueryResults(url, IRI, param,"GET","application/jsonld");         
+            let data 
+            // #730 fallback for case when hasNonVolumePart is true but Outline_root_volumes returns 404
+            try { 
+               data = await this.getQueryResults(url, IRI, param,"GET","application/jsonld");         
+            } catch(e) {               
+               if(e.code == 404 && node["tmp:hasNonVolumeParts"] == true) {
+                  IRI = initParams.IRI
+                  searchType = initParams.searchType
+                  param = {searchType,"R_RES":IRI,"L_NAME":"","LG_NAME":"", "I_LIM":"" }
+                  data = await this.getQueryResults(url, IRI, param,"GET","application/jsonld");         
+               }
+            }
             // use "local" node id for volume
             if(searchType.endsWith("_volumes") && data["@graph"]  && data["@graph"].length) {
                let volumes = []
