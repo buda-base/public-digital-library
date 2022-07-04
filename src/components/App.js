@@ -3582,7 +3582,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      else labels = labels["http://www.w3.org/2000/01/rdf-schema#label"]
                   }
                }
-               if(labels) labels = labels.filter(l => l.fromKey === skos+"prefLabel")
+               if(labels) labels = labels.filter(l => l.type === skos+"prefLabel" || l.fromKey === skos+"prefLabel")
                
                //loggergen.log("labels1",i,prop) //,labels,this.props.assoRes)
 
