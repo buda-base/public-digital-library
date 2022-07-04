@@ -1260,7 +1260,9 @@ class ResourceViewer extends Component<Props,State>
             images = getElem(bdo+"instanceHasReproduction",props.IRI),
             _T = getEntiType(props.IRI)
 
-
+         
+            // #732 show Scans rather than Etext as third tab 
+            if(images) images = _.sortBy(images, (i) => i.value && i.value.includes("/resource/W")?-1:1)
             
 
          // TODO find a way to keep an existing Etext/Images tab
