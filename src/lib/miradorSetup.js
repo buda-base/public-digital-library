@@ -931,11 +931,15 @@ function miradorAddZoomer() {
 
          }
 
+         let mR 
+
          if(nuW < scrollV.innerWidth()) { // && coef < 1 && maxW > scrollV.innerWidth()) {
             trX = ( scrollV.innerWidth() - nuW ) / 2
             if(maxW <  scrollV.innerWidth()) {
                trX = 0
                scrollT.addClass("transOri50")
+            } else {
+               mR = maxW - scrollV.width() + 0
             }
          } else {
             scrollT.removeClass("transOri50")
@@ -953,8 +957,10 @@ function miradorAddZoomer() {
 
             scrollT.css({
                "transform":"scale("+coef+") translateY("+10/coef+"px) translateX("+trX/coef+"px)",
-               ...(!inApp?{ "margin-bottom":"-50000000px" }:{})
+               ...(!inApp?{ "margin-bottom":"-50000000px" }:{}),
+               ...(!inApp&&mR?{ "margin-right":-mR+"px" }:{})
             })            
+            
             
             if(inApp) scrollV.css({            
                "margin-bottom": "calc(-1 * ("+scrollV[0].getBoundingClientRect().height+"px - "+scrollT[0].getBoundingClientRect().height+"px - 100px) )" //"-50000000px" // no more empty space at bottom 
