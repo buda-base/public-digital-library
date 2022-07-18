@@ -2093,6 +2093,16 @@ body.custom-background { background-image: url("http://dzongsarinstitute.org.in/
 <meta name="msapplication-TileImage" content="http://dzongsarinstitute.org.in/wp-content/uploads/2018/04/cropped-Dzongsar-Icon-2-270x270.png" />
 <link rel='stylesheet' id='esplanade-css'  href="http://dzongsarinstitute.org.in/wp-content/themes/esplanade/styles/youmax.css" type='text/css' media='all' />
 
+<script>
+	function setSrc(){
+		var src = window.location.protocol + "//" + window.location.hostname + ":" + window.location.port + "/scripts/embed-iframe.html?work=bdr:W1ERI0011001&origin=http://dzongsarinstitute.org.in"
+		console.log("src:",src)
+		var iframe = document.querySelector("iframe")
+		if(iframe.src != src) iframe.src = src
+
+	}
+</script>
+
  
 </head>
 
@@ -2223,7 +2233,7 @@ body.custom-background { background-image: url("http://dzongsarinstitute.org.in/
 						</header><!-- .entry-header -->
 						<div class="entry-content">
 							<p style="text-align: center;">འཕགས་ཡུལ་དཔལ་རྫོང་སར་བཤད་གྲྭ་ཆོས་ཀྱི་བློ་གྲོས་ཀྱི་སློབ་གཉེར་བ་འཛིན་གྲྭ་གོང་འོག་གི་སློབ་ཚན་དང་འབྲེལ་བའི་ཡིག་ཆ་ནང་བསྟན་དཔེ་ཚོགས་ལྟེ་གནས་(TBRC/DBRC)སུ་བཞུགས་པ་ཁག་འདི་ནས་བལྟ་ཀློག་ཐུབ།</p>
-<p><iframe src="http://localhost:3000/scripts/embed-iframe.html?work=bdr:W1ERI0011001&amp;origin=http://dzongsarinstitute.org.in" width="100%" height="50%" allowfullscreen="allowfullscreen"><span data-mce-type="bookmark" style="display: inline-block; width: 0px; overflow: hidden; line-height: 0;" class="mce_SELRES_start">﻿</span></iframe></p>
+<p><iframe onload="javascript:setSrc()"  width="100%" height="50%" allowfullscreen="allowfullscreen"><span data-mce-type="bookmark" style="display: inline-block; width: 0px; overflow: hidden; line-height: 0;" class="mce_SELRES_start">﻿</span></iframe></p>
 <p style="text-align: center;"><span style="color: #00ccff;">གཞན་ཡང། -&gt; ●</span><a href="https://bdrc-reader.github.io/dzongsar-shedra/shunglug" rel="noopener">གཞུང་ལུགས།</a> <span style="color: #00ccff;">●</span><a href="https://bdrc-reader.github.io/dzongsar-shedra/sungbum" rel="noopener">གསུང་འབུམ།</a> <span style="color: #00ccff;">●</span><a href="https://bdrc-reader.github.io/dzongsar-shedra/doncha" rel="noopener">འདོན་ཆ།</a> <span style="color: #00ccff;">●</span><a href="https://bdrc-reader.github.io/dzongsar-shedra/tantra" rel="noopener">སྔགས་སྐོར།</a> <span style="color: #00ccff;">●</span><a href="https://bdrc-reader.github.io/dzongsar-shedra/natsok" rel="noopener">སྣ་ཚོགས།</a></p>
 <p>&nbsp;</p>
 							<div class="clear"></div>
