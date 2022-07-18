@@ -722,6 +722,7 @@ async function getContext(iri,start,end,nb:integer = 1000) {
       store.dispatch(dataActions.gotAssocResources(iri, { data }))
       
    }
+   store.dispatch(dataActions.gotContext(state.data.keyword+"@"+state.data.language,iri,start,end,data))
    store.dispatch(uiActions.loading(null, false));
 
 }
@@ -2058,6 +2059,9 @@ function rewriteAuxMain(result,keyword,datatype,sortBy,language)
                } else if(e.type === bdo+"partType") {
                   partType = e.value
                } else if(e.value && e.value.match && e.value.match(/[↦↤]/)) {                  
+
+                  e.value = e.value.replace(/↤\/_↦/g,"/_")
+
                   if([_tmp+"nameMatch",_tmp+"labelMatch"].includes(e.type)) {
                      if(["works","instances","scans","etexts"].includes(t)) {
                         if(!context.includes(_tmp+"titleContext")) context.push(_tmp+"titleContext")
@@ -2140,6 +2144,7 @@ function rewriteAuxMain(result,keyword,datatype,sortBy,language)
                   // #718 check if match is exact
                   if(content?.value && content.value.match &&  content.value.match(/[↦↤]/)) {
                      hasM = true   
+                     content.value = content.value.replace(/↤\/_↦/g,"/ ")
                      if(content.value.match(_kwRegExpM)) {                                          
                         //console.log("exact:",e)
                         hasExactM = true

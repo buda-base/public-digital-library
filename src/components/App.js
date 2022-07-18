@@ -446,7 +446,6 @@ export function highlight(val,k,expand,newline,force)
       //console.log("k:",val,k.replace(/[ -'ʾ_/  \[\]0-9\n\r།]+/gu,"[ -'ʾ_/  \\[\\]0-9\n\r།]+"))
    }
 
-
    val = val.replace(/(\[[^\]]*?)([↦])([^\]]*?\])/g,"$1$3$2");
    val = val.replace(/(\[[^\]]*?)([↤])([^\]]*?\])/g,"$2$1$3");
    val = val.replace(/(↦↤)|(\[ *\])/g,"");
@@ -3338,6 +3337,16 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
       if(plural === true) plural = "_plural"
 
+      if(exclude) {         
+         if(exclude.value) { 
+            exclude.value = exclude.value.replace(/[↦↤]/g,"")
+            const translit = getLangLabel(this,"",[exclude])
+            exclude = translit.value
+         } else {
+            exclude = exclude.replace(/[↦↤]/g,"")
+         }
+      }
+
       if(allProps && this.props.assoRes) { 
          if(!fromProp) fromProp = [ prop ]
          let ret = []
@@ -3499,7 +3508,12 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             let labels = sortLangScriptLabels(id,langs.flat,langs.translit)
             for(let i of labels) {
                let val = i["value"] 
-               if(val === exclude) continue
+
+               const translit = getLangLabel(this, "", [i])
+
+               //console.log("val/excl:",val,exclude,translit)
+
+               if(val === exclude || translit?.value?.replace(/_/g," ").replace(/[\/། ]+$|[↦↤]/g,"") === exclude?.replace(/_/g," ").replace(/[\/། ]+$|[↦↤]/g,"")) continue
                let lang = i["xml:lang"]
 
                if((""+val).match(/^[0-9-]+T[0-9:.]+Z+$/)) {
@@ -3657,6 +3671,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
          let sTmp = shortUri(m.type), trad = I18n.t("prop."+sTmp)	
          if(trad !== sTmp) from = trad	
+
+         //console.log("m:",m)
 
          let val,isArray = false ;	
          let lang = m["lang"]	
@@ -4359,7 +4375,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             {/* { this.getResultProp(bdo+"workIsAbout",allProps,false) } */}
             {/* { this.getResultProp(bdo+"workGenre",allProps) } */}
 
-            { this.getResultProp(["Work","Instance","Scan","Etext"].includes(this.state.filters.datatype[0])?"tmp:otherTitle":"tmp:otherName",allLabels, true, false, [ tmp+"labelMatch", tmp+"nameMatch", skos+"prefLabel", skos+"altLabel"], !preLit?preLit:preLit.replace(/[↦↤]/g,"") ) }
+            { this.getResultProp(["Work","Instance","Scan","Etext"].includes(this.state.filters.datatype[0])?"tmp:otherTitle":"tmp:otherName",allLabels, true, false, [ tmp+"labelMatch", tmp+"nameMatch", skos+"prefLabel", skos+"altLabel"], preLit ) }
             {/* { this.getResultProp(tmp+"assetAvailability",allProps,false,false) } */}
             
             {/* { this.getResultProp(rdf+"type",allProps.filter(e => e.type === rdf+"type" && e.value === bdo+"EtextInstance")) }  */}
@@ -5277,7 +5293,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      lastN = cpt ;
                      nMax = n
                      //loggergen.log("lastN",lastN)
-                     message.push(this.makeResult(id,n,t,lit,lang,tip,Tag,null,r.match,k,sublist[o],r.lit.value))
+                     message.push(this.makeResult(id,n,t,lit,lang,tip,Tag,null,r.match,k,sublist[o],{...r.lit}))
                   }
                   else {
                      if(unreleased) n --
