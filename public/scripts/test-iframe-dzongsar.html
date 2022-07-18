@@ -2095,7 +2095,7 @@ body.custom-background { background-image: url("http://dzongsarinstitute.org.in/
 
 <script>
 	function setSrc(){
-		var src = window.location.protocol + "//" + window.location.hostname + ":" + window.location.port + "/scripts/embed-iframe.html?work=bdr:W1ERI0011001&origin=http://dzongsarinstitute.org.in"
+		var src = window.location.protocol + "//" + window.location.hostname + (window.location.port ? ":" + window.location.port : "") + "/scripts/embed-iframe.html?work=bdr:W1ERI0011001&origin=http://dzongsarinstitute.org.in"
 		console.log("src:",src)
 		var iframe = document.querySelector("iframe")
 		if(iframe.src != src) iframe.src = src
