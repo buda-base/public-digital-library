@@ -1171,18 +1171,29 @@ class ResourceViewer extends Component<Props,State>
          }
       }
 
-      let getElem = (prop,IRI,useAssoc,subIRI) => {         
+      // #732 handle withdrawn record links in tabs
+      const replaceW = (id) => { 
+         if(id?.length) {
+            if(props.assocResources) {
+               const rw = getElem(adm+"replaceWith",shortUri(id[0].value)) 
+               if(rw?.length) return rw
+            }
+         }
+         return id
+      }
+
+      const getElem = (prop,IRI,useAssoc,subIRI) => {         
          let longIRI = fullUri(IRI)
          if(subIRI) longIRI = subIRI
          if(useAssoc) {
             let elem = useAssoc[longIRI]
             if(elem) elem = elem.filter(e => e.type === prop || e.fromKey === prop)
             else elem = null
-            return elem
+            return replaceW(elem)
          }
          else if(props.resources && props.resources[IRI] && props.resources[IRI][longIRI]){
             let elem = props.resources[IRI][longIRI][prop]
-            return elem
+            return replaceW(elem)
          }
       }
 
@@ -1260,8 +1271,10 @@ class ResourceViewer extends Component<Props,State>
             images = getElem(bdo+"instanceHasReproduction",props.IRI),
             _T = getEntiType(props.IRI)
 
-
-            
+         
+         // #732 show Scans rather than Etext as third tab 
+         if(images) images = _.sortBy(images, (i) => i.value && i.value.includes("/resource/W")?-1:1)
+         
 
          // TODO find a way to keep an existing Etext/Images tab
          //if(images) images = images.filter(e => getEntiType(e.value) === "Images")
@@ -6891,7 +6904,8 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          <div id="settings" onClick={() => this.setState({collapse:{...this.state.collapse, etextNav:!this.state.collapse.etextNav}})}><img src="/icons/settings.svg"/></div>
          <div id="etext-nav" class={this.state.collapse.etextNav?"on":""}>
             <div>
-               <a id="DL" class={!accessError?"on":""} target="_blank" rel="alternate" type="text" download href={this.props.IRI?fullUri(this.props.IRI).replace(/^http:/,"https:")+".txt":""}>{I18n.t("mirador.downloadE")}<img src="/icons/DLw.png"/></a>
+               <a id="DL" class={!accessError?"on":""} onClick={(e) => this.setState({...this.state,anchorLangDL:e.currentTarget, collapse: {...this.state.collapse, langDL:!this.state.collapse.langDL } } ) }>{etext_lang_selec(this,true,<>{I18n.t("mirador.downloadE")}<img src="/icons/DLw.png"/></>,this.props.IRI?fullUri(this.props.IRI).replace(/^http:/,"https:")+".txt":"")}</a>
+               {/* // <a id="DL" class={!accessError?"on":""} target="_blank" rel="alternate" type="text" download href={this.props.IRI?fullUri(this.props.IRI).replace(/^http:/,"https:")+".txt":""}>{I18n.t("mirador.downloadE")}<img src="/icons/DLw.png"/></a>) */}
                <div id="control">
                   <span title={I18n.t("mirador.decrease")} class={!size||size > 0.6?"on":""} onClick={(e)=>etextSize(false)}><img src="/icons/Zm.svg"/></span>
                   <span title={I18n.t("mirador.increase")} class={!size||size < 2.4?"on":""} onClick={(e)=>etextSize(true)}><img src="/icons/Zp.svg"/></span>
@@ -6986,6 +7000,12 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   }
                   */
 
+                  const etextDL = (qname) => (
+                     <a onClick={(e) => this.setState({...this.state,anchorLangDL:e.currentTarget, collapse: {...this.state.collapse, langDL:!this.state.collapse.langDL } } ) } 
+                        class="ulink" style={{cursor:"pointer"}}>
+                           {etext_lang_selec(this,true,<>{I18n.t("mirador.downloadE")}</>,fullUri(qname).replace(/^http:/,"https:")+".txt")}
+                     </a>
+                  )
 
 
                   if(g.volumeNumber) { 
@@ -7001,7 +7021,8 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                            //nav.push(<span>|</span>)
                            nav.push(<Link to={"/show/"+txt[0].eTextResource+"?backToEtext="+this.props.IRI+"#open-viewer"} class="ulink">{I18n.t("result.openE")}</Link>)
                            nav.push(<span>|</span>)
-                           nav.push(<a href={fullUri(txt[0].eTextResource).replace(/^http:/,"https:")+".txt"} class="ulink"  download type="text" target="_blank">{I18n.t("mirador.downloadE")}</a>)
+                           //nav.push(<a href={fullUri(txt[0].eTextResource).replace(/^http:/,"https:")+".txt"} class="ulink"  download type="text" target="_blank">{I18n.t("mirador.downloadE")}</a>)
+                           nav.push(etextDL(txt[0].eTextResource))
 
                         }
                         else {
@@ -7018,7 +7039,8 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                      //nav.push(<span>|</span>)
                      nav.push(<Link to={"/show/"+g.eTextResource+"?backToEtext="+this.props.IRI+"#open-viewer"} class="ulink">{I18n.t("result.openE")}</Link>)
                      nav.push(<span>|</span>)
-                     nav.push(<a href={fullUri(g.eTextResource).replace(/^http:/,"https:")+".txt"} class="ulink" download type="text" target="_blank">{I18n.t("mirador.downloadE")}</a>)
+                     //nav.push(<a href={fullUri(g.eTextResource).replace(/^http:/,"https:")+".txt"} class="ulink" download type="text" target="_blank">{I18n.t("mirador.downloadE")}</a>)                     
+                     nav.push(etextDL(g.eTextResource))
 
                   }
 
@@ -7096,6 +7118,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
       return (
          <div class="data etextrefs" id="outline">
+            {this.props.loading && <Loader  options={{position:"fixed",left:"calc(50% + 100px)",top:"calc(50% - 20px)"}} loaded={!this.props.loading}/>}
             <h2>{I18n.t("home.search")}</h2>
             <div class="search on">
                <div>
@@ -7313,7 +7336,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
             loggergen.log("collapse!",osearch,root,opart,JSON.stringify(collapse,null,3),this.props.outlines[opart])
 
             let nodes = Object.values(this.props.outlines).reduce( (acc,v) => ([...acc, ...(v["@graph"]?v["@graph"]:[v])]), []), matches = []
-            let opart_node = nodes.filter(n => n["@id"] === opart)
+            let opart_node = nodes.filter(n => n["@id"] === opart), path = []
 
             if(!osearch && !get.osearch && !this.props.outlines[opart]) {             
                let parent_nodes = nodes.filter(n => n["@id"] === opart) //n => n.hasPart && (n.hasPart === opart || n.hasPart.includes(opart)))
@@ -7390,9 +7413,10 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                if(root !== opart && nodes && nodes.length) {
                   let head = opart, done_opart = false, parent_head = null, child_node
                   //console.log("opart??",opart,head)
+                  const already = []
                   do {
                      let head_node = nodes.filter(n => n.hasPart && (n.hasPart === head || n.hasPart.includes(head)))
-                     //loggergen.log("head?",head, head_node)
+                     //loggergen.log("head?",head, head_node, child_node)
                      head = head_node
                      if(head && head.length) { 
                         head = head[0]["@id"]
@@ -7406,13 +7430,18 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                               let vol = this.props.outlines[child_node["@id"]]["@graph"].filter(n => n["@id"] === child_node["@id"])
                               if(vol.length) vol = this.props.outlines[child_node["@id"]]["@graph"].filter(n => n["@id"] === vol[0].contentLocation)
                               if(vol.length) vol = vol[0].contentLocationVolume
-                              //console.log("#641",head_node,child_node,vol)
-                              this.props.onGetOutline("tmp:uri", { partType: "bdr:PartTypeVolume", "tmp:hasNonVolumeParts": true, volumeNumber: vol }, head);
+                              if(!already.includes(head)) { // fix side-effect of #729 (prevent opening same text from multiple volumes like bdr:MW3CN27014_K0022-40) 
+                                 this.props.onGetOutline("tmp:uri", { partType: "bdr:PartTypeVolume", "tmp:hasNonVolumeParts": true, volumeNumber: vol }, head);
+                                 already.push(head)
+                              }
                            }
                         }
                         if(collapse["outline-"+root+"-"+head] === undefined) { //} && (opart !== root || head !== root)) {
                            collapse["outline-"+root+"-"+head] = true ;                           
-                           if(!done_opart && head_node["tmp:hasNonVolumeParts"] && (head_node.partType === "bdr:PartTypeSection" || head === root)) {
+                           //console.log("parent_head:",root,head,already) //,JSON.stringify(head_node,null,3),done_opart)
+                           if((!done_opart 
+                                 || head_node["tmp:hasNonVolumeParts"] // #729 need to open virtual volume when page node is a sub sub node of it                                    
+                              ) && (head_node.partType === "bdr:PartTypeSection" || head === root)) {
                               let parent_head = []
                               if(head === root) parent_head = [ head_node ]
                               else parent_head = nodes.filter(n => n.hasPart && (n.hasPart === head || n.hasPart.includes(head)))
@@ -7424,7 +7453,10 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                                     if(vol.length) { 
                                        vol = vol[0].contentLocationVolume
                                        //console.log("ready for vol."+vol+" in "+head,head_node)
-                                       this.props.onGetOutline("tmp:uri", { partType: "bdr:PartTypeVolume", "tmp:hasNonVolumeParts": true, volumeNumber: vol }, head);
+                                       if(!already.includes(head)) { // fix side-effect of #729 (prevent opening same text from multiple volumes like bdr:MW3CN27014_K0022-40)
+                                          this.props.onGetOutline("tmp:uri", { partType: "bdr:PartTypeVolume", "tmp:hasNonVolumeParts": true, volumeNumber: vol }, head);
+                                          already.push(head)
+                                       }
                                     }
                                  }
                                  parent_head = parent_head[0]["@id"]
@@ -7460,7 +7492,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
             } else {
                let parent_nodes = nodes.filter(n => n.hasPart && (n.hasPart === opart || n.hasPart.includes(opart)))
-               console.log("parent:",parent_nodes)
+               //console.log("parent:",parent_nodes,opart_node)
                if(parent_nodes.length) { 
                   let update = false
                   for(let n of parent_nodes) {
@@ -7476,8 +7508,18 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                      } else if(n.parent?.startsWith("bdr:I") && collapse["outline-"+root+"-"+n["@id"]+";"+n.parent] === undefined){
                         collapse["outline-"+root+"-"+n["@id"]+";"+n.parent] = true
                         update = true
+                     } else { // #729 need to open node if page node is a sub node of it
+                        const p = nodes.filter(m => m.hasPart && (m.hasPart === n["@id"] || m.hasPart.includes(n["@id"])))
+                        //console.log("n.p:",n["@id"],n.parent, Object.keys(n),p)
+                        for(const q of p) {
+                           if(collapse["outline-"+root+"-"+n["@id"]+";"+q["@id"]] === undefined) {
+                              collapse["outline-"+root+"-"+n["@id"]+";"+q["@id"]] = true
+                              update = true                              
+                           }
+                        }
                      }
                   }
+
                   if(update) this.setState({ collapse })
                }
             }
@@ -7579,8 +7621,12 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                      const ShowNbChildren = 40
 
                      // TODO: case of a search 
-                     let isParent = sorted.filter(n => n.id === opart || !osearch && opartInVol.includes(n.partIndex) || osearchIds.includes(n.id) ), start = 0, end = start + ShowNbChildren
+
+                     // use opartInVol only when corresponding with page node 
+                     const parentIsVol = nodes.filter(m => m.hasPart && (m.hasPart === opart || m.hasPart.includes(opart))).map(m => m["@id"]).some(o => o && o.startsWith("bdr:I"))
+                     let isParent = sorted.filter(n => n.id === opart || !osearch && parentIsVol && opartInVol.includes(n.partIndex) || osearchIds.includes(n.id) ), start = 0, end = start + ShowNbChildren
                      if(isParent.length) {                                             
+                        //console.log("opIv:",opartInVol,opart_node,parentIsVol)
                         let mustBe = sorted.map( (n,i) => {
                            //console.log("isP?",n,i)
                            if(isParent.some(m => m.id === n.id)) {

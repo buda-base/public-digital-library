@@ -19,6 +19,7 @@ public/config-khmer.json
 !/public/scripts/scriptError.js
 !/public/scripts/patch-build.sh
 !/public/scripts/silent_callback.html
+!/public/scripts/test-iframe-dzongsar.html
 !/public/scripts/citation-js/
 /public/scripts/citation-js/*
 !/public/scripts/citation-js/*

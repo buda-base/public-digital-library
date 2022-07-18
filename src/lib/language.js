@@ -13,6 +13,8 @@ export const langScripts = {
    "x-iast":"lang.langscript.xIast",
    "khmr":"lang.langscript.km",
    "x-twktt":"lang.langscript.xTwktt",
+   "x-bdrc":"lang.langscript.xBdrc",
+   "x-femc":"lang.langscript.xFemc",
 }
 
 const dataLangUI = {

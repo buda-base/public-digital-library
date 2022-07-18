@@ -83,6 +83,8 @@ import ReactGA from 'react-ga';
 import I18n from 'i18next';
 import { Trans } from 'react-i18next'
 
+import axios from "axios"
+
 
 import LanguageSidePaneContainer from '../containers/LanguageSidePaneContainer';
 import ResourceViewerContainer from '../containers/ResourceViewerContainer';
@@ -429,15 +431,15 @@ export function highlight(val,k,expand,newline,force)
 
          // DONE "manually" add the ↦
          if(!Array.isArray(k)) 
-            val = val.replace(new RegExp("("+k.replace(/[ -'ʾʼʹ‘_/  \(\)\[\]0-9\n\r།]+/igu,"[ -'ʾʼʹ‘_/  \\(\\)\\[\\]0-9\n\r།]+")+")","igu"),"↦$1↤")
+            val = val.replace(new RegExp("("+k.replace(/[+]/g,"\\+").replace(/[ -'ʾʼʹ‘_/  \(\)\[\]0-9\n\r།]+/igu,"[ -'ʾʼʹ‘_/  \\(\\)\\[\\]0-9\n\r།]+")+")","igu"),"↦$1↤")
          else for(let key of k) { // advanced query
-            val =  val.replace(new RegExp("("+key.replace(/[ -'ʾʼʹ‘_/  \(\)\[\]0-9\n\r།]+/igu,"[ -'ʾʼʹ‘_/  \\(\\)\\[\\]0-9\n\r།]+")+")","igu"),"↦$1↤")
+            val =  val.replace(new RegExp("("+key.replace(/[+]/g,"\\+").replace(/[ -'ʾʼʹ‘_/  \(\)\[\]0-9\n\r།]+/igu,"[ -'ʾʼʹ‘_/  \\(\\)\\[\\]0-9\n\r།]+")+")","igu"),"↦$1↤")
          }
       } else {
          if(!Array.isArray(k)) 
-            val = val.replace(new RegExp("("+k.replace(/[ -'ʾʼʹ‘_/  \(\)\[\]\n\r།]+/igu,"[ -'ʾʼʹ‘_/  \\(\\)\\[\\]\n\r།]+")+")","igu"),"↦$1↤")
+            val = val.replace(new RegExp("("+k.replace(/[+]/g,"\\+").replace(/[ -'ʾʼʹ‘_/  \(\)\[\]\n\r།]+/igu,"[ -'ʾʼʹ‘_/  \\(\\)\\[\\]\n\r།]+")+")","igu"),"↦$1↤")
          else for(let key of k) { // advanced query
-            val =  val.replace(new RegExp("("+key.replace(/[ -'ʾʼʹ‘_/  \(\)\[\]\n\r།]+/igu,"[ -'ʾʼʹ‘_/  \\(\\)\\[\\]\n\r།]+")+")","igu"),"↦$1↤")
+            val =  val.replace(new RegExp("("+key.replace(/[+]/g,"\\+").replace(/[ -'ʾʼʹ‘_/  \(\)\[\]\n\r།]+/igu,"[ -'ʾʼʹ‘_/  \\(\\)\\[\\]\n\r།]+")+")","igu"),"↦$1↤")
          }
       }
 
@@ -682,9 +684,7 @@ export function lang_selec(that,black:boolean = false,inPopup:false)
                                        document.documentElement.lang = i
 
                                        that.props.onSetLocale(i);
-                                       if(i === "bo") that.props.onSetLangPreset(["bo","zh-hans"], "bo")
-                                       else if(i === "en") that.props.onSetLangPreset(["bo-x-ewts","sa-x-iast"], "en")
-                                       else if(i === "zh") that.props.onSetLangPreset(["zh-hans","bo"], "zh")
+                                       that.props.onSetLangPreset(that.props.config.language.data.presets[i], i)
 
                                        let loca = { ...that.props.history.location }
                                        if(loca.search.includes("uilang")) loca.search = loca.search.replace(/uilang=[^&]+/,"uilang="+i)
@@ -713,8 +713,9 @@ export function lang_selec(that,black:boolean = false,inPopup:false)
          </Popover>
    ]
 }
-export function etext_lang_selec(that,black:boolean = false)
+export function etext_lang_selec(that,black:boolean = false, elem, DL)
 {
+   if(!elem) elem = <span id="lang" title={I18n.t("home.choose")} onClick={(e) => that.setState({...that.state,anchorLang:e.currentTarget, collapse: {...that.state.collapse, lang:!that.state.collapse.lang } } ) }><img src={"/icons/LANGUE"+(black?"b":"")+".svg"}/></span>
    
    let text = { "bo":"lang.tip.bo","bo-x-ewts":"lang.tip.boXEwts" }, prio = ["bo", "bo-x-ewts" ]
 
@@ -724,17 +725,20 @@ export function etext_lang_selec(that,black:boolean = false)
       else current = "bo"
    }
 
+   const anchor = "anchorLang"+(DL?"DL":"")
+   const lang = "lang"+(DL?"DL":"")
+
    return [
-         <span id="lang" title={I18n.t("home.choose")} onClick={(e) => that.setState({...that.state,anchorLang:e.currentTarget, collapse: {...that.state.collapse, lang:!that.state.collapse.lang } } ) }><img src={"/icons/LANGUE"+(black?"b":"")+".svg"}/></span>
+         elem
          ,
          <Popover
             id="popLang"
-            open={that.state.collapse&&that.state.collapse.lang?true:false}
+            open={that.state.collapse&&that.state.collapse[lang]?true:false}
             transformOrigin={{vertical:(!black?'top':'bottom'),horizontal:(!black?'right':'left')}}
             anchorOrigin={{vertical:(!black?'bottom':'top'),horizontal:(!black?'right':'left')}}
-            anchorEl={that.state.anchorLang}
-            onClose={e => { that.setState({...that.state,anchorLang:null,collapse: {...that.state.collapse, lang:false } } ) }}
-            className={black?"black":""}
+            anchorEl={that.state[anchor]}
+            onClose={e => { that.setState({...that.state,[anchor]:null,collapse: {...that.state.collapse, [lang]:false } } ) }}
+            className={(black?"black":"")+(DL?" DL":"")}
             >
 
               <FormControl className="formControl">
@@ -746,16 +750,57 @@ export function etext_lang_selec(that,black:boolean = false)
 
                         // TODO add link to user profile / language preferences
 
-                        return ( <MenuItem
+                        if(DL) return (
+                           // better use a file request to send a token
+                           //<a target="_blank" rel="alternate" type="text" download /*={DL.split(/[/]/).pop().split(/[.]/)[0]+"_"+i} // can't bypass 'Content-Disposition: attachment; filename=' in response header */
+                           //   style={{color:"#4a4a4a",textDecoration:"none", display:"block"}} href={DL+"?prefLangs="+i}>
+                           //</a> 
+                              <MenuItem /*className={current===i?"is-locale":""}*/ onClick={async (event) => { 
+
+                                 const token = localStorage.getItem('id_token');
+                                 
+                                 that.props.onLoading("outline",true)
+
+                                 await axios
+                                 .request({
+                                   method: "get",
+                                   responseType: "blob",
+                                   timeout: 4000,
+                                   baseURL: DL.replace(/^(https:..[^/]+).*$/,"$1"),
+                                   url: DL.replace(/^https:..[^/]+(.*)$/,"$1")+"?prefLangs="+i,
+                                   ...token?{headers: {Authorization: `Bearer ${token}`}}:{},
+                                 })
+                                 .then(function (response) {
+                                   //console.log("loaded:", response.data)
+                         
+                                   // download file
+                                   const temp = window.URL.createObjectURL(new Blob([response.data]))
+                                   const link = document.createElement("a")
+                                   link.href = temp
+                                   let filename = DL.split(/[/]/).pop().split(/[.]/)[0]+"_"+i+".txt"
+                                   //debug("filename:",filename)
+                                   link.setAttribute("download", filename)
+                                   link.click()
+                                   window.URL.revokeObjectURL(link)
+                         
+                                 })
+                                 .catch(function (error) {
+                                   //console.error("error:", error.message)
+                                 })
+
+                                 that.props.onLoading("outline",false)
+                              }}>
+                                 {label}
+                              </MenuItem> 
+                        )
+                        else return ( <MenuItem
                                     className={current===i?"is-locale":""}     
                                     value={i}
                                     onClick={(event) => { 
-
                                        localStorage.setItem('etextlang', i);
-
-                                       that.setState({...that.state,anchorLang:null,collapse: {...that.state.collapse, lang:false } }); 
-
+                                       that.setState({...that.state,[anchor]:null,collapse: {...that.state.collapse, [lang]:false } }); 
                                        that.props.onSetEtextLang(i)
+                                    
 
                                        /*
                                        // not sure we need a url param
@@ -3209,6 +3254,45 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       return ret
    }
 
+   getSeriesNumber(allProps)  {
+
+      if(!allProps || !this.props.assoRes) return 
+
+      let res = [], 
+         number = allProps.filter(a => a.type === bdo+"seriesNumber"),
+         series = allProps.filter(a => a.type === bdo+"serialInstanceOf"),
+         label = this.props.assoRes[series[0]?.value]?.filter(l => l.fromKey === skos+"prefLabel")
+      
+      if(number?.length) { 
+         number = <span>{number[0].value /*?.replace(/v. ?/g,"")*/ }</span>
+      } else {
+         number = false
+      }
+      
+      if(series?.length) {
+         const qname = shortUri(series[0]?.value)
+         if (qname && label?.length) {
+            label = getLangLabel(this, bdo+"serialInstanceOf", label)
+            if(label?.value) {
+               label = <Link to={"/show/"+qname} lang={label.lang}>{label.value}</Link>
+            } else {
+               label = <Link to={"/show/"+qname}>{qname}</Link>
+            }
+         } else {
+            label = <Link to={"/show/"+qname}>{qname}</Link>
+         }
+      } else {
+         label = false
+      }
+      
+      if(label && number) res.push(<div class="match">
+         <span class="label">{this.fullname(bdo+"seriesNumber",[],true)}{I18n.t("punc.colon")}&nbsp;</span>
+         <div class="multi"><span>{number}&nbsp;{I18n.t("misc.in")}&nbsp;{label}</span></div>
+      </div>)
+
+      return res
+   }
+
    getPublisher(allProps)  {
 
       //if (this.state.filters.datatype[0] !== "Instance")
@@ -3497,10 +3581,11 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      else labels = labels["http://www.w3.org/2000/01/rdf-schema#label"]
                   }
                }
-
+               if(labels) labels = labels.filter(l => l.type === skos+"prefLabel" || l.fromKey === skos+"prefLabel")
+               
                //loggergen.log("labels1",i,prop) //,labels,this.props.assoRes)
 
-               if(labels) { 
+               if(labels?.length) { 
                   labels = getLangLabel(this,prop,labels)
                   if(labels) {
                      lang = labels["xml:lang"]
@@ -4296,6 +4381,9 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
             { type === "Place" && this.getResultProp(bdo+"placeLocatedIn",allProps,false) }
             {/* { this.getResultProp(bdo+"placeType",allProps) } */}
+
+            { (type === "Instance") && this.getSeriesNumber(allProps) }            
+
 
             {/* { this.getResultProp(bdo+"publisherName",allProps,false,false) }
             { this.getResultProp(bdo+"publisherLocation",allProps,false,false) } */}

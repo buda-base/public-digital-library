@@ -5,8 +5,8 @@ let iiifpres = "//iiifpres.bdrc.io"
 
 const onKhmerUrl = (
       window.location.host.startsWith("khmer-manuscripts")
-   || window.location.host.startsWith("library-dev")
-   || window.location.host.startsWith("localhost")
+   //|| window.location.host.startsWith("library-dev")
+   //|| window.location.host.startsWith("localhost")
 )
 
 let jQ,extendedPresets,sortLangScriptLabels,getMainLabel,getMainLabels,__
@@ -961,6 +961,7 @@ function miradorAddZoomer() {
                ...(!inApp?{ "margin-bottom":"-50000000px" }:{}),
                ...(!inApp&&mR?{ "margin-right":-mR+"px" }:{})
             })            
+            
             
             if(inApp) scrollV.css({            
                "margin-bottom": "calc(-1 * ("+scrollV[0].getBoundingClientRect().height+"px - "+scrollT[0].getBoundingClientRect().height+"px - 100px) )" //"-50000000px" // no more empty space at bottom 

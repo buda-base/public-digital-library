@@ -99,7 +99,7 @@
       "bookmarks": "དཔེ་རྟགས།",
       "results": "བཙལ་འབྲས་ནང་འཚོལ།",
       "instances": "བརྩམས་ཆོས།",
-      "proxied":"This is a proxied version provided by your institution's library subscription; login is disabled. If you are part of a subscribing institution, you can download PDFs of texts in the subscribed collections. If you have an account and wish to use it, please go to <tag href='https://{{library}}' target='_blank'>https://{{library}}<\/tag>",
+      "proxied":"",
       "resources":"དཔེ་ཆ།",
       "guided":"ལམ་སྟོན་ཡོད་པའི་འཚོལ་ཞིབ།",
       "browse":"མིག་བཤེར།",
@@ -675,5 +675,30 @@
       "join": "ང་ཚོའི་སྐོར་ཀྱི་གནས་ཚུལ་གསར་ཤོས་ཤེས་འདོད་ན་ནང་འཛུལ་བྱོས།",
       "subscribe": "མངགས་ཉོ།",
       "support": "ངེད་ཚོགས་པའི་ལས་རིགས་ལ་རྒྱབ་སྐྱོར།"
-   }
+   },
+   "viewer":{       
+      "browse":"དཔེ་ཚོགས་ལ་མིག་བཤེར་བྱོས།",
+      "cannotDL":"བཤེར་པར་འདི་དག་མཁོ་འདོན་པས་PDF ཕབ་ལེན་གྱི་ཁྱད་ཆོས་བཞག་མི་འདུག་པས། \nBDRC ངེད་ཚོགས་པར་འདི་དག་གི་འདྲ་བཤུ་ལག་སོན་བྱུང་མེད། དེའི་ཕྱིར་ཁྱེད་ལ་འདིའི་PDFམཁོ་སྤྲོད་བྱ་ཐུབ་མ་སོང་།",
+      "downloadI":"བཤེར་པར་ཕབ་ལེན།",
+      "dlPDF":"Download PDF",
+      "dlZIP":"Download image files",
+      "fairUseIA":"This work is <u>copyrighted by a third party<\/u>. As a result, BDRC can only make very limited portions available for private research and study. The full text of the work is viewable on Internet Archive, a close partner of ours, through their Open Library program.",
+      "fairUseIA1": "Access this work on Internet Archive",
+      "fairUseIA2": "View first/last 20 pages on BDRC",
+      "fairUseIA3": "To return to the record for this text, please use the \"back\" button",
+      "full":"Full",
+      "getPDF":"Get PDF",
+      "getZIP":"Get image files",
+      "genPDF":"Generating PDF...",
+      "genZIP":"Generating image files...",
+      "goto":"ཤོག་ངོས་སྟོན།",
+      "mustLogin":"ཁྱེད་ཀྱིས་PDFsདང་ZIPsགང་རུང་ཕབ་ལེན་བྱེད་པར་ཐོག་མར་ནང་འཛུལ་བྱོས།",
+      "or":"or",
+      "pdferror1":"Incorrect image range",
+      "pdferror2":"Server error",    
+      "quality0":"ང་ཚོའི་བཤེར་པར་ཁག་གི་སྤུས་ཀ་ཞན་པའི་རྐྱེན་གྱིས་ཀློག་དཀའ་བ་དང་\nགོ་རིམ་འཛོལ་བའི་རིགས་ཡོད་པས་ཁྱེད་ལ་དགོངས་དག་ཞུ། \nང་ཚོས་ལྟ་ཚུལ་ནི་སྐྱོན་ཡོད་ཀྱང་དགོས་ངེས་ཅན་ལ་མེད་པ་ལས་ཡོད་པ་དགེ་མཚན་ཆེ་བར་དམིགས་ནས་བཞག་པ་ཙམ་ཡིན།",
+      "range":"range",
+      "return":"བུདྡྷ་ལ་ཕྱིར་ལོག",
+      "showE":"འཕྲུལ་ཡིག་སྟོན།"
+   }     
 }

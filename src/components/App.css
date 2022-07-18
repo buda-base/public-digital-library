@@ -819,6 +819,7 @@ footer #donate,
 .App.guidedsearch.khmer .static-container.sticky + div nav .buttons .reset { margin-left:20px; }
 .App.guidedsearch.khmer .static-container.sticky + div nav .buttons > button {min-height:31px; vertical-align: middle; box-sizing: border-box;}
 .App.guidedsearch.khmer .static-container.sticky + div nav .buttons button[disabled] { /*background-color: #d7344990;*/ pointer-events:none; overflow: hidden; }
+.App.guidedsearch.khmer .static-container.sticky + div nav .buttons button { width:84px; }
 
 .App.guidedsearch.khmer .buttons button.reset  { color:#2f2f2f; font-weight: 600; cursor:pointer;
    border-radius: 2px;  background-color: #fbfafa;  border: 1px solid #e7e7e7; padding:7px 12px; font-size:12px; text-transform: uppercase;
@@ -1252,6 +1253,9 @@ a.result .contenu ul > div:last-child h3:is([lang$="-khmr"],[lang="km"]) { font-
    #root div .App .resultPage #filters-UI > div { margin-left:0px; padding-top:15px; max-height:80px; padding-right:15px;}
 }
 
+[lang='km'][data-browser='Firefox'] .home ~ footer :is(p,div),
+[lang='km'][data-browser='Firefox'] .home .static-container :is(h1,h2,p,a),
+[lang='km'][data-browser='Firefox'] .home #learn p { word-break:break-all;}
 
 
 /* ----------------------------------------------------------------------------------------------------------------------- samples/results */
@@ -2016,6 +2020,8 @@ h4:not(:hover) > .lang
 .resource .data#outline { background-color: #ffffff; padding: 35px; padding-bottom: 0; padding-top:45px; }
 .resource .data#outline > h2 { margin-left:35px; margin-bottom:35px; }
 .resource .data#outline > div { background-color: #fcf5e2; padding: 25px 35px; }
+.resource .data#outline > div.loader { background-color: transparent; padding: 0;  }
+
 .resource .data#outline > .search { background-color: #fce08d; justify-content:center; padding:20px; position:relative; }
 .resource .data#outline > .search > div { display:inline-block; position: relative;}
 .resource .data#outline > .search::after { content:none !important; }
@@ -2332,6 +2338,8 @@ h4:not(:hover) > .lang
 .resource.user .data#outline > .search h3 { font-weight:600;}
 .resource.user .data#outline .help { font-size:14px; margin-bottom:24px; margin-top:8px; font-weight:400;padding-left:2px;}
 
+
+.resource.user .data#outline .help + .widget > label > span:last-child { max-width: calc(100% - 190px - 20px); display: block; }  */
 
 .resource .data#outline .provider { padding-right:10px;  }
 .resource .data#outline .provider img { height:14px; vertical-align: -2px !important; cursor:pointer;}
@@ -2663,6 +2671,9 @@ span[lang^='sa-']:not([lang$='-ewts']) { text-transform: capitalize;}
 #popLang > div:last-child li.is-locale { font-weight:900; }
 
 #popLang.black > div:last-child li { padding-left:10px; }
+
+
+#popLang.DL > div:last-child { margin-top:-10px;margin-left:-10px; }
 
 #popHoverM .resource .data {/* width:100%;*/margin-left:0; }
 

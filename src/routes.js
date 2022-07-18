@@ -1,7 +1,7 @@
 // @flow
 import Script from 'react-load-script';
 import AppContainer from './containers/AppContainer';
-import React, { Component } from 'react';
+import React, { Component, useContext, useEffect } from 'react';
 import { Switch, Route, Router } from 'react-router-dom';
 import history from './history';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
@@ -31,6 +31,8 @@ import Profile from './components/ProfileStatic';
 import ClearCache from "react-clear-cache";
 
 import I18n from 'i18next';
+
+import {UAContext, UserAgentProvider} from '@quentin-sommer/react-useragent'
 
 export const auth = new Auth();
 
@@ -150,12 +152,23 @@ const handleAuthentication = (nextState, replace) => {
   }
 }
 
+const UAContextHook = () => {
+  const {parser} = useContext(UAContext)
+  useEffect( () => {
+     const browser = parser.getBrowser()
+     if(browser?.name) document.documentElement.setAttribute('data-browser', browser.name);
+     //console.log("parser:",parser.getBrowser(),parser)
+  }, [parser])
+  return []
+}
+
 const makeMainRoutes = () => {
 
-   return (
-      
-        <Provider store={store}>
+   return (      
+      <UserAgentProvider ua={window.navigator.userAgent}>
+         <Provider store={store}>
            <MuiThemeProvider theme={theme}>
+              <UAContextHook/>
               <Router history={history}>
                 <Switch>
                      <Route exact path="/static/:DIR1/:DIR2/:DIR3/:PAGE" render={(props) => {
@@ -375,6 +388,7 @@ const makeMainRoutes = () => {
                </Router>
             </MuiThemeProvider>
          </Provider>
+      </UserAgentProvider>
   );
 }
 
