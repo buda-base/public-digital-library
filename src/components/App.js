@@ -6641,6 +6641,74 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                /></div>
       ] )
 
+
+      let hasMatchPopup, hasMatchFacet = this.props.config?.facets[this.state.filters.datatype[0]]?.hasMatch, hasMatchTitle
+      if(metaK.includes("hasMatch")) { 
+         hasMatchPopup = 
+      
+      /* [<div key={0} style={{width:"200px",textAlign:"left"}} className="searchWidget">
+         <FormControlLabel
+            control={
+               <Checkbox
+                  checked={(!this.state.filters.facets || !this.state.filters.facets[tmp+"hasMatch"])}
+                  className="checkbox"
+                  icon={<PanoramaFishEye/>}
+                  checkedIcon={<CheckCircle  style={{color:"#d73449"}}/>}
+                  onChange={(event, checked) => this.handleCheckFacet(event, hasMatchFacet, Object.keys(meta["hasMatch"]), false) }
+               />
+
+            }
+            label={<span lang={this.props.locale}>{I18n.t("sort.exact")}</span>}
+         />
+         </div> ].concat( */
+            
+            Object.keys(meta["hasMatch"]).filter(p => p.startsWith(tmp)).map((t,n) => {
+         
+               return(<div key={n} style={{width:"200px",textAlign:"left"}} className="searchWidget">
+                  <FormControlLabel
+                     control={
+                        <Checkbox
+                           checked={this.state.filters.facets[tmp+"hasMatch"]?.includes(t)}
+                           className="checkbox"
+                           icon={<CheckBoxOutlineBlank/>}
+                           checkedIcon={<CheckBox  style={{color:"#d73449"}}/>}
+                           onChange={(event, checked) => { 
+                              this.handleCheckFacet(event, hasMatchFacet, [ t ], checked)
+                              this.setState({ collapse: { ...this.state.collapse, hasMatchPopup: false }})
+                              /*
+                              console.log("clicked?",checked,t)                           
+                              if(checked) {
+                                 this.handleCheckFacet(event, hasMatchFacet, [ t ], checked)
+                                 const uncheck = Object.keys(meta["hasMatch"]).filter(p => p.startsWith(tmp) && p != t && this.state.filters.facets && this.state.filters.facets[tmp+"hasMatch"]?.includes(p))
+                                 console.log("uncheck:",uncheck)
+                                 if(uncheck.length) setTimeout(() => this.handleCheckFacet(event, hasMatchFacet, uncheck, false), 150)
+                              } else {
+                                 this.handleCheckFacet(event, hasMatchFacet, [ t ], checked)
+                              }
+                              */
+                           }}
+                        />
+
+                     }
+                     label={<span lang={this.props.locale}>{I18n.t("prop."+shortUri(t))}</span>}
+                  />
+               </div> )
+            })
+
+         if(!this.state.filters.facets || !this.state.filters.facets[tmp+"hasMatch"]) hasMatchTitle = I18n.t("sort.exact")
+         else {
+            if(this.state.filters.facets) {
+               if(this.state.filters.facets[tmp+"hasMatch"].includes(tmp+"isExactMatch")) {
+                  if(this.state.filters.facets[tmp+"hasMatch"].includes(tmp+"hasExactMatch")) {
+                     hasMatchTitle = I18n.t("sort.exactMF")
+                  } else hasMatchTitle = I18n.t("sort.exactF")
+               } else hasMatchTitle = I18n.t("sort.exactM")
+            } 
+         }
+      }
+
+      //) // concat
+
       let infoPanelH, infoPanelR
       if(this.props.config && this.props.config.msg) {
          if(message.length == 0 && !this.props.loading && !this.props.keyword) infoPanelH = this.props.config.msg.filter(m => m.display && m.display.includes("home"))
@@ -7016,7 +7084,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      }>
                      <p class="widget-title" ><Visibility style={{verticalAlign:"-4px",marginRight:"8px"}}/>{I18n.t("search.toggleM")}</p>
                   </div> }
-                  { this.state.filters.datatype.includes("Etext") && <div class="widget-header" style={{marginRight:"auto"}} onClick={
+                  { this.state.filters.datatype.includes("Etext") && <div class="widget-header" style={{marginRight:!metaK.includes("hasMatch")?"auto":0}} onClick={
                            () => this.setState({repage:true, collapse:{...this.state.collapse,"etextOtherM":!this.state.collapse.etextOtherM}})
                      }>
                         <p class="widget-title" >
@@ -7025,6 +7093,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                               : [<Visibility style={{verticalAlign:"-4px",marginRight:"8px"}}/>,I18n.t("sort.showAll")] }
                         </p>
                      </div>}
+                  { metaK.includes("hasMatch") &&  this.popwidget(hasMatchTitle,"hasMatchPopup", hasMatchPopup,  <img src="/icons/exact.png" width="20px" style={{marginRight:"8px"}} /> )  }
                   <div id="pagine" lang={this.props.locale}>
                      <div>
                            { pageLinks && <span>{I18n.t("search.page")} { pageLinks }</span>}

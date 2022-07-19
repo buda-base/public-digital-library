@@ -2004,7 +2004,7 @@ function rewriteAuxMain(result,keyword,datatype,sortBy,language)
       flags = "u" // case sensitive in Tibetan/Wylie
    }
    //console.log("_kw:",_kw,keyword)
-   let _kwRegExpFullM = new RegExp("^↦"+_kw+"↤/?$", flags), _kwRegExpM = new RegExp("↦"+_kw+"↤", flags)
+   let _kwRegExpFullM = new RegExp("^↦.*?"+_kw+".*?↤/?$", flags), _kwRegExpM = new RegExp("↦.*?"+_kw+".*?↤", flags)
 
    let mergeLeporello = state.data.config.khmerServer
 

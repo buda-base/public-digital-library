@@ -154,7 +154,11 @@
       "volumeN": "པོད་གྲངས།",
       "roleN": "མི་སྣའི་མཚན།",
       "showAll":"མཐུན་པ་ཆ་ཚང་སྟོན།",
-      "hideAll":"མཐུན་ཤོས་ཁོ་ན།"
+      "hideAll":"མཐུན་ཤོས་ཁོ་ན།",
+      "exact":"partial or exact match",
+      "exactM":"exact match only",
+      "exactF":"exact full match only",
+      "exactMF":"any exact match"
    },
    "copyright": {
       "open": "བཀག་རྒྱ་མེད་པ།",
