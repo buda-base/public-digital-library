@@ -1320,7 +1320,7 @@ p.no-result {
    box-shadow: 0 2px 10px #e2e2e2;padding:15px; 
    transition:none;}
 #res-header > div .collapse.close {display: none;}
-#res-header > div .widget-header { display:flex; cursor:pointer; margin-top:10px;margin-left:38px;align-items: center;}
+#res-header > div .widget-header { display:flex; cursor:pointer; margin-top:10px;margin-left:34px;align-items: center;}
 #res-header > div .widget-header svg { font-size:16px;}
 #res-header > div .widget-header .widget-title { font-size:10px;color:#4a4a4a;font-weight:700; text-transform: uppercase; }
 
