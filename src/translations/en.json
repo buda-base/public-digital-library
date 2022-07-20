@@ -155,10 +155,10 @@
       "roleN": "Role Name",
       "showAll":"show all matches",
       "hideAll":"best matches only",
-      "exact":"partial or exact match",
-      "exactM":"exact match only",
-      "exactF":"exact full match only",
-      "exactMF":"any exact match"
+      "exact":"Partial or exact match",
+      "exactM":"Exact match only",
+      "exactF":"Exact full match only",
+      "exactMF":"Any exact match"
    },
    "copyright": {
       "open": "Open Access",

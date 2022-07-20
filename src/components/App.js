@@ -2409,7 +2409,7 @@ class App extends Component<Props,State> {
       } 
    }
 
-   handleCheckFacet = (ev:Event,prop:string,lab:string[],val:boolean,excl:boolean=false) => {
+   handleCheckFacet = (ev:Event,prop:string,lab:string[],val:boolean,excl:boolean=false,force:boolean=false) => {
 
       start = Date.now()
       last_t = start
@@ -2420,6 +2420,9 @@ class App extends Component<Props,State> {
 
       let propSet ;
       if(state.filters.facets) propSet = state.filters.facets[prop]
+
+      if(force) propSet = []
+
       if(!propSet) propSet = [ "Any" ]
       else if(propSet.val) propSet = propSet.val
 
@@ -6644,56 +6647,27 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
       let hasMatchPopup, hasMatchFacet = this.props.config?.facets[this.state.filters.datatype[0]]?.hasMatch, hasMatchTitle
       if(metaK.includes("hasMatch")) { 
-         hasMatchPopup = 
-      
-      /* [<div key={0} style={{width:"200px",textAlign:"left"}} className="searchWidget">
-         <FormControlLabel
-            control={
-               <Checkbox
-                  checked={(!this.state.filters.facets || !this.state.filters.facets[tmp+"hasMatch"])}
-                  className="checkbox"
-                  icon={<PanoramaFishEye/>}
-                  checkedIcon={<CheckCircle  style={{color:"#d73449"}}/>}
-                  onChange={(event, checked) => this.handleCheckFacet(event, hasMatchFacet, Object.keys(meta["hasMatch"]), false) }
-               />
-
-            }
-            label={<span lang={this.props.locale}>{I18n.t("sort.exact")}</span>}
-         />
-         </div> ].concat( */
-            
-            Object.keys(meta["hasMatch"]).filter(p => p.startsWith(tmp)).map((t,n) => {
          
-               return(<div key={n} style={{width:"200px",textAlign:"left"}} className="searchWidget">
-                  <FormControlLabel
-                     control={
-                        <Checkbox
-                           checked={this.state.filters.facets[tmp+"hasMatch"]?.includes(t)}
-                           className="checkbox"
-                           icon={<CheckBoxOutlineBlank/>}
-                           checkedIcon={<CheckBox  style={{color:"#d73449"}}/>}
-                           onChange={(event, checked) => { 
-                              this.handleCheckFacet(event, hasMatchFacet, [ t ], checked)
-                              this.setState({ collapse: { ...this.state.collapse, hasMatchPopup: false }})
-                              /*
-                              console.log("clicked?",checked,t)                           
-                              if(checked) {
-                                 this.handleCheckFacet(event, hasMatchFacet, [ t ], checked)
-                                 const uncheck = Object.keys(meta["hasMatch"]).filter(p => p.startsWith(tmp) && p != t && this.state.filters.facets && this.state.filters.facets[tmp+"hasMatch"]?.includes(p))
-                                 console.log("uncheck:",uncheck)
-                                 if(uncheck.length) setTimeout(() => this.handleCheckFacet(event, hasMatchFacet, uncheck, false), 150)
-                              } else {
-                                 this.handleCheckFacet(event, hasMatchFacet, [ t ], checked)
-                              }
-                              */
-                           }}
-                        />
-
-                     }
-                     label={<span lang={this.props.locale}>{I18n.t("prop."+shortUri(t))}</span>}
+         hasMatchPopup = [<div key={0} style={{width:"200px",textAlign:"left"}} className="searchWidget">
+            <FormControlLabel
+               control={
+                  <Checkbox
+                     checked={(!this.state.filters.facets || !this.state.filters.facets[tmp+"hasMatch"])}
+                     className="checkbox"
+                     icon={<PanoramaFishEye/>}
+                     checkedIcon={<CheckCircle  style={{color:"#d73449"}}/>}
+                     onChange={(event, checked) => { 
+                        this.handleCheckFacet(event, hasMatchFacet, Object.keys(meta["hasMatch"]), false) 
+                        this.setState({ collapse: { ...this.state.collapse, hasMatchPopup: false }})
+                     }}
                   />
-               </div> )
-            })
+
+               }
+               label={<span lang={this.props.locale}>{I18n.t("sort.exact")}</span>}
+            />
+            </div> ]
+
+
 
          if(!this.state.filters.facets || !this.state.filters.facets[tmp+"hasMatch"]) hasMatchTitle = I18n.t("sort.exact")
          else {
@@ -6703,11 +6677,58 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      hasMatchTitle = I18n.t("sort.exactMF")
                   } else hasMatchTitle = I18n.t("sort.exactF")
                } else hasMatchTitle = I18n.t("sort.exactM")
-            } 
+            }
          }
+
+         const matchK = Object.keys(meta["hasMatch"]).filter(p => p.startsWith(tmp)),
+            allMatch = matchK.length > 1 && !matchK.some(t => !this.state.filters.facets || !this.state.filters.facets[tmp+"hasMatch"]?.includes(t))
+
+         hasMatchPopup = hasMatchPopup.concat(matchK.map((t,n) => {         
+            return(<div key={n} style={{width:"200px",textAlign:"left"}} className="searchWidget">
+               <FormControlLabel
+                  control={
+                     <Checkbox
+                        checked={!allMatch && this.state.filters.facets && this.state.filters.facets[tmp+"hasMatch"]?.includes(t)}
+                        className="checkbox"
+                        icon={<PanoramaFishEye/>}
+                        checkedIcon={<CheckCircle  style={{color:"#d73449"}}/>}
+                        onChange={(event, checked) => { 
+                           if(checked) this.handleCheckFacet(event, hasMatchFacet, [ t ], checked, false, true)
+                           this.setState({ collapse: { ...this.state.collapse, hasMatchPopup: false }})
+                        }}
+                     />
+
+                  }
+                  label={<span lang={this.props.locale}>{I18n.t("sort.exact"+(t.endsWith("hasExactMatch")?"M":"F"))}</span>}
+               />
+            </div> )
+         }))       
+
+         if(matchK.length > 1) {
+
+            hasMatchPopup.push(         
+               <div key={99} style={{width:"200px",textAlign:"left"}} className="searchWidget">
+                  <FormControlLabel
+                     control={
+                        <Checkbox
+                           checked={allMatch}
+                           className="checkbox"
+                           icon={<PanoramaFishEye/>}
+                           checkedIcon={<CheckCircle  style={{color:"#d73449"}}/>}
+                           onChange={(event, checked) => { 
+                              if(checked) this.handleCheckFacet(event, hasMatchFacet, matchK, checked)
+                              this.setState({ collapse: { ...this.state.collapse, hasMatchPopup: false }})
+                           }}
+                        />
+
+                     }
+                     label={<span lang={this.props.locale}>{I18n.t("sort.exactMF")}</span>}
+                  />
+               </div> 
+            )            
+         }                           
       }
 
-      //) // concat
 
       let infoPanelH, infoPanelR
       if(this.props.config && this.props.config.msg) {
