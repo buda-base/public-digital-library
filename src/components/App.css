@@ -1342,11 +1342,13 @@ p.no-result {
    box-shadow: 0 2px 10px #e2e2e2;padding:15px; 
    transition:none;}
 #res-header > div .collapse.close {display: none;}
-#res-header > div .widget-header { display:flex; cursor:pointer; margin-top:10px;margin-left:38px;}
+#res-header > div .widget-header { display:flex; cursor:pointer; margin-top:10px;margin-left:34px;align-items: center;}
 #res-header > div .widget-header svg { font-size:16px;}
 #res-header > div .widget-header .widget-title { font-size:10px;color:#4a4a4a;font-weight:700; text-transform: uppercase; }
 
 #res-header #pagine { font-size:12px; font-weight:500; width:auto; margin-top:10px; padding:0; padding-right:calc(40px);}
+
+#res-header > div .widget-header:nth-last-child(2) { margin-right:auto; }
 
 #res-header #pagine #nb { 
    margin-left: 10px;
@@ -4571,6 +4573,11 @@ body {overflow-x:hidden; }
 .dataWidget > label > span svg { width:17px; height:17px; }
 .searchWidget > label > span:first-child,
 .dataWidget > label > span:first-child { width:22px;height:22px; color:rgba(0,0,0,0.7); margin-left:9px;margin-right:2px; }
+
+body > .collapse .searchWidget > label > span:first-child,
+body > .collapse .dataWidget > label > span:first-child { margin-top:-2px;}
+body > .collapse .searchWidget:not(:last-child) { margin-bottom:3px; }
+
 .SidePane .help { text-align:left;font-style:italic;margin-bottom:10px; font-size:12px; width:300px;line-height:16px; }
 /* .subcollapse label span:last-child { max-width:120px;} */
 .dataWidget ol { margin:0; font-size:12px;padding-left:16px; list-style: none; counter-reset: li; margin-top:4px; pointer-events:none; opacity:0.55;}

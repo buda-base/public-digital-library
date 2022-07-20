@@ -1608,7 +1608,7 @@ export const gotContext = (state: DataState, action: Action) => {
             }
       }
 
-      console.log("searches",time,searches,results)
+      //console.log("searches",time,searches,results)
 
       return {
          ...state,

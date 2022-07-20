@@ -154,7 +154,11 @@
       "volumeN": "លេខបរិមាណ",
       "roleN": "ឈ្មោះតួនាទី",
       "showAll":"បង្ហាញការផ្គូផ្គងទាំងអស់",
-      "hideAll":"ការផ្គូផ្គងដែលត្រូវគ្នាបំផុតប៉ុណ្ណោះ"
+      "hideAll":"ការផ្គូផ្គងដែលត្រូវគ្នាបំផុតប៉ុណ្ណោះ",
+      "exact":"partial or exact match",
+      "exactM":"exact match only",
+      "exactF":"exact full match only",
+      "exactMF":"any exact match"
    },
    "copyright": {
       "open": "បើកការចូលប្រើប្រាស់",

@@ -1207,18 +1207,29 @@ class ResourceViewer extends Component<Props,State>
          }
       }
 
-      let getElem = (prop,IRI,useAssoc,subIRI) => {         
+      // #732 handle withdrawn record links in tabs
+      const replaceW = (id) => { 
+         if(id?.length) {
+            if(props.assocResources) {
+               const rw = getElem(adm+"replaceWith",shortUri(id[0].value)) 
+               if(rw?.length) return rw
+            }
+         }
+         return id
+      }
+
+      const getElem = (prop,IRI,useAssoc,subIRI) => {         
          let longIRI = fullUri(IRI)
          if(subIRI) longIRI = subIRI
          if(useAssoc) {
             let elem = useAssoc[longIRI]
             if(elem) elem = elem.filter(e => e.type === prop || e.fromKey === prop)
             else elem = null
-            return elem
+            return replaceW(elem)
          }
          else if(props.resources && props.resources[IRI] && props.resources[IRI][longIRI]){
             let elem = props.resources[IRI][longIRI][prop]
-            return elem
+            return replaceW(elem)
          }
       }
 
@@ -1296,8 +1307,10 @@ class ResourceViewer extends Component<Props,State>
             images = getElem(bdo+"instanceHasReproduction",props.IRI),
             _T = getEntiType(props.IRI)
 
-
-            
+         
+         // #732 show Scans rather than Etext as third tab 
+         if(images) images = _.sortBy(images, (i) => i.value && i.value.includes("/resource/W")?-1:1)
+         
 
          // TODO find a way to keep an existing Etext/Images tab
          //if(images) images = images.filter(e => getEntiType(e.value) === "Images")

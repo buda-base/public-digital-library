@@ -154,7 +154,11 @@
       "volumeN": "Volume Number",
       "roleN": "Role Name",
       "showAll":"show all matches",
-      "hideAll":"best matches only"
+      "hideAll":"best matches only",
+      "exact":"partial or exact match",
+      "exactM":"exact match only",
+      "exactF":"exact full match only",
+      "exactMF":"any exact match"
    },
    "copyright": {
       "open": "开放访问",
@@ -255,7 +259,10 @@
       "tmp:placeContainsDesc":"Located in (descendents)",
       "tmp:GISCoordinates":"GIS Coordinates",
       "tmp:altLabelName":"Variant Name",
-      "tmp:altLabelTitle":"Variant Title"
+      "tmp:altLabelTitle":"Variant Title",
+      "tmp:hasMatch":"Exact Match",
+      "tmp:hasExactMatch":"Exact Match",
+      "tmp:isExactMatch":"Exact Full Match"
    },
    "result": {
       "open": "开放",

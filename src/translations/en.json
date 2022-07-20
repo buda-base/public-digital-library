@@ -154,7 +154,11 @@
       "volumeN": "Volume Number",
       "roleN": "Role Name",
       "showAll":"show all matches",
-      "hideAll":"best matches only"
+      "hideAll":"best matches only",
+      "exact":"Partial or exact match",
+      "exactM":"Exact match only",
+      "exactF":"Exact full match only",
+      "exactMF":"Any exact match"
    },
    "copyright": {
       "open": "Open Access",
@@ -255,7 +259,10 @@
       "tmp:placeContainsDesc":"Located in (descendents)",
       "tmp:GISCoordinates":"GIS Coordinates",
       "tmp:altLabelName":"Variant Name",
-      "tmp:altLabelTitle":"Variant Title"
+      "tmp:altLabelTitle":"Variant Title",
+      "tmp:hasMatch":"Exact Match",
+      "tmp:hasExactMatch":"Exact Match",
+      "tmp:isExactMatch":"Exact Full Match"
    },
    "guided":{
       "keyword":"keyword",

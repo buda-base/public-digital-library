@@ -9,7 +9,7 @@ import * as uiActions from '../ui/actions';
 import selectors from '../selectors';
 import store from '../../index';
 import bdrcApi, { getEntiType, ResourceNotFound } from '../../lib/api';
-import {sortLangScriptLabels, extendedPresets} from '../../lib/transliterators';
+import {sortLangScriptLabels, extendedPresets, getMainLabel} from '../../lib/transliterators';
 import {auth} from '../../routes';
 import {shortUri,fullUri,isAdmin,sublabels,subtime} from '../../components/App'
 import {getQueryParam, GUIDED_LIMIT} from '../../components/GuidedSearch'
@@ -722,6 +722,7 @@ async function getContext(iri,start,end,nb:integer = 1000) {
       store.dispatch(dataActions.gotAssocResources(iri, { data }))
       
    }
+   store.dispatch(dataActions.gotContext(state.data.keyword+"@"+state.data.language,iri,start,end,data))
    store.dispatch(uiActions.loading(null, false));
 
 }
@@ -1988,7 +1989,22 @@ function rewriteAuxMain(result,keyword,datatype,sortBy,language)
    let langPreset = state.ui.langPreset
    if(!sortBy) sortBy = state.ui.sortBy
    let reverse = sortBy && sortBy.endsWith("reverse")
-   let canPopuSort = false, isScan, isTypeScan = datatype.includes("Scan"), inRoot, partType, context, unreleased
+   let canPopuSort = false, isScan, isTypeScan = datatype.includes("Scan"), inRoot, partType, context, unreleased, hasExactM, isExactM, hasM
+   let _kw = keyword.replace(/^"|"(~1)?$/g,"").replace(/[“”]/g,'"').replace(/[`‘’]/g,"'") // normalize quotes in user input   
+   
+   // DONE case of tibetan unicode vs wylie
+   let flags = "iu"
+   if(language === "bo") { 
+      let translit = getMainLabel([ { lang: language, value: _kw } ], extendedPresets([ "bo-x-ewts" ]))
+      _kw = "(("+_kw+")|("+translit?.value?.replace(/[_ ]/g,"[_ ]")+(translit?.value?.endsWith("/")?"?":"/?") +"))"      
+      flags = "u" // case sensitive in Tibetan/Wylie
+   } else if(language === "bo-x-ewts") { 
+      let translit = getMainLabel([ { lang: language, value: _kw } ], extendedPresets([ "bo" ]))
+      _kw = "(("+_kw.replace(/[_ ]/g,"[_ ]")+(_kw.endsWith("/")?"?":"/?")+")|("+translit?.value+"))"      
+      flags = "u" // case sensitive in Tibetan/Wylie
+   }
+   //console.log("_kw:",_kw,keyword)
+   let _kwRegExpFullM = new RegExp("^↦.*?"+_kw+".*?↤/?$", flags), _kwRegExpM = new RegExp("↦.*?"+_kw+".*?↤", flags)
 
    let mergeLeporello = state.data.config.khmerServer
 
@@ -2016,6 +2032,9 @@ function rewriteAuxMain(result,keyword,datatype,sortBy,language)
             partType = ""
             context = []
             unreleased = false
+            hasExactM = false
+            isExactM = false
+            hasM = false
 
             if(auth && !auth.isAuthenticated() || !isAdmin(auth)) {	
                let status = result[e][k].filter(k => k.type === adm+"status" || k.type === tmp+"status")	
@@ -2040,6 +2059,9 @@ function rewriteAuxMain(result,keyword,datatype,sortBy,language)
                } else if(e.type === bdo+"partType") {
                   partType = e.value
                } else if(e.value && e.value.match && e.value.match(/[↦↤]/)) {                  
+
+                  e.value = e.value.replace(/↤\/_↦/g,"/_")
+
                   if([_tmp+"nameMatch",_tmp+"labelMatch"].includes(e.type)) {
                      if(["works","instances","scans","etexts"].includes(t)) {
                         if(!context.includes(_tmp+"titleContext")) context.push(_tmp+"titleContext")
@@ -2049,6 +2071,22 @@ function rewriteAuxMain(result,keyword,datatype,sortBy,language)
                   } else {
                      if(!context.includes(e.type)) context.push(e.type)
                   } 
+
+                  hasM = true
+
+                  // #718 check if match is full/exact
+                  if(e.value.match(_kwRegExpM)) {                                          
+                     //console.log("exact:",e)
+                     hasExactM = true
+                     if(e.value.match(_kwRegExpFullM)) {
+                        //console.log("full exact")
+                        isExactM = true
+                     } 
+                  } else {
+                     //console.log("exact?",e,_kw)
+                  }
+
+
                } else if(e.type === _tmp+"status" && e.value) {
                   if(!e.value.match(/Released/)) { 
                      unreleased = true
@@ -2072,7 +2110,6 @@ function rewriteAuxMain(result,keyword,datatype,sortBy,language)
             if(unreleased) {
                res.push({type:_tmp+"nonReleasedItems", value:_tmp+"show"})
             }
-
 
 
             canPopuSort = canPopuSort || (res.filter(e => e.type === tmp+"entityScore").length > 0)            
@@ -2104,6 +2141,16 @@ function rewriteAuxMain(result,keyword,datatype,sortBy,language)
                   //loggergen.log("full",content.value)
                   //loggergen.log("expand",expand.value)
 
+                  // #718 check if match is exact
+                  if(content?.value && content.value.match &&  content.value.match(/[↦↤]/)) {
+                     hasM = true   
+                     content.value = content.value.replace(/↤\/_↦/g,"/ ")
+                     if(content.value.match(_kwRegExpM)) {                                          
+                        //console.log("exact:",e)
+                        hasExactM = true
+                     }
+                  }
+
                   return { e, n, m, p, content, expand }
                })
                chunks = _.orderBy(chunks, ['n','m'], ['desc','asc'])
@@ -2115,6 +2162,13 @@ function rewriteAuxMain(result,keyword,datatype,sortBy,language)
 
                if(chunks.length > 1) res = res.concat(chunks.slice(1).map(e => ({...e.e, expand:e.expand, startChar:e.m, endChar:e.p})))
             }
+
+            if(hasM) {
+               if(hasExactM) res.push({type:_tmp+"hasMatch", value:_tmp+"hasExactMatch"})
+               if(isExactM) res.push({type:_tmp+"hasMatch", value:_tmp+"isExactMatch"})
+            }
+
+
 
             
             //if(isTypeScan && !isScan) return ({...acc})

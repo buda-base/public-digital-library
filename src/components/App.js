@@ -448,7 +448,6 @@ export function highlight(val,k,expand,newline,force)
       //console.log("k:",val,k.replace(/[ -'ʾ_/  \[\]0-9\n\r།]+/gu,"[ -'ʾ_/  \\[\\]0-9\n\r།]+"))
    }
 
-
    val = val.replace(/(\[[^\]]*?)([↦])([^\]]*?\])/g,"$1$3$2");
    val = val.replace(/(\[[^\]]*?)([↤])([^\]]*?\])/g,"$2$1$3");
    val = val.replace(/(↦↤)|(\[ *\])/g,"");
@@ -2429,7 +2428,7 @@ class App extends Component<Props,State> {
       } 
    }
 
-   handleCheckFacet = (ev:Event,prop:string,lab:string[],val:boolean,excl:boolean=false) => {
+   handleCheckFacet = (ev:Event,prop:string,lab:string[],val:boolean,excl:boolean=false,force:boolean=false) => {
 
       start = Date.now()
       last_t = start
@@ -2440,6 +2439,9 @@ class App extends Component<Props,State> {
 
       let propSet ;
       if(state.filters.facets) propSet = state.filters.facets[prop]
+
+      if(force) propSet = []
+
       if(!propSet) propSet = [ "Any" ]
       else if(propSet.val) propSet = propSet.val
 
@@ -3357,6 +3359,16 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
       if(plural === true) plural = "_plural"
 
+      if(exclude) {         
+         if(exclude.value) { 
+            exclude.value = exclude.value.replace(/[↦↤]/g,"")
+            const translit = getLangLabel(this,"",[exclude])
+            exclude = translit.value
+         } else {
+            exclude = exclude.replace(/[↦↤]/g,"")
+         }
+      }
+
       if(allProps && this.props.assoRes) { 
          if(!fromProp) fromProp = [ prop ]
          let ret = []
@@ -3518,7 +3530,12 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             let labels = sortLangScriptLabels(id,langs.flat,langs.translit)
             for(let i of labels) {
                let val = i["value"] 
-               if(val === exclude) continue
+
+               const translit = getLangLabel(this, "", [i])
+
+               //console.log("val/excl:",val,exclude,translit)
+
+               if(val === exclude || translit?.value?.replace(/_/g," ").replace(/[\/། ]+$|[↦↤]/g,"") === exclude?.replace(/_/g," ").replace(/[\/། ]+$|[↦↤]/g,"")) continue
                let lang = i["xml:lang"]
 
                if((""+val).match(/^[0-9-]+T[0-9:.]+Z+$/)) {
@@ -3551,17 +3568,16 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   */
                   val = getLangLabel(this,prop,[i])
                   let kw = lucenequerytokeywordmulti(this.props.keyword).map(v => v.trim().replace(/[་༌།]+$/,""))                  
+                  lang = val.lang
+                  if(!lang) lang = val["xml:lang"]
                   // join by "EEEE" as it won't be affected in wylie from/to conversion 
                   if(this.props.language) {
                      kw = getLangLabel(this,"",[ { "value":kw.join("EEEE"), "lang": this.props.language } ])
                      if(val && kw.value !== undefined) {
                         val = highlight(val.value,kw.value.replace(/ *\[?EEEE\]? */g,"|"))
-                        lang = val.lang
                      } else { 
                         if(!Array.isArray(kw)) kw = [ kw ]
                         val = highlight(i.value,kw.join("|"))
-                        lang = i["lang"]
-                        if(!lang) lang = i["xml:lang"]
                      }
                   } else {
                      if(val?.value) val = val.value
@@ -3601,10 +3617,11 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      else labels = labels["http://www.w3.org/2000/01/rdf-schema#label"]
                   }
                }
-
+               if(labels) labels = labels.filter(l => l.type === skos+"prefLabel" || l.fromKey === skos+"prefLabel")
+               
                //loggergen.log("labels1",i,prop) //,labels,this.props.assoRes)
 
-               if(labels) { 
+               if(labels?.length) { 
                   labels = getLangLabel(this,prop,labels)
                   if(labels) {
                      lang = labels["xml:lang"]
@@ -3676,6 +3693,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
          let sTmp = shortUri(m.type), trad = I18n.t("prop."+sTmp)	
          if(trad !== sTmp) from = trad	
+
+         //console.log("m:",m)
 
          let val,isArray = false ;	
          let lang = m["lang"]	
@@ -4378,7 +4397,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             {/* { this.getResultProp(bdo+"workIsAbout",allProps,false) } */}
             {/* { this.getResultProp(bdo+"workGenre",allProps) } */}
 
-            { this.getResultProp(["Work","Instance","Scan","Etext"].includes(this.state.filters.datatype[0])?"tmp:otherTitle":"tmp:otherName",allLabels, true, false, [ tmp+"labelMatch", tmp+"nameMatch", skos+"prefLabel", skos+"altLabel"], !preLit?preLit:preLit.replace(/[↦↤]/g,"") ) }
+            { this.getResultProp(["Work","Instance","Scan","Etext"].includes(this.state.filters.datatype[0])?"tmp:otherTitle":"tmp:otherName",allLabels, true, false, [ tmp+"labelMatch", tmp+"nameMatch", skos+"prefLabel", skos+"altLabel"], preLit ) }
             {/* { this.getResultProp(tmp+"assetAvailability",allProps,false,false) } */}
             
             {/* { this.getResultProp(rdf+"type",allProps.filter(e => e.type === rdf+"type" && e.value === bdo+"EtextInstance")) }  */}
@@ -5296,7 +5315,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      lastN = cpt ;
                      nMax = n
                      //loggergen.log("lastN",lastN)
-                     message.push(this.makeResult(id,n,t,lit,lang,tip,Tag,null,r.match,k,sublist[o],r.lit.value))
+                     message.push(this.makeResult(id,n,t,lit,lang,tip,Tag,null,r.match,k,sublist[o],{...r.lit}))
                   }
                   else {
                      if(unreleased) n --
@@ -5440,7 +5459,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                <Typography className="no-result">
                   <span>
                      {I18n.t("search.hidden")}<br/>
-                     <a onClick={(event) => this.handleCheckFacet(event,f?.nonReleased,["tmp:show"],true)} class="uri-link" style={{marginLeft:0}}>{I18n.t("search.showU")}</a>
+                     <a onClick={(event) => this.handleCheckFacet(event,f?.nonReleased,[_tmp+"show"],true)} class="uri-link" style={{marginLeft:0}}>{I18n.t("search.showU")}</a>
                   </span>
                </Typography>
             )
@@ -6644,6 +6663,92 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                /></div>
       ] )
 
+
+      let hasMatchPopup, hasMatchFacet = this.props.config?.facets[this.state.filters.datatype[0]]?.hasMatch, hasMatchTitle
+      if(metaK.includes("hasMatch")) { 
+         
+         hasMatchPopup = [<div key={0} style={{width:"200px",textAlign:"left"}} className="searchWidget">
+            <FormControlLabel
+               control={
+                  <Checkbox
+                     checked={(!this.state.filters.facets || !this.state.filters.facets[tmp+"hasMatch"])}
+                     className="checkbox"
+                     icon={<PanoramaFishEye/>}
+                     checkedIcon={<CheckCircle  style={{color:"#d73449"}}/>}
+                     onChange={(event, checked) => { 
+                        this.handleCheckFacet(event, hasMatchFacet, Object.keys(meta["hasMatch"]), false) 
+                        this.setState({ collapse: { ...this.state.collapse, hasMatchPopup: false }})
+                     }}
+                  />
+
+               }
+               label={<span lang={this.props.locale}>{I18n.t("sort.exact")}</span>}
+            />
+            </div> ]
+
+
+
+         if(!this.state.filters.facets || !this.state.filters.facets[tmp+"hasMatch"]) hasMatchTitle = I18n.t("sort.exact")
+         else {
+            if(this.state.filters.facets) {
+               if(this.state.filters.facets[tmp+"hasMatch"].includes(tmp+"isExactMatch")) {
+                  if(this.state.filters.facets[tmp+"hasMatch"].includes(tmp+"hasExactMatch")) {
+                     hasMatchTitle = I18n.t("sort.exactMF")
+                  } else hasMatchTitle = I18n.t("sort.exactF")
+               } else hasMatchTitle = I18n.t("sort.exactM")
+            }
+         }
+
+         const matchK = Object.keys(meta["hasMatch"]).filter(p => p.startsWith(tmp)),
+            allMatch = matchK.length > 1 && !matchK.some(t => !this.state.filters.facets || !this.state.filters.facets[tmp+"hasMatch"]?.includes(t))
+
+         hasMatchPopup = hasMatchPopup.concat(matchK.map((t,n) => {         
+            return(<div key={n} style={{width:"200px",textAlign:"left"}} className="searchWidget">
+               <FormControlLabel
+                  control={
+                     <Checkbox
+                        checked={!allMatch && this.state.filters.facets && this.state.filters.facets[tmp+"hasMatch"]?.includes(t)}
+                        className="checkbox"
+                        icon={<PanoramaFishEye/>}
+                        checkedIcon={<CheckCircle  style={{color:"#d73449"}}/>}
+                        onChange={(event, checked) => { 
+                           if(checked) this.handleCheckFacet(event, hasMatchFacet, [ t ], checked, false, true)
+                           this.setState({ collapse: { ...this.state.collapse, hasMatchPopup: false }})
+                        }}
+                     />
+
+                  }
+                  label={<span lang={this.props.locale}>{I18n.t("sort.exact"+(t.endsWith("hasExactMatch")?"M":"F"))}</span>}
+               />
+            </div> )
+         }))       
+
+         if(matchK.length > 1) {
+
+            hasMatchPopup.push(         
+               <div key={99} style={{width:"200px",textAlign:"left"}} className="searchWidget">
+                  <FormControlLabel
+                     control={
+                        <Checkbox
+                           checked={allMatch}
+                           className="checkbox"
+                           icon={<PanoramaFishEye/>}
+                           checkedIcon={<CheckCircle  style={{color:"#d73449"}}/>}
+                           onChange={(event, checked) => { 
+                              if(checked) this.handleCheckFacet(event, hasMatchFacet, matchK, checked)
+                              this.setState({ collapse: { ...this.state.collapse, hasMatchPopup: false }})
+                           }}
+                        />
+
+                     }
+                     label={<span lang={this.props.locale}>{I18n.t("sort.exactMF")}</span>}
+                  />
+               </div> 
+            )            
+         }                           
+      }
+
+
       let infoPanelH, infoPanelR
       if(this.props.config && this.props.config.msg) {
          if(message.length == 0 && !this.props.loading && !this.props.keyword) infoPanelH = this.props.config.msg.filter(m => m.display && m.display.includes("home"))
@@ -7019,7 +7124,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      }>
                      <p class="widget-title" ><Visibility style={{verticalAlign:"-4px",marginRight:"8px"}}/>{I18n.t("search.toggleM")}</p>
                   </div> }
-                  { this.state.filters.datatype.includes("Etext") && <div class="widget-header" style={{marginRight:"auto"}} onClick={
+                  { this.state.filters.datatype.includes("Etext") && <div class="widget-header" style={{marginRight:!metaK.includes("hasMatch")?"auto":0}} onClick={
                            () => this.setState({repage:true, collapse:{...this.state.collapse,"etextOtherM":!this.state.collapse.etextOtherM}})
                      }>
                         <p class="widget-title" >
@@ -7028,6 +7133,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                               : [<Visibility style={{verticalAlign:"-4px",marginRight:"8px"}}/>,I18n.t("sort.showAll")] }
                         </p>
                      </div>}
+                  { metaK.includes("hasMatch") &&  this.popwidget(hasMatchTitle,"hasMatchPopup", hasMatchPopup,  <img src="/icons/exact.png" width="20px" style={{marginRight:"8px"}} /> )  }
                   <div id="pagine" lang={this.props.locale}>
                      <div>
                            { pageLinks && <span>{I18n.t("search.page")} { pageLinks }</span>}
