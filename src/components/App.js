@@ -7119,18 +7119,21 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   {  // DONE change to popover style open/close
                      sortByList && this.popwidget(I18n.t("Lsidebar.sortBy.title",{by,reverse}),"sortBy",sortByPopup, <ImportExport className="header-icon"/> ) 
                   }
-                  { this.state.filters.datatype.includes("Place") && this.props.simple && <div class="widget-header" style={{marginRight:"auto"}} onClick={
+                  { this.state.filters.datatype.includes("Place") && this.props.simple && <div class="widget-header placeMap" style={{marginRight:"auto"}} onClick={
                         () => this.setState({ repage:true, collapse:{...this.state.collapse, placeMap:!this.state.collapse.placeMap}})
                      }>
-                     <p class="widget-title" ><Visibility style={{verticalAlign:"-4px",marginRight:"8px"}}/>{I18n.t("search.toggleM")}</p>
+                     <Visibility style={{verticalAlign:"-4px",marginRight:"8px"}}/>
+                     <p class="widget-title" >{I18n.t("search.toggleM")}</p>
                   </div> }
-                  { this.state.filters.datatype.includes("Etext") && <div class="widget-header" /*style={{marginRight:!metaK.includes("hasMatch")?"auto":0}}*/ onClick={
+                  { this.state.filters.datatype.includes("Etext") && <div class="widget-header etextBestM" /*style={{marginRight:!metaK.includes("hasMatch")?"auto":0}}*/ onClick={
                            () => this.setState({repage:true, collapse:{...this.state.collapse,"etextOtherM":!this.state.collapse.etextOtherM}})
-                     }>
+                     }>{ this.state.collapse.etextOtherM 
+                        ? <VisibilityOff style={{verticalAlign:"-4px",marginRight:"8px"}}/>
+                        : <Visibility style={{verticalAlign:"-4px",marginRight:"8px"}}/> }
                         <p class="widget-title" >
                            { this.state.collapse.etextOtherM 
-                              ? [<VisibilityOff style={{verticalAlign:"-4px",marginRight:"8px"}}/>,I18n.t("sort.hideAll")]
-                              : [<Visibility style={{verticalAlign:"-4px",marginRight:"8px"}}/>,I18n.t("sort.showAll")] }
+                              ? I18n.t("sort.hideAll")
+                              : I18n.t("sort.showAll") }
                         </p>
                      </div>}
                   { metaK.includes("hasMatch") &&  this.popwidget(hasMatchTitle,"hasMatchPopup", hasMatchPopup,  <img src="/icons/exact.png" width="20px" style={{marginRight:"8px"}} /> )  }

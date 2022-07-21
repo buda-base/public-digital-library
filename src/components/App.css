@@ -944,7 +944,7 @@ footer #donate,
 
    .App.home.khmer.static section > div .col2 { column-count:1;}
 
-   #res-header > div .widget-header + .widget-header + .widget-header { display:none; }
+   #res-header > div .widget-header ~ .widget-header:not(:is(.etextBestM,.placeMap)) { display:none; }
 
    #root .App .resultPage #res-header > div { padding:0 40px !important; }
 }
@@ -5516,7 +5516,7 @@ a.result + #matches.mobile,
    footer#site-footer > .body #b2 #f2 #s1 { justify-content: center; }
    
    footer#site-footer > div.foot #t1 > :is(#p1,#p2) { justify-content: flex-start; width:250px; display:flex; margin:auto; margin-bottom:40px;}
-   footer#site-footer > div.foot #p2 img + div, footer#site-footer > div.foot #p1 img + div { width:100%;}
+   footer#site-footer > div.foot #p2 img + div, footer#site-footer > div.foot #p1 img + div { width:100%; text-align: left;}
 
    footer#site-footer > div.foot #t2 #p1 { width:300px; margin:auto; display:block; margin-bottom:10px; max-width:100%;}
    footer#site-footer > div.foot #t2 #p1 > img { display:block; margin:auto; margin-bottom:20px;}
@@ -5757,6 +5757,21 @@ a.result + #matches.mobile,
    .resource .data.etext-title { padding-right:15px; order:-1; padding-bottom:10px !important; }
    .resource .data + .data.open-etext { position: relative; padding-left:35px; order:0; padding-bottom:50px !important; z-index:0; }
 
+   #root .App .resultPage #res-header > div .widget-header { max-width:130px; margin-right:15px;}
+   /* #root .App .resultPage #res-container { padding-left:0; padding-right:0; width:calc(100% - 40px) !important;} */
+   #root .App .resultPage #res-header > div { padding: 0 20px!important; justify-content: center;}
+
+   #res-header #pagine { flex-shrink: 0; }
+
+   .App:not(.home) .SearchPane .formControl { bottom:15px; /*left: 44px;*/ }
+   /* 
+   .App:not(.home) #search-bar > div:first-child > div:first-child { width:calc(100vw - 40px) !important; } 
+   .App:not(.home) #search-bar > div:first-child > div:first-child > div:first-child {       
+      width: calc(100% - 48px - 25px);
+      margin-left: 25px;
+   } */
+
+   #res-header > div .widget-header .widget-title { text-align:center; }
 }
 
 
