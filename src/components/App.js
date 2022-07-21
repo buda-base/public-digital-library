@@ -1393,8 +1393,8 @@ class App extends Component<Props,State> {
             if(this._refs["header"].current) $(this._refs["header"].current).css("top",(toph+navh+15)+"px") //
             
             $(ref)
-            .height(window.innerHeight - rect.y)
-            .css("top",(toph+navh+headh+15)+"px")
+            .height(window.innerHeight - rect.y + (window.innerWidth <= 1024 ? 0 : 0))
+            .css("top",(toph+navh+(window.innerWidth > 1024 ? headh+15 : 5)+"px"))
 
             if(this._refs["simplebar"].current) this._refs["simplebar"].current.recalculate()
             if(this._refs["filters-UI"].current) this._refs["filters-UI"].current.recalculate()
@@ -6147,7 +6147,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                //console.log("pages:",min,max, nbResu, paginate.pages[paginate.pages.length-1], paginate.pages )
 
                if(min > 1) pageLinks.push([<a onClick={this.goPage.bind(this,id,1)}>{I18n.t("punc.num",{num:1})}</a>," ... "]) 
-               for(let i = min ; i <= max ; i++) { /*if(nbResu >= paginate.pages[i-1])*/ pageLinks.push(<a onClick={this.goPage.bind(this,id,i)}>{((i-1)===this.state.paginate.index?<b><u>{I18n.t("punc.num",{num:i})}</u></b>:I18n.t("punc.num",{num:i}))}</a>) }
+               for(let i = min ; i <= max ; i++) { /*if(nbResu >= paginate.pages[i-1])*/ pageLinks.push(<a data-i={i} onClick={this.goPage.bind(this,id,i)}>{((i-1)===this.state.paginate.index?<b><u>{I18n.t("punc.num",{num:i})}</u></b>:I18n.t("punc.num",{num:i}))}</a>) }
                if(max < paginate.pages.length) {  
                   for(let i = paginate.pages.length-1 ; i >= min ; i--) {
                      if(nbResu >= paginate.pages[i]) {
@@ -7105,7 +7105,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      }>
                      <p class="widget-title" ><Visibility style={{verticalAlign:"-4px",marginRight:"8px"}}/>{I18n.t("search.toggleM")}</p>
                   </div> }
-                  { this.state.filters.datatype.includes("Etext") && <div class="widget-header" style={{marginRight:!metaK.includes("hasMatch")?"auto":0}} onClick={
+                  { this.state.filters.datatype.includes("Etext") && <div class="widget-header" /*style={{marginRight:!metaK.includes("hasMatch")?"auto":0}}*/ onClick={
                            () => this.setState({repage:true, collapse:{...this.state.collapse,"etextOtherM":!this.state.collapse.etextOtherM}})
                      }>
                         <p class="widget-title" >
