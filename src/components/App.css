@@ -272,7 +272,7 @@ body { overflow:auto !important;padding-right:0 !important; /*font-family:"Robot
 .data-checkbox > span > span:last-child { margin-top:12px; }
 
 #root ~ #menu-datatype,
-#root ~ #menu-language { z-index:100000;}
+#root ~ #menu-language { z-index:1000000;}
 
 #root ~ #menu-datatype ul,
 #root ~ #menu-language ul { padding:0 !important;}
@@ -899,6 +899,14 @@ footer #donate,
 
    .App.home.khmer.static h1 { font-size:38px; line-height: 40px;}
 
+
+   div #res-header { height:75px !important; }
+   #root .App .resultPage #res-header > div { flex-wrap: wrap;}
+   div #res-header #pagine { width: 100%; justify-content: center;}
+   #res-container #pagine div { width: 70% ; }
+
+
+   #root div .App .resultPage #filters-UI > div { padding-left:32.5px; padding-right:32.5px; }
 }
 
 @media(max-width:800px) {
@@ -944,9 +952,12 @@ footer #donate,
 
    .App.home.khmer.static section > div .col2 { column-count:1;}
 
-   #res-header > div .widget-header ~ .widget-header:not(:is(.etextBestM,.placeMap)) { display:none; }
 
    #root .App .resultPage #res-header > div { padding:0 40px !important; }
+
+
+   #res-header > div .widget-header ~ .widget-header:not(:is(.etextBestM,.placeMap)) { display:none; }
+
 }
 
 @media(max-width:1100px) {
@@ -4925,7 +4936,7 @@ a.result .contenu ul > div:last-child h3[lang=bo] span { font-size:18px;}
 
 @media (max-width:1280px)
 {
-   #pagine div a[data-i="3"] ~ [data-i] { display:none; }
+    /* #pagine div a[data-i="3"][data-max="true"] ~ [data-i] { display:none; } */
 }
 
 
@@ -5124,7 +5135,9 @@ a.result + #matches.mobile,
 
 
    #root .App #res-container h4,
-   #root .App #res-container p { width:100%; max-width:100%;margin:0;padding:10px 20px; box-sizing: border-box;}
+   #root .App #res-container p { width:100%; max-width:100%;margin:0;padding:10px 20px; box-sizing: border-box; display: block;}
+
+   .no-result.more-result #clear-filters { margin-left:0; display:flex ; }
    
    #root .App #latest h3,
    #root .App #res-container #samples h3 { font-size:24px; line-height:26px;}
@@ -5183,11 +5196,25 @@ a.result + #matches.mobile,
    #root .App .resultPage #res-container h4 { font-size:24px;}
    #root .App .resultPage .result-content { padding-left:20px;padding-right:20px;}
    .result-content #permalink { right:20px;}
-   a.result  {  max-width: calc(100% - 30px); }
+   a.result  {  max-width: calc(100% - 30px); min-height:90px; }
    #matches .match { max-width: calc(100% - 40px);}
-   a.result + #matches.mobile { margin-left:150px; display:block;}
+   a.result + #matches.mobile { margin-left:5px; display:block; padding-top:40px; }
    a.result + #matches.mobile .more-details { margin-left:-5px;margin-top:5px;}
-   
+
+   .noThumb + a.result + #matches.mobile { padding-top:0px; }
+
+   a.result ~ #matches:not(.mobile) > .match + div:not(.match) > .match,
+   a.result ~ #matches:not(.mobile) > .match { flex-wrap:wrap;  }
+
+   a.result ~ #matches:not(.mobile) > div > .match > .instance-link,
+   a.result ~ #matches:not(.mobile) > .match > .multi { width:100%; padding-left:15px; }
+
+   a.result ~ #matches:not(.mobile) > div > .match > .instance-link { padding-top:3px; }
+
+   #matches .match.by + .by > span.label, #matches .match.publisher + .publisher > span.hidden-en { display:none; }
+
+   .person + a.result { min-height: 0;}
+   .person #matches > .match.dates { padding-left:5px; }
 
    #settings { position:fixed;bottom:5px;right:5px; border-radius:50%; background:white;box-shadow: 0 0 5px 0px rgb(0 0 0 / 13%); 
       padding:5px; z-index:1;
@@ -5211,13 +5238,17 @@ a.result + #matches.mobile,
    .result-content > #num-box,
    .result-content > #icon { float:left; position: relative;}
 
+   .result-content #icon.wCopyR { margin-bottom:0;  }
+
+   
+
    a.result {  max-width: calc(100% - 150px); }   
    .result-content > .result > .contenu { margin-left:0;max-width:calc(100% - 40px); padding-left:5px; }
    a.result ~ #matches:not(.mobile) { margin-left:0; padding-left:5px; clear:both;  }
 
    #root .App .resultPage .result-content .result-content,
    a.result ~ #matches:not(.mobile) > .match ~ .label,
-   a.result ~ #matches:not(.mobile) > .match { padding-left:28px; }
+   a.result ~ #matches:not(.mobile) > .match { padding-left:0px; }
 
 
    a.result ~ #matches:not(.mobile) > .match ~ .label { padding-bottom:10px; }
@@ -5236,8 +5267,14 @@ a.result + #matches.mobile,
       margin-bottom:0;
    }
 
-   .App #results .result-content .result-content .more-details,
-   .result-content .result-content #icon { display:none; }
+
+   /* .App #results .result-content .result-content .more-details { display:none; } */
+   
+   .result-content .result-content #icon { width: 80px; }
+   .result-content .result-content #icon > .thumb { width:60px; height:60px; }
+
+   a.result ~ div a.result { max-width: calc(100% - 110px); min-height:70px; }
+   a.result ~ div a.result ~ #matches.mobile { padding-top:20px; }
 
    .result-content .result-content > .result > .contenu { padding-left:7px; }
 
@@ -5428,7 +5465,17 @@ a.result + #matches.mobile,
   .resource .data h2.on + h3 { padding-left:20px; }
 
 
+  #root .App .resultPage #res-header > div .widget-header { max-width:65%; margin-right:15px;}
 
+  /* #root .App .resultPage #res-container { padding-left:0; padding-right:0; width:calc(100% - 40px) !important;} */
+  #root .App .resultPage #res-header > div { padding: 0 20px!important; justify-content: center;}
+  #res-header #pagine { flex-shrink: 0; }
+
+  #res-header #pagine #nb:first-child { margin-left:0; padding-left: 0;}
+
+  .App #results > .result-content .more-details,
+  .App #results > .result-content > .mobile > .more-details,
+  .App #results > .result-content > .more-details { width:100%; text-align: center; margin-top:0 ;}
 }
 
 
@@ -5475,6 +5522,10 @@ a.result + #matches.mobile,
 
    .resource .data.related .react-tabs__tab-list { flex-wrap: wrap;  margin-bottom: 20px; }
    .resource .data.related .react-tabs__tab-list > li { width:100%; }
+
+
+
+
 }
 
 .not-logged svg,
@@ -5757,11 +5808,6 @@ a.result + #matches.mobile,
    .resource .data.etext-title { padding-right:15px; order:-1; padding-bottom:10px !important; }
    .resource .data + .data.open-etext { position: relative; padding-left:35px; order:0; padding-bottom:50px !important; z-index:0; }
 
-   #root .App .resultPage #res-header > div .widget-header { max-width:130px; margin-right:15px;}
-   /* #root .App .resultPage #res-container { padding-left:0; padding-right:0; width:calc(100% - 40px) !important;} */
-   #root .App .resultPage #res-header > div { padding: 0 20px!important; justify-content: center;}
-
-   #res-header #pagine { flex-shrink: 0; }
 
    .App:not(.home) .SearchPane .formControl { bottom:15px; /*left: 44px;*/ }
    /* 
@@ -5787,7 +5833,16 @@ a.result + #matches.mobile,
    #popDL.print > div { max-width:80vw;width:80vw; }
 
 
-   
+
+   #root .App .resultPage #res-header > div .widget-header { max-width:calc( (100% - 40px) / 2); max-height:20px;}
+   #res-header > div .widget-header .widget-title { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+   #res-header #pagine > div > span,
+   #res-header #pagine > div { display:flex; align-items: center;}
+   #res-header #pagine #nb { white-space: nowrap;}
+
+   #res-header #pagine #nb { line-height:18px; }
+
 }
 
 
@@ -5836,7 +5891,7 @@ a.result + #matches.mobile,
    #root .App #res-container, #search-bar > div:first-child > div:first-child { width:100%; }
 
    .App.home:not(.khmerServer) #search-bar { padding:15px; width:auto;}
-   #search-bar > div:first-child > div:first-child  { width:calc(100vw - 30px) !important;  box-sizing: border-box;}
+   #search-bar > div:first-child > div:first-child  { width:calc(100vw - 45px) !important;  box-sizing: border-box;}
    .SearchPane .formControl { left:31px; bottom:25px; }
 
    #suggestions li .maxW { display:none; }
@@ -5925,6 +5980,9 @@ a.result + #matches.mobile,
 
    .resource .data.related > div div.rel-or-crea > div {   width: calc((100vw - 40px - 30px - 20px - 50px)/2); }
    .resource .data.related > div div.rel-or-crea > div .header { height: calc((100vw - 40px - 30px - 20px - 50px)/2); }
+
+
+   #root div .App .resultPage #filters-UI > div { padding-left:15px; padding-right:15px; }
 }
 
 @media (max-width:375px)

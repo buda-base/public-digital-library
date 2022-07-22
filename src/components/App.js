@@ -1400,6 +1400,9 @@ class App extends Component<Props,State> {
       let ref
       if(this._refs["sidepane"] && (ref = this._refs["sidepane"].current) /*&& this.props.language*/) {                     
          $(window).off("scroll").on("scroll", () => {
+
+            if(!this.props.keyword) return
+
             const rect = ref.getBoundingClientRect()
             const stuck = rect.y > 230
             if(stuck !== this.state.stuck) {
@@ -1411,16 +1414,20 @@ class App extends Component<Props,State> {
             const headh = $("#res-header").height()
             if(this._refs["header"].current) $(this._refs["header"].current).css("top",(toph+navh+15)+"px") //
             
-            $(ref)
-            .height(window.innerHeight - rect.y + (window.innerWidth <= 1024 ? 0 : 0))
-            .css("top",(toph+navh+(window.innerWidth > 1024 ? headh+15 : 5)+"px"))
+            if(window.innerWidth > 1024)
+               $(ref)
+               .height(window.innerHeight - rect.y + (window.innerWidth <= 1024 ? 0 : 0))
+               .css("top",(toph+navh+(window.innerWidth > 1024 ? headh+15 : 5)+"px"))
+            else 
+               $(ref)
+               .height(window.innerHeight)
+               .css("top",0)
 
             if(this._refs["simplebar"].current) this._refs["simplebar"].current.recalculate()
             if(this._refs["filters-UI"].current) this._refs["filters-UI"].current.recalculate()
             
          }).scroll()
-         
-      }
+      } 
 
       if(this._refs["filters-UI"].current) this._refs["filters-UI"].current.recalculate()
       if(this._refs["filters-UI-scrollable"].current) this._refs["filters-UI-scrollable"].current.scrollTop = 500
@@ -1446,12 +1453,17 @@ class App extends Component<Props,State> {
                }
             }
 
-            this._refs["cluster"].current.refreshClusters()
+            try { 
+               this._refs["cluster"].current.refreshClusters()
 
-            $(".resultsMap").attr("data-nb-markers", currentMarkers.length)
-            if(currentMarkers.length) { 
-               this._map.fitBounds(currentMarkers, currentMarkers.length === 1 ? {maxZoom: 10}:{padding:[50,50]})
+               $(".resultsMap").attr("data-nb-markers", currentMarkers.length)
+               if(currentMarkers.length) { 
+                  this._map.fitBounds(currentMarkers, currentMarkers.length === 1 ? {maxZoom: 10}:{padding:[50,50]})
+               }
+            } catch(e) {
+               console.error("refreshClusters/map error",e)
             }
+
          } else {
             $(".resultsMap").attr("data-nb-markers", 0)
          }
@@ -4097,7 +4109,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
          let retList = [ 
             <div id="num-box" class={(this.state.checked[prettId] === true?"checked":"")} style={{flexShrink:0}} onClick={(e) => this.setState({repage:true,checked:{...this.state.checked,[prettId]:!this.state.checked[prettId]}})}>{warnStatus}{I18n.t("punc.num",{num:n})}</div>,         
-            <div id="icon" class={enType + (hasCopyR?" wCopyR":"")}>
+            <div id="icon" class={enType + (hasCopyR?" wCopyR":"")+(hasThumb.length > 0 ? "" : " noThumb")}>
                { hasThumb.length > 0  && <div class="thumb" title={I18n.t("copyright.view")}>{
                    getIconLink(viewUrl?viewUrl:resUrl+"#open-viewer", <LazyLoad height={130} offset={500}><img src={hasThumb}/></LazyLoad>)
                   }</div> }
@@ -6147,7 +6159,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
          if(this.state.results && this.state.results[id])
          {
-      
+            const MAX_PAGE = window.innerWidth <= 1280 ? 5 : 10
             results = this.state.results[id].results
             message = this.state.results[id].message
             counts = this.state.results[id].counts
@@ -6156,21 +6168,23 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             if(paginate && paginate.pages && paginate.pages.length > 1) {
                pageLinks = []
                let min = 1, max = paginate.pages.length
-               if(max > 10) { 
-                  min = paginate.index + 1 - 4 ;
+               if(max > MAX_PAGE) { 
+                  min = paginate.index + 1 - Math.floor(MAX_PAGE / 2) + 1 ;
                   if(min < 1) min = 1
-                  max = min + 10 - 2
+                  max = min + MAX_PAGE - 3
                   if(max > paginate.pages.length) max = paginate.pages.length
                }
 
                //console.log("pages:",min,max, nbResu, paginate.pages[paginate.pages.length-1], paginate.pages )
 
-               if(min > 1) pageLinks.push([<a onClick={this.goPage.bind(this,id,1)}>{I18n.t("punc.num",{num:1})}</a>," ... "]) 
-               for(let i = min ; i <= max ; i++) { /*if(nbResu >= paginate.pages[i-1])*/ pageLinks.push(<a data-i={i} onClick={this.goPage.bind(this,id,i)}>{((i-1)===this.state.paginate.index?<b><u>{I18n.t("punc.num",{num:i})}</u></b>:I18n.t("punc.num",{num:i}))}</a>) }
+               if(min > 1) pageLinks.push(<a onClick={this.goPage.bind(this,id,1)}>{I18n.t("punc.num",{num:1})}</a>) 
+               if(min > 2) pageLinks.push(" ... ") 
+               for(let i = min ; i <= max ; i++) { /*if(nbResu >= paginate.pages[i-1])*/ pageLinks.push(<a data-i={i} data-max={paginate.pages.length > MAX_PAGE} onClick={this.goPage.bind(this,id,i)}>{((i-1)===this.state.paginate.index?<b><u>{I18n.t("punc.num",{num:i})}</u></b>:I18n.t("punc.num",{num:i}))}</a>) }
                if(max < paginate.pages.length) {  
                   for(let i = paginate.pages.length-1 ; i >= min ; i--) {
                      if(nbResu >= paginate.pages[i]) {
-                        pageLinks.push([" ... ",<a onClick={this.goPage.bind(this,id,paginate.pages.length)}>{I18n.t("punc.num",{num:paginate.pages.length})}</a>]) 
+                        if(max < paginate.pages.length - 1) pageLinks.push(" ... ")
+                        pageLinks.push(<a onClick={this.goPage.bind(this,id,paginate.pages.length)}>{I18n.t("punc.num",{num:paginate.pages.length})}</a>) 
                         break;
                      }
                   }
