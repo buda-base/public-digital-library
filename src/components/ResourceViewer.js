@@ -2955,7 +2955,13 @@ class ResourceViewer extends Component<Props,State>
                   if(info === uri) {                      
                      if(elem.volume) {
                         infoBase = dico[elem.volume]
-                        //console.log("iB:",infoBase)
+                        if(!infoBase) {
+                           const fUri = fullUri(uri.replace(/[?].*$/,""))
+                           infoBase = dico[fUri]
+                        }
+                        
+                        //console.log("iB:",infoBase,elem.volume,dico)
+
                         if(infoBase) infoBase = infoBase.filter(e => [bdo+"volumeNumber",skos+"prefLabel", /*skos+"altLabel",*/ foaf+"name" /*,"literal"*/].reduce( (acc,f) => ((acc || f === e.type || f === e.fromKey) && !e.fromSameAs), false))
                         if(infoBase) {
                            let { _info, _lang } = this.getInfo(prop,infoBase,withProp) 
@@ -2971,7 +2977,10 @@ class ResourceViewer extends Component<Props,State>
                            lang = _lang
                         }
                      }
+                     
                      if(!info || info === uri) info = I18n.t("resource.noT")
+
+                     //console.log("dico:",uri,info)
                   }
 
 
