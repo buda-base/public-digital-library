@@ -5298,6 +5298,25 @@ a.result + #matches.mobile,
 
    .result-content #icon img { max-height:60px; }
 
+   
+   .App #results a.result + .more-details + #matches:empty {
+      display: block;
+      height: 24px;
+      margin-top: -32px !important;
+      background-color: white;
+      position: relative;
+   }
+
+   
+   .result-content:hover a.result + .more-details + #matches:empty {
+      background-color: #f5f5f5;
+   }
+   
+   .result-content:hover .result-content:hover a.result + .more-details + #matches:empty {
+      background-color: #f1f1f1;
+   }
+   
+   
 
   
    /* ------------------------------------------------------------------------------------------------------------------------ resource */
