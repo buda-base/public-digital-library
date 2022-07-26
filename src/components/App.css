@@ -906,7 +906,7 @@ footer #donate,
    #res-container #pagine div { width: 70% ; }
 
 
-   #root div .App .resultPage #filters-UI > div { padding-left:32.5px; padding-right:32.5px; }
+   #root div .App .resultPage #filters-UI > div { padding-left:40px; padding-right:40px; }
 }
 
 @media(max-width:800px) {
@@ -5492,6 +5492,36 @@ a.result + #matches.mobile,
   .App #results .result-content.etext .result-content.etext > .more-details { display:none; }
 
   .App #results .result-content.etext .result-content.etext { padding-left:15px; }
+
+
+   .resource > .ariane { 
+      position: fixed;
+      z-index: 100;
+      top: 100px;
+      left: 10px;
+      background: white;
+      padding: 0px 9px 4px 9px;
+      border-radius: 5px;
+      box-shadow: 0 0 5px rgba(0,0,0,0.5);
+      transition:top 200ms ease-in-out;
+   }
+
+
+   .resource.scrolled > .ariane { top:65px; }
+   
+   .resource.portrait-warn-on > .ariane { z-index:0;  }
+
+  .resource > .ariane a span span {
+     max-width: 50vw;
+     white-space: nowrap;
+     overflow: hidden;
+     text-overflow: ellipsis;
+     vertical-align: bottom;
+   }
+
+
+
+   .App #res-container > .loader:first-child:last-child { position:fixed; top:calc(50vh - 20px); background:white; padding:30px; border-radius:50%; }
 }
 
 
@@ -5600,6 +5630,7 @@ a.result + #matches.mobile,
    #search-bar { position: relative;}
    #search-bar > div:first-child > div:first-child { height:85px !important;}
    #search-bar > div:first-child > div:first-child > div:first-child { margin-top:10px; width:calc(100% - 48px - 15px); margin-right:0;}
+   .App:not(.home) #search-bar > div:first-child > div:first-child > div:first-child { padding-left:24px; }
 
    .SearchPane .formControl {
       bottom: 40px;
@@ -5909,8 +5940,9 @@ a.result + #matches.mobile,
    #root .App #res-container, #search-bar > div:first-child > div:first-child { width:100%; }
 
    .App.home:not(.khmerServer) #search-bar { padding:15px; width:auto;}
-   #search-bar > div:first-child > div:first-child  { width:calc(100vw - 45px) !important;  box-sizing: border-box;}
-   .SearchPane .formControl { left:31px; bottom:25px; }
+   #search-bar > div:first-child > div:first-child  { width:calc(100vw - 30px) !important;  box-sizing: border-box;}
+   .SearchPane .formControl { bottom:25px; }
+   .App.home .SearchPane .formControl { left:31px; }
 
    #suggestions li .maxW { display:none; }
    #suggestions li { padding-left:0; }
@@ -5976,7 +6008,7 @@ a.result + #matches.mobile,
    .resource.hasTabs .title { top:0; width:calc(100% - 66px); position: fixed; right:5px;z-index:10;flex-wrap: wrap;}
    .resource.hasTabs .title::before { width:calc(100% + 60px); height:100%; background: #efefef; display: block; content:'';margin-left:-60px;position:absolute;top:0;left:0;z-index:-1;}
    .resource.hasTabs .title::after { width:calc(100% + 66px); height:10px; background: white; display: block; content:'';margin-left:-56px;}
-   #root > div > .resource.hasTabs > .index + div { top:30px;}
+   #root > div:not(.H100vh) > .resource.hasTabs > .index + div { top:30px;}
    .resource .title h2 { transition:height 200ms; }
    .resource.scrolled .title h2 { height:60px;  }
    .resource .title h2 .T { transition:font-size 200ms; }
@@ -6006,8 +6038,17 @@ a.result + #matches.mobile,
    .match .inRoot ~ .sepa { display:block; border:none; height:0px;}
    .match .inRoot + .sepa { height:5px; } 
 
-   #search-bar > div:first-child > div:first-child > div:first-child { margin-left:32px; }
+   /* #search-bar > div:first-child > div:first-child > div:first-child { margin-left:32px; } */
+
    .App:not(.home) .SearchPane .formControl { left:55px; }
+
+
+   .resource .data#perma > div > #rid { order:-1; margin-left:0; margin-bottom:10px; }
+   .resource .data#perma > div { flex-wrap:nowrap; flex-direction: column;}
+   .resource .data#perma > div > .NL.nl-cite  { margin:5px; display: block; width:100%; }
+   .resource .data#perma > div > :is(#DL,#cite) { padding-right:0; margin:5px;}
+   .resource .data#perma > div > #cite { padding-left:0; border-left:none; }
+
 }
 
 @media (max-width:375px)
@@ -6023,16 +6064,6 @@ a.result + #matches.mobile,
    .nav.khmerServer > div > :is(a,div,span) { margin:0 0 0 15px !important; }
 
    .App.guidedsearch.khmer .static-container.sticky > div:first-child + div { padding:10px 20px 40px 20px; }
-
-   .resource .data#perma > div > #rid { order:-1; margin-left:0; margin-bottom:10px; }
-
-   .resource .data#perma > div { flex-wrap:nowrap; flex-direction: column;}
-
-   .resource .data#perma > div > .NL.nl-cite  { margin:5px; display: block; width:100%; }
-
-   .resource .data#perma > div > :is(#DL,#cite) { padding-right:0; margin:5px;}
-
-   .resource .data#perma > div > #cite { padding-left:0; border-left:none; }
 
    #popDL.cite > div > .actions { flex-wrap: wrap; justify-content: flex-start;  }
    #popDL.cite > div > .actions > a { margin-left:0px; }

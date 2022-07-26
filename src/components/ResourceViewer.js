@@ -8999,7 +8999,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          <div class={isMirador?"H100vh OF0":""}>
             { ["Images","Instance"].includes(_T) && <abbr class="unapi-id" title={this.props.IRI}></abbr> }
             { infoPanelR }
-            <div className={"resource "+hasTabs+getEntiType(this.props.IRI).toLowerCase() + (this.props.simple?" simple":"")} {...this.props.simple?{onClick:sendMsg}:{}}>                              
+            <div className={"resource "+hasTabs+getEntiType(this.props.IRI).toLowerCase() + (this.props.simple?" simple":"")+(!this.state.collapse.portrait?" portrait-warn-on":"")} {...this.props.simple?{onClick:sendMsg}:{}}>                              
                {searchUrl && <div class="ariane">
                   <Link to={searchUrl.startsWith("latest")?searchUrl:"/search?"+searchUrl} onClick={(ev) => {
                      this.props.onLoading("search",true)                     
