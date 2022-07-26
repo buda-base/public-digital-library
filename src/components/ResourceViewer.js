@@ -2955,9 +2955,10 @@ class ResourceViewer extends Component<Props,State>
                   if(info === uri) {                      
                      if(elem.volume) {
                         infoBase = dico[elem.volume]
-                        if(!infoBase) {
-                           const fUri = fullUri(uri.replace(/[?].*$/,""))
-                           infoBase = dico[fUri]
+                        const fUri = fullUri(uri.replace(/[?].*$/,""))
+                        if(dico[fUri]) {
+                           if(!infoBase) infoBase = dico[fUri]
+                           else infoBase = infoBase.concat(dico[fUri])
                         }
                         
                         //console.log("iB:",infoBase,elem.volume,dico)
@@ -3024,7 +3025,7 @@ class ResourceViewer extends Component<Props,State>
                         return false;
                      }
                                                 
-                  } }>{info}</a>
+                  } } data-info={info}>{info}</a>
                }
                else link = <Link className={"urilink prefLabel " } to={"/"+show+"/"+uri}>{info}</Link>
 
@@ -6932,7 +6933,8 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
       let toggle = (e,r,i,x = "",force) => {         
          let tag = "etextrefs-"+r+"-"+i+(x?"-"+x:"")
-         let val = this.state.collapse[tag]
+         let val = this.state.collapse[tag];
+         //console.log("tog:",e,force,val,tag,JSON.stringify(this.state.collapse),this.state.collapse[tag]);
          if((r === i || force) && val === undefined) val = true ;
          this.setState( { collapse:{...this.state.collapse, [tag]:!val } })         
       }
@@ -7076,7 +7078,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
             if(pType && pType["@id"]) pType = pType["@id"]
             else pType = "bdo:"+pType
             let tLabel 
-            //console.log("e:",tag,pType,parts);
+            //console.log("e:",e,tag,pType,parts);
             if(pType) {
                if(Array.isArray(pType)) pType = pType[0]
                tLabel = getOntoLabel(this.props.dictionary,this.props.locale,fullUri(pType))
@@ -7088,15 +7090,15 @@ perma_menu(pdfLink,monoVol,fairUse,other)
             let openD = this.state.collapse[tag+"-details"] || this.state.collapse[tag+"-details"]  === undefined && mono
 
             ret.push(<span class={'top'+ (this.state.collapse[tag]?" on":"") }>
-                  {(e.hasPart && !open) && <img src="/icons/triangle_.png" onClick={(ev) => toggle(null,root,e["@id"],!e.hasPart?"details":"",mono)} className="xpd"/>}
-                  {(e.hasPart && open) && <img src="/icons/triangle.png" onClick={(ev) => toggle(null,root,e["@id"],!e.hasPart?"details":"",mono)} className="xpd"/>}
-                  <span class={"parTy "+(e.details?"on":"")} {...e.details?{title: I18n.t("resource."+(openD?"hideD":"showD")), onClick:(ev) => toggle(ev,root,e["@id"],"details",mono)}:{title:tLabel}} >
+                  {(e.hasPart && !open) && <img src="/icons/triangle_.png" onClick={(ev) => toggle(null,root,e["@id"],!e.hasPart?"details":"",!e.hasPart && mono)} className="xpd"/>}
+                  {(e.hasPart && open) && <img src="/icons/triangle.png" onClick={(ev) => toggle(null,root,e["@id"],!e.hasPart?"details":"",!e.hasPart && mono)} className="xpd"/>}
+                  <span class={"parTy "+(e.details?"on":"")} {...e.details?{title: I18n.t("resource."+(openD?"hideD":"showD")), onClick:(ev) => toggle(ev,root,e["@id"],"details",!e.hasPart && mono)}:{title:tLabel}} >
                      {pType && parts[pType] ? <div>{parts[pType]}</div> : <div>{parts["?"]}</div> }
                   </span>
-                  <span>{this.uriformat(null,{type:'uri', value:gUri, volume:fUri, inOutline: (!e.hasPart?tag+"-details":tag), url:"/show/"+e.link, debug:false, toggle:() => toggle(null,root,e["@id"],!e.hasPart?"details":"",mono) })}</span>
+                  <span>{this.uriformat(null,{type:'uri', value:gUri, volume:fUri, inOutline: (!e.hasPart?tag+"-details":tag), url:"/show/"+e.link, debug:false, toggle:() => toggle(null,root,e["@id"],!e.hasPart?"details":"",!e.hasPart && mono) })}</span>
                   <div class="abs">                  
                      { !e.hasPart && <Link className="hasImg hasTxt" title={I18n.t("result.openE")}  to={"/show/"+e.link}><img src="/icons/search/etext.svg"/><img src="/icons/search/etext_r.svg"/></Link> }                   
-                     { e.details && <span id="anchor" title={I18n.t("resource."+(openD?"hideD":"showD"))} onClick={(ev) => toggle(ev,root,e["@id"],"details",mono)}>
+                     { e.details && <span id="anchor" title={I18n.t("resource."+(openD?"hideD":"showD"))} onClick={(ev) => toggle(ev,root,e["@id"],"details",!e.hasPart && mono)}>
                         <img src="/icons/info.svg"/>
                      </span> }
                      <CopyToClipboard text={gUri} onCopy={(e) => prompt(I18n.t("misc.clipboard"),gUri)}>

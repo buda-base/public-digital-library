@@ -2251,6 +2251,9 @@ h4:not(:hover) > .lang
    margin:0 3px;
 }
 */
+
+.urilink[data-info*="+"]:not([data-info*=" "]) { word-break: break-all;}
+
 .resource .data#outline .root + div .top + .details .sub h4 .highlight:first-child { margin-left:0; }
 .resource .data#outline .root + div .top + .details .sub h4 .highlight:first-child::before  { margin-left:0; }
 
