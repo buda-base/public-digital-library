@@ -3652,6 +3652,7 @@ html[lang="en"] .resource .data > [data-prop="bdo:creator"] h4[data-prop="bdo:ro
 .resource .data.related .header.thumb { background-position:center; background-size:cover; border: 1px solid #ccc;
    background-size: auto 100%;
    background-color: black;
+   background-repeat:no-repeat;
 }
 
 /* .resource .data.related .react-tabs .react-tabs__tab-panel .rel-or-crea { overflow-x:scroll;} */

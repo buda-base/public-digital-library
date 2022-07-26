@@ -3003,7 +3003,7 @@ class ResourceViewer extends Component<Props,State>
                         let part = elem.url.replace(/.*\?part=/,"")
                         let root = elem.url.replace(/\?part=.*/,"")
 
-                        loggergen.log("furi?",root,part)
+                        //loggergen.log("furi?",root,part)
 
                         let collapse = { ...this.state.collapse }
                         if(this.props.outlineKW) collapse[elem.inOutline] = (collapse[elem.inOutline] === undefined ? false : !collapse[elem.inOutline])
