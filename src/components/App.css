@@ -2290,6 +2290,9 @@ h4:not(:hover) > .lang
    margin:0 3px;
 }
 */
+
+.urilink[data-info*="+"]:not([data-info*=" "]) { word-break: break-all;}
+
 .resource .data#outline .root + div .top + .details .sub h4 .highlight:first-child { margin-left:0; }
 .resource .data#outline .root + div .top + .details .sub h4 .highlight:first-child::before  { margin-left:0; }
 
@@ -3693,6 +3696,7 @@ html[lang="en"] .resource .data > [data-prop="bdo:creator"] h4[data-prop="bdo:ro
 .resource .data.related .header.thumb { background-position:center; background-size:cover; border: 1px solid #ccc;
    background-size: auto 100%;
    background-color: black;
+   background-repeat:no-repeat;
 }
 
 /* .resource .data.related .react-tabs .react-tabs__tab-panel .rel-or-crea { overflow-x:scroll;} */
