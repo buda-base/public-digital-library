@@ -5323,7 +5323,7 @@ a.result + #matches.mobile,
 
    #root > div > .resource { padding:5px; padding-top:60px; }
 
-   .resource > .ariane { left:75px; top:18px;} > .ma
+   .resource > .ariane { left:75px; top:18px;} 
 
    #root > div > .resource > .index { display:none; }
 
@@ -5538,7 +5538,7 @@ a.result + #matches.mobile,
      vertical-align: bottom;
    }
 
-
+   #root > .H100vh .ariane { display:none; }
 
    .App #res-container > .loader:first-child:last-child { position:fixed; top:calc(50vh - 20px); background:white; padding:30px; border-radius:50%; }
 }
