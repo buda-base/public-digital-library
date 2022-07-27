@@ -2381,7 +2381,7 @@ h4:not(:hover) > .lang
 .resource.user .data#outline .help { font-size:14px; margin-bottom:24px; margin-top:8px; font-weight:400;padding-left:2px;}
 
 
-.resource.user .data#outline .help + .widget > label > span:last-child { max-width: calc(100% - 190px - 20px); display: block; }  */
+/* .resource.user .data#outline .help + .widget > label > span:last-child { max-width: calc(100% - 190px - 20px); display: block; }   */
 
 .resource .data#outline .provider { padding-right:10px;  }
 .resource .data#outline .provider img { height:14px; vertical-align: -2px !important; cursor:pointer;}
@@ -5582,6 +5582,7 @@ a.result + #matches.mobile,
 
 }
 
+
 .not-logged svg,
 .logged svg { display:none; }
 
@@ -5882,6 +5883,7 @@ a.result + #matches.mobile,
    .resource.user .data .group .sub h4.first { width:130px; }
    .resource.user .data .group .sub.otherI,
    .resource.user .data .group .sub .FC { display: block;}
+
 }
 
 
