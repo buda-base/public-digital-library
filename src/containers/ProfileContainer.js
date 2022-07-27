@@ -40,7 +40,9 @@ const mapStateToProps = (state,ownProps) => {
       if(auth.userProfile.name) profileName = auth.userProfile.name
    }
 
-   let props = { userID, profile, dictionary, rightPanel, resetLink, config, locale, profileName }
+   let portraitPopupClosed = state.ui.portraitPopupClosed
+
+   let props = { userID, profile, dictionary, rightPanel, resetLink, config, locale, profileName, portraitPopupClosed }
 
    return props
 

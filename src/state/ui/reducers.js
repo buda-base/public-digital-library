@@ -79,11 +79,16 @@ export const langPreset = (state: UIState, action: Action): UIState => {
 reducers[actions.TYPES.langPreset] = langPreset
 
 
-
 export const logEvent = (state: UIState, action: Action): UIState => {
     return {...state, logged:action.payload }
 };
 reducers[actions.TYPES.logEvent] = logEvent
+
+
+export const closePortraitPopup = (state: UIState, action: Action): UIState => {
+    return {...state, portraitPopupClosed: true }
+};
+reducers[actions.TYPES.closePortraitPopup] = closePortraitPopup
 
 
 export const loadingGallery = (state: UIState, action: Action): UIState => {

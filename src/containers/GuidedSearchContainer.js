@@ -30,7 +30,9 @@ const mapStateToProps = (state,ownProps) => {
    // not needed
    //let dictionary = state.data.dictionary ;
 
-   let props = { config, locale, profileName, type, checkResults, langPreset }  //dictionary }
+   let portraitPopupClosed = state.ui.portraitPopupClosed
+
+   let props = { config, locale, profileName, type, checkResults, langPreset, portraitPopupClosed }  //dictionary }
 
    return props
 

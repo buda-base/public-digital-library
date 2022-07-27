@@ -2719,7 +2719,7 @@ span[lang^='sa-']:not([lang$='-ewts']) { text-transform: capitalize;}
 
 #popHoverM .resource .data {/* width:100%;*/margin-left:0; }
 
-#popHoverM #anchor { position:absolute; right:57px; margin-top:-3px; cursor:pointer;}
+#popHoverM #anchor { position:absolute; right:57px; margin-top:-3px; cursor:pointer; z-index:1;}
 
 /* #popHoverM .resource .data > div[data-prop] > h3 { margin-top:-4px;} */
 /* #popHoverM .resource .data > div[data-prop] > .sub:first-child { margin-top:-4px;} */
@@ -5512,32 +5512,6 @@ a.result + #matches.mobile,
 
   .App #results .result-content.etext .result-content.etext { padding-left:15px; }
 
-
-   .resource > .ariane { 
-      position: fixed;
-      z-index: 100;
-      top: 100px;
-      left: 10px;
-      background: white;
-      padding: 0px 9px 4px 9px;
-      border-radius: 5px;
-      box-shadow: 0 0 5px rgba(0,0,0,0.5);
-      transition:top 200ms ease-in-out;
-   }
-
-
-   .resource.scrolled > .ariane { top:65px; }
-   
-   .resource.portrait-warn-on > .ariane { z-index:0;  }
-
-  .resource > .ariane a span span {
-     max-width: 50vw;
-     white-space: nowrap;
-     overflow: hidden;
-     text-overflow: ellipsis;
-     vertical-align: bottom;
-   }
-
    #root > .H100vh .ariane { display:none; }
 
    .App #res-container > .loader:first-child:last-child { position:fixed; top:calc(50vh - 20px); background:white; padding:30px; border-radius:50%; }
@@ -5591,6 +5565,8 @@ a.result + #matches.mobile,
 
    .active-filter > span b span { max-width:45vw; }
 
+
+   .resource .data.images-title h2.intro + h2 span { max-width:80vw;}
 
 }
 
@@ -5885,6 +5861,9 @@ a.result + #matches.mobile,
    } */
 
    #res-header > div .widget-header .widget-title { text-align:center; }
+
+
+   
 }
 
 
@@ -6067,6 +6046,34 @@ a.result + #matches.mobile,
    .resource .data#perma > div > .NL.nl-cite  { margin:5px; display: block; width:100%; }
    .resource .data#perma > div > :is(#DL,#cite) { padding-right:0; margin:5px;}
    .resource .data#perma > div > #cite { padding-left:0; border-left:none; }
+
+
+
+
+   .resource > .ariane { 
+      position: fixed;
+      z-index: 100;
+      top: 100px;
+      left: 10px;
+      background: white;
+      padding: 0px 9px 4px 9px;
+      border-radius: 5px;
+      box-shadow: 0 0 5px rgba(0,0,0,0.5);
+      transition:top 200ms ease-in-out;
+   }
+
+
+   .resource.scrolled > .ariane { top:65px; }
+   
+   .resource.portrait-warn-on > .ariane { z-index:0;  }
+
+  .resource > .ariane a span span {
+     max-width: 50vw;
+     white-space: nowrap;
+     overflow: hidden;
+     text-overflow: ellipsis;
+     vertical-align: bottom;
+   }
 
 }
 

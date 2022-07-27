@@ -61,7 +61,6 @@ import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faLanguage,faUserCircle,faSignOutAlt,faSlidersH } from '@fortawesome/free-solid-svg-icons'
 import qs from 'query-string'
-import store from "../index"
 import FormGroup from '@material-ui/core/FormGroup';
 import Popover from '@material-ui/core/Popover';
 import $ from 'jquery' ;
@@ -96,6 +95,8 @@ import {narrowWithString} from "../lib/langdetect"
 import {sortLangScriptLabels, extendedPresets, getMainLabel} from '../lib/transliterators';
 import './App.css';
 import Footer from "./Footer"
+import store from "../index"
+import {closePortraitPopup} from "../state/ui/actions"
 
 import {svgEtextS,svgImageS} from "./icons"
 
@@ -891,11 +892,11 @@ export function top_right_menu(that,etextTitle,backUrl,etextres)
       </div>
    }
 
-   const portrait = <div class="portrait-warn" onClick={()=>that.setState({collapse:{...that.state.collapse,portrait:true}})}><div><span></span><p data-tilt1={I18n.t("misc.tilt1")} data-tilt2={I18n.t("misc.tilt2")}></p></div></div>
+   const portrait = <div class="portrait-warn" onClick={()=>store.dispatch(closePortraitPopup())}><div><span></span><p data-tilt1={I18n.t("misc.tilt1")} data-tilt2={I18n.t("misc.tilt2")}></p></div></div>
 
    if(etextTitle)
       return (<>
-      {!that.state.collapse.portrait && portrait}
+      {!that.props.portraitPopupClosed && portrait}
       <div class="mobile-button top" onClick={()=>that.setState({collapse:{...that.state.collapse,navMenu:!that.state.collapse.navMenu}})}><img src="/icons/burger.svg" /></div>
       <div class={"nav"+(onZhMirror?" zhMirror":"")+(that.state.collapse.navMenu?" on":"")}>
          {uiLangPopup}
@@ -1015,7 +1016,7 @@ export function top_right_menu(that,etextTitle,backUrl,etextres)
       }
 
       return ([
-      !that.state.collapse.portrait? portrait:null,
+      !that.props.portraitPopupClosed? portrait:null,
       <div class="mobile-button top" onClick={() => that.setState({collapse:{...that.state.collapse,navMenu:!that.state.collapse.navMenu}})}><img src="/icons/burger.svg" /></div>,
       <div class={"nav"+(onZhMirror?" zhMirror":"")+ (that.state.collapse.navMenu?" on":"")+(onKhmerServer||onKhmerUrl?" khmerServer":"")}>
          {uiLangPopup}

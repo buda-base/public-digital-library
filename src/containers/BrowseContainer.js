@@ -32,7 +32,10 @@ const mapStateToProps = (state,ownProps) => {
       time = browse.time
    }
 
-   let props = { config, locale, profileName, path, checked, langPreset, time }
+   let portraitPopupClosed = state.ui.portraitPopupClosed
+
+   let props = { config, locale, profileName, path, checked, langPreset, time, portraitPopupClosed }
+
    console.log("props:",props,JSON.stringify(props.path),JSON.stringify(ownProps.path))
    return props
 

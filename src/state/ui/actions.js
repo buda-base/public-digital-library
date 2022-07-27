@@ -63,6 +63,13 @@ export const setType = (t: string): Action => {
    }
 }
 
+TYPES.closePortraitPopup = 'CLOSE_PORTRAIT_POPUP';
+export const closePortraitPopup = (): Action => {
+   return {
+      type: TYPES.closePortraitPopup,
+   }
+}
+
 
 TYPES.setPrefLang = 'SET_PREFLANG';
 export const setPrefLang = (lang: string): Action => {
