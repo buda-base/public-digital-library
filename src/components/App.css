@@ -5515,6 +5515,17 @@ a.result + #matches.mobile,
    #root > .H100vh .ariane { display:none; }
 
    .App #res-container > .loader:first-child:last-child { position:fixed; top:calc(50vh - 20px); background:white; padding:30px; border-radius:50%; }
+
+
+   .popper .resource .data .group { max-width: calc(100% - 155px - 130px); }
+
+   #popHoverM .resource .data .sub > .subgroup > h4,
+   #popHoverM .resource .data .sub > h4.first { width:130px; }
+
+   #popHoverM .resource .data .sub > .subgroup > .subsub {     width: calc(100% - 175px - 50px); }
+
+
+   .hover-menu { display:none; }
 }
 
 
@@ -5567,6 +5578,7 @@ a.result + #matches.mobile,
 
 
    .resource .data.images-title h2.intro + h2 span { max-width:80vw;}
+
 
 }
 

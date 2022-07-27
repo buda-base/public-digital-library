@@ -3334,7 +3334,7 @@ class ResourceViewer extends Component<Props,State>
 
    toggleHoverM(ID,noSame,wTip,dontClose) { 
       return (ev) => { 
-         if(window.width <= 800) return
+         if(window.innerWidth <= 1024) return
          let elem = $(ev.target).closest(".propCollapseHeader,.propCollapse,[data-prop='bdo:workHasInstance'],.etextPage")
          let popperFix 
          if(elem.length > 0) {
