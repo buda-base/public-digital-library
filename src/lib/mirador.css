@@ -416,4 +416,6 @@ body.auto_rela .inApp.mirador-container .slotIconContainer { position:absolute !
 
     .window-manifest-navigation { min-width:200px; }
     .window-manifest-navigation .mirador-btn.mirador-osd-fullscreen { display:none; }
+
+    .inApp .mirador-main-menu-bar .X { margin-left:8px; margin-top:-2px;}
 }       

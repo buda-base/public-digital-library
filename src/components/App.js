@@ -892,7 +892,8 @@ export function top_right_menu(that,etextTitle,backUrl,etextres)
       </div>
    }
 
-   const portrait = <div class="portrait-warn" onClick={()=>store.dispatch(closePortraitPopup())}><div><span></span><p data-tilt1={I18n.t("misc.tilt1")} data-tilt2={I18n.t("misc.tilt2")}></p></div></div>
+   // no need anymore
+   const portrait = null //<div class="portrait-warn" onClick={()=>store.dispatch(closePortraitPopup())}><div><span></span><p data-tilt1={I18n.t("misc.tilt1")} data-tilt2={I18n.t("misc.tilt2")}></p></div></div>
 
    if(etextTitle)
       return (<>
