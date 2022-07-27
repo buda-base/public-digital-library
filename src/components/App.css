@@ -5875,7 +5875,13 @@ a.result + #matches.mobile,
    #res-header > div .widget-header .widget-title { text-align:center; }
 
 
-   
+   .resource.user .data #validate { position: relative;}
+
+   .resource.user .data#outline .widget { margin-left:0; }
+
+   .resource.user .data .group .sub h4.first { width:130px; }
+   .resource.user .data .group .sub.otherI,
+   .resource.user .data .group .sub .FC { display: block;}
 }
 
 
