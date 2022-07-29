@@ -72,6 +72,7 @@ import ReactLeafletGoogleLayer from "react-leaflet-google-layer" ;
 import L from 'leaflet';
 import { GestureHandling } from "leaflet-gesture-handling";
 import MarkerClusterGroup from 'react-leaflet-cluster';
+import 'leaflet.markercluster.freezable';
 
 import 'leaflet/dist/leaflet.css';
 import "leaflet-gesture-handling/dist/leaflet-gesture-handling.css";
@@ -1314,6 +1315,7 @@ class App extends Component<Props,State> {
    _map = null
 
 
+
    constructor(props : Props) {
       super(props);      
 
@@ -1456,6 +1458,13 @@ class App extends Component<Props,State> {
             }
 
             try { 
+               if(currentMarkers.length < 50) { 
+                  this._refs["cluster"].current.disableClusteringKeepSpiderfy();
+               }
+               else {
+                  this._refs["cluster"].current.enableClustering()
+               }
+
                this._refs["cluster"].current.refreshClusters()
 
                $(".resultsMap").attr("data-nb-markers", currentMarkers.length)
@@ -4989,11 +4998,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                               />
                            </BaseLayer> }
                         </LayersControl>
-                        <MarkerClusterGroup ref={this._refs["cluster"]} chunkedLoading maxClusterRadius={(zLevel) => {
-                           //console.log("zoom:",zLevel)
-                           if(zLevel >= 9) return 0
-                           else return 80
-                        }} >{ markers }</MarkerClusterGroup>
+                        <MarkerClusterGroup ref={this._refs["cluster"]} spiderfyDistanceMultiplier={0.1} disableClusteringAtZoom={9} chunkedLoading maxClusterRadius={80} >{ markers }</MarkerClusterGroup>
                      </MapContainer>
                   </>}</>)
                   
