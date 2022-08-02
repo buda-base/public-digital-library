@@ -1993,15 +1993,18 @@ function rewriteAuxMain(result,keyword,datatype,sortBy,language)
    let _kw = keyword.replace(/^"|"(~1)?$/g,"").replace(/[“”]/g,'"').replace(/[`‘’]/g,"'") // normalize quotes in user input   
    
    // DONE case of tibetan unicode vs wylie
-   let flags = "iu"
-   if(language === "bo") { 
-      let translit = getMainLabel([ { lang: language, value: _kw } ], extendedPresets([ "bo-x-ewts" ]))
-      _kw = "(("+_kw+")|("+translit?.value?.replace(/[_ ]/g,"[_ ]")+(translit?.value?.endsWith("/")?"?":"/?") +"))"      
-      flags = "u" // case sensitive in Tibetan/Wylie
-   } else if(language === "bo-x-ewts") { 
-      let translit = getMainLabel([ { lang: language, value: _kw } ], extendedPresets([ "bo" ]))
-      _kw = "(("+_kw.replace(/[_ ]/g,"[_ ]")+(_kw.endsWith("/")?"?":"/?")+")|("+translit?.value+"))"      
-      flags = "u" // case sensitive in Tibetan/Wylie
+   let flags = "iu"   
+   // #741 first quickfix
+   if(!keyword.includes(" AND ")){ 
+      if(language === "bo") { 
+         let translit = getMainLabel([ { lang: language, value: _kw } ], extendedPresets([ "bo-x-ewts" ]))
+         _kw = "(("+_kw+")|("+translit?.value?.replace(/[_ ]/g,"[_ ]")+(translit?.value?.endsWith("/")?"?":"/?") +"))"      
+         flags = "u" // case sensitive in Tibetan/Wylie
+      } else if(language === "bo-x-ewts") { 
+         let translit = getMainLabel([ { lang: language, value: _kw } ], extendedPresets([ "bo" ]))
+         _kw = "(("+_kw.replace(/[_ ]/g,"[_ ]")+(_kw.endsWith("/")?"?":"/?")+")|("+translit?.value+"))"      
+         flags = "u" // case sensitive in Tibetan/Wylie
+      }
    }
    //console.log("_kw:",_kw,keyword)
    let _kwRegExpFullM = new RegExp("^↦.*?"+_kw+".*?↤/?$", flags), _kwRegExpM = new RegExp("↦.*?"+_kw+".*?↤", flags)
@@ -2074,18 +2077,20 @@ function rewriteAuxMain(result,keyword,datatype,sortBy,language)
 
                   hasM = true
 
-                  // #718 check if match is full/exact
-                  if(e.value.match(_kwRegExpM)) {                                          
-                     //console.log("exact:",e)
-                     hasExactM = true
-                     if(e.value.match(_kwRegExpFullM)) {
-                        //console.log("full exact")
-                        isExactM = true
-                     } 
-                  } else {
-                     //console.log("exact?",e,_kw)
+                  // #741 first quickfix
+                  if(!keyword.includes(" AND ")){
+                     // #718 check if match is full/exact
+                     if(e.value.match(_kwRegExpM)) {                                          
+                        //console.log("exact:",e)
+                        hasExactM = true
+                        if(e.value.match(_kwRegExpFullM)) {
+                           //console.log("full exact")
+                           isExactM = true
+                        } 
+                     } else {
+                        //console.log("exact?",e,_kw)
+                     }
                   }
-
 
                } else if(e.type === _tmp+"status" && e.value) {
                   if(!e.value.match(/Released/)) { 
@@ -2141,13 +2146,16 @@ function rewriteAuxMain(result,keyword,datatype,sortBy,language)
                   //loggergen.log("full",content.value)
                   //loggergen.log("expand",expand.value)
 
-                  // #718 check if match is exact
-                  if(content?.value && content.value.match &&  content.value.match(/[↦↤]/)) {
-                     hasM = true   
-                     content.value = content.value.replace(/↤\/_↦/g,"/ ")
-                     if(content.value.match(_kwRegExpM)) {                                          
-                        //console.log("exact:",e)
-                        hasExactM = true
+                  // #741 first quickfix
+                  if(!keyword.includes(" AND ")){
+                     // #718 check if match is exact
+                     if(content?.value && content.value.match &&  content.value.match(/[↦↤]/)) {
+                        hasM = true   
+                        content.value = content.value.replace(/↤\/_↦/g,"/ ")
+                        if(content.value.match(_kwRegExpM)) {                                          
+                           //console.log("exact:",e)
+                           hasExactM = true
+                        }
                      }
                   }
 
