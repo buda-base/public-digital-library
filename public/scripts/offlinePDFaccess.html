@@ -1,9 +1,67 @@
 <html>
-  <head>
+  <head> 
+    <style>
+      body { margin:0; }
+      iframe { border:none; width:100%;height:100%;position:fixed; box-sizing: border-box; display:block; opacity:0; pointer-events: none;}
+      nav { width:100%;height:80px;position:fixed; box-sizing: border-box; opacity:0; pointer-events: none;top:0;left:0;
+        display: flex; justify-content: center; align-items: center;
+      }
+      .off { display:none; }
+      .on { opacity:1;pointer-events:auto; }
+      iframe#pdf { top:80px; bottom:0;}
+    </style>
+    <script src="./tree.js"></script>
     <script>
-      window.location.href = "https://library.bdrc.io?useDLD="+encodeURIComponent(window.location.pathname.replace(/[^/]*?$/,""))
+
+      var host = "https://library.bdrc.io"
+      var params = new URLSearchParams(window.location.search);
+      var h = params.get("host"); 
+      if(h) host = h
+      if(!host.startsWith("http")) host = "http://"+host
+      var loca = host+"?useDLD=true"
+
+      // no need
+      //var loca = host+"?useDLD="+encodeURIComponent(window.location.pathname.replace(/[^/]*?$/,""))
+      //console.log(loca, h,params,window.location.search)
+      //window.location.href = loca      
+    
     </script>
   </head>
-  <body>    
+  <body>
+    <iframe id="BUDA" class="on" src="https://library.bdrc.io"></iframe>    
+    <nav id="top" class="off">
+      <span id="close">close</span>
+    </nav>
+    <iframe id="pdf" class="off" ></iframe>
+    <script>
+      var nav = document.querySelector("nav#top")
+      var close = document.querySelector("nav#top #close")
+      var pdf = document.querySelector("iframe#pdf")
+      var BUDA = document.querySelector("iframe#BUDA")
+      BUDA.src = loca
+      
+      window.addEventListener("message", function (e) {              
+        console.log("msgEv:",e);
+        if (e.data?.startsWith("open-viewer:")) {
+          var data = e.data.split(":")
+          console.log("data:",data,tree)
+
+          if(tree && tree[data[1]] && tree[data[1]].length){
+            pdf.src = tree[data[1]][0]
+            pdf.className = "on"
+            BUDA.className = "off"
+            nav.className = "on"
+          } 
+        }        
+      }, true);
+
+      close.addEventListener("click",function(){
+        nav.className = "off"
+        pdf.className = "off"
+        BUDA.className = "on"
+      })
+
+      // document.querySelector("iframe#pdf").src = "./data/W12827.pdf"
+    </script>
   </body>
 </html>

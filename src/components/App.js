@@ -7169,6 +7169,14 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
            }
             
            {/* <span>{ ""+this.props.loading }</span> */}
+            <Link to={"/show/bdr:W12827#open-viewer"} onClick={(ev) => {
+               
+               window.top.postMessage("open-viewer:W12827","*")
+               
+               ev.preventDefault()
+               ev.stopPropagation()
+              return false;
+            }}>open W12827 from iframe parent</Link><br/><br/><br/><br/>
            <div id="res-container" >
            { (!this.props.simple && (this.props.loading || this.props.keyword && (!this.props.datatypes || !this.props.datatypes.hash))) && <Loader className="fixloader"/> }
            {  (message.length > 0 || message.length == 0 && !this.props.loading) && this.render_filters(types,counts,sortByList,reverseSort,facetWidgets) }
