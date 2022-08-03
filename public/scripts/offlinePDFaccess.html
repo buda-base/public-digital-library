@@ -58,7 +58,10 @@
         console.log("data:",data,tree)
         if (data["open-viewer"]) {
           if(tree && tree[data["open-viewer"].rid] && tree[data["open-viewer"].rid].length && pdf.className != "on"){
-            pdf.src = tree[data["open-viewer"].rid][0]
+            if(!pdf.src || !pdf.src.endsWith(tree[data["open-viewer"].rid][0])) { 
+              //console.log("diff:",pdf.src,tree[data["open-viewer"].rid][0])
+              pdf.src = tree[data["open-viewer"].rid][0]
+            }
             pdf.className = "on"
             BUDA.className = "off"
             nav.className = "on"
