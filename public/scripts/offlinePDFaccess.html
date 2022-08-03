@@ -21,10 +21,13 @@
       var loca = host+"?useDLD=true"
       var u = params.get("url");
       if(u) {
-        loca = decodeURIComponent(u) 
-        if(loca.match(/[?][^?]/)) loca +="&"
-        else loca += "?"
-        loca += "useDLD=true"
+        // don't decode or it will break 
+        loca = u //decodeURIComponent(u) 
+        if(!loca.includes("useDLD=")) {
+          if(loca.match(/[?][^?]/)) loca +="&"
+          else loca += "?"
+          loca += "useDLD=true"
+        }
       }
       
 
@@ -54,7 +57,7 @@
         var data = await JSON.parse(e.data)
         console.log("data:",data,tree)
         if (data["open-viewer"]) {
-          if(tree && tree[data["open-viewer"].rid] && tree[data["open-viewer"].rid].length){
+          if(tree && tree[data["open-viewer"].rid] && tree[data["open-viewer"].rid].length && pdf.className != "on"){
             pdf.src = tree[data["open-viewer"].rid][0]
             pdf.className = "on"
             BUDA.className = "off"

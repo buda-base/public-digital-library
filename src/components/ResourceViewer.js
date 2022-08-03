@@ -3184,9 +3184,19 @@ class ResourceViewer extends Component<Props,State>
                let vlink = "/"+show+"/"+prefix+":"+pretty+"?s="+encodeURIComponent(this.props.history.location.pathname+this.props.history.location.search)+"#open-viewer"                
                thumb = <div class="images-thumb" style={{"background-image":"url("+thumbUrl+")"}}/>;               
 
-               ret = [<Link className={"urilink "+ prefix} to={vlink}>{thumb}</Link>,
+               const checkDLD = (ev) => {
+                  console.log("CDLD:",this.props.useDLD)
+                  if(this.props.useDLD) { 
+                     window.top.postMessage(JSON.stringify({"open-viewer":{"rid":pretty}}),"*")        
+                     ev.preventDefault();
+                     ev.stopPropagation();
+                     return false ;
+                  } 
+               }
+
+               ret = [<Link className={"urilink "+ prefix} onClick={checkDLD.bind(this)} to={vlink}>{thumb}</Link>,
                      <div class="images-thumb-links">
-                        <Link className={"urilink "+ prefix} to={vlink}>{I18n.t("index.openViewer")}</Link>
+                        <Link className={"urilink "+ prefix} to={vlink} onClick={checkDLD.bind(this)}>{I18n.t("index.openViewer")}</Link>
                         <Link className={"urilink "+ prefix} to={"/"+show+"/"+prefix+":"+pretty}>{I18n.t("resource.openR")}</Link>
                      </div>]
             } else if(thumbV && thumbV.length) {
@@ -4502,12 +4512,23 @@ class ResourceViewer extends Component<Props,State>
   */
 
 
-   showMirador(num?:number,useManifest?:{},click)
-   {
+   showMirador(num?:number,useManifest?:{},click) {
+
+      /*
+      if(this.props.useDLD) { 
+         if(!this.state.openMiradorDLD) {
+            window.top.postMessage(JSON.stringify({"open-viewer":{"rid":this.props.IRI.replace(/^bdr:/,"")}}),"*")        
+            this.setState({ openMiradorDLD: true });
+         }
+         return
+      } 
+      */ 
+
       let state = { ...this.state, openMirador:true, openDiva:false, openUV:false }
 
       if(!this.state.openMirador) // || !$("#viewer").hasClass("hidden"))
       {
+         
          document.getElementsByName("viewport")[0].content = "width=device-width, initial-scale=1.0, maximum-scale=1.0" ;
 
          if(click && state.fromSearch && (state.fromSearch.startsWith("latest") || state.fromSearch.includes("t=Scan"))) {
@@ -6679,7 +6700,17 @@ perma_menu(pdfLink,monoVol,fairUse,other)
       if(iiifThumb && iiifThumb.length) iiifThumb = iiifThumb[0].value
 
       let handleViewer = (ev) => {
-         if(ev.type === 'click') { 
+         if(ev.type === 'click') {
+            
+            console.log("hv:",this.props.useDLD)
+
+            if(this.props.useDLD) { 
+               window.top.postMessage(JSON.stringify({"open-viewer":{"rid":this.props.IRI.replace(/^bdr:/,"")}}),"*")        
+               ev.preventDefault();
+               ev.stopPropagation();
+               return false ;
+            } 
+            
             let location = { ...this.props.history.location, hash:"open-viewer" }
             this.props.history.push(location)
             //this.showMirador(null,null,true)
