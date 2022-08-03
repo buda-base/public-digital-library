@@ -7171,7 +7171,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
            {/* <span>{ ""+this.props.loading }</span> */}
             <Link to={"/show/bdr:W12827#open-viewer"} onClick={(ev) => {
                
-               window.top.postMessage("open-viewer:W12827","*")
+               window.top.postMessage(JSON.stringify({"open-viewer":{"rid":"W12827"}}),"*")
                
                ev.preventDefault()
                ev.stopPropagation()

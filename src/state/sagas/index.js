@@ -67,11 +67,21 @@ async function initiateApp(params,iri,myprops,route,isAuthCallback) {
       localStorage.removeItem('auth0_redirect_logout')
       if(redirect && redirect.startsWith && redirect.startsWith("http")) window.location.href = redirect
       
+      let useDLD = state.ui.useDLD
+      if(params && params.useDLD && !useDLD) {
+         store.dispatch(uiActions.useDLD());
+         useDLD = true
+      } 
+
+      if(useDLD) {
+         window.top.postMessage(JSON.stringify({"url":{"path":history.location.pathname,"search":history.location.search}}),"*")
+      }
+
       if(!state.data.config)
       {
          const config = await api.loadConfig();
 
-         console.log("is khmer server ?",config.khmerServer)
+         //console.log("is khmer server ?",config.khmerServer)
 
          //I18n.setHandleMissingTranslation((key, replacements) => key);
 

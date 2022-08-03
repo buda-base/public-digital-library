@@ -127,6 +127,16 @@ reducers[actions.TYPES.setType] = setType;
 
 
 
+export const useDLD = (state: UIState, action: Action) => {
+
+    return {
+    ...state,
+    useDLD:true
+ }
+}
+reducers[actions.TYPES.useDLD] = useDLD;
+
+
 export const setEtextLang = (state: UIState, action: Action) => {
 
       return {
