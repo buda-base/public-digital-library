@@ -69,11 +69,13 @@
             if(!pdf.src || !pdf.src.replace(/#page=.*?$/,"").endsWith(src)) { 
               pdf.src = src + (page?"#page="+page:"")
             } else if(page) {
-              // a bit more complex if we need to update current page
-              if(pdf.src) pdf.src = "" // reset first
-              setTimeout(function() {              
-                pdf.src = src + "#page="+page // then set volume again, with page
-              }, 100)
+              // a bit more complex if we need to update current page because changing src has no effect 
+              // (see for example https://stackoverflow.com/questions/29707110/iframe-pdf-change-page-on-click-url)
+              pdf.remove()
+              pdf = document.createElement('iframe');
+              pdf.id = "pdf"
+              pdf.src = src + "#page="+page
+              nav.parentNode.insertBefore(pdf, nav.nextSibling); // no insertAfter in API??
             }
 
             pdf.className = "on"
