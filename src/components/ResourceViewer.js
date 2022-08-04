@@ -7830,6 +7830,8 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                                           "vol":loca.contentLocationVolume,
                                           "page":loca.contentLocationPage
                                        }}),"*")        
+
+                                       ev.currentTarget.closest(".details,.top").scrollIntoView()
                                     }
                                     
 

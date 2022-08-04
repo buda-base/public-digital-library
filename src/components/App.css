@@ -2201,7 +2201,7 @@ h4:not(:hover) > .lang
 
 .resource .data#outline .root + div .abs { position:absolute; width:110px;}
 
-.resource .data#outline .root + div span.top { display: block;  margin-top:5px; }
+.resource .data#outline .root + div span.top { display: block;  margin-top:5px; scroll-margin:49vh; }
 
 .resource .data#outline .root { position:relative;}
 
@@ -2246,7 +2246,7 @@ h4:not(:hover) > .lang
 .resource .data#outline .root + div .top:hover .pType.on svg.details { display:inline; }
 
 .resource .data#outline .root + div { width:calc(100% - 25px - 50px - 35px); }
-.resource .data#outline .root + div .top + .details { width:100%; background-color:#ffffff80; margin:5px 25px 7px 33px; padding:15px 15px 15px 20px;}
+.resource .data#outline .root + div .top + .details { width:100%; background-color:#ffffff80; margin:5px 25px 7px 33px; padding:15px 15px 15px 20px; scroll-margin:49vh;}
 
 
 .resource .data#outline .root + div .top + .details .sub { margin:0;border:none;padding:0; display:flex; flex-wrap:wrap; /*align-items:baseline;*/}
