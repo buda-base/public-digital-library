@@ -3185,7 +3185,7 @@ class ResourceViewer extends Component<Props,State>
                thumb = <div class="images-thumb" style={{"background-image":"url("+thumbUrl+")"}}/>;               
 
                const checkDLD = (ev) => {
-                  console.log("CDLD:",this.props.useDLD)
+                  //console.log("CDLD:",this.props.useDLD)
                   if(this.props.useDLD) { 
                      window.top.postMessage(JSON.stringify({"open-viewer":{"rid":pretty}}),"*")        
                      ev.preventDefault();
@@ -7816,22 +7816,46 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
                               subtime(1)
 
+                              if(this.props.useDLD) { 
+                                 g.checkDLD = (ev) => {
+                                    //console.log("CDLD:",this.props.useDLD,g)
+
+                                    let loca = mapElem(g.contentLocation)
+                                    if(loca?.length) loca = loca[0]
+                                    if(loca && loca.contentLocationInstance) {
+                                       //console.log("root:",loca)
+
+                                       window.top.postMessage(JSON.stringify({"open-viewer":{
+                                          "rid":loca.contentLocationInstance.replace(/^bdr:/,""),
+                                          "vol":loca.contentLocationVolume,
+                                          "page":loca.contentLocationPage
+                                       }}),"*")        
+                                    }
+                                    
+
+                                    ev.preventDefault();
+                                    ev.stopPropagation();
+                                    return false ;
+                                 }
+                              }
+
+
                               let warn
                               if(g.contentLocation && (!this.state.catalogOnly || !this.state.catalogOnly[this.props.IRI])) {
                                  g.hasImg = "/show/"+g["@id"].split(";")[0].replace(/^((bdr:MW[^_]+)_[^_]+)$/,"$1")+"?s="+encodeURIComponent(this.props.history.location.pathname+this.props.history.location.search)+"#open-viewer"
                                  g.hasDetails = true
                                  if(showDetails) {
                                     if(!g.details) g.details = []
-                                    nav.push(<Link to={g.hasImg} class="ulink">{I18n.t("copyright.view")}</Link>)                                    
+                                    nav.push(<Link onClick={g.checkDLD} to={g.hasImg} class="ulink">{I18n.t("copyright.view")}</Link>)                                    
                                     warn = true
                                  }
                               }
-                              else if (g.instanceHasReproduction) {
+                              else if(g.instanceHasReproduction) {
                                  g.hasImg = "/show/"+g.instanceHasReproduction.split(";")[0]+"?s="+encodeURIComponent(this.props.history.location.pathname+this.props.history.location.search)+"#open-viewer"
                                  g.hasDetails = true
                                  if(showDetails) {
                                     if(!g.details) g.details = []
-                                    nav.push(<Link to={g.hasImg} class="ulink">{I18n.t("copyright.view")}</Link>)  
+                                    nav.push(<Link onClick={g.checkDLD} to={g.hasImg} class="ulink">{I18n.t("copyright.view")}</Link>)  
                                     warn = true
                                  }
                               }
@@ -8100,7 +8124,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                               {e.id}
                               {this.samePopup(e.same,fUri)}
                               <div class="abs">
-                                 { e.hasImg && <Link className="hasImg" title={I18n.t("copyright.view")}  to={e.hasImg}><img src="/icons/search/images.svg"/><img src="/icons/search/images_r.svg"/></Link> }
+                                 { e.hasImg && <Link className="hasImg" title={I18n.t("copyright.view")} onClick={e.checkDLD}  to={e.hasImg}><img src="/icons/search/images.svg"/><img src="/icons/search/images_r.svg"/></Link> }
                                  { /* pType && 
                                     <span class={"pType "+(e.details?"on":"")} {...e.details?{title:(this.state.collapse[tag+"-details"]?"Hide":"Show")+" Details", onClick:(ev) => toggle(ev,root,e["@id"],"details")}:{}} >
                                        {this.proplink(pType)}

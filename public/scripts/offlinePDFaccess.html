@@ -58,13 +58,30 @@
         console.log("data:",data,tree)
         if (data["open-viewer"]) {
           if(tree && tree[data["open-viewer"].rid] && tree[data["open-viewer"].rid].length && pdf.className != "on"){
-            if(!pdf.src || !pdf.src.endsWith(tree[data["open-viewer"].rid][0])) { 
-              //console.log("diff:",pdf.src,tree[data["open-viewer"].rid][0])
-              pdf.src = tree[data["open-viewer"].rid][0]
+            let vol = 0
+            if(data["open-viewer"].vol) vol = data["open-viewer"].vol - 1            
+            let page
+            if(data["open-viewer"].page) page = data["open-viewer"].page
+
+            let src = tree[data["open-viewer"].rid][vol] 
+
+            // simple case: no previous pdf open, or a different version, or a different volume than before
+            if(!pdf.src || !pdf.src.replace(/#page=.*?$/,"").endsWith(src)) { 
+              pdf.src = src + (page?"#page="+page:"")
+            } else if(page) {
+              // a bit more complex if we need to update current page
+              if(pdf.src) pdf.src = "" // reset first
+              setTimeout(function() {              
+                pdf.src = src + "#page="+page // then set volume again, with page
+              }, 100)
             }
+
             pdf.className = "on"
             BUDA.className = "off"
             nav.className = "on"
+
+
+
           } 
         } else if(data.url) {
           let nextURL = host + data.url.path + data.url.search;          
