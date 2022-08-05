@@ -75,6 +75,11 @@ async function initiateApp(params,iri,myprops,route,isAuthCallback) {
 
       if(useDLD) {
          window.top.postMessage(JSON.stringify({"url":{"path":history.location.pathname,"search":history.location.search}}),"*")
+         
+         new MutationObserver(function() {
+            //console.log("newT:",document.title);
+            window.top.postMessage(JSON.stringify({"title": document.title }),"*")
+         }).observe(document.querySelector('title'),{ childList: true });
       }
 
       if(!state.data.config)

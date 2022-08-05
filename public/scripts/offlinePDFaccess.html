@@ -33,9 +33,14 @@
 
       nav #logo a#BDRC + a img { height: 40px; }
 
+      nav #breadcrumbs { font-size:0; }
       nav #breadcrumbs #close::before { content: '<';  padding-right: 10px; } 
-      nav #breadcrumbs #close { cursor: pointer;} 
+      nav #breadcrumbs a { cursor: pointer;  position: relative;  padding: 0 10px;  max-width: 300px; }
+      nav #breadcrumbs a:not(#close) > span { text-transform: none; }
+      nav #breadcrumbs a:not(#close)::before { content: ' '; left: 0; top: 4px; height: 12px; width: 2px; border-left: 2px solid #152631; position: absolute; display: inline-block; }
 
+      nav #breadcrumbs a:hover > span { color:#d73449; }
+      
     </style>
     <script src="./tree.js"></script>
     <script>
@@ -64,10 +69,11 @@
       //window.location.href = loca      
     
     </script>
+    <title>BUDA - Buddhist Digital Archives</title>
   </head>
   <body>
     <iframe id="BUDA" class="on" src="https://library.bdrc.io"></iframe>    
-    <nav id="top" class="on">
+    <nav id="top" class="">
       <div>
         <div id="logo">
           <a href="/" id="buda">
@@ -80,6 +86,8 @@
         </div>
         <div id="breadcrumbs">
           <a id="close" class="active"><span>return to BUDA</span></a>
+          <a id="collec"><span>Browse collection</span></a>
+          <a id="volume"><span>Volume</span></a>
         </div>
       </div>
     </nav>
@@ -89,6 +97,7 @@
       var close = document.querySelector("nav#top #close")
       var pdf = document.querySelector("iframe#pdf")
       var BUDA = document.querySelector("iframe#BUDA")
+      var label
 
       BUDA.src = loca
       
@@ -97,13 +106,14 @@
         var data = await JSON.parse(e.data)
         console.log("data:",data,tree)
         if (data["open-viewer"]) {
-          if(tree && tree[data["open-viewer"].rid] && tree[data["open-viewer"].rid].length && pdf.className != "on"){
+          if(tree && pdf.className != "on"){
             let vol = 0
             if(data["open-viewer"].vol) vol = data["open-viewer"].vol - 1            
             let page
             if(data["open-viewer"].page) page = data["open-viewer"].page
 
-            let src = tree[data["open-viewer"].rid][vol] 
+            let src = ""
+            if(tree[data["open-viewer"].rid]?.length > vol) src = tree[data["open-viewer"].rid][vol] 
 
             // simple case: no previous pdf open, or a different version, or a different volume than before
             if(!pdf.src || !pdf.src.replace(/#page=.*?$/,"").endsWith(src)) { 
@@ -141,6 +151,13 @@
           window.history.pushState(nextState, nextTitle, nextURL);
 
 
+        } else if(data.title) {
+          document.title = data.title
+        } else if(data.label) {
+          if(!label || label != data.label.value) {
+            label = data.label.value
+            console.log("label:",label)
+          }
         }
       }, true);
 

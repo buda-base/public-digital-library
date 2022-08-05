@@ -4016,13 +4016,18 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          }
 
          let sendMsg = (ev,prevent = false,resUrl) => {
+
             if(this.props.useDLD && resUrl){
                //console.log("resU:",resUrl)
-               const rid = resUrl.replace(/^[/]show[/]bdr:([^?]+)[?].*/,"$1")
-               window.top.postMessage(JSON.stringify({"open-viewer":{ rid }}),"*")        
-               ev.preventDefault();
-               ev.stopPropagation();
-               return false ;
+               let scans = allProps.filter(a => a.type === bdo+"instanceHasReproduction" && !a.value.includes("/resource/IE"))
+               let version = allProps.filter(a => a.type === bdo+"instanceReproductionOf")               
+               if(scans.length || version.length) {
+                  const rid = resUrl.replace(/^[/]show[/]bdr:([^?]+)[?].*/,"$1")
+                  window.top.postMessage(JSON.stringify({"open-viewer":{ rid, label: [ preLit ] }}),"*")        
+                  ev.preventDefault();
+                  ev.stopPropagation();
+                  return false ;
+               }
             } else if(this.props.simple) {
                let otherData =  {} ;
                if(T === "Person") {

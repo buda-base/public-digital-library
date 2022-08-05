@@ -4772,8 +4772,7 @@ class ResourceViewer extends Component<Props,State>
           if(other) title = <h2 lang={this.props.locale}><Link onClick={() => setTimeout(()=>window.scrollTo(0,0),10)} to={"/show/"+shortUri(other)+this.getTabs(T_,other)}>{_T}<span>{loaded && (T_ === "Work" || T_ === "Instance")?I18n.t("resource.noT"):shortUri(other?other:this.props.IRI)}</span></Link></h2>
           else  title = <h2 class="on" lang={this.props.locale}>{_T}<span>{loaded && (T_ === "Work" || T_ === "Instance")?I18n.t("resource.noT"):shortUri(other?other:this.props.IRI)}</span></h2>
       }
-      
-      
+
       if(!title) {
          if(titlElem) {
             if(typeof titlElem !== 'object') titlElem =  { "value" : titlElem, "lang":""}
@@ -4785,8 +4784,8 @@ class ResourceViewer extends Component<Props,State>
             title = getLangLabel(this,"", titlElem, false, false, otherLabels)            
          }
          
-         //loggergen.log("titl:",title,kZprop,titlElem,otherLabels,other)
-
+         loggergen.log("titl:",title,kZprop,titlElem,otherLabels,other)
+      
          let _befo
          if(title && title.value) {
             if(!other && !document.title.includes(title.value) ) document.title = title.value + " - " + (this.props.config?.khmerServer?"Khmer Manuscript Heritage Project":"Buddhist Digital Archives")
@@ -4797,7 +4796,9 @@ class ResourceViewer extends Component<Props,State>
          }
          if(!title) title = { value:"", lang:"" }
          title = this.getH2(title,_befo,_T,other,T_,rootC)         
+
       }
+
 
       //loggergen.log("sT",other,title,titlElem)
 
@@ -8291,7 +8292,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
    }
 
 
-   getWtitle(baseW,rootC) {
+   getWtitle(baseW,rootC,titleRaw) {
       if(baseW && baseW.length && baseW[0].value) {
          let wUri = shortUri(baseW[0].value);
          if(this.props.resources && !this.props.resources[wUri]) this.props.onGetResource(wUri);
@@ -8305,7 +8306,9 @@ perma_menu(pdfLink,monoVol,fairUse,other)
             else baseData = []
          }
          let _T = getEntiType(shortUri(baseW[0].value))
-         let { title,titlElem,otherLabels } = this.setTitle(baseData,_T,baseW[0].value,rootC) ;
+         let { title,titlElem,otherLabels } = this.setTitle(baseData,_T,baseW[0].value,rootC,titleRaw) ;
+         //console.log("tEl:",titlElem)
+         if(titleRaw && titlElem) titleRaw.label = titlElem
          return title
       }
       return null
@@ -8390,6 +8393,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
       let getWtitle = this.getWtitle.bind(this)
       let wTitle,iTitle,rTitle ;
       let _T = getEntiType(this.props.IRI)
+      let titleRaw = { label:[] }
       let { title,titlElem,otherLabels } = this.setTitle(kZprop,_T,null,null,true) ;
       if(_T === "Instance") { 
          iTitle = title ; 
@@ -8408,10 +8412,10 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          rTitle = title ; 
 
          let baseW = this.state.title.work 
-         wTitle = getWtitle(baseW)
+         wTitle = getWtitle(baseW,null,titleRaw)
 
          baseW = this.state.title.instance 
-         iTitle = getWtitle(baseW)
+         iTitle = getWtitle(baseW,null,titleRaw)
 
       }
       else if(_T === "Etext") { 
@@ -9049,7 +9053,9 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
          const hasTabs = [wTitle,iTitle,rTitle].filter(e=>e).length > 1 ? " hasTabs ": ""
 
-
+         if(this.props.useDLD) {            
+            window.top.postMessage(JSON.stringify({label:getLangLabel(this,"",titleRaw.label)}),"*")
+         }
 
 
          return (
