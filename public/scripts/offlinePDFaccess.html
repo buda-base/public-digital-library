@@ -6,9 +6,8 @@
       nav { width:100%;height:80px;position:fixed; box-sizing: border-box; opacity:0; pointer-events: none;top:0;left:0;
         display: flex; justify-content: center; align-items: center;
       }
-      .off { display:none; }
       .on { opacity:1;pointer-events:auto; }
-      iframe#pdf { top:80px; bottom:0;}
+      iframe#pdf { top:80px; bottom:0;  }
     </style>
     <script src="./tree.js"></script>
     <script>
@@ -40,10 +39,10 @@
   </head>
   <body>
     <iframe id="BUDA" class="on" src="https://library.bdrc.io"></iframe>    
-    <nav id="top" class="off">
+    <nav id="top" >
       <span id="close">close</span>
     </nav>
-    <iframe id="pdf" class="off" ></iframe>
+    <iframe id="pdf" ></iframe>
     <script>
       var nav = document.querySelector("nav#top")
       var close = document.querySelector("nav#top #close")
