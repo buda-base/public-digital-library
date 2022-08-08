@@ -1010,23 +1010,43 @@ class ResourceViewer extends Component<Props,State>
 
          document.getElementsByName("viewport")[0].content = "width=device-width, initial-scale=1, shrink-to-fit=no" ;
 
-         loggergen.log("closeV",this.state.fromSearch,this.state,this.props)
+         //loggergen.log("closeV",this.state.fromSearch,this.state,this.props)
+
+         let get = qs.parse(this.props.history.location.search)
+         let hasQinS 
+         if(get.s) {
+            get = qs.parse(get.s)
+            //console.log("hQinS:",get.q) 
+            if(get.q) { hasQinS = true
+               //fromSearch = this.state.fromSearch               
+            } else if(get.s) { 
+               get = qs.parse(decodeURIComponent(get.s))
+               if(get.q) { hasQinS = true
+                  //fromSearch = this.state.fromSearch               
+               } 
+            }               
+         }
 
          let fromSearch
-         if(this.state.fromSearch && !this.state.fromClick) {
+         if(this.state.fromSearch  && !this.state.fromClick) {
+
             let backTo = this.state.fromSearch
 
             let withW = backTo.replace(/^.*[?&]([sw]=[^&]+)&?.*$/,"$1")
-            loggergen.log("fromS",this.state.fromSearch,backTo,withW)
             if(backTo === withW) backTo = decodeURIComponent(backTo)
             else backTo = (decodeURIComponent(backTo.replace(new RegExp("(([?])|&)"+withW),"$2"))+"&"+withW).replace(/\?&/,"?")
+            
+            //loggergen.log("fromS:",this.state.fromSearch,backTo,withW)
 
             if(backTo.startsWith("latest")) this.props.history.push({pathname:"/latest",search:backTo.replace(/^latest/,"")})
-            else if(!backTo.startsWith("/show")) this.props.history.push({pathname:"/search",search:backTo})
-            else {
+            else if(!backTo.startsWith("/show") && hasQinS ) this.props.history.push({pathname:"/search",search:backTo})
+            else if(hasQinS) {
                fromSearch = this.state.fromSearch
                let path = backTo.split("?")
-               this.props.history.push({pathname:path[0],search:path[1]})
+               this.props.history.push({pathname:hasQinS?"/search":path[0],search:path[1]})
+            }
+            else {
+               fromSearch = backTo               
             }
          }
 
@@ -8645,8 +8665,16 @@ perma_menu(pdfLink,monoVol,fairUse,other)
       let searchUrl, searchTerm
       
       if(this.state.fromSearch) {
-         let backTo = this.state.fromSearch
-         if(!decodeURIComponent(backTo).startsWith("/show/")) {
+         let backTo = this.state.fromSearch, oldUrl = backTo
+         if(oldUrl.startsWith("/show/")) {
+            let get = qs.parse(oldUrl.replace(/^[^?]+[?]/,""))
+            console.log("old get:",get)
+            if(get.s) { 
+               oldUrl = get.s 
+               backTo = oldUrl
+            }
+         }
+         if(!decodeURIComponent(oldUrl).startsWith("/show/")) {
             let withW = backTo.replace(/^.*[?&](w=[^&]+)&?.*$/,"$1")
             //loggergen.log("fromS",this.state.fromSearch,backTo,withW)
             if(backTo === withW) { 
@@ -8664,6 +8692,8 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                searchUrl = backTo
                searchTerm = I18n.t("topbar.instances")+" "+searchUrl.replace(/.*i=([^&]+).*/,"$1")
             }
+         } else {
+            console.log("backto:",oldUrl)
          }
       }
 
