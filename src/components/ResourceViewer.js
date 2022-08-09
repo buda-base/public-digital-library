@@ -1013,18 +1013,21 @@ class ResourceViewer extends Component<Props,State>
          //loggergen.log("closeV",this.state.fromSearch,this.state,this.props)
 
          let get = qs.parse(this.props.history.location.search)
-         let hasQinS 
-         if(get.s) {
-            get = qs.parse(get.s)
-            //console.log("hQinS:",get.q) 
-            if(get.q) { hasQinS = true
+         let hasQinS, backToPart
+         if(get.s && !get.part) {
+            get = qs.parse(get.s.replace(/^[^?]+[?]/,""))
+            //console.log("hQinS:",get) 
+            if((get.q || get.r || get.w)) { hasQinS = true
                //fromSearch = this.state.fromSearch               
-            } else if(get.s) { 
+            } 
+            /* 
+            else if(get.s) { 
                get = qs.parse(decodeURIComponent(get.s))
-               if(get.q) { hasQinS = true
+               if((get.q || get.r || get.w)) { hasQinS = true
                   //fromSearch = this.state.fromSearch               
                } 
-            }               
+            }
+            */               
          }
 
          let fromSearch
