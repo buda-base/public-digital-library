@@ -1005,12 +1005,14 @@ class ResourceViewer extends Component<Props,State>
       //loggergen.log("tmp",tmp)
       propOrder = tmp
 
-      window.closeViewer = () => {
+      window.closeViewer = (ev, gotoResults = false) => {
          //delete window.mirador
 
          document.getElementsByName("viewport")[0].content = "width=device-width, initial-scale=1, shrink-to-fit=no" ;
 
          //loggergen.log("closeV",this.state.fromSearch,this.state,this.props)
+
+         console.log("ev:", ev, gotoResults)
 
          let get = qs.parse(this.props.history.location.search)
          let hasQinS, backToPart
@@ -1019,15 +1021,7 @@ class ResourceViewer extends Component<Props,State>
             //console.log("hQinS:",get) 
             if((get.q || get.r || get.w)) { hasQinS = true
                //fromSearch = this.state.fromSearch               
-            } 
-            /* 
-            else if(get.s) { 
-               get = qs.parse(decodeURIComponent(get.s))
-               if((get.q || get.r || get.w)) { hasQinS = true
-                  //fromSearch = this.state.fromSearch               
-               } 
-            }
-            */               
+            }                
          }
 
          let fromSearch
@@ -1041,12 +1035,12 @@ class ResourceViewer extends Component<Props,State>
             
             //loggergen.log("fromS:",this.state.fromSearch,backTo,withW)
 
-            if(backTo.startsWith("latest")) this.props.history.push({pathname:"/latest",search:backTo.replace(/^latest/,"")})
-            else if(!backTo.startsWith("/show") && hasQinS ) this.props.history.push({pathname:"/search",search:backTo})
+            if(backTo.startsWith("latest") && gotoResults) this.props.history.push({pathname:"/latest",search:backTo.replace(/^latest/,"")})
+            else if(!backTo.startsWith("/show") && hasQinS && gotoResults ) this.props.history.push({pathname:"/search",search:backTo})
             else if(hasQinS) {
                fromSearch = this.state.fromSearch
                let path = backTo.split("?")
-               this.props.history.push({pathname:hasQinS?"/search":path[0],search:path[1]})
+               this.props.history.push({pathname:hasQinS&& gotoResults?"/search":path[0],search:path[1]})
             }
             else {
                fromSearch = backTo               
@@ -9033,7 +9027,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          <div class={isMirador?"H100vh OF0":""}>
             { ["Images","Instance"].includes(_T) && <abbr class="unapi-id" title={this.props.IRI}></abbr> }
             { infoPanelR }
-            <div className={"resource "+hasTabs+getEntiType(this.props.IRI).toLowerCase() + (this.props.simple?" simple":"")/*+(!this.props.portraitPopupClosed?" portrait-warn-on":"")*/} {...this.props.simple?{onClick:sendMsg}:{}}>                              
+            <div {...searchUrl?{"data-searchUrl":searchUrl}:{}} className={"resource "+hasTabs+getEntiType(this.props.IRI).toLowerCase() + (this.props.simple?" simple":"") /*+(!this.props.portraitPopupClosed?" portrait-warn-on":"")*/} {...this.props.simple?{onClick:sendMsg}:{}}>                              
                {searchUrl && <div class="ariane">
                   <Link to={searchUrl.startsWith("latest")?searchUrl:"/search?"+searchUrl} onClick={(ev) => {
                      this.props.onLoading("search",true)                     

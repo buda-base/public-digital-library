@@ -9343,7 +9343,7 @@ minipass@^3.0.0, minipass@^3.1.1:
 
 "mirador@https://github.com/buda-base/mirador#2.7.0-bdrc":
   version "2.7.0"
-  resolved "https://github.com/buda-base/mirador#92293270ff06eb4d79e957e0e8f07f8094a827cf"
+  resolved "https://github.com/buda-base/mirador#84f9fc3e5962931d51c335749d66838b38aa9001"
   dependencies:
     bootbox "^4.4.0"
     bootstrap "^3.3.7"
@@ -9867,7 +9867,7 @@ open@^7.0.2:
 
 "openseadragon@https://github.com/openseadragon/openseadragon#master":
   version "3.1.0"
-  resolved "https://github.com/openseadragon/openseadragon#0335f3f4abfcd003a70ecd2fce92475bb13fa207"
+  resolved "https://github.com/openseadragon/openseadragon#12402f2f0f21ac3e17567dc26cdfeaa607b794d0"
 
 opn@^5.5.0:
   version "5.5.0"
