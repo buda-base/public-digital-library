@@ -1033,8 +1033,23 @@ class ResourceViewer extends Component<Props,State>
             if(backTo === withW) backTo = decodeURIComponent(backTo)
             else backTo = (decodeURIComponent(backTo.replace(new RegExp("(([?])|&)"+withW),"$2"))+"&"+withW).replace(/\?&/,"?")
             
-            //loggergen.log("fromS:",this.state.fromSearch,backTo,withW)
+            loggergen.log("fromS:",this.state.fromSearch, backTo, withW, get)
+            
+            //fromSearch = this.state.fromSearch
 
+            if(gotoResults) {
+               if(backTo.startsWith("latest")) this.props.history.push({pathname:"/latest",search:backTo.replace(/^latest/,"")})
+               else if(backTo.startsWith("search")) this.props.history.push({pathname:"/search",search:backTo.replace(/^[^?]+[?]/,"")})                              
+               else {
+                  get = qs.parse(backTo.replace(/^[^?]+[?]/,""))
+                  this.props.history.push({pathname:"/search",search:get.s?get.s:backTo.replace(/^[^?]+[?]/,"")})   
+               }
+            } else {
+               if(backTo.startsWith("show")) this.props.history.push({pathname:"/show",search:backTo})
+               
+            }
+
+            /*
             if(backTo.startsWith("latest") && gotoResults) this.props.history.push({pathname:"/latest",search:backTo.replace(/^latest/,"")})
             else if(!backTo.startsWith("/show") && hasQinS && gotoResults ) this.props.history.push({pathname:"/search",search:backTo})
             else if(hasQinS) {
@@ -1045,6 +1060,7 @@ class ResourceViewer extends Component<Props,State>
             else {
                fromSearch = backTo               
             }
+            */
          }
 
          if(window.mirador) delete window.mirador

@@ -77,6 +77,9 @@
     font-style: normal;
 }
 
+#root > div > .resource:not([data-searchurl]) .nav-bar-top #breadcrumbs #return { display:none;  }
+#root > div > .resource:not([data-searchurl]) .nav-bar-top #breadcrumbs a#collec::before { content:none; }
+
 #viewer:not(.inApp) .mirador-hud-nav { display:none; }
 
 body:not(.inApp) .scroll-view .provider div,
