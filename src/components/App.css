@@ -4987,7 +4987,8 @@ a.result .contenu ul > div:last-child h3[lang=bo] span { font-size:18px;}
 
    .resource:not(.etext-view) > :not(.index):not(.ariane) { width:100%; margin:0;}
 
-   .resource > .ariane { padding-left: calc((100% - 700px) /2) ; }
+   .resource > .ariane { padding-left: 0; } 
+   /* calc((100% - 700px) /2) ; } */
 
 
    footer#site-footer > .body #b2 #f1 { border:none; }
@@ -5077,11 +5078,11 @@ a.result + #matches.mobile,
 
 }
 
-#root .nav .close { font-size:40px; transform:rotate(45deg); margin-left:35px; cursor:pointer;}
+#root .nav .close { font-size:40px; transform:rotate(45deg); margin-left:35px; cursor:pointer; display: block;}
 .nav #back { margin-left:auto; }
-@media (min-width:1025px) {
-   #root .nav #donate + .close { display:none;}
-}
+
+#root .nav #donate + .close { display:none;}
+
 
    
 @media (max-width:1024px)
@@ -5093,7 +5094,7 @@ a.result + #matches.mobile,
    
    /* ------------------------------------------------------------------------------------------------------------------------ home/topbar */ 
    #root .nav {  height:60px; padding:0 10px; top:0px; transition:all 400ms ease-in-out; 
-      z-index: 100001;
+      z-index: 100001; padding-left:55px; 
    }
    #root .App .SearchPane { margin-top:0px; }
    #root .nav .history,
@@ -5130,7 +5131,7 @@ a.result + #matches.mobile,
       border-radius: 50%;
       font-size: 0;
       padding: 5px;
-      z-index: 100000;
+      z-index: 1000000;
       width: 40px;
       height: 40px;
       display: flex;
@@ -5138,6 +5139,11 @@ a.result + #matches.mobile,
       align-items: center;
       justify-content: center;
       box-shadow: 0 0 5px 0px rgba(0, 0, 0, 0.125);
+      transition:all 400ms ease-in-out ;
+   }
+   .mobile-button.top.on {
+      box-shadow:0 0 0px 0px rgba(0, 0, 0, 0);
+      transform:rotate(180deg);
    }
 
    #root .App #data-checkbox { display:none; }
@@ -5941,7 +5947,7 @@ a.result + #matches.mobile,
  }
 
 
-@media (max-width:480px)
+@media (max-width:485px)
 {
    .nav #logo.khmer + .links { flex-shrink:1; }
    .nav > div { justify-content: flex-end; }
@@ -5960,7 +5966,7 @@ a.result + #matches.mobile,
 
    .nav.khmerServer > div > .close { position: absolute; top:0; }
 
-   .nav > div > #logo { position:absolute; left:10px; margin-left:0 !important; }
+   .nav > div > #logo { position:absolute; left:55px; margin-left:0 !important; }
 
    #root .App #res-container, #search-bar > div:first-child > div:first-child { width:100%; }
 
