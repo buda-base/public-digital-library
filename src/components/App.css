@@ -5057,8 +5057,9 @@ a.result + #matches.mobile,
 
 @media (min-device-width:801px)
 {
-   .mobile-button.top,
-   .nav .close { display:none; }
+   .mobile-button.top
+   /* .nav .close  */
+   { display:none; }
 }
 
 
@@ -5076,6 +5077,9 @@ a.result + #matches.mobile,
 
 }
 
+#root .nav .close { font-size:40px; transform:rotate(45deg); margin-left:35px; cursor:pointer;}
+.nav #back { margin-left:auto; }
+   
 @media (max-width:1024px)
 {
    
@@ -5097,7 +5101,6 @@ a.result + #matches.mobile,
    #root .nav #login span { margin-left:35px;}
 
 
-   #root .nav .close { font-size:40px; transform:rotate(45deg); margin-left:35px;}
    #root .nav:not(.on) { top:-100px; }
    
 

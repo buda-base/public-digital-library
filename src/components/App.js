@@ -905,8 +905,8 @@ export function top_right_menu(that,etextTitle,backUrl,etextres)
          <div>
             {logo}
 
-            <span id="back"><span>&lt;</span><a //{...etextres?{href:"/show/"+etextres}:{}}
-               onClick={(ev) => {
+            <span id="back"><span>&lt;</span>{ backUrl && <a //{...etextres?{href:"/show/"+etextres}:{}}
+               onClick={(ev   ) => {
 
                   // DONE add loader to wait when back to search 
                   // TODO dont go back to search when opened from button
@@ -919,23 +919,7 @@ export function top_right_menu(that,etextTitle,backUrl,etextres)
                   //if(!etextres) 
                   setTimeout(() => { 
                      
-                     if(!backUrl) {
-                        let loca = { ...that.props.history.location }, rid                  
-                        const urlParams = new URLSearchParams(loca.search)
-                        if(rid = urlParams.get("backToEtext")) {
-                           loca.pathname = "/show/"+rid
-                           delete loca.search
-                           delete loca.hash
-                           if(!rid.startsWith("bdr:MW")) loca.hash = "outline"
-                           console.log("loca:",loca)
-                           that.props.history.push(loca) ; 
-                        }
-                        else {
-                           delete loca.hash
-                           that.props.history.push(loca) ; 
-                        }                        
-                        if(that.state.openEtext) that.setState({...that.state, openEtext: false });
-                     } else {
+                     if(backUrl) {
                         that.props.history.push({pathname:"/search",search:"?"+backUrl}) ; 
                      }
 
@@ -943,17 +927,43 @@ export function top_right_menu(that,etextTitle,backUrl,etextres)
                      //setTimeout(()=>that.props.onLoading("search",false),100)                     
 
                   }, 100)
-                  
-                  /*
-                  ev.preventDefault();
-                  ev.stopPropagation();
-                  return false;
-                  */
 
-               }}><span style={{verticalAlign:"-3px"}}>{I18n.t("topbar.closeEtext")}</span></a>
+               }}><span style={{verticalAlign:"-3px"}}>{I18n.t("viewer.results")}</span></a> }
                <span>{etextTitle}</span>
             </span>
-            <div class="close" onClick={()=>that.setState({collapse:{...that.state.collapse,navMenu:false}})}>+</div> 
+            <div class="close" 
+               onClick={()=>{ 
+                  // #743 TODO: use burger-like icon instead
+                  //that.setState({collapse:{...that.state.collapse,navMenu:false}})
+
+                  that.props.onLoading("search",true,etextres)
+
+                  //if(!etextres) 
+                  setTimeout(() => { 
+                     
+                     let loca = { ...that.props.history.location }, rid                  
+                     const urlParams = new URLSearchParams(loca.search)
+                     if(rid = urlParams.get("backToEtext")) {
+                        loca.pathname = "/show/"+rid
+                        delete loca.search
+                        delete loca.hash
+                        if(!rid.startsWith("bdr:MW")) loca.hash = "outline"
+                        console.log("loca:",loca)
+                        that.props.history.push(loca) ; 
+                     }
+                     else {
+                        delete loca.hash
+                        that.props.history.push(loca) ; 
+                     }                        
+                     if(that.state.openEtext) that.setState({...that.state, openEtext: false });
+                  
+                     that.props.onLoading("search",false)
+                     //setTimeout(()=>that.props.onLoading("search",false),100)                     
+
+                  }, 100)
+                  
+                  
+               }}>+</div> 
          </div>
       </div></>)
    else {
