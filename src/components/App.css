@@ -5079,6 +5079,10 @@ a.result + #matches.mobile,
 
 #root .nav .close { font-size:40px; transform:rotate(45deg); margin-left:35px; cursor:pointer;}
 .nav #back { margin-left:auto; }
+@media (min-width:1025px) {
+   #root .nav #donate + .close { display:none;}
+}
+
    
 @media (max-width:1024px)
 {
