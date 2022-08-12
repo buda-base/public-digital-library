@@ -42,15 +42,21 @@
       nav #breadcrumbs a:hover > span { color:#d73449; }
       
     </style>
-    <script src="./tree.js"></script>
+    <script  charset="UTF-8" src="./DLD_2018.js"></script>
     <script>
 
-      var host = "https://library.bdrc.io"
       var params = new URLSearchParams(window.location.search);
+
+      var prefix = "data/"
+      var p = params.get("prefix");
+      if(p) prefix = p 
+      
+      var host = "https://library.bdrc.io"
       var h = params.get("host"); 
       if(h) host = h
-      if(!host.startsWith("http")) host = "http://"+host
-      var loca = host+"?useDLD=true"
+      
+      if(!host.startsWith("http")) host = "http://"+host      
+      var loca = host+"?useDLD=true"      
       var u = params.get("url");
       if(u) {
         // don't decode or it will break 
@@ -101,24 +107,33 @@
 
       BUDA.src = loca
       
+
+
       window.addEventListener("message", async function (e) {              
         console.log("msgEv:",e);
         var data = await JSON.parse(e.data)
-        console.log("data:",data,tree)
+        //console.log("data:",data,tree)
         if (data["open-viewer"]) {
           if(tree && pdf.className != "on"){
-            let vol = 0
-            if(data["open-viewer"].vol) vol = data["open-viewer"].vol - 1            
+            let rid = data["open-viewer"].rid
+            let vol = 1
+            if(data["open-viewer"].vol) vol = data["open-viewer"].vol           
             let page
             if(data["open-viewer"].page) page = data["open-viewer"].page
 
-            let src = ""
-            if(tree[data["open-viewer"].rid]?.length > vol) src = tree[data["open-viewer"].rid][vol] 
+            let src = tree[rid]
+            let file = rid+"-"+(""+vol).padStart(3,"0")+".pdf"
+            if(src) src += "/"+file
+            if(prefix) src = prefix + src
+
+            console.log("src:", rid, vol, page, src)
 
             // simple case: no previous pdf open, or a different version, or a different volume than before
-            if(!pdf.src || !pdf.src.replace(/#page=.*?$/,"").endsWith(src)) { 
+            if(!pdf.src || !pdf.src.replace(/#page=.*?$/,"").endsWith(file)) { 
+              console.log("1!",pdf.src)
               pdf.src = src + (page?"#page="+page:"")
             } else if(page) {
+              console.log("2!")
               // a bit more complex if we need to update current page because changing src has no effect 
               // (see for example https://stackoverflow.com/questions/29707110/iframe-pdf-change-page-on-click-url)
               pdf.remove()
