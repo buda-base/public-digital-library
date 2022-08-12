@@ -4023,7 +4023,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                let version = allProps.filter(a => a.type === bdo+"instanceReproductionOf")               
                if(scans.length || version.length) {
                   const rid = resUrl.replace(/^[/]show[/]bdr:([^?]+)[?].*/,"$1")
-                  window.top.postMessage(JSON.stringify({"open-viewer":{ rid, label: [ preLit ] }}),"*")        
+                  const nbVol = allProps.filter(a => a.type === bdo+"numberOfVolumes").map(v => v.value)               
+                  window.top.postMessage(JSON.stringify({"open-viewer":{ rid, label: [ preLit ], nbVol: ""+nbVol }}),"*")        
                   ev.preventDefault();
                   ev.stopPropagation();
                   return false ;

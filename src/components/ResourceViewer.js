@@ -3185,9 +3185,11 @@ class ResourceViewer extends Component<Props,State>
                thumb = <div class="images-thumb" style={{"background-image":"url("+thumbUrl+")"}}/>;               
 
                const checkDLD = (ev) => {
-                  //console.log("CDLD:",this.props.useDLD)
+                  console.log("CDLD:",this.props.useDLD)
                   if(this.props.useDLD) { 
-                     window.top.postMessage(JSON.stringify({"open-viewer":{"rid":pretty}}),"*")        
+                     let nbVol =  this.getResourceElem(bdo+"numberOfVolumes")
+                     if(nbVol) nbVol = nbVol.map(v => v.value)
+                     window.top.postMessage(JSON.stringify({"open-viewer":{"rid":pretty, nbVol:""+nbVol}}),"*")        
                      ev.preventDefault();
                      ev.stopPropagation();
                      return false ;
@@ -6706,7 +6708,11 @@ perma_menu(pdfLink,monoVol,fairUse,other)
             console.log("hv:",this.props.useDLD)
 
             if(this.props.useDLD) { 
-               window.top.postMessage(JSON.stringify({"open-viewer":{"rid":this.props.IRI.replace(/^bdr:/,"")}}),"*")        
+
+               let nbVol =  this.getResourceElem(bdo+"numberOfVolumes")
+               if(nbVol) nbVol = nbVol.map(v => v.value)
+
+               window.top.postMessage(JSON.stringify({"open-viewer":{nbVol:""+nbVol,"rid":this.props.IRI.replace(/^bdr:/,"")}}),"*")        
                ev.preventDefault();
                ev.stopPropagation();
                return false ;
@@ -7826,10 +7832,14 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                                     if(loca && loca.contentLocationInstance) {
                                        //console.log("root:",loca)
 
+                                       let nbVol =  this.getResourceElem(bdo+"numberOfVolumes")
+                                       if(nbVol) nbVol = nbVol.map(v => v.value)
+                                       
                                        window.top.postMessage(JSON.stringify({"open-viewer":{
                                           "rid":loca.contentLocationInstance.replace(/^bdr:/,""),
                                           "vol":loca.contentLocationVolume,
-                                          "page":loca.contentLocationPage
+                                          "page":loca.contentLocationPage,
+                                          "nbVol":""+nbVol
                                        }}),"*")        
 
                                        ev.currentTarget.closest(".details,.top").scrollIntoView()

@@ -13,7 +13,7 @@
         display: flex; justify-content: center; align-items: center;
       }
       .on { opacity:1;pointer-events:auto; }
-      iframe#pdf { top:80px; bottom:0;  }
+      iframe#pdf { top:80px; bottom:0;  }      
 
       nav a { text-decoration: none; font-size: 0; display: inline-block; }
       nav { width:100%; height:80px; position:fixed;top:0;left:0;background:white; display:flex;align-items: center; justify-content: center;
@@ -33,14 +33,29 @@
 
       nav #logo a#BDRC + a img { height: 40px; }
 
-      nav #breadcrumbs { font-size:0; }
+      nav #breadcrumbs { font-size:0; position: relative;}
       nav #breadcrumbs #close::before { content: '<';  padding-right: 10px; } 
       nav #breadcrumbs a { cursor: pointer;  position: relative;  padding: 0 10px;  max-width: 300px; }
       nav #breadcrumbs a:not(#close) > span { text-transform: none; }
-      nav #breadcrumbs a:not(#close)::before { content: ' '; left: 0; top: 4px; height: 12px; width: 2px; border-left: 2px solid #152631; position: absolute; display: inline-block; }
+      nav #breadcrumbs a:not(#close)::before { content: ' '; left: 0; top: 14px; height: 12px; width: 2px; border-left: 2px solid #152631; position: absolute; display: inline-block; }
 
       nav #breadcrumbs a:hover > span { color:#d73449; }
       
+      nav #selector { display:inline-block; } 
+      nav #selector > div { position:absolute; top:35px;margin-left:-170px;  /*right:-10px; */ display:none; }
+      nav #selector span { font-size:14px; display:flex; padding: 5px 10px ; cursor: pointer; background-color:#f9f9f9; border:1px solid #f0f0f0;}
+      nav #selector span:hover { background-color:#eeeeee; }
+      nav #selector span.selected { background-color:#efefef; font-weight:700; }
+      nav #selector.off { display: none; }
+      
+      nav #selector span,
+      nav #breadcrumbs #volume { width:150px;}
+
+      nav #breadcrumbs #volume { padding-bottom:10px;padding-top:10px;}
+
+      nav #breadcrumbs #volume:hover + #selector > div,
+      nav #selector:hover > div { display: block; }
+
     </style>
     <script  charset="UTF-8" src="./DLD_2018.js"></script>
     <script>
@@ -92,8 +107,9 @@
         </div>
         <div id="breadcrumbs">
           <a id="close" class="active"><span>return to BUDA</span></a>
-          <a id="collec"><span>Browse collection</span></a>
+          <!-- <a id="collec"><span>Browse collection</span></a> -->
           <a id="volume"><span>Volume</span></a>
+          <div id="selector"><div><span class="selected">Volume 1</span><span>Volume 2</span></div></div> 
         </div>
       </div>
     </nav>
@@ -101,14 +117,14 @@
     <script>
       var nav = document.querySelector("nav#top")
       var close = document.querySelector("nav#top #close")
+      var volume = document.querySelector("nav#top #volume")
+      var selector = document.querySelector("nav#top #selector")
       var pdf = document.querySelector("iframe#pdf")
       var BUDA = document.querySelector("iframe#BUDA")
       var label
 
       BUDA.src = loca
       
-
-
       window.addEventListener("message", async function (e) {              
         console.log("msgEv:",e);
         var data = await JSON.parse(e.data)
@@ -116,15 +132,35 @@
         if (data["open-viewer"]) {
           if(tree && pdf.className != "on"){
             let rid = data["open-viewer"].rid
-            let vol = 1
+            let vol = 1, nbvol = 1
             if(data["open-viewer"].vol) vol = data["open-viewer"].vol           
+            if(data["open-viewer"].nbVol) nbVol = data["open-viewer"].nbVol           
             let page
             if(data["open-viewer"].page) page = data["open-viewer"].page
 
+            volume.innerHTML = "<span>Volume "+vol+"</span>"
+            
             let src = tree[rid]
             let file = rid+"-"+(""+vol).padStart(3,"0")+".pdf"
             if(src) src += "/"+file
             if(prefix) src = prefix + src
+
+            let selec = "<div>"
+            for(let i = 1 ; i <= nbVol ; i ++) {              
+              selec += "<span data-vol='"+i+"'"+(vol == i ? "class='selected'":"")+">Volume "+i+"</span>"
+            }
+            selec += "</div>"
+            selector.innerHTML = selec
+
+            document.querySelectorAll("nav#top #selector span").forEach(function(item) { 
+              item.addEventListener("click", function(e) {
+                selector.className = "off"
+                console.log("e:",e.currentTarget)
+                pdf.src = pdf.src.replace(/-[0-9]{3}[.]pdf.*?$/,"-"+e.currentTarget.dataset.vol.padStart(3,"0")+".pdf#page=1")
+                setTimeout(function() { selector.className = "" }, 150)
+              })
+
+            });
 
             console.log("src:", rid, vol, page, src)
 
