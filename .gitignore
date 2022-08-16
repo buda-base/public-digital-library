@@ -16,7 +16,7 @@ public/config-khmer.json
 
 # static files
 /public/scripts/*
-!/public/scripts/offlinePDFaccess.html
+!/public/scripts/offlinePDFaccess.*
 !/public/scripts/scriptError.js
 !/public/scripts/patch-build.sh
 !/public/scripts/silent_callback.html

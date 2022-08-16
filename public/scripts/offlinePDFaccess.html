@@ -1,103 +1,15 @@
 <html>
   <head> 
-    <style>
-
-      @import url('https://fonts.googleapis.com/css2?family=Noto+Sans:wght@500;600&display=swap');
-
-      nav #breadcrumbs #close::before,
-      nav * { font-family: "Noto Sans", "Noto Serif Khmer", "Noto Sans Mongolian", "Roboto", "Helvetica", "Arial", sans-serif;  }
-
-      body { margin:0; }
-      iframe { border:none; width:100%;height:100%;position:fixed; box-sizing: border-box; display:block; opacity:0; pointer-events: none;}
-      nav { width:100%;height:80px;position:fixed; box-sizing: border-box; opacity:0; pointer-events: none;top:0;left:0;
-        display: flex; justify-content: center; align-items: center;
-      }
-      .on { opacity:1;pointer-events:auto; }
-      iframe#pdf { top:80px; bottom:0;  }      
-
-      nav a { text-decoration: none; font-size: 0; display: inline-block; }
-      nav { width:100%; height:80px; position:fixed;top:0;left:0;background:white; display:flex;align-items: center; justify-content: center;
-        box-shadow: 0 2px 4px rgba(187, 187, 187, 0.5); z-index:100010; 
-      }
-      nav > div { width:1222px; display:flex;justify-content: space-between;align-items:center; max-width:100%;}
-      nav #logo { display: flex;  align-items: center; }
-      nav #logo a { display: inline-block; margin-right: 15px; }
-      nav #logo > a:first-child img {  height: 65px;  display: inline-block;  margin-right: 10px; }
-      nav #logo > a:first-child * {  vertical-align: middle; }
-      nav #logo a#BDRC span, nav #logo a:last-child span, nav #logo a:first-child span {  font-size: 24px;  line-height: 26px; font-weight: 500; }
-
-      nav #logo #by span {padding-top: 7px; text-transform: none; letter-spacing: 1px;  font-weight: 600; }
-
-      nav #breadcrumbs #close::before,
-      nav a > span {font-weight: 700;  font-size: 14px; letter-spacing: 0.29px; text-transform: uppercase; text-decoration: none;  color: #192229;  display: inline-block; }
-
-      nav #logo a#BDRC + a img { height: 40px; }
-
-      nav #breadcrumbs { font-size:0; position: relative;}
-      nav #breadcrumbs #close::before { content: '<';  padding-right: 10px; } 
-      nav #breadcrumbs a { cursor: pointer;  position: relative;  padding: 0 10px;  max-width: 300px; }
-      nav #breadcrumbs a:not(#close) > span { text-transform: none; }
-      nav #breadcrumbs a:not(#close)::before { content: ' '; left: 0; top: 14px; height: 12px; width: 2px; border-left: 2px solid #152631; position: absolute; display: inline-block; }
-
-      nav #breadcrumbs a:hover > span { color:#d73449; }
-      
-      nav #selector { display:inline-block; } 
-      nav #selector > div { position:absolute; top:35px;margin-left:-170px;  /*right:-10px; */ display:none; }
-      nav #selector span { font-size:14px; display:flex; padding: 5px 10px ; cursor: pointer; background-color:#f9f9f9; border:1px solid #f0f0f0;}
-      nav #selector span:hover { background-color:#eeeeee; }
-      nav #selector span.selected { background-color:#efefef; font-weight:700; }
-      nav #selector.off { display: none; }
-      
-      nav #selector span,
-      nav #breadcrumbs #volume { width:150px;}
-
-      nav #breadcrumbs #volume { padding-bottom:10px;padding-top:10px;}
-
-      nav #breadcrumbs #volume:hover + #selector > div,
-      nav #selector:hover > div { display: block; }
-
-    </style>
-    <script  charset="UTF-8" src="./DLD_2018.js"></script>
-    <script>
-
-      var params = new URLSearchParams(window.location.search);
-
-      var prefix = "data/"
-      var p = params.get("prefix");
-      if(p) prefix = p 
-      
-      var host = "https://library.bdrc.io"
-      var h = params.get("host"); 
-      if(h) host = h
-      
-      if(!host.startsWith("http")) host = "http://"+host      
-      var loca = host+"?useDLD=true"      
-      var u = params.get("url");
-      if(u) {
-        // don't decode or it will break 
-        loca = u //decodeURIComponent(u) 
-        if(!loca.includes("useDLD=")) {
-          if(loca.match(/[?][^?]/)) loca +="&"
-          else loca += "?"
-          loca += "useDLD=true"
-        }
-      }
-      
-
-      // no need
-      //var loca = host+"?useDLD="+encodeURIComponent(window.location.pathname.replace(/[^/]*?$/,""))
-      //console.log(loca, h,params,window.location.search)
-      //window.location.href = loca      
-    
-    </script>
     <title>BUDA - Buddhist Digital Archives</title>
+    <link rel="stylesheet" href="https://library.bdrc.io/scripts/offlinePDFaccess.css"/>
+    <script charset="UTF-8" src="./99-DLDs/DLD_2018.js"></script>
   </head>
   <body>
     <iframe id="BUDA" class="on" src="https://library.bdrc.io"></iframe>    
     <nav id="top" class="">
       <div>
         <div id="logo">
-          <a href="/" id="buda">
+          <a href="https://library.bdrc.io/" id="buda">
               <img src="https://library.bdrc.io/icons/BUDA-small.svg">
               <span>BUDA</span>
           </a>
@@ -114,111 +26,6 @@
       </div>
     </nav>
     <iframe id="pdf" ></iframe>
-    <script>
-      var nav = document.querySelector("nav#top")
-      var close = document.querySelector("nav#top #close")
-      var volume = document.querySelector("nav#top #volume")
-      var selector = document.querySelector("nav#top #selector")
-      var pdf = document.querySelector("iframe#pdf")
-      var BUDA = document.querySelector("iframe#BUDA")
-      var label
-
-      BUDA.src = loca
-      
-      window.addEventListener("message", async function (e) {              
-        console.log("msgEv:",e);
-        var data = await JSON.parse(e.data)
-        //console.log("data:",data,tree)
-        if (data["open-viewer"]) {
-          if(tree && pdf.className != "on"){
-            let rid = data["open-viewer"].rid
-            let vol = 1, nbvol = 1
-            if(data["open-viewer"].vol) vol = data["open-viewer"].vol           
-            if(data["open-viewer"].nbVol) nbVol = data["open-viewer"].nbVol           
-            let page
-            if(data["open-viewer"].page) page = data["open-viewer"].page
-
-            volume.innerHTML = "<span>Volume "+vol+"</span>"
-            
-            let src = tree[rid]
-            let file = rid+"-"+(""+vol).padStart(3,"0")+".pdf"
-            if(src) src += "/"+file
-            if(prefix) src = prefix + src
-
-            let selec = "<div>"
-            for(let i = 1 ; i <= nbVol ; i ++) {              
-              selec += "<span data-vol='"+i+"'"+(vol == i ? "class='selected'":"")+">Volume "+i+"</span>"
-            }
-            selec += "</div>"
-            selector.innerHTML = selec
-
-            document.querySelectorAll("nav#top #selector span").forEach(function(item) { 
-              item.addEventListener("click", function(e) {
-                selector.className = "off"
-                console.log("e:",e.currentTarget)
-                pdf.src = pdf.src.replace(/-[0-9]{3}[.]pdf.*?$/,"-"+e.currentTarget.dataset.vol.padStart(3,"0")+".pdf#page=1")
-                setTimeout(function() { selector.className = "" }, 150)
-              })
-
-            });
-
-            console.log("src:", rid, vol, page, src)
-
-            // simple case: no previous pdf open, or a different version, or a different volume than before
-            if(!pdf.src || !pdf.src.replace(/#page=.*?$/,"").endsWith(file)) { 
-              console.log("1!",pdf.src)
-              pdf.src = src + (page?"#page="+page:"")
-            } else if(page) {
-              console.log("2!")
-              // a bit more complex if we need to update current page because changing src has no effect 
-              // (see for example https://stackoverflow.com/questions/29707110/iframe-pdf-change-page-on-click-url)
-              pdf.remove()
-              pdf = document.createElement('iframe');
-              pdf.id = "pdf"
-              pdf.src = src + "#page="+page
-              nav.parentNode.insertBefore(pdf, nav.nextSibling); // no insertAfter in API??
-            }
-
-            pdf.className = "on"
-            BUDA.className = "off"
-            nav.className = "on"
-
-
-
-          } 
-        } else if(data.url) {
-          let nextURL = host + data.url.path + data.url.search;          
-          let search = window.location.search.replace(/([&?])url=[^&]+/,"")
-          if(search && search.match(/^[?][^?]/)) search += "&"
-          else search = "?"
-          search += "url="+encodeURIComponent(nextURL)
-          nextURL = window.location.pathname + search
-
-          const nextTitle = 'no title yet';
-          const nextState = { };
-
-          console.log("nextURL:"+nextURL, nextTitle)
-
-          window.history.pushState(nextState, nextTitle, nextURL);
-
-
-        } else if(data.title) {
-          document.title = data.title
-        } else if(data.label) {
-          if(!label || label != data.label.value) {
-            label = data.label.value
-            console.log("label:",label)
-          }
-        }
-      }, true);
-
-      close.addEventListener("click",function(){
-        nav.className = "off"
-        pdf.className = "off"
-        BUDA.className = "on"
-      })
-
-      // document.querySelector("iframe#pdf").src = "./data/W12827.pdf"
-    </script>
+    <script src="https://library.bdrc.io/scripts/offlinePDFaccess.js"></script>
   </body>
 </html>
