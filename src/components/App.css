@@ -5651,7 +5651,6 @@ a.result + #matches.mobile,
    #search-bar { position: relative;}
    #search-bar > div:first-child > div:first-child { height:85px !important;}
    #search-bar > div:first-child > div:first-child > div:first-child { margin-top:10px; width:calc(100% - 48px - 15px); margin-right:0;}
-   .App:not(.home) #search-bar > div:first-child > div:first-child > div:first-child { padding-left:24px; }
 
    .SearchPane .formControl {
       bottom: 40px;
@@ -5949,6 +5948,9 @@ a.result + #matches.mobile,
 
 @media (max-width:485px)
 {
+
+   .App:not(.home) #search-bar > div:first-child > div:first-child > div:first-child { padding-left:24px; }
+   
    .nav #logo.khmer + .links { flex-shrink:1; }
    .nav > div { justify-content: flex-end; }
 
