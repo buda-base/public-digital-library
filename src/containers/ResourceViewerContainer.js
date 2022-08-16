@@ -157,6 +157,8 @@ const mapStateToProps = (state,ownProps) => {
 
    let portraitPopupClosed = state.ui.portraitPopupClosed
 
+   let useDLD = state.ui.useDLD
+
    let props = { logged,config,resources, ontology, dictionary, keyword, language, datatype, assocResources, prefLang, failures, loading,
       imageAsset,firstImage,canvasID,collecManif,manifests,manifestError,pdfVolumes,createPdf,pdfUrl, manifestWpdf, monovolume,
       annoCollec,rightPanel,locale,langPreset,langExt,imgData, nextChunk, nextPage, resourceManifest, imageVolumeManifests, imageLists, userEditPolicies, highlight,
@@ -168,7 +170,9 @@ const mapStateToProps = (state,ownProps) => {
       profileName,
       etextLang,
       etextErrors,
-      portraitPopupClosed }
+      portraitPopupClosed,
+      useDLD 
+   }
 
    if(config && !config.auth) props.auth = false
 

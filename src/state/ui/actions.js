@@ -36,6 +36,14 @@ export const selectType = (datatype: string): Action => {
    }
 }
 
+TYPES.useDLD = 'USE_DLD';
+export const useDLD = (): Action => {
+   return {
+      type: TYPES.useDLD,
+      payload: true
+   }
+}
+
 TYPES.langPreset = 'LANG_PRESET';
 export const langPreset = (lang: string[],i?:number): Action => {
    let ext = extendedPresets(lang)

@@ -3217,9 +3217,21 @@ class ResourceViewer extends Component<Props,State>
                let vlink = "/"+show+"/"+prefix+":"+pretty+"?s="+encodeURIComponent(this.props.history.location.pathname+this.props.history.location.search)+"#open-viewer"                
                thumb = <div class="images-thumb" style={{"background-image":"url("+thumbUrl+")"}}/>;               
 
-               ret = [<Link className={"urilink "+ prefix} to={vlink}>{thumb}</Link>,
+               const checkDLD = (ev) => {
+                  console.log("CDLD:",this.props.useDLD)
+                  if(this.props.useDLD) { 
+                     let nbVol =  this.getResourceElem(bdo+"numberOfVolumes")
+                     if(nbVol) nbVol = nbVol.map(v => v.value)
+                     window.top.postMessage(JSON.stringify({"open-viewer":{"rid":pretty, nbVol:""+nbVol}}),"*")        
+                     ev.preventDefault();
+                     ev.stopPropagation();
+                     return false ;
+                  } 
+               }
+
+               ret = [<Link className={"urilink "+ prefix} onClick={checkDLD.bind(this)} to={vlink}>{thumb}</Link>,
                      <div class="images-thumb-links">
-                        <Link className={"urilink "+ prefix} to={vlink}>{I18n.t("index.openViewer")}</Link>
+                        <Link className={"urilink "+ prefix} to={vlink} onClick={checkDLD.bind(this)}>{I18n.t("index.openViewer")}</Link>
                         <Link className={"urilink "+ prefix} to={"/"+show+"/"+prefix+":"+pretty}>{I18n.t("resource.openR")}</Link>
                      </div>]
             } else if(thumbV && thumbV.length) {
@@ -4535,12 +4547,23 @@ class ResourceViewer extends Component<Props,State>
   */
 
 
-   showMirador(num?:number,useManifest?:{},click)
-   {
+   showMirador(num?:number,useManifest?:{},click) {
+
+      /*
+      if(this.props.useDLD) { 
+         if(!this.state.openMiradorDLD) {
+            window.top.postMessage(JSON.stringify({"open-viewer":{"rid":this.props.IRI.replace(/^bdr:/,"")}}),"*")        
+            this.setState({ openMiradorDLD: true });
+         }
+         return
+      } 
+      */ 
+
       let state = { ...this.state, openMirador:true, openDiva:false, openUV:false }
 
       if(!this.state.openMirador) // || !$("#viewer").hasClass("hidden"))
       {
+         
          document.getElementsByName("viewport")[0].content = "width=device-width, initial-scale=1.0, maximum-scale=1.0" ;
 
          if(click && state.fromSearch && (state.fromSearch.startsWith("latest") || state.fromSearch.includes("t=Scan"))) {
@@ -4784,8 +4807,7 @@ class ResourceViewer extends Component<Props,State>
           if(other) title = <h2 lang={this.props.locale}><Link onClick={() => setTimeout(()=>window.scrollTo(0,0),10)} to={"/show/"+shortUri(other)+this.getTabs(T_,other)}>{_T}<span>{loaded && (T_ === "Work" || T_ === "Instance")?I18n.t("resource.noT"):shortUri(other?other:this.props.IRI)}</span></Link></h2>
           else  title = <h2 class="on" lang={this.props.locale}>{_T}<span>{loaded && (T_ === "Work" || T_ === "Instance")?I18n.t("resource.noT"):shortUri(other?other:this.props.IRI)}</span></h2>
       }
-      
-      
+
       if(!title) {
          if(titlElem) {
             if(typeof titlElem !== 'object') titlElem =  { "value" : titlElem, "lang":""}
@@ -4797,8 +4819,8 @@ class ResourceViewer extends Component<Props,State>
             title = getLangLabel(this,"", titlElem, false, false, otherLabels)            
          }
          
-         //loggergen.log("titl:",title,kZprop,titlElem,otherLabels,other)
-
+         loggergen.log("titl:",title,kZprop,titlElem,otherLabels,other)
+      
          let _befo
          if(title && title.value) {
             if(!other && !document.title.includes(title.value) ) document.title = title.value + " - " + (this.props.config?.khmerServer?"Khmer Manuscript Heritage Project":"Buddhist Digital Archives")
@@ -4809,7 +4831,9 @@ class ResourceViewer extends Component<Props,State>
          }
          if(!title) title = { value:"", lang:"" }
          title = this.getH2(title,_befo,_T,other,T_,rootC)         
+
       }
+
 
       //loggergen.log("sT",other,title,titlElem)
 
@@ -6712,7 +6736,21 @@ perma_menu(pdfLink,monoVol,fairUse,other)
       if(iiifThumb && iiifThumb.length) iiifThumb = iiifThumb[0].value
 
       let handleViewer = (ev) => {
-         if(ev.type === 'click') { 
+         if(ev.type === 'click') {
+            
+            console.log("hv:",this.props.useDLD)
+
+            if(this.props.useDLD) { 
+
+               let nbVol =  this.getResourceElem(bdo+"numberOfVolumes")
+               if(nbVol) nbVol = nbVol.map(v => v.value)
+
+               window.top.postMessage(JSON.stringify({"open-viewer":{nbVol:""+nbVol,"rid":this.props.IRI.replace(/^bdr:/,"")}}),"*")        
+               ev.preventDefault();
+               ev.stopPropagation();
+               return false ;
+            } 
+            
             let location = { ...this.props.history.location, hash:"open-viewer" }
             this.props.history.push(location)
             //this.showMirador(null,null,true)
@@ -7818,22 +7856,52 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
                               subtime(1)
 
+                              if(this.props.useDLD) { 
+                                 g.checkDLD = (ev) => {
+                                    //console.log("CDLD:",this.props.useDLD,g)
+
+                                    let loca = mapElem(g.contentLocation)
+                                    if(loca?.length) loca = loca[0]
+                                    if(loca && loca.contentLocationInstance) {
+                                       //console.log("root:",loca)
+
+                                       let nbVol =  this.getResourceElem(bdo+"numberOfVolumes")
+                                       if(nbVol) nbVol = nbVol.map(v => v.value)
+                                       
+                                       window.top.postMessage(JSON.stringify({"open-viewer":{
+                                          "rid":loca.contentLocationInstance.replace(/^bdr:/,""),
+                                          "vol":loca.contentLocationVolume,
+                                          "page":loca.contentLocationPage,
+                                          "nbVol":""+nbVol
+                                       }}),"*")        
+
+                                       ev.currentTarget.closest(".details,.top").scrollIntoView()
+                                    }
+                                    
+
+                                    ev.preventDefault();
+                                    ev.stopPropagation();
+                                    return false ;
+                                 }
+                              }
+
+
                               let warn
                               if(g.contentLocation && (!this.state.catalogOnly || !this.state.catalogOnly[this.props.IRI])) {
                                  g.hasImg = "/show/"+g["@id"].split(";")[0].replace(/^((bdr:MW[^_]+)_[^_]+)$/,"$1")+"?s="+encodeURIComponent(this.props.history.location.pathname+this.props.history.location.search)+"#open-viewer"
                                  g.hasDetails = true
                                  if(showDetails) {
                                     if(!g.details) g.details = []
-                                    nav.push(<Link to={g.hasImg} class="ulink">{I18n.t("copyright.view")}</Link>)                                    
+                                    nav.push(<Link onClick={g.checkDLD} to={g.hasImg} class="ulink">{I18n.t("copyright.view")}</Link>)                                    
                                     warn = true
                                  }
                               }
-                              else if (g.instanceHasReproduction) {
+                              else if(g.instanceHasReproduction) {
                                  g.hasImg = "/show/"+g.instanceHasReproduction.split(";")[0]+"?s="+encodeURIComponent(this.props.history.location.pathname+this.props.history.location.search)+"#open-viewer"
                                  g.hasDetails = true
                                  if(showDetails) {
                                     if(!g.details) g.details = []
-                                    nav.push(<Link to={g.hasImg} class="ulink">{I18n.t("copyright.view")}</Link>)  
+                                    nav.push(<Link onClick={g.checkDLD} to={g.hasImg} class="ulink">{I18n.t("copyright.view")}</Link>)  
                                     warn = true
                                  }
                               }
@@ -8102,7 +8170,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                               {e.id}
                               {this.samePopup(e.same,fUri)}
                               <div class="abs">
-                                 { e.hasImg && <Link className="hasImg" title={I18n.t("copyright.view")}  to={e.hasImg}><img src="/icons/search/images.svg"/><img src="/icons/search/images_r.svg"/></Link> }
+                                 { e.hasImg && <Link className="hasImg" title={I18n.t("copyright.view")} onClick={e.checkDLD}  to={e.hasImg}><img src="/icons/search/images.svg"/><img src="/icons/search/images_r.svg"/></Link> }
                                  { /* pType && 
                                     <span class={"pType "+(e.details?"on":"")} {...e.details?{title:(this.state.collapse[tag+"-details"]?"Hide":"Show")+" Details", onClick:(ev) => toggle(ev,root,e["@id"],"details")}:{}} >
                                        {this.proplink(pType)}
@@ -8267,7 +8335,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
    }
 
 
-   getWtitle(baseW,rootC) {
+   getWtitle(baseW,rootC,titleRaw) {
       if(baseW && baseW.length && baseW[0].value) {
          let wUri = shortUri(baseW[0].value);
          if(this.props.resources && !this.props.resources[wUri]) this.props.onGetResource(wUri);
@@ -8281,7 +8349,9 @@ perma_menu(pdfLink,monoVol,fairUse,other)
             else baseData = []
          }
          let _T = getEntiType(shortUri(baseW[0].value))
-         let { title,titlElem,otherLabels } = this.setTitle(baseData,_T,baseW[0].value,rootC) ;
+         let { title,titlElem,otherLabels } = this.setTitle(baseData,_T,baseW[0].value,rootC,titleRaw) ;
+         //console.log("tEl:",titlElem)
+         if(titleRaw && titlElem) titleRaw.label = titlElem
          return title
       }
       return null
@@ -8366,6 +8436,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
       let getWtitle = this.getWtitle.bind(this)
       let wTitle,iTitle,rTitle ;
       let _T = getEntiType(this.props.IRI)
+      let titleRaw = { label:[] }
       let { title,titlElem,otherLabels } = this.setTitle(kZprop,_T,null,null,true) ;
       if(_T === "Instance") { 
          iTitle = title ; 
@@ -8384,10 +8455,10 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          rTitle = title ; 
 
          let baseW = this.state.title.work 
-         wTitle = getWtitle(baseW)
+         wTitle = getWtitle(baseW,null,titleRaw)
 
          baseW = this.state.title.instance 
-         iTitle = getWtitle(baseW)
+         iTitle = getWtitle(baseW,null,titleRaw)
 
       }
       else if(_T === "Etext") { 
@@ -9035,7 +9106,9 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
          const hasTabs = [wTitle,iTitle,rTitle].filter(e=>e).length > 1 ? " hasTabs ": ""
 
-
+         if(this.props.useDLD) {            
+            window.top.postMessage(JSON.stringify({label:getLangLabel(this,"",titleRaw.label)}),"*")
+         }
 
 
          return (

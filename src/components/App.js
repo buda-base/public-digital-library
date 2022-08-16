@@ -4025,8 +4025,21 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             return "bdo:"+t
          }
 
-         let sendMsg = (ev,prevent = false) => {
-            if(this.props.simple) {
+         let sendMsg = (ev,prevent = false,resUrl) => {
+
+            if(this.props.useDLD && resUrl){
+               //console.log("resU:",resUrl)
+               let scans = allProps.filter(a => a.type === bdo+"instanceHasReproduction" && !a.value.includes("/resource/IE"))
+               let version = allProps.filter(a => a.type === bdo+"instanceReproductionOf")               
+               if(scans.length || version.length) {
+                  const rid = resUrl.replace(/^[/]show[/]bdr:([^?]+)[?].*/,"$1")
+                  const nbVol = allProps.filter(a => a.type === bdo+"numberOfVolumes").map(v => v.value)               
+                  window.top.postMessage(JSON.stringify({"open-viewer":{ rid, label: [ preLit ], nbVol: ""+nbVol }}),"*")        
+                  ev.preventDefault();
+                  ev.stopPropagation();
+                  return false ;
+               }
+            } else if(this.props.simple) {
                let otherData =  {} ;
                if(T === "Person") {
                   //console.log("allP:",allProps)
@@ -4065,7 +4078,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
          let getIconLink = (resUrl,div) => {
 
-            if(!resUrl.startsWith("http")) return <Link to={resUrl}  onClick={(ev) => sendMsg(ev, true)}>{div}</Link>
+            if(!resUrl.startsWith("http")) return <Link to={resUrl}  onClick={(ev) => sendMsg(ev, true, resUrl)}>{div}</Link>
             else return <a href={resUrl} target="_blank"  onClick={(ev) => sendMsg(ev, true)}>{div}</a>
 
          }
@@ -7179,6 +7192,16 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
            }
             
            {/* <span>{ ""+this.props.loading }</span> */}
+
+            {/* // #734 proof of concept
+            
+            <Link to={"/show/bdr:W12827#open-viewer"} onClick={(ev) => {             
+               window.top.postMessage(JSON.stringify({"open-viewer":{"rid":"W12827"}}),"*")               
+               ev.preventDefault()
+               ev.stopPropagation()
+              return false;
+            }}>open W12827 from iframe parent</Link><br/><br/><br/><br/> */}
+
            <div id="res-container" >
            { (!this.props.simple && (this.props.loading || this.props.keyword && (!this.props.datatypes || !this.props.datatypes.hash))) && <Loader className="fixloader"/> }
            {  (message.length > 0 || message.length == 0 && !this.props.loading) && this.render_filters(types,counts,sortByList,reverseSort,facetWidgets) }
