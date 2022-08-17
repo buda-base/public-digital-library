@@ -1,7 +1,7 @@
 
 var params = new URLSearchParams(window.location.search);
 
-var prefix = ""
+var prefix = "./"
 var p = params.get("prefix");
 if(p) prefix = p 
 
@@ -33,9 +33,9 @@ var label
 BUDA.src = loca
 
 window.addEventListener("message", async function (e) {              
-  console.log("msgEv:",e);
+  var tree = lists[userDLD]
+  console.log("msgEv:",e,userDLD,tree,tree["W8LS32717"]);
   var data = await JSON.parse(e.data)
-  //console.log("data:",data,tree)
   if (data["open-viewer"]) {
     if(tree && pdf.className != "on"){
       let rid = data["open-viewer"].rid
@@ -124,3 +124,4 @@ close.addEventListener("click",function(){
   pdf.className = "off"
   BUDA.className = "on"
 })
+

@@ -39,8 +39,8 @@
     nav #breadcrumbs a:hover > span { color:#d73449; }
     
     nav #selector { display:inline-block; } 
-    nav #selector > div { position:absolute; top:35px;margin-left:-170px;  /*right:-10px; */ display:none; }
-    nav #selector span { font-size:14px; display:flex; padding: 5px 10px ; cursor: pointer; background-color:#f9f9f9; border:1px solid #f0f0f0;}
+    nav #selector > div { position:absolute; top:35px;margin-left:-170px;  /*right:-10px; */ display:none; max-height:50vh; overflow: auto;}
+    nav #selector span { font-size:14px; display:flex; padding: 5px 10px ; cursor: pointer; background-color:#f9f9f9; /*border:1px solid #f0f0f0;*/ }
     nav #selector span:hover { background-color:#eeeeee; }
     nav #selector span.selected { background-color:#efefef; font-weight:700; }
     nav #selector.off { display: none; }
