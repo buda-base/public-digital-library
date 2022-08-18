@@ -1,68 +1,17 @@
 <html>
   <head> 
     <title>BUDA - Buddhist Digital Archives</title>
-    <link rel="stylesheet" href="http://localhost:3000/scripts/offlinePDFaccess.css"/>
-    <!-- <link rel="stylesheet" href="https://library.bdrc.io/scripts/offlinePDFaccess.css"/> -->
+    <!-- <link rel="stylesheet" href="http://localhost:3000/scripts/offlinePDFaccess.css"/> -->
+    <link rel="stylesheet" href="https://library.bdrc.io/scripts/offlinePDFaccess.css"/>
     <script>
-      var lists = {}, userDLD = "DLD_2020_2021"
-      
-      function checkUnique() {
-        console.log("unique?")
-        // for all DLDs
-        const dlds = Object.keys(lists)
-        for(const dld of dlds){
-          let unique = true
-          const otherDLDs = dlds.filter(d => d != dld)
-          // for all its RIDs
-          const rids = Object.keys(lists[dld])
-          for(const rid of rids) {
-            for(const o of otherDLDs) {
-              // check if it's in another DLD
-              if(lists[o][rid]) {
-                unique = false
-                break;
-              }
-            }
-            // this rid is unique to this DLD
-            if(unique) {
-              console.log('"'+dld+'":"'+rid+'"')
-              break;
-            }
-          }
-        }
-      }
-
-      var possibleDLDs = [ "CTC_18", "DLD_2018", "DLD_2018_ric", "DLD_2020_2021", "DLD_2021" ]; 
-      var uniqueForDLD = {
-        "CTC_18": "W1AC343",
-        "DLD_2018": "W00EGS1017030",
-        "DLD_2018_ric": "W3CN15675",
-        "DLD_2021": "W1NLM1030"
-      }
-
-      var timer = setInterval(async function(){
-        if(!possibleDLDs.some(d => !lists[d])) {
-          //checkUnique()
-          console.log("all lists loaded")
-          clearInterval(timer)
-          for(const k of Object.keys(uniqueForDLD)) {
-            const link = document.createElement("img")
-            link.addEventListener('error', function(e){ console.error('error:'+k,e); })
-            link.addEventListener('load', function(e){ console.error('loaded:'+k,e); })
-            link.src = prefix + lists[k][uniqueForDLD[k]] // + "/" + uniqueForDLD[k] + "-001.pdf"
-            console.log("link:",link)
-            await new Promise(r => setTimeout(r, 150));
-          }
-
-        }
-      }, 1000)
-
+      var lists = {}, userDLD
     </script>
     <script charset="UTF-8" src="./99-DLDs/CTC_18.js"></script>
     <script charset="UTF-8" src="./99-DLDs/DLD_2018.js"></script>
     <script charset="UTF-8" src="./99-DLDs/DLD_2018_ric.js"></script>
     <script charset="UTF-8" src="./99-DLDs/DLD_2020_2021.js"></script>
     <script charset="UTF-8" src="./99-DLDs/DLD_2021.js"></script>
+    <link rel="prefetch" id="tmp-link" />
   </head>
   <body>
     <iframe id="BUDA" class="on" src="https://library.bdrc.io" name="main"></iframe>    
@@ -86,7 +35,7 @@
       </div>
     </nav>
     <iframe id="pdf" ></iframe>
-    <script src="http://localhost:3000/scripts/offlinePDFaccess.js"></script>
-    <!-- <script src="https://library.bdrc.io/scripts/offlinePDFaccess.js"></script> -->    
+    <!-- <script src="http://localhost:3000/scripts/offlinePDFaccess.js"></script> -->
+    <script src="https://library.bdrc.io/scripts/offlinePDFaccess.js"></script>    
   </body>
 </html>

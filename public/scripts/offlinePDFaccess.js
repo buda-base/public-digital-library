@@ -34,7 +34,7 @@ BUDA.src = loca
 
 window.addEventListener("message", async function (e) {              
   var tree = lists[userDLD]
-  console.log("msgEv:",e,userDLD,tree,tree["W8LS32717"]);
+  console.log("msgEv:",e,userDLD,tree);
   var data = await JSON.parse(e.data)
   if (data["open-viewer"]) {
     if(tree && pdf.className != "on"){
@@ -124,4 +124,78 @@ close.addEventListener("click",function(){
   pdf.className = "off"
   BUDA.className = "on"
 })
+      
+function checkUnique() {
+  console.log("unique?")
+  // for all DLDs
+  const dlds = Object.keys(lists)
+  for(const dld of dlds){
+    let unique = true
+    const otherDLDs = dlds.filter(d => d != dld)
+    // for all its RIDs
+    const rids = Object.keys(lists[dld])
+    for(const rid of rids) {
+      for(const o of otherDLDs) {
+        // check if it's in another DLD
+        if(lists[o][rid] && lists[o][rid] === lists[dld][rid]) {
+          unique = false
+        }
+      }
+      // this rid is unique to this DLD
+      if(unique) {
+        console.log('"'+dld+'":"'+rid+'"')
+        break;
+      } 
+    }
+  }
+}
 
+var possibleDLDs = [ "CTC_18", "DLD_2018", "DLD_2018_ric", "DLD_2020_2021", "DLD_2021" ]; 
+var uniqueForDLD = {
+  "CTC_18": "W1AC343",
+  "DLD_2018": "W00EGS1017030",
+  "DLD_2018_ric": "W3CN15675",
+  "DLD_2021": "W1NLM1030"
+}
+
+var testDLDs = [ ...possibleDLDs ], foundDLD
+var timer = setInterval(async function(){
+  if(!possibleDLDs.some(d => !lists[d])) {
+    clearInterval(timer)
+    //console.log("all lists loaded")
+    //checkUnique()
+    for(const k of Object.keys(uniqueForDLD)) {
+      const link = document.querySelector("#tmp-link")
+      link.onerror = function(e){ 
+        testDLDs = testDLDs.filter(d => d != k)
+        //console.error('error:'+k,testDLDs,foundDLD); 
+      }
+      link.onload = function(e){ 
+        foundDLD = k
+        //console.error('loaded:'+k,testDLDs,foundDLD); 
+      }
+      link.href = prefix + lists[k][uniqueForDLD[k]] // + "/" + uniqueForDLD[k] + "-001.pdf"
+      //console.log("link:",link)
+      await new Promise(r => setTimeout(r, 150));
+    }
+    if(!foundDLD && testDLDs.length === 1) { 
+      // can only be DLD_2020_2021 now, but we need to check at least one path to be sure
+      const link = document.querySelector("#tmp-link")
+      link.onload = function(e){ 
+        foundDLD = "DLD_2020_2021"
+        //console.error('loaded:'+k,testDLDs,foundDLD); 
+      }
+      link.href = prefix + lists["DLD_2020_2021"]["W27905"]
+      //console.log("link:",link)
+      await new Promise(r => setTimeout(r, 150));
+    }
+    if(foundDLD) {
+      console.log("found DLD:",foundDLD)
+      userDLD = foundDLD
+    } else {
+      alert("could not identify DLD version\nredirecting to online site")
+      window.location.href = "https://library.bdrc.io/"
+    }
+
+  }
+}, 650)
