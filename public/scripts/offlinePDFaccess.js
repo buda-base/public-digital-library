@@ -93,7 +93,7 @@ window.addEventListener("message", async function (e) {
 
 
     } 
-  } else if(data.url) {
+  } else if(data.url) {    
     let nextURL = host + data.url.path + data.url.search;          
     let search = window.location.search.replace(/([&?])url=[^&]+/,"")
     if(search && search.match(/^[?][^?]/)) search += "&"
@@ -108,7 +108,6 @@ window.addEventListener("message", async function (e) {
 
     window.history.pushState(nextState, nextTitle, nextURL);
 
-
   } else if(data.title) {
     document.title = data.title
   } else if(data.label) {
@@ -116,6 +115,21 @@ window.addEventListener("message", async function (e) {
       label = data.label.value
       console.log("label:",label)
     }
+  } else if(data.download) {
+
+    let rid = data.download.rid
+    let vol = data.download.nbVol
+
+    let src = tree[rid]
+    let file = rid+"-"+(""+vol).padStart(3,"0")+".pdf"
+    if(src) src += "/"+file
+    if(prefix) src = prefix + src
+    
+    const link = document.createElement("a")
+    link.href = src
+    link.setAttribute("download", file)
+    link.click()
+      
   }
 }, true);
 
@@ -159,7 +173,12 @@ var uniqueForDLD = {
 }
 
 var testDLDs = [ ...possibleDLDs ], foundDLD
-var timer = setInterval(async function(){
+var timer 
+
+if(window.location.host.startsWith("library.bdrc.io") || window.location.host.startsWith("localhost")) {
+  userDLD = "DLD_2018"
+  if(prefix === "./") prefix = "./99-DLDs/"
+} else timer = setInterval(async function(){
   if(!possibleDLDs.some(d => !lists[d])) {
     clearInterval(timer)
     //console.log("all lists loaded")

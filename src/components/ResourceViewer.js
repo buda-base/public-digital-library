@@ -5919,9 +5919,9 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                           [<MenuItem onClick={e => that.setState({...that.state,pdfOpen:false})}><a href={that.props.pdfUrl} target="_blank">Download</a></MenuItem>
                           ,<hr/>]
                          */}
-                         { authError && <ListItem><a className="mustLogin" onClick={() => that.props.auth.login(that.props.history.location)}>{I18n.t("resource.mustLogin")}</a></ListItem>}
+                         { !this.props.useDLD && authError && <ListItem><a className="mustLogin" onClick={() => that.props.auth.login(that.props.history.location)}>{I18n.t("resource.mustLogin")}</a></ListItem>}
                          {
-                           !authError && that.props.pdfVolumes.map(e => {
+                           (!authError || this.props.useDLD) && that.props.pdfVolumes.map(e => {
 
                               let Ploading = e.pdfFile && e.pdfFile == true
                               let Ploaded = e.pdfFile && e.pdfFile != true
@@ -5985,7 +5985,16 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
                               //console.log("pdfMenu:",e)
 
-                              return (<ListItem className="pdfMenu">
+                              const nbVol = (e.volume !== undefined?e.volume:monoVol.replace(/[^0-9]+/,""))
+                              if(this.props.useDLD)  return (<ListItem className="pdfMenu">
+                                    <b>{(e.volume !== undefined?(!e.volume.match || e.volume.match(/^[0-9]+$/)?"Volume ":"")+(e.volume):monoVol)}{I18n.t("punc.colon")}</b>
+                                    <a href="#" onClick={(ev) => {
+                                       window.top.postMessage(JSON.stringify({"download":{nbVol:""+nbVol,"rid":this.props.IRI.replace(/^bdr:/,"")}}),"*")        
+                                       ev.preventDefault()
+                                       ev.stopPropagation()
+                                    }}><span class="on">{I18n.t("resource.gener3pdf")}</span></a>                                     
+                                 </ListItem>)                              
+                              else  return (<ListItem className="pdfMenu">
                                      <b>{(e.volume !== undefined?(!e.volume.match || e.volume.match(/^[0-9]+$/)?"Volume ":"")+(e.volume):monoVol)}{I18n.t("punc.colon")}</b>
                                      <a onClick={ev => that.handlePdfClick(ev,e.link,e.pdfFile)}
                                         {...(Ploaded ?{href:e.pdfFile}:{})}
