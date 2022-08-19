@@ -113,7 +113,6 @@ import edtf, { parse } from "edtf" // see https://github.com/inukshuk/edtf.js/is
 import Cite from 'citation-js'
 let citationConfig ;
 
-
 // for full debug, type this in the console:
 // window.localStorage.debug = 'rv'
 const loggergen = new logdown('rv', { markdown: false });

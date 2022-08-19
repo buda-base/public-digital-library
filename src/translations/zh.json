@@ -262,7 +262,9 @@
       "tmp:altLabelTitle":"Variant Title",
       "tmp:hasMatch":"Exact Match",
       "tmp:hasExactMatch":"Exact Match",
-      "tmp:isExactMatch":"Exact Full Match"
+      "tmp:isExactMatch":"Exact Full Match",
+      "tmp:inDLD":"Availability on DLD",
+      "tmp:available":"Available on"
    },
    "result": {
       "open": "开放",

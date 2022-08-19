@@ -259,7 +259,9 @@
       "tmp:placeContainsDesc":"Located in (descendents)",
       "tmp:GISCoordinates":"GIS Coordinates",
       "tmp:altLabelName":"Variant Name",
-      "tmp:altLabelTitle":"Variant Title"
+      "tmp:altLabelTitle":"Variant Title",
+      "tmp:inDLD":"Availability on DLD",
+      "tmp:available":"Available on"
    },
    "guided":{
       "keyword":"keyword",

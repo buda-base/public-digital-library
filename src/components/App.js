@@ -1399,6 +1399,8 @@ class App extends Component<Props,State> {
          }
       }
       */ 
+
+      //console.log("dld?",window.top.DLD)
    }
 
    componentDidUpdate() {
@@ -1642,6 +1644,7 @@ class App extends Component<Props,State> {
 
       let hasOpenPossibly = ""
       if(label.includes("Instance") || label.includes("Scan")) hasOpenPossibly = "&f=asset,inc,tmp:possibleAccess&f=asset,inc,tmp:catalogOnly" ;
+      if(this.props.useDLD) hasOpenPossibly += (hasOpenPossibly?"&":"")+"&f=inDLD,inc,tmp:available"
 
       if(dataInfo) {
          console.log("new route:",dataInfo)

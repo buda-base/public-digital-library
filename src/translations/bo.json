@@ -262,7 +262,9 @@
       "tmp:altLabelTitle":"མཚན་བྱང་གཞན།",
       "tmp:hasMatch":"Exact Match",
       "tmp:hasExactMatch":"Exact Match",
-      "tmp:isExactMatch":"Exact Full Match"
+      "tmp:isExactMatch":"Exact Full Match",
+      "tmp:inDLD":"Availability on DLD",
+      "tmp:available":"Available"
    },
    "result": {
       "open": "ཁ་ཕྱེ།",

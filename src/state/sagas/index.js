@@ -2004,7 +2004,7 @@ function rewriteAuxMain(result,keyword,datatype,sortBy,language)
    let langPreset = state.ui.langPreset
    if(!sortBy) sortBy = state.ui.sortBy
    let reverse = sortBy && sortBy.endsWith("reverse")
-   let canPopuSort = false, isScan, isTypeScan = datatype.includes("Scan"), inRoot, partType, context, unreleased, hasExactM, isExactM, hasM
+   let canPopuSort = false, isScan, isTypeScan = datatype.includes("Scan"), inRoot, partType, context, unreleased, hasExactM, isExactM, hasM, inDLD
    let _kw = keyword.replace(/^"|"(~1)?$/g,"").replace(/[“”]/g,'"').replace(/[`‘’]/g,"'") // normalize quotes in user input   
    
    // DONE case of tibetan unicode vs wylie
@@ -2053,6 +2053,7 @@ function rewriteAuxMain(result,keyword,datatype,sortBy,language)
             hasExactM = false
             isExactM = false
             hasM = false
+            inDLD = false
 
             if(auth && !auth.isAuthenticated() || !isAdmin(auth)) {	
                let status = result[e][k].filter(k => k.type === adm+"status" || k.type === tmp+"status")	
@@ -2062,8 +2063,8 @@ function rewriteAuxMain(result,keyword,datatype,sortBy,language)
                if(status && !status.match(/Released/)) 	
                   continue; //return acc ;	
 
-            }
-            
+            }            
+
             let res = result[e][k].map(e => { 
                if(mergeLeporello && e.type === bdo+"binding") {
                   return({type:bdo+"format", value:e.value})
@@ -2074,6 +2075,11 @@ function rewriteAuxMain(result,keyword,datatype,sortBy,language)
                   return ({type:_tmp+"assetAvailability",value:e.type})
                } else if(e.type === bdo+"inRootInstance") {
                   inRoot = true
+               } else if(e.type === bdo+"instanceHasReproduction") {
+                  let qn = e.value.replace(/.*?[/]([^/]+)$/,"$1")
+                  if(window.top?.DLD[qn]) {
+                     inDLD = true
+                  }
                } else if(e.type === bdo+"partType") {
                   partType = e.value
                } else if(e.value && e.value.match && e.value.match(/[↦↤]/)) {                  
@@ -2112,6 +2118,15 @@ function rewriteAuxMain(result,keyword,datatype,sortBy,language)
                      unreleased = true
                   }
                }
+
+               if(isTypeScan && window.top?.DLD) {
+                  let qn = k.replace(/.*?[/]([^/]+)$/,"$1")
+                  if(window.top?.DLD[qn]) {
+                     inDLD = true
+                  }
+               } 
+
+
                return e
             } )
 
@@ -2131,6 +2146,9 @@ function rewriteAuxMain(result,keyword,datatype,sortBy,language)
                res.push({type:_tmp+"nonReleasedItems", value:_tmp+"show"})
             }
 
+            if(inDLD) {
+               res.push({type:_tmp+"inDLD", value:_tmp+"available"})
+            }
 
             canPopuSort = canPopuSort || (res.filter(e => e.type === tmp+"entityScore").length > 0)            
             let chunks = res.filter(e => e.type === bdo+"eTextHasChunk")
