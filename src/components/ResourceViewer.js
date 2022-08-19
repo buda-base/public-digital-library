@@ -8631,9 +8631,9 @@ perma_menu(pdfLink,monoVol,fairUse,other)
             if(_T === "Person") {
                searchUrl += "&t=Work&f=relation,exc,bdo:workIsAbout"
             } else if(_T === "Place" || serial && _T === "Work") {
-               searchUrl += "&t=Instance"
+               searchUrl += "&t=Instance"+(this.props.useDLD?"&f=inDLD,inc,tmp:available":"")
             } else if( _T === "Product") {
-               searchUrl += "&t=Scan"
+               searchUrl += "&t=Scan"+(this.props.useDLD?"&f=inDLD,inc,tmp:available":"")
             } else if(_T === "Corporation") {
                searchUrl += "&t=Person"
             } else {
