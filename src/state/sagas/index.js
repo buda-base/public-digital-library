@@ -2077,7 +2077,7 @@ function rewriteAuxMain(result,keyword,datatype,sortBy,language)
                   inRoot = true
                } else if(e.type === bdo+"instanceHasReproduction") {
                   let qn = e.value.replace(/.*?[/]([^/]+)$/,"$1")
-                  if(window.top?.DLD[qn]) {
+                  if(window.top?.DLD && window.top?.DLD[qn]) {
                      inDLD = true
                   }
                } else if(e.type === bdo+"partType") {
@@ -2121,7 +2121,7 @@ function rewriteAuxMain(result,keyword,datatype,sortBy,language)
 
                if(isTypeScan && window.top?.DLD) {
                   let qn = k.replace(/.*?[/]([^/]+)$/,"$1")
-                  if(window.top?.DLD[qn]) {
+                  if(window.top?.DLD && window.top?.DLD[qn]) {
                      inDLD = true
                   }
                } 
