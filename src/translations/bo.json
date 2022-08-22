@@ -263,8 +263,8 @@
       "tmp:hasMatch":"Exact Match",
       "tmp:hasExactMatch":"Exact Match",
       "tmp:isExactMatch":"Exact Full Match",
-      "tmp:inDLD":"Availability on DLD",
-      "tmp:available":"Available"
+      "tmp:inDLD":"སྟབས་བདེའི་དཔེ་མཛོད་ནང་ཐོབ།",
+      "tmp:available":"སྟབས་བདེའི་དཔེ་མཛོད་ནང་ཐོབ།"
    },
    "result": {
       "open": "ཁ་ཕྱེ།",

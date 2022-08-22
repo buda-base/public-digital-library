@@ -219,6 +219,18 @@ const go = () => {
 
 if(process.env.NODE_ENV !== 'test') go();
 
+window.addEventListener("message",async function(ev){
+   try {
+      const data = await JSON.parse(ev.data)
+      if(data.list) {
+         console.log("list:",data.list)
+         window.DLD = data.list
+         if(window.top) window.top.postMessage(JSON.stringify({listSent:true}), "*")
+      }
+   } catch(e) {
+      // not json => do nothing
+   }  
+})
 
 //store.dispatch(helloWorld());
 // setTimeout(function(){ store.dispatch(data.searchingKeyword("'od zer")) },  500 )

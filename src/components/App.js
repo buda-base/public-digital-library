@@ -4031,16 +4031,34 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          let sendMsg = (ev,prevent = false,resUrl) => {
 
             if(this.props.useDLD && resUrl){
-               //console.log("resU:",resUrl)
                let scans = allProps.filter(a => a.type === bdo+"instanceHasReproduction" && !a.value.includes("/resource/IE"))
                let version = allProps.filter(a => a.type === bdo+"instanceReproductionOf")               
-               if(scans.length || version.length) {
+               let hasRoot = allProps.filter(a => a.type === bdo+"inRootInstance")               
+               //console.log("resU:",resUrl,scans,version,hasRoot,allProps)
+               if(scans.length || version.length || hasRoot.length) {
                   const rid = resUrl.replace(/^[/]show[/]bdr:([^?]+)[?].*/,"$1")
                   const nbVol = allProps.filter(a => a.type === bdo+"numberOfVolumes").map(v => v.value)               
-                  window.top.postMessage(JSON.stringify({"open-viewer":{ rid, label: [ preLit ], nbVol: ""+nbVol }}),"*")        
-                  ev.preventDefault();
-                  ev.stopPropagation();
-                  return false ;
+                  if(window.DLD && window.DLD[rid]) {
+                     window.top.postMessage(JSON.stringify({"open-viewer":{ rid, label: [ preLit ], nbVol: ""+nbVol }}),"*")        
+                     ev.preventDefault();
+                     ev.stopPropagation();
+                     return false ;
+                  } else {
+                     //console.log("hR:",hasRoot)
+                     if(hasRoot.length && (hasRoot = hasRoot[0]?.value?.replace(/.*[/]M([^/]+)$/,"$1")) && window.DLD && window.DLD[hasRoot]) {
+                        window.top.postMessage(JSON.stringify({"open-viewer":{ rid, label: [ preLit ], nbVol: ""+nbVol }}),"*")        
+                        ev.preventDefault();
+                        ev.stopPropagation();
+                        return false ;                  
+                     } else {
+                        const go = window.confirm("not available on your DLD\nopen online version instead?")
+                        if(!go)  {
+                           ev.preventDefault();
+                           ev.stopPropagation();
+                           return false ;
+                        }
+                     }
+                  }
                }
             } else if(this.props.simple) {
                let otherData =  {} ;

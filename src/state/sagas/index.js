@@ -2004,7 +2004,7 @@ function rewriteAuxMain(result,keyword,datatype,sortBy,language)
    let langPreset = state.ui.langPreset
    if(!sortBy) sortBy = state.ui.sortBy
    let reverse = sortBy && sortBy.endsWith("reverse")
-   let canPopuSort = false, isScan, isTypeScan = datatype.includes("Scan"), inRoot, partType, context, unreleased, hasExactM, isExactM, hasM, inDLD
+   let canPopuSort = false, isScan, isTypeScan = datatype.includes("Scan"), isTypeVersion = datatype.includes("Instance"), inRoot, partType, context, unreleased, hasExactM, isExactM, hasM, inDLD
    let _kw = keyword.replace(/^"|"(~1)?$/g,"").replace(/[“”]/g,'"').replace(/[`‘’]/g,"'") // normalize quotes in user input   
    
    // DONE case of tibetan unicode vs wylie
@@ -2021,7 +2021,9 @@ function rewriteAuxMain(result,keyword,datatype,sortBy,language)
          flags = "u" // case sensitive in Tibetan/Wylie
       }
    }
-   //console.log("_kw:",_kw,keyword)
+   
+   console.log("_kw:",_kw,keyword,window.DLD)
+
    let _kwRegExpFullM = new RegExp("^↦.*?"+_kw+".*?↤/?$", flags), _kwRegExpM = new RegExp("↦.*?"+_kw+".*?↤", flags)
 
    let mergeLeporello = state.data.config.khmerServer
@@ -2075,9 +2077,15 @@ function rewriteAuxMain(result,keyword,datatype,sortBy,language)
                   return ({type:_tmp+"assetAvailability",value:e.type})
                } else if(e.type === bdo+"inRootInstance") {
                   inRoot = true
+                  if(window.DLD) {
+                     let qn = e.value.replace(/.*?[/]M([^/]+)$/,"$1")
+                     if(window.DLD && window.DLD[qn]) {
+                        inDLD = true
+                     }
+                  }
                } else if(e.type === bdo+"instanceHasReproduction") {
                   let qn = e.value.replace(/.*?[/]([^/]+)$/,"$1")
-                  if(window.top?.DLD && window.top?.DLD[qn]) {
+                  if(window.DLD && window.DLD[qn]) {
                      inDLD = true
                   }
                } else if(e.type === bdo+"partType") {
@@ -2119,13 +2127,12 @@ function rewriteAuxMain(result,keyword,datatype,sortBy,language)
                   }
                }
 
-               if(isTypeScan && window.top?.DLD) {
+               if(isTypeScan && window.DLD) {
                   let qn = k.replace(/.*?[/]([^/]+)$/,"$1")
-                  if(window.top?.DLD && window.top?.DLD[qn]) {
+                  if(window.DLD && window.DLD[qn]) {
                      inDLD = true
                   }
                } 
-
 
                return e
             } )

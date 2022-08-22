@@ -32,11 +32,22 @@ var label
 
 BUDA.src = loca
 
+var listSent
+function sendList(list) {
+  listSent = setInterval(function(){
+    console.log("send:",list)
+    BUDA.contentWindow.postMessage(JSON.stringify({list}),"*")
+  }, 650)
+}
+
 window.addEventListener("message", async function (e) {              
   var tree = lists[userDLD]
   //console.log("msgEv:",e,userDLD,tree);
   var data = await JSON.parse(e.data)
-  if (data["open-viewer"]) {
+  if (data["listSent"]) {
+    console.log("received!")
+    clearInterval(listSent)
+  } else if (data["open-viewer"]) {
     if(tree && pdf.className != "on"){
       let rid = data["open-viewer"].rid
       let vol = 1, nbvol = 1
@@ -164,6 +175,8 @@ function checkUnique() {
   }
 }
 
+
+
 var possibleDLDs = [ "CTC_18", "DLD_2018", "DLD_2018_ric", "DLD_2020_2021", "DLD_2021" ]; 
 var uniqueForDLD = {
   "CTC_18": "W1AC343",
@@ -178,7 +191,7 @@ var timer
 if(window.location.host.startsWith("library.bdrc.io") || window.location.host.startsWith("localhost")) {
   userDLD = "DLD_2018"
   if(prefix === "./") prefix = "./99-DLDs/"
-  window.DLD = lists[userDLD]
+  sendList(lists[userDLD])
 } else timer = setInterval(async function(){
   if(!possibleDLDs.some(d => !lists[d])) {
     clearInterval(timer)
@@ -212,7 +225,7 @@ if(window.location.host.startsWith("library.bdrc.io") || window.location.host.st
     if(foundDLD) {
       console.log("found DLD:",foundDLD)
       userDLD = foundDLD
-      window.DLD = lists[userDLD]
+      sendList(lists[userDLD])
     } else {
       alert("could not identify DLD version\nredirecting to online site")
       window.location.href = "https://library.bdrc.io/"
