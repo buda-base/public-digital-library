@@ -264,7 +264,7 @@
       "tmp:hasExactMatch":"Exact Match",
       "tmp:isExactMatch":"Exact Full Match",
       "tmp:inDLD":"Availability on DLD",
-      "tmp:available":"Available on"
+      "tmp:available":"Available"
    },
    "result": {
       "open": "开放",

@@ -3221,10 +3221,20 @@ class ResourceViewer extends Component<Props,State>
                   if(this.props.useDLD) { 
                      let nbVol =  this.getResourceElem(bdo+"numberOfVolumes")
                      if(nbVol) nbVol = nbVol.map(v => v.value)
-                     window.top.postMessage(JSON.stringify({"open-viewer":{"rid":pretty, nbVol:""+nbVol}}),"*")        
-                     ev.preventDefault();
-                     ev.stopPropagation();
-                     return false ;
+                     let rid = pretty
+                     if(window.DLD && window.DLD[rid]) {                        
+                        window.top.postMessage(JSON.stringify({"open-viewer":{rid, nbVol:""+nbVol}}),"*")        
+                        ev.preventDefault();
+                        ev.stopPropagation();
+                        return false ;
+                     } else {                           
+                        const go = window.confirm("not available on your DLD\nopen online version instead?")
+                        if(!go)  {
+                           ev.preventDefault();
+                           ev.stopPropagation();
+                           return false ;
+                        }
+                     }
                   } 
                }
 
@@ -4548,15 +4558,6 @@ class ResourceViewer extends Component<Props,State>
 
    showMirador(num?:number,useManifest?:{},click) {
 
-      /*
-      if(this.props.useDLD) { 
-         if(!this.state.openMiradorDLD) {
-            window.top.postMessage(JSON.stringify({"open-viewer":{"rid":this.props.IRI.replace(/^bdr:/,"")}}),"*")        
-            this.setState({ openMiradorDLD: true });
-         }
-         return
-      } 
-      */ 
 
       let state = { ...this.state, openMirador:true, openDiva:false, openUV:false }
 
@@ -6752,11 +6753,21 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
                let nbVol =  this.getResourceElem(bdo+"numberOfVolumes")
                if(nbVol) nbVol = nbVol.map(v => v.value)
+               let rid = this.props.IRI.replace(/^bdr:/,"")
 
-               window.top.postMessage(JSON.stringify({"open-viewer":{nbVol:""+nbVol,"rid":this.props.IRI.replace(/^bdr:/,"")}}),"*")        
-               ev.preventDefault();
-               ev.stopPropagation();
-               return false ;
+               if(window.DLD && window.DLD[rid]) {
+                  window.top.postMessage(JSON.stringify({"open-viewer":{nbVol:""+nbVol,rid}}),"*")        
+                  ev.preventDefault();
+                  ev.stopPropagation();
+                  return false ;
+               } else {                  
+                  const go = window.confirm("not available on your DLD\nopen online version instead?")
+                  if(!go)  {
+                     ev.preventDefault();
+                     ev.stopPropagation();
+                     return false ;
+                  }
+               }
             } 
             
             let location = { ...this.props.history.location, hash:"open-viewer" }
@@ -7868,28 +7879,39 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                                  g.checkDLD = (ev) => {
                                     //console.log("CDLD:",this.props.useDLD,g)
 
-                                    let loca = mapElem(g.contentLocation)
+                                    let loca = mapElem(g.contentLocation), go
                                     if(loca?.length) loca = loca[0]
                                     if(loca && loca.contentLocationInstance) {
                                        //console.log("root:",loca)
 
                                        let nbVol =  this.getResourceElem(bdo+"numberOfVolumes")
                                        if(nbVol) nbVol = nbVol.map(v => v.value)
+                                       let rid = loca.contentLocationInstance.replace(/^bdr:/,"")
                                        
-                                       window.top.postMessage(JSON.stringify({"open-viewer":{
-                                          "rid":loca.contentLocationInstance.replace(/^bdr:/,""),
-                                          "vol":loca.contentLocationVolume,
-                                          "page":loca.contentLocationPage,
-                                          "nbVol":""+nbVol
-                                       }}),"*")        
-
-                                       ev.currentTarget.closest(".details,.top").scrollIntoView()
+                                       if(window.DLD && window.DLD[rid]) {                        
+                                          window.top.postMessage(JSON.stringify({"open-viewer":{
+                                             "rid":rid,
+                                             "vol":loca.contentLocationVolume,
+                                             "page":loca.contentLocationPage,
+                                             "nbVol":""+nbVol
+                                          }}),"*")        
+                                          
+                                          ev.currentTarget.closest(".details,.top").scrollIntoView()
+                                       } else {                           
+                                          go = window.confirm("not available on your DLD\nopen online version instead?")
+                                          if(!go)  {
+                                             ev.preventDefault();
+                                             ev.stopPropagation();
+                                             return false ;
+                                          }
+                                       }
                                     }
                                     
-
-                                    ev.preventDefault();
-                                    ev.stopPropagation();
-                                    return false ;
+                                    if(!go) {
+                                       ev.preventDefault();
+                                       ev.stopPropagation();
+                                       return false ;
+                                    }
                                  }
                               }
 

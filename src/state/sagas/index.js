@@ -2022,7 +2022,7 @@ function rewriteAuxMain(result,keyword,datatype,sortBy,language)
       }
    }
    
-   console.log("_kw:",_kw,keyword,window.DLD)
+   //console.log("_kw:",_kw,keyword,window.DLD)
 
    let _kwRegExpFullM = new RegExp("^↦.*?"+_kw+".*?↤/?$", flags), _kwRegExpM = new RegExp("↦.*?"+_kw+".*?↤", flags)
 
@@ -2127,15 +2127,16 @@ function rewriteAuxMain(result,keyword,datatype,sortBy,language)
                   }
                }
 
-               if(isTypeScan && window.DLD) {
-                  let qn = k.replace(/.*?[/]([^/]+)$/,"$1")
-                  if(window.DLD && window.DLD[qn]) {
-                     inDLD = true
-                  }
-               } 
-
                return e
             } )
+
+            if(isTypeScan && window.DLD) {
+               let qn = k.replace(/.*?[/]([^/]+)$/,"$1")
+               console.log("qn:",isTypeScan,qn,window.DLD[qn])
+               if(window.DLD && window.DLD[qn]) {
+                  inDLD = true
+               }
+            } 
 
             if(t === "instances") {
                if(!inRoot) res.push({type:_tmp+"versionType", value:_tmp+"standalone"})

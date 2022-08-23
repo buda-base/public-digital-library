@@ -261,7 +261,7 @@
       "tmp:altLabelName":"Variant Name",
       "tmp:altLabelTitle":"Variant Title",
       "tmp:inDLD":"Availability on DLD",
-      "tmp:available":"Available on"
+      "tmp:available":"Available"
    },
    "guided":{
       "keyword":"keyword",
