@@ -3856,6 +3856,8 @@ html[lang="en"] .resource .data > [data-prop="bdo:creator"] h4[data-prop="bdo:ro
 .resource.etext-view [lang=bo] > span[lang],
 .resource.etext #etext-scroll [lang=bo] > span:not(.startChar) { font-family:'Tibetan Machine Uni' !important; }
 
+.resource.etext:not(#a) .data.bot-props #etext-scroll { display:none !important; }
+
 #etext-scroll > .etextPage:first-child { margin-top:20px; }
 
 .resource .data #etext-scroll,
