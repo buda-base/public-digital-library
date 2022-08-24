@@ -2734,7 +2734,7 @@ class ResourceViewer extends Component<Props,State>
                if(lang) info = infoBase[0].value 
                else info = null
                if(infoBase[0].type && (infoBase[0].type == bdo+"volumeNumber" || infoBase[0].fromKey == bdo+"volumeNumber"))  {
-                  if(parent) info = I18n.t("types.volume_num",{num:infoBase[0].value, id:shortUri(parent).replace(/^[^:]+:/,"")}) ;
+                  if(parent && isAdmin(this.props.auth)) info = I18n.t("types.volume_num",{num:infoBase[0].value, id:shortUri(parent).replace(/^[^:]+:/,"")}) ;
                   else info = I18n.t("types.volume_num_noid",{num:infoBase[0].value }) ;
                }
                else if(info && info.match(/purl[.]bdrc/)) info = null
@@ -7230,8 +7230,8 @@ perma_menu(pdfLink,monoVol,fairUse,other)
             let openD = this.state.collapse[tag+"-details"] || this.state.collapse[tag+"-details"]  === undefined && mono
 
             ret.push(<span class={'top'+ (this.state.collapse[tag]?" on":"") }>
-                  {(e.hasPart && !open) && <img src="/icons/triangle_.png" onClick={(ev) => toggle(null,root,e["@id"],!e.hasPart?"details":"",!e.hasPart && mono)} className="xpd"/>}
-                  {(e.hasPart && open) && <img src="/icons/triangle.png" onClick={(ev) => toggle(null,root,e["@id"],!e.hasPart?"details":"",!e.hasPart && mono)} className="xpd"/>}
+                  {(e.hasPart && !open) && <img src="/icons/triangle.png" onClick={(ev) => toggle(null,root,e["@id"],!e.hasPart?"details":"",!e.hasPart && mono)} className="xpd right"/>}
+                  {(e.hasPart && open) && <img src="/icons/triangle_.png" onClick={(ev) => toggle(null,root,e["@id"],!e.hasPart?"details":"",!e.hasPart && mono)} className="xpd"/>}
                   <span class={"parTy "+(e.details?"on":"")} {...e.details?{title: I18n.t("resource."+(openD?"hideD":"showD")), onClick:(ev) => toggle(ev,root,e["@id"],"details",!e.hasPart && mono)}:{title:tLabel}} >
                      {pType && parts[pType] ? <div>{parts[pType]}</div> : <div>{parts["?"]}</div> }
                   </span>
@@ -7318,8 +7318,8 @@ perma_menu(pdfLink,monoVol,fairUse,other)
             </div>
             <div>
                <div class={"root is-root"} onClick={(e) => toggle(e,root,root)} >                     
-                  { !open && [<img src="/icons/triangle_.png" className="xpd" />,colT,<span >{title}</span>]}
-                  {  open && [<img src="/icons/triangle.png" className="xpd"  />,colT,<span class='on'>{title}</span>]}
+                  { !open && [<img src="/icons/triangle.png" className="xpd right" />,colT,<span >{title}</span>]}
+                  {  open && [<img src="/icons/triangle_.png" className="xpd"  />,colT,<span class='on'>{title}</span>]}
                </div>
                { open && <div style={{paddingLeft:"50px"}}>{etextRefs}</div> }
             </div>
@@ -8191,8 +8191,8 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
                         ret.push(<span class={'top'+ (isRoot ?" is-root":"")+(this.state.collapse[tag]||osearch&&e.hasMatch?" on":"") }>
                               {((e.hasPart || e["tmp:hasNonVolumeParts"]) && open && osearch && !this.props.outlines[e['@id']]) && <span onClick={(ev) => toggle(ev,root,e["@id"],"",true,e,top)} className="xpd" title={I18n.t("resource.otherN")}><RefreshIcon /></span>}
-                              {((e.hasPart || e["tmp:hasNonVolumeParts"]) && !open && this.props.outlines[e['@id']] !== true) && <img src="/icons/triangle_.png" onClick={(ev) => toggle(null,root,togId,!e.hasPart&&!e["tmp:hasNonVolumeParts"]?"details":"",false,e,top)} className="xpd"/>}
-                              {((e.hasPart || e["tmp:hasNonVolumeParts"])&& open && this.props.outlines[e['@id']] !== true) && <img src="/icons/triangle.png" onClick={(ev) => toggle(null,root,togId,!e.hasPart&&!e["tmp:hasNonVolumeParts"]?"details":"",false,e,top)} className="xpd"/>}
+                              {((e.hasPart || e["tmp:hasNonVolumeParts"]) && !open && this.props.outlines[e['@id']] !== true) && <img src="/icons/triangle.png" onClick={(ev) => toggle(null,root,togId,!e.hasPart&&!e["tmp:hasNonVolumeParts"]?"details":"",false,e,top)} className="xpd right"/>}
+                              {((e.hasPart || e["tmp:hasNonVolumeParts"])&& open && this.props.outlines[e['@id']] !== true) && <img src="/icons/triangle_.png" onClick={(ev) => toggle(null,root,togId,!e.hasPart&&!e["tmp:hasNonVolumeParts"]?"details":"",false,e,top)} className="xpd"/>}
                               <span class={"parTy "+(e.details?"on":"")}  ref={citeRef} {...e.details?{title:/*tLabel+" - "+*/ I18n.t("resource."+(this.state.collapse[tag+"-details"]?"hideD":"showD")), onClick:(ev) => toggle(ev,root,e["@id"],"details",false,e)}:{title:tLabel}} >
                                  {pType && parts[pType] ? <div>{parts[pType]}</div> : <div>{parts["?"]}</div> }
                               </span>
@@ -8355,8 +8355,8 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   <Loader  options={{position:"fixed",left:"calc(50% + 100px)",top:"calc(50% - 20px)"}} loaded={this.props.loading !== "outline"}/>
                   <div class={"root " +(this.state.outlinePart === root || (!this.state.outlinePart && this.props.IRI===root)?"is-root":"")} >
                      { (osearch && open && (this.props.outlines[root] && !this.props.outlines[osearch].reloaded)) && <span onClick={(ev) => toggle(ev,root,root,"",true)} className="xpd" title={I18n.t("resource.otherN")}><RefreshIcon /></span>}
-                     { !open && [<img src="/icons/triangle_.png" className="xpd" onClick={(e) => toggle(e,root,root)} />,colT,<span onClick={rootClick}>{title}</span>]}
-                     {  open && [<img src="/icons/triangle.png" className="xpd" onClick={(e) => toggle(e,root,root)} />,colT,<span onClick={rootClick} class='on'>{title}</span>]}
+                     { !open && [<img src="/icons/triangle.png" className="xpd right" onClick={(e) => toggle(e,root,root)} />,colT,<span onClick={rootClick}>{title}</span>]}
+                     {  open && [<img src="/icons/triangle_.png" className="xpd" onClick={(e) => toggle(e,root,root)} />,colT,<span onClick={rootClick} class='on'>{title}</span>]}
                   </div>
                   { open && <div style={{paddingLeft:"50px"}}>{outline}</div> }
                </div>

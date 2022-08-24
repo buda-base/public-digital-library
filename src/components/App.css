@@ -2117,6 +2117,7 @@ h4:not(:hover) > .lang
 /* .resource .data#outline .is-root a:hover { text-decoration-color: #d73449;} */
 
 .resource .data#outline .root img.xpd { margin-top:3px; }
+.resource .data#outline img.xpd.right { transform:rotate(90deg); }
 /* .resource .data#outline .is-root svg.xpd { color:#d73449; margin-top:-2px; } */
 .resource .data#outline .root + div > span { display:flex; position:relative; }
 .resource .data#outline .root + div .xpd { position:absolute; left:-19px; top:3px; }
