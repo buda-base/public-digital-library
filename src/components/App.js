@@ -4053,7 +4053,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                         ev.stopPropagation();
                         return false ;                  
                      } else {
-                        const go = window.confirm("not available on your DLD\nopen online version instead?")
+                        const go = window.confirm(I18n.t("misc.DLD"))
                         if(!go)  {
                            ev.preventDefault();
                            ev.stopPropagation();

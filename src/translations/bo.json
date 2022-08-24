@@ -407,7 +407,8 @@
       "hideR": "བསྐྱར་དཔར་སྐུང་།",
       "previewN": "སྡོན་བལྟའི་ {{count}}",
       "tilt1":"Please rotate your device",
-      "tilt2":"This content is optimised for landscape mode"
+      "tilt2":"This content is optimised for landscape mode",
+      "DLD":"This text is not available on your DLD.\nWould you like to open it online instead?"
    },
    "lang": {
       "en": "ཨིན་སྐད།",

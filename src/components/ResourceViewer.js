@@ -3228,7 +3228,7 @@ class ResourceViewer extends Component<Props,State>
                         ev.stopPropagation();
                         return false ;
                      } else {                           
-                        const go = window.confirm("not available on your DLD\nopen online version instead?")
+                        const go = window.confirm(I18n.t("misc.DLD"))
                         if(!go)  {
                            ev.preventDefault();
                            ev.stopPropagation();
@@ -6761,7 +6761,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   ev.stopPropagation();
                   return false ;
                } else {                  
-                  const go = window.confirm("not available on your DLD\nopen online version instead?")
+                  const go = window.confirm(I18n.t("misc.DLD"))
                   if(!go)  {
                      ev.preventDefault();
                      ev.stopPropagation();
@@ -7898,7 +7898,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                                           
                                           ev.currentTarget.closest(".details,.top").scrollIntoView()
                                        } else {                           
-                                          go = window.confirm("not available on your DLD\nopen online version instead?")
+                                          go = window.confirm(I18n.t("misc.DLD"))
                                           if(!go)  {
                                              ev.preventDefault();
                                              ev.stopPropagation();
