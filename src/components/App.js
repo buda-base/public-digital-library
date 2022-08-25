@@ -3564,8 +3564,10 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             return ret
          }
          else if(!doLink) {
+            let hasToggle
             let langs = extendedPresets(...this.state.langPreset)
             let labels = sortLangScriptLabels(id,langs.flat,langs.translit)
+            if(prop === bdo+"biblioNote") labels = _.orderBy(labels.map(l => ({l,len:l.value?.length})), ["len"]).map(l => l.l)
             for(let i of labels) {
                let val = i["value"] 
 
@@ -3608,6 +3610,20 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   let kw = lucenequerytokeywordmulti(this.props.keyword).map(v => v.trim().replace(/[་༌།]+$/,""))                  
                   lang = val.lang
                   if(!lang) lang = val["xml:lang"]
+                  
+                  if(prop === bdo+"biblioNote") { 
+                     if(this.state.collapse[iri+"-note"] != true) {
+                        if(!val.value?.includes("↦")) val.value = val.value.replace(/^ *(([^ ]+ ){35})(.*?)$/,(m,g1,g2,g3)=>g1+(g3?" (...)":""))
+                        else { 
+                           val.value = val.value.replace(/^ *(.*?)(([^ ]+ ){17} *↦)/,(m,g1,g2,g3)=>(g1?"(...) ":"")+g2)
+                           val.value = val.value.replace(/(↤ *([^ ]+ ){17})(.*?)$/,(m,g1,g2,g3)=>g1+(g3?" (...)":""))
+                        }
+                        if(val.value.startsWith("(...)") || val.value.endsWith("(...)") || this.state.collapse[iri+"-note"] == false) hasToggle = true
+                     } else {
+                        hasToggle = true
+                     }
+                  }
+                  
                   // join by "EEEE" as it won't be affected in wylie from/to conversion 
                   if(this.props.language) {
                      kw = getLangLabel(this,"",[ { "value":kw.join("EEEE"), "lang": this.props.language } ])
@@ -3621,6 +3637,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      if(val?.value) val = val.value
                      else val = i.value
                   }
+
                }
                //console.log("1 val:",val,lang,i)
 
@@ -3633,6 +3650,14 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                                     </div>
                                  }><span className="lang">&nbsp;{lang}</span></Tooltip>
                         }</span>)
+            }
+            if(hasToggle) {
+               ret.push(
+                  <span onClick={() => this.setState({repage:true,blurSearch:true,collapse:{ ...this.state.collapse, [iri+"-note"]:!this.state.collapse[iri+"-note"]}})} 
+                     className="toggle-note" style={{display:"inline-flex", alignItems:"flex-end"}}>
+                        <span>{I18n.t(this.state.collapse[iri+"-note"]?"misc.hide":"misc.expand")}</span>
+                        {this.state.collapse[iri+"-note"]?<ExpandLess style={{fontSize:"18px"}}/>:<ExpandMore style={{fontSize:"18px"}}/>}
+                  </span>)
             }
          }
          else if(id && id.length) { 
@@ -4502,8 +4527,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
             {/* { this.getResultProp(bdo+"contentLocationStatement",allProps,false,false, [bdo+"instanceExtentStatement",bdo+"contentLocationStatement"]) } */}
 
-            { (type === "Instance" || type === "Scan" || type === "Work") && this.getResultProp(bdo+"biblioNote",allProps,true,false,[bdo+"biblioNote", bdo+"catalogInfo", rdfs+"comment", tmp+"noteMatch", bdo+"colophon", bdo+"incipit"]) }
-            { (type !== "Instance" && type !== "Scan" && type !== "Work") && this.getResultProp(bdo+"biblioNote",allProps,true,false,[ tmp+"noteMatch" ]) }
+            { (type === "Instance" || type === "Scan" || type === "Work") && this.getResultProp(bdo+"biblioNote",allProps,true,false,[bdo+"biblioNote", bdo+"catalogInfo", rdfs+"comment", tmp+"noteMatch", bdo+"colophon", bdo+"incipit"], undefined, undefined, undefined, undefined, id) }
+            { (type !== "Instance" && type !== "Scan" && type !== "Work") && this.getResultProp(bdo+"biblioNote",allProps,true,false,[ tmp+"noteMatch" ], undefined, undefined, undefined, undefined, id) }
 
             {/* { this.getResultProp(tmp+"provider",allProps) } */}
             {/* { this.getResultProp(tmp+"popularity",allProps,false,false, [tmp+"entityScore"]) } */}

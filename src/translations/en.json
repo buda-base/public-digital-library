@@ -432,7 +432,8 @@
       "previewN": "preview {{count}}",
       "tilt1":"Please rotate your device",
       "tilt2":"This content is optimised for landscape mode",
-      "DLD":"This text is not available on your DLD.\nWould you like to open it online instead?"
+      "DLD":"This text is not available on your DLD.\nWould you like to open it online instead?",
+      "expand":"Expand"
    },
    "lang": {
       "en": "English",

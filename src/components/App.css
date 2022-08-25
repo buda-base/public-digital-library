@@ -4044,20 +4044,32 @@ div[role="tooltip"]:not(.cite) > div b { font-weight:700; }
 #matches br[data-last=true], 
 #matches br[data-last=true] ~ br { display:none; }
 
+
+.toggle-note span { border-bottom:1px solid transparent;}
+
+.toggle-note,
 .uri-link { cursor:pointer; }
 
+.toggle-note { font-weight:700; }
+
+.toggle-note,
 .uri-link,
 .instance-link .urilink,
 .match .urilink,  
 .match .multi a,
 .resource .data a, a.login { text-decoration: none; color: #d73449; /*color:rgba(229, 74, 53,1);*/}
+
 a.login { text-decoration:underline; cursor:pointer; }
+
+
+.toggle-note:hover span,
 .uri-link:hover,
 .instance-link .urilink:hover,
 .match .urilink:hover, 
 .match .multi a:hover,
 .resource .data a:hover { border-bottom:1px solid #d73449; }
 
+.toggle-note a:hover,
 .resource .data#first-image a:hover { border:none; }
 
 .urilink { position:relative; }
