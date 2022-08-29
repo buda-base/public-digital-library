@@ -4722,7 +4722,7 @@ class ResourceViewer extends Component<Props,State>
          });
    };
 
-   proplink = (k,txt,count?:integer=1) => {
+   proplink = (k,txt,count?:integer=1,checkPlural = false) => {
 
 
       if(txt) console.warn("use of txt in proplink",k,txt)
@@ -4739,7 +4739,7 @@ class ResourceViewer extends Component<Props,State>
 
       if(tooltip) tooltip = getLangLabel(this, "", tooltip, false, true)
 
-      if(k === bdo+'note') txt = I18n.t("popover.notes") ;
+      if(k === bdo+'note' && !checkPlural) txt = I18n.t("popover.notes") ;
       else if(k === skos+'altLabel') { 
          const t = getEntiType(this.props.IRI)
          if(["Work","Instance","Images","Etext"].includes(t)){
@@ -8073,6 +8073,18 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                                     }
                                  }
    
+                              }
+
+                              if(showDetails && g.note) {
+                                 if(!Array.isArray(g.note)) g.note = [ g.note ]
+                                 const notes = []
+                                 for(const n of g.note) {
+                                    if(!g.details) g.details = []
+                                    let note = mapElem(g.note)
+                                    //console.log("note:",note)
+                                    if(note?.length && note[0].noteText) notes.push(note[0].noteText)
+                                 }
+                                 if(notes.length) g.details.push(<div class="sub"><h4 class="first type">{this.proplink(bdo+"note",undefined,notes.length,true)}{I18n.t("punc.colon")} </h4><div>{notes.map(n => this.format("h4","","",false, "sub",[{ value:n["@value"], lang:n["@language"], type:"literal"}]))}</div></div>)
                               }
                               
                               if(showDetails && osearch && g["tmp:colophonMatch"]) {
