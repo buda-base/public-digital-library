@@ -7742,8 +7742,8 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   if(node.length && node[0].hasPart) { 
                      if(!Array.isArray(node[0].hasPart)) node[0].hasPart = [ node[0].hasPart ]
 
-                     // expand node when it's an only child and it's a inserted volume
-                     if(node[0].hasPart.length === 1 && node[0].hasPart[0].includes(";")) { 
+                     // expand node when it's an only child and it's a inserted volume but #748 don't show results siblings unless asked for
+                     if(!osearch && node[0].hasPart.length === 1 && node[0].hasPart[0].includes(";")) { 
                         if(this.state.collapse["outline-"+root+"-"+node[0].hasPart[0]] === undefined) { 
                            let vol = mapElem(node[0].hasPart[0])
                            this.setState({collapse:{...this.state.collapse, ["outline-"+root+"-"+node[0].hasPart[0]]:true }})
