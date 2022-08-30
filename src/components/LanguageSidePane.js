@@ -87,8 +87,24 @@ class LanguageSidePane extends Component<Props,State> {
    }
 
    static getDerivedStateFromProps(props,state) {
+      //console.log("gDsFp:",state,state.custom)
       if(props.langIndex === "custom" && Array.isArray(props.langPriority?.presets["custom"]) && !state.custom?.length) { //.toString() !== props.langPriority?.presets["custom"]?.toString())
+         //console.log("custom:",props.langPriority?.presets["custom"])
          return ({...state, custom: [ ...props.langPriority?.presets["custom"] ]})
+      } else if(props.langIndex != "custom" && state.custom.length && Array.isArray(state.custom)) {
+         //console.log("not custom but",state.custom)
+         let defPref = props.langPriority?.presets["custom"]
+         if(defPref) defPref = defPref[props.locale]
+         if(defPref?.length === state.custom.length) {
+            let isDef = true
+            for(let i of defPref) {
+               if(defPref[i] != state.custom[i]) { 
+                  defPref = false
+                  break ;
+               }
+            }
+            if(defPref) return ({...state, custom: [ ]})
+         } 
       }
    }
 
@@ -96,7 +112,7 @@ class LanguageSidePane extends Component<Props,State> {
       if(!this._refs) this._refs = {}
 
        if(!this.props.langPriority) return <div></div>
-       else return Object.keys(this.props.langPriority.presets).filter(k => ["bo","en","zh","custom"].includes(k)).map((k,i) => {
+       else return Object.keys(this.props.langPriority.presets).filter(k => ["bo","en","zh","km","custom"].includes(k)).map((k,i) => {
 
          let list = this.props.langPriority.presets[k]
          if(k == "custom") { 
@@ -105,9 +121,9 @@ class LanguageSidePane extends Component<Props,State> {
             if(customlist[this.props.locale]) customlist = customlist[this.props.locale]
             if(customlist) list = customlist
             else list = list[this.props.locale]
-
-            console.log("list:",list,this.props.locale,customlist)
-         }
+            
+            //console.log("list:",list,k,this.state.custom,this.props.locale)
+         } 
          let label,subcollapse
          let disab = false ;
          if(k !== "custom") label = list.map(l => makeLangScriptLabel(l,true,true)) //.join(" + ");
@@ -152,7 +168,7 @@ class LanguageSidePane extends Component<Props,State> {
                                     if(p != '-') lang += "-" + p
                                     newList[index] = lang
                                     this.props.onSetLangPreset(newList, "custom")
-                                    this.setState({  collapse:{ ...this.state.collapse, [value]:false }})
+                                    this.setState({  custom:newList, collapse:{ ...this.state.collapse, [value]:false }})
                                     if(this.props.that) this.props.that.setState({ needsUpdate: true}); 
                                  }}>{ makeLangScriptLabel(p, false, true, part[0]) }</MenuItem>)}
                            </Popover> 
