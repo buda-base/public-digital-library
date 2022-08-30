@@ -520,7 +520,8 @@
          "incHelper": "Sanskrit or Pāli",
          "unicode": "Unicode",
          "xBdrc":"BDRC Translit.",
-         "xFemc":"FEMC Translit."
+         "xFemc":"FEMC Translit.",
+         "hani": "Original - no conversion"
       },
       "x": "Transliterated",
       "latn": "Transliterated"

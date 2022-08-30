@@ -507,7 +507,8 @@
          "latnPinyin": "Pinyin",
          "xTwktt":"Trent Walker Khmer-Tai Translit.",
          "xBdrc":"BDRC Translit.",
-         "xFemc":"FEMC Translit."
+         "xFemc":"FEMC Translit.",
+         "hani": "Original - no conversion"
       },
       "x": "Transliterated",
       "latn": "Transliterated"

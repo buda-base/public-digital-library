@@ -48,7 +48,7 @@ const bdou  = "http://purl.bdrc.io/ontology/ext/user/" ;
 
 const langSettings = {
    "bo":  [ "-", "x-ewts" ],
-   "zh":  [ "hans", "hant", "latn-pinyin" ],
+   "zh":  [ "hani", "hans", "hant", "latn-pinyin" ],
    "inc": [ "deva", "newa", "sinh", "x-iast" ],
    "km":  [ "-", "x-twktt", "x-iast" ],  
 }

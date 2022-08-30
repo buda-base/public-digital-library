@@ -491,7 +491,8 @@
          "latnPinyin": "ཕིན་ཡིག",
          "incHelper": "Sanskrit or Pāli",
          "unicode": "Unicode",
-         "xTwktt":"Trent Walker Khmer-Tai Translit."
+         "xTwktt":"Trent Walker Khmer-Tai Translit.",
+         "hani": "Original - no conversion"
       },
       "x": "སྒྲ་ཐད་བསྒྱུར།",
       "latn": "སྒྲ་ཐད་བསྒྱུར།"
