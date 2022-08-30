@@ -3646,10 +3646,10 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   
                   if(prop === bdo+"biblioNote") { 
                      if(this.state.collapse[iri+"-note"] != true) {
-                        if(!val.value?.includes("↦")) val.value = val.value.replace(/[\n\r]/gm,"").replace(/^ *(([^ ]+ ){35})(.*?)$/,(m,g1,g2,g3)=>g1+(g3?" (...)":""))
+                        if(!val.value?.includes("↦")) val.value = val.value.replace(/[\n\r]/gm," ").replace(/^ *(([^ ]+ ){35})(.*?)$/,(m,g1,g2,g3)=>g1+(g3?" (...)":""))
                         else { 
-                           val.value = val.value.replace(/[\n\r]/gm,"").replace(/^ *(.*?)(([^ ]+ ){17} *↦)/,(m,g1,g2,g3)=>(g1?"(...) ":"")+g2)
-                           val.value = val.value.replace(/[\n\r]/gm,"").replace(/(↤ *([^ ]+ ){17})(.*?)$/,(m,g1,g2,g3)=>g1+(g3?" (...)":""))
+                           val.value = val.value.replace(/[\n\r]/gm," ").replace(/^ *(.*?)(([^ ]+ ){17} *↦)/,(m,g1,g2,g3)=>(g1?"(...) ":"")+g2)
+                           val.value = val.value.replace(/[\n\r]/gm," ").replace(/(↤ *([^ ]+ ){17})(.*?)$/,(m,g1,g2,g3)=>g1+(g3?" (...)":""))
                         }
                         if(val.value.startsWith("(...)") || val.value.endsWith("(...)") || this.state.collapse[iri+"-note"] == false) hasToggle = true
                      } else {
