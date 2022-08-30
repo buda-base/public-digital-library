@@ -7668,6 +7668,23 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                               update = true                              
                            }
                         }
+                        // #729 check contentLocation from parent node if not returned by query
+                        const parent = nodes.filter(n => opart_node.length && (n.hasPart === opart_node[0]["@id"] || n.hasPart?.includes(opart_node[0]["@id"])) && n.contentLocation)
+                        if(!osearch && opart_node.length && !opart_node[0].contentLocation && parent.length) {
+                           const cLoc = nodes.filter(n => n["@id"] === parent[0].contentLocation)
+                           if(cLoc.length && cLoc[0].contentLocationVolume) {                        
+                              let vol = cLoc[0].contentLocationVolume, volElem
+                              if(vol) {
+                                 volElem = nodes.filter(v => v.volumeNumber === vol)                                                            
+                                 if(volElem.length && collapse["outline-"+root+"-"+volElem[0]["@id"]] === undefined) {                                    
+                                    //console.log("no location:", parent, cLoc, vol, volElem)
+                                    collapse["outline-"+root+"-"+volElem[0]["@id"]] = true
+                                    update = true                              
+                                    this.props.onGetOutline(volElem[0]["@id"], volElem[0], p[0]["@id"]);                              
+                                 }
+                              }
+                           }
+                        }
                      }
                   }
 
