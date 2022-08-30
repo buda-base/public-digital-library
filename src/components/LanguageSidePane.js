@@ -92,18 +92,18 @@ class LanguageSidePane extends Component<Props,State> {
          //console.log("custom:",props.langPriority?.presets["custom"])
          return ({...state, custom: [ ...props.langPriority?.presets["custom"] ]})
       } else if(props.langIndex != "custom" && state.custom.length && Array.isArray(state.custom)) {
-         //console.log("not custom but",state.custom)
          let defPref = props.langPriority?.presets["custom"]
          if(defPref) defPref = defPref[props.locale]
          if(defPref?.length === state.custom.length) {
             let isDef = true
-            for(let i of defPref) {
+            for(let i in defPref) {
                if(defPref[i] != state.custom[i]) { 
-                  defPref = false
+                  isDef = false
                   break ;
                }
             }
-            if(defPref) return ({...state, custom: [ ]})
+            //console.log("not custom but",isDef, state.custom)
+            if(isDef) return ({...state, custom: [ ]})
          } 
       }
    }
@@ -118,11 +118,11 @@ class LanguageSidePane extends Component<Props,State> {
          if(k == "custom") { 
             let customlist = this.state.custom
             if(!customlist?.length) customlist = this.props.langPriority.presets[k]            
-            if(customlist[this.props.locale]) customlist = customlist[this.props.locale]
+            if(customlist[this.props.locale]) customlist = customlist[this.props.locale]            
             if(customlist) list = customlist
             else list = list[this.props.locale]
             
-            //console.log("list:",list,k,this.state.custom,this.props.locale)
+            //console.log("list:",this.state.custom,list,k,this.props.locale)
          } 
          let label,subcollapse
          let disab = false ;
