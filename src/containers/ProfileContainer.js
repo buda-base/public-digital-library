@@ -45,7 +45,9 @@ const mapStateToProps = (state,ownProps) => {
    let langPreset = state.ui.langPreset
    let langIndex = state.ui.langIndex
 
-   let props = { userID, profile, dictionary, rightPanel, resetLink, config, locale, profileName, langPreset, langIndex }
+   let portraitPopupClosed = state.ui.portraitPopupClosed
+   
+   let props = { userID, profile, dictionary, rightPanel, resetLink, config, locale, profileName, langPreset, langIndex, portraitPopupClosed }
 
    return props
 

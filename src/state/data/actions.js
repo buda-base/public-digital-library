@@ -469,14 +469,14 @@ export const gotAssocResources = (iri: string,res:{}): Action => {
 
 
 TYPES.getContext = 'GET_CONTEXT';
-export const getContext = (iri: string,start:integer,end:integer): Action => {
+export const getContext = (iri: string,start:integer,end:integer,nb:integer): Action => {
 
    console.log("getCtx",iri,start,end)
 
     return {
         type: TYPES.getContext,
         payload: iri,
-        meta: { start, end }
+        meta: { start, end, nb, }
     }
 }
 

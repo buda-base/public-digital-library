@@ -6,9 +6,11 @@ import history from '../history';
 import {shortUri} from '../components/App';
 
 import * as rdflib from "rdflib"
+const urlParams = qs.parse(history.location.search)
 
 const onKhmerUrl = (
       window.location.host.startsWith("khmer-manuscripts")
+   || window.location.search.includes("forceCambodia=true")
    //|| window.location.host.startsWith("library-dev")
    //|| window.location.host.startsWith("localhost")
 )
@@ -165,6 +167,9 @@ export default class API {
          }
 
          //console.log("access:",{id_token,access_token,isAuth:isAuthenticated(),url,minSize,acc,cookie,xhrArgs,head});
+
+         // force refresh if ?v=... in url
+         if(urlParams.v) url += (url.includes("?")?"&":"?")+"v="+urlParams.v
 
          let response = await this._fetch( url, { method:"GET",headers:new Headers(head), ...xhrArgs } )
          //console.log("response:",response,etag)
@@ -400,8 +405,9 @@ export default class API {
             let config = store.getState().data.config.ldspdi
             let url = config.endpoints[config.index]+"/query/graph" ;            
             let searchType = "Outline_root", extraParam, isTaishoNode
-            console.log("loadO:",IRI,node,volFromUri)
+            const initParams = { IRI, searchType } 
             //if(IRI.match(/bdr:MW0T[ST]0/)) isTaishoNode = true; // quickfix for Taisho to keep working
+            //console.log("loadO:",IRI,searchType,node,volFromUri)
             if(node && !isTaishoNode) {
                if(node["tmp:hasNonVolumeParts"] == true) { 
                   if(node.volumeNumber !== undefined && node.partType === "bdr:PartTypeVolume") { 
@@ -412,9 +418,21 @@ export default class API {
                   else if(node["partType"] !== "bdr:PartTypeVolume" && node["partType"] !== "bdr:PartTypeText" && node["partType"] !== "bdr:PartTypeChapter") searchType += "_volumes"
                }
             }
+            //console.log("loadO?",initParams,IRI,searchType)
             let param = {searchType,"R_RES":IRI,"L_NAME":"","LG_NAME":"", "I_LIM":"" }
             if(extraParam) param = { ...param, ...extraParam }
-            let data = await this.getQueryResults(url, IRI, param,"GET","application/jsonld");         
+            let data 
+            // #730 fallback for case when hasNonVolumePart is true but Outline_root_volumes returns 404
+            try { 
+               data = await this.getQueryResults(url, IRI, param,"GET","application/jsonld");         
+            } catch(e) {               
+               if(e.code == 404 && node["tmp:hasNonVolumeParts"] == true) {
+                  IRI = initParams.IRI
+                  searchType = initParams.searchType
+                  param = {searchType,"R_RES":IRI,"L_NAME":"","LG_NAME":"", "I_LIM":"" }
+                  data = await this.getQueryResults(url, IRI, param,"GET","application/jsonld");         
+               }
+            }
             // use "local" node id for volume
             if(searchType.endsWith("_volumes") && data["@graph"]  && data["@graph"].length) {
                let volumes = []
@@ -710,6 +728,9 @@ export default class API {
       // let body = Object.keys(param).map( (k) => k+"="+param[k] ).join('&') +"&L_NAME="+key
       //searchType=Res_withFacet&"+param+"L_NAME=\""+key+"\"",
 
+      // force refresh if ?v=... in url
+      if(urlParams.v) param["v"] = urlParams.v
+
       var formData = new FormData();
       for (var k in param) {
           formData.append(k, param[k]);
@@ -861,7 +882,8 @@ export default class API {
                 }
                 else searchType = "etextContentFacet" //chunksFacet"
              }
-             else if(["Work","Person","Place","Instance"].includes(typ[0]))  searchType = typ[0].toLowerCase()+(["Work","Instance"].includes(typ[0])?"Facet":"")              
+             else if(["SerialWork","Work","Person","Place","Instance"].includes(typ[0]))  searchType = typ[0].toLowerCase().replace(/serialwork/,"serialWork")
+               +(["SerialWork","Work","Instance"].includes(typ[0])?"Facet":"")              
              else if(["Product"].includes(typ[0])) R_TYPE = "bdo:Collection"
              else R_TYPE = "bdo:"+typ[0]
              if(!inEtext) searchType+="Graph"
@@ -882,25 +904,46 @@ export default class API {
 
       async _getAssocResultsData(key: string,styp:string,dtyp:string): Promise<{} | null> {
          try {
-              let config = store.getState().data.config
-              let url = config.ldspdi.endpoints[config.ldspdi.index]+"/lib" ;
-              let simple = !["Work","Person","Place","Instance"].includes(dtyp)              
-              let param = {
-                 "R_RES":key,
-                  ...(
-                     config.khmerServer && styp === "Product" && dtyp === "Work"
-                     ?{"searchType":"worksInCollection","R_RES":"bdr:PR1KDPP00"}
-                     :{"searchType":"associated"+(!simple?dtyp:(styp=="Product"&&dtyp=="Scan"?"IInstance":"SimpleType"))+"s"}
-                  ),
-                  ...(simple?{R_TYPE:(["Product"].includes(dtyp)?"bdo:Collection":"bdo:"+dtyp)}:{}),
-                  "L_NAME":"","LG_NAME":"", "I_LIM":"" }
-               console.log("param:",param, key, styp, dtyp)
-              let data = this.getQueryResults(url, key, param,"GET");
-              // let data = this.getSearchContents(url, key);
+            let config = store.getState().data.config
+            let url = config.ldspdi.endpoints[config.ldspdi.index]+"/lib" ;
+            let simple = !["Work","Person","Place","Instance"].includes(dtyp)              
+            
+            // case of proxied site
+            let subscrip = key == "tmp:subscriptions" && styp == "Product"
+            if(subscrip) url = "https://ldspdi.bdrc.io"
+            
+            let param = {
+               "R_RES":key,
+               ...(
+                  config.khmerServer && styp === "Product" && dtyp === "Work"
+                  ?{"searchType":"worksInCollection","R_RES":"bdr:PR1KDPP00"}
+                  : subscrip
+                     ? {"searchType":"subscribedCollectionsGraph"}
+                     : {"searchType": "associated"+
+                           (!simple
+                              ? dtyp
+                              : (styp=="Product" && dtyp=="Scan"
+                                 ? "IInstance"
+                                 : "SimpleType"
+                              )
+                           )+"s"
+                        } 
+               ),
+               ...(simple?{R_TYPE:(["Product"].includes(dtyp)?"bdo:Collection":"bdo:"+dtyp)}:{}),
+               "L_NAME":"","LG_NAME":"", "I_LIM":"" }
+         
+            if(subscrip) { 
+               delete param["R_RES"]
+               delete param["R_TYPE"] 
+            }
 
-              return data ;
+            console.log("param:",param, key, styp, dtyp)
+            let data = this.getQueryResults(url, key, param,"GET");
+            // let data = this.getSearchContents(url, key);
+
+            return data ;
          } catch(e) {
-              throw e;
+            throw e;
          }
      }
 

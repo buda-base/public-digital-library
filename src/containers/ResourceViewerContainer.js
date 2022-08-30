@@ -155,6 +155,11 @@ const mapStateToProps = (state,ownProps) => {
 
    let etextErrors = state.data.etextErrors
 
+
+   let portraitPopupClosed = state.ui.portraitPopupClosed
+
+   let useDLD = state.ui.useDLD
+
    let props = { logged,config,resources, ontology, dictionary, keyword, language, datatype, assocResources, prefLang, failures, loading,
       imageAsset,firstImage,canvasID,collecManif,manifests,manifestError,pdfVolumes,createPdf,pdfUrl, manifestWpdf, monovolume,
       annoCollec,rightPanel,locale,langPreset,langIndex,langExt,imgData, nextChunk, nextPage, resourceManifest, imageVolumeManifests, imageLists, userEditPolicies, highlight,
@@ -165,7 +170,10 @@ const mapStateToProps = (state,ownProps) => {
       citationData,
       profileName,
       etextLang,
-      etextErrors }
+      etextErrors,
+      portraitPopupClosed,
+      useDLD 
+   }
 
    if(config && !config.auth) props.auth = false
 
@@ -213,6 +221,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       },
       onGetPages:(IRI:string,next:number=0) => {
          dispatch(data.getPages(IRI,next));
+      },
+      onGetContext:(iri:string,start:integer,end:integer,nb:integer) => {
+         dispatch(data.getContext(iri,start,end,nb));
       },
       onGetOutline:(IRI:string,node?:{},volFromUri?:string) => {
          dispatch(data.getOutline(IRI,node,volFromUri));

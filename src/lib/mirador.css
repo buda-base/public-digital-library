@@ -77,6 +77,9 @@
     font-style: normal;
 }
 
+#root > div > .resource:not([data-searchurl]) .nav-bar-top #breadcrumbs #return { display:none;  }
+#root > div > .resource:not([data-searchurl]) .nav-bar-top #breadcrumbs a#collec::before { content:none; }
+
 #viewer:not(.inApp) .mirador-hud-nav { display:none; }
 
 body:not(.inApp) .scroll-view .provider div,
@@ -86,7 +89,7 @@ body.auto_rela .inApp.mirador-container .slotIconContainer { position:absolute !
 
 /* TODO show only one scroll bar whern mirador is open & no horizontal scroll when non need*/
 
-#viewer.mirador-container { position:fixed;width:100%;height:100%;top:0;left:0;z-index:100000; overflow:auto; }
+#viewer.mirador-container { position:fixed;width:100%;height:100%;top:0;left:0;z-index:100100; overflow:auto; }
 #collection-tree > ul > li[role=treeitem]:nth-child(-n+2) { display:none; }
 /* .jstree-default .jstree-anchor {  line-height: 42px; height: 42px;  font-size: 20px; } */
 .jstree-default .jstree-icon:empty { line-height: 42px;  padding-right: 4px; }
@@ -416,4 +419,6 @@ body.auto_rela .inApp.mirador-container .slotIconContainer { position:absolute !
 
     .window-manifest-navigation { min-width:200px; }
     .window-manifest-navigation .mirador-btn.mirador-osd-fullscreen { display:none; }
+
+    .inApp .mirador-main-menu-bar .X { margin-left:8px; margin-top:-2px;}
 }       

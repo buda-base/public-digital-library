@@ -5,6 +5,7 @@ let iiifpres = "//iiifpres.bdrc.io"
 
 const onKhmerUrl = (
       window.location.host.startsWith("khmer-manuscripts")
+   || window.location.search.includes("forceCambodia=true")
    //|| window.location.host.startsWith("library-dev")
    //|| window.location.host.startsWith("localhost")
 )
@@ -107,7 +108,7 @@ if(jQ) reqFS(jQ("body")[0]);
 
 let timerConf, scrollTimer, scrollTimer2, clickTimer, inApp ;
 
-export function miradorSetUI(closeCollec, num) {
+export function miradorSetUI(closeCollec, num, withIAlink) {
 
    if(closeCollec == undefined) closeCollec = true
    if(!jQ) importModules()
@@ -115,9 +116,17 @@ export function miradorSetUI(closeCollec, num) {
    // TODO use "responsive" flag to work in library as well
    var urlParams = new URLSearchParams(window.location.search), origin = urlParams.get("origin");
    origin = origin && origin.startsWith("BDRCLibApp");
+   
+   if(origin && withIAlink) {
+      jQ("#viewer").addClass("withIAlink") 
+   } else {
+      jQ("#viewer").removeClass("withIAlink") 
+   }
+   
    if(origin || window.innerWidth < 800) { 
       jQ("#viewer").addClass("inApp");
       inApp = true
+
    }
 
 
@@ -923,11 +932,15 @@ function miradorAddZoomer() {
 
          }
 
+         let mR 
+
          if(nuW < scrollV.innerWidth()) { // && coef < 1 && maxW > scrollV.innerWidth()) {
             trX = ( scrollV.innerWidth() - nuW ) / 2
             if(maxW <  scrollV.innerWidth()) {
                trX = 0
                scrollT.addClass("transOri50")
+            } else {
+               mR = maxW - scrollV.width() + 0
             }
          } else {
             scrollT.removeClass("transOri50")
@@ -943,10 +956,13 @@ function miradorAddZoomer() {
 
             let oldH = scrollT[0].getBoundingClientRect().height;
 
+
             scrollT.css({
                "transform":"scale("+coef+") translateY("+10/coef+"px) translateX("+trX/coef+"px)",
-               ...(!inApp?{ "margin-bottom":"-50000000px" }:{})
+               ...(!inApp?{ "margin-bottom":"-50000000px" }:{}),
+               ...(!inApp&&mR?{ "margin-right":-mR+"px" }:{})
             })            
+            
             
             if(inApp) scrollV.css({            
                "margin-bottom": "calc(-1 * ("+scrollV[0].getBoundingClientRect().height+"px - "+scrollT[0].getBoundingClientRect().height+"px - 100px) )" //"-50000000px" // no more empty space at bottom 
@@ -1125,14 +1141,14 @@ export async function miradorInitView(work,lang,callerURI,locale,extManif) {
    const urlParams = new URLSearchParams(window.location.search);
    if(urlParams.get('iiifpres')) iiifpres = "//" + urlParams.get('iiifpres') 
 
-   let opt = {}
+   let opt = {}, withIAlink
 
    //const work = props.match.params.IRI;
    if(!extManif && work) {
       console.log("work",work)
 
-      const resData = await(await fetch(ldspdi+"/query/graph/ResInfo?R_RES="+work+"&format=jsonld")).json()
-      console.warn(resData, resData["@graph"]?resData["@graph"]:"", resData["@graph"]?resData["@graph"].filter(d => d["id"] == work):"")
+      const resData = await(await fetch(ldspdi+"/query/graph/ResInfo-SameAs?R_RES="+work+"&format=jsonld")).json()
+      console.warn("resData:",resData, resData["@graph"]?resData["@graph"]:"", resData["@graph"]?resData["@graph"].filter(d => d["id"] == work):"")
 
       if(resData["qualityGrade"] != undefined) opt["qualityGrade"] = resData["qualityGrade"]
 
@@ -1149,6 +1165,13 @@ export async function miradorInitView(work,lang,callerURI,locale,extManif) {
       console.log("pK",propK)
       if(propK)
       {
+         if(propK["tmp:addIALink"] === true) {
+            var origin = urlParams.get("origin");
+            origin = origin && origin.startsWith("BDRCLibApp");
+            if(origin) { 
+               withIAlink = true
+            }
+         }
          
          if(propK["instanceReproductionOf"]) {
             const repro = propK["instanceReproductionOf"]
@@ -1266,7 +1289,7 @@ export async function miradorInitView(work,lang,callerURI,locale,extManif) {
       if(window.Mirador !== undefined) {
          clearInterval(initTimer);
          window.mirador = window.Mirador( { ...cfg, windowSettings:{ ...cfg.windowSettings, ...opt } } )
-         miradorSetUI();
+         miradorSetUI(undefined, undefined, withIAlink);
       }
    })(config), 1000)
 }

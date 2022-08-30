@@ -1,7 +1,7 @@
 // @flow
 import Script from 'react-load-script';
 import AppContainer from './containers/AppContainer';
-import React, { Component } from 'react';
+import React, { Component, useContext, useEffect } from 'react';
 import { Switch, Route, Router } from 'react-router-dom';
 import history from './history';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
@@ -31,6 +31,8 @@ import Profile from './components/ProfileStatic';
 import ClearCache from "react-clear-cache";
 
 import I18n from 'i18next';
+
+import {UAContext, UserAgentProvider} from '@quentin-sommer/react-useragent'
 
 export const auth = new Auth();
 
@@ -109,11 +111,23 @@ export class Redirect404 extends Component<Props>
    {
       super(props);
 
-      // console.log("props404",props)
+      console.log("props404",props,to)
+
       let to = "/"
       if(props.to) to = props.to
 
-      setTimeout((function(that) { return function() { that.props.history.push(to) } })(this), 3000) ;
+      setTimeout((function(that) { return function() { 
+         if(that.props.simple && that.props.from  && that.props.propid) {
+            const msg = {
+               "@id":that.props.from,
+               "tmp:propid":that.props.propid,
+               "tmp:notFound":true
+            }
+            window.top.postMessage(JSON.stringify(msg), "*")
+         } else {
+            that.props.history.push(to) 
+         }
+      } })(this), 3000) ;
    }
 
    render()
@@ -138,12 +152,23 @@ const handleAuthentication = (nextState, replace) => {
   }
 }
 
+const UAContextHook = () => {
+  const {parser} = useContext(UAContext)
+  useEffect( () => {
+     const browser = parser.getBrowser()
+     if(browser?.name) document.documentElement.setAttribute('data-browser', browser.name);
+     //console.log("parser:",parser.getBrowser(),parser)
+  }, [parser])
+  return []
+}
+
 const makeMainRoutes = () => {
 
-   return (
-      
-        <Provider store={store}>
+   return (      
+      <UserAgentProvider ua={window.navigator.userAgent}>
+         <Provider store={store}>
            <MuiThemeProvider theme={theme}>
+              <UAContextHook/>
               <Router history={history}>
                 <Switch>
                      <Route exact path="/static/:DIR1/:DIR2/:DIR3/:PAGE" render={(props) => {
@@ -363,6 +388,7 @@ const makeMainRoutes = () => {
                </Router>
             </MuiThemeProvider>
          </Provider>
+      </UserAgentProvider>
   );
 }
 

@@ -9,7 +9,7 @@ import * as uiActions from '../ui/actions';
 import selectors from '../selectors';
 import store from '../../index';
 import bdrcApi, { getEntiType, ResourceNotFound } from '../../lib/api';
-import {sortLangScriptLabels, extendedPresets} from '../../lib/transliterators';
+import {sortLangScriptLabels, extendedPresets, getMainLabel} from '../../lib/transliterators';
 import {auth} from '../../routes';
 import {shortUri,fullUri,isAdmin,sublabels,subtime} from '../../components/App'
 import {getQueryParam, GUIDED_LIMIT} from '../../components/GuidedSearch'
@@ -69,12 +69,26 @@ async function initiateApp(params,iri,myprops,route,isAuthCallback) {
       localStorage.removeItem('auth0_redirect_logout')
       if(redirect && redirect.startsWith && redirect.startsWith("http")) window.location.href = redirect
       
+      let useDLD = state.ui.useDLD
+      if(params && params.useDLD && !useDLD) {
+         store.dispatch(uiActions.useDLD());
+         useDLD = true
+      } 
+
+      if(useDLD) {
+         window.top.postMessage(JSON.stringify({"url":{"path":history.location.pathname,"search":history.location.search}}),"*")
+         
+         new MutationObserver(function() {
+            //console.log("newT:",document.title);
+            window.top.postMessage(JSON.stringify({"title": document.title }),"*")
+         }).observe(document.querySelector('title'),{ childList: true });
+      }
+
       if(!state.data.config)
       {
          const config = await api.loadConfig();
 
-
-         console.log("is khmer server ?",config.khmerServer)
+         //console.log("is khmer server ?",config.khmerServer)
 
          //I18n.setHandleMissingTranslation((key, replacements) => key);
 
@@ -385,7 +399,7 @@ else if(params && params.q) {
 
    let dontGetDT = false
    let pt = params.t
-   if(pt && !pt.match(/,/) && ["Place", "Person","Work","Etext", "Topic","Role","Corporation","Lineage","Instance","Product", "Scan"].indexOf(pt) !== -1)  {
+   if(pt && !pt.match(/,/) && ["Place", "Person","SerialWork","Work","Etext", "Topic","Role","Corporation","Lineage","Instance","Product", "Scan"].indexOf(pt) !== -1)  {
 
       let inEtext
       if(params.r && pt === "Etext") inEtext = params.r
@@ -436,6 +450,7 @@ else if(params && params.q) {
 else if(params && params.r) {
    let t = getEntiType(params.r)
    if(["Instance", "Images", "Volume", "Scan"].includes(t) || ["bdo:SerialWork"].includes(params.r) ) t = "Work"
+   if(params.r === "tmp:subscriptions") t = "Product"
 
    loggergen.log("state r",t,state.data.searches,params,iri)
 
@@ -449,9 +464,9 @@ else if(params && params.r) {
    }
    else {
       store.dispatch(uiActions.loading(params.r, false));
-      if(state.data.searches[params.t] && state.data.searches[params.t][params.r+"@"] && state.data.searches[params.t][params.r+"@"].metadata) {
+      if(state.data.searches[params.t] && state.data.searches[params.t][params.r+"@"]) { 
          store.dispatch(dataActions.foundResults(params.r,"", state.data.searches[params.t][params.r+"@"], params.t));
-         store.dispatch(dataActions.foundFacetInfo(params.r,"", [params.t],state.data.searches[params.t][params.r+"@"].metadata ));
+         if(state.data.searches[params.t][params.r+"@"].metadata) store.dispatch(dataActions.foundFacetInfo(params.r,"", [params.t],state.data.searches[params.t][params.r+"@"].metadata ));
       }
    }
 }
@@ -506,6 +521,7 @@ function extractAssoRes(iri,res) {
    let allowK = [ skos+"prefLabel", skos+"altLabel", tmp+"withSameAs", bdo+"inRootInstance", bdo+"language", adm+"canonicalHtml", bdo+"partIndex", bdo+"volumeNumber", tmp+"thumbnailIIIFService", bdo+"instanceHasReproduction",
                   tmp+"nbTranslations", tmp+"provider", rdfs+"comment", rdf+"type", bdo+"note", bdo+"script", bdo+"partOf", bdo+"partType", bdo+"isComplete", bdo+"instanceOf", bdo+"instanceEvent", bdo+"instanceHasItem",
                   bdo+"material", bdo+"biblioNote", bdo+"sponsoshipStatement", bdo+"sponsorshipStatement", bdo+"ownershipStatement", rdfs+"seeAlso",
+                  bdo+"creator", 
                   // #562 there must be something weird in the data here... but can't apply same fix as usual because it removes data (from ToL)
                   //bdo+"personGender", bdo+"personName", bdo+"personStudentOf", bdo+"personTeacherOf", tmp+"hasAdminData", owl+"sameAs"
                    ]
@@ -514,11 +530,16 @@ function extractAssoRes(iri,res) {
    for(let k of Object.keys(res)) {                  
       _res[k] = { ...res[k], ..._res[k] }
       if(_res[k][bdo+"instanceEvent"]) {
-         _res[k][bdo+"instanceEvent"] = _res[k][bdo+"instanceEvent"].reduce( (acc,e) => { 
-            if(res[e.value] && res[e.value][bdo+"eventWho"]) {
-               return ([...acc,...res[e.value][bdo+"eventWho"].map(f => ({fromEvent:e.value,type:'uri',value:f.value}) ) ])
+         _res[k][bdo+"instanceEvent"] = _res[k][bdo+"instanceEvent"].reduce( (acc,e) => {             
+            if(res[e.value] && res[e.value][bdo+"eventWho"]?.length) {
+               // DONE: must also check what's in eventWho (ok for bdr:MW23703_4150 but not bdr:MW3KG19)
+               let who = res[res[e.value][bdo+"eventWho"][0].value]
+               //console.log("who:",who)
+               if(who[rdf+"type"]?.some(t => t.value === bdo+"AgentAsCreator")) {
+                  return ([...acc,...res[e.value][bdo+"eventWho"].map(f => ({fromEvent:e.value,type:'uri',value:f.value}) ) ])
+               }
             }
-            else return ([...acc, e])
+            return ([...acc, e])
          },[])
          /*
          _res[k][bdo+"instanceEvent"] = _res[k][bdo+"instanceEvent"].map(e => {
@@ -768,23 +789,52 @@ async function getContext(iri,start,end,nb:integer = 1000) {
 
    let state = store.getState()
 
-   store.dispatch(dataActions.gotAssocResources(state.data.keyword, { data: dict }))
-
-
    let results, t = "Etext", uri = fullUri(iri), chunk
    if(state.data.searches[t] && state.data.searches[t][state.data.keyword+"@"+state.data.language]) results = state.data.searches[t][state.data.keyword+"@"+state.data.language]
+
+   if(results) store.dispatch(dataActions.gotAssocResources(state.data.keyword, { data: dict }))
+
    if(results && results.results && results.results.bindings && results.results.bindings['etexts'] && results.results.bindings['etexts'][uri]) { 
       
       results.results.bindings['etexts'][uri] = results.results.bindings['etexts'][uri].concat(inInst.filter(e => results.results.bindings['etexts'][uri].filter(f => f.type === tmp+"inInstance" && f.value === fullUri(e["id"])).length === 0).map(e => ({value:fullUri(e["id"]),type:tmp+"inInstance"})))      
 
       chunk = results.results.bindings['etexts'][uri].filter(e => e.startChar == start && e.endChar == end)
-      if(chunk.length) chunk[0].inPart = inInstP.map(e => fullUri(e["id"]))
+      //console.log("iIP:",inInstP,sav)
+      if(chunk.length && inInstP.length) chunk[0].inPart = [...new Set(inInstP.map(e => fullUri(e["id"])))].sort()
 
    }
 
    //loggergen.log("ctx",chunk,results.results.bindings['etexts'][uri],results,inInst,inInstP,data)
    
-   store.dispatch(dataActions.foundResults(state.data.keyword, state.data.language, results,["Etext"]))
+   if(results) { 
+      store.dispatch(dataActions.foundResults(state.data.keyword, state.data.language, results,["Etext"]))
+   } else {
+      const inP = sav.filter(e => e.seqNum !== undefined)
+      const labels = sav.filter(e => inP.some(f => f["tmp:inInstancePart"]?.some(g => g.id === e.id)))
+      console.log("inPart:", iri, inP, labels)
+      let data = {} 
+      inP.map(e => {
+         let iIp = e["tmp:inInstancePart"]
+         if(iIp) {
+            if(!Array.isArray(iIp)) iIp = [ iIp ] 
+            data[fullUri(e.id)] = [
+               ...iIp.map(i => ({ type: _tmp+"inInstancePart", value: i.id }))
+            ]
+         } else data[fullUri(e.id)] = []
+      })
+      labels.map( e => {
+         let label = e["skos:prefLabel"]
+         if(!Array.isArray(label)) label = [ label]
+         data[fullUri(e.id)] = label.map(l =>({ 
+            type:skos+"prefLabel",
+            value:l["@value"],
+            lang:l["@language"]
+         }))
+      })      
+      
+      store.dispatch(dataActions.gotAssocResources(iri, { data }))
+      
+   }
    store.dispatch(dataActions.gotContext(state.data.keyword+"@"+state.data.language,iri,start,end,data))
    store.dispatch(uiActions.loading(null, false));
 
@@ -796,7 +846,7 @@ export function* watchGetContext() {
       dataActions.TYPES.getContext,
       (action) => { 
          store.dispatch(uiActions.loading(null, true));
-         getContext(action.payload,action.meta.start,action.meta.end)
+         getContext(action.payload,action.meta.start,action.meta.end,action.meta.nb)
       }
    );
 }
@@ -836,7 +886,7 @@ async function getChunks(iri,next,nb = 10000,useContext = false) {
 
          if(hilight && hilight.lang === clang && cval) cval = cval.replace(new RegExp("("+hilight.value+")","g"),"↦$1↤")
 
-         return ({ value:cval, lang:clang, start:e.sliceStartChar, end:e.sliceEndChar}) 
+         return ({ value:cval, lang:clang, start:e.sliceStartChar, end:e.sliceEndChar, id:fullUri(e.id)}) 
       }); //+ " ("+e.seqNum+")" }))
 
       //loggergen.log("dataC",iri,next,data)
@@ -939,7 +989,8 @@ async function getPages(iri,next) {
                language:lang,
                seq:e.seqNum,
                start:e.sliceStartChar,
-               end:e.sliceEndChar        
+               end:e.sliceEndChar,
+               id: fullUri(e.id)
             }
          
       }).filter(e => e); //+ " ("+e.seqNum+")" }))
@@ -2051,7 +2102,29 @@ function rewriteAuxMain(result,keyword,datatype,sortBy,language)
    let langPreset = state.ui.langPreset
    if(!sortBy) sortBy = state.ui.sortBy
    let reverse = sortBy && sortBy.endsWith("reverse")
-   let canPopuSort = false, isScan, isTypeScan = datatype.includes("Scan"), inRoot, partType, context, unreleased
+   let canPopuSort = false, isScan, isTypeScan = datatype.includes("Scan"), isTypeVersion = datatype.includes("Instance"), inRoot, partType, context, unreleased, hasExactM, isExactM, hasM, inDLD
+   let _kw = keyword.replace(/^"|"(~1)?$/g,"").replace(/[“”]/g,'"').replace(/[`‘’]/g,"'") // normalize quotes in user input   
+   
+   // DONE case of tibetan unicode vs wylie
+   let flags = "iu"   
+   // #741 first quickfix
+   if(!keyword.includes(" AND ")){ 
+      if(language === "bo") { 
+         let translit = getMainLabel([ { lang: language, value: _kw } ], extendedPresets([ "bo-x-ewts" ]))
+         _kw = "(("+_kw+")|("+translit?.value?.replace(/[_ ]/g,"[_ ]")+(translit?.value?.endsWith("/")?"?":"/?") +"))"      
+         flags = "u" // case sensitive in Tibetan/Wylie
+      } else if(language === "bo-x-ewts") { 
+         let translit = getMainLabel([ { lang: language, value: _kw } ], extendedPresets([ "bo" ]))
+         _kw = "(("+_kw.replace(/[_ ]/g,"[_ ]")+(_kw.endsWith("/")?"?":"/?")+")|("+translit?.value+"))"      
+         flags = "u" // case sensitive in Tibetan/Wylie
+      }
+   }
+   
+   //console.log("_kw:",_kw,keyword,window.DLD)
+
+   let _kwRegExpFullM = new RegExp("^↦.*?"+_kw+".*?↤/?$", flags), _kwRegExpM = new RegExp("↦.*?"+_kw+".*?↤", flags)
+
+   let mergeLeporello = state.data.config.khmerServer
 
    result = Object.keys(result).reduce((acc,e)=>{
       if(e === "main") {
@@ -2077,6 +2150,10 @@ function rewriteAuxMain(result,keyword,datatype,sortBy,language)
             partType = ""
             context = []
             unreleased = false
+            hasExactM = false
+            isExactM = false
+            hasM = false
+            inDLD = false
 
             if(auth && !auth.isAuthenticated() || !isAdmin(auth)) {	
                let status = result[e][k].filter(k => k.type === adm+"status" || k.type === tmp+"status")	
@@ -2086,19 +2163,35 @@ function rewriteAuxMain(result,keyword,datatype,sortBy,language)
                if(status && !status.match(/Released/)) 	
                   continue; //return acc ;	
 
-            }
-            
+            }            
+
             let res = result[e][k].map(e => { 
-               if(e.type === bdo+"isComplete" && e.value=="true") {
+               if(mergeLeporello && e.type === bdo+"binding") {
+                  return({type:bdo+"format", value:e.value})
+               } else if(e.type === bdo+"isComplete" && e.value=="true") {
                   return ({type:_tmp+"completion", value:_tmp+"complete"})
                } else if(asset.includes(e.type) && e.value == "true") {
                   if(isTypeScan && e.type === _tmp+"hasImage") isScan = true ; 
                   return ({type:_tmp+"assetAvailability",value:e.type})
                } else if(e.type === bdo+"inRootInstance") {
                   inRoot = true
+                  if(window.DLD) {
+                     let qn = e.value.replace(/.*?[/]M([^/]+)$/,"$1")
+                     if(window.DLD && window.DLD[qn]) {
+                        inDLD = true
+                     }
+                  }
+               } else if(e.type === bdo+"instanceHasReproduction") {
+                  let qn = e.value.replace(/.*?[/]([^/]+)$/,"$1")
+                  if(window.DLD && window.DLD[qn]) {
+                     inDLD = true
+                  }
                } else if(e.type === bdo+"partType") {
                   partType = e.value
                } else if(e.value && e.value.match && e.value.match(/[↦↤]/)) {                  
+
+                  e.value = e.value.replace(/↤\/_↦/g,"/_")
+
                   if([_tmp+"nameMatch",_tmp+"labelMatch"].includes(e.type)) {
                      if(["works","instances","scans","etexts"].includes(t)) {
                         if(!context.includes(_tmp+"titleContext")) context.push(_tmp+"titleContext")
@@ -2108,13 +2201,40 @@ function rewriteAuxMain(result,keyword,datatype,sortBy,language)
                   } else {
                      if(!context.includes(e.type)) context.push(e.type)
                   } 
+
+                  hasM = true
+
+                  // #741 first quickfix
+                  if(!keyword.includes(" AND ")){
+                     // #718 check if match is full/exact
+                     if(e.value.match(_kwRegExpM)) {                                          
+                        //console.log("exact:",e)
+                        hasExactM = true
+                        if(e.value.match(_kwRegExpFullM)) {
+                           //console.log("full exact")
+                           isExactM = true
+                        } 
+                     } else {
+                        //console.log("exact?",e,_kw)
+                     }
+                  }
+
                } else if(e.type === _tmp+"status" && e.value) {
                   if(!e.value.match(/Released/)) { 
                      unreleased = true
                   }
                }
+
                return e
             } )
+
+            if(isTypeScan && window.DLD) {
+               let qn = k.replace(/.*?[/]([^/]+)$/,"$1")
+               console.log("qn:",isTypeScan,qn,window.DLD[qn])
+               if(window.DLD && window.DLD[qn]) {
+                  inDLD = true
+               }
+            } 
 
             if(t === "instances") {
                if(!inRoot) res.push({type:_tmp+"versionType", value:_tmp+"standalone"})
@@ -2132,7 +2252,9 @@ function rewriteAuxMain(result,keyword,datatype,sortBy,language)
                res.push({type:_tmp+"nonReleasedItems", value:_tmp+"show"})
             }
 
-
+            if(inDLD) {
+               res.push({type:_tmp+"inDLD", value:_tmp+"available"})
+            }
 
             canPopuSort = canPopuSort || (res.filter(e => e.type === tmp+"entityScore").length > 0)            
             let chunks = res.filter(e => e.type === bdo+"eTextHasChunk")
@@ -2163,6 +2285,19 @@ function rewriteAuxMain(result,keyword,datatype,sortBy,language)
                   //loggergen.log("full",content.value)
                   //loggergen.log("expand",expand.value)
 
+                  // #741 first quickfix
+                  if(!keyword.includes(" AND ")){
+                     // #718 check if match is exact
+                     if(content?.value && content.value.match &&  content.value.match(/[↦↤]/)) {
+                        hasM = true   
+                        content.value = content.value.replace(/↤\/_↦/g,"/ ")
+                        if(content.value.match(_kwRegExpM)) {                                          
+                           //console.log("exact:",e)
+                           hasExactM = true
+                        }
+                     }
+                  }
+
                   return { e, n, m, p, content, expand }
                })
                chunks = _.orderBy(chunks, ['n','m'], ['desc','asc'])
@@ -2174,6 +2309,13 @@ function rewriteAuxMain(result,keyword,datatype,sortBy,language)
 
                if(chunks.length > 1) res = res.concat(chunks.slice(1).map(e => ({...e.e, expand:e.expand, startChar:e.m, endChar:e.p})))
             }
+
+            if(hasM) {
+               if(hasExactM) res.push({type:_tmp+"hasMatch", value:_tmp+"hasExactMatch"})
+               if(isExactM) res.push({type:_tmp+"hasMatch", value:_tmp+"isExactMatch"})
+            }
+
+
 
             
             //if(isTypeScan && !isScan) return ({...acc})

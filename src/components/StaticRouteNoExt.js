@@ -38,6 +38,7 @@ export class StaticRouteNoExt extends Component<State, Props>
                 this.updateContent();
             } 
         }, 10);
+        /*
         const isMobile = window.matchMedia("only screen and (max-width: 800px)").matches;
         if (isMobile) {
             var viewport = document.querySelector('meta[name="viewport"]');
@@ -46,12 +47,20 @@ export class StaticRouteNoExt extends Component<State, Props>
                 viewport.content = "width=800";
             }
         }
+        */
     }
 
     componentDidUpdate() { 
         this._urlParams = qs.parse(history.location.search) 
+        //console.log("u:", I18n.language, this.state.locale, this.props.locale)
         if(I18n.language && this.state.locale !== this.props.locale || this.state.route != this.props.dir+"/"+this.props.page ) {
-            if(this.state.route != this.props.dir+"/"+this.props.page) this.setState({ route: this.props.dir+"/"+this.props.page })
+            if(this.state.route != this.props.dir+"/"+this.props.page) { 
+                this.setState({ route: this.props.dir+"/"+this.props.page, 
+                    collapse:{ ...this.state.collapse, navMenu: false }
+                })
+                window.scrollTo(0,0);
+            }
+
             this.updateContent();  
         }
         /* // impossible to get iframe content height without js code server-side
@@ -72,6 +81,8 @@ export class StaticRouteNoExt extends Component<State, Props>
 
     async updateContent() {
 
+        //console.log("content!",  I18n.language, this.state.locale, this.props.locale)
+
         const budaxIframePatch = (html) => {
             html = html.replace(/src="(https:\/\/shimowendang.com\/[^?"]+)[^"]*/g, (m,g1) => {
                 //console.log("replaced:",m)
@@ -81,17 +92,19 @@ export class StaticRouteNoExt extends Component<State, Props>
             })
             return html
         }
-
-        window.fetch("/scripts/static/"+this.props.dir+"/"+this.props.page+"."+I18n.language+".html").then(async (data) => {        
+        const loading = this.props.locale
+        window.fetch("/scripts/static/"+this.props.dir+"/"+this.props.page+"."+this.props.locale+".html").then(async (data) => {        
             let content = await data.text()
+            if(loading !== this.props.locale) return
+
             //console.log("data?",data,content)
             // #561
             if(this.props.dir.includes("budax/")) {
                 content = budaxIframePatch(content)
                 //console.log("patched:",content)
             }
-            if(!content.includes("You need to enable JavaScript to run this app.")) this.setState({content,locale:I18n.language})
-            else this.setState({error:true,locale:I18n.language})
+            if(!content.includes("You need to enable JavaScript to run this app.")) this.setState({content,locale:this.props.locale})
+            else this.setState({error:true,locale:this.props.locale})
         })
     }
 

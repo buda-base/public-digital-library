@@ -1,0 +1,41 @@
+<html>
+  <head> 
+    <title>BUDA - Buddhist Digital Archives</title>
+    <!-- <link rel="stylesheet" href="http://localhost:3000/scripts/offlinePDFaccess.css"/> -->
+    <link rel="stylesheet" href="https://library.bdrc.io/scripts/offlinePDFaccess.css"/>
+    <script>
+      var lists = {}, userDLD
+    </script>
+    <script charset="UTF-8" src="./99-DLDs/CTC_18.js"></script>
+    <script charset="UTF-8" src="./99-DLDs/DLD_2018.js"></script>
+    <script charset="UTF-8" src="./99-DLDs/DLD_2018_ric.js"></script>
+    <script charset="UTF-8" src="./99-DLDs/DLD_2020_2021.js"></script>
+    <script charset="UTF-8" src="./99-DLDs/DLD_2021.js"></script>
+    <link rel="prefetch" id="tmp-link" />
+  </head>
+  <body>
+    <iframe id="BUDA" class="on" src="https://library.bdrc.io" name="main"></iframe>    
+    <nav id="top" class="">
+      <div>
+        <div id="logo">
+          <a href="https://library.bdrc.io/" id="buda" target="main" onclick="javascript:document.querySelector('#close').click();">
+              <img src="https://library.bdrc.io/icons/BUDA-small.svg">
+              <span>BUDA</span>
+          </a>
+          <a id="by"><span>by</span></a>
+          <a href="https://bdrc.io/" target="_blank" id="bdrc"><span>BDRC</span></a>
+          <a href="https://bdrc.io" target="_blank"><img src="https://library.bdrc.io/BDRC-Logo_.png"></a>
+        </div>
+        <div id="breadcrumbs">
+          <a id="close" class="active"><span>return to BUDA</span></a>
+          <!-- <a id="collec"><span>Browse collection</span></a> -->
+          <a id="volume"><span>Volume</span></a>
+          <div id="selector"><div><span class="selected">Volume 1</span><span>Volume 2</span></div></div> 
+        </div>
+      </div>
+    </nav>
+    <iframe id="pdf" ></iframe>
+    <!-- <script src="http://localhost:3000/scripts/offlinePDFaccess.js"></script> -->
+    <script src="https://library.bdrc.io/scripts/offlinePDFaccess.js"></script>    
+  </body>
+</html>

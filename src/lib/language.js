@@ -14,6 +14,8 @@ export const langScripts = {
    "khmr":"lang.langscript.km",
    "x-twktt":"lang.langscript.xTwktt",
    "x-ndia":"lang.langscript.xNdia",
+   "x-bdrc":"lang.langscript.xBdrc",
+   "x-femc":"lang.langscript.xFemc",
 }
 
 const dataLangUI = {

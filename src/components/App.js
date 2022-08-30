@@ -28,6 +28,7 @@ import WarnIcon from '@material-ui/icons/Warning';
 import SearchIcon from '@material-ui/icons/Search';
 import Settings from '@material-ui/icons/SettingsSharp';
 import TranslateIcon from '@material-ui/icons/Translate';
+import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import Apps from '@material-ui/icons/Apps';
 import Close from '@material-ui/icons/Close';
 import Cancel from '@material-ui/icons/Cancel';
@@ -60,17 +61,18 @@ import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faLanguage,faUserCircle,faSignOutAlt,faSlidersH } from '@fortawesome/free-solid-svg-icons'
 import qs from 'query-string'
-import store from "../index"
 import FormGroup from '@material-ui/core/FormGroup';
 import Popover from '@material-ui/core/Popover';
 import $ from 'jquery' ;
 import {CopyToClipboard} from 'react-copy-to-clipboard' ;
 import LazyLoad from 'react-lazyload';
 
-import {Map,TileLayer,LayersControl,Marker,Popup,GeoJSON,Popup as MapPopup} from 'react-leaflet' ;
-import { GoogleLayer } from "react-leaflet-google" ;
+import {MapContainer,TileLayer,LayersControl,Marker,Popup,GeoJSON,Popup as MapPopup} from 'react-leaflet' ;
+import ReactLeafletGoogleLayer from "react-leaflet-google-layer" ;
 import L from 'leaflet';
 import { GestureHandling } from "leaflet-gesture-handling";
+import MarkerClusterGroup from 'react-leaflet-cluster';
+import 'leaflet.markercluster.freezable';
 
 import 'leaflet/dist/leaflet.css';
 import "leaflet-gesture-handling/dist/leaflet-gesture-handling.css";
@@ -82,6 +84,8 @@ import ReactGA from 'react-ga';
 import I18n from 'i18next';
 import { Trans } from 'react-i18next'
 
+import axios from "axios"
+
 
 import LanguageSidePaneContainer from '../containers/LanguageSidePaneContainer';
 import ResourceViewerContainer from '../containers/ResourceViewerContainer';
@@ -92,6 +96,8 @@ import {narrowWithString} from "../lib/langdetect"
 import {sortLangScriptLabels, extendedPresets, getMainLabel} from '../lib/transliterators';
 import './App.css';
 import Footer from "./Footer"
+import store from "../index"
+import {closePortraitPopup} from "../state/ui/actions"
 
 import {svgEtextS,svgImageS} from "./icons"
 
@@ -157,7 +163,7 @@ export const prefixes = Object.values(prefixesMap) ;
 export const sameAsMap = { wd:"WikiData", ol:"Open Library", ola:"Open Library", bdr:"BDRC", mbbt:"Marcus Bingenheimer", eftr:"84000" }
 
 // TODO: example C1 P1 G10 W1 WA1 MW1 R37 IE23703 I1KG9127 UT4CZ5369_I1KG9127_0000 (with bda:)PR0ET003
-export const RIDregexp = /(^([^:]+:)?([cpgwrti]|mw|wa|ws|ut|ie|pr)(\d|eap)[^ ]*$)/i
+export const RIDregexp = /(^([^:]+:)?([cpgwrti]|mw|was?|ws|ut|ie|pr)(\d|eap)[^ ]*$)/i
 
 export function fullUri(id:string, force:boolean=false) {   
    if(id && !id.replace) {
@@ -182,9 +188,10 @@ export function shortUri(id:string, nobdo?:boolean=false) {
 console.log("loca:",window.location.hostname)
 
 const onKhmerUrl = (
-      window.location.host.startsWith("khmer-manuscripts")
-  // || window.location.host.startsWith("library-dev")
-  // || window.location.host.startsWith("localhost")
+      window.location.host.startsWith("khmer-manuscripts")   
+   || window.location.search.includes("forceCambodia=true")
+   //|| window.location.host.startsWith("library-dev")
+   //|| window.location.host.startsWith("localhost")
 )
 
 
@@ -431,21 +438,20 @@ export function highlight(val,k,expand,newline,force)
 
          // DONE "manually" add the ↦
          if(!Array.isArray(k)) 
-            val = val.replace(new RegExp("("+k.replace(/[ -'ʾʼʹ‘_/  \(\)\[\]0-9\n\r།]+/igu,"[ -'ʾʼʹ‘_/  \\(\\)\\[\\]0-9\n\r།]+")+")","igu"),"↦$1↤")
+            val = val.replace(new RegExp("("+k.replace(/[+]/g,"\\+").replace(/[ -'ʾʼʹ‘_/  \(\)\[\]0-9\n\r།]+/igu,"[ -'ʾʼʹ‘_/  \\(\\)\\[\\]0-9\n\r།]+")+")","igu"),"↦$1↤")
          else for(let key of k) { // advanced query
-            val =  val.replace(new RegExp("("+key.replace(/[ -'ʾʼʹ‘_/  \(\)\[\]0-9\n\r།]+/igu,"[ -'ʾʼʹ‘_/  \\(\\)\\[\\]0-9\n\r།]+")+")","igu"),"↦$1↤")
+            val =  val.replace(new RegExp("("+key.replace(/[+]/g,"\\+").replace(/[ -'ʾʼʹ‘_/  \(\)\[\]0-9\n\r།]+/igu,"[ -'ʾʼʹ‘_/  \\(\\)\\[\\]0-9\n\r།]+")+")","igu"),"↦$1↤")
          }
       } else {
          if(!Array.isArray(k)) 
-            val = val.replace(new RegExp("("+k.replace(/[ -'ʾʼʹ‘_/  \(\)\[\]\n\r།]+/igu,"[ -'ʾʼʹ‘_/  \\(\\)\\[\\]\n\r།]+")+")","igu"),"↦$1↤")
+            val = val.replace(new RegExp("("+k.replace(/[+]/g,"\\+").replace(/[ -'ʾʼʹ‘_/  \(\)\[\]\n\r།]+/igu,"[ -'ʾʼʹ‘_/  \\(\\)\\[\\]\n\r།]+")+")","igu"),"↦$1↤")
          else for(let key of k) { // advanced query
-            val =  val.replace(new RegExp("("+key.replace(/[ -'ʾʼʹ‘_/  \(\)\[\]\n\r།]+/igu,"[ -'ʾʼʹ‘_/  \\(\\)\\[\\]\n\r།]+")+")","igu"),"↦$1↤")
+            val =  val.replace(new RegExp("("+key.replace(/[+]/g,"\\+").replace(/[ -'ʾʼʹ‘_/  \(\)\[\]\n\r།]+/igu,"[ -'ʾʼʹ‘_/  \\(\\)\\[\\]\n\r།]+")+")","igu"),"↦$1↤")
          }
       }
 
       //console.log("k:",val,k.replace(/[ -'ʾ_/  \[\]0-9\n\r།]+/gu,"[ -'ʾ_/  \\[\\]0-9\n\r།]+"))
    }
-
 
    val = val.replace(/(\[[^\]]*?)([↦])([^\]]*?\])/g,"$1$3$2");
    val = val.replace(/(\[[^\]]*?)([↤])([^\]]*?\])/g,"$2$1$3");
@@ -458,9 +464,10 @@ export function highlight(val,k,expand,newline,force)
       //loggergen.log("e:",_idx,e,e.length,newline,force)
 
       const prepNewL = (w) => {
+         //console.log("split:",w,w.split("\n"))
          return w.split("\n").reduce( (acc,k) => {
             let ret = [ ]
-            if(acc.length && k?.match(/[^ \n\r]/)) ret.push(<br/>)
+            if(acc.length && (!k || k?.match(/[^ \n\r]/))) ret.push(<br/>) // fix for https://youtu.be/Qmxr-p-7Od8?t=4090
             ret.push(k)
             return acc.concat(ret)
          },[])
@@ -738,8 +745,9 @@ export function lang_selec(that,black:boolean = false,inPopup:false, useCheckbox
          </Popover>
    ]
 }
-export function etext_lang_selec(that,black:boolean = false)
+export function etext_lang_selec(that,black:boolean = false, elem, DL)
 {
+   if(!elem) elem = <span id="lang" title={I18n.t("home.choose")} onClick={(e) => that.setState({...that.state,anchorLang:e.currentTarget, collapse: {...that.state.collapse, lang:!that.state.collapse.lang } } ) }><img src={"/icons/LANGUE"+(black?"b":"")+".svg"}/></span>
    
    let text = { "bo":"lang.tip.bo","bo-x-ewts":"lang.tip.boXEwts" }, prio = ["bo", "bo-x-ewts" ]
 
@@ -749,17 +757,20 @@ export function etext_lang_selec(that,black:boolean = false)
       else current = "bo"
    }
 
+   const anchor = "anchorLang"+(DL?"DL":"")
+   const lang = "lang"+(DL?"DL":"")
+
    return [
-         <span id="lang" title={I18n.t("home.choose")} onClick={(e) => that.setState({...that.state,anchorLang:e.currentTarget, collapse: {...that.state.collapse, lang:!that.state.collapse.lang } } ) }><img src={"/icons/LANGUE"+(black?"b":"")+".svg"}/></span>
+         elem
          ,
          <Popover
             id="popLang"
-            open={that.state.collapse&&that.state.collapse.lang?true:false}
+            open={that.state.collapse&&that.state.collapse[lang]?true:false}
             transformOrigin={{vertical:(!black?'top':'bottom'),horizontal:(!black?'right':'left')}}
             anchorOrigin={{vertical:(!black?'bottom':'top'),horizontal:(!black?'right':'left')}}
-            anchorEl={that.state.anchorLang}
-            onClose={e => { that.setState({...that.state,anchorLang:null,collapse: {...that.state.collapse, lang:false } } ) }}
-            className={black?"black":""}
+            anchorEl={that.state[anchor]}
+            onClose={e => { that.setState({...that.state,[anchor]:null,collapse: {...that.state.collapse, [lang]:false } } ) }}
+            className={(black?"black":"")+(DL?" DL":"")}
             >
 
               <FormControl className="formControl">
@@ -771,16 +782,57 @@ export function etext_lang_selec(that,black:boolean = false)
 
                         // TODO add link to user profile / language preferences
 
-                        return ( <MenuItem
+                        if(DL) return (
+                           // better use a file request to send a token
+                           //<a target="_blank" rel="alternate" type="text" download /*={DL.split(/[/]/).pop().split(/[.]/)[0]+"_"+i} // can't bypass 'Content-Disposition: attachment; filename=' in response header */
+                           //   style={{color:"#4a4a4a",textDecoration:"none", display:"block"}} href={DL+"?prefLangs="+i}>
+                           //</a> 
+                              <MenuItem /*className={current===i?"is-locale":""}*/ onClick={async (event) => { 
+
+                                 const token = localStorage.getItem('id_token');
+                                 
+                                 that.props.onLoading("outline",true)
+
+                                 await axios
+                                 .request({
+                                   method: "get",
+                                   responseType: "blob",
+                                   timeout: 4000,
+                                   baseURL: DL.replace(/^(https:..[^/]+).*$/,"$1"),
+                                   url: DL.replace(/^https:..[^/]+(.*)$/,"$1")+"?prefLangs="+i,
+                                   ...token?{headers: {Authorization: `Bearer ${token}`}}:{},
+                                 })
+                                 .then(function (response) {
+                                   //console.log("loaded:", response.data)
+                         
+                                   // download file
+                                   const temp = window.URL.createObjectURL(new Blob([response.data]))
+                                   const link = document.createElement("a")
+                                   link.href = temp
+                                   let filename = DL.split(/[/]/).pop().split(/[.]/)[0]+"_"+i+".txt"
+                                   //debug("filename:",filename)
+                                   link.setAttribute("download", filename)
+                                   link.click()
+                                   window.URL.revokeObjectURL(link)
+                         
+                                 })
+                                 .catch(function (error) {
+                                   //console.error("error:", error.message)
+                                 })
+
+                                 that.props.onLoading("outline",false)
+                              }}>
+                                 {label}
+                              </MenuItem> 
+                        )
+                        else return ( <MenuItem
                                     className={current===i?"is-locale":""}     
                                     value={i}
                                     onClick={(event) => { 
-
                                        localStorage.setItem('etextlang', i);
-
-                                       that.setState({...that.state,anchorLang:null,collapse: {...that.state.collapse, lang:false } }); 
-
+                                       that.setState({...that.state,[anchor]:null,collapse: {...that.state.collapse, [lang]:false } }); 
                                        that.props.onSetEtextLang(i)
+                                    
 
                                        /*
                                        // not sure we need a url param
@@ -870,17 +922,20 @@ export function top_right_menu(that,etextTitle,backUrl,etextres)
       </div>
    }
 
+   // no need anymore
+   const portrait = null //<div class="portrait-warn" onClick={()=>store.dispatch(closePortraitPopup())}><div><span></span><p data-tilt1={I18n.t("misc.tilt1")} data-tilt2={I18n.t("misc.tilt2")}></p></div></div>
 
    if(etextTitle)
       return (<>
-      <div class="mobile-button top" onClick={()=>that.setState({collapse:{...that.state.collapse,navMenu:!that.state.collapse.navMenu}})}><img src="/icons/burger.svg" /></div>
+      {!that.props.portraitPopupClosed && portrait}
+      <div class={"mobile-button top"+(!that.state.collapse.navMenu?" off":" on")} onClick={()=>that.setState({collapse:{...that.state.collapse,navMenu:!that.state.collapse.navMenu}})}><img src="/icons/burger.svg" /></div>
       <div class={"nav"+(onZhMirror?" zhMirror":"")+(that.state.collapse.navMenu?" on":"")}>
          {uiLangPopup}
          <div>
             {logo}
 
-            <span id="back"><span>&lt;</span><a //{...etextres?{href:"/show/"+etextres}:{}}
-               onClick={(ev) => {
+            <span id="back"><span>&lt;</span>{ backUrl && <a //{...etextres?{href:"/show/"+etextres}:{}}
+               onClick={(ev   ) => {
 
                   // DONE add loader to wait when back to search 
                   // TODO dont go back to search when opened from button
@@ -893,23 +948,7 @@ export function top_right_menu(that,etextTitle,backUrl,etextres)
                   //if(!etextres) 
                   setTimeout(() => { 
                      
-                     if(!backUrl) {
-                        let loca = { ...that.props.history.location }, rid                  
-                        const urlParams = new URLSearchParams(loca.search)
-                        if(rid = urlParams.get("backToEtext")) {
-                           loca.pathname = "/show/"+rid
-                           delete loca.search
-                           delete loca.hash
-                           if(!rid.startsWith("bdr:MW")) loca.hash = "outline"
-                           console.log("loca:",loca)
-                           that.props.history.push(loca) ; 
-                        }
-                        else {
-                           delete loca.hash
-                           that.props.history.push(loca) ; 
-                        }                        
-                        if(that.state.openEtext) that.setState({...that.state, openEtext: false });
-                     } else {
+                     if(backUrl) {
                         that.props.history.push({pathname:"/search",search:"?"+backUrl}) ; 
                      }
 
@@ -917,17 +956,43 @@ export function top_right_menu(that,etextTitle,backUrl,etextres)
                      //setTimeout(()=>that.props.onLoading("search",false),100)                     
 
                   }, 100)
-                  
-                  /*
-                  ev.preventDefault();
-                  ev.stopPropagation();
-                  return false;
-                  */
 
-               }}><span style={{verticalAlign:"-3px"}}>{I18n.t("topbar.closeEtext")}</span></a>
+               }}><span style={{verticalAlign:"-3px"}}>{I18n.t("viewer.results")}</span></a> }
                <span>{etextTitle}</span>
             </span>
-            <div class="close" onClick={()=>that.setState({collapse:{...that.state.collapse,navMenu:false}})}>+</div> 
+            <div class="close" 
+               onClick={()=>{ 
+                  // #743 TODO: use burger-like icon instead
+                  //that.setState({collapse:{...that.state.collapse,navMenu:false}})
+
+                  that.props.onLoading("search",true,etextres)
+
+                  //if(!etextres) 
+                  setTimeout(() => { 
+                     
+                     let loca = { ...that.props.history.location }, rid                  
+                     const urlParams = new URLSearchParams(loca.search)
+                     if(rid = urlParams.get("backToEtext")) {
+                        loca.pathname = "/show/"+rid
+                        delete loca.search
+                        delete loca.hash
+                        if(!rid.startsWith("bdr:MW")) loca.hash = "outline"
+                        console.log("loca:",loca)
+                        that.props.history.push(loca) ; 
+                     }
+                     else {
+                        delete loca.hash
+                        that.props.history.push(loca) ; 
+                     }                        
+                     if(that.state.openEtext) that.setState({...that.state, openEtext: false });
+                  
+                     that.props.onLoading("search",false)
+                     //setTimeout(()=>that.props.onLoading("search",false),100)                     
+
+                  }, 100)
+                  
+                  
+               }}>+</div> 
          </div>
       </div></>)
    else {
@@ -945,25 +1010,38 @@ export function top_right_menu(that,etextTitle,backUrl,etextres)
       if(that.props.auth) login = <div id="login" {...(proxied?{class:"proxied"}:{})}>
          {
             !that.props.auth.isAuthenticated() && // TODO check redirection
-               <div>
-               <span onClick={() => that.props.auth.login(that.props.history.location,true)} >{I18n.t("topbar.register")}</span>
-               <span onClick={() => that.props.auth.login(that.props.history.location)} >{I18n.t("topbar.login")}</span>
+               <div class="not-logged">
+                  <span onClick={() => that.props.auth.login(that.props.history.location,true)} >
+                     {I18n.t("topbar.register")}
+                     <svg style={{fill:"#d73449", width:"22px", padding:"1px", border: "2px solid #d73449", borderRadius:"50%"}} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" ><path d="M0 0h24v24H0z" fill="none"/><path d="M15 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm-9-2V7H4v3H1v2h3v3h2v-3h3v-2H6zm9 4c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                  </span>
+                  <span onClick={() => that.props.auth.login(that.props.history.location)} >
+                     {I18n.t("topbar.login")}
+                     <svg style={{fill:"#d73449", width:"28px"}} xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 24 24" viewBox="0 0 24 24"><g><rect fill="none" height="24" width="24"/></g><g><path d="M11,7L9.6,8.4l2.6,2.6H2v2h10.2l-2.6,2.6L11,17l5-5L11,7z M20,19h-8v2h8c1.1,0,2-0.9,2-2V5c0-1.1-0.9-2-2-2h-8v2h8V19z"/></g></svg>
+                  </span>
                </div>
          }
          {
             that.props.auth.isAuthenticated() && 
                <div class="logged">
-               <span onClick={(e) => { that.props.onUserProfile(that.props.history.location); that.props.history.push("/user");    }}>{profileName}</span>
-               <span onClick={(e) => { that.props.auth.logout(that.props.history.location.pathname!=="/user"?window.location.href:window.location.origin) }} >{I18n.t("topbar.logout")}</span>
+                  <span onClick={(e) => { that.props.onUserProfile(that.props.history.location); that.props.history.push("/user");    }}>
+                     {profileName}
+                     <AccountCircleIcon style={{ fontSize:"28px" }}/>
+                  </span>
+                  <span onClick={(e) => { that.props.auth.logout(that.props.history.location.pathname!=="/user"?window.location.href:window.location.origin) }} >
+                     {I18n.t("topbar.logout")}
+                     <svg style={{fill:"#d73449", width:"28px"}} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M0 0h24v24H0z" fill="none"/><path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/></svg>
+                  </span>
                </div>
          }
       </div>
 
       if(proxied) {
+         const dot = '.'
          login = <Tooltip id="hoverLogin" open={that.state.collapse.hoverLogin === undefined?false:that.state.collapse.hoverLogin} 
                      placement="center" 
                      onOpen={(e)=>toggleHoverLogin(true,e)} onClose={(e)=>toggleHoverLogin(false,e)} 
-                     title={<span style={{ whiteSpace:"normal" }} onMouseEnter={(e)=>toggleHoverLogin(true, e)} onMouseLeave={(e)=>toggleHoverLogin(false,e)}><Trans i18nKey="topbar.proxied" components={{ tag: <a /> }} /></span>}  >{login}</Tooltip>
+                     title={<span style={{ whiteSpace:"normal" }} onMouseEnter={(e)=>toggleHoverLogin(true, e)} onMouseLeave={(e)=>toggleHoverLogin(false,e)}><Trans i18nKey="topbar.proxied" values={{library: "library"+dot+"bdrc"+dot+"io"}} components={{ tag: <a /> }} /></span>}  >{login}</Tooltip>
       }
 
       let khmerLinks 
@@ -979,8 +1057,9 @@ export function top_right_menu(that,etextTitle,backUrl,etextres)
       }
 
       return ([
-      <div class="mobile-button top" onClick={()=>that.setState({collapse:{...that.state.collapse,navMenu:!that.state.collapse.navMenu}})}><img src="/icons/burger.svg" /></div>,
-         <div class={"nav"+(onZhMirror?" zhMirror":"")+ (that.state.collapse.navMenu?" on":"")+(onKhmerServer||onKhmerUrl?" khmerServer":"")}>
+      !that.props.portraitPopupClosed? portrait:null,
+      <div class={"mobile-button top"+(!that.state.collapse.navMenu?" off":" on")} onClick={() => that.setState({collapse:{...that.state.collapse,navMenu:!that.state.collapse.navMenu}})}><img src="/icons/burger.svg" /></div>,
+      <div class={"nav"+(onZhMirror?" zhMirror":"")+ (that.state.collapse.navMenu?" on":"")+(onKhmerServer||onKhmerUrl?" khmerServer":"")}>
          {uiLangPopup}
           <div>
          {logo}
@@ -994,15 +1073,21 @@ export function top_right_menu(that,etextTitle,backUrl,etextres)
          { !onKhmerServer && <Link to="/"  onClick={(ev) => { 
                that.props.history.push({pathname:"/",search:""}); 
                if(that.props.keyword) { that.props.onResetSearch();}
-               setTimeout(() => {
+               if(window.innerWidth > 800)  setTimeout(() => {
                   $("#search-bar input").click()
                   document.querySelector("#search-bar input").focus()
                   document.querySelector("#search-bar").scrollIntoView({block: "start", inline: "nearest", behavior:"smooth"})
                },350)
                ev.preventDefault()
             } }><span>{I18n.t("topbar.search")}</span></Link> }         
-         
+
          { onKhmerServer && khmerLinks }
+
+         { proxied &&   
+            <Tooltip placement="center" title={<span style={{ whiteSpace:"normal" }}><Trans i18nKey="topbar.collections" /></span>}  >
+               <Link id="collections" to={"/search?r=tmp:subscriptions&t=Product"} >{I18n.t("types.product",{ count:2 })}</Link>
+            </Tooltip>
+         }
 
          <div class="history">
             <span title={I18n.t("topbar.history")}><img src="/icons/histo.svg"/></span>
@@ -1266,6 +1351,8 @@ class App extends Component<Props,State> {
    _refs = {}
    _scrollTimer = null
    _get = null
+   _map = null
+
 
 
    constructor(props : Props) {
@@ -1341,19 +1428,26 @@ class App extends Component<Props,State> {
          }
       }
       */ 
+
+      //console.log("dld?",window.top.DLD)
    }
 
    componentDidUpdate() {
       if(!this.state.blurSearch) {
-         $("#search-bar input[type=text][placeholder]").attr("placeholder",I18n.t("home.start"));
          let elem = document.querySelector("#search-bar input")
-         if(elem) elem.focus()
+         if(elem && window.innerWidth > 800) { 
+            elem.focus()
+            $("#search-bar input[type=text][placeholder]").attr("placeholder",I18n.t("home.start"));
+         }
       }
 
       // TODO check how this behave with smaller screen width/height
       let ref
       if(this._refs["sidepane"] && (ref = this._refs["sidepane"].current) /*&& this.props.language*/) {                     
          $(window).off("scroll").on("scroll", () => {
+
+            if(!this.props.keyword) return
+
             const rect = ref.getBoundingClientRect()
             const stuck = rect.y > 230
             if(stuck !== this.state.stuck) {
@@ -1365,26 +1459,68 @@ class App extends Component<Props,State> {
             const headh = $("#res-header").height()
             if(this._refs["header"].current) $(this._refs["header"].current).css("top",(toph+navh+15)+"px") //
             
-            $(ref)
-            .height(window.innerHeight - rect.y)
-            .css("top",(toph+navh+headh+15)+"px")
+            if(window.innerWidth > 1024)
+               $(ref)
+               .height(window.innerHeight - rect.y + (window.innerWidth <= 1024 ? 0 : 0))
+               .css("top",(toph+navh+(window.innerWidth > 1024 ? headh+15 : 5)+"px"))
+            else 
+               $(ref)
+               .height(window.innerHeight)
+               .css("top",0)
 
             if(this._refs["simplebar"].current) this._refs["simplebar"].current.recalculate()
             if(this._refs["filters-UI"].current) this._refs["filters-UI"].current.recalculate()
             
          }).scroll()
-         
-      }
+      } 
 
       if(this._refs["filters-UI"].current) this._refs["filters-UI"].current.recalculate()
       if(this._refs["filters-UI-scrollable"].current) this._refs["filters-UI-scrollable"].current.scrollTop = 500
 
-      loggergen.log("didU:",this.state,this.state.uriPage,this._refs["markers"]) //,this._refs)
+      loggergen.log("didU:",this.state,this.state.uriPage,this._refs["maps"],this._refs["cluster"]) //,this._refs)
 
-      if(this._refs.map && this._refs.map.current) {
-         if(this._refs.markers) $(".resultsMap").attr("data-nb-markers", this._refs["markers"].length)
-         if(this._refs["markers"].length) this._refs.map.current.leafletElement.fitBounds(this._refs["markers"], this._refs["markers"].length === 1 ? {maxZoom: 10}:{})
-      }
+      
+      if(this._map && this._refs["cluster"]?.current) {
+         
+         if(this._refs.markers) {
+            const currentMarkers = []
+            const vals = Object.values(this.state.mapInfo)
+            for(let v of vals) {
+               if(this.hasAllFacets(v.data)) {
+                  //console.log("on map:",v)
+                  
+                  if(v.ref?.current) v.ref.current.addTo(this._refs["cluster"].current) 
+
+                  currentMarkers.push(v.latLong)
+               } else {                  
+                  //console.log("not on map:",v)
+                  if(v.ref?.current) this._refs["cluster"].current.removeLayer(v.ref.current)
+               }
+            }
+
+            try { 
+               if(currentMarkers.length < 50) { 
+                  this._refs["cluster"].current.disableClusteringKeepSpiderfy();
+               }
+               else {
+                  this._refs["cluster"].current.enableClustering()
+               }
+
+               this._refs["cluster"].current.refreshClusters()
+
+               $(".resultsMap").attr("data-nb-markers", currentMarkers.length)
+               if(currentMarkers.length) { 
+                  this._map.fitBounds(currentMarkers, currentMarkers.length === 1 ? {maxZoom: 10}:{padding:[50,50]})
+               }
+            } catch(e) {
+               console.error("refreshClusters/map error",e)
+            }
+
+         } else {
+            $(".resultsMap").attr("data-nb-markers", 0)
+         }
+      } 
+      
 
       report_GA(this.props.config,this.props.history.location);
 
@@ -1536,7 +1672,10 @@ class App extends Component<Props,State> {
       loggergen.log("search::",key,_key,label,searchDT) //,this.state,!global.inTest ? this.props:null)
 
       let hasOpenPossibly = ""
-      if(label.includes("Instance") || label.includes("Scan")) hasOpenPossibly = "&f=asset,inc,tmp:possibleAccess&f=asset,inc,tmp:catalogOnly" ;
+      if(label.includes("Instance") || label.includes("Scan")) { 
+         hasOpenPossibly = "&f=asset,inc,tmp:possibleAccess&f=asset,inc,tmp:catalogOnly" ;
+         if(this.props.useDLD) hasOpenPossibly += (hasOpenPossibly?"&":"")+"&f=inDLD,inc,tmp:available"
+      }
 
       if(dataInfo) {
          console.log("new route:",dataInfo)
@@ -1574,7 +1713,9 @@ class App extends Component<Props,State> {
          if(this.props.searches && this.props.searches[this.state.filters.datatype[0]] && this.props.searches[this.state.filters.datatype[0]][this.props.keyword+"@"+this.props.language] && this.props.searches[this.state.filters.datatype[0]][this.props.keyword+"@"+this.props.language].inEtext) {
             inEtext = this.props.searches[this.state.filters.datatype[0]][this.props.keyword+"@"+this.props.language].inEtext
          }
-         this.props.history.push({pathname:"/search",search:"?q="+key+"&lg="+lang+"&t="+label+khmerCollec+hasOpenPossibly+(inEtext?"&r="+inEtext:"")})
+         const newLoca = {pathname:"/search",search:"?q="+key+"&lg="+lang+"&t="+label+khmerCollec+hasOpenPossibly+(inEtext?"&r="+inEtext:"")}
+         console.log("newL?",newLoca)
+         this.props.history.push(newLoca)
          
          // TODO add permanent filters (here ?)
       }
@@ -1776,7 +1917,7 @@ class App extends Component<Props,State> {
 
       
       // TODO deprecate in favor of query modification      
-      if(props.language == "" && (!props.resources || !props.resources[props.keyword]))
+      if(props.language == "" && props.keyword !== "tmp:subscriptions" && (!props.resources || !props.resources[props.keyword]))
       {
          loggergen.log("gRes?",props.resources,props.keyword);
          props.onGetResource(props.keyword);
@@ -2111,6 +2252,73 @@ class App extends Component<Props,State> {
             }
             if(time && s.results[s.id].results) s.results[s.id].results.time = time    
 
+
+
+            const t = s.filters.datatype[0].toLowerCase()
+            if(t === "place") {
+               const mapInfo = {}
+               const sublist = s.results[s.id]?.results?.results?.bindings[t+"s"];
+               const keys = Object.keys(sublist?sublist:{})
+               //console.log("keys:",keys,s.results[s.id])
+               for(let n in keys) {
+                  let o = keys[n]
+                  let lat = sublist[o].filter(k => k.type === bdo+"placeLat"),
+                    long = sublist[o].filter(k => k.type === bdo+"placeLong")
+                  if(lat.length && long.length) { 
+                     mapInfo[o] = { data: sublist[o] }
+
+                     lat = lat[0].value;
+                     long = long[0].value                           
+                     const latLong = [lat,long].map(n => {
+                        if(n.match(/ [WS]$/)) n = "-" + n
+                        return n.replace(/ [EWSN]$/,"")
+                     })
+                     mapInfo[o].latLong = (latLong)
+                     
+                     var redIcon = new L.Icon({
+                        iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
+                        shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+                        iconSize: [25, 41],
+                        iconAnchor: [12, 41],
+                        popupAnchor: [1, -34],
+                        shadowSize: [41, 41]
+                     });
+
+                     let sUri = shortUri(o), url = "/show/"+sUri+"?s="+ encodeURIComponent(window.location.href.replace(/^https?:[/][/][^?]+[?]?/gi,"").replace(/(&n=[^&]*)/g,"")+"&n="+(1+n))
+                     
+                     const sendMsgMap = (ev) => {
+                        if(this.props.simple) {
+                           let otherData =  {}, allProps = sublist[o] ;                              
+                           otherData["tmp:type"] = "bdo:Place"
+                           //if(!prettId.startsWith("bdr:")) otherData["tmp:externalUrl"] = resUrl
+                           let msg = 
+                              '{"@id":"'+sUri+'"'
+                              +',"skos:prefLabel":'+JSON.stringify(allProps.filter(p => p.type === skos+"prefLabel").map(p => ({"@value":p.value,"@language":p["xml:lang"]})))
+                              +',"tmp:keyword":{"@value":"'+lucenequerytokeyword(this.props.keyword)+'","@language":"'+this.props.language+'"}'
+                              +',"tmp:propid":"'+this.props.propid+'"'
+                              +(otherData?',"tmp:otherData":'+JSON.stringify(otherData):'')
+                              +'}'
+                           console.log("(MSG)",this.props.propid,JSON.stringify(otherData,null,3),msg)
+                           window.top.postMessage(msg, "*") // TODO set target url for message
+                           ev.preventDefault()
+                           ev.stopPropagation()
+                           return false
+                        }
+                     }
+
+                     let lit = getLangLabel({props,state:s},"",sublist[o].filter(p => [skos+"prefLabel"].includes(p.type)))
+                     if(!lit) console.warn("EMPTY lit:",o,sublist[o])
+                     mapInfo[o].ref = React.createRef()
+                     mapInfo[o].marker = (<Marker ref={mapInfo[o].ref} position={latLong} permanent icon={redIcon}> 
+                           <MapPopup direction="top"><Link onClick={(ev) => sendMsgMap(ev)} to={url}>{ lit?.value }<br/><span className="RID">{sUri}</span></Link></MapPopup>
+                     </Marker>)
+
+                  }
+               }
+               s.mapInfo = mapInfo
+            }
+
+            
             if(needRefresh && results.results && results.results.bindings && Object.keys(results.results.bindings).length) { 
                s.repage = true
                
@@ -2287,7 +2495,7 @@ class App extends Component<Props,State> {
       } 
    }
 
-   handleCheckFacet = (ev:Event,prop:string,lab:string[],val:boolean,excl:boolean=false) => {
+   handleCheckFacet = (ev:Event,prop:string,lab:string[],val:boolean,excl:boolean=false,force:boolean=false) => {
 
       start = Date.now()
       last_t = start
@@ -2298,6 +2506,9 @@ class App extends Component<Props,State> {
 
       let propSet ;
       if(state.filters.facets) propSet = state.filters.facets[prop]
+
+      if(force) propSet = []
+
       if(!propSet) propSet = [ "Any" ]
       else if(propSet.val) propSet = propSet.val
 
@@ -2541,6 +2752,7 @@ class App extends Component<Props,State> {
          
          if([ /*"Any",*/ "Person","Place","Work","Etext","Role","Topic","Corporation","Lineage","Instance","Product","Scan"].indexOf(lab) !== -1)
          {
+            console.log("rs??1")
             this.requestSearch(this.props.keyword.replace(/(^[(")]+)|([")]+(~1)?$)/g,""),[ lab ], this.props.language, true, ["date","id"].includes(this.props.language)?this.props.language:null);
          }
          
@@ -3130,6 +3342,45 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       return ret
    }
 
+   getSeriesNumber(allProps)  {
+
+      if(!allProps || !this.props.assoRes) return 
+
+      let res = [], 
+         number = allProps.filter(a => a.type === bdo+"seriesNumber"),
+         series = allProps.filter(a => a.type === bdo+"serialInstanceOf"),
+         label = this.props.assoRes[series[0]?.value]?.filter(l => l.fromKey === skos+"prefLabel")
+      
+      if(number?.length) { 
+         number = <span>{number[0].value /*?.replace(/v. ?/g,"")*/ }</span>
+      } else {
+         number = false
+      }
+      
+      if(series?.length) {
+         const qname = shortUri(series[0]?.value)
+         if (qname && label?.length) {
+            label = getLangLabel(this, bdo+"serialInstanceOf", label)
+            if(label?.value) {
+               label = <Link to={"/show/"+qname} lang={label.lang}>{label.value}</Link>
+            } else {
+               label = <Link to={"/show/"+qname}>{qname}</Link>
+            }
+         } else {
+            label = <Link to={"/show/"+qname}>{qname}</Link>
+         }
+      } else {
+         label = false
+      }
+      
+      if(label && number) res.push(<div class="match">
+         <span class="label">{this.fullname(bdo+"seriesNumber",[],true)}{I18n.t("punc.colon")}&nbsp;</span>
+         <div class="multi"><span>{number}&nbsp;{I18n.t("misc.in")}&nbsp;{label}</span></div>
+      </div>)
+
+      return res
+   }
+
    getPublisher(allProps)  {
 
       //if (this.state.filters.datatype[0] !== "Instance")
@@ -3174,6 +3425,16 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
    getResultProp(prop:string,allProps:[],plural:string="_plural", doLink:boolean = true, fromProp:[], exclude:string,useAux:[],findProp:[],altInfo:[],iri,T,n) {
 
       if(plural === true) plural = "_plural"
+
+      if(exclude) {         
+         if(exclude.value) { 
+            exclude.value = exclude.value.replace(/[↦↤]/g,"")
+            const translit = getLangLabel(this,"",[exclude])
+            exclude = translit.value
+         } else {
+            exclude = exclude.replace(/[↦↤]/g,"")
+         }
+      }
 
       if(allProps && this.props.assoRes) { 
          if(!fromProp) fromProp = [ prop ]
@@ -3332,13 +3593,22 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             return ret
          }
          else if(!doLink) {
+            let hasToggle
             let langs = extendedPresets(...this.state.langPreset)
             let labels = sortLangScriptLabels(id,langs.flat,langs.translit)
+            if(prop === bdo+"biblioNote") labels = _.orderBy(labels.map(l => ({l,len:l.value?.length})), ["len"]).map(l => l.l)
             for(let i of labels) {
                let val = i["value"] 
                if(val === exclude) continue
+               
                let langval = getLangLabel(this,prop,[ i ])
                if(langval.value?.replace(/[↦↤]/g,"") === exclude) continue
+
+               const translit = getLangLabel(this, "", [i])
+
+               //console.log("val/excl:",val,exclude,translit)
+
+               if(val === exclude || translit?.value?.replace(/_/g," ").replace(/[\/། ]+$|[↦↤]/g,"") === exclude?.replace(/_/g," ").replace(/[\/། ]+$|[↦↤]/g,"")) continue
                let lang = i["xml:lang"]
 
                if((""+val).match(/^[0-9-]+T[0-9:.]+Z+$/)) {
@@ -3371,17 +3641,30 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   */
                   val = getLangLabel(this,prop,[i])
                   let kw = lucenequerytokeywordmulti(this.props.keyword).map(v => v.trim().replace(/[་༌།]+$/,""))                  
+                  lang = val.lang
+                  if(!lang) lang = val["xml:lang"]
+                  
+                  if(prop === bdo+"biblioNote") { 
+                     if(this.state.collapse[iri+"-note"] != true) {
+                        if(!val.value?.includes("↦")) val.value = val.value.replace(/^ *(([^ ]+ ){35})(.*?)$/,(m,g1,g2,g3)=>g1+(g3?" (...)":""))
+                        else { 
+                           val.value = val.value.replace(/^ *(.*?)(([^ ]+ ){17} *↦)/,(m,g1,g2,g3)=>(g1?"(...) ":"")+g2)
+                           val.value = val.value.replace(/(↤ *([^ ]+ ){17})(.*?)$/,(m,g1,g2,g3)=>g1+(g3?" (...)":""))
+                        }
+                        if(val.value.startsWith("(...)") || val.value.endsWith("(...)") || this.state.collapse[iri+"-note"] == false) hasToggle = true
+                     } else {
+                        hasToggle = true
+                     }
+                  }
+                  
                   // join by "EEEE" as it won't be affected in wylie from/to conversion 
                   if(this.props.language) {
                      kw = getLangLabel(this,"",[ { "value":kw.join("EEEE"), "lang": this.props.language } ])
                      if(val && kw.value !== undefined) {
                         val = highlight(val.value,kw.value.replace(/ *\[?EEEE\]? */g,"|"))
-                        lang = val.lang
                      } else { 
                         if(!Array.isArray(kw)) kw = [ kw ]
                         val = highlight(i.value,kw.join("|"))
-                        lang = i["lang"]
-                        if(!lang) lang = i["xml:lang"]
                      }
                      if(langval.lang) lang = langval.lang
                      else if(langval["xml:lang"]) lang = langval["xml:lang"]
@@ -3389,6 +3672,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      if(val?.value) val = val.value
                      else val = i.value
                   }
+
                }
                //console.log("1 val:",val,lang,i)
 
@@ -3401,6 +3685,14 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                                     </div>
                                  }><span className="lang">&nbsp;{lang}</span></Tooltip>
                         }</span>)
+            }
+            if(hasToggle) {
+               ret.push(
+                  <span onClick={() => this.setState({repage:true,blurSearch:true,collapse:{ ...this.state.collapse, [iri+"-note"]:!this.state.collapse[iri+"-note"]}})} 
+                     className="toggle-note" style={{display:"inline-flex", alignItems:"flex-end"}}>
+                        <span>{I18n.t(this.state.collapse[iri+"-note"]?"misc.hide":"misc.expand")}</span>
+                        {this.state.collapse[iri+"-note"]?<ExpandLess style={{fontSize:"18px"}}/>:<ExpandMore style={{fontSize:"18px"}}/>}
+                  </span>)
             }
          }
          else if(id && id.length) { 
@@ -3423,10 +3715,11 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      else labels = labels["http://www.w3.org/2000/01/rdf-schema#label"]
                   }
                }
-
+               if(labels) labels = labels.filter(l => l.type === skos+"prefLabel" || l.fromKey === skos+"prefLabel")
+               
                //loggergen.log("labels1",i,prop) //,labels,this.props.assoRes)
 
-               if(labels) { 
+               if(labels?.length) { 
                   labels = getLangLabel(this,prop,labels)
                   if(labels) {
                      lang = labels["xml:lang"]
@@ -3499,6 +3792,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          let sTmp = shortUri(m.type), trad = I18n.t("prop."+sTmp)	
          if(trad !== sTmp) from = trad	
 
+         //console.log("m:",m)
+
          let val,isArray = false ;	
          let lang = m["lang"]	
          if(!lang) lang = m["xml:lang"]	
@@ -3555,14 +3850,14 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
          if(inPart && inPart.length) {	
 
-            //loggergen.log("inPart",inPart)	
+            //loggergen.log("inPart:",inPart)	
 
             inPart = <div class="inPart">{[ <span>[ from part </span>, inPart.map( (p,i) => { 	
                let label = getPropLabel(this,p,false,true)	
                let ret = [getUrilink(p,label.value,label.lang)]	
                if(i > 0) ret = [ " / ", ret ]	
                return ret 	
-            }), " ]" ]}</div>	
+            }), " ]" ]}<br/><br/></div>	
          }	
 
          return (<div className={"match "+prop}>	
@@ -3791,17 +4086,55 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             // DONE: check compliance with BLMP
             if(t === "Images") return "bdo:ImageInstance"
             else if(t === "Etext") return "bdo:EtextInstance"
+            else if(t === "Work" && isSerial) return "bdo:SerialWork"            
             return "bdo:"+t
          }
 
-         let sendMsg = (ev,prevent = false) => {
-            if(this.props.simple) {
+         let sendMsg = (ev,prevent = false,resUrl) => {
+
+            if(this.props.useDLD && resUrl){
+               let scans = allProps.filter(a => a.type === bdo+"instanceHasReproduction" && !a.value.includes("/resource/IE"))
+               let version = allProps.filter(a => a.type === bdo+"instanceReproductionOf")               
+               let hasRoot = allProps.filter(a => a.type === bdo+"inRootInstance")               
+               //console.log("resU:",resUrl,scans,version,hasRoot,allProps)
+               if(scans.length || version.length || hasRoot.length) {
+                  const rid = resUrl.replace(/^[/]show[/]bdr:([^?]+)[?].*/,"$1")
+                  const nbVol = allProps.filter(a => a.type === bdo+"numberOfVolumes").map(v => v.value)               
+                  if(window.DLD && window.DLD[rid]) {
+                     window.top.postMessage(JSON.stringify({"open-viewer":{ rid, label: [ preLit ], nbVol: ""+nbVol }}),"*")        
+                     ev.preventDefault();
+                     ev.stopPropagation();
+                     return false ;
+                  } else {
+                     //console.log("hR:",hasRoot)
+                     if(hasRoot.length && (hasRoot = hasRoot[0]?.value?.replace(/.*[/]M([^/]+)$/,"$1")) && window.DLD && window.DLD[hasRoot]) {
+                        window.top.postMessage(JSON.stringify({"open-viewer":{ rid, label: [ preLit ], nbVol: ""+nbVol }}),"*")        
+                        ev.preventDefault();
+                        ev.stopPropagation();
+                        return false ;                  
+                     } else {
+                        const go = window.confirm(I18n.t("misc.DLD"))
+                        if(!go)  {
+                           ev.preventDefault();
+                           ev.stopPropagation();
+                           return false ;
+                        }
+                     }
+                  }
+               }
+            } else if(this.props.simple) {
                let otherData =  {} ;
                if(T === "Person") {
+                  //console.log("allP:",allProps)
                   otherData = allProps.filter(e => [bdo+"personEvent"].includes(e.type)).map(e => this.props.assoRes[e.value]).reduce( (acc,e) =>{
                      let t = e.filter(f => f.type === rdf+"type")
-                     if(t.length) return { ...acc, [shortUri(t[0].value, true)]:e.filter(e => [bdo+"onYear", bdo+"notBefore", bdo+"notAfter", bdo+"eventWhere"].includes(e.type))
-                        .reduce( (subacc,p)=>( {...subacc, [shortUri(p.type, true)]: shortUri(p.value, true) }),{}) }
+                     let k = shortUri(t[0].value, true)
+                     //console.log("t,k",t,k)
+                     if(t.length) return { ...acc, 
+                        [k]:[ ...acc[k]?acc[k]:[],
+                           e.filter(e => [bdo+"onYear", bdo+"notBefore", bdo+"notAfter", bdo+"eventWhere"].includes(e.type))
+                            .reduce( (subacc,p)=>( {...subacc, [shortUri(p.type, true)]: shortUri(p.value, true) }),{}) 
+                        ] }
                      else return acc
                   },{}) 
                }
@@ -3810,6 +4143,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                let msg = 
                   '{"@id":"'+prettId+'"'
                   +',"skos:prefLabel":'+JSON.stringify(allProps.filter(p => p.type === skos+"prefLabel").map(p => ({"@value":p.value,"@language":p["xml:lang"]})))
+                  +',"skos:altLabel":'+JSON.stringify(allProps.filter(p => p.type === skos+"altLabel").map(p => ({"@value":p.value,"@language":p["xml:lang"]})))
                   +',"tmp:keyword":{"@value":"'+lucenequerytokeyword(this.props.keyword)+'","@language":"'+this.props.language+'"}'
                   +',"tmp:propid":"'+this.props.propid+'"'
                   +(otherData?',"tmp:otherData":'+JSON.stringify(otherData):'')
@@ -3827,7 +4161,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
          let getIconLink = (resUrl,div) => {
 
-            if(!resUrl.startsWith("http")) return <Link to={resUrl}  onClick={(ev) => sendMsg(ev, true)}>{div}</Link>
+            if(!resUrl.startsWith("http")) return <Link to={resUrl}  onClick={(ev) => sendMsg(ev, true, resUrl)}>{div}</Link>
             else return <a href={resUrl} target="_blank"  onClick={(ev) => sendMsg(ev, true)}>{div}</a>
 
          }
@@ -3892,7 +4226,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
          let retList = [ 
             <div id="num-box" class={(this.state.checked[prettId] === true?"checked":"")} style={{flexShrink:0}} onClick={(e) => this.setState({repage:true,checked:{...this.state.checked,[prettId]:!this.state.checked[prettId]}})}>{warnStatus}{I18n.t("punc.num",{num:n})}</div>,         
-            <div id="icon" class={enType + (hasCopyR?" wCopyR":"")}>
+            <div id="icon" class={enType + (hasCopyR?" wCopyR":"")+(hasThumb.length > 0 ? "" : " noThumb")}>
                { hasThumb.length > 0  && <div class="thumb" title={I18n.t("copyright.view")}>{
                    getIconLink(viewUrl?viewUrl:resUrl+"#open-viewer", <LazyLoad height={130} offset={500}><img src={hasThumb}/></LazyLoad>)
                   }</div> }
@@ -4192,7 +4526,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             {/* { this.getResultProp(bdo+"workIsAbout",allProps,false) } */}
             {/* { this.getResultProp(bdo+"workGenre",allProps) } */}
 
-            { this.getResultProp(["Work","Instance","Scan","Etext"].includes(this.state.filters.datatype[0])?"tmp:otherTitle":"tmp:otherName",allLabels, true, false, [ tmp+"labelMatch", tmp+"nameMatch", skos+"prefLabel", skos+"altLabel"], !preLit?preLit:preLit.replace(/[↦↤]/g,"") ) }
+            { this.getResultProp(["Work","Instance","Scan","Etext"].includes(this.state.filters.datatype[0])?"tmp:otherTitle":"tmp:otherName",allLabels, true, false, [ tmp+"labelMatch", tmp+"nameMatch", skos+"prefLabel", skos+"altLabel"], preLit ) }
             {/* { this.getResultProp(tmp+"assetAvailability",allProps,false,false) } */}
             
             {/* { this.getResultProp(rdf+"type",allProps.filter(e => e.type === rdf+"type" && e.value === bdo+"EtextInstance")) }  */}
@@ -4215,6 +4549,9 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             { type === "Place" && this.getResultProp(bdo+"placeLocatedIn",allProps,false) }
             {/* { this.getResultProp(bdo+"placeType",allProps) } */}
 
+            { (type === "Instance") && this.getSeriesNumber(allProps) }            
+
+
             {/* { this.getResultProp(bdo+"publisherName",allProps,false,false) }
             { this.getResultProp(bdo+"publisherLocation",allProps,false,false) } */}
             { (type === "Instance" || type === "Etext" || type === "Scan" || type === "Work") && this.getPublisher(allProps) }
@@ -4225,8 +4562,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
             {/* { this.getResultProp(bdo+"contentLocationStatement",allProps,false,false, [bdo+"instanceExtentStatement",bdo+"contentLocationStatement"]) } */}
 
-            { (type === "Instance" || type === "Scan" || type === "Work") && this.getResultProp(bdo+"biblioNote",allProps,true,false,[bdo+"biblioNote", bdo+"catalogInfo", rdfs+"comment", tmp+"noteMatch", bdo+"colophon", bdo+"incipit"]) }
-            { (type !== "Instance" && type !== "Scan" && type !== "Work") && this.getResultProp(bdo+"biblioNote",allProps,true,false,[ tmp+"noteMatch" ]) }
+            { (type === "Instance" || type === "Scan" || type === "Work") && this.getResultProp(bdo+"biblioNote",allProps,true,false,[bdo+"biblioNote", bdo+"catalogInfo", rdfs+"comment", tmp+"noteMatch", bdo+"colophon", bdo+"incipit"], undefined, undefined, undefined, undefined, id) }
+            { (type !== "Instance" && type !== "Scan" && type !== "Work") && this.getResultProp(bdo+"biblioNote",allProps,true,false,[ tmp+"noteMatch" ], undefined, undefined, undefined, undefined, id) }
 
             {/* { this.getResultProp(tmp+"provider",allProps) } */}
             {/* { this.getResultProp(tmp+"popularity",allProps,false,false, [tmp+"entityScore"]) } */}
@@ -4519,9 +4856,66 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
    }
    */
 
+   hasAllFacets(elem) {
+      let filtered = true
+
+      if(this.state.filters.datatype.indexOf("Any") === -1 && this.state.filters && this.state.filters.facets) {
+         for(let k of Object.keys(this.state.filters.facets)) {
+
+            let v = this.state.filters.facets[k]
+
+            let exclude = this.state.filters.exclude
+            if(exclude) exclude = exclude[k]
+
+            //loggergen.log("k",k,v,exclude)
+
+            let withProp = false, hasProp = false, isExclu = false                   
+            for(let e of elem) {
+
+               if(v.alt) { 
+                  for(let a of v.alt) {
+                     if(e.type === a) { 
+                        hasProp = true ;
+                        //loggergen.log("e sub",e)
+                        if( v.val.indexOf("Any") !== -1 || e.value === v.val || v.val.indexOf(e.value) !== -1 )  withProp = true ;                              
+                        if(exclude && exclude.indexOf(e.value) !== -1) isExclu = true
+                     }
+                  }
+               }
+               else if(e.type === k) {
+                  hasProp = true ;
+                  if(v.indexOf("Any") !== -1 || e.value === v || v.indexOf(e.value) !== -1)  withProp = true ;                                                                       
+                  if(exclude && exclude.indexOf(e.value) !== -1) isExclu = true
+               }
+            }
+
+            if(!exclude || !exclude.length) {
+               if((v.alt && v.val.indexOf("unspecified") !== -1) || (!v.alt && v.indexOf("unspecified") !== -1)) {
+                  if( hasProp && !withProp ) filtered = false
+               }
+               else if((v.alt && v.val.indexOf("Any") === -1) || (!v.alt && v.indexOf("Any") === -1)) {
+                  if( !withProp ) filtered = false
+               } 
+            }
+            else {
+               if((v.alt && v.val.indexOf("unspecified") !== -1) || (!v.alt && v.indexOf("unspecified") !== -1)) {
+                  if( exclude.indexOf("unspecified") !== -1 && !hasProp ) filtered = false
+                  if((v.alt && v.val.indexOf("Any") === -1) || (!v.alt && v.indexOf("Any") === -1)) {
+                     if( withProp && isExclu ) filtered = false
+                  } 
+               }                     
+               else if((v.alt && v.val.indexOf("Any") === -1) || (!v.alt && v.indexOf("Any") === -1)) {
+                  if( withProp && isExclu ) filtered = false
+               } 
+            }
+         }
+      }
+
+      return filtered ;
+   }
 
 
-   handleResults(types,counts,message,results,paginate,bookmarks,resLength) 
+   handleResults(types,counts,message,results,paginate,bookmarks,resLength, mapInfo) 
    {
       this._menus = {}
 
@@ -4594,9 +4988,9 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          
          let h5
 
-         const markers = [], latLongs = []
-
          let hasUnreleased = false
+
+         const markers = [], latLongs = []
 
          if(sublist) { for(let o of Object.keys(sublist))
          {
@@ -4631,18 +5025,31 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                
                if(t === "Place") {
 
+                  
+                  if(mapInfo) {
+                     for(let k of Object.keys(mapInfo)) {
+                        markers.push(mapInfo[k].marker)
+                        latLongs.push(mapInfo[k].latLong)                     
+                     }
+                  }
+                  
 
                   const { BaseLayer} = LayersControl;
                   
-                  this._refs["map"] = React.createRef()
-                  this._refs["markers"] = latLongs                                    
+                  
+                  this._refs["markers"] = latLongs     
+                  this._refs["cluster"] = React.createRef()
+                  
 
-                  console.log("latlongs:",latLongs)
+                  console.log("latlongs:",latLongs, markers)
                   
                   // latLongs.length && 
                   const map =  (this.props.config && <> 
                      
-                     { (!this.props.simple || this.state.collapse.placeMap) && <><Map ref={this._refs["map"]}
+                     { (!this.props.simple || this.state.collapse.placeMap) && <><MapContainer 
+                        whenCreated={ mapInstance => { 
+                           this._map = mapInstance ;                           
+                        }}
                         center={[0,0]} zoom={18} 
                         // attempt to fix #584 (see https://github.com/Leaflet/Leaflet/issues/7255 + https://stackoverflow.com/questions/67406533/react-leaflet-popups-not-working-on-mobile-devices/67422057#67422057)
                         tap={false} 
@@ -4657,11 +5064,15 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                         }}
                         whenReady={ () => {                            
                            let timeo = setInterval(() => {
-                              if(this._refs["map"].current && latLongs.length) {                                                         
-                                 //console.log("map:",this._refs["map"].current,latLongs)
+                              console.log("timeo:",this._map)
+                              latLongs = latLongs.filter(m => m)
+                              if(this._map) {
                                  clearInterval(timeo)
-                                 this._refs["map"].current.leafletElement.fitBounds(latLongs, latLongs.length === 1 ?{maxZoom: 10}:{})
-                                 //$(".resultsMap").attr("data-nb-markers", latLongs.length)
+                                 if( latLongs.length) {                                                         
+                                    console.log(":map:",this._map,latLongs)
+                                    this._map.fitBounds(latLongs, latLongs.length === 1 ?{maxZoom: 10}:{padding:[50,50]})                                    
+                                 }
+                                 $(".resultsMap").attr("data-nb-markers", latLongs.length)
                               }
                            }, 10);
                         }}
@@ -4670,19 +5081,19 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                            { this.props.config.googleAPIkey && [
                               <BaseLayer name='Satellite+Roadmap'>
 
-                                 <GoogleLayer googlekey={this.props.config.googleAPIkey} maptype='HYBRID'
+                                 <ReactLeafletGoogleLayer apiKey={this.props.config.googleAPIkey} type='hybrid'
                                        //attribution="&amp;copy <a href=&quot;http://osm.org/copyright&quot;></a> contributors"
-                                       attribution="&amp;copy 2018 Google"
+                                       //attribution="&amp;copy 2018 Google"
                                  />
                               </BaseLayer>,
                               <BaseLayer checked name='Terrain'>
-                                 <GoogleLayer googlekey={this.props.config.googleAPIkey} maptype='TERRAIN'/>
+                                 <ReactLeafletGoogleLayer apiKey={this.props.config.googleAPIkey} type='terrain'/>
                               </BaseLayer>,
                               <BaseLayer name='Satellite'>
-                                 <GoogleLayer googlekey={this.props.config.googleAPIkey} maptype='SATELLITE'/>
+                                 <ReactLeafletGoogleLayer apiKey={this.props.config.googleAPIkey} type='satellite'/>
                               </BaseLayer>,
                               <BaseLayer name='Roadmap'>
-                                 <GoogleLayer googlekey={this.props.config.googleAPIkey} maptype='ROADMAP'/>
+                                 <ReactLeafletGoogleLayer apiKey={this.props.config.googleAPIkey} type='roadmap'/>
                               </BaseLayer>]
                            }
                            { !this.props.config.googleAPIkey && <BaseLayer checked name='OpenStreetMap'>
@@ -4693,8 +5104,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                               />
                            </BaseLayer> }
                         </LayersControl>
-                        { markers } 
-                     </Map>
+                        <MarkerClusterGroup ref={this._refs["cluster"]} spiderfyDistanceMultiplier={0.1} disableClusteringAtZoom={9} chunkedLoading maxClusterRadius={80} >{ markers }</MarkerClusterGroup>
+                     </MapContainer>
                   </>}</>)
                   
                   if(map) message.push(map)
@@ -4705,6 +5116,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             absi ++ ;
 
             //loggergen.log("cpt",absi,cpt,n,begin,findFirst,findNext,o) //,sublist[o])
+
 
             if(absi < begin && findFirst) { cpt++ ; m++ ;  continue; }
             else if(cpt == begin && !findNext && findFirst) {
@@ -4873,7 +5285,10 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                let val = getLangLabel(this,"",[r.lit]), kw = lucenequerytokeywordmulti(this.props.keyword).map(v => v.trim().replace(/[་༌།]+$/,""))
                // join by "EEEE" as it won't be affected in wylie from/to conversion 
                if(this.props.language) kw = getLangLabel(this,"",[ { "value":kw.join("EEEE"), "lang": this.props.language } ])
-               if(val && this.props.language) {
+               if(this.props.language === "id") {
+                  lit = val.value
+                  lang = ""
+               } else if(val && this.props.language) {
                   lit = highlight(val.value,kw.value.replace(/ *\[?EEEE\]? */g,"|"))
                   lang = val.lang
                } else {
@@ -4888,65 +5303,13 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
             //loggergen.log("sublist:",o,sublist[o],r,label,lit);
 
-            let filtered = true ;
-
-            if(this.state.filters.datatype.indexOf("Any") === -1 && this.state.filters && this.state.filters.facets)
-
-               for(let k of Object.keys(this.state.filters.facets)) {
-
-                  let v = this.state.filters.facets[k]
-
-                  let exclude = this.state.filters.exclude
-                  if(exclude) exclude = exclude[k]
-
-                  //loggergen.log("k",k,v,exclude)
-
-                  let withProp = false, hasProp = false, isExclu = false                   
-                  for(let e of sublist[o]) {
-
-                     if(v.alt) { 
-                        for(let a of v.alt) {
-                           if(e.type === a) { 
-                              hasProp = true ;
-                              //loggergen.log("e sub",e)
-                              if( v.val.indexOf("Any") !== -1 || e.value === v.val || v.val.indexOf(e.value) !== -1 )  withProp = true ;                              
-                              if(exclude && exclude.indexOf(e.value) !== -1) isExclu = true
-                           }
-                        }
-                     }
-                     else if(e.type === k) {
-                        hasProp = true ;
-                        if(v.indexOf("Any") !== -1 || e.value === v || v.indexOf(e.value) !== -1)  withProp = true ;                                                                       
-                        if(exclude && exclude.indexOf(e.value) !== -1) isExclu = true
-                     }
-                  }
-
-                  if(!exclude || !exclude.length) {
-                     if((v.alt && v.val.indexOf("unspecified") !== -1) || (!v.alt && v.indexOf("unspecified") !== -1)) {
-                        if( hasProp && !withProp ) filtered = false
-                     }
-                     else if((v.alt && v.val.indexOf("Any") === -1) || (!v.alt && v.indexOf("Any") === -1)) {
-                        if( !withProp ) filtered = false
-                     } 
-                  }
-                  else {
-                     if((v.alt && v.val.indexOf("unspecified") !== -1) || (!v.alt && v.indexOf("unspecified") !== -1)) {
-                        if( exclude.indexOf("unspecified") !== -1 && !hasProp ) filtered = false
-                        if((v.alt && v.val.indexOf("Any") === -1) || (!v.alt && v.indexOf("Any") === -1)) {
-                           if( withProp && isExclu ) filtered = false
-                        } 
-                     }                     
-                     else if((v.alt && v.val.indexOf("Any") === -1) || (!v.alt && v.indexOf("Any") === -1)) {
-                        if( withProp && isExclu ) filtered = false
-                     } 
-                  }
-
-
+            let filtered = this.hasAllFacets(sublist[o])
 
                   //if(isExclu) filtered = false
 
                   //loggergen.log("hP",o, hasProp,withProp,isExclu,filtered) //,k,v) //,sublist[o])
-               }
+               
+
 
                //loggergen.log("typ",typ,t,filtered)
 
@@ -5077,56 +5440,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      lastN = cpt ;
                      nMax = n
                      //loggergen.log("lastN",lastN)
-                     message.push(this.makeResult(id,n,t,lit,lang,tip,Tag,null,r.match,k,sublist[o],r.lit.value))
-
-                     if(t === "Place") {
-                        let lat = sublist[o].filter(k => k.type === bdo+"placeLat"),
-                            long = sublist[o].filter(k => k.type === bdo+"placeLong")
-                        if(lat.length && long.length) { 
-                           lat = lat[0].value;
-                           long = long[0].value                           
-                           const latLong = [lat,long].map(n => {
-                              if(n.match(/ [WS]$/)) n = "-" + n
-                              return n.replace(/ [EWSN]$/,"")
-                           })
-                           latLongs.push(latLong)
-
-                           var redIcon = new L.Icon({
-                              iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
-                              shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
-                              iconSize: [25, 41],
-                              iconAnchor: [12, 41],
-                              popupAnchor: [1, -34],
-                              shadowSize: [41, 41]
-                           });
-
-                           let sUri = shortUri(o), url = "/show/"+sUri+"?s="+ encodeURIComponent(window.location.href.replace(/^https?:[/][/][^?]+[?]?/gi,"").replace(/(&n=[^&]*)/g,"")+"&n="+n)
-
-                           const sendMsgMap = (ev) => {
-                              if(this.props.simple) {
-                                 let otherData =  {}, allProps = sublist[o] ;                              
-                                 otherData["tmp:type"] = "bdo:Place"
-                                 //if(!prettId.startsWith("bdr:")) otherData["tmp:externalUrl"] = resUrl
-                                 let msg = 
-                                    '{"@id":"'+sUri+'"'
-                                    +',"skos:prefLabel":'+JSON.stringify(allProps.filter(p => p.type === skos+"prefLabel").map(p => ({"@value":p.value,"@language":p["xml:lang"]})))
-                                    +',"tmp:keyword":{"@value":"'+lucenequerytokeyword(this.props.keyword)+'","@language":"'+this.props.language+'"}'
-                                    +',"tmp:propid":"'+this.props.propid+'"'
-                                    +(otherData?',"tmp:otherData":'+JSON.stringify(otherData):'')
-                                    +'}'
-                                 console.log("(MSG)",this.props.propid,JSON.stringify(otherData,null,3),msg)
-                                 window.top.postMessage(msg, "*") // TODO set target url for message
-                                 ev.preventDefault()
-                                 ev.stopPropagation()
-                                 return false
-                              }
-                           }
-
-                           markers.push(<Marker position={latLong} permanent icon={redIcon}> 
-                                 <MapPopup direction="top"><Link onClick={(ev) => sendMsgMap(ev)} to={url}>{lit}<br/><span className="RID">{sUri}</span></Link></MapPopup>
-                           </Marker>)
-                        }
-                     }
+                     message.push(this.makeResult(id,n,t,lit,lang,tip,Tag,null,r.match,k,sublist[o],{...r.lit}))
                   }
                   else {
                      if(unreleased) n --
@@ -5172,7 +5486,9 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             loggergen.log("other:",other)
             
             //if(other && other.length) 
-            if(this.props.loading && this.state.filters.datatype[0] !== "Any" || !this.props.datatypes || !this.props.datatypes.hash) {
+            if(this.props.keyword==="tmp:subscriptions") {
+               message.push(<Typography className="no-result"><span class="noR">Empty list of subscriptions<br/>(work in progress)</span></Typography>)
+            } else if(this.props.loading && this.state.filters.datatype[0] !== "Any" || !this.props.datatypes || !this.props.datatypes.hash) {
                message.push(<Typography className="loading"></Typography>)
             } else {
                message.push(<Typography className="no-result">
@@ -5268,7 +5584,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                <Typography className="no-result">
                   <span>
                      {I18n.t("search.hidden")}<br/>
-                     <a onClick={(event) => this.handleCheckFacet(event,f?.nonReleased,["tmp:show"],true)} class="uri-link" style={{marginLeft:0}}>{I18n.t("search.showU")}</a>
+                     <a onClick={(event) => this.handleCheckFacet(event,f?.nonReleased,[_tmp+"show"],true)} class="uri-link" style={{marginLeft:0}}>{I18n.t("search.showU")}</a>
                   </span>
                </Typography>
             )
@@ -5333,6 +5649,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          }
          */
 
+
+
          /*
          loggergen.log("sta?",sta.id !== id,sta.repage,"=repage",
             !sta.results,
@@ -5360,7 +5678,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             //loggergen.log("paginate?",JSON.stringify(paginate))
 
             if(!results) results = { results:{bindings:{}}}
-            this.handleResults(types,counts,message,results,paginate,bookmarks,resLength);
+            this.handleResults(types,counts,message,results,paginate,bookmarks,resLength, this.state.mapInfo);
             
             //loggergen.log("bookM:",results,JSON.stringify(paginate,null,3))
             
@@ -5954,7 +6272,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
          if(this.state.results && this.state.results[id])
          {
-      
+            const MAX_PAGE = window.innerWidth <= 1280 ? 5 : 10
             results = this.state.results[id].results
             message = this.state.results[id].message
             counts = this.state.results[id].counts
@@ -5963,21 +6281,23 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             if(paginate && paginate.pages && paginate.pages.length > 1) {
                pageLinks = []
                let min = 1, max = paginate.pages.length
-               if(max > 10) { 
-                  min = paginate.index + 1 - 4 ;
+               if(max > MAX_PAGE) { 
+                  min = paginate.index + 1 - Math.floor(MAX_PAGE / 2) + 1 ;
                   if(min < 1) min = 1
-                  max = min + 10 - 2
+                  max = min + MAX_PAGE - 3
                   if(max > paginate.pages.length) max = paginate.pages.length
                }
 
                //console.log("pages:",min,max, nbResu, paginate.pages[paginate.pages.length-1], paginate.pages )
 
-               if(min > 1) pageLinks.push([<a onClick={this.goPage.bind(this,id,1)}>{I18n.t("punc.num",{num:1})}</a>," ... "]) 
-               for(let i = min ; i <= max ; i++) { /*if(nbResu >= paginate.pages[i-1])*/ pageLinks.push(<a onClick={this.goPage.bind(this,id,i)}>{((i-1)===this.state.paginate.index?<b><u>{I18n.t("punc.num",{num:i})}</u></b>:I18n.t("punc.num",{num:i}))}</a>) }
+               if(min > 1) pageLinks.push(<a onClick={this.goPage.bind(this,id,1)}>{I18n.t("punc.num",{num:1})}</a>) 
+               if(min > 2) pageLinks.push(" ... ") 
+               for(let i = min ; i <= max ; i++) { /*if(nbResu >= paginate.pages[i-1])*/ pageLinks.push(<a data-i={i} data-max={paginate.pages.length > MAX_PAGE} onClick={this.goPage.bind(this,id,i)}>{((i-1)===this.state.paginate.index?<b><u>{I18n.t("punc.num",{num:i})}</u></b>:I18n.t("punc.num",{num:i}))}</a>) }
                if(max < paginate.pages.length) {  
                   for(let i = paginate.pages.length-1 ; i >= min ; i--) {
                      if(nbResu >= paginate.pages[i]) {
-                        pageLinks.push([" ... ",<a onClick={this.goPage.bind(this,id,paginate.pages.length)}>{I18n.t("punc.num",{num:paginate.pages.length})}</a>]) 
+                        if(max < paginate.pages.length - 1) pageLinks.push(" ... ")
+                        pageLinks.push(<a onClick={this.goPage.bind(this,id,paginate.pages.length)}>{I18n.t("punc.num",{num:paginate.pages.length})}</a>) 
                         break;
                      }
                   }
@@ -6322,6 +6642,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
             let detec ;
             if(value) detec = narrowWithString(value, this.state.langDetect)
+            if(onKhmerUrl && detec?.includes("iast")) detec = [ "pi-x-ndia", "iast" ].concat(detec.filter(d => d != "iast")) 
+
             let possible = [ ...this.state.langPreset, ...langSelect ]
             if(detec && detec.length < 3) { 
                if(detec[0] === "tibt") for(let p of possible) { if(p === "bo" || p.match(/-[Tt]ibt$/)) { language = p ; break ; } }
@@ -6330,12 +6652,14 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             }
 
             possible = [ ...this.state.langPreset, ...langSelect.filter(l => !this.state.langPreset || !this.state.langPreset.includes(l))]
-            loggergen.log("detec:",language,possible,detec,this.state.langPreset,this.state.langDetect)
+            loggergen.log("detec:",detec,possible) //language,possible,detec,this.state.langPreset,this.state.langDetect)
             
-            if(detec) { 
-               dataSource = detec.reduce( (acc,d) => {
-                  
+            if(detec) {
+               dataSource = detec.reduce( (acc,d) => {                  
                   let presets = []
+                  
+                  if(onKhmerUrl && d === "iast") presets.push("pi-x-ndia")                  
+
                   if(d === "tibt") for(let p of possible) { if(p === "bo" || p.match(/-[Tt]ibt$/)) { presets.push(p); } }
                   else if(d === "hani") for(let p of possible) { if(p.match(/^zh((-[Hh])|$)/)) { presets.push(p); } }
                   else if(["ewts","iast","deva","pinyin"].indexOf(d) !== -1) for(let p of possible) { 
@@ -6350,7 +6674,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   else if(d === "khmr") { presets.push("km");  } 
                   
                   // #509
-                  if(d === "iast") presets.push("pi-x-ndia")                  
+                  if(!onKhmerUrl && d === "iast") presets.push("pi-x-ndia")                  
                   
                   return [...acc, ...presets]
                }, [] ).concat(!value || value.match(/[a-zA-Z0-9]/)?["en"]:[]).map(p => '"'+(p==="bo-x-ewts_lower"?value.toLowerCase():value).trim()+'"@'+(p == "sa-x-iast"?"inc-x-ndia":p))
@@ -6466,6 +6790,92 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                /></div>
       ] )
 
+
+      let hasMatchPopup, hasMatchFacet = this.props.config?.facets[this.state.filters.datatype[0]]?.hasMatch, hasMatchTitle
+      if(metaK.includes("hasMatch")) { 
+         
+         hasMatchPopup = [<div key={0} style={{width:"200px",textAlign:"left"}} className="searchWidget">
+            <FormControlLabel
+               control={
+                  <Checkbox
+                     checked={(!this.state.filters.facets || !this.state.filters.facets[tmp+"hasMatch"])}
+                     className="checkbox"
+                     icon={<PanoramaFishEye/>}
+                     checkedIcon={<CheckCircle  style={{color:"#d73449"}}/>}
+                     onChange={(event, checked) => { 
+                        this.handleCheckFacet(event, hasMatchFacet, Object.keys(meta["hasMatch"]), false) 
+                        this.setState({ collapse: { ...this.state.collapse, hasMatchPopup: false }})
+                     }}
+                  />
+
+               }
+               label={<span lang={this.props.locale}>{I18n.t("sort.exact")}</span>}
+            />
+            </div> ]
+
+
+
+         if(!this.state.filters.facets || !this.state.filters.facets[tmp+"hasMatch"]) hasMatchTitle = I18n.t("sort.exact")
+         else {
+            if(this.state.filters.facets) {
+               if(this.state.filters.facets[tmp+"hasMatch"].includes(tmp+"isExactMatch")) {
+                  if(this.state.filters.facets[tmp+"hasMatch"].includes(tmp+"hasExactMatch")) {
+                     hasMatchTitle = I18n.t("sort.exactMF")
+                  } else hasMatchTitle = I18n.t("sort.exactF")
+               } else hasMatchTitle = I18n.t("sort.exactM")
+            }
+         }
+
+         const matchK = Object.keys(meta["hasMatch"]).filter(p => p.startsWith(tmp)),
+            allMatch = matchK.length > 1 && !matchK.some(t => !this.state.filters.facets || !this.state.filters.facets[tmp+"hasMatch"]?.includes(t))
+
+         hasMatchPopup = hasMatchPopup.concat(matchK.map((t,n) => {         
+            return(<div key={n} style={{width:"200px",textAlign:"left"}} className="searchWidget">
+               <FormControlLabel
+                  control={
+                     <Checkbox
+                        checked={!allMatch && this.state.filters.facets && this.state.filters.facets[tmp+"hasMatch"]?.includes(t)}
+                        className="checkbox"
+                        icon={<PanoramaFishEye/>}
+                        checkedIcon={<CheckCircle  style={{color:"#d73449"}}/>}
+                        onChange={(event, checked) => { 
+                           if(checked) this.handleCheckFacet(event, hasMatchFacet, [ t ], checked, false, true)
+                           this.setState({ collapse: { ...this.state.collapse, hasMatchPopup: false }})
+                        }}
+                     />
+
+                  }
+                  label={<span lang={this.props.locale}>{I18n.t("sort.exact"+(t.endsWith("hasExactMatch")?"M":"F"))}</span>}
+               />
+            </div> )
+         }))       
+
+         if(matchK.length > 1) {
+
+            hasMatchPopup.push(         
+               <div key={99} style={{width:"200px",textAlign:"left"}} className="searchWidget">
+                  <FormControlLabel
+                     control={
+                        <Checkbox
+                           checked={allMatch}
+                           className="checkbox"
+                           icon={<PanoramaFishEye/>}
+                           checkedIcon={<CheckCircle  style={{color:"#d73449"}}/>}
+                           onChange={(event, checked) => { 
+                              if(checked) this.handleCheckFacet(event, hasMatchFacet, matchK, checked)
+                              this.setState({ collapse: { ...this.state.collapse, hasMatchPopup: false }})
+                           }}
+                        />
+
+                     }
+                     label={<span lang={this.props.locale}>{I18n.t("sort.exactMF")}</span>}
+                  />
+               </div> 
+            )            
+         }                           
+      }
+
+
       let infoPanelH, infoPanelR
       if(this.props.config && this.props.config.msg) {
          if(message.length == 0 && !this.props.loading && !this.props.keyword) infoPanelH = this.props.config.msg.filter(m => m.display && m.display.includes("home"))
@@ -6516,7 +6926,30 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       if(tags && tags.props?.children?.length && !tags.props?.children?.some(e=>e)) tags = null
 
 
-      //console.log("tags:",tags)
+      //console.log("tags:",tags,message)
+
+      const requestSearchOnClick = (tab,i) => {
+
+         loggergen.log("CLICK:",i,tab[0],tab[1]);
+         let kw = tab[0]
+         let isRID = !languages[tab[1]], isDateOrId
+         if(isRID) {
+            if(!kw.includes(":")) {
+               if(!tab[1].match(/date|identifier/)) kw = "bdr:"+kw.toUpperCase()
+               else isRID = "IDorDate"
+            }
+            else {
+               kw = kw.split(":")
+               kw = kw[0].toLowerCase()+":"+kw[1].toUpperCase()
+               if(tab[1].endsWith("identifier")) isRID = "IDorDate"
+            }
+         } 
+
+         console.log("rs??2")
+         if(this.state.keyword) this.requestSearch(kw,null,tab[1], isRID && i === 1, (isRID == "IDorDate"?tab[1].replace(/^.*(date|identifier).*$/,"$1"):null), i)
+         this.setState({...this.state,langIndex:i,dataSource:[]});
+         
+      }
 
 
       const ret = (
@@ -6615,7 +7048,14 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                            this.setState({langIndex:idx})
                         }
                      }}
-                     onRequestSearch={this.requestSearch.bind(this)}
+                     onRequestSearch={ () => {
+                        if(!this.state.dataSource?.length) return
+                        let i = 0
+                        if(this.state.langIndex) i = this.state.langIndex
+                        let v = this.state.dataSource[i]
+                        let tab = v.split("@")
+                        requestSearchOnClick(tab,i)
+                     }}
                      value={this.props.latest&&this.state.keyword==="(latest)"?"":(this.props.hostFailure?"Endpoint error: "+this.props.hostFailure+" ("+this.getEndpoint()+")":this.state.keyword !== undefined && this.state.keyword!==this.state.newKW?this.state.keyword:this.props.keyword&&this.state.newKW?lucenequerytokeyword(this.state.newKW):"")}
                      style={{
                         marginTop: '0px',
@@ -6646,26 +7086,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                                  return (
                                     <MenuItem key={v} style={{lineHeight:"1em"}} onMouseDown={(e) => e.preventDefault()} 
                                     className={(!this.state.langIndex && i===0 || this.state.langIndex === i || this.state.langIndex >= this.state.dataSource.length && i === 0?"active":"")} 
-                                    onClick={(e)=>{ 
-                                          loggergen.log("CLICK:",v,i,tab[0],tab[1]);
-                                          let kw = tab[0]
-                                          let isRID = !languages[tab[1]], isDateOrId
-                                          if(isRID) {
-                                             if(!kw.includes(":")) {
-                                                if(!tab[1].match(/date|identifier/)) kw = "bdr:"+kw.toUpperCase()
-                                                else isRID = "IDorDate"
-                                             }
-                                             else {
-                                                kw = kw.split(":")
-                                                kw = kw[0].toLowerCase()+":"+kw[1].toUpperCase()
-                                                if(tab[1].endsWith("identifier")) isRID = "IDorDate"
-                                             }
-                                          } 
-
-                                          if(this.state.keyword) this.requestSearch(kw,null,tab[1], isRID && i === 1, (isRID == "IDorDate"?tab[1].replace(/^.*(date|identifier).*$/,"$1"):null), i)
-                                          this.setState({...this.state,langIndex:i,dataSource:[]});
-                                          
-                                       }} ><span class="maxW">{ tab.length == 1 ?"":tab[0].replace(/["]/g,"")}</span> <SearchIcon style={{padding:"0 10px"}}/><span class="lang">{tab.length == 1 ? I18n.t("home."+tab[0]):(I18n.t(""+(searchLangSelec[tab[1]]?searchLangSelec[tab[1]]:(languages[tab[1]]?languages[tab[1]]:tab[1])))) }</span></MenuItem> ) 
+                                    onClick={(e)=> requestSearchOnClick(tab,i) } ><span class="maxW">{ tab.length == 1 ?"":tab[0].replace(/["]/g,"")}</span> <SearchIcon style={{padding:"0 10px"}}/><span class="lang">{tab.length == 1 ? I18n.t("home."+tab[0]):(I18n.t(""+(searchLangSelec[tab[1]]?searchLangSelec[tab[1]]:(languages[tab[1]]?languages[tab[1]]:tab[1])))) }</span></MenuItem> ) 
                                     })
                               }
                         </Paper>
@@ -6825,20 +7246,24 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   {  // DONE change to popover style open/close
                      sortByList && this.popwidget(I18n.t("Lsidebar.sortBy.title",{by,reverse}),"sortBy",sortByPopup, <ImportExport className="header-icon"/> ) 
                   }
-                  { this.state.filters.datatype.includes("Place") && this.props.simple && <div class="widget-header" style={{marginRight:"auto"}} onClick={
+                  { this.state.filters.datatype.includes("Place") && this.props.simple && <div class="widget-header placeMap" style={{marginRight:"auto"}} onClick={
                         () => this.setState({ repage:true, collapse:{...this.state.collapse, placeMap:!this.state.collapse.placeMap}})
                      }>
-                     <p class="widget-title" ><Visibility style={{verticalAlign:"-4px",marginRight:"8px"}}/>{I18n.t("search.toggleM")}</p>
+                     <Visibility style={{verticalAlign:"-4px",marginRight:"8px"}}/>
+                     <p class="widget-title" >{I18n.t("search.toggleM")}</p>
                   </div> }
-                  { this.state.filters.datatype.includes("Etext") && <div class="widget-header" style={{marginRight:"auto"}} onClick={
+                  { this.state.filters.datatype.includes("Etext") && <div class="widget-header etextBestM" /*style={{marginRight:!metaK.includes("hasMatch")?"auto":0}}*/ onClick={
                            () => this.setState({repage:true, collapse:{...this.state.collapse,"etextOtherM":!this.state.collapse.etextOtherM}})
-                     }>
+                     }>{ this.state.collapse.etextOtherM 
+                        ? <VisibilityOff style={{verticalAlign:"-4px",marginRight:"8px"}}/>
+                        : <Visibility style={{verticalAlign:"-4px",marginRight:"8px"}}/> }
                         <p class="widget-title" >
                            { this.state.collapse.etextOtherM 
-                              ? [<VisibilityOff style={{verticalAlign:"-4px",marginRight:"8px"}}/>,I18n.t("sort.hideAll")]
-                              : [<Visibility style={{verticalAlign:"-4px",marginRight:"8px"}}/>,I18n.t("sort.showAll")] }
+                              ? I18n.t("sort.hideAll")
+                              : I18n.t("sort.showAll") }
                         </p>
                      </div>}
+                  { metaK.includes("hasMatch") &&  this.popwidget(hasMatchTitle,"hasMatchPopup", hasMatchPopup,  <img src="/icons/exact.png" width="20px" style={{marginRight:"8px"}} /> )  }
                   <div id="pagine" lang={this.props.locale}>
                      <div>
                            { pageLinks && <span>{I18n.t("search.page")} { pageLinks }</span>}
@@ -6850,6 +7275,16 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
            }
             
            {/* <span>{ ""+this.props.loading }</span> */}
+
+            {/* // #734 proof of concept
+            
+            <Link to={"/show/bdr:W12827#open-viewer"} onClick={(ev) => {             
+               window.top.postMessage(JSON.stringify({"open-viewer":{"rid":"W12827"}}),"*")               
+               ev.preventDefault()
+               ev.stopPropagation()
+              return false;
+            }}>open W12827 from iframe parent</Link><br/><br/><br/><br/> */}
+
            <div id="res-container" >
            { (!this.props.simple && (this.props.loading || this.props.keyword && (!this.props.datatypes || !this.props.datatypes.hash))) && <Loader className="fixloader"/> }
            {  (message.length > 0 || message.length == 0 && !this.props.loading) && this.render_filters(types,counts,sortByList,reverseSort,facetWidgets) }
@@ -6879,7 +7314,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                         {/* { messageD } */}
                         <h3>{ I18n.t("home.message") }</h3>
                         <h4>{ I18n.t("home.submessage") }</h4>
-                        { (!this.props.auth.isAuthenticated() && (!this.props.config || !this.props.config.chineseMirror)) && <h4 class="subsubtitleFront">
+                        { ((!this.props.config || !this.props.config.chineseMirror) && !this.props.auth?.isAuthenticated()) && <h4 class="subsubtitleFront">
                            { I18n.t("home.subsubmessage_account1")}
                            {this.props.locale==="bo"?<span> </span>:""}
                            <span class="uri-link" onClick={() => this.props.auth.login(this.props.history.location,true)} >{I18n.t("home.subsubmessage_account4")}</span>

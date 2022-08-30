@@ -80,11 +80,16 @@ export const langPreset = (state: UIState, action: Action): UIState => {
 reducers[actions.TYPES.langPreset] = langPreset
 
 
-
 export const logEvent = (state: UIState, action: Action): UIState => {
     return {...state, logged:action.payload }
 };
 reducers[actions.TYPES.logEvent] = logEvent
+
+
+export const closePortraitPopup = (state: UIState, action: Action): UIState => {
+    return {...state, portraitPopupClosed: true }
+};
+reducers[actions.TYPES.closePortraitPopup] = closePortraitPopup
 
 
 export const loadingGallery = (state: UIState, action: Action): UIState => {
@@ -121,6 +126,16 @@ export const setType = (state: UIState, action: Action) => {
 }
 reducers[actions.TYPES.setType] = setType;
 
+
+
+export const useDLD = (state: UIState, action: Action) => {
+
+    return {
+    ...state,
+    useDLD:true
+ }
+}
+reducers[actions.TYPES.useDLD] = useDLD;
 
 
 export const setEtextLang = (state: UIState, action: Action) => {
