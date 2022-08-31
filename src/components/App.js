@@ -689,9 +689,10 @@ export function lang_selec(that,black:boolean = false,inPopup:false, useCheckbox
 
                            that.props.onSetLocale(i);
                            if(that.props.langIndex != "custom") { // && !callback) {
-                              if(i === "bo") that.props.onSetLangPreset(["bo","zh-hans"], "bo")
-                              else if(i === "en") that.props.onSetLangPreset(["bo-x-ewts","inc-x-iast"], "en")
-                              else if(i === "zh") that.props.onSetLangPreset(["zh-hant","bo"], "zh")
+                              if(that.props.config.language.menu?.includes(i)) {
+                                 const conf = that.props.config.language.data.presets[i]
+                                 if(conf?.length) that.props.onSetLangPreset(conf, i)
+                              }
                            }
 
                            let loca = { ...that.props.history.location }

@@ -508,7 +508,8 @@
          "xTwktt":"Trent Walker Khmer-Tai Translit.",
          "xBdrc":"BDRC Translit.",
          "xFemc":"FEMC Translit.",
-         "hani": "Original - no conversion"
+         "hani": "Original - no conversion",
+         "fr":"Français"
       },
       "x": "Transliterated",
       "latn": "Transliterated"

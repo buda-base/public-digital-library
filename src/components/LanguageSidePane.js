@@ -112,7 +112,7 @@ class LanguageSidePane extends Component<Props,State> {
       if(!this._refs) this._refs = {}
 
        if(!this.props.langPriority) return <div></div>
-       else return Object.keys(this.props.langPriority.presets).filter(k => ["bo","en","zh","km","custom"].includes(k)).map((k,i) => {
+       else return Object.keys(this.props.langPriority.presets).filter(k => ["bo","en","fr","zh","km","custom"].includes(k)).map((k,i) => {
 
          let list = this.props.langPriority.presets[k]
          if(k == "custom") { 

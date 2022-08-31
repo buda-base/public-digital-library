@@ -4657,12 +4657,16 @@ body > .ol-li-lang:last-child li::before { content:'(--)';}
 #outline .widget ol { margin-left:4px;}
 body > .ol-li-lang label span:not(#a),
 #outline .widget label span:not(#a) { font-weight:700; }
+#outline .widget label > span > span { display:inline-flex; }
 body > .ol-li-lang  label span:not(#a) .lang-info,
-#outline .widget label span:not(#a) .lang-info { font-weight:400; text-transform:none; }
-#outline .widget label > span:last-child > span + span::before { content:" + "; font-weight:400;}
+#outline .widget label span:not(#a) .lang-info { font-weight:400; text-transform:none; padding-left:4px; }
+#outline .widget label > span:last-child > span + span::before { content:" + "; font-weight:400;padding:0 4px;}
 #outline .widget label .checkbox:not(.disabled) { opacity:0.8;}
 
+@media(min-width:666px) {
 
+   #outline .widget { min-width:calc(100% - 210px); }
+}
 
 .collapse.sortBy > div:last-child { padding:20px;} 
 .collapse.open { margin-bottom:20px; z-index:100000;}

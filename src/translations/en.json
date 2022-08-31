@@ -521,7 +521,8 @@
          "unicode": "Unicode",
          "xBdrc":"BDRC Translit.",
          "xFemc":"FEMC Translit.",
-         "hani": "Original - no conversion"
+         "hani": "Original - no conversion",
+         "fr":"French"
       },
       "x": "Transliterated",
       "latn": "Transliterated"

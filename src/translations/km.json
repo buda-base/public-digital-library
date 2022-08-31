@@ -507,7 +507,9 @@
          "latnPinyin": "ភីងអ៊ីង",
          "xTwktt":"ការសរសេរជាសូរស័ព្ទថៃខ្មែរ Trent Walker",
          "xBdrc":"BDRC Translit.",
-         "xFemc":"FEMC Translit."
+         "xFemc":"FEMC Translit.",
+         "hani": "Original - no conversion",
+         "fr":"Français"
       },
       "x": "បានសរសេរជាសូរស័ព្ទ",
       "latn": "បានសរសេរជាសូរស័ព្ទ"
