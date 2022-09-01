@@ -713,6 +713,8 @@
       "genPDF":"Generating PDF...",
       "genZIP":"Generating image files...",
       "goto":"ཤོག་ངོས་སྟོན།",
+      "image": "བཤེར་པར།",
+      "images": "བཤེར་པར།",
       "mustLogin":"ཁྱེད་ཀྱིས་PDFsདང་ZIPsགང་རུང་ཕབ་ལེན་བྱེད་པར་ཐོག་མར་ནང་འཛུལ་བྱོས།",
       "or":"or",
       "pdferror1":"Incorrect image range",

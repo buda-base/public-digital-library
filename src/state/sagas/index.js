@@ -637,8 +637,8 @@ export async function updateConfigFromProfile() {
       const id = state.ui.userID
       const res = state.data.resources[id][id]
       let locale = res[bdou+"preferredUiLang"][0]?.value
-      if(locale) locale = locale.replace(/^zh.*$/,"zh")
-      if(!state.data.config.language.menu[locale]) locale = "en" 
+      if(locale) locale = locale.replace(/^zh.*$/,"zh")      
+      if(!state.data.config.language.menu?.includes(locale)) locale = "en" 
       const litLangs = toArray(state.data.resources[id], res[bdou+"preferredUiLiteralLangs"])
       let preset = locale, allPresets = Object.keys(state.data.config.language.data.presets).reduce( (acc,k) => { 
          let ret = k != "custom" ? state.data.config.language.data.presets[k]?.toString() : ""
