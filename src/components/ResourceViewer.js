@@ -6526,7 +6526,9 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                      return this.renderEtextHasChunk(elem, k, tags)                     
                   }
                   else if(k !== bdo+"eTextHasChunk" && k !== bdo+"eTextHasPage" && (k !== bdo+"instanceHasVolume" || this.props.logged === "admin")) {
-                     return this.renderGenericProp(elem, k, tags, hasMaxDisplay) //div!=="ext-props"?hasMaxDisplay:-1)
+                     let disable
+                     if(k === bdo+"scanInfo") disable = elem?.length && elem.some(l => l.value?.startsWith("Scanned or acquired in Tibetan areas of China by BDRC") )
+                     if(!disable) return this.renderGenericProp(elem, k, tags, hasMaxDisplay) //div!=="ext-props"?hasMaxDisplay:-1)
                   }
                }
             }

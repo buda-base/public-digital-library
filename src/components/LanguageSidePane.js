@@ -51,6 +51,7 @@ const langSettings = {
    "zh":  [ "hani", "hans", "hant", "latn-pinyin" ],
    "inc": [ "deva", "newa", "sinh", "x-iast" ],
    "km":  [ "-", "x-twktt", "x-iast" ],  
+   "pi": [ "deva", "newa", "sinh", "x-iast" ],
 }
 
 
