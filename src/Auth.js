@@ -128,8 +128,20 @@ export default class Auth {
     console.log("redirect",redirect)
     if(redirect) localStorage.setItem('auth0_redirect', JSON.stringify(redirect));
     else localStorage.setItem('auth0_redirect', '/');
-    if(signup === true) this.auth1.authorize({'bdrc_showsignup':1, "locale":"en" }); //, "prompt":"none"}); 
-    else this.auth1.authorize({"warn": I18n.t("home.subsubmessage_auth"), "locale":"en" }); //, "prompt":"none"});
+
+    let locale = "en"
+    let uilang = localStorage.getItem('uilang')
+    if(!uilang) {
+      uilang = window.navigator.language.slice(0, 2)
+      if(['bo','en','zh','km','fr'].includes(uilang)) locale = uilang
+    }
+    if(uilang) {
+      if(["en","zh"].includes(uilang)) locale = uilang
+      else if(uilang === "bo") locale = "zh"
+    }
+
+    if(signup === true) this.auth1.authorize({'bdrc_showsignup':1, locale }); //, "prompt":"none"}); 
+    else this.auth1.authorize({"warn": I18n.t("home.subsubmessage_auth" /*,{ lng: locale } // no need */ ), locale }); //, "prompt":"none"});
   }
 
   constructor() {
