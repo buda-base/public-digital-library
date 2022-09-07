@@ -17,7 +17,7 @@ const onKhmerUrl = (
 
 require('formdata-polyfill')
 
-const CONFIG_PATH = onKhmerUrl?'/config-khmer.json':'/config.json'
+const CONFIG_PATH = onKhmerUrl?'/config-khmer_v2.json':'/config_v2.json'
 const CONFIGDEFAULTS_PATH = '/config-defaults.json'
 const ONTOLOGY_PATH = '/ontology/core.json'
 const DICTIONARY_PATH = '/ontology/data/json' //  '/graph/ontologySchema.json'
