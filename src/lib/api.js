@@ -86,6 +86,34 @@ export const dPrefix = {
    }
 };
 
+export async function logError(error, json) {
+   
+   if(!json) json = {}
+   
+   json.message = error.message
+   json.stack = error.stack
+   json.location = window.location.href
+
+   const url = "https://editserv-dev.bdrc.io/logClientException"
+
+   const id_token = localStorage.getItem('id_token');
+
+   const { isAuthenticated } = auth;
+
+   let response = await fetch( url, {
+      method: 'POST',
+      headers: new Headers({
+         ...( isAuthenticated() && {"Authorization":"Bearer "+id_token } )
+      }),
+      body: JSON.stringify(json)
+   })
+
+   console.error("sent:",json)
+
+}
+
+//logError({test: "ok?"})
+
 export function getEntiType(t:string):string {
    let uri = shortUri(t)
    let p = uri.replace(/^([^:]+):.*$/,"$1")
@@ -260,6 +288,7 @@ export default class API {
          return config ;
       }
       catch(e) {
+         logError(e)
 
          console.error("fetching config.json",e);
 
@@ -343,6 +372,7 @@ export default class API {
          }
          catch(e)
          {
+            logError(e)         
             //throw(e)
             console.error("ERROR byDateOrId",e)
             return true
@@ -366,6 +396,7 @@ export default class API {
          }
          catch(e)
          {
+            logError(e)         
             //throw(e)
             console.error("ERROR outline",e)
             return true
@@ -389,6 +420,7 @@ export default class API {
          }
          catch(e)
          {
+            logError(e)         
             //throw(e)
             console.error("ERROR outline",e)
             return true
@@ -459,6 +491,8 @@ export default class API {
          }
          catch(e)
          {
+            logError(e)
+         
             //throw(e)
             console.error("ERROR outline",e)
             return true
@@ -479,6 +513,7 @@ export default class API {
          }
          catch(e)
          {
+            logError(e)
             //throw(e)
             console.error(e)
             return true
@@ -634,6 +669,7 @@ export default class API {
          }
          catch(e)
          {
+            logError(e)
             //throw(e)
             console.error("ERROR etextrefs",e)
             return true
@@ -1037,6 +1073,7 @@ export default class API {
          console.log("upload:",RID,ttl,user) //,ttl0)
 
       } catch(e) {
+         logError(e)
          console.warn("RDF parse error:",e)
       }
    
@@ -1060,6 +1097,7 @@ export default class API {
          })
 
       } catch(e) {
+         logError(e)
          console.log("patch",e)
       }
 
@@ -1078,6 +1116,7 @@ export default class API {
          })).text()
 
       } catch(e) {
+         logError(e)
          console.log("patch",e)
       }
 
@@ -1113,6 +1152,7 @@ export default class API {
          return response
       }
       catch(e) {
+         logError(e)
          console.error("auth0 email update failed",e)
          return { statusCode:-1, error:"auth0 email update failed", message:e  }
       }

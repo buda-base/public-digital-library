@@ -247,7 +247,8 @@ reducers[actions.TYPES.gotCitationData] = gotCitationData;
 
 export const getResource = (state: DataState, action: Action) => {
    
-   let res = state.resources[action.payload]
+   let res 
+   if(state.resources) res = state.resources[action.payload]
    if(!res) res = true
 
     return {

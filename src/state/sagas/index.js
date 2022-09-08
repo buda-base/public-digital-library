@@ -8,7 +8,7 @@ import * as dataActions from '../data/actions';
 import * as uiActions from '../ui/actions';
 import selectors from '../selectors';
 import store from '../../index';
-import bdrcApi, { getEntiType, ResourceNotFound } from '../../lib/api';
+import bdrcApi, { getEntiType, ResourceNotFound, logError } from '../../lib/api';
 import {sortLangScriptLabels, extendedPresets, getMainLabel} from '../../lib/transliterators';
 import {auth} from '../../routes';
 import {shortUri,fullUri,isAdmin,sublabels,subtime} from '../../components/App'
@@ -123,7 +123,7 @@ async function initiateApp(params,iri,myprops,route,isAuthCallback) {
          // set data language preferences
          // 1-saved preference
          let list 
-         if((val = localStorage.getItem('langpreset')) && ((list = localStorage.getItem('lang')) || (list = { ...config.language.data.presets[val] }))) {
+         if((val = localStorage.getItem('langpreset')) && ((list = localStorage.getItem('lang')) || (list = [ ...config.language.data.presets[val] ]))) {
             if(list[locale]) list = list[locale]            
             else if(!Array.isArray(list)) list = list.split(/ *, */)
             store.dispatch(uiActions.langPreset(list, val))
@@ -190,6 +190,7 @@ async function initiateApp(params,iri,myprops,route,isAuthCallback) {
             else res = await api.loadEtextInfo(iri)         
          }
          catch(e){
+            logError(e)
             store.dispatch(dataActions.noResource(iri,e));
             return
          }
@@ -502,6 +503,8 @@ else if(!iri) {
 } catch(e) {
    console.error('initiateApp error: %o', e);
    // TODO: add action for initiation failure
+
+   logError(e)
 }
 }
 
@@ -581,6 +584,7 @@ async function getResetLink(id,user,profile)
    }
    catch(e)
    {
+      logError(e)
       console.error("password link",e)
    }
 
@@ -636,7 +640,11 @@ export async function updateConfigFromProfile() {
       const state = store.getState()
       const id = state.ui.userID
       const res = state.data.resources[id][id]
-      let locale = res[bdou+"preferredUiLang"][0]?.value
+      let locale = "en"
+      
+      if(res[bdou+"preferredUiLang"]?.length) 
+         locale = res[bdou+"preferredUiLang"][0]?.value
+
       if(locale) locale = locale.replace(/^zh.*$/,"zh")      
       if(!state.data.config.language.menu?.includes(locale)) locale = "en" 
       const litLangs = toArray(state.data.resources[id], res[bdou+"preferredUiLiteralLangs"])
@@ -668,14 +676,20 @@ export async function updateConfigFromProfile() {
       console.log("state:", state, res, litLangs, locale, isCustom,litLangs.toString(),state.data.config.language.data.presets[locale])
    }
 
-   if (!userProfile) {
-      getProfile(async (err, profile) => {
-         await getUser(profile) 
+   try {
+      if (!userProfile) {
+         getProfile(async (err, profile) => {
+            await getUser(profile) 
+            handleUser()        
+         });
+      } else {
+         await getUser(userProfile)
          handleUser()        
-      });
-   } else {
-      await getUser(userProfile)
-      handleUser()        
+      }
+   } catch(e) {
+      console.error(JSON.stringify(e))
+
+      logError(e)
    }
 }
   
@@ -760,6 +774,7 @@ export function* chooseHost(host:string) {
    }
    catch(e)
    {
+      logError(e)
       // yield put(dataActions.chosenHost(host));
       yield put(dataActions.hostError(host,e.message));
    }
@@ -899,6 +914,7 @@ async function getChunks(iri,next,nb = 10000,useContext = false) {
       
    }
    catch(e){
+      logError(e)
       console.error("ERRROR with chunks",iri,next,e)
 
       //store.dispatch(dataActions.chunkError(url,e,iri);
@@ -1007,6 +1023,7 @@ async function getPages(iri,next) {
          store.dispatch(dataActions.etextError(e.code,iri))
       } else {      
          console.error("ERRROR with pages",iri,next,e)
+         logError(e)
       }
    }
 
@@ -1037,6 +1054,7 @@ async function createPdf(url,iri) {
                //loggergen.log("pdf:",data)
                link = data.link
             } catch(e) {
+               logError(e)
                console.warn("PDF code",e.code,e)
                clearInterval(pdfCheck)
                store.dispatch(dataActions.pdfError(e.code?e.code:502,{url,iri:iri.iri}))
@@ -1070,6 +1088,7 @@ async function createPdf(url,iri) {
 
    }
    catch(e){
+      logError(e)
       console.error("ERRROR with pdf",e)
 
       //store.dispatch(dataActions.manifestError(url,e,iri))
@@ -1114,7 +1133,8 @@ async function requestPdf(url,iri) {
       if(e.code == 401 || e.code == 403) {
          console.warn("PDF request error",e.code)
          store.dispatch(dataActions.pdfError(e.code,{url,iri}))
-      } else {      
+      } else {     
+         logError(e) 
          console.error("ERRROR with pdf",e)
       }
 
@@ -1141,6 +1161,7 @@ async function getAnnotations(iri) {
       }
    }
    catch(e){
+      logError(e)
       //console.error("ERRROR with Annotations",e)
       store.dispatch(dataActions.gotAnnoResource(iri,{}))
 
@@ -1163,6 +1184,7 @@ async function getImageVolumeManifest(url,iri) {
 
    }
    catch(e){
+      logError(e)
       console.error("ERRROR with manifest",e)
 
       store.dispatch(dataActions.manifestError(url,e,iri))
@@ -1266,6 +1288,8 @@ async function getManifest(url,iri,thumb) {
       }
    }
    catch(e){
+      logError(e)
+
       console.error("ERRROR with manifest",e)
 
       store.dispatch(dataActions.manifestError(url,e,iri))
@@ -2626,6 +2650,7 @@ store.dispatch(uiActions.loading(keyword, false));
 //yield put(uiActions.showResults(keyword, language));
 
 } catch(e) {
+   logError(e)
 
    console.error("startSearch failed",e);
 
@@ -3115,6 +3140,7 @@ async function getCitationData(id) {
 
       store.dispatch(dataActions.gotCitationData(id,JSON.parse(res)))
    } catch(e) {
+      logError(e)
       store.dispatch(uiActions.loading(id, false));
    }
 
@@ -3227,6 +3253,7 @@ async function searchKeyword(keyword,language,datatype) {
       //yield put(uiActions.showResults(keyword, language));
 
    } catch(e) {
+      logError(e)
       store.dispatch(dataActions.searchFailed(keyword, e.message));
       store.dispatch(uiActions.loading(keyword, false));
    }
@@ -3245,6 +3272,7 @@ async function getOneDatatype(datatype,keyword,language:string) {
       store.dispatch(dataActions.foundResults(keyword, language, result));
 
    } catch(e) {
+      logError(e)
       store.dispatch(dataActions.searchFailed(keyword, e.message));
       store.dispatch(uiActions.loading(keyword, false));
    }
@@ -3262,6 +3290,7 @@ async function getOneFacet(keyword,language:string,facet:{[string]:string}) {
       store.dispatch(dataActions.foundResults(keyword, language, result));
 
    } catch(e) {
+      logError(e)
       store.dispatch(dataActions.searchFailed(keyword, e.message));
       store.dispatch(uiActions.loading(keyword, false));
    }
@@ -3278,6 +3307,7 @@ async function getResource(iri:string) {
       //store.dispatch(dataActions.gotResource(iri, res));
    }
    catch(e) {
+      logError(e)
       console.error("ERRROR with resource "+iri,e)
       store.dispatch(dataActions.noResource(iri,e));
    }
@@ -3296,6 +3326,7 @@ async function getFacetInfo(keyword,language:string,property:string) {
       store.dispatch(dataActions.foundFacetInfo(keyword, language, property, result));
 
    } catch(e) {
+      logError(e)
       store.dispatch(dataActions.searchFailed(keyword, e.message));
    }
 

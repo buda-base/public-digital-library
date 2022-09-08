@@ -91,7 +91,7 @@ import LanguageSidePaneContainer from '../containers/LanguageSidePaneContainer';
 import ResourceViewerContainer from '../containers/ResourceViewerContainer';
 import {getOntoLabel,provImg as img,providers} from './ResourceViewer';
 import {getQueryParam} from './GuidedSearch';
-import {getEntiType} from '../lib/api';
+import {getEntiType, logError} from '../lib/api';
 import {narrowWithString} from "../lib/langdetect"
 import {sortLangScriptLabels, extendedPresets, getMainLabel} from '../lib/transliterators';
 import './App.css';
@@ -818,6 +818,7 @@ export function etext_lang_selec(that,black:boolean = false, elem, DL)
                          
                                  })
                                  .catch(function (error) {
+                                    logError(error)
                                    //console.error("error:", error.message)
                                  })
 
@@ -1514,6 +1515,7 @@ class App extends Component<Props,State> {
                   this._map.fitBounds(currentMarkers, currentMarkers.length === 1 ? {maxZoom: 10}:{padding:[50,50]})
                }
             } catch(e) {
+               logError(e)
                console.error("refreshClusters/map error",e)
             }
 
@@ -1790,7 +1792,7 @@ class App extends Component<Props,State> {
 
       document.title = title
 
-      if(!props.language && props.keyword) {
+      if(!props.language && props.keyword && props.resources) {
          if(state.resReceived !== props.keyword && props.resources[props.keyword] && props.resources[props.keyword] !== true) {
             if(!s) s = { ...state }
             s.resReceived = props.keyword ;

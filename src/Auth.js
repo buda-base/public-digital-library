@@ -13,7 +13,7 @@ import {top_right_menu, isAdmin} from './components/App';
 import ResourceViewerContainer,{ UserViewerContainer } from './containers/ResourceViewerContainer'
 import { updateConfigFromProfile } from './state/sagas/index.js' 
 
-import bdrcApi from './lib/api';
+import bdrcApi, {logError} from './lib/api';
 
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -118,6 +118,7 @@ export default class Auth {
           }
           catch(e)
           {
+            logError(e)
             console.error("ERROR with cookie",e)
           }      
       }
@@ -214,7 +215,8 @@ export default class Auth {
       }
       catch(e)
       {
-         console.error("ERROR with cookie",e)
+        logError(e)
+        console.error("ERROR with cookie",e)
       }
     }
 
@@ -231,6 +233,7 @@ export default class Auth {
          }
          catch(e)
          {
+            logError(e)
             console.error("ERROR with cookie",e,localStorage.getItem('id_token'))
          }
 
@@ -393,6 +396,7 @@ export class TestToken extends Component<TTState> {
                     test = await api.getURLContents(url, false)                  
                   }
                   catch(e) {
+                    logError(e)
                     console.error(e)
                     test = ""+e
                     error = true
