@@ -94,6 +94,14 @@ export function ewtsToDisplay(src) {
    return src
 }
 
+
+const presets = { 
+   "zh":[ "zh-hant", "bo" ],
+   "bo":[ "bo", "zh-hans" ],
+   "km":[ "km", "pi-khmr", "en", "bo-x-ewts", "sa-x-iast" ],
+   "en":[ "bo-x-ewts", "inc-x-iast" ]
+}
+
 export function extendedPresets(preset)
 {
    // invscore is a score assigned to each possible lang tags, the lower the better. In the rest of the
@@ -104,6 +112,15 @@ export function extendedPresets(preset)
 
    // use sa-..., pi-... instead of inc-...
    let presetNoInc = [], handledKm = false
+
+   // try to fix "not iterable" error in logs 
+   if(!preset?.length) { 
+      let langpreset = localStorage.getItem("langpreset")
+      if(!langpreset) langpreset = "en"
+      preset = presets[langpreset]
+      if(!preset?.length) preset = [ "bo-x-ewts", "inc-x-iast" ]
+   }
+
    for(const p of preset) {
       if(p.startsWith("inc")) { 
          presetNoInc.push(p.replace(/^inc/,"sa"))
