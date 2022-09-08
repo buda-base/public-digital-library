@@ -121,7 +121,7 @@ export async function logError(error, json) {
    let response = await fetch( url, {
       method: 'POST',
       headers: new Headers({
-         "Accept": "application/json",
+         "Content-Type": "application/json",
          ...( isAuthenticated() && {"Authorization":"Bearer "+id_token } )
       }),
       body: JSON.stringify(json)
