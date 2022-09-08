@@ -93,6 +93,8 @@ export async function logError(error, json) {
    json.message = error.message
    json.stack = error.stack
    json.location = window.location.href
+   json.version = localStorage.getItem('APP_VERSION')
+
 
    const lang = localStorage.getItem('lang');
    const uilang = localStorage.getItem('uilang');
@@ -128,7 +130,6 @@ export async function logError(error, json) {
    })
 
    console.error("sent:",json)
-
 }
 
 //logError({test: "ok?"})

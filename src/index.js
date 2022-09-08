@@ -45,21 +45,6 @@ import qs from 'query-string'
 
 import makeMainRoutes from './routes'
 
-import { logError } from './lib/api'
-
-
-window.onerror = async function(messageOrEvent, source, noligne, nocolonne, e) {
-   /* // does not work in prod... getting previous surl
-   const next = window.location.href
-   history.goBack()
-   await new Promise(r => setTimeout(r, 1000));
-   logError(e, { previous: window.location.href, next})
-   */
-
-   logError(e, { previous: window.location.href })
-}
-
-
 const enTranslation = require("./translations/en.json") ;
 const zhTranslation = require("./translations/zh.json") ;
 const boTranslation = require("./translations/bo.json") ;
