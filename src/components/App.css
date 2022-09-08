@@ -449,6 +449,10 @@ body { overflow:auto !important;padding-right:0 !important; /*font-family:"Robot
 .nav #back > span:last-child { display:inline-block;   max-width:calc(100% - 100px); margin-left:0;   white-space: pre; overflow: hidden; text-overflow: ellipsis;  
    color:#d73449;
 }
+
+.nav.etext-nav #back > span:last-child { max-width:none; }
+.nav.etext-nav #back > span:first-child > h2:before { content:none; }
+
 .nav #back h2 {    overflow: hidden; margin:0; display:inline; } 
 .nav #back h2 span { /*max-width:calc(75% - 70px);*/ display:inline;} 
 

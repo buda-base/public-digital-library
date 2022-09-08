@@ -931,12 +931,12 @@ export function top_right_menu(that,etextTitle,backUrl,etextres)
       return (<>
       {!that.props.portraitPopupClosed && portrait}
       <div class={"mobile-button top"+(!that.state.collapse.navMenu?" off":" on")} onClick={()=>that.setState({collapse:{...that.state.collapse,navMenu:!that.state.collapse.navMenu}})}><img src="/icons/burger.svg" /></div>
-      <div class={"nav"+(onZhMirror?" zhMirror":"")+(that.state.collapse.navMenu?" on":"")}>
+      <div class={"nav etext-nav"+(onZhMirror?" zhMirror":"")+(that.state.collapse.navMenu?" on":"")}>
          {uiLangPopup}
          <div>
             {logo}
 
-            <span id="back"><span>&lt;</span>{ backUrl && <a //{...etextres?{href:"/show/"+etextres}:{}}
+            <span id="back">{ backUrl && <><span>&lt;</span> <a //{...etextres?{href:"/show/"+etextres}:{}}
                onClick={(ev   ) => {
 
                   // DONE add loader to wait when back to search 
@@ -959,7 +959,7 @@ export function top_right_menu(that,etextTitle,backUrl,etextres)
 
                   }, 100)
 
-               }}><span style={{verticalAlign:"-3px"}}>{I18n.t("viewer.results")}</span></a> }
+               }}><span style={{verticalAlign:"-3px"}}>{I18n.t("viewer.results")}</span></a></> }
                <span>{etextTitle}</span>
             </span>
             <div class="close" 
