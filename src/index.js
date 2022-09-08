@@ -49,10 +49,14 @@ import { logError } from './lib/api'
 
 
 window.onerror = async function(messageOrEvent, source, noligne, nocolonne, e) {
+   /* // does not work in prod... getting previous surl
    const next = window.location.href
    history.goBack()
    await new Promise(r => setTimeout(r, 1000));
    logError(e, { previous: window.location.href, next})
+   */
+
+   logError(e, { previous: window.location.href })
 }
 
 

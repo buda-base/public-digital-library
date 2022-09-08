@@ -94,6 +94,24 @@ export async function logError(error, json) {
    json.stack = error.stack
    json.location = window.location.href
 
+   const lang = localStorage.getItem('lang');
+   const uilang = localStorage.getItem('uilang');
+   const langpreset = localStorage.getItem('langpreset');
+   const customlangpreset = localStorage.getItem('customlangpreset');
+   json.localStorage = { lang, uilang, langpreset, customlangpreset }
+
+   const state = store.getState()
+
+   const locale = state.i18next.lang
+   const langIndex = state.ui.langIndex
+   const langPreset = state.ui.langPreset   
+   const userID = state.ui.userID
+   const profile = state.data.resources[userID]
+
+   json.user = { locale, langIndex, langPreset, userID, profile }
+
+   //const user = store.getState().ui
+
    const url = "https://editserv-dev.bdrc.io/logClientException"
 
    const id_token = localStorage.getItem('id_token');
@@ -103,6 +121,7 @@ export async function logError(error, json) {
    let response = await fetch( url, {
       method: 'POST',
       headers: new Headers({
+         "Accept": "application/json",
          ...( isAuthenticated() && {"Authorization":"Bearer "+id_token } )
       }),
       body: JSON.stringify(json)
