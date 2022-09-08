@@ -102,15 +102,18 @@ export async function logError(error, json) {
    const customlangpreset = localStorage.getItem('customlangpreset');
    json.localStorage = { lang, uilang, langpreset, customlangpreset }
 
-   const state = store.getState()
+   const state = store?.getState()
 
-   const locale = state.i18next.lang
-   const langIndex = state.ui.langIndex
-   const langPreset = state.ui.langPreset   
-   const userID = state.ui.userID
-   const profile = state.data.resources[userID]
-
-   json.user = { locale, langIndex, langPreset, userID, profile }
+   if(state) {
+      const locale = state.i18next?.lang
+      const langIndex = state.ui?.langIndex
+      const langPreset = state.ui?.langPreset   
+      const userID = state.ui?.userID
+      let profile 
+      if(state.data?.resources) profile = state.data.resources[userID]
+      
+      json.user = { locale, langIndex, langPreset, userID, profile }
+   }
 
    //const user = store.getState().ui
 
@@ -118,19 +121,20 @@ export async function logError(error, json) {
 
    const id_token = localStorage.getItem('id_token');
 
-   const { isAuthenticated } = auth;
+   //const { isAuthenticated } = auth;
 
    let response = await fetch( url, {
       method: 'POST',
       headers: new Headers({
          "Content-Type": "application/json",
-         ...( isAuthenticated() && {"Authorization":"Bearer "+id_token } )
+         //...( isAuthenticated() && {"Authorization":"Bearer "+id_token } )
       }),
       body: JSON.stringify(json)
    })
 
    console.error("sent:",json)
 }
+window.logError = logError
 
 //logError({test: "ok?"})
 

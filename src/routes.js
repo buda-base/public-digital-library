@@ -59,7 +59,9 @@ Router.prototype.setState = function(...args) {
     }
     */
 
-    previousLocation = {...loc};
+   console.log("previous:", previousLocation.pathname, previousLocation.search)
+   previousLocation = previousLocation.pathname + previousLocation.search
+
     return routerSetState.apply(this, args);
 };
 const routerDidMount = Router.prototype.componentDidMount;
@@ -120,8 +122,8 @@ class LogErrorBoundary extends React.Component {
   
     componentDidCatch(error, errorInfo) {
       // Vous pouvez aussi enregistrer l'erreur au sein d'un service de rapport.
-      console.log("catch:",error,errorInfo)
-      logError(error);
+      console.log("catch:",error,errorInfo,previousLocation)
+      logError(error, { previousLocation });
     }
   
     render() {
