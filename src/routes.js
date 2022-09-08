@@ -59,8 +59,7 @@ Router.prototype.setState = function(...args) {
     }
     */
 
-   console.log("previous:", previousLocation.pathname, previousLocation.search)
-   previousLocation = previousLocation.pathname + previousLocation.search
+   previousLocation = loc.pathname + loc.search + loc.hash
 
     return routerSetState.apply(this, args);
 };
