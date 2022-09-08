@@ -41,9 +41,11 @@ export const auth = new Auth();
 
 // ignore hash changes made by UV
 // (see https://stackoverflow.com/questions/45799823/react-router-ignore-hashchange)
-let previousLocation;
+let previousLocation, newLocation;
 const routerSetState = Router.prototype.setState;
 Router.prototype.setState = function(...args) {
+
+   console.log("args:",args)
 
     const loc = this.props.history.location;
 
@@ -59,15 +61,17 @@ Router.prototype.setState = function(...args) {
     }
     */
 
-   previousLocation = loc.pathname + loc.search + loc.hash
+   previousLocation = newLocation
+   newLocation = loc.pathname + loc.search + loc.hash
 
     return routerSetState.apply(this, args);
 };
 const routerDidMount = Router.prototype.componentDidMount;
 Router.prototype.componentDidMount = function(...args) {
-    previousLocation = {
-        ...this.props.history.location,
-    };
+   
+   let loc = this.props.history.location   
+   newLocation = loc.pathname + loc.search + loc.hash
+
     if (typeof routerDidMount === 'function') {
         return routerDidMount.apply(this, args);
     }
