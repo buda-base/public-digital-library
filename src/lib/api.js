@@ -94,6 +94,7 @@ export async function logError(error, json) {
    json.stack = error.stack
    json.location = window.location.href
    json.version = localStorage.getItem('APP_VERSION')
+   json.userAgent = window.navigator.userAgent
 
 
    const lang = localStorage.getItem('lang');
