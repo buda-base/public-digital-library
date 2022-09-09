@@ -1321,16 +1321,18 @@ class ResourceViewer extends Component<Props,State>
       
       if(props.resources && props.resources[props.IRI]) {
 
-         if(props.IRI && !props.outline && getEntiType(props.IRI) === "Instance" && props.config) {             
-            let hasPartB = getElem(tmp+"hasNonVolumeParts",props.IRI)
-            if(hasPartB?.length && hasPartB[0].value == "true") props.onGetOutline(props.IRI, { "tmp:hasNonVolumeParts": true})
-            else props.onGetOutline(props.IRI)
-         }
-
+         
          let root = getElem(bdo+"inRootInstance",props.IRI)
          if(root && root.length) {
             let shR = shortUri(root[0].value)
             if(props.outlines && !props.outlines[shR] && props.config && state.outlinePart) props.onGetOutline(shR)
+         }
+
+         // #754 don't need to get outline data when on sub-node record page
+         if(props.IRI && !props.outline && getEntiType(props.IRI) === "Instance" && props.config && !root?.length) {             
+            let hasPartB = getElem(tmp+"hasNonVolumeParts",props.IRI)
+            if(hasPartB?.length && hasPartB[0].value == "true") props.onGetOutline(props.IRI, { "tmp:hasNonVolumeParts": true})
+            else props.onGetOutline(props.IRI)
          }
 
          let 
@@ -8301,6 +8303,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                                        </span>
                                  </span>] }</div>
                            )
+                        //console.log("will loop:",e["@id"], top, this.props.outlines[e["@id"]],tag,this.state.collapse[tag])
                         if((osearch && this.state.collapse[tag] !== false) || (this.props.outlines[e["@id"]] && this.props.outlines[e["@id"]] !== true && this.state.collapse[tag]) ) 
                            ret.push(<div style={{paddingLeft:"33px"}}>{makeNodes(e["@id"],top)}</div>)                        
                         return ( ret )
