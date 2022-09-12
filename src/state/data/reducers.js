@@ -405,7 +405,7 @@ export const gotResource = (state: DataState, action: Action) => {
                         let v_ev = data[v.value], w_ev = data[w.value]
                         
                         // found same event type
-                        if(v_ev[rdf+"type"] && w_ev[rdf+"type"] && v_ev[rdf+"type"].length && w_ev[rdf+"type"].length && v_ev[rdf+"type"][0].value === w_ev[rdf+"type"][0].value) {
+                        if(v_ev && w_ev && v_ev[rdf+"type"] && w_ev[rdf+"type"] && v_ev[rdf+"type"].length && w_ev[rdf+"type"].length && v_ev[rdf+"type"][0].value === w_ev[rdf+"type"][0].value) {
 
                            //console.log("nodes:",v_ev,w_ev)
                            
