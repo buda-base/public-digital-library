@@ -3777,10 +3777,13 @@ class ResourceViewer extends Component<Props,State>
                if(lang) {
 
                   let tLab = getLangLabel(this,prop,[e])
+                  if(!tLab) tLab = { ...e, value: "--" }
                   let lang = tLab["lang"]
                   if(!lang) lang = tLab["xml:lang"]
+                  if(!lang) lang = this.props.locale
                   let tVal = tLab["value"]
                   if(!tVal) tVal = tLab["@value"]
+                  if(!tVal) tVal = ""
 
                   if(tLab.start !== undefined) tmp = [ <span class="startChar">
                      <span>[&nbsp;
