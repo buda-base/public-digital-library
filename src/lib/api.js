@@ -88,6 +88,7 @@ export const dPrefix = {
 
 export async function logError(error, json) {
    
+   
    if(!json) json = {}
    
    json.message = error.message
@@ -124,14 +125,19 @@ export async function logError(error, json) {
 
    //const { isAuthenticated } = auth;
 
-   let response = await fetch( url, {
-      method: 'POST',
-      headers: new Headers({
-         "Content-Type": "application/json",
-         //...( isAuthenticated() && {"Authorization":"Bearer "+id_token } )
-      }),
-      body: JSON.stringify(json)
-   })
+   if(window.location.hostname != "localhost") {
+
+      let response = await fetch( url, {
+         method: 'POST',
+         headers: new Headers({
+            "Content-Type": "application/json",
+            //...( isAuthenticated() && {"Authorization":"Bearer "+id_token } )
+         }),
+         body: JSON.stringify(json)
+      })
+   } else {
+      console.log("(localhost/not sending)")
+   }
 
    console.error("sent:",json)
 }
