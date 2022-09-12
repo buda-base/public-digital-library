@@ -4824,7 +4824,7 @@ class ResourceViewer extends Component<Props,State>
             title = getLangLabel(this,"", titlElem, false, false, otherLabels)            
          }
          
-         loggergen.log("titl:",title,kZprop,titlElem,otherLabels,other)
+         //loggergen.log("titl:",title,kZprop,titlElem,otherLabels,other)
       
          let _befo
          if(title && title.value) {
@@ -7566,7 +7566,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                collapse["outline-"+root+"-"+opart] = true
                collapse["outline-"+root+"-"+opart+"-details"] = true          
 
-               let nodes = this.props.outlines[opart], preloading = false
+               let nodes = this.props.outlines[opart], preloading = false, update = false
                if(nodes && nodes["@graph"]) nodes = nodes["@graph"]
                if(root !== opart && nodes && nodes.length) {
                   let head = opart, done_opart = false, parent_head = null, child_node
@@ -7612,6 +7612,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                                        vol = vol[0].contentLocationVolume
                                        //console.log("ready for vol."+vol+" in "+head,head_node)
                                        if(!already.includes(head)) { // fix side-effect of #729 (prevent opening same text from multiple volumes like bdr:MW3CN27014_K0022-40)
+                                          update = true                              
                                           this.props.onGetOutline("tmp:uri", { partType: "bdr:PartTypeVolume", "tmp:hasNonVolumeParts": true, volumeNumber: vol }, head);
                                           already.push(head)
                                        }
@@ -7629,7 +7630,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   } while(head !== root && head.length);
                }
 
-               if(!preloading) this.setState( { collapse } )               
+               if(!preloading || update) this.setState( { collapse } )               
                loggergen.log("collapse?",JSON.stringify(collapse,null,3))
 
                
