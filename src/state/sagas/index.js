@@ -179,7 +179,7 @@ async function initiateApp(params,iri,myprops,route,isAuthCallback) {
          let s = params.s.filter(p => p.includes("%"))
          if(!s.length) s = params.s
          search = search.replace(/([&?])s=[^&]+/g, "") + "s=" + encodeURIComponent(s[0])
-         history.push({ pathname, search })
+         history.replace({ pathname, search })
          return
       }
 
