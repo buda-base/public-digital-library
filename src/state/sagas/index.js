@@ -174,6 +174,7 @@ async function initiateApp(params,iri,myprops,route,isAuthCallback) {
          
       }
 
+      // #757
       if(params && params.s && Array.isArray(params.s)) {
          let { pathname, search } = { ...history.location }
          let s = params.s.filter(p => p.includes("%"))
@@ -181,6 +182,24 @@ async function initiateApp(params,iri,myprops,route,isAuthCallback) {
          search = search.replace(/([&?])s=[^&]+/g, "") + "s=" + encodeURIComponent(s[0])
          history.replace({ pathname, search })
          return
+      }
+
+      // #756
+      if(params && params.t === "Version") {
+         let { pathname, search } = { ...history.location }
+         search = search.replace(/t=Version/, "t=Instance") 
+         history.replace({ pathname, search })
+         return
+      }
+
+      // #756
+      if(params && params.q && params.q.match(/^(["(]+[^"]*)"([^"]*[")~0-9]+)$/)) {
+         let { pathname, search } = { ...history.location }
+         search = search.replace(/q=[^&]+/, "q="+params.q.replace(/^(["(]+[^"]*)"([^"]*[")~0-9]+)$/g,(m,g1,g2) => g1+(g2.includes('"')?g2:'"'+g2))) 
+         if(search != history.location.search) {
+            history.replace({ pathname, search })
+            return
+         }
       }
 
       // [TODO] load only missing info when needed (see click on "got to annotation" for WCBC2237)
@@ -2145,17 +2164,16 @@ function rewriteAuxMain(result,keyword,datatype,sortBy,language)
    if(!keyword.includes(" AND ")){ 
       if(language === "bo") { 
          let translit = getMainLabel([ { lang: language, value: _kw } ], extendedPresets([ "bo-x-ewts" ]))
-         _kw = "(("+_kw+")|("+translit?.value?.replace(/[_ ]/g,"[_ ]")+(translit?.value?.endsWith("/")?"?":"/?") +"))"      
+         _kw = "(("+_kw+")|("+translit?.value?.replace(/[_ ()]/g,"[_ ]")+(translit?.value?.endsWith("/")?"?":"/?") +"))"  // #756
          flags = "u" // case sensitive in Tibetan/Wylie
       } else if(language === "bo-x-ewts") { 
          let translit = getMainLabel([ { lang: language, value: _kw } ], extendedPresets([ "bo" ]))
-         _kw = "(("+_kw.replace(/[_ ]/g,"[_ ]")+(_kw.endsWith("/")?"?":"/?")+")|("+translit?.value+"))"      
+         _kw = "(("+_kw.replace(/[_ ()]/g,"[_ ]")+(_kw.endsWith("/")?"?":"/?")+")|("+translit?.value+"))"  // #756     
          flags = "u" // case sensitive in Tibetan/Wylie
       }
    }
    
    //console.log("_kw:",_kw,keyword,window.DLD)
-
    let _kwRegExpFullM = new RegExp("^↦.*?"+_kw+".*?↤/?$", flags), _kwRegExpM = new RegExp("↦.*?"+_kw+".*?↤", flags)
 
    let mergeLeporello = state.data.config.khmerServer
