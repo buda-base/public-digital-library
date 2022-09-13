@@ -174,6 +174,15 @@ async function initiateApp(params,iri,myprops,route,isAuthCallback) {
          
       }
 
+      if(params && params.s && Array.isArray(params.s)) {
+         let { pathname, search } = { ...history.location }
+         let s = params.s.filter(p => p.includes("%"))
+         if(!s.length) s = params.s
+         search = search.replace(/([&?])s=[^&]+/g, "") + "s=" + encodeURIComponent(s[0])
+         history.push({ pathname, search })
+         return
+      }
+
       // [TODO] load only missing info when needed (see click on "got to annotation" for WCBC2237)
       if(iri) // || (params && params.r)) // && (!state.data.resources || !state.data.resources[iri]))
       {

@@ -1632,8 +1632,10 @@ class ResourceViewer extends Component<Props,State>
 
 
       if(get.s && (!s && this.state.fromSearch !== get.s || s && s.fromSearch !== get.s ) ) { 
-         if(!s) s = { ...this.state } 
-         s.fromSearch = get.s
+         if(!Array.isArray(get.s)) {
+            if(!s) s = { ...this.state } 
+            s.fromSearch = get.s
+         }
       }
 
       // DONE
@@ -8826,7 +8828,15 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                backTo = oldUrl
             }
          }
-         if(!decodeURIComponent(oldUrl).startsWith("/show/")) {
+
+
+         let decoded = "" 
+         try {
+            decoded = decodeURIComponent(oldUrl)
+         } catch(e) {
+            console.error("pb:",oldUrl)
+         }
+         if(decoded && !decoded.startsWith("/show/")) {
             let withW = backTo.replace(/^.*[?&](w=[^&]+)&?.*$/,"$1")
             //loggergen.log("fromS",this.state.fromSearch,backTo,withW)
             if(backTo === withW) { 
