@@ -117,6 +117,7 @@ export const setPrefLang = (state: UIState, action: Action) => {
 reducers[actions.TYPES.setPrefLang] = setPrefLang;
 
 
+
 export const setType = (state: UIState, action: Action) => {
 
       return {

@@ -6954,6 +6954,22 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          
       }
 
+      let failure 
+      if(this.props.failures?.search) {
+         let lang = languages[this.props.language]
+         if(!lang) lang = this.props.language
+         
+         failure = <List key={2} id="results">         
+            <Typography className="no-result">
+               <Trans i18nKey="search.filters.error" components={{ newline: <br /> }} values={{
+                     keyword:'"'+lucenequerytokeyword(this.props.keyword)+'"', 
+                     language:"$t("+lang+")", 
+                     type:I18n.t("types.searchIn", { type:I18n.t("types."+this.state.filters.datatype[0].toLowerCase(),{count:2}).toLowerCase() }),  
+                     interpolation: {escapeValue: false} }}/>
+            </Typography>
+         </List>
+      }
+
 
       const ret = (
 <div className={(this.props.simple?"simpleSearch":"")}>
@@ -7289,7 +7305,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             }}>open W12827 from iframe parent</Link><br/><br/><br/><br/> */}
 
            <div id="res-container" >
-           { (!this.props.simple && (this.props.loading || this.props.keyword && (!this.props.datatypes || !this.props.datatypes.hash))) && <Loader className="fixloader"/> }
+           { (!this.props.simple && (this.props.loading || this.props.keyword && !failure && (!this.props.datatypes || !this.props.datatypes.hash))) && <Loader className="fixloader"/> }
            {  (message.length > 0 || message.length == 0 && !this.props.loading) && this.render_filters(types,counts,sortByList,reverseSort,facetWidgets) }
                { /*false && this.state.keyword.length > 0 && this.state.dataSource.length > 0 &&
                   <div style={{
@@ -7332,7 +7348,9 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      <h3 style={{marginLeft:"21px"}}>No result found.</h3>             
                   </List>     */
                 }
-               { message.length > 0 &&
+
+               { failure }
+               { (!failure && message.length > 0) &&
                   <List key={2} id="results">
                      { this.props.isInstance && this.state.backToWorks && <a className="uri-link"  onClick={(event) => {
                            this.resetFilters(event)

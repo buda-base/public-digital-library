@@ -2681,7 +2681,7 @@ store.dispatch(uiActions.loading(keyword, false));
 
    console.error("startSearch failed",e);
 
-   store.dispatch(dataActions.searchFailed(keyword, e.message));
+   store.dispatch(dataActions.searchFailed(keyword, e.message, language));
    store.dispatch(uiActions.loading(keyword, false));
 }
 
@@ -3281,7 +3281,7 @@ async function searchKeyword(keyword,language,datatype) {
 
    } catch(e) {
       logError(e)
-      store.dispatch(dataActions.searchFailed(keyword, e.message));
+      store.dispatch(dataActions.searchFailed(keyword, e.message, language));
       store.dispatch(uiActions.loading(keyword, false));
    }
 }
@@ -3300,7 +3300,7 @@ async function getOneDatatype(datatype,keyword,language:string) {
 
    } catch(e) {
       logError(e)
-      store.dispatch(dataActions.searchFailed(keyword, e.message));
+      store.dispatch(dataActions.searchFailed(keyword, e.message, language));
       store.dispatch(uiActions.loading(keyword, false));
    }
 }
@@ -3318,7 +3318,7 @@ async function getOneFacet(keyword,language:string,facet:{[string]:string}) {
 
    } catch(e) {
       logError(e)
-      store.dispatch(dataActions.searchFailed(keyword, e.message));
+      store.dispatch(dataActions.searchFailed(keyword, e.message, language));
       store.dispatch(uiActions.loading(keyword, false));
    }
 }
@@ -3354,7 +3354,7 @@ async function getFacetInfo(keyword,language:string,property:string) {
 
    } catch(e) {
       logError(e)
-      store.dispatch(dataActions.searchFailed(keyword, e.message));
+      store.dispatch(dataActions.searchFailed(keyword, e.message, language));
    }
 
 }

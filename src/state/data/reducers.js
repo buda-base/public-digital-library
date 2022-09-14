@@ -114,12 +114,16 @@ export const loadedDictionary = (state: DataState, action: Action) => {
 reducers[actions.TYPES.loadedDictionary] = loadedDictionary;
 
 export const resetSearch = (state: DataState, action: Action) => {
-    return {
-        ...state,
-        //datatypes:null,
-        keyword: null,
-        language:"bo-x-ewts"
-    }
+   let failures = { ...state.failures }
+   if(failures.search) delete failures.search
+
+   return {
+      ...state,
+      failures,
+      //datatypes:null,
+      keyword: null,
+      language:"bo-x-ewts"
+   }
 }
 reducers[actions.TYPES.resetSearch] = resetSearch;
 
@@ -898,6 +902,32 @@ export const gotNextPages = (state: DataState, action: Action) => {
     return state ;
 }
 reducers[actions.TYPES.gotNextPages] = gotNextPages;
+
+
+export const searchFailed = (state: DataState, action: actions.SearchFailedAction) => {
+   return {
+      ...state,
+      failures: {
+         ...state.failures,
+         search: action.payload.error
+      },
+      keyword:action.payload.keyword,
+      language:action.payload.language
+   }
+}
+reducers[actions.TYPES.searchFailed] = searchFailed;
+
+
+export const startSearch = (state: DataState, action: Action) => {
+   let failures = { ...state.failures }
+   if(failures.search) delete failures.search
+   
+   return {
+      ...state,
+      failures
+   }
+}
+reducers[actions.TYPES.startSearch] = startSearch;
 
 
 

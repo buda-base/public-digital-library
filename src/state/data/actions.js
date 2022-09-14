@@ -545,7 +545,8 @@ export type SearchFailedAction = {
     type: string,
     payload: {
         keyword: string,
-        error: string
+        error: string,
+        language: string,
     }
 }
 
@@ -561,12 +562,13 @@ export const hostError = (keyword: string, error: string): SearchFailedAction =>
 }
 
 TYPES.searchFailed = 'SEARCH_FAILED';
-export const searchFailed = (keyword: string, error: string): SearchFailedAction => {
+export const searchFailed = (keyword: string, error: string, language:string): SearchFailedAction => {
     return {
         type: TYPES.searchFailed,
         payload: {
             keyword,
-            error
+            error,
+            language
         }
     }
 }
