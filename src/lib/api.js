@@ -489,11 +489,13 @@ export default class API {
             try { 
                data = await this.getQueryResults(url, IRI, param,"GET","application/jsonld");         
             } catch(e) {               
-               if(e.code == 404 && node["tmp:hasNonVolumeParts"] == true) {
+               if(e.code == 404 && node && node["tmp:hasNonVolumeParts"] == true) {
                   IRI = initParams.IRI
                   searchType = initParams.searchType
                   param = {searchType,"R_RES":IRI,"L_NAME":"","LG_NAME":"", "I_LIM":"" }
                   data = await this.getQueryResults(url, IRI, param,"GET","application/jsonld");         
+               } else {
+                  throw e
                }
             }
             // use "local" node id for volume
