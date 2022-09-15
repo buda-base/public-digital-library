@@ -6645,12 +6645,10 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
          // #765
          let sValue = shortUri(value)
-         if(sValue.match(RIDregexp)) value = sValue
 
-         if(value.match(RIDregexp)) {
+         if(value.match(RIDregexp) || sValue.match(RIDregexp)) {
             dataSource = [ value+"@Find resource with this RID", value+"@Find associated resources" ]
-         }
-         else {
+         } else {
 
             let detec ;
             if(value) detec = narrowWithString(value, this.state.langDetect)
@@ -6945,6 +6943,13 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          loggergen.log("CLICK:",i,tab[0],tab[1]);
          let kw = tab[0]
          let isRID = !languages[tab[1]], isDateOrId
+
+         // #765
+         let sValue = shortUri(kw)
+         if(sValue.match(RIDregexp)) {  
+            kw = sValue            
+         } 
+
          if(isRID) {
             if(!kw.includes(":")) {
                if(!tab[1].match(/date|identifier/)) kw = "bdr:"+kw.toUpperCase()
