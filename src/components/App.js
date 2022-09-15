@@ -1646,12 +1646,17 @@ class App extends Component<Props,State> {
       
       if(key) key = key.trim()
 
+
+      // #765
+      if(key.includes("purl.bdrc.io/resource")) key = shortUri(key.replace(/"/g,""))
+
+
       let _key = ""+key
       if(!key || key == "" || !key.match) return ;
       if(!key.match(/:/)) {
         key = keywordtolucenequery(key, lang)
         key = encodeURIComponent(key) // prevent from losing '+' when adding it to url
-      }
+      } 
       loggergen.log("new key",key)
 
 
@@ -6637,7 +6642,11 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          
          let dataSource = [] 
          let language = this.state.language
-         
+
+         // #765
+         let sValue = shortUri(value)
+         if(sValue.match(RIDregexp)) value = sValue
+
          if(value.match(RIDregexp)) {
             dataSource = [ value+"@Find resource with this RID", value+"@Find associated resources" ]
          }

@@ -174,6 +174,15 @@ async function initiateApp(params,iri,myprops,route,isAuthCallback) {
          
       }
 
+      // #765
+      if(params && params.p && params.p.includes("purl.bdrc.io/resource")) {     
+         let iri = shortUri(params.p.replace(/"/g,""))
+         if(iri.startsWith("bdr:")) {
+            history.replace({ pathname: "/show/"+iri })
+            return
+         }
+      }
+
       // #757
       if(params && params.s && Array.isArray(params.s)) {
          let { pathname, search } = { ...history.location }
