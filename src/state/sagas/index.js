@@ -3077,7 +3077,7 @@ async function getOutline(iri,node?,volFromUri?) {
    store.dispatch(uiActions.loading(iri, "outline"));
    let res = await api.loadOutline(iri,node,volFromUri) 
 
-   console.log("gotO:",iri,res,node,volFromUri)
+   //console.log("gotO:",iri,JSON.stringify(res,null,3),node,volFromUri)
 
    if(res && res["@graph"] && volFromUri) res["@graph"].map(r => { 
       // patch main node
@@ -3093,7 +3093,7 @@ async function getOutline(iri,node?,volFromUri?) {
          // keep only parts that are in current volume data
          if(r.hasPart) {
             if(!Array.isArray(r.hasPart)) r.hasPart = [ r.hasPart ]
-            r.hasPart = r.hasPart.filter(h => res["@graph"].some(n => n.id === h))
+            r.hasPart = r.hasPart.filter(h => res["@graph"].some(n => n.id === h && !iri.endsWith(n.id))) // #759 prevent infinite loop
          }
 
          r.id = iri
