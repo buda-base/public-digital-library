@@ -7548,15 +7548,19 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
             if(osearch && this.props.outlines[osearch] && this.props.outlines[osearch] !== true) {
 
-               let parents = nodes.filter(n => matches.some(m => n.hasPart === m["@id"] || Array.isArray(n.hasPart) && n.hasPart.includes(m["@id"]) )), update
+               // #768 fix infinite loop
+               let parents = nodes.filter(n => matches.some(m => n.hasPart === m["@id"] || Array.isArray(n.hasPart) && n.hasPart.includes(m["@id"]) )), update, previously = {}
                while(parents.length) {
                   let head = parents.pop()
+                  previously[head["@id"]] = true
+                  
                   //console.log("parents:",head,parents) 
+
                   if(collapse["outline-"+root+"-"+head["@id"]] === undefined) { 
                      update = true
                      collapse["outline-"+root+"-"+head["@id"]] = true
                   }
-                  parents = parents.concat(nodes.filter(n => n.hasPart === head["@id"] || Array.isArray(n.hasPart) && n.hasPart.includes(head["@id"])))
+                  parents = parents.concat(nodes.filter(n => !previously[n["@id"]] && (n.hasPart === head["@id"] || Array.isArray(n.hasPart) && n.hasPart.includes(head["@id"]))))
                } 
 
                if(update) this.setState( { collapse } )           
@@ -7680,7 +7684,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                         }
                         // #729 check contentLocation from parent node if not returned by query
                         const parent = nodes.filter(n => opart_node.length && (n.hasPart === opart_node[0]["@id"] || n.hasPart?.includes(opart_node[0]["@id"])) && n.contentLocation)
-                        if(!osearch && opart_node.length && !opart_node[0].contentLocation && parent.length) {
+                        if(!osearch && opart_node.length && !opart_node[0].contentLocation && parent.length && !opart_node[0].hasPart) { // #759 fix open node "sometimes" empty
                            const cLoc = nodes.filter(n => n["@id"] === parent[0].contentLocation)
                            if(cLoc.length && cLoc[0].contentLocationVolume) {                        
                               let vol = cLoc[0].contentLocationVolume, volElem
