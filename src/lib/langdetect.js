@@ -72,6 +72,10 @@ function narrowWithChar(char, wordlen, lttotest) {
 }
 
 export function narrowWithString(strtoguess, transtotest = ['ewts', 'iast', 'pinyin']) {
+
+	// #756
+	strtoguess = strtoguess.replace(/[\[\]()|_]/g, " ")
+
 	//console.log("nWs:",strtoguess,transtotest)
 	var wordlen = 0;
 	var triedrange = false;

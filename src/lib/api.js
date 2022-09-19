@@ -962,7 +962,9 @@ export default class API {
              if(typ && typ.length >= 1 && typ[0] !== "Any") { param = { ...param, searchType, ...(R_TYPE?{R_TYPE}:{}) } }
              else url = url.replace(/-dev/,"") // fix while -dev/rootSearch returns nothing
 
-             let data = this.getQueryResults(url, key, param,"GET","");
+             // #756
+             let data = this.getQueryResults(url, key.replace(/[\[\]()_|]/g," "), param,"GET","");
+             
              // let data = this.getSearchContents(url, key);
 
              return data ;

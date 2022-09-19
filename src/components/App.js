@@ -2000,7 +2000,7 @@ class App extends Component<Props,State> {
          if(!state.id || !(sameKW && fromAny2Work)) 
          */   
 
-         let sameKW = state.id && state.id.match(new RegExp("#"+props.keyword+"@"+props.language+"$"))
+         let sameKW = state.id && state.id.match(new RegExp("#"+props.keyword.replace(/([\[\]()|])/g,"\\$1")+"@"+props.language+"$"))
          
 
          if(!sameKW || (state.filters.datatype.length > 1 || state.filters.datatype.indexOf("Any") !== -1)) { //((state.filters.datatype.indexOf("Work") !== -1 || state.filters.datatype.indexOf("Any") !== -1) && (!state.id || state.filters.datatype.length > 1 || (!state.id.match(/Work/)&&!state.id.match(/Any/)) ) ) )
