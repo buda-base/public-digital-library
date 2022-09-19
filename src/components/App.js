@@ -438,15 +438,15 @@ export function highlight(val,k,expand,newline,force)
 
          // DONE "manually" add the ↦
          if(!Array.isArray(k)) 
-            val = val.replace(new RegExp("("+k.replace(/[+]/g,"\\+").replace(/[ -'ʾʼʹ‘_/  \(\)\[\]0-9\n\r།]+/igu,"[ -'ʾʼʹ‘_/  \\(\\)\\[\\]0-9\n\r།]+")+")","igu"),"↦$1↤")
+            val = val.replace(new RegExp("("+k.replace(/[+]/g,"\\+").replace(/[ -'ʾʼʹ‘_/  \{\}\(\)\[\]0-9\n\r།]+/igu,"[ -'ʾʼʹ‘_/  \\{\\}\\(\\)\\[\\]0-9\n\r།]+")+")","igu"),"↦$1↤")
          else for(let key of k) { // advanced query
-            val =  val.replace(new RegExp("("+key.replace(/[+]/g,"\\+").replace(/[ -'ʾʼʹ‘_/  \(\)\[\]0-9\n\r།]+/igu,"[ -'ʾʼʹ‘_/  \\(\\)\\[\\]0-9\n\r།]+")+")","igu"),"↦$1↤")
+            val =  val.replace(new RegExp("("+key.replace(/[+]/g,"\\+").replace(/[ -'ʾʼʹ‘_/  \{\}\(\)\[\]0-9\n\r།]+/igu,"[ -'ʾʼʹ‘_/  \\{\\}\\(\\)\\[\\]0-9\n\r།]+")+")","igu"),"↦$1↤")
          }
       } else {
          if(!Array.isArray(k)) 
-            val = val.replace(new RegExp("("+k.replace(/[+]/g,"\\+").replace(/[ -'ʾʼʹ‘_/  \(\)\[\]\n\r།]+/igu,"[ -'ʾʼʹ‘_/  \\(\\)\\[\\]\n\r།]+")+")","igu"),"↦$1↤")
+            val = val.replace(new RegExp("("+k.replace(/[+]/g,"\\+").replace(/[ -'ʾʼʹ‘_/  \{\}\(\)\[\]\n\r།]+/igu,"[ -'ʾʼʹ‘_/  \\{\\}\\(\\)\\[\\]\n\r།]+")+")","igu"),"↦$1↤")
          else for(let key of k) { // advanced query
-            val =  val.replace(new RegExp("("+key.replace(/[+]/g,"\\+").replace(/[ -'ʾʼʹ‘_/  \(\)\[\]\n\r།]+/igu,"[ -'ʾʼʹ‘_/  \\(\\)\\[\\]\n\r།]+")+")","igu"),"↦$1↤")
+            val =  val.replace(new RegExp("("+key.replace(/[+]/g,"\\+").replace(/[ -'ʾʼʹ‘_/  \{\}\(\)\[\]\n\r།]+/igu,"[ -'ʾʼʹ‘_/  \\{\\}\\(\\)\\[\\]\n\r།]+")+")","igu"),"↦$1↤")
          }
       }
 

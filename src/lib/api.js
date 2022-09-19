@@ -963,7 +963,7 @@ export default class API {
              else url = url.replace(/-dev/,"") // fix while -dev/rootSearch returns nothing
 
              // #756
-             let data = this.getQueryResults(url, key.replace(/[\[\]()_|]/g," "), param,"GET","");
+             let data = this.getQueryResults(url, key.replace(/[\{\}\[\]()_|]/g," "), param,"GET","");
              
              // let data = this.getSearchContents(url, key);
 
