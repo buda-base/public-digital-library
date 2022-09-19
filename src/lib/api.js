@@ -764,7 +764,7 @@ export default class API {
    async getQueryResults(url: string, key:string, param:{}={}, method:string = "POST", accept:string="application/json",other?:{}): Promise<{}>
    {
 
-      //console.log("key",key)
+      //console.log("key",key, param)
 
       let res = {}
       param = { "searchType":"Res_withType","LG_NAME":"bo-x-ewts","I_LIM":500, ...param }
@@ -792,7 +792,7 @@ export default class API {
 
       if(accept === "application/json") param["format"] = "json"
 
-      console.log("query",url,key,param,method,accept,other);
+      //console.log("query",url,key,param,method,accept,other);
 
       // let body = Object.keys(param).map( (k) => k+"="+param[k] ).join('&') +"&L_NAME="+key
       //searchType=Res_withFacet&"+param+"L_NAME=\""+key+"\"",
@@ -963,7 +963,7 @@ export default class API {
              else url = url.replace(/-dev/,"") // fix while -dev/rootSearch returns nothing
 
              // #756
-             let data = this.getQueryResults(url, key.replace(/[\{\}\[\]()_|]/g," ").replace(/^ */,""), param,"GET","");
+             let data = this.getQueryResults(url, key.replace(/[\{\}\[\]()_|]/g," ").replace(/^" +/,'"'), param,"GET","");
              
              // let data = this.getSearchContents(url, key);
 
