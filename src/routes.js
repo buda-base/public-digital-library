@@ -218,7 +218,7 @@ const VersionChecker = () => {
                   }}
                   //title={"New version id: "+latestVersion}
                >
-                  <InfoIcon className="info"/><span>{I18n.t("misc.update")}</span>
+                  <InfoIcon className="info"/><span>{I18n.t("topbar.update")}</span>
                </a>
             </p>
          </div>
@@ -230,7 +230,7 @@ const VersionChecker = () => {
 const makeMainRoutes = () => {
 
    // #767
-   return (<ClearCacheProvider duration={5 * 60 * 1000} auto={true}>
+   return (<ClearCacheProvider duration={ 10 /* * 60 */ * 1000 } /*auto={true}*/ >
       <UserAgentProvider ua={window.navigator.userAgent}>
          <Provider store={store}>
            <MuiThemeProvider theme={theme}>
