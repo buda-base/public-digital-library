@@ -1367,7 +1367,8 @@ class ResourceViewer extends Component<Props,State>
          if(_T === "Images" || _T === "Etext") {            
             if(!s) s = { ...state }
             if(!work && s.title.work) work = s.title.work
-            else if( /* _T === "Etext" && */ instance) {
+            else if( /* _T === "Etext" && */ instance?.length) {
+               //console.log(instance)
                work = getElem(bdo+"instanceOf",shortUri(instance[0].value));
             }
             if(!instance && s.title.instance && s.title.instance[0].value !== fullUri(props.IRI)) instance = s.title.instance
@@ -7089,14 +7090,14 @@ perma_menu(pdfLink,monoVol,fairUse,other)
       }
       
       let title = this.state.title.instance
-      if(title) title = title[0].value
+      if(title?.length) title = title[0].value
       else { 
          title = this.state.title.work
-         if(title) title = title[0].value
+         if(title?.length) title = title[0].value
       }
-      if(title) title = this.getResourceElem(skos+"prefLabel", title, this.props.assocResources)
-      if(title && title.length) title = getLangLabel(this,"",title)
-      if(title && title.value) title = <h2><a><span>{title.value}</span></a></h2>
+      if(title?.length) title = this.getResourceElem(skos+"prefLabel", title, this.props.assocResources)
+      if(title?.length) title = getLangLabel(this,"",title)
+      if(title?.value) title = <h2><a><span>{title.value}</span></a></h2>
 
       // TODO fix for UTxyz
       let root = this.props.IRI 
@@ -8933,8 +8934,8 @@ perma_menu(pdfLink,monoVol,fairUse,other)
             return false
          }
 
-         if(this.state.title.work && this.state.title.work[0].value) wDataExt = checkDataExt(this.state.title.work[0].value)
-         if(this.state.title.instance && this.state.title.instance[0].value) { 
+         if(this.state.title.work?.length && this.state.title.work[0].value) wDataExt = checkDataExt(this.state.title.work[0].value)
+         if(this.state.title.instance?.length && this.state.title.instance[0].value) { 
             iDataExt = checkDataExt(this.state.title.instance[0].value)
             let sRid = shortUri(this.state.title.instance[0].value)               
             if(this.props.outlines && this.props.outlines[sRid] !== undefined  && this.props.outlines[sRid]) {
@@ -8947,7 +8948,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                else this.props.onGetOutline(sRid)
             }
          }
-         if(this.state.title.images && this.state.title.images[0].value) {
+         if(this.state.title.images?.length && this.state.title.images[0].value) {
             rDataExt = checkDataExt(this.state.title.images[0].value)
             let sRid = shortUri(this.state.title.images[0].value)
             
