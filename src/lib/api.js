@@ -963,7 +963,12 @@ export default class API {
              else url = url.replace(/-dev/,"") // fix while -dev/rootSearch returns nothing
 
              // #756
-             let data = this.getQueryResults(url, key.replace(/[\{\}\[\]()_|]/g," ").replace(/^" +/,'"'), param,"GET","");
+             if(key.includes(" AND ")) {
+               key = key.replace(/(^\()|(\))$/g,'_PAREN_').replace(/[\{\}\[\]()_|]/g," ").replace(/^ PAREN (.*) PAREN $/,"($1)").replace(/^" +/,'"')
+             } else {
+               key = key.replace(/[\{\}\[\]()_|]/g," ").replace(/^" +/,'"')
+             }
+             let data = this.getQueryResults(url, key, param,"GET","");
              
              // let data = this.getSearchContents(url, key);
 
