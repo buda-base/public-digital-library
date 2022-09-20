@@ -230,7 +230,7 @@ const VersionChecker = () => {
 const makeMainRoutes = () => {
 
    // #767
-   return (<ClearCacheProvider duration={ 10 /* * 60 */ * 1000 } /*auto={true}*/ >
+   return (<ClearCacheProvider duration={ 10 * 60 * 1000 } auto={true} >
       <UserAgentProvider ua={window.navigator.userAgent}>
          <Provider store={store}>
            <MuiThemeProvider theme={theme}>
