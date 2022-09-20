@@ -104,7 +104,8 @@
       "guided":"Guided search",
       "browse":"browse",
       "home":"home",
-      "collections":""
+      "collections":"",
+      "update":"Update to latest version of BUDA"
    },
    "Lsidebar": {
       "sortBy": {

@@ -30,7 +30,9 @@ import BrowseContainer from './containers/BrowseContainer'
 import { top_right_menu } from './components/App'
 
 import Profile from './components/ProfileStatic';
-import ClearCache from "react-clear-cache";
+import { ClearCacheProvider, useClearCacheCtx } from "react-clear-cache";
+import WarnIcon from '@material-ui/icons/Warning';
+import InfoIcon from '@material-ui/icons/InfoOutlined';
 
 import I18n from 'i18next';
 
@@ -200,13 +202,40 @@ const UAContextHook = () => {
   return []
 }
 
+// #767
+const VersionChecker = () => {
+   const { latestVersion, isLatestVersion, emptyCacheStorage } = useClearCacheCtx();
+   return (
+     <div {...!isLatestVersion?{style:{height:"60px"}}:{}}>
+       { !isLatestVersion && (
+         <div class="infoPanel version">
+            <p>
+               <a
+                  href="#"
+                  onClick={e => {
+                     e.preventDefault();
+                     emptyCacheStorage();
+                  }}
+                  //title={"New version id: "+latestVersion}
+               >
+                  <InfoIcon className="info"/><span>{I18n.t("misc.update")}</span>
+               </a>
+            </p>
+         </div>
+       )}
+     </div>
+   );
+ };
+
 const makeMainRoutes = () => {
 
-   return (      
+   // #767
+   return (<ClearCacheProvider duration={5 * 60 * 1000} auto={true}>
       <UserAgentProvider ua={window.navigator.userAgent}>
          <Provider store={store}>
            <MuiThemeProvider theme={theme}>
               <UAContextHook/>
+              <VersionChecker /> 
               <LogErrorBoundary>              
                <Router history={history}>
                   <Switch>
@@ -237,26 +266,14 @@ const makeMainRoutes = () => {
                         }}/>
                         { 
                            <Route exact path="/user" render={(props) => {
-
                               store.dispatch(initiateApp(qs.parse(history.location.search)));
-
-                              return (
-                                 <ClearCache auto={true} duration={20*60*1000}>
-                                    {({ isLatestVersion, emptyCacheStorage }) => (<ProfileContainer auth={auth} history={history} />)}
-                                 </ClearCache>
-                              )
+                              return (<ProfileContainer auth={auth} history={history} />)
                            } } />
                         }
                         { 
                            <Route exact path="/testUser" render={(props) => {
-
                               store.dispatch(initiateApp(qs.parse(history.location.search)));
-
-                              return (
-                                 <ClearCache auto={true}  duration={20*60*1000}>
-                                    {({ isLatestVersion, emptyCacheStorage }) => (<UserViewerContainer auth={auth} history={history} />)}
-                                 </ClearCache>
-                              )
+                              return (<UserViewerContainer auth={auth} history={history} />)
                            } } />
                         }
                         {/*
@@ -319,26 +336,15 @@ const makeMainRoutes = () => {
                            )
                         }}/>
                         <Route exact path="/" render={(props) => {
-                           store.dispatch(initiateApp(qs.parse(history.location.search)));
-                           return ( 
-                              <ClearCache auto={true}  duration={20*60*1000}>
-                                 {({ isLatestVersion, emptyCacheStorage }) => (<AppContainer history={history} auth={auth}/> )}
-                              </ClearCache>
-                           )}}/>
-
+                           console.log("refresh?")
+                           store.dispatch(initiateApp(qs.parse(history.location.search)));                           
+                           return (<AppContainer history={history} auth={auth}/> )
+                           }}/>
                         <Route exact path="/guidedsearch" render={(props) => {                        
-                           return ( 
-                              <ClearCache auto={true}  duration={20*60*1000}>
-                                 {({ isLatestVersion, emptyCacheStorage }) => (<GuidedSearchContainer history={history} auth={auth}/> )}
-                              </ClearCache>
-                           )
+                           return (<GuidedSearchContainer history={history} auth={auth}/> )
                         }} />
                         <Route exact path="/browse" render={(props) => {
-                           return ( 
-                              <ClearCache auto={true}  duration={20*60*1000}>
-                                 {({ isLatestVersion, emptyCacheStorage }) => (<BrowseContainer history={history} auth={auth}/> )}
-                              </ClearCache>
-                           )
+                           return (<BrowseContainer history={history} auth={auth}/> )
                         }} />
                         <Route path="/search" render={(props) => {
                            let get = qs.parse(history.location.search)
@@ -348,19 +354,11 @@ const makeMainRoutes = () => {
                               //if(!store.getState().ui.loading)
                               store.dispatch(initiateApp(qs.parse(history.location.search)))
                            }
-                           return ( 
-                              <ClearCache auto={true}  duration={20*60*1000}>
-                                 {({ isLatestVersion, emptyCacheStorage }) => (<AppContainer history={history} auth={auth}/> )}
-                              </ClearCache>
-                           )}}/>
+                           return (<AppContainer history={history} auth={auth}/> ) }}/>
                         <Route path="/simplesearch" render={(props) => {
                            let get = qs.parse(history.location.search)
                            store.dispatch(initiateApp(qs.parse(history.location.search)))
-                           return ( 
-                              <ClearCache auto={true}  duration={20*60*1000}>
-                                 {({ isLatestVersion, emptyCacheStorage }) => (<AppContainer simple={true} history={history} auth={auth} propid={get.for}/> )}
-                              </ClearCache>
-                           )}}/>
+                           return (<AppContainer simple={true} history={history} auth={auth} propid={get.for}/> )}}/>
                         <Route path="/latest" render={(props) => {
                            let get = qs.parse(history.location.search)
                            //if(!store.getState().data.ontology)
@@ -369,11 +367,8 @@ const makeMainRoutes = () => {
                               //if(!store.getState().ui.loading)
                               store.dispatch(initiateApp(qs.parse(history.location.search), null, null, "latest"))
                            }
-                           return ( 
-                              <ClearCache auto={true}  duration={20*60*1000}>
-                                 {({ isLatestVersion, emptyCacheStorage }) => (<AppContainer history={history} auth={auth} latest={true}/> )}
-                              </ClearCache>
-                           )}}/>
+                           return (<AppContainer history={history} auth={auth} latest={true}/> )
+                        }}/>
                         <Route path="/view/:IRI" render={(props) =>
                            {
                               let get = qs.parse(history.location.search)
@@ -405,22 +400,16 @@ const makeMainRoutes = () => {
                            }
                            store.dispatch(initiateApp(get,IRI));
                         
-                           return (
-                              <ClearCache auto={true} duration={20*60*1000}>
-                                 {({ isLatestVersion, emptyCacheStorage }) => (<ResourceViewerContainer  auth={auth} history={history} IRI={IRI}/> )}
-                              </ClearCache>
-                           )}}/>
+                           return (<ResourceViewerContainer  auth={auth} history={history} IRI={IRI}/> )
+                        }}/>
 
                         <Route path="/simple/:IRI" render={(props) => {
                            let IRI = props.match.params.IRI
                            let get = qs.parse(history.location.search)
                            if(get.part && get.part !== IRI) get.root = IRI
                            store.dispatch(initiateApp(get,IRI));                     
-                           return (
-                              <ClearCache auto={true} duration={20*60*1000}>
-                                 {({ isLatestVersion, emptyCacheStorage }) => (<ResourceViewerContainer  auth={auth} history={history} IRI={IRI} simple={true} propid={get.for}  onlyView={get.view}/> )}
-                              </ClearCache>
-                           )}}/>
+                           return (<ResourceViewerContainer  auth={auth} history={history} IRI={IRI} simple={true} propid={get.for}  onlyView={get.view}/> )
+                           }}/>
                         <Route render={(props) => { return <Redirect404  history={history}  auth={auth}/> }}/>
                         <Route path="/scripts/" onEnter={() => window.location.reload(true)} />
                      </Switch>
@@ -429,6 +418,7 @@ const makeMainRoutes = () => {
             </MuiThemeProvider>
          </Provider>
       </UserAgentProvider>
+   </ClearCacheProvider>
   );
 }
 
