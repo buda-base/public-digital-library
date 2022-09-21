@@ -13642,9 +13642,9 @@ thunky@^1.0.2:
   integrity sha512-eHY7nBftgThBqOyHGVN+l8gF0BucP09fMo0oO/Lb0w1OF80dJv+lDVpXG60WMQvkcxAkNybKsrEIE3ZtKGmPrA==
 
 tibetan-sort-js@^2.1.3:
-  version "2.1.3"
-  resolved "https://registry.yarnpkg.com/tibetan-sort-js/-/tibetan-sort-js-2.1.3.tgz#9ceb6d479e90f92924f5ab94fba5ef201993e33f"
-  integrity sha512-ZpBYc3RR1Cq6ba3F5HNI9uVzUTw66GcvmE+QySCto5+a8cwjNlJD3x1MNYvM/TIjL2SSwE6/YkCp/okavldsZA==
+  version "2.1.4"
+  resolved "https://registry.yarnpkg.com/tibetan-sort-js/-/tibetan-sort-js-2.1.4.tgz#eb27a68b3c42f8f65e8e07eb287ec9589539dd80"
+  integrity sha512-399fNqQYwraXr3wxchtFp0Y4iw3zheqh7/Zrl4xC+S31VYIe5AUcEI4xDtJUi39f7eau/retgpoO4DUY/J8j3Q==
 
 timed-out@^4.0.0:
   version "4.0.1"
