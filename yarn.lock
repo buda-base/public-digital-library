@@ -9436,7 +9436,7 @@ minipass@^3.0.0, minipass@^3.1.1:
 
 "mirador@https://github.com/buda-base/mirador#2.7.0-bdrc":
   version "2.7.0"
-  resolved "https://github.com/buda-base/mirador#7d57c06d1244b2bb66e1c4baddc3a286a9b7f453"
+  resolved "https://github.com/buda-base/mirador#7d26a68484d8e2f66ec023d86e38819087acae58"
   dependencies:
     bootbox "^4.4.0"
     bootstrap "^3.3.7"
@@ -9456,7 +9456,7 @@ minipass@^3.0.0, minipass@^3.1.1:
     jquery.scrollto "^1.4.12"
     material-design-icons "^3.0.1"
     mousetrap "^1.4.6"
-    openseadragon "https://github.com/buda-base/openseadragon#no-uglify"
+    openseadragon "https://github.com/buda-base/openseadragon"
     paper "^0.11.2"
     perfect-scrollbar "^1.5.0"
     qtip2 "^3.0.3"
@@ -9981,9 +9981,9 @@ open@^7.0.2:
     is-docker "^2.0.0"
     is-wsl "^2.1.1"
 
-"openseadragon@https://github.com/buda-base/openseadragon#no-uglify":
-  version "3.0.0"
-  resolved "https://github.com/buda-base/openseadragon#51b2161dce0c1f6cfda3de7f64a2bbb451c11931"
+"openseadragon@https://github.com/buda-base/openseadragon":
+  version "3.1.0"
+  resolved "https://github.com/buda-base/openseadragon#3585445cc7a5e6537ebc10fe689b18598e1c556e"
 
 opn@^5.5.0:
   version "5.5.0"
