@@ -420,6 +420,13 @@ export const gotResource = (state: DataState, action: Action) => {
                               break ;
                            }
 
+                           // #771 
+                           if(v_ev[bdo+"onYear"] && w_ev[bdo+"eventWhen"] && v_ev[bdo+"onYear"].length && w_ev[bdo+"eventWhen"].length && v_ev[bdo+"onYear"][0].value === w_ev[bdo+"eventWhen"][0].value) {
+                              found = w_ev[bdo+"eventWhen"][0] ;
+                              found.bnode = true 
+                              break ;
+                           }
+
                            // TODO example with :eventWhere ?
                         }                        
                      }
@@ -428,7 +435,7 @@ export const gotResource = (state: DataState, action: Action) => {
 
                      if(p.endsWith("Event")) { 
                         let v_ev = data[v.value]
-                        if(v_ev) for(let q of [bdo+"onYear", bdo+"onDate", bdo+"eventWhere", bdo+"notBefore", bdo+"notAfter"]){
+                        if(v_ev) for(let q of [bdo+"onYear", bdo+"onDate", bdo+"eventWhere", bdo+"notBefore", bdo+"notAfter", bdo+"eventWhen"]){
                            if(v_ev[q] && v_ev[q].length) {
                               v_ev[q][0].allSameAs = [ k ]
                               v_ev[q][0].fromSameAs = k

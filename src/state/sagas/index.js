@@ -15,8 +15,10 @@ import {shortUri,fullUri,isAdmin,sublabels,subtime} from '../../components/App'
 import {getQueryParam, GUIDED_LIMIT} from '../../components/GuidedSearch'
 import qs from 'query-string'
 import history from '../../history.js'
+import {locales} from '../../components/ResourceViewer';
 
 import logdown from 'logdown'
+import edtf, { parse } from "edtf"
 
 //import { setHandleMissingTranslation } from 'react-i18nify';
 //import { I18n } from 'react-redux-i18n';
@@ -2029,22 +2031,22 @@ function sortResultsByPopularity(results,reverse) {
 }
 
 
-function sortResultsByYear(results,reverse) {
+function sortResultsByYear(results,reverse,aux) {
 
    if(!results) return 
 
-   /* // not needed
+   
    if(!aux) {
       let state = store.getState()
       aux = state.data.assocResources
       if(aux) aux = aux[state.data.keyword]
    }
-   */
+
 
    let keys = Object.keys(results)
    if(keys && keys.length) {
       keys = keys.map(k => {
-         let n = 1000000, score, p = results[k].lengthn, ctx = 0
+         let n = 1000000, score, p = results[k].length, ctx = 0
          if(reverse) n = -1000000
          let multi_n = []
          for(let i in results[k]) {
@@ -2059,7 +2061,21 @@ function sortResultsByYear(results,reverse) {
             } else  
             */
             
-            if(v.type === tmp+"yearStart") {
+            if(v.type?.endsWith("Event")) {
+               let ev = aux[v.value]
+               if(ev?.length) ev = ev.filter(w => w.type === bdo+"eventWhen")
+               if(ev?.length) {
+                  let value = ev[0].value, edtfObj
+                  try {
+                     edtfObj = edtf(value)
+                     //console.log("edtfObj:",edtfObj)
+                     multi_n.push(Number(edtf(edtfObj.min)?.values[0]))
+
+                  } catch(e) {
+                     console.warn("EDTF error:",e,value,edtfObj)
+                  }
+               }
+            } else if(v.type === tmp+"yearStart") {
                multi_n.push(Number(v.value))
             } else if(v.type === tmp+"matchContext" && (v.value === tmp+"nameContext" || v.value === tmp+"titleContext")) {
                ctx = 1
@@ -2071,7 +2087,7 @@ function sortResultsByYear(results,reverse) {
          }
          return ({k, n, p, ctx})
       },{})
-      keys = _.orderBy(keys,['ctx','n','p'],[(reverse?'asc':'desc'), (reverse?'desc':'asc'), (reverse?'asc':'desc')])
+      keys = _.orderBy(keys,['ctx','n','p'],[(reverse?'desc':'desc'), (reverse?'desc':'asc'), (reverse?'asc':'desc')])
       
       loggergen.log("keysY:",keys)
 
@@ -2404,7 +2420,7 @@ function rewriteAuxMain(result,keyword,datatype,sortBy,language)
          }
 
          if(!sortBy || sortBy.startsWith("popularity")) return { ...acc, [t]: sortResultsByPopularity(dataWithAsset,reverse) }
-         else if(sortBy.startsWith("year of")) return { ...acc, [t]: sortResultsByYear(dataWithAsset,reverse) }
+         else if(sortBy.startsWith("year of")) return { ...acc, [t]: sortResultsByYear(dataWithAsset,reverse,result.aux) }
          else if(sortBy.startsWith("closest matches")) return { ...acc, [t]: sortResultsByRelevance(dataWithAsset,reverse) }
          else if(sortBy.startsWith("number of matching chunks")) return { ...acc, [t]: sortResultsByNbChunks(dataWithAsset,reverse) }
          else if(sortBy.startsWith("volume number")) return { ...acc, [t]: sortResultsByVolumeNb(dataWithAsset,reverse) }
