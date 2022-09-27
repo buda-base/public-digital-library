@@ -3842,12 +3842,14 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
             expand = m.expand	
             if(expand && expand.value) {	
+               if(expand.value.includes("ܚ")) expand.value = expand.value.replace(/[ܚܝ]/g,"-") // #771
                if(!this.state.collapse[prettId+"@"+startC]) expand = getLangLabel(this,m.type,[{...m, "value":expand.value}])	
                else expand = true	
             }	
 
             context = m.context	
             if(context && context.value) {	
+               if(context.value.includes("ܚ")) context.value = context.value.replace(/[ܚܝ]/g,"-") // #771
                if(this.state.collapse[prettId+"@"+startC]) context = getLangLabel(this,m.type,[{...m, "value":context.value}])	
                else context = false	
             }	
@@ -3878,7 +3880,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
          let toggleExpand = (e,id) => {	
             //loggergen.log("toggle",id)	
-            this.setState({...this.state,repage:true,collapse:{...this.state.collapse, [id]:!this.state.collapse[id]}})
+            this.setState({...this.state,blurSearch:true,repage:true,collapse:{...this.state.collapse, [id]:!this.state.collapse[id]}})
          }	
 
          let getUrilink = (uri,val,lang) => ([ <Link className="urilink" to={"/show/"+shortUri(uri)}>{val}</Link>,lang?<Tooltip placement="bottom-end" title={	
