@@ -1159,6 +1159,7 @@ export function renderDates(birth,death,floruit,locale) {
 
 
             let value = ""+(d.edtf?d.edtf:d.value), obj, edtfObj, readable = value
+            if(value?.includes("XX?")) value = value.replace(/XX\?/,"?") // #771
             try {
                obj = parse(value)
                edtfObj = edtf(value)

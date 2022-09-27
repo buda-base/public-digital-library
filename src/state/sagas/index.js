@@ -2066,6 +2066,7 @@ function sortResultsByYear(results,reverse,aux) {
                if(ev?.length) ev = ev.filter(w => w.type === bdo+"eventWhen")
                if(ev?.length) {
                   let value = ev[0].value, edtfObj
+                  if(value?.includes("XX?")) value = value.replace(/XX\?/,"?") // #771
                   try {
                      edtfObj = edtf(value)
                      //console.log("edtfObj:",edtfObj)

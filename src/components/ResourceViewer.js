@@ -2178,6 +2178,7 @@ class ResourceViewer extends Component<Props,State>
                               //console.log("eW:",JSON.stringify(assoR[w.value][bdo+"eventWhen"][0], null,3))
                               
                               let value = assoR[w.value][bdo+"eventWhen"][0].value, obj, edtfObj, readable = value
+                              if(value?.includes("XX?")) value = value.replace(/XX\?/,"?") // #771
                               try {
                                  obj = parse(value)
                                  edtfObj = edtf(value)
@@ -2226,6 +2227,7 @@ class ResourceViewer extends Component<Props,State>
                            if(value) {
 
                               let obj, edtfObj, readable = value
+                              if(value?.includes("XX?")) value = value.replace(/XX\?/,"?") // #771
                               try {
                                  obj = parse(value)
                                  edtfObj = edtf(value)
