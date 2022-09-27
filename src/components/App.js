@@ -1140,7 +1140,7 @@ export function renderDates(birth,death,floruit,locale) {
 
    const formatDate = (dates) => {
       const clean = (d) => (""+d).replace(/^([^0-9]*)0+/,"$1")
-      let date = "", min, max, val, isCentury
+      let date = "", min, max, val, isCentury, uncertain, approx
       for(let d of dates) {
          val = clean(d.value)
          //console.log("d:",min,max,val,JSON.stringify(d))
@@ -1156,7 +1156,6 @@ export function renderDates(birth,death,floruit,locale) {
          } else if(d.type === bdo+"eventWhen") {
             //if(max === undefined || val > max) max = val
             //if(min === undefined || val < min) min = val
-
 
             let value = ""+(d.edtf?d.edtf:d.value), obj, edtfObj, readable = value
             if(value?.includes("XX?")) value = value.replace(/XX\?/,"?") // #771
@@ -1179,7 +1178,8 @@ export function renderDates(birth,death,floruit,locale) {
                   if(min === undefined || y < min) min = y
                } else console.warn("EDTF error:",e,value,obj,edtfObj,readable)
             }
-            
+            if(value.includes("?")) uncertain = true            
+            if(value.includes("~")) approx = true            
          }
       }
       if(min !== undefined && max != undefined) {
@@ -1192,8 +1192,10 @@ export function renderDates(birth,death,floruit,locale) {
             else date = I18n.t("misc.ordInter", { min: cmin, max:cmax })
          }
          else date = I18n.t("misc.inter", { min, max }) 
-      }
-
+      }      
+      if(uncertain) date = date + " ?" 
+      if(approx) date = "~"+date
+      
       //console.log("date:",dates,date);
 
       return { date, isCentury }
