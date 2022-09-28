@@ -6253,7 +6253,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          {/* {this.hasSub(k)?this.subProps(k):tags.map((e)=> [e," "] )} */}
          { elem.map( e => { 
 
-               let pageVal ="", pageLang = "", current = []
+            let pageVal ="", pageLang = "", current = []
 
             let showIm = ((this.state.showEtextImages && !(this.state.collapse["image-"+this.props.IRI+"-"+e.seq] === false)) || this.state.collapse["image-"+this.props.IRI+"-"+e.seq])
 
@@ -6292,6 +6292,8 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
             let imgErr = that.state.errors[that.props.IRI]
             if(imgErr) imgErr = imgErr[e.seq]
+
+            //console.log("links:",imageLinks,e)
 
             const imgElem = !unpag && !imgErr && <h5><a title={I18n.t("misc."+(!showIm?"show":"hide"))+" "+I18n.t("available scans for this page")} onClick={(eve) => {
                let id = "image-"+this.props.IRI+"-"+e.seq

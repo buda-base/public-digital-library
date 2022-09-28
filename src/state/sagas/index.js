@@ -890,7 +890,7 @@ async function getContext(iri,start,end,nb:integer = 1000) {
       store.dispatch(dataActions.gotAssocResources(iri, { data }))
       
    }
-   store.dispatch(dataActions.gotContext(state.data.keyword+"@"+state.data.language,iri,start,end,data))
+   if(state.data.keyword) store.dispatch(dataActions.gotContext(state.data.keyword+"@"+state.data.language,iri,start,end,data))
    store.dispatch(uiActions.loading(null, false));
 
 }
