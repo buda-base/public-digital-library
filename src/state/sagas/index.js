@@ -998,6 +998,7 @@ async function getPages(iri,next) {
 
          let cval
          let clang 
+         let chunks = []
          
          let value = chunk.reduce( (acc,c) => { 
             
@@ -1023,6 +1024,7 @@ async function getPages(iri,next) {
 
             if(start >= 0 && end >= 0) {
                acc += content["@value"].substring(start,end+1) ;
+               chunks.push({"@value":content["@value"].substring(start,end+1),"@language":c.chunkContents["@language"]})
             }
 
             return acc ; 
@@ -1046,7 +1048,8 @@ async function getPages(iri,next) {
                seq:e.seqNum,
                start:e.sliceStartChar,
                end:e.sliceEndChar,
-               id: fullUri(e.id)
+               id: fullUri(e.id),
+               chunks
             }
          
       }).filter(e => e); //+ " ("+e.seqNum+")" }))

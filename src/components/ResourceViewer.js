@@ -6380,17 +6380,24 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
                </div> }
                <div class="overpage">
-                  <h4 class="page">{!e.value.match(/[\n\r]/) && !e.seq ?[<span class="startChar"><span>[&nbsp;<Link to={"/show/"+this.props.IRI+"?startChar="+e.start+"#open-viewer"}>@{e.start}</Link>&nbsp;]</span></span>]:null}{[ e.value ].map(f => {
-                        let label = getLangLabel(this,bdo+"eTextHasPage",[{"lang":e.language,"value":f}]), lang
+                  <h4 class="page">{!e.value.match(/[\n\r]/) && !e.seq ?[<span class="startChar"><span>[&nbsp;<Link to={"/show/"+this.props.IRI+"?startChar="+e.start+"#open-viewer"}>@{e.start}</Link>&nbsp;]</span></span>]:null}{(e.chunks?.length?e.chunks:[e.value]).map(f => {
+
+                        // #771 multiple language in on epage
+                        let lang = e.language
+                        if(f["@language"]) lang = f["@language"]                        
+                        if(f["@value"] != undefined) f = f["@value"];
+
+                        let label = getLangLabel(this,bdo+"eTextHasPage",[{"lang":lang,"value":f}])
+
                         if(label) { lang = label["lang"] ; if(!pageLang) pageLang = lang }
                         if(label) { label = label["value"]; pageVal += " "+label ; }
                         if(label && this.props.highlight && this.props.highlight.key) { label = highlight(label,kw.map(k => k.replace(/(.)/g,"$1\\n?")),null,false,true); current.push(label); }
-                        else if(label) label = label.split(/[\n\r]/).map(e =>([e,<br/>]))
+                        else if(label) label = label.split(/[\n\r]/).map(e =>(e?[e,<br/>]:[]))
                         //label = f
                         let size = this.state.etextSize
                         //console.log("page:",pageVal,e,current)
                         if(lang === "bo") { size += 0.4 ; }
-                        return ([<span lang={lang} {...this.state.etextSize?{style:{ fontSize:size+"em", lineHeight:(size * 1.0)+"em" }}:{}}>{label}</span>,<br/>])})}
+                        return ([<span lang={lang} {...this.state.etextSize?{style:{ fontSize:size+"em", lineHeight:(size * 1.0)+"em" }}:{}}>{label}</span>])})}
                         {this.hoverMenu(bdo+"EtextHasPage",{value:pageVal,lang:pageLang,start:e.start,end:e.end},current)}
                   </h4>
                </div>
