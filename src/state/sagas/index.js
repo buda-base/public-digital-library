@@ -2061,7 +2061,7 @@ function sortResultsByYear(results,reverse,aux) {
             } else  
             */
             
-            if(v.type?.endsWith("Event")) {
+            if(v.type?.endsWith("BirthEvent")) {
                let ev = aux[v.value]
                if(ev?.length) ev = ev.filter(w => w.type === bdo+"eventWhen")
                if(ev?.length) {
