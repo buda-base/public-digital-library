@@ -6800,7 +6800,13 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       }
       let reverse, by, sortByPopup ;
       if(sortByList) sortByPopup = sortByList.map((t,n) => {
-         let i = I18n.t("sort."+t,{lng:"en"}), label = I18n.t("sort."+t), check = (this.props.sortBy && this.props.sortBy.startsWith(i.toLowerCase()) ) || (!this.props.sortBy && n === 0)
+         let i = I18n.t("sort."+t,{lng:"en"}), label = I18n.t("sort."+t), 
+            check = (this.props.sortBy && this.props.sortBy.startsWith(i.toLowerCase()) ) 
+            || (this.props.sortBy?.startsWith("title") && ["workT","personN","placeN","roleN","title"].includes(t))
+            || (!this.props.sortBy && n === 0)
+
+         //console.log("sB:",this.props.sortBy,t,check,(this.props.sortBy?.startsWith("title"),["workT","personN","placeN","roleN","title"].includes(t)))
+
          if(check) by = label
          if(reverseSort) reverse = I18n.t("sort.reverseS")
          return(<div key={i} style={{width:"200px",textAlign:"left"}} className="searchWidget">
