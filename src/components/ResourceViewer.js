@@ -963,6 +963,75 @@ class OutlineSearchBar extends Component<Props,State>
       )
    }
 }
+export const locales = { en: "en-US", zh: "zh-Hans-CN", bo: "bo-CN", km:"km-KH" }
+
+export const intervalToEDTF = (notBefore = null, notAfter = null) => {
+   //console.log("inter2edtf:", notBefore, notAfter)
+   if (notBefore == null && notAfter == null)
+       return null;
+   if (notBefore == null)
+       return "/"+notAfter;
+   if (notAfter == null)
+       return notBefore+"/";
+   if (notBefore[0] == notAfter[0] && notBefore[1] == notAfter[1]) {
+       if (notBefore[2] == notAfter[2]) {
+           if (notBefore[3] == '0' && notAfter[3] == '9')
+               return notBefore.substring(0,3)+"X";
+       } else if (notBefore[2] == '0' && notAfter[2] == '9' && notBefore[3] == '0' && notAfter[3] == '9') {
+           return notBefore.substring(0, 2)+"XX";
+       }
+   }
+   return notBefore+"/"+notAfter;
+}
+export const humanizeEDTF = (obj, str, locale = "en-US", dbg = false) => {
+
+   //console.log("edtf2H:", obj, str, locale, dbg)
+   if (!obj) return ""
+ 
+   const conc = (values, sepa) => {
+     sepa = sepa ? " " + sepa + " " : ""
+     return values.reduce((acc, v, i, array) => {
+       if (i > 0) acc += i < array.length - 1 ? ", " : sepa
+       acc += humanizeEDTF(v)
+       return acc
+     }, "")
+   }
+ 
+   // just output EDTF object
+   if (dbg /*|| true*/) return JSON.stringify(obj, null, 3)
+ 
+   if (obj.type === "Set") return conc(obj.values, "or")
+   else if (obj.type === "List") return conc(obj.values, "and")
+   else if (obj.type === "Interval" && !obj.values[0]) return "not after " + conc([obj.values[1]])
+   else if (obj.type === "Interval" && !obj.values[1]) return "not before " + conc([obj.values[0]])
+   else if (obj.type === "Interval") return "between " + conc(obj.values, "and")
+   else if (obj.approximate) {
+     if (obj.type === "Century") return "circa " + (Number(obj.values[0]) + 1) + "th c."
+     return "circa " + humanizeEDTF({ ...obj, approximate: false }, str, locale, dbg)
+   } else if (obj.uncertain) {
+     if (obj.type === "Century") return Number(obj.values[0]) + 1 + "th c. ?"
+     return humanizeEDTF({ ...obj, uncertain: false }, str, locale, dbg) + "?"
+   } else if (obj.unspecified === 12) return obj.values[0] / 100 + 1 + "th c."
+   else if (obj.type === "Century") return Number(obj.values[0]) + 1 + "th c."
+   else if (obj.unspecified === 8) return obj.values[0] + "s"
+   else if (obj.type === "Decade") return obj.values[0] + "0s"
+   else if (!obj.unspecified && obj.values.length === 1) return obj.values[0]
+   else if (!obj.unspecified && obj.values.length === 3) {
+     try {
+       const event = new Date(Date.UTC(obj.values[0], obj.values[1], obj.values[2], 0, 0, 0))
+       const options = { year: "numeric", month: "numeric", day: "numeric" }
+       const val = event.toLocaleDateString(locale, options)
+       console.log("val:",locale,val)
+       return val
+     } catch (e) {
+       console.warn("locale error:", e, str, obj)
+     }
+     return str
+   } else {
+     return str
+   }
+ }
+
 
 function MySwipeable(props) {
    const handlers = useSwipeable({
@@ -1367,7 +1436,8 @@ class ResourceViewer extends Component<Props,State>
          if(_T === "Images" || _T === "Etext") {            
             if(!s) s = { ...state }
             if(!work && s.title.work) work = s.title.work
-            else if( /* _T === "Etext" && */ instance) {
+            else if( /* _T === "Etext" && */ instance?.length) {
+               //console.log(instance)
                work = getElem(bdo+"instanceOf",shortUri(instance[0].value));
             }
             if(!instance && s.title.instance && s.title.instance[0].value !== fullUri(props.IRI)) instance = s.title.instance
@@ -2055,76 +2125,8 @@ class ResourceViewer extends Component<Props,State>
 
          if(prop[bdo+"creator"]) prop[bdo+"creator"] = sortByEventType("creator");
 
-         const intervalToEDTF = (notBefore = null, notAfter = null) => {
-            console.log("inter2edtf:", notBefore, notAfter)
-            if (notBefore == null && notAfter == null)
-                return null;
-            if (notBefore == null)
-                return "/"+notAfter;
-            if (notAfter == null)
-                return notBefore+"/";
-            if (notBefore[0] == notAfter[0] && notBefore[1] == notAfter[1]) {
-                if (notBefore[2] == notAfter[2]) {
-                    if (notBefore[3] == '0' && notAfter[3] == '9')
-                        return notBefore.substring(0,3)+"X";
-                } else if (notBefore[2] == '0' && notAfter[2] == '9' && notBefore[3] == '0' && notAfter[3] == '9') {
-                    return notBefore.substring(0, 2)+"XX";
-                }
-            }
-            return notBefore+"/"+notAfter;
-         }
-         const humanizeEDTF = (obj, str, locale = "en-US", dbg = false) => {
-
-            console.log("edtf2H:", obj, str, locale, dbg)
-            if (!obj) return ""
-          
-            const conc = (values, sepa) => {
-              sepa = sepa ? " " + sepa + " " : ""
-              return values.reduce((acc, v, i, array) => {
-                if (i > 0) acc += i < array.length - 1 ? ", " : sepa
-                acc += humanizeEDTF(v)
-                return acc
-              }, "")
-            }
-          
-            // just output EDTF object
-            if (dbg /*|| true*/) return JSON.stringify(obj, null, 3)
-          
-            if (obj.type === "Set") return conc(obj.values, "or")
-            else if (obj.type === "List") return conc(obj.values, "and")
-            else if (obj.type === "Interval" && !obj.values[0]) return "not after " + conc([obj.values[1]])
-            else if (obj.type === "Interval" && !obj.values[1]) return "not before " + conc([obj.values[0]])
-            else if (obj.type === "Interval") return "between " + conc(obj.values, "and")
-            else if (obj.approximate) {
-              if (obj.type === "Century") return "circa " + (Number(obj.values[0]) + 1) + "th c."
-              return "circa " + humanizeEDTF({ ...obj, approximate: false }, str, locale, dbg)
-            } else if (obj.uncertain) {
-              if (obj.type === "Century") return Number(obj.values[0]) + 1 + "th c. ?"
-              return humanizeEDTF({ ...obj, uncertain: false }, str, locale, dbg) + "?"
-            } else if (obj.unspecified === 12) return obj.values[0] / 100 + 1 + "th c."
-            else if (obj.type === "Century") return Number(obj.values[0]) + 1 + "th c."
-            else if (obj.unspecified === 8) return obj.values[0] + "s"
-            else if (obj.type === "Decade") return obj.values[0] + "0s"
-            else if (!obj.unspecified && obj.values.length === 1) return obj.values[0]
-            else if (!obj.unspecified && obj.values.length === 3) {
-              try {
-                const event = new Date(Date.UTC(obj.values[0], obj.values[1], obj.values[2], 0, 0, 0))
-                const options = { year: "numeric", month: "numeric", day: "numeric" }
-                const val = event.toLocaleDateString(locale, options)
-                console.log("val:",locale,val)
-                return val
-              } catch (e) {
-                console.warn("locale error:", e, str, obj)
-              }
-              return str
-            } else {
-              return str
-            }
-          }
 
 
-
-         const locales = { en: "en-US", zh: "zh-Hans-CN", bo: "bo-CN", km:"km-KH" }
 
          let sortByEventDate = (tagEnd:string) => {
             
@@ -2160,11 +2162,11 @@ class ResourceViewer extends Component<Props,State>
 
                         if(assoR[w.value][bdo+"onYear"]) { 
                            d = assoR[w.value][bdo+"onYear"][0]
-                           if(d) d = d.value
+                           if(d) d = Number(d.value)
                         }                           
                         else if(assoR[w.value][bdo+"notBefore"]) {
                            d = assoR[w.value][bdo+"notBefore"][0]
-                           if(d) d = d.value
+                           if(d) d = Number(d.value)
                         }
 
                         if(assoR[w.value][bdo+"eventWhen"]){
@@ -2176,15 +2178,24 @@ class ResourceViewer extends Component<Props,State>
                               //console.log("eW:",JSON.stringify(assoR[w.value][bdo+"eventWhen"][0], null,3))
                               
                               let value = assoR[w.value][bdo+"eventWhen"][0].value, obj, edtfObj, readable = value
+                              if(value?.includes("XX?")) value = value.replace(/XX\?/,"?") // #771
                               try {
                                  obj = parse(value)
                                  edtfObj = edtf(value)
                                  readable = humanizeEDTF(obj, value, locales[this.props.locale])
+
+                                 d = Number(edtf(edtfObj.min)?.values[0])
+                                 console.log("date:",d)
+
                               } catch(e) {
                                  console.warn("EDTF error:",e,value,obj,edtfObj,readable)
                               }
                               
+                              assoR[w.value][bdo+"eventWhen"][0].d = d
+                              assoR[w.value][bdo+"eventWhen"][0].edtf = value
                               assoR[w.value][bdo+"eventWhen"][0].value = readable
+                           } else {
+                              d = assoR[w.value][bdo+"eventWhen"][0].d
                            }
 
                         } else {
@@ -2216,6 +2227,7 @@ class ResourceViewer extends Component<Props,State>
                            if(value) {
 
                               let obj, edtfObj, readable = value
+                              if(value?.includes("XX?")) value = value.replace(/XX\?/,"?") // #771
                               try {
                                  obj = parse(value)
                                  edtfObj = edtf(value)
@@ -2226,6 +2238,7 @@ class ResourceViewer extends Component<Props,State>
 
                               assoR[w.value][bdo+"eventWhen"] = [ { 
                                  parsed: true,
+                                 edtf:value,
                                  value: readable, 
                                  datatype:"http://id.loc.gov/datatypes/edtf",
                                  ...sameAsData
@@ -2248,8 +2261,8 @@ class ResourceViewer extends Component<Props,State>
                      if(w.type!=='bnode'||!assoR[w.value]) return w
                      else return { ...w, d, n, k, bnode:w.value }
                   })
-                  //loggergen.log("valsort",assoR,valSort)
                   valSort = _.orderBy(valSort,['fromEvent','n', 'd', 'k'],['asc']).map(e => ({'type':'bnode','n':e.n,'k':e.k,'d':e.d,'value':e.bnode,'sorted':true, ...e.fromEvent?{fromEvent:e.fromEvent}:{}, ...e.fromSameAs?{fromSameAs:e.fromSameAs}:{}}))               
+                  //loggergen.log("valsort",assoR,valSort)
                }
             }
             return valSort ; //
@@ -6240,7 +6253,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          {/* {this.hasSub(k)?this.subProps(k):tags.map((e)=> [e," "] )} */}
          { elem.map( e => { 
 
-               let pageVal ="", pageLang = "", current = []
+            let pageVal ="", pageLang = "", current = []
 
             let showIm = ((this.state.showEtextImages && !(this.state.collapse["image-"+this.props.IRI+"-"+e.seq] === false)) || this.state.collapse["image-"+this.props.IRI+"-"+e.seq])
 
@@ -6279,6 +6292,8 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
             let imgErr = that.state.errors[that.props.IRI]
             if(imgErr) imgErr = imgErr[e.seq]
+
+            //console.log("links:",imageLinks,e)
 
             const imgElem = !unpag && !imgErr && <h5><a title={I18n.t("misc."+(!showIm?"show":"hide"))+" "+I18n.t("available scans for this page")} onClick={(eve) => {
                let id = "image-"+this.props.IRI+"-"+e.seq
@@ -6365,17 +6380,24 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
                </div> }
                <div class="overpage">
-                  <h4 class="page">{!e.value.match(/[\n\r]/) && !e.seq ?[<span class="startChar"><span>[&nbsp;<Link to={"/show/"+this.props.IRI+"?startChar="+e.start+"#open-viewer"}>@{e.start}</Link>&nbsp;]</span></span>]:null}{[ e.value ].map(f => {
-                        let label = getLangLabel(this,bdo+"eTextHasPage",[{"lang":e.language,"value":f}]), lang
+                  <h4 class="page">{!e.value.match(/[\n\r]/) && !e.seq ?[<span class="startChar"><span>[&nbsp;<Link to={"/show/"+this.props.IRI+"?startChar="+e.start+"#open-viewer"}>@{e.start}</Link>&nbsp;]</span></span>]:null}{(e.chunks?.length?e.chunks:[e.value]).map(f => {
+
+                        // #771 multiple language in on epage
+                        let lang = e.language
+                        if(f["@language"]) lang = f["@language"]                        
+                        if(f["@value"] != undefined) f = f["@value"];
+
+                        let label = getLangLabel(this,bdo+"eTextHasPage",[{"lang":lang,"value":f}])
+
                         if(label) { lang = label["lang"] ; if(!pageLang) pageLang = lang }
                         if(label) { label = label["value"]; pageVal += " "+label ; }
                         if(label && this.props.highlight && this.props.highlight.key) { label = highlight(label,kw.map(k => k.replace(/(.)/g,"$1\\n?")),null,false,true); current.push(label); }
-                        else if(label) label = label.split(/[\n\r]/).map(e =>([e,<br/>]))
+                        else if(label) label = label.split(/[\n\r]/).map(e =>(e?[e,<br/>]:[]))
                         //label = f
                         let size = this.state.etextSize
                         //console.log("page:",pageVal,e,current)
                         if(lang === "bo") { size += 0.4 ; }
-                        return ([<span lang={lang} {...this.state.etextSize?{style:{ fontSize:size+"em", lineHeight:(size * 1.0)+"em" }}:{}}>{label}</span>,<br/>])})}
+                        return ([<span lang={lang} {...this.state.etextSize?{style:{ fontSize:size+"em", lineHeight:(size * 1.0)+"em" }}:{}}>{label}</span>])})}
                         {this.hoverMenu(bdo+"EtextHasPage",{value:pageVal,lang:pageLang,start:e.start,end:e.end},current)}
                   </h4>
                </div>
@@ -7089,14 +7111,14 @@ perma_menu(pdfLink,monoVol,fairUse,other)
       }
       
       let title = this.state.title.instance
-      if(title) title = title[0].value
+      if(title?.length) title = title[0].value
       else { 
          title = this.state.title.work
-         if(title) title = title[0].value
+         if(title?.length) title = title[0].value
       }
-      if(title) title = this.getResourceElem(skos+"prefLabel", title, this.props.assocResources)
-      if(title && title.length) title = getLangLabel(this,"",title)
-      if(title && title.value) title = <h2><a><span>{title.value}</span></a></h2>
+      if(title?.length) title = this.getResourceElem(skos+"prefLabel", title, this.props.assocResources)
+      if(title?.length) title = getLangLabel(this,"",title)
+      if(title?.value) title = <h2><a><span>{title.value}</span></a></h2>
 
       // TODO fix for UTxyz
       let root = this.props.IRI 
@@ -8919,7 +8941,10 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          if(!root || !root.length) theOutline = this.renderOutline()      
 
          let etext = this.isEtext()
-         if(etext && !this.props.eTextRefs) this.props.onGetETextRefs(this.props.IRI);
+         if(etext && !this.props.eTextRefs) { 
+            let etextRes = this.getResourceElem(bdo+"eTextInInstance")
+            if(!etextRes || !etextRes.length) this.props.onGetETextRefs(this.props.IRI);
+         }
 
          let loca = this.props.history.location            
 
@@ -8933,8 +8958,8 @@ perma_menu(pdfLink,monoVol,fairUse,other)
             return false
          }
 
-         if(this.state.title.work && this.state.title.work[0].value) wDataExt = checkDataExt(this.state.title.work[0].value)
-         if(this.state.title.instance && this.state.title.instance[0].value) { 
+         if(this.state.title.work?.length && this.state.title.work[0].value) wDataExt = checkDataExt(this.state.title.work[0].value)
+         if(this.state.title.instance?.length && this.state.title.instance[0].value) { 
             iDataExt = checkDataExt(this.state.title.instance[0].value)
             let sRid = shortUri(this.state.title.instance[0].value)               
             if(this.props.outlines && this.props.outlines[sRid] !== undefined  && this.props.outlines[sRid]) {
@@ -8947,7 +8972,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                else this.props.onGetOutline(sRid)
             }
          }
-         if(this.state.title.images && this.state.title.images[0].value) {
+         if(this.state.title.images?.length && this.state.title.images[0].value) {
             rDataExt = checkDataExt(this.state.title.images[0].value)
             let sRid = shortUri(this.state.title.images[0].value)
             
@@ -9056,9 +9081,10 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
             const prep = (obj) => {
                let ret = []
-               for(let k of [ bdo+"onYear", bdo+"notBefore", bdo+"notAfter" ]) {
+               for(let k of [ bdo+"onYear", bdo+"notBefore", bdo+"notAfter", bdo+"eventWhen" ]) {
                   if(obj[k]) for(let v of obj[k]) {
-                     ret.push({ type:k, value: v.value })
+                     const edtf = v.edtf
+                     ret.push({ type:k, value: v.value, edtf })
                   }   
                }
                return ret
@@ -9074,7 +9100,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                      else if(e.k.endsWith("Floruit")) floruit = floruit.concat(prep(this.getResourceBNode(e.value)))
                   }                  
                }
-               const vals = renderDates(birth, death, floruit)
+               const vals = renderDates(birth, death, floruit, this.props.locale)
                if(vals.length >= 1) dates = <span class='date'>{vals}</span> ;
             }
          }
@@ -9124,7 +9150,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                         else prop = false
                         if(prop) {
                            let data 
-                           [bdo+"onYear", bdo+"notBefore", bdo+"notAfter", bdo+"eventWhere"].map(e => {
+                           [bdo+"onYear", bdo+"notBefore", bdo+"notAfter", bdo+"eventWhere", bdo+"eventWhen"].map(e => {
                               if(!data) data = {}
                               if(elem[e] && elem[e].length) data[shortUri(e,true)] = shortUri(elem[e][0].value)
                               //console.log("data?",JSON.stringify(data))

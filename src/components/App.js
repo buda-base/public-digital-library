@@ -90,6 +90,7 @@ import axios from "axios"
 import LanguageSidePaneContainer from '../containers/LanguageSidePaneContainer';
 import ResourceViewerContainer from '../containers/ResourceViewerContainer';
 import {getOntoLabel,provImg as img,providers} from './ResourceViewer';
+import {humanizeEDTF, locales} from './ResourceViewer';
 import {getQueryParam} from './GuidedSearch';
 import {getEntiType, logError} from '../lib/api';
 import {narrowWithString} from "../lib/langdetect"
@@ -106,6 +107,7 @@ import logdown from 'logdown'
 import SimpleBar from 'simplebar-react';
 import 'simplebar/dist/simplebar.min.css';
 
+import edtf, { parse } from "edtf"
 
 // for full debug, type this in the console:
 // window.localStorage.debug = 'gen'
@@ -1132,13 +1134,13 @@ export function isAdmin(auth) {
 }
 
 
-export function renderDates(birth,death,floruit) {
+export function renderDates(birth,death,floruit,locale) {
       
    //console.log("b/d/f:",birth,death,floruit)
 
    const formatDate = (dates) => {
       const clean = (d) => (""+d).replace(/^([^0-9]*)0+/,"$1")
-      let date = "", min, max, val, isCentury
+      let date = "", min, max, val, isCentury, uncertain, approx
       for(let d of dates) {
          val = clean(d.value)
          //console.log("d:",min,max,val,JSON.stringify(d))
@@ -1151,6 +1153,33 @@ export function renderDates(birth,death,floruit) {
          } else if(d.type === bdo+"onYear") {
             if(max === undefined || val > max) max = val
             if(min === undefined || val < min) min = val
+         } else if(d.type === bdo+"eventWhen") {
+            //if(max === undefined || val > max) max = val
+            //if(min === undefined || val < min) min = val
+
+            let value = ""+(d.edtf?d.edtf:d.value), obj, edtfObj, readable = value
+            if(value?.includes("XX?")) value = value.replace(/XX\?/,"?") // #771
+            try {
+               obj = parse(value)
+               edtfObj = edtf(value)
+               readable = humanizeEDTF(obj, value, locales[locale])
+               //console.log("edtf:",readable, edtfObj, obj)
+
+               let minEdtf = edtf(edtfObj.min)?.values[0]
+               let maxEdtf = edtf(edtfObj.max)?.values[0]
+
+               if(max === undefined || maxEdtf > max) max = maxEdtf
+               if(min === undefined || minEdtf < min) min = minEdtf
+
+            } catch(e) {
+               if(value.match(/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/)) {
+                  let y = value.split("-")[1]
+                  if(max === undefined || y > max) max = y
+                  if(min === undefined || y < min) min = y
+               } else console.warn("EDTF error:",e,value,obj,edtfObj,readable)
+            }
+            if(value.includes("?")) uncertain = true            
+            if(value.includes("~")) approx = true            
          }
       }
       if(min !== undefined && max != undefined) {
@@ -1163,8 +1192,10 @@ export function renderDates(birth,death,floruit) {
             else date = I18n.t("misc.ordInter", { min: cmin, max:cmax })
          }
          else date = I18n.t("misc.inter", { min, max }) 
-      }
-
+      }      
+      if(uncertain) date = date + " ?" 
+      if(approx) date = "~"+date
+      
       //console.log("date:",dates,date);
 
       return { date, isCentury }
@@ -3588,7 +3619,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             //console.log("B/D:",JSON.stringify(birth,null,3),JSON.stringify(death,null,3))
 
             if(!other.length) {
-               const vals = renderDates(birth, death, floruit)
+               const vals = renderDates(birth, death, floruit, this.props.locale)
                if(vals.length >= 1) ret.push(<div class="match dates">{vals}</div>)
             } else {
 
@@ -3811,12 +3842,14 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
             expand = m.expand	
             if(expand && expand.value) {	
+               if(expand.value.includes("ܚ")) expand.value = expand.value.replace(/[ܚܝ]/g,"-") // #771
                if(!this.state.collapse[prettId+"@"+startC]) expand = getLangLabel(this,m.type,[{...m, "value":expand.value}])	
                else expand = true	
             }	
 
             context = m.context	
             if(context && context.value) {	
+               if(context.value.includes("ܚ")) context.value = context.value.replace(/[ܚܝ]/g,"-") // #771
                if(this.state.collapse[prettId+"@"+startC]) context = getLangLabel(this,m.type,[{...m, "value":context.value}])	
                else context = false	
             }	
@@ -3847,7 +3880,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
          let toggleExpand = (e,id) => {	
             //loggergen.log("toggle",id)	
-            this.setState({...this.state,repage:true,collapse:{...this.state.collapse, [id]:!this.state.collapse[id]}})
+            this.setState({...this.state,blurSearch:true,repage:true,collapse:{...this.state.collapse, [id]:!this.state.collapse[id]}})
          }	
 
          let getUrilink = (uri,val,lang) => ([ <Link className="urilink" to={"/show/"+shortUri(uri)}>{val}</Link>,lang?<Tooltip placement="bottom-end" title={	
@@ -4140,7 +4173,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      //console.log("t,k",t,k)
                      if(t.length) return { ...acc, 
                         [k]:[ ...acc[k]?acc[k]:[],
-                           e.filter(e => [bdo+"onYear", bdo+"notBefore", bdo+"notAfter", bdo+"eventWhere"].includes(e.type))
+                           e.filter(e => [bdo+"onYear", bdo+"notBefore", bdo+"notAfter", bdo+"eventWhere", bdo+"eventWhen"].includes(e.type))
                             .reduce( (subacc,p)=>( {...subacc, [shortUri(p.type, true)]: shortUri(p.value, true) }),{}) 
                         ] }
                      else return acc
@@ -4275,7 +4308,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                         { this.state.collapse["more-details-"+id] && <ExpandLess /> }
                      </div>
          let inRoo = this.getResultProp(I18n.t("result.inRootInstance"),allProps,false,true,[bdo+"inRootInstance",tmp+"inRootInstance"],null,null,null,null,resUrl,T)
-         let personDates = this.getResultProp(I18n.t("result.year"),allProps,false,false,[tmp+"onYear",bdo+"onYear",bdo+"notBefore",bdo+"notAfter"],null,[bdo+"personEvent"],[bdo+"PersonBirth",bdo+"PersonDeath"]) 
+         let personDates = this.getResultProp(I18n.t("result.year"),allProps,false,false,[tmp+"onYear",bdo+"onYear",bdo+"notBefore",bdo+"notAfter",bdo+"eventWhen"],null,[bdo+"personEvent"],[bdo+"PersonBirth",bdo+"PersonDeath"]) 
 
          if(typeisbiblio && (by || inRoo) || type === "Person" && personDates ) retList.push( <div id='matches' class={"mobile hasAuthor "+( this.state.collapse["more-details-"+id] == true ?" on":"" )}>         
 
