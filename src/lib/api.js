@@ -119,7 +119,7 @@ export async function logError(error, json) {
 
    //const user = store.getState().ui
 
-   const url = "https://editserv-dev.bdrc.io/logClientException"
+   const url = "https://editserv.bdrc.io/logClientException"
 
    const id_token = localStorage.getItem('id_token');
 

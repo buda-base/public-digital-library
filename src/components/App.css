@@ -464,7 +464,7 @@ body { overflow:auto !important;padding-right:0 !important; /*font-family:"Robot
    color: #152631;
 }
 .nav #back > * { vertical-align:middle;}
-.nav #back {  max-width:calc(100% - 400px); display: flex;  align-items: center; justify-content: flex-end;}
+.nav #back {  max-width:calc(100% - 420px); display: flex;  align-items: center; justify-content: flex-end;}
 .nav #back span { margin-left:auto; }
 .nav #back > span:first-child { padding-right:10px;padding-top:2px; } 
 .nav #back a { cursor: pointer; flex-shrink:0;}
