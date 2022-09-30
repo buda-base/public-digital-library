@@ -164,8 +164,8 @@ export class Redirect404 extends Component<Props>
                "tmp:notFound":true
             }
             window.top.postMessage(JSON.stringify(msg), "*")
-         } else {
-            that.props.history.push(to) 
+         } else {            
+            that.props.history.push(to)             
          }
       } })(this), 3000) ;
    }
