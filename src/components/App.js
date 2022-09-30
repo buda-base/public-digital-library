@@ -6587,7 +6587,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       }
 
       const allSortByLists = { 
-         "Topic": [ "title" ],  
+         "Topic": [ "closestM", "title" ],  
          "Role": [ "closestM", "roleN" ],
          "Work": [ "popu", "closestM", "workT" ], 
          "Person": [ "popu", "closestM", "personN", "yearB" ],  
