@@ -27,7 +27,7 @@ import ProfileContainer from './containers/ProfileContainer';
 import StaticRouteContainer from './containers/StaticRouteContainer';
 import GuidedSearchContainer from './containers/GuidedSearchContainer'
 import BrowseContainer from './containers/BrowseContainer'
-import { top_right_menu } from './components/App'
+import { top_right_menu, RIDregexp } from './components/App'
 
 import Profile from './components/ProfileStatic';
 import { ClearCacheProvider, useClearCacheCtx } from "react-clear-cache";
@@ -156,6 +156,9 @@ export class Redirect404 extends Component<Props>
       let to = "/"
       if(props.to) to = props.to
 
+      let delay = 3000
+      if(props.delay) delay = props.delay
+
       setTimeout((function(that) { return function() { 
          if(that.props.simple && that.props.from  && that.props.propid) {
             const msg = {
@@ -167,7 +170,7 @@ export class Redirect404 extends Component<Props>
          } else {            
             that.props.history.push(to)             
          }
-      } })(this), 3000) ;
+      } })(this), delay) ;
    }
 
    render()
@@ -175,11 +178,13 @@ export class Redirect404 extends Component<Props>
       let message = this.props.message ;
       if(!message) message = "Page not found: "+this.props.history.location.pathname ;
 
+      let redirecting = this.props.redirecting ;
+      if(!redirecting) redirecting = I18n.t("resource.redirecting")
 
       return (<div style={{textAlign:"center",marginTop:"100px",fontSize:"22px"}}>
          { message }
          <br/>
-         Redirecting...
+         { redirecting }
       </div>)
 
    }
@@ -393,6 +398,20 @@ const makeMainRoutes = () => {
                            //   || !store.getState().data.assocResources || !store.getState().data.assocResources[props.match.params.IRI])
                            
                            let IRI = props.match.params.IRI
+                           
+                           // #766
+                           if(IRI?.includes(":")) {
+                              if(IRI.match(RIDregexp)) {
+                                 IRI = IRI.split(":")
+                                 if(IRI[1] != IRI[1].toUpperCase()) {
+                                    IRI = IRI[0]+":"+IRI[1].toUpperCase()
+                                    return <Redirect404 history={history} redirecting={" "} message={" "} delay={150} to={"/show/"+IRI+history.location.search+history.location.hash} />
+                                 } else {
+                                    IRI = props.match.params.IRI
+                                 }
+                              }
+                           }
+
                            let get = qs.parse(history.location.search)
                            if(get.part && get.part !== IRI) {
                               get.root = IRI

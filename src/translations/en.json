@@ -670,7 +670,8 @@
       "ok":"ok",
       "firstP": "First page",
       "lastP": "Last page",
-      "openIA": "Open on Internet Archive"
+      "openIA": "Open on Internet Archive",
+      "redirecting": "Redirecting..."
    },
    "mirador": {
       "return": "return to BUDA",
