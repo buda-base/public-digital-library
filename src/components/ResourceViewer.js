@@ -7639,7 +7639,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                                     if(vol.length) { 
                                        vol = vol[0].contentLocationVolume
                                        //console.log("ready for vol."+vol+" in "+head,head_node)
-                                       if(!already.includes(head)) { // fix side-effect of #729 (prevent opening same text from multiple volumes like bdr:MW3CN27014_K0022-40)
+                                       if(!already.includes(head) && vol != undefined) { // fix side-effect of #729 (prevent opening same text from multiple volumes like bdr:MW3CN27014_K0022-40)
                                           update = true                              
                                           this.props.onGetOutline("tmp:uri", { partType: "bdr:PartTypeVolume", "tmp:hasNonVolumeParts": true, volumeNumber: vol }, head);
                                           already.push(head)

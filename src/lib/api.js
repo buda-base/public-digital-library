@@ -487,7 +487,12 @@ export default class API {
             let data 
             // #730 fallback for case when hasNonVolumePart is true but Outline_root_volumes returns 404
             try { 
-               data = await this.getQueryResults(url, IRI, param,"GET","application/jsonld");         
+               if(IRI === "tmp:uri") {
+                  console.warn("tmp:uri?outline",IRI,node,volFromUri)
+                  data = {"@graph":[]}
+               } else {
+                  data = await this.getQueryResults(url, IRI, param,"GET","application/jsonld");         
+               }
             } catch(e) {               
                if(e.code == 404 && node && node["tmp:hasNonVolumeParts"] == true) {
                   IRI = initParams.IRI
