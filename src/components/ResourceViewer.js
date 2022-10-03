@@ -6937,7 +6937,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
    renderNoAccess = (fairUse) => {
       
-      if ( this.props.manifestError && [404, 444].includes(this.props.manifestError.error.code)) return
+      if ( this.props.manifestError && [404, 444].includes(this.props.manifestError.error.code)) return this.renderAccess()
 
       if(fairUse) { // && (!this.props.auth || this.props.auth && !this.props.auth.isAuthenticated()) ) { 
 
@@ -6977,6 +6977,9 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                    </span>
                   </h3>
                </div>
+      }
+      else{
+         return this.renderAccess()
       }
    }
 
@@ -9278,8 +9281,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   { _T !== "Etext" && this.renderQuality() }
                   { _T === "Etext" && this.renderEtextAccess(etextAccessError) }
                   { _T === "Etext" && this.renderOCR() }
-                  { _T !== "Etext" && this.renderNoAccess(fairUse) }
-                  { _T !== "Etext" && !fairUse && this.renderAccess() }
+                  { _T !== "Etext" && this.renderNoAccess(fairUse) }                  
                   { this.renderMirador(isMirador) }           
                   { theDataTop }
                   <div class="data" id="perma">{ this.perma_menu(pdfLink,monoVol,fairUse,kZprop.filter(k => k.startsWith(adm+"seeOther")))  }</div>
