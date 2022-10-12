@@ -429,11 +429,33 @@ export default class API {
          {
             logError(e)         
             //throw(e)
-            console.error("ERROR outline",e)
+            console.error("ERROR latest syncs",e)
             return true
          }
 
    }
+
+   async loadStaticQueryAsResults(route): Promise<string>
+   {
+      const staticQueries = { "female-authors": "femaleAuthorsGraph", "all-collections":"allCollections" }
+      try {
+         
+         let config = store.getState().data.config.ldspdi
+         let url = config.endpoints[config.index] + "/lib" ;            
+         let param = {"searchType":staticQueries[route],"L_NAME":"","LG_NAME":"", "I_LIM":"" }
+         let data = await this.getQueryResults(url, "", param,"GET","application/json");         
+
+         return data
+      }
+      catch(e)
+      {
+         logError(e)         
+         //throw(e)
+         console.error("ERROR static query",e)
+         return true
+      }
+
+  }
 
     async loadLatestSyncs(): Promise<string>
     {

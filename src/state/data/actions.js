@@ -294,6 +294,15 @@ export const getLatestSyncsAsResults = (): Action => {
     }
 }
 
+TYPES.getStaticQueryAsResults = 'GET_STATIC_QUERY_AS_RESULTS';
+export const getStaticQueryAsResults = (route:string, datatype:string): Action => {
+    return {
+        type: TYPES.getStaticQueryAsResults,
+        payload:route,
+        meta:datatype
+    }
+}
+
 
 TYPES.getLatestSyncs = 'GET_LATEST_SYNCS';
 export const getLatestSyncs = (): Action => {

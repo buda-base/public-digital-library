@@ -4112,7 +4112,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                }
             }
             let urlBase ;
-            if(window.location.href.match(/\/latest/)) urlBase = window.location.href.replace(/.*?\/latest[\/]?/,"latest?");
+            if(window.location.href.match(/\/(latest|all-collections|female-authors)/)) urlBase = window.location.href.replace(/.*?\/(latest|all-collections|female-authors)[\/]?/,"$1?");
             else urlBase = window.location.href.replace(/^https?:[/][/][^?]+[?]?/gi,"")+"&"
             //console.log("urlB",urlBase)
             resUrl = "/show/"+urlpart+"s="+ encodeURIComponent((urlBase.replace(/((([?])?&*|^)n=[^&]*)/g,"$3")+(!urlBase.match(/[\?&]$/)?"&":"")+"n="+n).replace(/\?+&?/,"?"))+(!bestM?"":"&"+bestM.replace(/^\?/,""))
@@ -5043,6 +5043,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                else { 
                   let txt = ""
                   if(this.props.latest) txt = I18n.t("home.new")
+                  else if(this.props.static) txt = I18n.t("home."+this.props.static)
                   else txt = I18n.t("types."+_t,{count:2}) 
                   
                   if(this.props.language==="") {
@@ -6669,7 +6670,9 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             changeKWtimer = setTimeout( () => { changeKW() }, 1000) ;
          }
          */
-         if(this.props.latest&&this.state.keyword==="(latest)") value = ""
+         if(this.props.latest&&this.state.keyword==="(latest)"
+            || this.props.static
+            ) value = ""
 
          loggergen.log("changeKW",value,keyEv,ev)
          
@@ -7128,7 +7131,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                         let tab = v.split("@")
                         requestSearchOnClick(tab,i)
                      }}
-                     value={this.props.latest&&this.state.keyword==="(latest)"?"":(this.props.hostFailure?"Endpoint error: "+this.props.hostFailure+" ("+this.getEndpoint()+")":this.state.keyword !== undefined && this.state.keyword!==this.state.newKW?this.state.keyword:this.props.keyword&&this.state.newKW?lucenequerytokeyword(this.state.newKW):"")}
+                     value={this.props.latest&&this.state.keyword==="(latest)"||this.props.static?"":(this.props.hostFailure?"Endpoint error: "+this.props.hostFailure+" ("+this.getEndpoint()+")":this.state.keyword !== undefined && this.state.keyword!==this.state.newKW?this.state.keyword:this.props.keyword&&this.state.newKW?lucenequerytokeyword(this.state.newKW):"")}
                      style={{
                         marginTop: '0px',
                         width: (this.props.config.khmerServer&&!this.props.keyword?"400px":"700px"),

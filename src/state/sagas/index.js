@@ -527,6 +527,20 @@ else if(route === "latest") {
    store.dispatch(uiActions.updateSortBy(sortBy,"Scan"))
    store.dispatch(dataActions.getLatestSyncsAsResults());
 }
+else if(["female-authors", "all-collections"].includes(route)) {
+   const datatypes = { "female-authors": "Person", "all-collections": "Product"}
+   
+   let sortBy = "popularity" 
+   if(params && params.s) sortBy = params.s
+   if(!params.t) {
+      let {pathname,search} = history.location         
+      history.replace({pathname,search:(search?"&":"")+"t="+datatypes[route]})
+      return
+   }
+   store.dispatch(uiActions.updateSortBy(sortBy,params.t))
+   
+   store.dispatch(dataActions.getStaticQueryAsResults(route,params.t));
+}
 else if(!iri) {
 
    let state = store.getState()
@@ -3028,6 +3042,42 @@ export function* watchGetResultsById() {
    );
 }
 
+async function getStaticQueryAsResults(route, datatype) {
+
+   store.dispatch(uiActions.loading(null, true));
+
+   let res = await api.loadStaticQueryAsResults(route)
+
+   route = "("+route+")"
+      
+   res = rewriteAuxMain(res,route,[datatype])
+
+   let data = getData(res)
+
+   loggergen.log("static:"+route,datatype,res,data)
+   
+   store.dispatch(dataActions.foundResults(route, "-", { results: {bindings: {} } } ) ); // needed to initialize ("Any" / legacy code)
+
+   store.dispatch(dataActions.foundResults(route, "-", data, [datatype]));
+
+   store.dispatch(dataActions.foundDatatypes(route,"-",{ metadata:{[bdo+datatype]:data.numResults}, hash:true}));
+
+   addMeta(route,"-",data,datatype,null,false); 
+
+   store.dispatch(uiActions.loading(null, false));
+
+   
+}
+
+export function* watchGetStaticQueryAsResults() {
+
+   yield takeLatest(
+      dataActions.TYPES.getStaticQueryAsResults,
+      (action) => getStaticQueryAsResults(action.payload, action.meta)
+   );
+}
+
+
 
 async function getLatestSyncsAsResults() {
 
@@ -3542,6 +3592,7 @@ export default function* rootSaga() {
       watchCreatePdf(),
       watchGetResource(),
       watchSearchingKeyword(),
-      watchStartSearch()
+      watchStartSearch(),
+      watchGetStaticQueryAsResults()
    ])
 }

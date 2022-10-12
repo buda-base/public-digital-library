@@ -373,6 +373,18 @@ const makeMainRoutes = () => {
                               store.dispatch(initiateApp(qs.parse(history.location.search), null, null, "latest"))
                            }
                            return (<AppContainer history={history} auth={auth} latest={true}/> )
+                        }}/>  
+                        <Route path="/female-authors" render={(props) => {
+                           let get = qs.parse(history.location.search), path = props.location.pathname.split("/")[1]
+                           console.log("new route",props,store.getState())                           
+                           store.dispatch(initiateApp(qs.parse(history.location.search), null, null, path))
+                           return (<AppContainer history={history} auth={auth} static={path}/> )
+                        }}/>
+                        <Route path="/all-collections" render={(props) => {
+                           let get = qs.parse(history.location.search), path = props.location.pathname.split("/")[1]
+                           console.log("new route",props,store.getState())                           
+                           store.dispatch(initiateApp(qs.parse(history.location.search), null, null, path))
+                           return (<AppContainer history={history} auth={auth} static={path}/> )
                         }}/>
                         <Route path="/view/:IRI" render={(props) =>
                            {

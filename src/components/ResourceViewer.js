@@ -1107,6 +1107,8 @@ class ResourceViewer extends Component<Props,State>
 
             if(gotoResults) {
                if(backTo.startsWith("latest")) this.props.history.push({pathname:"/latest",search:backTo.replace(/^latest/,"")})
+               else if(backTo.startsWith("female-authors")) this.props.history.push({pathname:"/female-authors",search:backTo.replace(/^female-authors/,"")})
+               else if(backTo.startsWith("all-collections")) this.props.history.push({pathname:"/all-collections",search:backTo.replace(/^all-collections/,"")})
                else if(backTo.startsWith("search")) this.props.history.push({pathname:"/search",search:backTo.replace(/^[^?]+[?]/,"")})                              
                else {
                   get = qs.parse(backTo.replace(/^[^?]+[?]/,""))
@@ -9222,6 +9224,12 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          }
 
 
+         let fromStaticRoute = searchUrl?.match(/^(latest|all-collections|female-authors)/)
+         if(fromStaticRoute) { 
+            fromStaticRoute = searchUrl.replace(/^(latest|all-collections|female-authors).*/,"$1")
+            if(fromStaticRoute != "latest") searchTerm = I18n.t("home."+fromStaticRoute).toLowerCase()
+         }
+
          return (
          [getGDPRconsent(this),   
          <div class={isMirador?"H100vh OF0":""}>
@@ -9229,13 +9237,13 @@ perma_menu(pdfLink,monoVol,fairUse,other)
             { infoPanelR }
             <div {...searchUrl?{"data-searchUrl":searchUrl}:{}} className={"resource "+hasTabs+getEntiType(this.props.IRI).toLowerCase() + (this.props.simple?" simple":"") /*+(!this.props.portraitPopupClosed?" portrait-warn-on":"")*/} {...this.props.simple?{onClick:sendMsg}:{}}>                              
                {searchUrl && <div class="ariane">
-                  <Link to={searchUrl.startsWith("latest")?searchUrl:"/search?"+searchUrl} onClick={(ev) => {
+                  <Link to={fromStaticRoute?searchUrl:"/search?"+searchUrl} onClick={(ev) => {
                      this.props.onLoading("search",true)                     
 
                      let pathname = "/search"
-                     if(searchUrl.startsWith("latest")) {
-                        pathname = "/latest"
-                        searchUrl = searchUrl.replace(/^latest[?]/,"")
+                     if(fromStaticRoute){
+                        pathname = "/"+fromStaticRoute
+                        searchUrl = searchUrl.replace(new RegExp(fromStaticRoute+"[?]"),"")
                      }
 
                      setTimeout(() => { 
