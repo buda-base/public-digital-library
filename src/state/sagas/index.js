@@ -1933,7 +1933,7 @@ export function sortResultsByTitle(results, userLangs, reverse) {
             if(!labels.length && state.data.assocResources && (assoR = state.data.assocResources[state.data.keyword]) && assoR[k]) labels = assoR[k].filter(r => r.type && r.type === skos+"prefLabel") 
             //loggergen.log("labels?",labels,assoR,k,assoR[k],results[k])
             if(labels.length) { 
-               labels = sortLangScriptLabels(labels,langs.flat,langs.translit, langs.flat.includes("km-x-iast"))
+               labels = sortLangScriptLabels(labels,langs.flat,langs.translit, langs.flat.includes("km-x-iast"), true)
                labels = labels[0]
                if(labels)  { 
                   lang = labels.lang
@@ -1944,7 +1944,7 @@ export function sortResultsByTitle(results, userLangs, reverse) {
             return { k, lang, value }
          },{})
          //loggergen.log("keys1", keys)
-         let sortKeys = sortLangScriptLabels(partKeys,langs.flat,langs.translit, langs.flat.includes("km-x-iast"))
+         let sortKeys = sortLangScriptLabels(partKeys,langs.flat,langs.translit, langs.flat.includes("km-x-iast"), true)
          if(reverse) sortKeys = sortKeys.reverse()
          //loggergen.log("keys2", sortKeys)
          return sortKeys

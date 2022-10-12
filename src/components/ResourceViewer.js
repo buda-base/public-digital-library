@@ -9154,8 +9154,8 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                         if(prop && prop.length) prop = shortUri(prop[0].value, true)
                         else prop = false
                         if(prop) {
-                           let data 
-                           [bdo+"onYear", bdo+"notBefore", bdo+"notAfter", bdo+"eventWhere", bdo+"eventWhen"].map(e => {
+                           let data                            
+                           [bdo+"onYear", bdo+"notBefore", bdo+"notAfter", bdo+"eventWhere" /*, bdo+"eventWhen"*/].map(e => { // DONE: fix editor crash
                               if(!data) data = {}
                               if(elem[e] && elem[e].length) data[shortUri(e,true)] = shortUri(elem[e][0].value)
                               //console.log("data?",JSON.stringify(data))

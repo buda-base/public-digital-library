@@ -172,7 +172,7 @@ export function extendedPresets(preset)
    return extPreset
 }
 
-export function sortLangScriptLabels(data,preset,translit,mergeXs = false)
+export function sortLangScriptLabels(data,preset,translit,mergeXs = false, caseInsensitive = false)
 {
    if(translit == undefined) translit={}
    if(!Array.isArray(data)) data = [ data ]
@@ -275,7 +275,7 @@ export function sortLangScriptLabels(data,preset,translit,mergeXs = false)
          data_ = data_.concat(data[k].sort(khmerSort))
       } else {
          //console.log("sorting ?:",k,JSON.stringify(data[k],null,3))
-         data_ = data_.concat(__.orderBy(data[k],[ "_val" ],['asc']))
+         data_ = data_.concat(__.orderBy(data[k],[ d => caseInsensitive?d._val.toLowerCase():d._val ],['asc']))
       }
    }
    
