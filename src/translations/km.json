@@ -50,7 +50,11 @@
             "text":"<parag>គន្ថនិទ្ទេសដែលពាក់ព័ន្ធ និងធនធានបន្ទាប់បន្សំដែលទាក់ទងនឹងសាស្ត្រាស្លឹករឹតកម្ពុជា <nbsp>—មកដល់ឆាប់ៗនេះ</nbsp>។ </parag>"
          }
       },
-      "help":""
+      "help":"",
+      "all-collections":"All collections",
+      "female-authors":"Female authors",
+      "works-by-female-authors":"Works by female authors",
+      "instances-by-female-authors":"Versions by female authors"
    },
    "types": {
       "any": "ណាមួយ",

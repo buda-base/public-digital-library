@@ -92,7 +92,7 @@ import ResourceViewerContainer from '../containers/ResourceViewerContainer';
 import {getOntoLabel,provImg as img,providers} from './ResourceViewer';
 import {humanizeEDTF, locales} from './ResourceViewer';
 import {getQueryParam} from './GuidedSearch';
-import {getEntiType, logError} from '../lib/api';
+import {getEntiType, logError, staticQueries} from '../lib/api';
 import {narrowWithString} from "../lib/langdetect"
 import {sortLangScriptLabels, extendedPresets, getMainLabel} from '../lib/transliterators';
 import './App.css';
@@ -4111,8 +4111,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   urlpart = root+"?part="+prettId+"&"
                }
             }
-            let urlBase ;
-            if(window.location.href.match(/\/(latest|all-collections|female-authors)/)) urlBase = window.location.href.replace(/.*?\/(latest|all-collections|female-authors)[\/]?/,"$1?");
+            let urlBase, staticRegExp = new RegExp(".*?[/](latest|"+Object.keys(staticQueries).join("|")+")[/]?")  ;
+            if(window.location.href.match(staticRegExp)) urlBase = window.location.href.replace(staticRegExp,"$1?");
             else urlBase = window.location.href.replace(/^https?:[/][/][^?]+[?]?/gi,"")+"&"
             //console.log("urlB",urlBase)
             resUrl = "/show/"+urlpart+"s="+ encodeURIComponent((urlBase.replace(/((([?])?&*|^)n=[^&]*)/g,"$3")+(!urlBase.match(/[\?&]$/)?"&":"")+"n="+n).replace(/\?+&?/,"?"))+(!bestM?"":"&"+bestM.replace(/^\?/,""))

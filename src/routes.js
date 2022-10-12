@@ -13,7 +13,7 @@ import IIIFViewerContainer from './containers/IIIFViewerContainer'
 import IIIFCookieLogin from './lib/IIIFCookieLogin';
 import {miradorSetUI, miradorConfig, miradorInitView} from './lib/miradorSetup';
 import { initiateApp } from './state/actions';
-import { logError } from './lib/api'
+import { logError, staticQueries } from './lib/api'
 
 
 import store from './index';
@@ -374,18 +374,14 @@ const makeMainRoutes = () => {
                            }
                            return (<AppContainer history={history} auth={auth} latest={true}/> )
                         }}/>  
-                        <Route path="/female-authors" render={(props) => {
-                           let get = qs.parse(history.location.search), path = props.location.pathname.split("/")[1]
-                           console.log("new route",props,store.getState())                           
-                           store.dispatch(initiateApp(qs.parse(history.location.search), null, null, path))
-                           return (<AppContainer history={history} auth={auth} static={path}/> )
-                        }}/>
-                        <Route path="/all-collections" render={(props) => {
-                           let get = qs.parse(history.location.search), path = props.location.pathname.split("/")[1]
-                           console.log("new route",props,store.getState())                           
-                           store.dispatch(initiateApp(qs.parse(history.location.search), null, null, path))
-                           return (<AppContainer history={history} auth={auth} static={path}/> )
-                        }}/>
+                        { Object.keys(staticQueries).map(q => (
+                           <Route path={"/"+q} render={(props) => {
+                              let get = qs.parse(history.location.search), path = props.location.pathname.split("/")[1]
+                              console.log("new route",props,store.getState())                           
+                              store.dispatch(initiateApp(qs.parse(history.location.search), null, null, path))
+                              return (<AppContainer history={history} auth={auth} static={path}/> )
+                           }}/>
+                        )) }
                         <Route path="/view/:IRI" render={(props) =>
                            {
                               let get = qs.parse(history.location.search)

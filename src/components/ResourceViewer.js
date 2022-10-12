@@ -79,7 +79,7 @@ import Loader from "react-loader"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faLanguage } from '@fortawesome/free-solid-svg-icons'
 //import {MapComponent} from './Map';
-import {getEntiType,dPrefix,RISexportPath} from '../lib/api';
+import {getEntiType,dPrefix,RISexportPath,staticQueries} from '../lib/api';
 import {numtobo} from '../lib/language';
 import {languages,getLangLabel,top_right_menu,prefixesMap as prefixes,sameAsMap,shortUri,fullUri,highlight,lang_selec,etext_lang_selec,langSelect,searchLangSelec,report_GA,getGDPRconsent,renderDates} from './App';
 import {narrowWithString} from "../lib/langdetect"
@@ -1106,9 +1106,9 @@ class ResourceViewer extends Component<Props,State>
             //fromSearch = this.state.fromSearch
 
             if(gotoResults) {
+               let staticRegExp = new RegExp("^(latest|"+Object.keys(staticQueries).join("|")+")(.*)$"), m;
                if(backTo.startsWith("latest")) this.props.history.push({pathname:"/latest",search:backTo.replace(/^latest/,"")})
-               else if(backTo.startsWith("female-authors")) this.props.history.push({pathname:"/female-authors",search:backTo.replace(/^female-authors/,"")})
-               else if(backTo.startsWith("all-collections")) this.props.history.push({pathname:"/all-collections",search:backTo.replace(/^all-collections/,"")})
+               else if(m = backTo.match(staticRegExp)) this.props.history.push({pathname:"/"+m[1],search:m[2]})
                else if(backTo.startsWith("search")) this.props.history.push({pathname:"/search",search:backTo.replace(/^[^?]+[?]/,"")})                              
                else {
                   get = qs.parse(backTo.replace(/^[^?]+[?]/,""))
@@ -9223,10 +9223,10 @@ perma_menu(pdfLink,monoVol,fairUse,other)
             window.top.postMessage(JSON.stringify({label:getLangLabel(this,"",titleRaw.label)}),"*")
          }
 
-
-         let fromStaticRoute = searchUrl?.match(/^(latest|all-collections|female-authors)/)
+         let staticRegExp = new RegExp("^(latest|"+Object.keys(staticQueries).join("|")+").*"),
+            fromStaticRoute = searchUrl?.match(staticRegExp)
          if(fromStaticRoute) { 
-            fromStaticRoute = searchUrl.replace(/^(latest|all-collections|female-authors).*/,"$1")
+            fromStaticRoute = searchUrl.replace(staticRegExp,"$1")
             if(fromStaticRoute != "latest") searchTerm = I18n.t("home."+fromStaticRoute).toLowerCase()
          }
 

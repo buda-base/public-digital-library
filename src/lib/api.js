@@ -86,6 +86,14 @@ export const dPrefix = {
    }
 };
 
+
+export const staticQueries = { 
+   "female-authors": ["femaleAuthorsGraph", "Person" ],
+   "all-collections": [ "allCollections", "Product" ],
+   "works-by-female-authors": ["worksByFemaleAuthors", "Work"],
+   "instances-by-female-authors": ["instancesByFemaleAuthor", "Instance"]
+}
+
 export async function logError(error, json) {
    
    
@@ -437,12 +445,13 @@ export default class API {
 
    async loadStaticQueryAsResults(route): Promise<string>
    {
-      const staticQueries = { "female-authors": "femaleAuthorsGraph", "all-collections":"allCollections" }
       try {
          
+         let query = staticQueries[route]
+         if(query?.length) query = query[0]
          let config = store.getState().data.config.ldspdi
          let url = config.endpoints[config.index] + "/lib" ;            
-         let param = {"searchType":staticQueries[route],"L_NAME":"","LG_NAME":"", "I_LIM":"" }
+         let param = {"searchType":query,"L_NAME":"","LG_NAME":"", "I_LIM":"" }
          let data = await this.getQueryResults(url, "", param,"GET","application/json");         
 
          return data

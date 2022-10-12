@@ -52,7 +52,9 @@
       },
       "help":"<bold>Please consult the <lk href='https://www.bdrc.io/buda-user-guide/'>user guide</lk> and <lk href='https://www.bdrc.io/buda-user-guide/frequently-asked-questions/'>FAQ</lk> to learn more about BUDA</bold>",
       "all-collections":"All collections",
-      "female-authors":"Female authors"
+      "female-authors":"Female authors",
+      "works-by-female-authors":"Works by female authors",
+      "instances-by-female-authors":"Versions by female authors"
 
    },
    "types": {

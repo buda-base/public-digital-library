@@ -8,7 +8,7 @@ import * as dataActions from '../data/actions';
 import * as uiActions from '../ui/actions';
 import selectors from '../selectors';
 import store from '../../index';
-import bdrcApi, { getEntiType, ResourceNotFound, logError } from '../../lib/api';
+import bdrcApi, { getEntiType, ResourceNotFound, logError, staticQueries } from '../../lib/api';
 import {sortLangScriptLabels, extendedPresets, getMainLabel} from '../../lib/transliterators';
 import {auth} from '../../routes';
 import {shortUri,fullUri,isAdmin,sublabels,subtime} from '../../components/App'
@@ -527,14 +527,13 @@ else if(route === "latest") {
    store.dispatch(uiActions.updateSortBy(sortBy,"Scan"))
    store.dispatch(dataActions.getLatestSyncsAsResults());
 }
-else if(["female-authors", "all-collections"].includes(route)) {
-   const datatypes = { "female-authors": "Person", "all-collections": "Product"}
+else if(staticQueries[route]?.length === 2) {   
    
    let sortBy = "popularity" 
    if(params && params.s) sortBy = params.s
    if(!params.t) {
       let {pathname,search} = history.location         
-      history.replace({pathname,search:(search?"&":"")+"t="+datatypes[route]})
+      history.replace({pathname,search:(search?"&":"")+"t="+staticQueries[route][1]})
       return
    }
    store.dispatch(uiActions.updateSortBy(sortBy,params.t))
