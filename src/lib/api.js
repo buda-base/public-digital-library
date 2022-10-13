@@ -445,25 +445,15 @@ export default class API {
 
    async loadStaticQueryAsResults(route): Promise<string>
    {
-      try {
-         
-         let query = staticQueries[route]
-         if(query?.length) query = query[0]
-         let config = store.getState().data.config.ldspdi
-         let url = config.endpoints[config.index] + "/lib" ;            
-         let param = {"searchType":query,"L_NAME":"","LG_NAME":"", "I_LIM":"" }
-         let data = await this.getQueryResults(url, "", param,"GET","application/json");         
+      let query = staticQueries[route]
+      if(query?.length) query = query[0]
+      let config = store.getState().data.config.ldspdi
+      let url = config.endpoints[config.index] + "/lib" ;            
+      let param = {"searchType":query,"L_NAME":"","LG_NAME":"", "I_LIM":"" }
+      let data = await this.getQueryResults(url, "", param,"GET","application/json");         
 
-         return data
-      }
-      catch(e)
-      {
-         logError(e)         
-         //throw(e)
-         console.error("ERROR static query",e)
-         return true
-      }
-
+      return data
+   
   }
 
     async loadLatestSyncs(): Promise<string>

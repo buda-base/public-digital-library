@@ -3045,7 +3045,15 @@ async function getStaticQueryAsResults(route, datatype) {
 
    store.dispatch(uiActions.loading(null, true));
 
-   let res = await api.loadStaticQueryAsResults(route)
+   let res
+   try {
+      res = await api.loadStaticQueryAsResults(route)
+   } catch(e) {
+      logError(e)
+      store.dispatch(dataActions.searchFailed(route, e.message, "en"));
+      store.dispatch(uiActions.loading(null, false));   
+      return
+   }
 
    route = "("+route+")"
       
