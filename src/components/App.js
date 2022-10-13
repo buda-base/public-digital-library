@@ -4592,6 +4592,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
             { (type === "Instance") && this.getSeriesNumber(allProps) }            
 
+            { type === "Product" && this.getResultProp(tmp+"nbMembers",allProps.filter(v => v.value && v.value != 0),false, false) }
+            { type === "Product" && this.getResultProp(tmp+"nbParts",allProps.filter(v => v.value && v.value != 0),false, false) }
 
             {/* { this.getResultProp(bdo+"publisherName",allProps,false,false) }
             { this.getResultProp(bdo+"publisherLocation",allProps,false,false) } */}

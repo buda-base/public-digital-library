@@ -269,7 +269,9 @@
       "tmp:hasExactMatch":"Exact Match",
       "tmp:isExactMatch":"Exact Full Match",
       "tmp:inDLD":"Availability on DLD",
-      "tmp:available":"Available"
+      "tmp:available":"Available",
+      "tmp:nbMembers":"Members",
+      "tmp:nbParts":"Parts"
    },
    "result": {
       "open": "开放",

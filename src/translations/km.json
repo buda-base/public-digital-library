@@ -266,7 +266,9 @@
       "tmp:altLabelName":"ឈ្មោះផ្សេងទៀត",
       "tmp:altLabelTitle":"ចំណងជើងផ្សេងទៀត",
       "tmp:inDLD":"Availability on DLD",
-      "tmp:available":"Available"
+      "tmp:available":"Available",
+      "tmp:nbMembers":"Members",
+      "tmp:nbParts":"Parts"
    },
    "guided":{
       "keyword":"keyword",

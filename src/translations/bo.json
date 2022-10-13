@@ -269,7 +269,9 @@
       "tmp:hasExactMatch":"Exact Match",
       "tmp:isExactMatch":"Exact Full Match",
       "tmp:inDLD":"སྟབས་བདེའི་དཔེ་མཛོད་ནང་ཐོབ།",
-      "tmp:available":"སྟབས་བདེའི་དཔེ་མཛོད་ནང་ཐོབ།"
+      "tmp:available":"སྟབས་བདེའི་དཔེ་མཛོད་ནང་ཐོབ།",
+      "tmp:nbMembers":"Members",
+      "tmp:nbParts":"Parts"
    },
    "result": {
       "open": "ཁ་ཕྱེ།",
