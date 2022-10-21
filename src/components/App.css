@@ -3062,6 +3062,14 @@ body > [id^="menu-"] > div:last-child,
 }
 .resource .data > [data-prop="bdo:workHasInstance"] .inst-prov img { flex-shrink:0; height:65%; }
 
+.resource .data > [data-prop="bdo:workHasInstance"] .inst-prov.sat { background-color: white; left:67px; top:67px; width:28px; height:28px; display:flex; align-items: center; justify-content: center;}
+
+.resource .data > [data-prop="bdo:workHasInstance"] .inst-prov.sat { border:2px solid green; border-radius: 4px;}
+
+.resource .data > [data-prop="bdo:workHasInstance"] .inst-prov.sat::before { font-weight: 700; color:#555; font-size:12px; line-height: 12px;}
+
+.resource .data > [data-prop="bdo:workHasInstance"] .inst-prov.sat::before { content:'SAT'; }
+
 .resource .data .images-thumb.no-thumb { background-size:60px auto; /*border-color:transparent;*/}
 /* .resource .data .images-thumb.no-thumb + .ulink { display:inline-block;margin-left:28px; width:auto;} */
 
@@ -4632,7 +4640,7 @@ body {overflow-x:hidden; }
 }
 .searchWidget.datatype.corporation .img { width:45px; margin-left:-17px; margin-right:7px;}
 
-[lang$="-x-iast"] { word-break: break-all; }
+[lang$="-x-iast"]:not(.hasSpace) { word-break: break-all; }
 
 .widget label { text-transform:capitalize; /*word-break: break-all;*/ }
 .searchWidget > label > span,

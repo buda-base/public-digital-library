@@ -2974,11 +2974,13 @@ class ResourceViewer extends Component<Props,State>
             }
          }
          
-         if(elem.inOutline || ((!thumbV || !thumbV.length) && ((info && infoBase && infoBase.filter(e=>e["xml:lang"]||e["lang"]).length >= 0) || (prop && prop.match && prop.match(/[/#]sameAs/))))) {
+         let noSpace
 
+         if(elem.inOutline || ((!thumbV || !thumbV.length) && ((info && infoBase && infoBase.filter(e=>e["xml:lang"]||e["lang"]).length >= 0) || (prop && prop.match && prop.match(/[/#]sameAs/))))) {
 
             //loggergen.log("svg?",svgImageS)
 
+            if(info && !info.includes(" ")) noSpace= true
 
             let link,orec,canUrl;
             if(this.props.assocResources && this.props.assocResources[elem.value]) {
@@ -3070,7 +3072,6 @@ class ResourceViewer extends Component<Props,State>
 
                      //console.log("dico:",uri,info)
                   }
-
 
                   link = <a class={"urilink prefLabel " } href={elem.url} onClick={(e) => { 
 
@@ -3213,7 +3214,7 @@ class ResourceViewer extends Component<Props,State>
                bdrcData = null
             }
             
-            ret.push([<span lang={lang} class={"ulink " + (sameAsPrefix?sameAsPrefix:'')  }>{befo}{link}</span>,lang?<Tooltip placement="bottom-end" title={
+            ret.push([<span lang={lang} class={"ulink " + (sameAsPrefix?sameAsPrefix:'') + (noSpace ? "" : " hasSpace" ) }>{befo}{link}</span>,lang?<Tooltip placement="bottom-end" title={
                <div style={{margin:"10px"}}>
                   {I18n.t(languages[lang]?languages[lang].replace(/search/,"tip"):lang)}
                </div>
