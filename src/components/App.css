@@ -3045,6 +3045,9 @@ body > [id^="menu-"] > div:last-child,
    background-size: auto 100%;
    background-color: black;
 }
+.resource .data > [data-prop="bdo:workHasParallelsIn"] > h3 ~ .group > h4.multiple > * { vertical-align: baseline !important; line-height:23px; }
+.resource .data > [data-prop="bdo:workHasParallelsIn"] a.no-bdrc img { position:relative; vertical-align: middle; opacity:1; }
+
 .resource .data [data-prop="bdo:workHasInstance"] .images-thumb { width:100px;height:100px;z-index:1;position:relative;}
 .resource .data [data-prop="bdo:workHasInstance"] .images-thumb-links { margin-left:0px;}
 
