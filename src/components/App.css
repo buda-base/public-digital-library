@@ -1607,6 +1607,22 @@ a.result + #matches .result-content::before { left:110px; width:calc(100% - 110p
    position:absolute; right:17px; margin-top:-65px !important; opacity:1 !important;
 }
 
+.result-content #icon .provImg.sat { 
+   width: 26px !important;
+   height: 25px;
+   margin-top: -55px !important;
+   background: white;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   border: 2px solid green;
+   font-size: 11px;
+   font-weight: 600;
+   border-radius: 4px;
+   margin-right: -1px !important;
+   line-height:12px;
+}
+
 .result-content #icon .provImg.loc {height:15px;margin-top:-40px !important;}
 
 .result-content #icon .provImg.lul,

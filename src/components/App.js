@@ -89,7 +89,7 @@ import axios from "axios"
 
 import LanguageSidePaneContainer from '../containers/LanguageSidePaneContainer';
 import ResourceViewerContainer from '../containers/ResourceViewerContainer';
-import {getOntoLabel,provImg as img,providers} from './ResourceViewer';
+import {getOntoLabel,provImg as img,providers,provNoLogo as nologo} from './ResourceViewer';
 import {humanizeEDTF, locales} from './ResourceViewer';
 import {getQueryParam} from './GuidedSearch';
 import {getEntiType, logError, staticQueries} from '../lib/api';
@@ -4053,18 +4053,24 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       let orec = allProps.filter(e => e.type === adm+"originalRecord")
 
       let hasProv, prov = allProps.filter(a => a.type === tmp+"provider")
+         
       if(prov && prov.length && this.props.dictionary) prov = this.props.dictionary[prov[0].value]
       if(prov && prov[skos+"prefLabel"] && prov[skos+"prefLabel"]) prov = (""+prov[skos+"prefLabel"].filter(p=>!p.lang || p.lang === "en")[0].value).toLowerCase()
       else prov = false
-      
-      //console.log("prov:",prov)
-
+            
       if(prov) prov = prov.replace(/(^\[ *)|( *\]$)/g,"") // CUDL
       if(prov) prov = prov.replace(/internet archives/g,"ia") 
       if(prov) prov = prov.replace(/library of congress/g,"loc") 
       if(prov) prov = prov.replace(/staatsbibliothek zu berlin/g,"sbb")
       if(prov) prov = prov.replace(/leiden university libraries/g,"lul")
-      if(prov && prov !== "bdrc" && img[prov]) hasProv = <img class={"provImg "+prov+ (orec.length?" oriRec":"")} title={I18n.t("copyright.provided",{provider:providers[prov]})} src={img[prov]}/>
+      if(prov) prov = prov.replace(/.* sat daizōkyō .*/gu,"sat")
+      
+      //console.log("prov:",prov,nologo,nologo[prov])
+
+      if(prov && prov !== "bdrc") { 
+         if(img[prov]) hasProv = <img class={"provImg "+prov+ (orec.length?" oriRec":"")} title={I18n.t("copyright.provided",{provider:providers[prov]})} src={img[prov]}/>
+         else if(nologo[prov]) hasProv = <span class={"provImg "+ prov + (orec.length?" oriRec":"")}  title={I18n.t("copyright.provided",{provider:providers[prov]})} >{nologo[prov]}</span>
+      }
 
 
     

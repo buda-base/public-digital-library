@@ -282,6 +282,10 @@ export const providers = {
 }
    
 
+export const provNoLogo = {
+   "sat":  "SAT", 
+}
+
 export const provImg = {
    "bdr":  "/logo.svg", 
    "bn":  "/BUDDHANEXUS.png",
