@@ -204,9 +204,9 @@ async function initiateApp(params,iri,myprops,route,isAuthCallback) {
       }
 
       // #756
-      if(params && params.q && params.q.match(/^(["(]+[^"]*)"([^"]*[")~0-9]+)$/)) {
+      if(params && params.q && params.q.match(/^(["(]+[^"]*)"([^"]*[")]+[~0-9]*)$/)) {
          let { pathname, search } = { ...history.location }
-         search = search.replace(/q=[^&]+/, "q="+params.q.replace(/^(["(]+[^"]*)"([^"]*[")~0-9]+)$/g,(m,g1,g2) => g1+(g2.includes('"')?g2:'"'+g2))) 
+         search = search.replace(/q=[^&]+/, "q="+params.q.replace(/^(["(]+[^"]*)"([^"]*[")~0-9]+)$/g,(m,g1,g2) => g1+(g2.includes('"')?g2:'"'+g2)))
          if(search != history.location.search) {
             history.replace({ pathname, search })
             return
