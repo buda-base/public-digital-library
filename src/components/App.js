@@ -3650,7 +3650,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                if(val === exclude || translit?.value?.replace(/_/g," ").replace(/[\/། ]+$|[↦↤]/g,"") === exclude?.replace(/_/g," ").replace(/[\/། ]+$|[↦↤]/g,"")) continue
                let lang = i["xml:lang"]
 
-               if((""+val).match(/^[0-9-]+T[0-9:.]+Z+$/)) {
+               if((""+val).match(/^[0-9-]+T[0-9:.]+(Z+|[+][0-9:]+)$/)) {
                   //val.replace(/[ZT]/g," ").replace(/:[0-9][0-9][.].*?$/,"")
                   
                   let code = "en-US"
