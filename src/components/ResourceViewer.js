@@ -8147,9 +8147,11 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                                           if(!Array.isArray(l)) l = [ l ]   
                                           wLab.push(getLangLabel(this, "", l))
                                        }
-                                       if(t && t["catalogInfo"]) t = t["catalogInfo"]
-                                       if(!Array.isArray(t)) t = [ t ]
-                                       cInfo.push(this.format("h4", "", "", false, "sub", t))
+                                       if(t && t["catalogInfo"]) { 
+                                          t = t["catalogInfo"]
+                                          if(!Array.isArray(t)) t = [ t ]
+                                          cInfo.push(this.format("h4", "", "", false, "sub", t))
+                                       }
                                     }
                                  }                                 
                                  if(cInfo?.length) catInf.push(<div class={"sub "}><h4 class="first type">{this.proplink(bdo+"catalogInfo")}{I18n.t("punc.colon")} </h4><div>{cInfo}</div></div>)
@@ -9166,6 +9168,8 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          if(this.props.config && this.props.config.msg) {
 
             infoPanelR = this.props.config.msg.filter(m => m.display && m.display.includes("resource"))            
+
+            console.log("infoPanelR",infoPanelR)
 
             let rend = (infoPanel) => <div class="infoPanel inRes">{ infoPanel.map(m => {
                let lab = getLangLabel(this,"",m.text)
