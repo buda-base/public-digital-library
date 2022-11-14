@@ -8032,6 +8032,12 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                                  }
                               }
 
+
+                              if(g.instanceOf) {
+                                 if(nav.length) nav.push(<span>|</span>)
+                                 nav.push(<Link to={"/show/"+(Array.isArray(g.instanceOf)?g.instanceOf[0]:g.instanceOf)} class="ulink">{I18n.t("resource.openW")}</Link>)                                                                     
+                              }
+
                               if(nav.length) { 
                                  g.hasDetails = true
                                  if(showDetails) {
@@ -8078,14 +8084,16 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
                               subtime(4)
 
+                              const inst = []
                               if(g.instanceOf) {
                                  //if(Array.isArray(g.instanceOf)) g.instanceOf = 
                                  if(showDetails) {
                                     if(!g.details) g.details = []
-                                    g.details.push(<div class="sub"><h4 class="first type">{this.proplink(tmp+"instanceOfWork")}{I18n.t("punc.colon")} </h4>{this.format("h4","instacO","",false, "sub", [{type:"uri",value:fullUri(g.instanceOf)}])}</div>)
+                                    inst.push(<div class="sub"><h4 class="first type">{this.proplink(tmp+"instanceOfWork")}{I18n.t("punc.colon")} </h4>{this.format("h4","instacO","",false, "sub", [{type:"uri",value:fullUri(g.instanceOf)}])}</div>)
                                  }
                               }
                               
+                              const titleTxt = []
                               if(showDetails && g.hasTitle) {
                                  if(!g.details) g.details = []
                                  if(!Array.isArray(g.hasTitle)) g.hasTitle = [ g.hasTitle ]
@@ -8113,12 +8121,48 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
                                           //console.log("useT:",useT,title,g["tmp:titleMatch"], titleT)
 
+                                          titleTxt.push(getLangLabel(this,"",title))
+
                                           if(!g.details) g.details = []
                                           g.details.push(<div class={"sub " + (hideT?"hideT":"")}><h4 class="first type">{this.proplink(titleT)}{I18n.t("punc.colon")} </h4>{this.format("h4", "", "", false, "sub", useT?.length?useT:title)}</div>)
                                        } else {
                                           g.hidden.push(<div class={"sub " + (hideT?"hideT":"")}><h4 class="first type">{this.proplink(titleT)}{I18n.t("punc.colon")} </h4>{this.format("h4", "", "", false, "sub", title)}</div>)
                                        }
                                     }
+                                 }
+                              }
+
+                              const catInf = [], wLab = []
+                              if(showDetails && g.instanceOf) {
+                                 if(!g.details) g.details = []
+                                 if(!Array.isArray(g.instanceOf)) g.instanceOf = [ g.instanceOf ]
+                                 const cInfo = []
+                                 
+                                 for(let t of g.instanceOf) { 
+                                    t = mapElem(t)
+                                    if(t.length) {                                        
+                                       t = { ...t[0] }
+                                       const l = t["skos:prefLabel"]
+                                       if(l) {
+                                          if(!Array.isArray(l)) l = [ l ]   
+                                          wLab.push(getLangLabel(this, "", l))
+                                       }
+                                       if(t && t["catalogInfo"]) t = t["catalogInfo"]
+                                       if(!Array.isArray(t)) t = [ t ]
+                                       cInfo.push(this.format("h4", "", "", false, "sub", t))
+                                    }
+                                 }                                 
+                                 if(cInfo?.length) catInf.push(<div class={"sub "}><h4 class="first type">{this.proplink(bdo+"catalogInfo")}{I18n.t("punc.colon")} </h4><div>{cInfo}</div></div>)
+                              }
+
+                              if(inst.length && g.details) {
+                                 if(titleTxt.length && wLab.length) {
+                                    //console.log("tTxt:",titleTxt,wLab)
+                                    if(!wLab.some(l => titleTxt.some(t => t.value === l.value))){
+                                       g.details.push(inst)   
+                                    }
+                                 } else {
+                                    g.details.push(inst)
                                  }
                               }
 
@@ -8220,6 +8264,8 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                                  }
                               }
 
+
+                              if(catInf.length && g.details) g.details.push(catInf)
 
                               subtime(8)
                            }
