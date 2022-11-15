@@ -390,6 +390,82 @@ export const langProfile = [
 ]
 */
 
+
+export const renderBanner = (that, infoPanel, isResourcePage) => <div class={"infoPanel "+(isResourcePage?"inRes":"")}>{ infoPanel.map(m => {
+   let lab = getLangLabel(that,"",m.text)
+   let icon 
+
+   console.log("m:",m)
+   
+   if(m.severity=="info") icon = <InfoIcon className="info"/>
+   else if(m.severity=="warning") icon = <WarnIcon className="warn"/>
+   else if(m.severity=="error") icon = <ErrorIconC className="error"/>
+
+   if(lab) {      
+
+      // handle links
+      let link,img ;
+      let content = [], str = lab.value
+      while(link = str.match(/([^!]|^|\n)(\[([^\]]+?)\]\(([^)]+?)\))/m)) {
+         let arr = str.split(link[2])
+         content = content.concat([ arr[0], <a href={link[4]} target="_blank">{link[3]}</a> ])
+         str = arr.slice(1).join(" ")
+      }
+      if(str) content.push(str)
+
+      // handle images
+      let sav = content
+      content = []
+      sav.map(c => {
+         console.log("c:",c)
+         if(c?.match) { 
+            while(img = c.match(/!\[([^\]]+)\]\(([^)]+)\)/)) {
+               let arr = c.split(img[0])
+               content = content.concat([ arr[0], <img src={img[2]} alt={img[1]}/> ])
+               c = arr.slice(1).join(" ")            
+            } 
+            if(c) content.push(c)
+         }
+         else {
+            content.push(c)
+         }
+      })
+
+      // check if popup has it recently been closed (less than a week)
+      let hidden = that.state.collapse?.msgPopup
+      const wasClosed = localStorage.getItem("msg-popup-closed")
+      if(!hidden && wasClosed && Date.now() - wasClosed < /* 7 * 24 * 3600 */ 10 * 1000) {
+         that.setState({ collapse: { ...that.state.collapse, msgPopup: true }})
+         hidden = true
+      }
+      
+      // layout
+      if(!m.popup) return <p>{icon}{content}</p>
+      else if(!hidden) return <div class="msg-popup">
+         <div class="back"></div>
+         <div class="front">
+            <Close className="close" onClick={(ev) => {
+               that.setState({collapse:{ ...that.state.collapse, msgPopup: true }})
+               localStorage.setItem("msg-popup-closed", Date.now())
+            }}/>
+            { icon && <p>{icon}</p> }
+            <p>{content.map(c => { 
+               // handle newlines
+               if(c?.match && c.match(/\n/)) {
+                  const p = c.split("\n")
+                  return p.map( (d,i) => {
+                     if(i < p.length - 1) return <>{d}<br/></>
+                     else return d
+                  })
+               }
+               else return c
+            })}</p>
+         </div>
+      </div>
+   }
+}) }</div>
+
+
 let _GA = false ;
 export function report_GA(config,location) {
 
@@ -933,7 +1009,7 @@ export function top_right_menu(that,etextTitle,backUrl,etextres)
       return (<>
       {!that.props.portraitPopupClosed && portrait}
       <div class={"mobile-button top"+(!that.state.collapse.navMenu?" off":" on")} onClick={()=>that.setState({collapse:{...that.state.collapse,navMenu:!that.state.collapse.navMenu}})}><img src="/icons/burger.svg" /></div>
-      <div class={"nav etext-nav"+(onZhMirror?" zhMirror":"")+(that.state.collapse.navMenu?" on":"")}>
+      <div class={"nav etext-nav"+(onZhMirror?" zhMirror":"")+(that.state.collapse.navMenu?" on":"") +(that.props.config?.msg?.some(m => m.popup)&&!that.state.collapse?.msgPopup?" msgPopupOn":"") }>
          {uiLangPopup}
          <div>
             {logo}
@@ -1063,7 +1139,9 @@ export function top_right_menu(that,etextTitle,backUrl,etextres)
       return ([
       !that.props.portraitPopupClosed? portrait:null,
       <div class={"mobile-button top"+(!that.state.collapse.navMenu?" off":" on")} onClick={() => that.setState({collapse:{...that.state.collapse,navMenu:!that.state.collapse.navMenu}})}><img src="/icons/burger.svg" /></div>,
-      <div class={"nav"+(onZhMirror?" zhMirror":"")+ (that.state.collapse.navMenu?" on":"")+(onKhmerServer||onKhmerUrl?" khmerServer":"")}>
+      <div class={"nav"+(onZhMirror?" zhMirror":"")+ (that.state.collapse.navMenu?" on":"")+(onKhmerServer||onKhmerUrl?" khmerServer":"")
+               +(that.props.config?.msg?.some(m => m.popup)&&!that.state.collapse?.msgPopup?" msgPopupOn":"")
+         }>
          {uiLangPopup}
           <div>
          {logo}
@@ -6941,27 +7019,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          if(message.length == 0 && !this.props.loading && !this.props.keyword) infoPanelH = this.props.config.msg.filter(m => m.display && m.display.includes("home"))
          else infoPanelR = this.props.config.msg.filter(m => m.display && m.display.includes("search"))
          
-         let rend = (infoPanel) => <div class="infoPanel">{ infoPanel.map(m => {
-            let lab = getLangLabel(this,"",m.text)
-            let icon 
-            
-            if(m.severity=="info") icon = <InfoIcon className="info"/>
-            else if(m.severity=="warning") icon = <WarnIcon className="warn"/>
-            else if(m.severity=="error") icon = <ErrorIconC className="error"/>
-
-            if(lab) {
-               let link ;
-               let content = lab.value
-               if(link = lab.value.match(/\[([^\]]+)\]\(([^)]+)\)(.*?$)/)) {
-                  content = lab.value.split(/\[[^\]]+\]\([^)]+\)/)
-                  content = [ content[0], <a href={link[2]} target="_blank">{link[1]}</a>, link[3] ]
-               } 
-               return <p>{icon}{content}</p>
-            }
-         }) }</div>
-
-         if(infoPanelH && infoPanelH.length) infoPanelH = rend(infoPanelH)
-         if(infoPanelR && infoPanelR.length) infoPanelR = rend(infoPanelR)
+         if(infoPanelH && infoPanelH.length) infoPanelH = renderBanner(this, infoPanelH)
+         if(infoPanelR && infoPanelR.length) infoPanelR = renderBanner(this, infoPanelR)
       }
 
 

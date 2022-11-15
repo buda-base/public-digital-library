@@ -81,7 +81,9 @@ import { faLanguage } from '@fortawesome/free-solid-svg-icons'
 //import {MapComponent} from './Map';
 import {getEntiType,dPrefix,RISexportPath,staticQueries} from '../lib/api';
 import {numtobo} from '../lib/language';
-import {languages,getLangLabel,top_right_menu,prefixesMap as prefixes,sameAsMap,shortUri,fullUri,highlight,lang_selec,etext_lang_selec,langSelect,searchLangSelec,report_GA,getGDPRconsent,renderDates} from './App';
+import {languages,getLangLabel,top_right_menu,prefixesMap as prefixes,sameAsMap,shortUri,fullUri,
+   highlight,lang_selec,etext_lang_selec,langSelect,searchLangSelec,report_GA,getGDPRconsent,renderDates,
+   renderBanner} from './App';
 import {narrowWithString} from "../lib/langdetect"
 import Popover from '@material-ui/core/Popover';
 import Popper from '@material-ui/core/Popper';
@@ -9166,31 +9168,8 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
          let infoPanelR
          if(this.props.config && this.props.config.msg) {
-
             infoPanelR = this.props.config.msg.filter(m => m.display && m.display.includes("resource"))            
-
-            console.log("infoPanelR",infoPanelR)
-
-            let rend = (infoPanel) => <div class="infoPanel inRes">{ infoPanel.map(m => {
-               let lab = getLangLabel(this,"",m.text)
-               let icon 
-
-               if(m.severity=="info") icon = <InfoIcon className="info"/>
-               else if(m.severity=="warning") icon = <WarnIcon className="warn"/>
-               else if(m.severity=="error") icon = <ErrorIcon className="error"/>
-               
-               if(lab) {
-                  let link ;
-                  let content = lab.value
-                  if(link = lab.value.match(/\[([^\]]+)\]\(([^)]+)\)(.*?$)/)) {
-                     content = lab.value.split(/\[[^\]]+\]\([^)]+\)/)
-                     content = [ content[0], <a href={link[2]} target="_blank">{link[1]}</a>, link[3] ]
-                  } 
-                  return <p>{icon}{content}</p>
-               }
-            }) }</div>
-
-            if(infoPanelR && infoPanelR.length) infoPanelR = rend(infoPanelR)
+            if(infoPanelR && infoPanelR.length) infoPanelR = renderBanner(this, infoPanelR, true)
          }
 
    
