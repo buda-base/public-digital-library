@@ -438,16 +438,18 @@ export const renderBanner = (that, infoPanel, isResourcePage) => <div class={"in
          that.setState({ collapse: { ...that.state.collapse, msgPopup: true }})
          hidden = true
       }
+
+      const closePopup = (ev) => {
+         that.setState({collapse:{ ...that.state.collapse, msgPopup: true }})
+         localStorage.setItem("msg-popup-closed", Date.now())
+      }
       
       // layout
       if(!m.popup) return <p>{icon}{content}</p>
       else if(!hidden) return <div class="msg-popup">
-         <div class="back"></div>
+         <div class="back" onClick={closePopup}></div>
          <div class="front">
-            <Close className="close" onClick={(ev) => {
-               that.setState({collapse:{ ...that.state.collapse, msgPopup: true }})
-               localStorage.setItem("msg-popup-closed", Date.now())
-            }}/>
+            <Close className="close" onClick={closePopup}/>
             { icon && <p>{icon}</p> }
             <p>{content.map(c => { 
                // handle newlines
