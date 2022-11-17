@@ -1768,7 +1768,7 @@ a.result + #matches .result-content #icon > :not(.thumb) img { width:40px; }
 .resource a.outL img { background:none; filter:invert(100%) saturate(0%) brightness(1000%); vertical-align: -9px;}
 .resource a.outL:hover { text-decoration: underline;}
 
-.resource h3.inT { width:calc(100%); padding-top:5px;}
+.resource h3.inT { width:calc(100%); padding-top:5px; line-height:30px;}
 
 #matches .match .assets { margin:0 4px; }
 #matches .match .assets img,
