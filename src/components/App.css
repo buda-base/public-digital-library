@@ -2165,7 +2165,7 @@ h4:not(:hover) > .lang
 
 .resource .data#outline div::after { content:none !important;}
 .resource .data#outline div h2:not(.on) .T { display:none; }
-.resource .data#outline div .root { width:100%; display:flex; }
+.resource .data#outline div .root { width:100%; display:flex; /*flex-wrap: nowrap;*/}
 
 .resource .data#outline span.is-root .parTy + span a:hover { text-decoration-color:#d73449;}
 

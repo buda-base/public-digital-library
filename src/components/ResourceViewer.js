@@ -567,11 +567,15 @@ let extProperties = {
       //bdo+"authorshipStatement",
       bdo+"itemBDRCHoldingStatement",
       bdo+"numberOfVolumes",
-      "tmp:dimensions",
-      bdo+"bdo:dimensionsStatement",
-      bdo+"bdo:instanceReproductionOf",
+      tmp+"dimensions",
+      tmp+"contentDimensions",
+      bdo+"dimensionsStatement",
+      bdo+"instanceReproductionOf",
       bdo+"note",
       bdo+"instanceHasVolume",
+      bdo+"paginationExtentStatement",
+      bdo+"conditionGrade",
+      bdo+"readabilityGrade"
    ],
    "Person": [,
       bf+"identifiedBy",
@@ -1861,6 +1865,23 @@ class ResourceViewer extends Component<Props,State>
       }
       else if(h && h[0] && !h[0].value.match(/cm/)) {
          prop[bdo+"dimHeight"] = [ { ...h[0], value:h[0].value+"cm" } ]
+      }
+
+      w = prop[bdo+"contentWidth"]
+      h = prop[bdo+"contentHeight"]
+
+      //loggergen.log("propZ",prop,sorted)
+
+      if(w && h && w[0] && h[0] && !w[0].value.match(/cm/) && !h[0].value.match(/cm/)) {
+         prop[tmp+"contentDimensions"] = [ {type: "literal", value: w[0].value+"×"+h[0].value+"cm" } ]
+         delete prop[bdo+"contentWidth"]
+         delete prop[bdo+"contentHeight"]
+      }
+      else if(w && w[0] && !w[0].value.match(/cm/)) {
+         prop[bdo+"contentWidth"] = [ { ...w[0], value:w[0].value+"cm" } ]
+      }
+      else if(h && h[0] && !h[0].value.match(/cm/)) {
+         prop[bdo+"contentHeight"] = [ { ...h[0], value:h[0].value+"cm" } ]
       }
 
       const customDMS = (val, tag, obj) => {
