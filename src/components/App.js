@@ -431,12 +431,20 @@ export const renderBanner = (that, infoPanel, isResourcePage) => <div class={"in
          }
       })
 
-      // check if popup has it recently been closed (less than a week)
-      let hidden = that.state.collapse?.msgPopup
-      const wasClosed = localStorage.getItem("msg-popup-closed")
-      if(!hidden && wasClosed && Date.now() - wasClosed < /* 7 * 24 * 3600 */ 10 * 1000) {
-         that.setState({ collapse: { ...that.state.collapse, msgPopup: true }})
-         hidden = true
+      // check if popup has it recently been closed 
+      let hidden = that.state.collapse?.msgPopup 
+      if(m.popup) {
+         let showEveryNDay = 30
+         if(m.showEveryNDay != undefined) showEveryNDay = m.showEveryNDay 
+         const wasClosed = localStorage.getItem("msg-popup-closed")
+         //console.log("sENd:",showEveryNDay,m.showEveryNDay,wasClosed,Date.now())         
+         if(!hidden && (!wasClosed || Date.now() - wasClosed > showEveryNDay * 24 * 3600 * 1000)) {
+            //console.log("show!",hidden) 
+         } else if(!hidden) {
+            //console.log("hide!") 
+            that.setState({ collapse: { ...that.state.collapse, msgPopup: true }})
+            hidden = true
+         }
       }
 
       const closePopup = (ev) => {
