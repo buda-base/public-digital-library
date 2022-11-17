@@ -392,10 +392,10 @@ export const langProfile = [
 
 
 export const renderBanner = (that, infoPanel, isResourcePage) => <div class={"infoPanel "+(isResourcePage?"inRes":"")}>{ infoPanel.map(m => {
-   let lab = getLangLabel(that,"",m.text)
+   let lab = getLangLabel(that,tmp+"bannerMessage",m.text) 
    let icon 
 
-   console.log("m:",m)
+   console.log("m:",m,lab,m.text,that.props.locale,that)
    
    if(m.severity=="info") icon = <InfoIcon className="info"/>
    else if(m.severity=="warning") icon = <WarnIcon className="warn"/>
@@ -605,7 +605,9 @@ const preferUIlang = [ bdo+"placeType", bdo+"workIsAbout", bdo+"workGenre", bdo+
    bdo+"binding",
    bdo+"tradition", tmp+"hasRole",
    adm+"logWho",
-   bdo+"creationEventType" ]
+   bdo+"creationEventType",
+   tmp+"bannerMessage" 
+]
 
 export function getLangLabel(that:{},prop:string="",labels:[],proplang:boolean=false,uilang:boolean=false,otherLabels:[],dontUseUI:boolean=false)
 {
