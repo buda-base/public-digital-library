@@ -395,7 +395,7 @@ export const renderBanner = (that, infoPanel, isResourcePage) => <div class={"in
    let lab = getLangLabel(that,tmp+"bannerMessage",m.text) 
    let icon 
 
-   //console.log("m:",m,lab,m.text,that.props.locale,that)
+   console.log("m:",m,lab,m.text,that.props.locale,that)
    
    if(m.severity=="info") icon = <InfoIcon className="info"/>
    else if(m.severity=="warning") icon = <WarnIcon className="warn"/>
@@ -417,7 +417,7 @@ export const renderBanner = (that, infoPanel, isResourcePage) => <div class={"in
       let sav = content
       content = []
       sav.map(c => {
-         //console.log("c:",c)
+         console.log("c:",c)
          if(c?.match) { 
             while(img = c.match(/!\[([^\]]+)\]\(([^)]+)\)/)) {
                let arr = c.split(img[0])
