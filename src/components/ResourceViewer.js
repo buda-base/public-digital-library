@@ -4219,6 +4219,10 @@ class ResourceViewer extends Component<Props,State>
                         //console.log("text:",text)
                         if(text) text = text.value
                         else text = this.pretty(noteData[bdo+"noteText"].value) 
+                        if(text?.includes && text.includes("\n")) { 
+                           text = text.split("\n").map(t => ([t,<br/>]))
+                        }
+
 
                         let sav = [
                               <Tag className="first type">{I18n.t("punc.num",{num:nbN++}) /*this.proplink(bdo+"noteText","Note")*/}</Tag>,
