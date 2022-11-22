@@ -8254,9 +8254,16 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                                  if(p === "colophon" && osearch && g["tmp:colophonMatch"]) {
                                     node = node.filter(n => !g["tmp:colophonMatch"].some(t => n["@value"] && t["@value"] && t["@value"].replace(/[↦↤]/g,"") === n["@value"].replace(/[↦↤]/g,"")))
                                     //console.log("coloph:",node,g["tmp:colophonMatch"])
-                                 }
+                                 }                                 
                                  if(!p.includes(":")) p = bdo+p
-                                 if(node.length) g.hidden.push(<div class="sub"><h4 class="first type">{this.proplink(p)}{I18n.t("punc.colon")} </h4><div>{node.map(n => this.format("h4","","",false, "sub",[{ value:n["@value"], lang:n["@language"], type:"literal"}]))}</div></div>)
+                                 if(node.length) { 
+                                    
+                                    // #784
+                                    let addTo = g.hidden
+                                    if(p.endsWith("incipit")) addTo = g.details
+
+                                    addTo.push(<div class="sub"><h4 class="first type">{this.proplink(p)}{I18n.t("punc.colon")} </h4><div>{node.map(n => this.format("h4","","",false, "sub",[{ value:n["@value"], lang:n["@language"], type:"literal"}]))}</div></div>)
+                                 }
                               }
 
 
@@ -8298,6 +8305,13 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
                               subtime(8)
                            }
+
+                           // #784
+                           if(g.details?.length === 1 && g.hidden?.length) {
+                              g.details = g.details.concat(g.hidden)
+                              g.hidden = []
+                           }
+
                            outline.push(g);
                         }
                      }
