@@ -1127,7 +1127,7 @@ class ResourceViewer extends Component<Props,State>
             } else {
                if(backTo.startsWith("/show") && backTo.includes("backToOutline=true")) { 
                   const part = backTo.split("?")
-                  this.props.history.push({pathname:part[0],search:part[1]})
+                  this.props.history.push({pathname:part[0],search:part[1].replace(/.backToOutline=true/,"")})
                }
                
             }
@@ -8031,7 +8031,14 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                               else if(!g.contentLocation) {
                                  let repro = this.getResourceElem(bdo+"instanceHasReproduction")
                                  if(repro?.length && repro[0].value) {
-                                    g.hasImg = "/show/"+shortUri(repro[0].value)+"?s="+encodeURIComponent(this.props.history.location.pathname+this.props.history.location.search.replace(/([?&])part=[^&]+/,"$1part="+g["@id"])+"&backToOutline=true")+"#open-viewer"
+                                    let backToUrl = this.props.history.location.search.replace(/([?&])(part|backToOutline)=[^&]+/,"$1")
+                                    if(!backToUrl.endsWith("&")) {
+                                       if(backToUrl && backToUrl.includes("?")) backToUrl += "&"
+                                       else backToUrl += "?"
+                                    }
+                                    backToUrl += "part="+g["@id"]+"&backToOutline=true"
+                                    backToUrl = this.props.history.location.pathname+backToUrl
+                                    g.hasImg = "/show/"+shortUri(repro[0].value)+"?s="+encodeURIComponent(backToUrl)+"#open-viewer"
                                     g.hasDetails = true
                                     if(showDetails) {
                                        if(!g.details) g.details = []
