@@ -1125,7 +1125,10 @@ class ResourceViewer extends Component<Props,State>
                   this.props.history.push({pathname:"/search",search:get.s?get.s:backTo.replace(/^[^?]+[?]/,"")})   
                }
             } else {
-               if(backTo.startsWith("show")) this.props.history.push({pathname:"/show",search:backTo})
+               if(backTo.startsWith("/show") && backTo.includes("backToOutline=true")) { 
+                  const part = backTo.split("?")
+                  this.props.history.push({pathname:part[0],search:part[1]})
+               }
                
             }
 
@@ -8024,19 +8027,36 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                                     nav.push(<Link onClick={g.checkDLD} to={g.hasImg} class="ulink">{I18n.t("copyright.view")}</Link>)  
                                     warn = true
                                  }
+                              } 
+                              else if(!g.contentLocation) {
+                                 let repro = this.getResourceElem(bdo+"instanceHasReproduction")
+                                 if(repro?.length && repro[0].value) {
+                                    g.hasImg = "/show/"+shortUri(repro[0].value)+"?s="+encodeURIComponent(this.props.history.location.pathname+this.props.history.location.search.replace(/([?&])part=[^&]+/,"$1part="+g["@id"])+"&backToOutline=true")+"#open-viewer"
+                                    g.hasDetails = true
+                                    if(showDetails) {
+                                       if(!g.details) g.details = []
+                                       nav.push(<Link onClick={g.checkDLD} to={g.hasImg} class="ulink">{I18n.t("copyright.view")}</Link>)  
+                                       warn = true
+                                    }
+                                 }
                               }
                               if(warn) {
                                  let loca = mapElem(g.contentLocation)
                                  if(loca?.length) loca = loca[0]
                                  if(loca && loca.contentLocationVolume && !loca.contentLocationPage) {
                                     let ptype = g.partType
-                                    console.log("root:",loca,ptype,g)
+                                    //console.log("root:",loca,ptype,g)
                                     if(ptype && !["bdr:PartTypeVolume","bdr:PartTypeSection"].includes(ptype)) {
                                        nav.push(<div class="outline-warn"><Tooltip placement="top-end" title={
                                           <div style={{margin:"10px"}}><Trans i18nKey="location.tooltip" components={{ newL: <br /> }} /></div>
                                        }><WarnIcon/></Tooltip></div>)
                                     } 
-                                 }
+                                 } else if(loca && Array.isArray(loca) && !loca.length){
+                                    //console.log("warn:",loca,g)                                    
+                                    nav.push(<div class="outline-warn"><Tooltip placement="top-end" title={
+                                       <div style={{margin:"10px"}}><Trans i18nKey="location.tooltip" components={{ newL: <br /> }} /></div>
+                                    }><WarnIcon/></Tooltip></div>)                                 
+                                 } 
                               }
 
 
