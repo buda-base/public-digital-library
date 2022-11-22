@@ -5358,7 +5358,7 @@ class ResourceViewer extends Component<Props,State>
       if(elem && elem.filter) n = elem.filter(t=>t && ( (t.type === "uri" && !this.isTransitiveSame(t.value) && (k !== bdo+"workHasInstance" || t.value.match(/[/]MW[^/]+$/))) || t.type === "literal")).length
       ret = this.insertPreprop(k, n, ret)
 
-      //loggergen.log("genP",elem,k,maxDisplay,n)
+      //loggergen.log("genP:",elem,k,maxDisplay,n)
 
       let linkToVersions, maxVersions = 20
       if(k === bdo+"workHasInstance" && ret.length > 2) {
@@ -6507,9 +6507,23 @@ perma_menu(pdfLink,monoVol,fairUse,other)
       let data = kZprop.map((k) => {
 
             let elem = this.getResourceElem(k);
+            // #783
+            if(k === bdo+"authorshipStatement" && this.props.outlines && !elem?.length) {
+               let nodes = this.props.outlines[this.props.IRI]
+               if(nodes && nodes["@graph"]) nodes = nodes["@graph"] 
+               if(nodes?.filter) {
+                  nodes = nodes?.filter(n => n.outlineOf && n.outlineOf["@id"] === this.props.IRI)
+                  if(nodes.length && nodes[0].authorshipStatement) {
+                     elem = nodes[0].authorshipStatement
+                     if(elem && !Array.isArray(elem)) elem = [ elem ]
+                     elem = elem.map(e => ({value:e["@value"], lang:e["@language"], type:"literal"}))
+                     k = tmp+"outlineAuthorshipStatement"
+                  }
+               }
+            }
             let hasMaxDisplay ;
 
-            //loggergen.log("prop",k,elem,this.hasSuper(k))
+            //loggergen.log("prop:",k,elem,this.hasSuper(k))
             //for(let e of elem) loggergen.log(e.value,e.label1);
 
             //if(!k.match(new RegExp("Revision|Entry|prefLabel|"+rdf+"|toberemoved"))) {
@@ -6568,7 +6582,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                      allLabels = [ label, ...sortLabel ]
                      */
                   } 
-
+                  if(k === tmp+"outlineAuthorshipStatement") allLabels = elem
                   let tags = this.format("h4",k,"",false,"sub",allLabels)
 
                   //loggergen.log("tags",tags,k,elem)
@@ -9050,9 +9064,14 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          ])
       }
       else {
+
+         let listWithAS = [ ], tmpElem = this.getResourceElem(bdo+"authorshipStatement")
+         if(!tmpElem?.length && this.props.outlines && this.props.outlines[this.props.IRI]) {
+            listWithAS = [ bdo+"authorshipStatement" ]
+         }
          
          let theDataTop = this.renderData(topProps,iiifpres,title,otherLabels,"top-props","main-info")      
-         let theDataBot = this.renderData(kZprop.filter(k => !topProps.includes(k) && !extProps.includes(k)),iiifpres,title,otherLabels,"bot-props")      
+         let theDataBot = this.renderData(kZprop.filter(k => !topProps.includes(k) && !extProps.includes(k)).concat(listWithAS),iiifpres,title,otherLabels,"bot-props")      
 
          let theEtext
          if(this.props.eTextRefs && this.props.eTextRefs !== true && this.props.IRI && this.props.IRI.startsWith("bdr:IE")) { 
