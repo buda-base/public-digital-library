@@ -90,7 +90,8 @@ export function translitHelper(src,dst) {
 
 export function ewtsToDisplay(src) {
    src = src.replace(/_/g, " ")
-   src = src.replace(/[ \/]+$/, "")
+   src = src.replace(/[ \/_*]+$/, "")
+   src = src.replace(/^[ \/_*@#]+$/, "")
    return src
 }
 
