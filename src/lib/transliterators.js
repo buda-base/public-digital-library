@@ -31,6 +31,13 @@ export const importModules = async () => {
 }
 importModules();
 
+function fromWylie(s) {
+    if (s.startsWith("*")) {
+        return "*"+jsEWTS.fromWylie(s.substring(1))
+    }
+    return jsEWTS.fromWylie(s)
+}
+
 export const transliterators = {
    "bo": { "bo-x-ewts": (val) => jsEWTS.toWylie(val) },
    "bo-tibt": { "bo-x-ewts": (val) => jsEWTS.toWylie(val) },
@@ -91,7 +98,7 @@ export function translitHelper(src,dst) {
 export function ewtsToDisplay(src) {
    src = src.replace(/_/g, " ")
    src = src.replace(/[ \/_*]+$/, "")
-   src = src.replace(/^[ \/_*@#]+/, "")
+   src = src.replace(/^[ \/_@#]+/, "")
    return src
 }
 

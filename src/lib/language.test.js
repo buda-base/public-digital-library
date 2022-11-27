@@ -291,7 +291,17 @@ describe('language settings tests', () => {
         await importModules()
 
         expect(ewtsToDisplay("rdzogs test_chen / test_2// //")).toEqual("rdzogs test chen / test 2")
+        expect(ewtsToDisplay("*pad+ma can/")).toEqual("*pad+ma can")
         expect(ewtsToDisplay("@#/ /rdzogs test_chen / test_2*//_//")).toEqual("rdzogs test chen / test 2")
+        done()
+    })
+
+   it('testing ewtsToUnicode', async (done) => {
+
+        await importModules()
+
+        expect(ewtsToDisplay("*pad+ma can/")).toEqual("*པདྨ་ཅན།")
+        expect(ewtsToDisplay("pad+ma can/")).toEqual("པདྨ་ཅན།")
         done()
     })
 
