@@ -43,7 +43,7 @@ export const transliterators = {
    "bo-tibt": { "bo-x-ewts": (val) => jsEWTS.toWylie(val) },
    "sa-tibt": { "bo-x-ewts": (val) => jsEWTS.toWylie(val) },
    "bo-x-ewts":{ "bo": (val) => fromWylie(val) },
-   "dz": { "bo-x-ewts": (val) => toWylie(val) },
+   "dz": { "bo-x-ewts": (val) => jsEWTS.toWylie(val) },
    "dz-x-ewts": { "bo": (val) => fromWylie(val) },
    "sa-x-ewts": { "bo": (val) => fromWylie(val) },
    
