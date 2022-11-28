@@ -16,7 +16,7 @@ import tcpPortUsed from 'tcp-port-used'
 import 'whatwg-fetch'
 import {narrowWithString} from "./langdetect"
 import {langScripts,makeLangScriptLabel} from "./language"
-import {sortLangScriptLabels,transliterators,translitHelper,extendedPresets, importModules, getMainLabel, getMainLabels, ewtsToDisplay} from "./transliterators"
+import {sortLangScriptLabels,transliterators,translitHelper,extendedPresets, importModules, getMainLabel, getMainLabels, ewtsToDisplay, fromWylie} from "./transliterators"
 
 //let makeRoutes = require('../routes').default
 //let bdrcAPI = require('../lib/api').default;
@@ -300,8 +300,8 @@ describe('language settings tests', () => {
 
         await importModules()
 
-        expect(ewtsToDisplay("*pad+ma can/")).toEqual("*པདྨ་ཅན།")
-        expect(ewtsToDisplay("pad+ma can/")).toEqual("པདྨ་ཅན།")
+        expect(fromWylie("*pad+ma can/")).toEqual("*པདྨ་ཅན།")
+        expect(fromWylie("pad+ma can/")).toEqual("པདྨ་ཅན།")
         done()
     })
 

@@ -31,7 +31,7 @@ export const importModules = async () => {
 }
 importModules();
 
-function fromWylie(s) {
+export function fromWylie(s) {
     if (s.startsWith("*")) {
         return "*"+jsEWTS.fromWylie(s.substring(1))
     }
@@ -42,10 +42,10 @@ export const transliterators = {
    "bo": { "bo-x-ewts": (val) => jsEWTS.toWylie(val) },
    "bo-tibt": { "bo-x-ewts": (val) => jsEWTS.toWylie(val) },
    "sa-tibt": { "bo-x-ewts": (val) => jsEWTS.toWylie(val) },
-   "bo-x-ewts":{ "bo": (val) => jsEWTS.fromWylie(val) },
-   "dz": { "bo-x-ewts": (val) => jsEWTS.toWylie(val) },
-   "dz-x-ewts": { "bo": (val) => jsEWTS.fromWylie(val) },
-   "sa-x-ewts": { "bo": (val) => jsEWTS.fromWylie(val) },
+   "bo-x-ewts":{ "bo": (val) => fromWylie(val) },
+   "dz": { "bo-x-ewts": (val) => toWylie(val) },
+   "dz-x-ewts": { "bo": (val) => fromWylie(val) },
+   "sa-x-ewts": { "bo": (val) => fromWylie(val) },
    
    "sa-deva":{ "sa-x-iast": (val) => Sanscript.t(val,"devanagari","iast") },
    "pi-deva":{ "pi-x-iast": (val) => Sanscript.t(val,"devanagari","iast") },
