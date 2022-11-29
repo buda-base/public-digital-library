@@ -4058,7 +4058,9 @@ class ResourceViewer extends Component<Props,State>
 
             if(prop === bdo+"instanceEvent")  {
                let from = e.fromEvent
+               
                //loggergen.log("fromE:",from,this.getResourceBNode(from)        )
+
                if(from) from = this.getResourceBNode(from)        
                if(from && from[rdf+"type"]) val = from[rdf+"type"]
             }
@@ -4312,6 +4314,7 @@ class ResourceViewer extends Component<Props,State>
                   else
                   {
                      let what = this.props.resources[this.props.IRI][elem[f][0].value]
+
                      //loggergen.log("what",what,elem[f])
 
                      if(!noVal)
@@ -4407,13 +4410,21 @@ class ResourceViewer extends Component<Props,State>
 
                               txt = [txt,<Tooltip placement="bottom-end" title={<div style={{margin:"10px"}}>{dateC}</div>}><span className="lang">{dateL}</span></Tooltip>]
                            }
-                           else { txt = this.fullname(v.value)
+                           else {
+                              let lang = v["lang"], label
+                              if(!lang) lang = v["xml:lang"]
+                              if(lang) {
+                                 txt = getLangLabel(this, "", [v])
+                                 if(txt?.value) { 
+                                    lang = txt.lang
+                                    txt = txt.value
+                                 }
+                              }
+                              if(!txt) txt = this.fullname(v.value)
 
-                              //loggergen.log("txt",txt)
+                              //loggergen.log("txt",txt,lang,v)
 
-                              if(v["lang"] || v["xml:lang"]) {
-                                 let lang = v["lang"]
-                                 if(!lang) lang = v["xml:lang"]
+                              if(lang) {
                                  txt = [txt,lang?<Tooltip placement="bottom-end" title={
                                     <div style={{margin:"10px"}}>
                                        {I18n.t(languages[lang]?languages[lang].replace(/search/,"tip"):lang)}
@@ -5203,12 +5214,12 @@ class ResourceViewer extends Component<Props,State>
          if(vol) str = I18n.t("resource.volume",{num:vol})+" " ;
          else monoVol = true
          if(p) str += I18n.t("resource.page",{num:p}) ;
-         if(l) str += "|"+l ;
+         if(l) str += "|"+I18n.t("location.line",{num:l}) ;
          if(!oneP) {
             if(str && p) str += " - "
             if(eV) str += I18n.t("resource.volume",{num:eV})+" " ;
             if(eP) str += I18n.t("resource.page",{num:eP}) ;
-            if(eL) str += "|"+eL ;
+            if(eL) str += "|"+I18n.t("location.line",{num:eL}) ;
          }
 
          let w = loca("Instance")

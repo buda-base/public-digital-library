@@ -689,7 +689,8 @@
       "endV": "结束卷{{num}}",
       "endP": "结束页{{num}}",
       "endL": "结束行{{num}}",
-      "tooltip": "No image indication found.<newL/>You might have to find the right page by yourself."
+      "tooltip": "No image indication found.<newL/>You might have to find the right page by yourself.",
+      "line": "{{num}}"
    },
    "footer": {
       "BDRC": "Buddhist Digital Resource Center",

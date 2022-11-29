@@ -689,7 +689,8 @@
       "endV": "པོད་ {{num,counttobo}} བར།",
       "endP": "ཤོག་ངོས་ {{num,counttobo}} ནས་",
       "endL": "ཐིག་ཕྲེང་ {{num,counttobo}} བར།",
-      "tooltip": "No image indication found.<newL/>You might have to find the right page by yourself."
+      "tooltip": "No image indication found.<newL/>You might have to find the right page by yourself.",
+      "line": "{{num,counttobo}}"
    },
    "footer": {
       "BDRC": "Buddhist Digital Resource Center",
