@@ -6349,6 +6349,29 @@ perma_menu(pdfLink,monoVol,fairUse,other)
             }}>{I18n.t("resource.page",{num:e.seq})}</a>                                             
             </h5>
 
+            const monlamPopup = (ev) => {
+               const MIN_CONTEXT_LENGTH = 40
+               const selection = window.getSelection();
+               let langElem = selection.anchorNode.parentElement
+               if(!(langElem = langElem.getAttribute("lang"))) langElem = selection.anchorNode.parentElement.parentElement.getAttribute("lang")
+               const parent = selection.anchorNode.parentElement.parentElement
+               
+               let start = 0, nodes = Array.from(parent.children)
+               if(nodes?.length) for(let i in nodes) {
+                  if(nodes[i] == selection.anchorNode.parentElement) break ;
+                  const n = nodes[i].textContent?.length || 0
+                  start += n
+                  //console.log("i:",i,start)
+               }
+               start += selection.anchorOffset
+               let end = start + selection.toString().length
+
+               const startOff = Math.max(0, start - MIN_CONTEXT_LENGTH)
+               const endOff = Math.min(pageVal.length, end + MIN_CONTEXT_LENGTH)
+
+               console.log("selec:",pageVal.substring(startOff, endOff), start - startOff, end - startOff, langElem) 
+            }
+
             return (
             <div class={"etextPage"+(this.props.manifestError&&!imageLinks?" manifest-error":"")+ (!e.value.match(/[\n\r]/)?" unformated":"") + (e.seq?" hasSeq":"")/*+(e.language === "bo"?" lang-bo":"")*/ }>
                {/*                                          
@@ -6428,19 +6451,20 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
                </div> }
                <div class="overpage">
-                  <h4 class="page">{!e.value.match(/[\n\r]/) && !e.seq ?[<span class="startChar"><span>[&nbsp;<Link to={"/show/"+this.props.IRI+"?startChar="+e.start+"#open-viewer"}>@{e.start}</Link>&nbsp;]</span></span>]:null}{(e.chunks?.length?e.chunks:[e.value]).map(f => {
+                  <h4 class="page"  onMouseUp={monlamPopup}>{!e.value.match(/[\n\r]/) && !e.seq ?[<span class="startChar"><span>[&nbsp;<Link to={"/show/"+this.props.IRI+"?startChar="+e.start+"#open-viewer"}>@{e.start}</Link>&nbsp;]</span></span>]:null}{(e.chunks?.length?e.chunks:[e.value]).map(f => {
 
                         // #771 multiple language in on epage
                         let lang = e.language
                         if(f["@language"]) lang = f["@language"]                        
                         if(f["@value"] != undefined) f = f["@value"];
 
-                        let label = getLangLabel(this,bdo+"eTextHasPage",[{"lang":lang,"value":f}])
+                        let label = getLangLabel(this,bdo+"eTextHasPage",[{"lang":lang,"value":f}])                        
 
                         if(label) { lang = label["lang"] ; if(!pageLang) pageLang = lang }
-                        if(label) { label = label["value"]; pageVal += " "+label ; }
+                        if(label) { label = label["value"]; pageVal += " "+label ;  }
                         if(label && this.props.highlight && this.props.highlight.key) { label = highlight(label,kw.map(k => k.replace(/(.)/g,"$1\\n?")),null,false,true); current.push(label); }
-                        else if(label) label = label.split(/[\n\r]/).map(e =>(e?[e,<br/>]:[]))
+                        else if(label) label = label.split(/[\n\r]/).map(e =>(e?[e,<br/>]:[]))                        
+
                         //label = f
                         let size = this.state.etextSize
                         //console.log("page:",pageVal,e,current)
