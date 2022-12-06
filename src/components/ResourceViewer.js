@@ -6369,7 +6369,14 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                const startOff = Math.max(0, start - MIN_CONTEXT_LENGTH)
                const endOff = Math.min(pageVal.length, end + MIN_CONTEXT_LENGTH)
 
-               console.log("selec:",pageVal.substring(startOff, endOff), start - startOff, end - startOff, langElem) 
+               const coords = Array.from(selection.getRangeAt(0).getClientRects())
+
+               console.log("coords:",coords)
+
+               this.setState({ monlam:  coords.map(c => ({ top:c.top+"px",left:c.left+"px",width:c.width+"px",height:c.height+"px" })) })
+               //this.props.onCallMonlamAPI(pageVal.substring(startOff, endOff), langElem, start - startOff, end - startOff)
+
+               selection.removeAllRanges()
             }
 
             return (
@@ -7170,7 +7177,12 @@ perma_menu(pdfLink,monoVol,fairUse,other)
       if(showToggleScan && showToggleScan.length && !this.unpaginated()) showToggleScan = (showToggleScan[0].seq !== undefined)
       else showToggleScan = false
 
+      let monlamHiL
+
+      if(this.state.monlam) monlamHiL = this.state.monlam.map(c => <div style={{...c, position:"absolute", background: "#0099ff99", display:"block", zIndex: 0 }}></div>)
+
       return (<>
+         { monlamHiL }
          <div id="settings" onClick={() => this.setState({collapse:{...this.state.collapse, etextNav:!this.state.collapse.etextNav}})}><img src="/icons/settings.svg"/></div>
          <div id="etext-nav" class={this.state.collapse.etextNav?"on":""}>
             <div>
@@ -9084,7 +9096,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
             <div>
                { top_right_menu(this,title,searchUrl,etextRes) }               
                { this.renderMirador(isMirador) }           
-               <div class="resource etext-view">
+               <div class="resource etext-view" /* TODO: onClick={() => { if(this.props.monlamData) this.setState({ monlam: false }) } }*/ >
                   <Loader loaded={!this.props.loading}  options={{position:"fixed",left:"50%",top:"50%"}} />      
                   <div class="">
                      { this.unpaginated() && <h4 style={{fontSize:"16px",fontWeight:600,textAlign:"center", marginBottom:"50px",top:"-15px"}}>{I18n.t("resource.unpag")}</h4>}
