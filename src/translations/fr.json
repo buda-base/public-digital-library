@@ -663,7 +663,8 @@
       "firstP": "First page",
       "lastP": "Last page",
       "openIA": "Open on Internet Archive",
-      "openW":"Open Work"
+      "openW":"Open Work",
+      "find":"Find in dictionary"
    },
    "mirador": {
       "return": "return to BUDA",

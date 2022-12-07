@@ -7179,7 +7179,21 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
       let monlamHiL
 
-      if(this.state.monlam) monlamHiL = this.state.monlam.map(c => <div style={{...c, position:"absolute", background: "#0099ff99", display:"block", zIndex: 0 }}></div>)
+      if(this.state.monlam?.length) { 
+         let ref = React.createRef()
+         monlamHiL = this.state.monlam.map( (c,i) => <div {...i == 0?{...ref}:{}} style={{...c, position:"absolute", background: "#0099ff99", display:"block", zIndex: 0 }}></div>)
+         const popup = 
+            <Popover
+               className="monlamPopup"
+               open={!this.state.collapse.monlamPopup}
+               anchorReference="anchorPosition"
+               anchorPosition={{ top:-50+Number(this.state.monlam[0].top.split("px")[0]), left:Number(this.state.monlam[0].left.split("px")[0])}}
+               onClose={() => this.setState({monlam:null})}
+            >
+               <MenuItem>{I18n.t("resource.find")}</MenuItem>
+            </Popover>
+         monlamHiL.push(popup)
+      }
 
       return (<>
          { monlamHiL }
@@ -9096,7 +9110,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
             <div>
                { top_right_menu(this,title,searchUrl,etextRes) }               
                { this.renderMirador(isMirador) }           
-               <div class="resource etext-view" /* TODO: onClick={() => { if(this.props.monlamData) this.setState({ monlam: false }) } }*/ >
+               <div class="resource etext-view" >
                   <Loader loaded={!this.props.loading}  options={{position:"fixed",left:"50%",top:"50%"}} />      
                   <div class="">
                      { this.unpaginated() && <h4 style={{fontSize:"16px",fontWeight:600,textAlign:"center", marginBottom:"50px",top:"-15px"}}>{I18n.t("resource.unpag")}</h4>}

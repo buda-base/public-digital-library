@@ -647,7 +647,8 @@
       "firstP": "ཤོག་ལྡེབས་དང་བོ།",
       "lastP": "ཤོག་ལྡེབས་ཐ་མ།",
       "openIA": "དྲ་ཐོག་ཡིག་མཛོད་ནང་ཁ་ཕྱེས།",
-      "openW":"Open Work"
+      "openW":"Open Work",
+      "find":"Find in dictionary"
    },
    "mirador": {
       "return": "བུདྡྷ་ལ་ཕྱིར་ལོག",
