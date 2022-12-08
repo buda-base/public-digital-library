@@ -283,6 +283,21 @@ export const getPages = (state: DataState, action: Action) => {
 }
 reducers[actions.TYPES.getPages] = getPages;
 
+export const getMonlamResults = (state: DataState, action: Action) => {
+   return {
+       ...state,
+       monlamResults: true
+   }
+}
+reducers[actions.TYPES.getMonlamResults] = getMonlamResults;
+
+export const closeMonlamResults = (state: DataState, action: Action) => {
+   return {
+       ...state,
+       monlamResults: false
+   }
+}
+reducers[actions.TYPES.closeMonlamResults] = closeMonlamResults;
 
 export const gotResource = (state: DataState, action: Action) => {
  

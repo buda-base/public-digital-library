@@ -1176,6 +1176,14 @@ class ResourceViewer extends Component<Props,State>
          oldScrollTop = ev.currentTarget.scrollY
          }
       })
+
+      $(window).off("resize").on("resize",(ev) => {
+         if(this.state.monlam) {
+            let coords = Array.from(this.state.monlam.range.getClientRects())
+            coords = coords.map(c => ({ top:c.top+"px",left:c.left+"px",width:c.width+"px",height:c.height+"px" }))
+            this.setState({ monlam: { ...this.state.monlam, coords, monlamPopup: true } })
+         }
+      })
    }
 
    static setTitleFromTabs(props,state) {
@@ -6350,8 +6358,10 @@ perma_menu(pdfLink,monoVol,fairUse,other)
             </h5>
 
             const monlamPopup = (ev) => {
+
                const MIN_CONTEXT_LENGTH = 40
                const selection = window.getSelection();
+               
                let langElem = selection.anchorNode.parentElement
                if(!(langElem = langElem.getAttribute("lang"))) langElem = selection.anchorNode.parentElement.parentElement.getAttribute("lang")
                const parent = selection.anchorNode.parentElement.parentElement
@@ -6366,15 +6376,35 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                start += selection.anchorOffset
                let end = start + selection.toString().length
 
+               if(start === end) {
+                  if(this.state.monlam && this.state.collapse.monlamPopup) { 
+                     this.setState({ monlam:null })
+                     this.props.onCloseMonlam()
+                  }
+                  return
+               }
+
                const startOff = Math.max(0, start - MIN_CONTEXT_LENGTH)
                const endOff = Math.min(pageVal.length, end + MIN_CONTEXT_LENGTH)
 
                const coords = Array.from(selection.getRangeAt(0).getClientRects())
 
-               console.log("coords:",coords)
+               //console.log("coords:",coords)
 
-               this.setState({ monlam:  coords.map(c => ({ top:c.top+"px",left:c.left+"px",width:c.width+"px",height:c.height+"px" })) })
-               //this.props.onCallMonlamAPI(pageVal.substring(startOff, endOff), langElem, start - startOff, end - startOff)
+               let range
+               if (selection.rangeCount > 0) {
+                  range = selection.getRangeAt(0);
+                  range = range.cloneRange();
+               }
+
+               this.setState({ 
+                  collapse:{...this.state.collapse, monlamPopup: false},
+                  monlam:  { 
+                     coords: coords.map(c => ({ top:c.top+"px",left:c.left+"px",width:c.width+"px",height:c.height+"px" })),
+                     api: { chunk: encodeURIComponent(pageVal.substring(startOff, endOff)), lang: langElem, cursor_start:start - startOff, cursor_end: end - startOff },
+                     range
+                  }
+               })
 
                selection.removeAllRanges()
             }
@@ -7179,18 +7209,30 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
       let monlamHiL
 
-      if(this.state.monlam?.length) { 
+      if(this.state.monlam?.coords?.length) { 
          let ref = React.createRef()
-         monlamHiL = this.state.monlam.map( (c,i) => <div {...i == 0?{...ref}:{}} style={{...c, position:"absolute", background: "#0099ff99", display:"block", zIndex: 0 }}></div>)
+         monlamHiL = this.state.monlam.coords.map( (c,i) => <div {...i == 0?{...ref}:{}} style={{...c, position:"absolute", background: "#0099ff99", display:"block", zIndex: 0 }}></div>)
          const popup = 
             <Popover
                className="monlamPopup"
                open={!this.state.collapse.monlamPopup}
                anchorReference="anchorPosition"
-               anchorPosition={{ top:-50+Number(this.state.monlam[0].top.split("px")[0]), left:Number(this.state.monlam[0].left.split("px")[0])}}
-               onClose={() => this.setState({monlam:null})}
+               anchorPosition={{ top:-50+Number(this.state.monlam.coords[0].top.split("px")[0]), left:Number(this.state.monlam.coords[0].left.split("px")[0])}}
+               onClose={() => { 
+                  this.setState({monlam:null})
+                  this.props.onCloseMonlam()
+               }}
             >
-               <MenuItem>{I18n.t("resource.find")}</MenuItem>
+               <MenuItem onClick={() => {
+                  this.props.onCallMonlamAPI(this.state.monlam.api);
+                  this.setState({ monlam: { ...this.state.monlam, coords: !this.props.monlamResults?[]:this.state.monlam.coords }, collapse:{ ...this.state.collapse, monlamPopup: true }})
+                  // need to update highlighted area if monlam not already open
+                  if(!this.props.monlamResults) setTimeout(() => {
+                     let coords = Array.from(this.state.monlam.range.getClientRects())
+                     coords = coords.map(c => ({ top:c.top+"px",left:c.left+"px",width:c.width+"px",height:c.height+"px" }))
+                     this.setState({ monlam: { ...this.state.monlam, coords, monlamPopup: true } })
+                  }, 150)
+               }}>{I18n.t("resource.find")}</MenuItem>
             </Popover>
          monlamHiL.push(popup)
       }
@@ -9107,7 +9149,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
          return ([
             getGDPRconsent(this),
-            <div>
+            <div style={{display: "flex"}}>
                { top_right_menu(this,title,searchUrl,etextRes) }               
                { this.renderMirador(isMirador) }           
                <div class="resource etext-view" >
@@ -9121,7 +9163,12 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   </div>                  
                </div>
                { this.renderEtextNav(etextAccessError) }
-            </div>
+               <div class={"monlamResults "+(this.state.monlam && this.state.collapse.monlamPopup || this.props.monlamResults ? "visible" : "")}>
+                  <div>
+                     <Loader loaded={this.props.monlamResults != true} />
+                  </div>
+               </div>
+            </div>,
          ])
       }
       else {

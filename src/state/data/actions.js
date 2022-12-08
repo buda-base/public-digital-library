@@ -174,6 +174,20 @@ export const pdfNotReady = (url: string, iri:string): Action => {
     }
 }
 
+TYPES.getMonlamResults = 'GET_MONLAM_RESULTS';
+export const getMonlamResults = (obj:{}): Action => {
+    return {
+        type: TYPES.getMonlamResults,
+        payload: obj
+    }
+}
+
+TYPES.closeMonlamResults = 'CLOSE_MONLAM_RESULTS';
+export const closeMonlamResults = (): Action => {
+    return {
+        type: TYPES.closeMonlamResults,
+    }
+}
 
 TYPES.etextError = 'ETEXT_ERROR';
 export const etextError = (code: string, iri:string): Action => {

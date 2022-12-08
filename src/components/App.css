@@ -2388,6 +2388,14 @@ h4:not(:hover) > .lang
 
 .resource .data#outline.etextrefs .search + h2 { margin-top:70px;}
 
+/* ------------------------------------------------------------------------------------------------------------------------ monlam*/
+
+.resource ~ .monlamResults { width:0px; position:relative; box-shadow:-2px 0 3px rgba(0,0,0,0.15);flex-shrink: 0;  }
+.resource ~ .monlamResults > div { width:0px; height:100%; position:fixed; right:0; top:0; background:white;}
+.resource ~ .monlamResults.visible,
+.resource ~ .monlamResults.visible > div { width:400px; }
+
+
 /* ------------------------------------------------------------------------------------------------------------------------ header */
 
 .resource .data#head { background-color:#ffffff; padding:35px; padding-bottom:45px; padding-top:35px;}

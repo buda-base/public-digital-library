@@ -160,6 +160,8 @@ const mapStateToProps = (state,ownProps) => {
 
    let useDLD = state.ui.useDLD
 
+   let monlamResults = state.data.monlamResults
+
    let props = { logged,config,resources, ontology, dictionary, keyword, language, datatype, assocResources, prefLang, failures, loading,
       imageAsset,firstImage,canvasID,collecManif,manifests,manifestError,pdfVolumes,createPdf,pdfUrl, manifestWpdf, monovolume,
       annoCollec,rightPanel,locale,langPreset,langIndex,langExt,imgData, nextChunk, nextPage, resourceManifest, imageVolumeManifests, imageLists, userEditPolicies, highlight,
@@ -172,7 +174,8 @@ const mapStateToProps = (state,ownProps) => {
       etextLang,
       etextErrors,
       portraitPopupClosed,
-      useDLD 
+      useDLD,
+      monlamResults
    }
 
    if(config && !config.auth) props.auth = false
@@ -268,6 +271,12 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       },
       onGetCitationData:(id:string) => {
          dispatch(data.getCitationData(id))
+      },
+      onCallMonlamAPI:(obj:{}) => {
+         dispatch(data.getMonlamResults(obj))
+      },
+      onCloseMonlam:() => {
+         dispatch(data.closeMonlamResults())
       }
    }
 }
