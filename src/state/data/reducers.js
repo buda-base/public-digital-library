@@ -291,6 +291,16 @@ export const getMonlamResults = (state: DataState, action: Action) => {
 }
 reducers[actions.TYPES.getMonlamResults] = getMonlamResults;
 
+
+export const gotMonlamResults = (state: DataState, action: Action) => {
+   return {
+       ...state,
+       monlamResults: action.payload
+   }
+}
+reducers[actions.TYPES.gotMonlamResults] = gotMonlamResults;
+
+
 export const closeMonlamResults = (state: DataState, action: Action) => {
    return {
        ...state,

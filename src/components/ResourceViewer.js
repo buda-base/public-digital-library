@@ -6359,6 +6359,8 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
             const monlamPopup = (ev) => {
 
+               if(!this.props.config.useMonlam) return
+
                const MIN_CONTEXT_LENGTH = 40
                const selection = window.getSelection();
                
@@ -6401,7 +6403,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   collapse:{...this.state.collapse, monlamPopup: false},
                   monlam:  { 
                      coords: coords.map(c => ({ top:c.top+"px",left:c.left+"px",width:c.width+"px",height:c.height+"px" })),
-                     api: { chunk: encodeURIComponent(pageVal.substring(startOff, endOff)), lang: langElem, cursor_start:start - startOff, cursor_end: end - startOff },
+                     api: { chunk: pageVal.substring(startOff, endOff), lang: langElem, cursor_start:start - startOff, cursor_end: end - startOff },
                      range
                   }
                })
@@ -9166,6 +9168,9 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                <div class={"monlamResults "+(this.state.monlam && this.state.collapse.monlamPopup || this.props.monlamResults ? "visible" : "")}>
                   <div>
                      <Loader loaded={this.props.monlamResults != true} />
+                     <pre style={{ whiteSpace: "pre-wrap", padding:"80px 15px" }}>
+                     { Array.isArray(this.props.monlamResults) && this.props.monlamResults.map(w => w.word.value+"\n"+w.def.value+"\n\n")}
+                     </pre>
                   </div>
                </div>
             </div>,

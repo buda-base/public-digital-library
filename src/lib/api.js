@@ -379,6 +379,13 @@ export default class API {
    }
 
 
+   async loadMonlamResults(params): Promise<string>
+   {
+      let res =  JSON.parse(await this.getURLContents(this._monlamPath()+"?"+qs.stringify(params),false,"application/json"));
+      console.log("monlam:",res)
+      return res;
+  }
+
     async loadCheckResults(params): Promise<string>
     {
          let config = store.getState().data.config.ldspdi
@@ -1429,6 +1436,16 @@ export default class API {
          let url = config.endpoints[config.index] ;
 
           let path = url +  "/resource/" + IRI + ".json";
+
+          return path;
+      }
+
+      _monlamPath(IRI:string): string {
+
+         let config = store.getState().data.config.ldspdi
+         let url = config.endpoints[config.index] ;
+
+          let path = url +  "/lexicography/entriesForChunk"
 
           return path;
       }

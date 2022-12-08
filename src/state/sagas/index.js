@@ -3033,6 +3033,28 @@ export function* watchGetResultsByDate() {
    );
 }
 
+
+async function getMonlamResults(params){
+   //console.log("go:",params)
+   
+   try {
+      const res = await api.loadMonlamResults(params)
+      store.dispatch(dataActions.gotMonlamResults(res))
+      //console.log("monlam?",res)
+   } catch(e) {
+      store.dispatch(dataActions.gotMonlamResults([]))
+   }
+
+}
+
+export function* watchGetMonlamResults() {
+
+   yield takeLatest(
+      dataActions.TYPES.getMonlamResults,
+      (action) => getMonlamResults(action.payload)
+   );
+}
+
 export function* watchGetResultsById() {
 
    yield takeLatest(
@@ -3600,6 +3622,7 @@ export default function* rootSaga() {
       watchGetResource(),
       watchSearchingKeyword(),
       watchStartSearch(),
-      watchGetStaticQueryAsResults()
+      watchGetStaticQueryAsResults(),
+      watchGetMonlamResults()
    ])
 }

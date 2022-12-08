@@ -182,6 +182,14 @@ export const getMonlamResults = (obj:{}): Action => {
     }
 }
 
+TYPES.gotMonlamResults = 'GOT_MONLAM_RESULTS';
+export const gotMonlamResults = (obj:{}): Action => {
+    return {
+        type: TYPES.gotMonlamResults,
+        payload: obj
+    }
+}
+
 TYPES.closeMonlamResults = 'CLOSE_MONLAM_RESULTS';
 export const closeMonlamResults = (): Action => {
     return {
