@@ -6364,15 +6364,25 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                const MIN_CONTEXT_LENGTH = 40
                const selection = window.getSelection();
                
-               let langElem = selection.anchorNode.parentElement
-               if(!(langElem = langElem.getAttribute("lang"))) langElem = selection.anchorNode.parentElement.parentElement.getAttribute("lang")
-               const parent = selection.anchorNode.parentElement.parentElement
+               let langElem = selection.anchorNode.parentElement.getAttribute("lang")
+               if(!langElem) langElem = selection.anchorNode.parentElement.parentElement.getAttribute("lang")
                
-               let start = 0, nodes = Array.from(parent.children)
+               let parent = selection.anchorNode.parentElement
+               if(!parent.getAttribute("lang")) parent = parent.parentElement
+
+               //console.log("parent:",langElem,ev.currentTarget,parent,selection.toString(),selection,parent.children,selection.anchorNode)
+               
+               // case when multiple bo-x-ewts span in a row inside page (bdr:UT3JT13384_014_0001)
+               let rootPage = ev.currentTarget, startFromRoot = 0
+               for(let n of rootPage.children) {
+                  if(n == parent) break ;
+                  startFromRoot += n.textContent?.length || 0
+               }
+
+               let start = startFromRoot, nodes = Array.from(parent.children)
                if(nodes?.length) for(let i in nodes) {
                   if(nodes[i] == selection.anchorNode.parentElement) break ;
-                  const n = nodes[i].textContent?.length || 0
-                  start += n
+                  start += nodes[i].textContent?.length || 0
                   //console.log("i:",i,start)
                }
                start += selection.anchorOffset
@@ -6391,7 +6401,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
                const coords = Array.from(selection.getRangeAt(0).getClientRects())
 
-               //console.log("coords:",coords)
+               //console.log("coords:",start,end,startOff,endOff,pageVal.substring(startOff, endOff))
 
                let range
                if (selection.rangeCount > 0) {
@@ -6490,17 +6500,17 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
                </div> }
                <div class="overpage">
-                  <h4 class="page"  onMouseUp={monlamPopup}>{!e.value.match(/[\n\r]/) && !e.seq ?[<span class="startChar"><span>[&nbsp;<Link to={"/show/"+this.props.IRI+"?startChar="+e.start+"#open-viewer"}>@{e.start}</Link>&nbsp;]</span></span>]:null}{(e.chunks?.length?e.chunks:[e.value]).map(f => {
+                  <h4 class="page" onMouseUp={monlamPopup} >{!e.value.match(/[\n\r]/) && !e.seq ?[<span class="startChar"><span>[&nbsp;<Link to={"/show/"+this.props.IRI+"?startChar="+e.start+"#open-viewer"}>@{e.start}</Link>&nbsp;]</span></span>]:null}{(e.chunks?.length?e.chunks:[e.value]).map(f => {
 
                         // #771 multiple language in on epage
                         let lang = e.language
                         if(f["@language"]) lang = f["@language"]                        
                         if(f["@value"] != undefined) f = f["@value"];
 
-                        let label = getLangLabel(this,bdo+"eTextHasPage",[{"lang":lang,"value":f}])                        
+                        let label = getLangLabel(this,bdo+"eTextHasPage",[{"lang":lang,"value":f}]), chunkVal
 
                         if(label) { lang = label["lang"] ; if(!pageLang) pageLang = lang }
-                        if(label) { label = label["value"]; pageVal += " "+label ;  }
+                        if(label) { label = label["value"]; pageVal += " "+label ; chunkVal = label }
                         if(label && this.props.highlight && this.props.highlight.key) { label = highlight(label,kw.map(k => k.replace(/(.)/g,"$1\\n?")),null,false,true); current.push(label); }
                         else if(label) label = label.split(/[\n\r]/).map(e =>(e?[e,<br/>]:[]))                        
 
@@ -7213,7 +7223,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
       if(this.state.monlam?.coords?.length) { 
          let ref = React.createRef()
-         monlamHiL = this.state.monlam.coords.map( (c,i) => <div {...i == 0?{...ref}:{}} style={{...c, position:"absolute", background: "#0099ff99", display:"block", zIndex: 0 }}></div>)
+         monlamHiL = this.state.monlam.coords.map( (c,i) => <div {...i == 0?{...ref}:{}} style={{...c, pointerEvents:"none", position:"absolute", background: "rgba(0,153,255,0.35)", display:"block", zIndex: 1, mixBlendMode: "darken" }}></div>)
          const popup = 
             <Popover
                className="monlamPopup"
@@ -9168,7 +9178,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                <div class={"monlamResults "+(this.state.monlam && this.state.collapse.monlamPopup || this.props.monlamResults ? "visible" : "")}>
                   <div>
                      <Loader loaded={this.props.monlamResults != true} />
-                     <pre style={{ whiteSpace: "pre-wrap", padding:"80px 15px" }}>
+                     <pre style={{ whiteSpace: "pre-wrap", padding:"15px" }}>
                      { Array.isArray(this.props.monlamResults) && this.props.monlamResults.map(w => w.word.value+"\n"+w.def.value+"\n\n")}
                      </pre>
                   </div>

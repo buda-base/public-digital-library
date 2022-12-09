@@ -2390,8 +2390,8 @@ h4:not(:hover) > .lang
 
 /* ------------------------------------------------------------------------------------------------------------------------ monlam*/
 
-.resource ~ .monlamResults { width:0px; position:relative; box-shadow:-2px 0 3px rgba(0,0,0,0.15);flex-shrink: 0;  }
-.resource ~ .monlamResults > div { width:0px; height:100%; position:fixed; right:0; top:0; background:white;}
+.resource ~ .monlamResults { width:0px; position:relative; box-shadow:-2px 0 3px rgba(0,0,0,0.15);flex-shrink: 0; } 
+.resource ~ .monlamResults > div { width:0px; height:calc(100% - 2 * 80px); position:fixed; right:0; top:80px; background:white; overflow:auto;}
 .resource ~ .monlamResults.visible,
 .resource ~ .monlamResults.visible > div { width:400px; }
 
