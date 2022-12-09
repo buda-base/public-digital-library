@@ -2403,11 +2403,14 @@ h4:not(:hover) > .lang
 .resource ~ .monlamResults pre:empty { display: none;}
 */
 
-.resource ~ .monlamResults div .def { margin-bottom:15px; line-height:24px; }
+.resource ~ .monlamResults div .def { margin-bottom:0px; line-height:24px; padding-bottom:15px;}
 .resource ~ .monlamResults div .def > b { color:#0077ff;  }
 .resource ~ .monlamResults div .def > span { padding-left:15px; display: inline-block; padding-top:12px; }
+.resource ~ .monlamResults div .def:first-child { padding-top:30px; }
+.resource ~ .monlamResults div .def:last-child { padding-bottom:30px; }
 
-
+#root > .withMonlam { display: flex; }
+#root > .withMonlam > .resource.etext-view { width:calc(100% - 400px - 30px * 2); }
 
 /* ------------------------------------------------------------------------------------------------------------------------ header */
 

@@ -7229,7 +7229,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                className="monlamPopup"
                open={!this.state.collapse.monlamPopup}
                anchorReference="anchorPosition"
-               anchorPosition={{ top:-50+Number(this.state.monlam.coords[0].top.split("px")[0]), left:Number(this.state.monlam.coords[0].left.split("px")[0])}}
+               anchorPosition={{ top:-50+Number(this.state.monlam.coords[0].top.split("px")[0])-window.scrollY, left:Number(this.state.monlam.coords[0].left.split("px")[0])}}
                onClose={() => { 
                   this.setState({monlam:null})
                   this.props.onCloseMonlam()
@@ -9175,7 +9175,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
          return ([
             getGDPRconsent(this),
-            <div style={{display: "flex"}}>
+            <div class={monlamResults ? "withMonlam" : ""}>
                { top_right_menu(this,title,searchUrl,etextRes) }               
                { this.renderMirador(isMirador) }           
                <div class="resource etext-view" >
