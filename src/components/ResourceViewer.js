@@ -1180,7 +1180,7 @@ class ResourceViewer extends Component<Props,State>
       $(window).off("resize").on("resize",(ev) => {
          if(this.state.monlam) {
             let coords = Array.from(this.state.monlam.range.getClientRects())
-            coords = coords.map(c => ({ top:c.top+"px",left:c.left+"px",width:c.width+"px",height:c.height+"px" }))
+            coords = coords.map(c => ({ top:c.top+window.scrollY+"px",left:c.left+"px",width:c.width+"px",height:c.height+"px" }))
             this.setState({ monlam: { ...this.state.monlam, coords, monlamPopup: true } })
          }
       })
@@ -6412,7 +6412,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                this.setState({ 
                   collapse:{...this.state.collapse, monlamPopup: false},
                   monlam:  { 
-                     coords: coords.map(c => ({ top:c.top+"px",left:c.left+"px",width:c.width+"px",height:c.height+"px" })),
+                     coords: coords.map(c => ({ top:c.top+window.scrollY+"px",left:c.left+"px",width:c.width+"px",height:c.height+"px" })),
                      api: { chunk: pageVal.substring(startOff, endOff), lang: langElem, cursor_start:start - startOff, cursor_end: end - startOff },
                      range
                   }
@@ -7241,7 +7241,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   // need to update highlighted area if monlam not already open
                   if(!this.props.monlamResults) setTimeout(() => {
                      let coords = Array.from(this.state.monlam.range.getClientRects())
-                     coords = coords.map(c => ({ top:c.top+"px",left:c.left+"px",width:c.width+"px",height:c.height+"px" }))
+                     coords = coords.map(c => ({ top:c.top+window.scrollY+"px",left:c.left+"px",width:c.width+"px",height:c.height+"px" }))
                      this.setState({ monlam: { ...this.state.monlam, coords, monlamPopup: true } })
                   }, 150)
                }}>{I18n.t("resource.find")}</MenuItem>
@@ -9157,6 +9157,20 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          else etextRes = null
 
 
+         let monlamResults 
+         if(Array.isArray(this.props.monlamResults) && this.props.monlamResults.length > 0) { 
+            monlamResults = //<pre>{
+               this.props.monlamResults.map(w => { 
+                  let word = w.word // getLangLabel(this,"",[w.word]) 
+                  let def = w.def // getLangLabel(this, "", [w.def])
+                  return <div class="def"><b>{word?.value}</b><br/>{def?.value?.split(/[\r\n]+/).map(d => <span>{d}</span>)}</div>
+               })
+            //}</pre>
+         } else if(this.props.monlamResults != true) {
+            monlamResults = <div>Nothing found for "{this.state.monlam?.range.toString()}".</div>
+         }
+
+
          // TODO fix loader not hiding when closing then opening again
 
          return ([
@@ -9177,10 +9191,8 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                { this.renderEtextNav(etextAccessError) }
                <div class={"monlamResults "+(this.state.monlam && this.state.collapse.monlamPopup || this.props.monlamResults ? "visible" : "")}>
                   <div>
-                     <Loader loaded={this.props.monlamResults != true} />
-                     <pre style={{ whiteSpace: "pre-wrap", padding:"15px" }}>
-                     { Array.isArray(this.props.monlamResults) && this.props.monlamResults.map(w => w.word.value+"\n"+w.def.value+"\n\n")}
-                     </pre>
+                     { this.props.monlamResults == true && <Loader  /> }
+                     { monlamResults }
                   </div>
                </div>
             </div>,

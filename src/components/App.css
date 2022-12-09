@@ -2392,8 +2392,21 @@ h4:not(:hover) > .lang
 
 .resource ~ .monlamResults { width:0px; position:relative; box-shadow:-2px 0 3px rgba(0,0,0,0.15);flex-shrink: 0; } 
 .resource ~ .monlamResults > div { width:0px; height:calc(100% - 2 * 80px); position:fixed; right:0; top:80px; background:white; overflow:auto;}
+
 .resource ~ .monlamResults.visible,
 .resource ~ .monlamResults.visible > div { width:400px; }
+
+.resource ~ .monlamResults > div > * { padding:15px; font-size:15px; }
+
+/*
+.resource ~ .monlamResults pre { white-space: pre-wrap; margin:0; }
+.resource ~ .monlamResults pre:empty { display: none;}
+*/
+
+.resource ~ .monlamResults div .def { margin-bottom:15px; line-height:24px; }
+.resource ~ .monlamResults div .def > b { color:#0077ff;  }
+.resource ~ .monlamResults div .def > span { padding-left:15px; display: inline-block; padding-top:12px; }
+
 
 
 /* ------------------------------------------------------------------------------------------------------------------------ header */
@@ -3327,6 +3340,7 @@ h4:hover a.no-bdrc img { opacity:1; }
 .resource .data h2.intro + h2[lang=bo],
 .resource .data h2[lang=bo] { line-height:64px; }
 
+.monlamResults,
 .resource .data h2.intro + h2[lang=bo] > a > span:not(.T,.lang),
 .resource .data h2[lang=bo] > span:not(.T,.lang) { font-family: "Noto Sans Tibetan", "Noto Sans", "Roboto", "Helvetica", "Arial", sans-serif !important; }
 
