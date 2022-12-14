@@ -283,6 +283,7 @@ export const getPages = (state: DataState, action: Action) => {
 }
 reducers[actions.TYPES.getPages] = getPages;
 
+
 export const getMonlamResults = (state: DataState, action: Action) => {
    return {
        ...state,

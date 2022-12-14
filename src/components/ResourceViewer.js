@@ -1177,13 +1177,13 @@ class ResourceViewer extends Component<Props,State>
          }
       })
 
+      
       $(window).off("resize").on("resize",(ev) => {
-         if(this.state.monlam) {
-            let coords = Array.from(this.state.monlam.range.getClientRects())
-            coords = coords.map(c => ({ top:c.top+window.scrollY+"px",left:c.left+"px",width:c.width+"px",height:c.height+"px" }))
-            this.setState({ monlam: { ...this.state.monlam, coords, monlamPopup: true } })
+         if(this.state.monlam) {         
+            this.setState({ monlam: { ...this.state.monlam, hilight:this.state.monlam.updateHilightCoords() } })
          }
       })
+      
    }
 
    static setTitleFromTabs(props,state) {
@@ -6357,18 +6357,21 @@ perma_menu(pdfLink,monoVol,fairUse,other)
             }}>{I18n.t("resource.page",{num:e.seq})}</a>                                             
             </h5>
 
-            const monlamPopup = (ev) => {
 
-               if(!this.props.config.useMonlam) return
+            const monlamPopup = (ev, seq) => {
 
+               ev.persist()
+               
                const MIN_CONTEXT_LENGTH = 40
                const selection = window.getSelection();
+
+               if(!this.props.config.useMonlam) return
                
-               let langElem = selection.anchorNode.parentElement.getAttribute("lang")
-               if(!langElem) langElem = selection.anchorNode.parentElement.parentElement.getAttribute("lang")
+               let langElem = selection.anchorNode?.parentElement?.getAttribute("lang")
+               if(!langElem) langElem = selection.anchorNode?.parentElement?.parentElement?.getAttribute("lang")
                
-               let parent = selection.anchorNode.parentElement
-               if(!parent.getAttribute("lang")) parent = parent.parentElement
+               let parent = selection.anchorNode?.parentElement
+               if(!parent?.getAttribute("lang")) parent = parent?.parentElement
 
                //console.log("parent:",langElem,ev.currentTarget,parent,selection.toString(),selection,parent.children,selection.anchorNode)
                
@@ -6379,9 +6382,9 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   startFromRoot += n.textContent?.length || 0
                }
 
-               let start = startFromRoot, nodes = Array.from(parent.children)
+               let start = startFromRoot, nodes = Array.from(parent?.children)
                if(nodes?.length) for(let i in nodes) {
-                  if(nodes[i] == selection.anchorNode.parentElement) break ;
+                  if(nodes[i] == selection.anchorNode?.parentElement) break ;
                   start += nodes[i].textContent?.length || 0
                   //console.log("i:",i,start)
                }
@@ -6396,12 +6399,30 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   return
                }
 
+               // TODO: check case when selection is made backwards? right to left 
+
                const startOff = Math.max(0, start - MIN_CONTEXT_LENGTH)
                const endOff = Math.min(pageVal.length, end + MIN_CONTEXT_LENGTH)
 
-               const coords = Array.from(selection.getRangeAt(0).getClientRects())
+               const popupCoords = Array.from(selection.getRangeAt(0).getClientRects()) 
 
-               //console.log("coords:",start,end,startOff,endOff,pageVal.substring(startOff, endOff))
+               const updateHilightCoords = (target = this.state.monlam?.target, range = this.state.monlam?.range) => {
+
+                  const { top, left } = target.getBoundingClientRect()
+                  const coords = Array.from(range.getClientRects()).map(r => ({ 
+                     ...r, 
+                     px:{
+                        top:(r.top - top)+"px",
+                        left:(r.left - left)+"px",
+                        height:r.height+"px",
+                        width:r.width+"px"
+                     }
+                  }))
+               
+                  return coords.map( (c,i) => <div style={{...c.px, pointerEvents:"none", position:"absolute", background: "rgba(0,153,255,0.35)", display:"block", zIndex: 1, mixBlendMode: "darken" }}></div>)
+               }
+           
+               //console.log("coords:",coords,ev.currentTarget,start,end,startOff,endOff,pageVal.substring(startOff, endOff))
 
                let range
                if (selection.rangeCount > 0) {
@@ -6412,14 +6433,19 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                this.setState({ 
                   collapse:{...this.state.collapse, monlamPopup: false},
                   monlam:  { 
-                     coords: coords.map(c => ({ top:c.top+window.scrollY+"px",left:c.left+"px",width:c.width+"px",height:c.height+"px" })),
+                     target: ev.currentTarget,
+                     seq,
+                     range,
+                     hilight: updateHilightCoords(ev.currentTarget, selection.getRangeAt(0)),
+                     popupCoords,
+                     updateHilightCoords,
                      api: { chunk: pageVal.substring(startOff, endOff), lang: langElem, cursor_start:start - startOff, cursor_end: end - startOff },
-                     range
                   }
                })
 
                selection.removeAllRanges()
             }
+
 
             return (
             <div class={"etextPage"+(this.props.manifestError&&!imageLinks?" manifest-error":"")+ (!e.value.match(/[\n\r]/)?" unformated":"") + (e.seq?" hasSeq":"")/*+(e.language === "bo"?" lang-bo":"")*/ }>
@@ -6500,7 +6526,9 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
                </div> }
                <div class="overpage">
-                  <h4 class="page" onMouseUp={monlamPopup} >{!e.value.match(/[\n\r]/) && !e.seq ?[<span class="startChar"><span>[&nbsp;<Link to={"/show/"+this.props.IRI+"?startChar="+e.start+"#open-viewer"}>@{e.start}</Link>&nbsp;]</span></span>]:null}{(e.chunks?.length?e.chunks:[e.value]).map(f => {
+                  <h4 class="page" onMouseUp={(ev) => monlamPopup(ev, e.seq)} >
+                     {e.seq == this.state.monlam?.seq ? this.state.monlam?.hilight : null}
+                     {!e.value.match(/[\n\r]/) && !e.seq ?[<span class="startChar"><span>[&nbsp;<Link to={"/show/"+this.props.IRI+"?startChar="+e.start+"#open-viewer"}>@{e.start}</Link>&nbsp;]</span></span>]:null}{(e.chunks?.length?e.chunks:[e.value]).map(f => {
 
                         // #771 multiple language in on epage
                         let lang = e.language
@@ -6614,7 +6642,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                if(elem && 
                (![bdo+"placeLong",bdo+"placeLat"].includes(k) || !kZprop.includes(tmp+"GISCoordinates")) &&
                (!k.match(new RegExp(adm+"|adm:|isRoot$|SourcePath|"+rdf+"|toberemoved|entityScore|associatedCentury|lastSync|dateCreated|qualityGrade|digitalLendingPossible|inRootInstance|workPagination|partIndex|partTreeIndex|legacyOutlineNodeRID|sameAs|thumbnailIIIFSe|instanceOf|instanceReproductionOf|instanceHasReproduction|seeOther|(Has|ction)Member$|serialHasInstance|withSameAs|hasNonVolumeParts|hasPartB|addIALink|lastChunk|first(Text|Vol)N?"+(this._dontMatchProp?"|"+this._dontMatchProp:"")))
-               ||k.match(/(metadataLegal|contentProvider|replaceWith)$/)
+               ||k.match(/(metadataLegal|contentProvider)$/) // |replaceWith
                //||k.match(/([/]see|[/]sameAs)[^/]*$/) // quickfix [TODO] test property ancestors
                || (this.props.IRI.match(/^bda:/) && (k.match(new RegExp(adm+"|adm:"))) && !k.match(/\/(git[RP]|adminAbout|logEntry|graphId|facetIndex)/)))
             && (k !== bdo+"eTextHasChunk" || kZprop.indexOf(bdo+"eTextHasPage") === -1) 
@@ -7219,38 +7247,34 @@ perma_menu(pdfLink,monoVol,fairUse,other)
       if(showToggleScan && showToggleScan.length && !this.unpaginated()) showToggleScan = (showToggleScan[0].seq !== undefined)
       else showToggleScan = false
 
-      let monlamHiL
-
-      if(this.state.monlam?.coords?.length) { 
-         let ref = React.createRef()
-         monlamHiL = this.state.monlam.coords.map( (c,i) => <div {...i == 0?{...ref}:{}} style={{...c, pointerEvents:"none", position:"absolute", background: "rgba(0,153,255,0.35)", display:"block", zIndex: 1, mixBlendMode: "darken" }}></div>)
-         const popup = 
-            <Popover
+      let monlamPop
+      if(this.state.monlam?.popupCoords) {
+         monlamPop = <Popover
                className="monlamPopup"
-               open={!this.state.collapse.monlamPopup}
+               open={this.state.collapse.monlamPopup != true}
                anchorReference="anchorPosition"
-               anchorPosition={{ top:-50+Number(this.state.monlam.coords[0].top.split("px")[0])-window.scrollY, left:Number(this.state.monlam.coords[0].left.split("px")[0])}}
+               anchorPosition={{ top:-50+this.state.monlam.popupCoords[0].top, left:this.state.monlam.popupCoords[0].left }}
                onClose={() => { 
-                  this.setState({monlam:null})
+                  this.setState({monlam:null, collapse:{ ...this.state.collapse, monlamPopup: true }})
                   this.props.onCloseMonlam()
                }}
             >
-               <MenuItem onClick={() => {
+               <MenuItem onClick={(ev) => {
+                  this.setState({ collapse:{ ...this.state.collapse, monlamPopup: true }})
                   this.props.onCallMonlamAPI(this.state.monlam.api);
-                  this.setState({ monlam: { ...this.state.monlam, coords: !this.props.monlamResults?[]:this.state.monlam.coords }, collapse:{ ...this.state.collapse, monlamPopup: true }})
-                  // need to update highlighted area if monlam not already open
-                  if(!this.props.monlamResults) setTimeout(() => {
-                     let coords = Array.from(this.state.monlam.range.getClientRects())
-                     coords = coords.map(c => ({ top:c.top+window.scrollY+"px",left:c.left+"px",width:c.width+"px",height:c.height+"px" }))
-                     this.setState({ monlam: { ...this.state.monlam, coords, monlamPopup: true } })
-                  }, 150)
+                  
+                  if(!this.props.monlamResults) {
+                     setTimeout( () => {
+                        this.setState({ monlam: { ...this.state.monlam, hilight:this.state.monlam.updateHilightCoords() } })
+                     }, 150)
+                  }
+
                }}>{I18n.t("resource.find")}</MenuItem>
             </Popover>
-         monlamHiL.push(popup)
       }
 
       return (<>
-         { monlamHiL }
+         { monlamPop }
          <div id="settings" onClick={() => this.setState({collapse:{...this.state.collapse, etextNav:!this.state.collapse.etextNav}})}><img src="/icons/settings.svg"/></div>
          <div id="etext-nav" class={this.state.collapse.etextNav?"on":""}>
             <div>
@@ -8750,12 +8774,13 @@ perma_menu(pdfLink,monoVol,fairUse,other)
       let redir, withdrawn
       if(this.props.resources && (redir = this.props.resources[this.props.IRI]) && (redir = redir[fullUri(this.props.IRI)]))
       {
-         //loggergen.log("WithD?",redir);
+         loggergen.log("WithD?",redir);
          if(redir[adm+"replaceWith"]) {
             redir = shortUri(redir[adm+"replaceWith"][0].value)                        
-            return (               
-               <Redirect404 history={this.props.history} message={"Record withdrawn in favor of "+redir} to={(this.props.simple?"/simple/":"/show/")+redir+this.props.history.location.search+this.props.history.location.hash} />
-            )
+            if(redir != this.props.IRI)
+               return (               
+                  <Redirect404 history={this.props.history} message={"Record withdrawn in favor of "+redir} to={(this.props.simple?"/simple/":"/show/")+redir+this.props.history.location.search+this.props.history.location.hash} />
+               )
          }
          else if(this.props.auth && this.props.auth.isAuthenticated() && redir[adm+"status"] && (redir = redir[adm+"status"]).length && redir[0].value === bda+"StatusWithdrawn"){
             withdrawn = true 
@@ -9161,15 +9186,20 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          if(Array.isArray(this.props.monlamResults) && this.props.monlamResults.length > 0) { 
             monlamResults = //<pre>{
                this.props.monlamResults.map(w => { 
-                  let word = w.word // getLangLabel(this,"",[w.word]) 
-                  let def = w.def // getLangLabel(this, "", [w.def])
+                  let word = //w.word
+                        getLangLabel(this,"",[w.word]) 
+                  let def = //w.def 
+                        getLangLabel(this, "", [w.def])
                   return <div class="def"><b>{word?.value}</b><br/>{def?.value?.split(/[\r\n]+/).map(d => <span>{d}</span>)}</div>
                })
             //}</pre>
-         } else if(this.props.monlamResults != true) {
-            monlamResults = <div>Nothing found for "{this.state.monlam?.range.toString()}".</div>
+         } else if(this.props.monlamResults && this.props.monlamResults != true) {
+            monlamResults = <div>Nothing found for "{this.props.monlamKeyword}".</div>
+         } else if(this.state.monlam && this.state.collapse.monlamPopup) {
+            monlamResults = <div></div>
          }
 
+         console.log("monlamR:",monlamResults,this.props.monlamResults)
 
          // TODO fix loader not hiding when closing then opening again
 
@@ -9189,7 +9219,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   </div>                  
                </div>
                { this.renderEtextNav(etextAccessError) }
-               <div class={"monlamResults "+(this.state.monlam && this.state.collapse.monlamPopup || this.props.monlamResults ? "visible" : "")}>
+               <div class={"monlamResults "+(this.state.monlam && this.state.collapse.monlamPopup || monlamResults ? "visible" : "")}>
                   <div>
                      { this.props.monlamResults == true && <Loader  /> }
                      { monlamResults }
