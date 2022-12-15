@@ -161,6 +161,7 @@ const mapStateToProps = (state,ownProps) => {
    let useDLD = state.ui.useDLD
 
    let monlamResults = state.data.monlamResults
+   let monlamKeyword = state.data.monlamKeyword
 
    let props = { logged,config,resources, ontology, dictionary, keyword, language, datatype, assocResources, prefLang, failures, loading,
       imageAsset,firstImage,canvasID,collecManif,manifests,manifestError,pdfVolumes,createPdf,pdfUrl, manifestWpdf, monovolume,
@@ -175,7 +176,7 @@ const mapStateToProps = (state,ownProps) => {
       etextErrors,
       portraitPopupClosed,
       useDLD,
-      monlamResults
+      monlamResults, monlamKeyword
    }
 
    if(config && !config.auth) props.auth = false
@@ -272,8 +273,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       onGetCitationData:(id:string) => {
          dispatch(data.getCitationData(id))
       },
-      onCallMonlamAPI:(obj:{}) => {
-         dispatch(data.getMonlamResults(obj))
+      onCallMonlamAPI:(obj:{}, keyword: string) => {
+         dispatch(data.getMonlamResults(obj, keyword))
       },
       onCloseMonlam:() => {
          dispatch(data.closeMonlamResults())

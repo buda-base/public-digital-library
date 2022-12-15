@@ -287,7 +287,8 @@ reducers[actions.TYPES.getPages] = getPages;
 export const getMonlamResults = (state: DataState, action: Action) => {
    return {
        ...state,
-       monlamResults: true
+       monlamResults: true,
+       monlamKeyword: action.meta
    }
 }
 reducers[actions.TYPES.getMonlamResults] = getMonlamResults;
@@ -305,7 +306,8 @@ reducers[actions.TYPES.gotMonlamResults] = gotMonlamResults;
 export const closeMonlamResults = (state: DataState, action: Action) => {
    return {
        ...state,
-       monlamResults: false
+       monlamResults: false,
+       monlamKeyword:""
    }
 }
 reducers[actions.TYPES.closeMonlamResults] = closeMonlamResults;

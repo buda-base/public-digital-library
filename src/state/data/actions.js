@@ -175,10 +175,11 @@ export const pdfNotReady = (url: string, iri:string): Action => {
 }
 
 TYPES.getMonlamResults = 'GET_MONLAM_RESULTS';
-export const getMonlamResults = (obj:{}): Action => {
+export const getMonlamResults = (obj:{}, keyword:string): Action => {
     return {
         type: TYPES.getMonlamResults,
-        payload: obj
+        payload: obj,
+        meta: keyword
     }
 }
 

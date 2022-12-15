@@ -1180,7 +1180,7 @@ class ResourceViewer extends Component<Props,State>
       
       $(window).off("resize").on("resize",(ev) => {
          if(this.state.monlam) {         
-            this.setState({ monlam: { ...this.state.monlam, hilight:this.state.monlam.updateHilightCoords() } })
+            this.setState({ monlam: { ...this.state.monlam, ...this.state.monlam.updateHilightCoords() } })
          }
       })
       
@@ -6375,23 +6375,51 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
                //console.log("parent:",langElem,ev.currentTarget,parent,selection.toString(),selection,parent.children,selection.anchorNode)
                
-               // case when multiple bo-x-ewts span in a row inside page (bdr:UT3JT13384_014_0001)
-               let rootPage = ev.currentTarget, startFromRoot = 0
-               for(let n of rootPage.children) {
-                  if(n == parent) break ;
-                  startFromRoot += n.textContent?.length || 0
+               const getAbsOffset = (node, nodeOffset) => {
+
+                  // case when multiple bo-x-ewts span in a row inside page (bdr:UT3JT13384_014_0001)                             
+                  let rootPage = ev.currentTarget, startFromRoot = 0                  
+                  for(let n of rootPage.children) {
+                     if(n == parent) break ;
+                     startFromRoot += n.textContent?.length || 0
+                  }
+
+                  // case when there are already some highlighted keyword from search
+                  let start = startFromRoot, nodes = Array.from(parent?.children)
+                  if(nodes?.length) for(let i in nodes) {
+                     if(nodes[i] == node.parentElement) break ;
+                     start += nodes[i].textContent?.length || 0
+                     //console.log("i:",i,start)
+                  }
+                  
+                  // case when there are <br/>, must count inner nodes as well 
+                  let previousElement = node.previousSibling
+                  while (previousElement) {
+                     //console.log("prev:",previousElement)
+                     if (previousElement.nodeType === Node.TEXT_NODE) {
+                        start += previousElement.nodeValue.length;
+                     } 
+                     if (previousElement.nodeName === "BR") {
+                        start += 1
+                     }
+                     previousElement = previousElement.previousSibling;
+                  }
+                  start += nodeOffset
+
+                  return start
                }
 
-               let start = startFromRoot, nodes = Array.from(parent?.children)
-               if(nodes?.length) for(let i in nodes) {
-                  if(nodes[i] == selection.anchorNode?.parentElement) break ;
-                  start += nodes[i].textContent?.length || 0
-                  //console.log("i:",i,start)
-               }
-               start += selection.anchorOffset
-               let end = start + selection.toString().length
+               let start = getAbsOffset(selection.anchorNode, selection.anchorOffset)
+               let end = getAbsOffset(selection.focusNode, selection.focusOffset)                
 
-               if(start === end) {
+               if(start > end) {
+                  let tmp = start
+                  start = end
+                  end = tmp
+
+                  if(start + selection.toString().length != end) console.warn(start,end,start + selection.toString().length)
+
+               } else if(start === end) {
                   if(this.state.monlam && this.state.collapse.monlamPopup) { 
                      this.setState({ monlam:null })
                      this.props.onCloseMonlam()
@@ -6409,7 +6437,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                const updateHilightCoords = (target = this.state.monlam?.target, range = this.state.monlam?.range) => {
 
                   const { top, left } = target.getBoundingClientRect()
-                  const coords = Array.from(range.getClientRects()).map(r => ({ 
+                  let coords = Array.from(range.getClientRects()).map(r => ({ 
                      ...r, 
                      px:{
                         top:(r.top - top)+"px",
@@ -6419,7 +6447,13 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                      }
                   }))
                
-                  return coords.map( (c,i) => <div style={{...c.px, pointerEvents:"none", position:"absolute", background: "rgba(0,153,255,0.35)", display:"block", zIndex: 1, mixBlendMode: "darken" }}></div>)
+                  let ref = React.createRef()
+                  coords = coords.map( (c,i) => { 
+                     if(i > 0) ref = null
+                     return <div {...ref?{ref}:{}} style={{...c.px, scrollMargin:"50vh 50px 50vh 50px", pointerEvents:"none", position:"absolute", background: "rgba(0,153,255,0.35)", display:"block", zIndex: 1, mixBlendMode: "darken" }}></div>
+                  })
+
+                  return { hilight:coords, ref}
                }
            
                //console.log("coords:",coords,ev.currentTarget,start,end,startOff,endOff,pageVal.substring(startOff, endOff))
@@ -6436,7 +6470,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                      target: ev.currentTarget,
                      seq,
                      range,
-                     hilight: updateHilightCoords(ev.currentTarget, selection.getRangeAt(0)),
+                     ...updateHilightCoords(ev.currentTarget, selection.getRangeAt(0)),
                      popupCoords,
                      updateHilightCoords,
                      api: { chunk: pageVal.substring(startOff, endOff), lang: langElem, cursor_start:start - startOff, cursor_end: end - startOff },
@@ -7261,11 +7295,16 @@ perma_menu(pdfLink,monoVol,fairUse,other)
             >
                <MenuItem onClick={(ev) => {
                   this.setState({ collapse:{ ...this.state.collapse, monlamPopup: true }})
-                  this.props.onCallMonlamAPI(this.state.monlam.api);
+                  this.props.onCallMonlamAPI(this.state.monlam.api, this.state.monlam.range.toString());
                   
                   if(!this.props.monlamResults) {
                      setTimeout( () => {
-                        this.setState({ monlam: { ...this.state.monlam, hilight:this.state.monlam.updateHilightCoords() } })
+                        const { ref, hilight } = this.state.monlam.updateHilightCoords()
+                        this.setState({ monlam: { ...this.state.monlam, ref, hilight } })
+                        setTimeout(() => {
+                           if(ref?.current) ref.current.scrollIntoView(({behavior:"smooth",block:"nearest",inline:"start"}))
+                        }, 150)
+
                      }, 150)
                   }
 
