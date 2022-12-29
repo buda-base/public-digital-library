@@ -6432,6 +6432,12 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                const startOff = Math.max(0, start - MIN_CONTEXT_LENGTH)
                const endOff = Math.min(pageVal.length, end + MIN_CONTEXT_LENGTH)
 
+               // let's use indexOf to get exact coordinates of selection in page
+               const chunk =  pageVal.substring(startOff, endOff)
+               let cursor_start = chunk.indexOf(selection.toString())
+               if(cursor_start < 0) cursor_start = start - startOff 
+               let cursor_end =  cursor_start + selection.toString().length
+
                const popupCoords = Array.from(selection.getRangeAt(0).getClientRects()) 
 
                const updateHilightCoords = (target = this.state.monlam?.target, range = this.state.monlam?.range) => {
@@ -6473,7 +6479,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                      ...updateHilightCoords(ev.currentTarget, selection.getRangeAt(0)),
                      popupCoords,
                      updateHilightCoords,
-                     api: { chunk: pageVal.substring(startOff, endOff), lang: langElem, cursor_start:start - startOff, cursor_end: end - startOff },
+                     api: {chunk, lang: langElem, cursor_start, cursor_end },
                   }
                })
 
