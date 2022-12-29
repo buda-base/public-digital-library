@@ -2403,7 +2403,11 @@ h4:not(:hover) > .lang
 .resource ~ .monlamResults pre:empty { display: none;}
 */
 
-.resource ~ .monlamResults div .def { margin-bottom:0px; line-height:24px; padding-bottom:15px;}
+.resource ~ .monlamResults div .def { margin-bottom:0px; line-height:24px; padding-bottom:15px;
+   -webkit-user-select: none; /* Safari */
+   -ms-user-select: none; /* IE 10+ */
+   user-select: none;
+}
 .resource ~ .monlamResults div .def > b { color:#0077ff;  }
 .resource ~ .monlamResults div .def > span { padding-left:15px; display: inline-block; padding-top:12px; }
 .resource ~ .monlamResults div .def:first-child { padding-top:30px; }
