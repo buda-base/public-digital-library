@@ -6365,7 +6365,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                const MIN_CONTEXT_LENGTH = 40
                const selection = window.getSelection();
 
-               if(!this.props.config.useMonlam) return
+               if(!this.props.config.useMonlam || !this.state.enableDicoSearch) return
                
                let langElem = selection.anchorNode?.parentElement?.getAttribute("lang")
                if(!langElem) langElem = selection.anchorNode?.parentElement?.parentElement?.getAttribute("lang")
@@ -7314,7 +7314,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                      }, 150)
                   }
 
-               }}>{I18n.t("resource.find")}</MenuItem>
+               }}><img class="ico" src="/icons/monlam.png"/>{I18n.t("resource.find")}</MenuItem>
             </Popover>
       }
 
@@ -7325,6 +7325,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
             <div>
                <a id="DL" class={!accessError?"on":""} onClick={(e) => this.setState({...this.state,anchorLangDL:e.currentTarget, collapse: {...this.state.collapse, langDL:!this.state.collapse.langDL } } ) }>{etext_lang_selec(this,true,<>{I18n.t("mirador.downloadE")}<img src="/icons/DLw.png"/></>,this.props.IRI?fullUri(this.props.IRI).replace(/^http:/,"https:")+".txt":"")}</a>
                {/* // <a id="DL" class={!accessError?"on":""} target="_blank" rel="alternate" type="text" download href={this.props.IRI?fullUri(this.props.IRI).replace(/^http:/,"https:")+".txt":""}>{I18n.t("mirador.downloadE")}<img src="/icons/DLw.png"/></a>) */}
+               <a id="dico" class="on" onClick={(e) => this.setState({enableDicoSearch:!this.state.enableDicoSearch})}>{this.state.enableDicoSearch?<img id="check" src="/icons/check.svg"/>:<span id="check"></span>}{I18n.t("resource.find")}<span><img class="ico" src="/icons/monlam.png"/></span></a>
                <div id="control">
                   <span title={I18n.t("mirador.decrease")} class={!size||size > 0.6?"on":""} onClick={(e)=>etextSize(false)}><img src="/icons/Zm.svg"/></span>
                   <span title={I18n.t("mirador.increase")} class={!size||size < 2.4?"on":""} onClick={(e)=>etextSize(true)}><img src="/icons/Zp.svg"/></span>

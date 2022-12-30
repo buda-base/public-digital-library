@@ -2416,6 +2416,12 @@ h4:not(:hover) > .lang
 #root > .withMonlam { display: flex; }
 #root > .withMonlam > .resource.etext-view { width:calc(100% - 400px - 30px * 2); }
 
+
+#etext-nav #dico { margin-left:auto;  }
+#etext-nav #dico img.ico { width:42px; display: inline-block; vertical-align: -15px;}
+
+.monlamPopup .ico { width:32px; padding-right:12px; align-self: flex-end;} 
+
 /* ------------------------------------------------------------------------------------------------------------------------ header */
 
 .resource .data#head { background-color:#ffffff; padding:35px; padding-bottom:45px; padding-top:35px;}
