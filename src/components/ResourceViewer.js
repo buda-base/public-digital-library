@@ -1178,11 +1178,26 @@ class ResourceViewer extends Component<Props,State>
       })
 
       
+      const that = this
       $(window).off("resize").on("resize",(ev) => {
-         if(this.state.monlam) {         
-            this.setState({ monlam: { ...this.state.monlam, ...this.state.monlam.updateHilightCoords() } })
+         if(that.state.monlam) {         
+            that.setState({ monlam: { ...that.state.monlam, ...that.state.monlam.updateHilightCoords() } })
          }
       })
+
+      $(document).off("keydown").on("keydown", function (myEvent) {
+   
+         // function that verifies the detection
+         myEvent = myEvent || window.event; // 'myEvent' is event object
+         let key = myEvent.which || myEvent.keyCode; // this is to detect keyCode         
+         // Detecting Ctrl
+         let ctrl = myEvent.ctrlKey ? myEvent.ctrlKey : ((key === 17) ? true : false);
+         
+         if (that.state?.monlam?.range && key == 67 && ctrl) {         
+            navigator.clipboard.writeText(that.state.monlam.range.toString())
+            console.log("copied:",that.state.monlam.range.toString())
+         }
+      });
       
    }
 
@@ -6364,8 +6379,10 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                
                const MIN_CONTEXT_LENGTH = 40
                const selection = window.getSelection();
+               
+               //console.log("closest:",ev.target.closest(".popper"),ev.currentTarget,ev.target)
 
-               if(!this.props.config.useMonlam || !this.state.enableDicoSearch) return
+               if(!this.props.config.useMonlam || ev.target.closest(".popper")) return
                
                let langElem = selection.anchorNode?.parentElement?.getAttribute("lang")
                if(!langElem) langElem = selection.anchorNode?.parentElement?.parentElement?.getAttribute("lang")
@@ -6385,7 +6402,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   }
 
                   // case when there are already some highlighted keyword from search
-                  let start = startFromRoot, nodes = Array.from(parent?.children)
+                  let start = startFromRoot, nodes = parent?.children ? Array.from(parent?.children) : []
                   if(nodes?.length) for(let i in nodes) {
                      if(nodes[i] == node.parentElement) break ;
                      start += nodes[i].textContent?.length || 0
@@ -6393,7 +6410,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   }
                   
                   // case when there are <br/>, must count inner nodes as well 
-                  let previousElement = node.previousSibling
+                  let previousElement = node?.previousSibling
                   while (previousElement) {
                      //console.log("prev:",previousElement)
                      if (previousElement.nodeType === Node.TEXT_NODE) {
@@ -6438,8 +6455,6 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                if(cursor_start < 0) cursor_start = start - startOff 
                let cursor_end =  cursor_start + selection.toString().length
 
-               const popupCoords = Array.from(selection.getRangeAt(0).getClientRects()) 
-
                const updateHilightCoords = (target = this.state.monlam?.target, range = this.state.monlam?.range) => {
 
                   const { top, left } = target.getBoundingClientRect()
@@ -6459,7 +6474,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                      return <div {...ref?{ref}:{}} style={{...c.px, scrollMargin:"50vh 50px 50vh 50px", pointerEvents:"none", position:"absolute", background: "rgba(0,153,255,0.35)", display:"block", zIndex: 1, mixBlendMode: "darken" }}></div>
                   })
 
-                  return { hilight:coords, ref}
+                  return { hilight:coords, ref, popupCoords:Array.from(range.getClientRects()) }
                }
            
                //console.log("coords:",coords,ev.currentTarget,start,end,startOff,endOff,pageVal.substring(startOff, endOff))
@@ -6477,13 +6492,13 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                      seq,
                      range,
                      ...updateHilightCoords(ev.currentTarget, selection.getRangeAt(0)),
-                     popupCoords,
                      updateHilightCoords,
                      api: {chunk, lang: langElem, cursor_start, cursor_end },
                   }
                })
 
-               selection.removeAllRanges()
+
+               if(this.state.enableDicoSearch) selection.removeAllRanges()
             }
 
 
@@ -6567,7 +6582,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                </div> }
                <div class="overpage">
                   <h4 class="page" onMouseUp={(ev) => monlamPopup(ev, e.seq)} >
-                     {e.seq == this.state.monlam?.seq ? this.state.monlam?.hilight : null}
+                     {e.seq == this.state.monlam?.seq && this.state.enableDicoSearch ? this.state.monlam?.hilight : null}
                      {!e.value.match(/[\n\r]/) && !e.seq ?[<span class="startChar"><span>[&nbsp;<Link to={"/show/"+this.props.IRI+"?startChar="+e.start+"#open-viewer"}>@{e.start}</Link>&nbsp;]</span></span>]:null}{(e.chunks?.length?e.chunks:[e.value]).map(f => {
 
                         // #771 multiple language in on epage
@@ -7278,6 +7293,13 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          if(inc) size += 0.1
          else size -= 0.1
          this.setState({ etextSize: size })
+         if(this.state.monlam) setTimeout( () => {
+            this.setState({ 
+               monlam: { ...this.state.monlam, ...this.state.monlam.updateHilightCoords() },
+               collapse:{ ...this.state.collapse, monlamPopupMove: true } 
+            } )         
+            setTimeout( () => this.setState({ collapse:{ ...this.state.collapse, monlamPopupMove: false } } ), 10)
+         }, 10)
       }
 
       let size = this.state.etextSize
@@ -7291,9 +7313,9 @@ perma_menu(pdfLink,monoVol,fairUse,other)
       if(this.state.monlam?.popupCoords) {
          monlamPop = <Popover
                className="monlamPopup"
-               open={this.state.collapse.monlamPopup != true}
+               open={this.state.collapse.monlamPopup != true && this.state.enableDicoSearch && !this.state.collapse.monlamPopupMove}
                anchorReference="anchorPosition"
-               anchorPosition={{ top:-50+this.state.monlam.popupCoords[0].top, left:this.state.monlam.popupCoords[0].left }}
+               anchorPosition={{ top:-50+this.state.monlam.popupCoords[0]?.top, left:this.state.monlam.popupCoords[0]?.left }}
                onClose={() => { 
                   this.setState({monlam:null, collapse:{ ...this.state.collapse, monlamPopup: true }})
                   this.props.onCloseMonlam()
@@ -7309,9 +7331,9 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                         this.setState({ monlam: { ...this.state.monlam, ref, hilight } })
                         setTimeout(() => {
                            if(ref?.current) ref.current.scrollIntoView(({behavior:"smooth",block:"nearest",inline:"start"}))
-                        }, 150)
+                        }, 10)
 
-                     }, 150)
+                     }, 10)
                   }
 
                }}><img class="ico" src="/icons/monlam.png"/>{I18n.t("resource.find")}</MenuItem>
@@ -7325,10 +7347,13 @@ perma_menu(pdfLink,monoVol,fairUse,other)
             <div>
                <a id="DL" class={!accessError?"on":""} onClick={(e) => this.setState({...this.state,anchorLangDL:e.currentTarget, collapse: {...this.state.collapse, langDL:!this.state.collapse.langDL } } ) }>{etext_lang_selec(this,true,<>{I18n.t("mirador.downloadE")}<img src="/icons/DLw.png"/></>,this.props.IRI?fullUri(this.props.IRI).replace(/^http:/,"https:")+".txt":"")}</a>
                {/* // <a id="DL" class={!accessError?"on":""} target="_blank" rel="alternate" type="text" download href={this.props.IRI?fullUri(this.props.IRI).replace(/^http:/,"https:")+".txt":""}>{I18n.t("mirador.downloadE")}<img src="/icons/DLw.png"/></a>) */}
-               <a id="dico" class="on" onClick={(e) => this.setState({enableDicoSearch:!this.state.enableDicoSearch})}>{this.state.enableDicoSearch?<img id="check" src="/icons/check.svg"/>:<span id="check"></span>}{I18n.t("resource.find")}<span><img class="ico" src="/icons/monlam.png"/></span></a>
+               <a id="dico" class="on" onClick={(e) => { 
+                  if(this.state.enableDicoSearch) this.props.onCloseMonlam()
+                  this.setState({enableDicoSearch:!this.state.enableDicoSearch, ...this.state.enableDicoSearch?{monlam:null}:{}})
+               }}>{this.state.enableDicoSearch?<img id="check" src="/icons/check.svg"/>:<span id="check"></span>}{I18n.t("resource.find")}<span><img class="ico" src="/icons/monlam.png"/></span></a>
                <div id="control">
-                  <span title={I18n.t("mirador.decrease")} class={!size||size > 0.6?"on":""} onClick={(e)=>etextSize(false)}><img src="/icons/Zm.svg"/></span>
-                  <span title={I18n.t("mirador.increase")} class={!size||size < 2.4?"on":""} onClick={(e)=>etextSize(true)}><img src="/icons/Zp.svg"/></span>
+                  <span title={I18n.t("mirador.decreaseFont")} class={!size||size > 0.6?"on":""} onClick={(e)=>etextSize(false)}><img src="/icons/Zm.svg"/></span>
+                  <span title={I18n.t("mirador.increaseFont")} class={!size||size < 2.4?"on":""} onClick={(e)=>etextSize(true)}><img src="/icons/Zp.svg"/></span>
                   {etext_lang_selec(this,true)}
                </div>
                <a class={showToggleScan?"on":""} onClick={(e) => this.setState({showEtextImages:!this.state.showEtextImages})}>{this.state.showEtextImages?<img id="check" src="/icons/check.svg"/>:<span id="check"></span>}{I18n.t("mirador.showI")}<img width="42" src="/icons/search/images_b.svg"/></a>
@@ -9229,7 +9254,9 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
 
          let monlamResults 
-         if(Array.isArray(this.props.monlamResults) && this.props.monlamResults.length > 0) { 
+         if(!this.state.enableDicoSearch) { 
+
+         } else if(Array.isArray(this.props.monlamResults) && this.props.monlamResults.length > 0) { 
             monlamResults = //<pre>{
                this.props.monlamResults.map(w => { 
                   let word = //w.word
@@ -9265,7 +9292,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   </div>                  
                </div>
                { this.renderEtextNav(etextAccessError) }
-               <div class={"monlamResults "+(this.state.monlam && this.state.collapse.monlamPopup || monlamResults ? "visible" : "")}>
+               <div class={"monlamResults "+(this.state.enableDicoSearch && (this.state.monlam && this.state.collapse.monlamPopup || monlamResults) ? "visible" : "")}>
                   <div>
                      { this.props.monlamResults == true && <Loader  /> }
                      { monlamResults }

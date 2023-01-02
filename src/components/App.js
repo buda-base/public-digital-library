@@ -922,7 +922,9 @@ export function etext_lang_selec(that,black:boolean = false, elem, DL)
                                     value={i}
                                     onClick={(event) => { 
                                        localStorage.setItem('etextlang', i);
-                                       that.setState({...that.state,[anchor]:null,collapse: {...that.state.collapse, [lang]:false } }); 
+                                       that.setState({...that.state,[anchor]:null,collapse: {...that.state.collapse, [lang]:false },
+                                          ...that.state.monlam?{monlam:null}:{}
+                                       }); 
                                        that.props.onSetEtextLang(i)
                                     
 
@@ -1076,8 +1078,11 @@ export function top_right_menu(that,etextTitle,backUrl,etextres)
                         delete loca.hash
                         that.props.history.push(loca) ; 
                      }                        
-                     if(that.state.openEtext) that.setState({...that.state, openEtext: false });
+                     if(that.state.monlam) that.props.onCloseMonlam()
+
+                     if(that.state.openEtext) that.setState({ enableDicoSearch: false, openEtext: false, ...that.state.monlam?{monlam:null}:{} });
                   
+
                      that.props.onLoading("search",false)
                      //setTimeout(()=>that.props.onLoading("search",false),100)                     
 
