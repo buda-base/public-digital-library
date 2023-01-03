@@ -2408,8 +2408,13 @@ h4:not(:hover) > .lang
    -ms-user-select: none; /* IE 10+ */
    user-select: none;
 }
-.resource ~ .monlamResults div .def > b { color:#0077ff;  }
-.resource ~ .monlamResults div .def > span { padding-left:15px; display: inline-block; padding-top:12px; }
+.resource ~ .monlamResults div .def > b { color:#09b; display: inline-flex; align-items: center; cursor: pointer; text-decoration: underline; }
+.resource ~ .monlamResults div .def > b > svg { transform: rotate(270deg); margin-top:-5px;}
+.resource ~ .monlamResults div .def > b > svg.on { transform: rotate(0deg); margin-top:-5px;}
+.resource ~ .monlamResults div .def > b > span > .kw { background:rgba(0,128,255,0.2); }
+.resource ~ .monlamResults div .def > b > span { font-size:115%; }
+.resource ~ .monlamResults div .def > b[lang='bo'] > span { font-size:135%;}
+.resource ~ .monlamResults div .def div div div span { padding-left:15px; display: block; padding-top:12px; }
 .resource ~ .monlamResults div .def:first-child { padding-top:30px; }
 .resource ~ .monlamResults div .def:last-child { padding-bottom:30px; }
 

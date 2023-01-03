@@ -7322,7 +7322,11 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                }}
             >
                <MenuItem onClick={(ev) => {
-                  this.setState({ collapse:{ ...this.state.collapse, monlamPopup: true }})
+                  const collapse = { ...this.state.collapse, monlamPopup: true  }
+                  for(const k of Object.keys(collapse)) {
+                     if(k.startsWith("monlam-def-")) delete collapse[k]
+                  }
+                  this.setState({ collapse })
                   this.props.onCallMonlamAPI(this.state.monlam.api, this.state.monlam.range.toString());
                   
                   if(!this.props.monlamResults) {
@@ -9258,12 +9262,22 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
          } else if(Array.isArray(this.props.monlamResults) && this.props.monlamResults.length > 0) { 
             monlamResults = //<pre>{
-               this.props.monlamResults.map(w => { 
+               this.props.monlamResults.map( (w,i) => { 
                   let word = //w.word
                         getLangLabel(this,"",[w.word]) 
                   let def = //w.def 
                         getLangLabel(this, "", [w.def])
-                  return <div class="def"><b>{word?.value}</b><br/>{def?.value?.split(/[\r\n]+/).map(d => <span>{d}</span>)}</div>
+                  let open = this.state.collapse["monlam-def-"+i] || this.props.monlamResults.length === 1 && this.state.collapse["monlam-def-"+i] === undefined
+                  let kw = getLangLabel(this,"",[ { value:this.props.monlamKeyword, lang: this.props.etextLang }])
+                  if(kw?.value) kw = kw.value 
+                  else kw = this.props.monlamKeyword
+                  return <div class="def">
+                     <b lang={word.lang} onClick={() => this.setState({collapse:{...this.state.collapse, ["monlam-def-"+i]:!open}})}>
+                        <span>{word?.value.split(kw).map((v,j) => <>{j > 0 ? <span className="kw">{kw}</span>:null}<span>{v}</span></>)}</span>
+                        <ExpandMore className={open?"on":""}/>
+                     </b>
+                     <Collapse in={open}>{def?.value?.split(/[\r\n]+/).map(d => <span>{d}</span>)}</Collapse>
+                  </div>
                })
             //}</pre>
          } else if(this.props.monlamResults && this.props.monlamResults != true) {
