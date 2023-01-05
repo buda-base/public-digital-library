@@ -663,8 +663,7 @@
       "firstP": "ទំព័រទីមួយ",
       "lastP": "ទំព័រចុងក្រោយ",
       "openIA": "បើកនៅលើបណ្ណសារអ៊ីនធឺណិត",
-      "openW":"Open Work",
-      "find":"Find in dictionary"
+      "openW":"Open Work"
    },
    "mirador": {
       "return": "ត្រលប់ទៅកាន់ BUDA",
@@ -781,6 +780,7 @@
       "fairUseIA3": "To return to the record for this text, please use the \"back\" button",
       "fillColorTooltip": "Choose fill color",
       "filterObjects": "Filter objects",
+      "find":"Lookup in Monlam dictionary",
       "freehandTooltip": "Freeform annotation",
       "full":"Full",
       "fullScreen": "Full Screen",
@@ -809,6 +809,7 @@
       "manifest": "IIIF Manifest",
       "metadataTooltip": "View information/metadata about this object",
       "mirrorTooltip": "Mirror image",
+      "monlam":"Monlam dictionary",
       "more": "more",
       "mustLogin":"You must be logged in to download PDFs or image files.",
       "myManifests": "My Manifests",

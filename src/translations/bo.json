@@ -647,8 +647,7 @@
       "firstP": "ཤོག་ལྡེབས་དང་བོ།",
       "lastP": "ཤོག་ལྡེབས་ཐ་མ།",
       "openIA": "དྲ་ཐོག་ཡིག་མཛོད་ནང་ཁ་ཕྱེས།",
-      "openW":"Open Work",
-      "find":"Find in dictionary"
+      "openW":"Open Work"
    },
    "mirador": {
       "return": "བུདྡྷ་ལ་ཕྱིར་ལོག",
@@ -717,6 +716,7 @@
       "fairUseIA1": "Access this work on Internet Archive",
       "fairUseIA2": "View first/last 20 pages on BDRC",
       "fairUseIA3": "To return to the record for this text, please use the \"back\" button",
+      "find":"Lookup in Monlam dictionary",
       "full":"Full",
       "getPDF":"Get PDF",
       "getRAW":"Download original file for this image",
@@ -726,6 +726,7 @@
       "goto":"ཤོག་ངོས་སྟོན།",
       "image": "བཤེར་པར།",
       "images": "བཤེར་པར།",
+      "monlam":"Monlam dictionary",
       "mustLogin":"ཁྱེད་ཀྱིས་PDFsདང་ZIPsགང་རུང་ཕབ་ལེན་བྱེད་པར་ཐོག་མར་ནང་འཛུལ་བྱོས།",
       "or":"or",
       "pdferror1":"Incorrect image range",

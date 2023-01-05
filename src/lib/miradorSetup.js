@@ -384,9 +384,9 @@ async function hasEtextPage(manifest) {
 
             let start = id;
             while(id > 0 && start - id < NB_PAGES && !etextPages[ut][id - 1] ) { id -- ; } 
-            for(let i = id ; i <= id+NB_PAGES-1 ; i++) etextPages[ut][i] = true ;
+            for(let i = id ; i <= id+NB_PAGES /*-1*/ ; i++) etextPages[ut][i] = true ; 
 
-            let data = await window.fetch(ldspdi+"/lib/ChunksByPage?R_RES="+ut+"&I_START="+id+"&I_END="+(id+NB_PAGES-1), { 
+            let data = await window.fetch(ldspdi+"/lib/ChunksByPage?R_RES="+ut+"&I_START="+id+"&I_END="+(id+NB_PAGES /*-1*/), { 
                headers:new Headers({
                   accept:"application/ld+json",               
                   ...( id_token && expires_at > Date.now() ? { Authorization:"Bearer "+id_token }:{} )
@@ -443,7 +443,7 @@ async function hasEtextPage(manifest) {
             console.log("return:",ut,id_sav,etextPages[ut][id_sav].chunks,etextPages[ut][id_sav])
             return etextPages[ut][id_sav].chunks ;
          }
-
+         
          //return [{"@language":"en","@value":"no data found (yet !?)"}]
 
       }
@@ -764,6 +764,7 @@ function miradorAddScroll(toImage)
 
             console.log("id:",id)
 
+
             let fromInp = false 
             if(id !== undefined) {
                if(id && id.match && !id.match(/^(https?)?[/][/]/)) {
@@ -782,7 +783,7 @@ function miradorAddScroll(toImage)
                   }
                   else id = false
                }
-               else id = jQ(".scroll-view img[data-image-id$='"+id+"']").first()
+               else id = jQ(".scroll-view img[data-image-id$='"+id.replace(/^.*?iiifpres(-dev)?\./,"")+"']").first()
             }
             
             if(!id || !id.length) id = jQ(".panel-listing-thumbs li.highlight img").first()
@@ -1022,6 +1023,10 @@ function miradorAddZoomer() {
                   var etc = jQ(e);
                   var h0 = etc.attr('data-h0');
                   var p = etc.find("div:not(.pad)");
+                  
+                  etc.find(".monlam-popup,.monlam-hilight").remove()
+                  window.getSelection().removeAllRanges()
+
                   var h = p.attr('data-h');
                   p.css({"transform":"scale("+1/window.currentZoom+")"});
                   etc.find(".pad").height(30 / window.currentZoom + 0.5 * (h / window.currentZoom - h0));

@@ -663,8 +663,7 @@
       "firstP": "First page",
       "lastP": "Last page",
       "openIA": "Open on Internet Archive",
-      "openW":"Open Work",
-      "find":"Find in dictionary"
+      "openW":"Open Work"
    },
    "mirador": {
       "return": "return to BUDA",
@@ -774,6 +773,7 @@
       "emptyTemplateMessage": "Il n'y a pas de calques d'image sur ce canevas",
       "fillColorTooltip": "Choisir une couleur de remplissage",
       "filterObjects": "Filtrer la liste",
+      "find":"Lookup in Monlam dictionary",
       "freehandTooltip": "Tracé libre",
       "fullScreen": "Plein écran",
       "fullScreenTooltip": "Ouvrir en plein écran",
@@ -799,6 +799,7 @@
       "manifest": "Manifest IIIF",
       "metadataTooltip": "Afficher les informations/métadonnées",
       "mirrorTooltip": "Retourner l'image (axe horizontal)",
+      "monlam":"Monlam dictionary",
       "more": "restants",
       "myManifests": "Mes objets",
       "newObject": "Nouvel objet",

@@ -7340,7 +7340,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                      }, 10)
                   }
 
-               }}><img class="ico" src="/icons/monlam.png"/>{I18n.t("resource.find")}</MenuItem>
+               }}><img class="ico" src="/icons/monlam.png"/>{I18n.t("viewer.find")}</MenuItem>
             </Popover>
       }
 
@@ -7354,7 +7354,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                <a id="dico" class="on" onClick={(e) => { 
                   if(this.state.enableDicoSearch) this.props.onCloseMonlam()
                   this.setState({enableDicoSearch:!this.state.enableDicoSearch, ...this.state.enableDicoSearch?{monlam:null}:{}})
-               }}>{this.state.enableDicoSearch?<img id="check" src="/icons/check.svg"/>:<span id="check"></span>}{I18n.t("resource.find")}<span><img class="ico" src="/icons/monlam.png"/></span></a>
+               }}>{this.state.enableDicoSearch?<img id="check" src="/icons/check.svg"/>:<span id="check"></span>}{I18n.t("viewer.monlam")}<span><img class="ico" src="/icons/monlam.png"/></span></a>
                <div id="control">
                   <span title={I18n.t("mirador.decreaseFont")} class={!size||size > 0.6?"on":""} onClick={(e)=>etextSize(false)}><img src="/icons/Zm.svg"/></span>
                   <span title={I18n.t("mirador.increaseFont")} class={!size||size < 2.4?"on":""} onClick={(e)=>etextSize(true)}><img src="/icons/Zp.svg"/></span>

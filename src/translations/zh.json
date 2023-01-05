@@ -647,8 +647,7 @@
       "firstP": "First page",
       "lastP": "Last page",
       "openIA": "Open on Internet Archive",
-      "openW":"Open Work",
-      "find":"Find in dictionary"
+      "openW":"Open Work"
    },
    "mirador": {
       "return": "回到BUDA",
@@ -753,6 +752,7 @@
       "fairUseIA3": "To return to the record for this text, please use the \"back\" button",
       "fillColorTooltip": "选择填充颜色",
       "filterObjects": "过滤物件",
+      "find":"Lookup in Monlam dictionary",
       "freehandTooltip": "自由注释",
       "full":"Full",
       "fullScreen": "全屏",
@@ -772,6 +772,7 @@
       "links": "链接",
       "load": "载入",
       "logo": "徽标",
+      "monlam":"Monlam dictionary",
       "metadataTooltip": "查看这个物件的信息/元数据",
       "more": "更多",
       "mustLogin":"You must be logged in to download PDFs or ZIPs.",

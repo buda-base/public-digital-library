@@ -879,7 +879,7 @@ async function getContext(iri,start,end,nb:integer = 1000) {
       store.dispatch(dataActions.foundResults(state.data.keyword, state.data.language, results,["Etext"]))
    } else {
       const inP = sav.filter(e => e.seqNum !== undefined)
-      const labels = sav.filter(e => inP.some(f => f["tmp:inInstancePart"]?.some(g => g.id === e.id)))
+      const labels = sav.filter(e => inP.some(f => f["tmp:inInstancePart"] && (Array.isArray(f["tmp:inInstancePart"])?f["tmp:inInstancePart"]:[f["tmp:inInstancePart"]]).some(g => g.id === e.id)))
       console.log("inPart:", iri, inP, labels)
       let data = {} 
       inP.map(e => {
