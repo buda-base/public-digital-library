@@ -9276,7 +9276,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                         <span>{word?.value.split(kw).map((v,j) => <>{j > 0 ? <span className="kw">{kw}</span>:null}<span>{v}</span></>)}</span>
                         <ExpandMore className={open?"on":""}/>
                      </b>
-                     <Collapse in={open}>{def?.value?.split(/[\r\n]+/).map(d => <span>{d}</span>)}</Collapse>
+                     <Collapse timeout={0} in={open}>{def?.value?.split(/[\r\n]+/).map(d => <span>{d}</span>)}</Collapse>
                   </div>
                })
             //}</pre>
