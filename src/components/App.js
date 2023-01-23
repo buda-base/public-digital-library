@@ -7409,7 +7409,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      <Visibility style={{verticalAlign:"-4px",marginRight:"8px"}}/>
                      <p class="widget-title" >{I18n.t("search.toggleM")}</p>
                   </div> }
-                  { this.state.filters.datatype.includes("Etext") && <div class="widget-header etextBestM" /*style={{marginRight:!metaK.includes("hasMatch")?"auto":0}}*/ onClick={
+                  { this.state.filters.datatype.includes("Etext") && this.props.language && <div class="widget-header etextBestM" /*style={{marginRight:!metaK.includes("hasMatch")?"auto":0}}*/ onClick={
                            () => this.setState({repage:true, collapse:{...this.state.collapse,"etextOtherM":!this.state.collapse.etextOtherM}})
                      }>{ this.state.collapse.etextOtherM 
                         ? <VisibilityOff style={{verticalAlign:"-4px",marginRight:"8px"}}/>
