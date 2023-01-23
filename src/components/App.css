@@ -2528,8 +2528,11 @@ vertical-align:middle;}
 .resource.person .data > .header::before { background-image:url("/icons/person.png");  }
 .resource .data.related .rel-or-crea.all .header.topic::before,
 .resource.topic .data > .header::before { background-image:url("/icons/topic.png");  }
-.resource.etext .data > .header::before { background-image:url("/icons/etext.png");  }
+
+.resource .data.related .rel-or-crea .header.etext::before,
+.resource.etext .data > .header::before,
 .resource.etext .data > a > .header::before { background-image:url("/icons/etext.png");  }
+
 .resource .data.related .rel-or-crea.all .header.lineage::before,
 .resource.lineage .data > .header::before { background-image:url("/icons/lineage.png");  }
 .resource .data.related .rel-or-crea.all .header.place::before,

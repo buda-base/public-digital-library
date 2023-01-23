@@ -5623,13 +5623,16 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             if(other) other = other.datatype
             //loggergen.log("other:",other)
             if(other) other = Object.keys(other).filter(k => k !== "Any" && k !== t && other[k] !== 0 && searchTypes.includes(k))
-            loggergen.log("other:",other)
+            //loggergen.log("other:",other, this.props.loading, this.props.datatypes, this.props.datatypes?.hash)
             
             //if(other && other.length) 
             if(this.props.keyword==="tmp:subscriptions") {
                message.push(<Typography className="no-result"><span class="noR">Empty list of subscriptions<br/>(work in progress)</span></Typography>)
-            } else if(this.props.loading && this.state.filters.datatype[0] !== "Any" || !this.props.datatypes || !this.props.datatypes.hash) {
-               message.push(<Typography className="loading"></Typography>)
+            // - was related to #794
+            // - #791 fix blank page when no results
+            // - needed to prevent displaying "no result" while loading...
+            } else if(this.props.loading && this.state.filters.datatype[0] !== "Any" || !this.props.datatypes?.hash) {
+              message.push(<Typography className="loading"></Typography>)
             } else {
                message.push(<Typography className="no-result">
                   { lang && I18n.t("search.filters.noresult"+(this.props.keyword=="-"?"-":"s"),{ 

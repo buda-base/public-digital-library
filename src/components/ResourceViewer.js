@@ -8799,6 +8799,8 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          if(!serial) serial = this.getResourceElem(bdo+"collectionMember");
          if(!serial) serial = this.getResourceElem(bdo+"corporationHasMember");
          
+         const isEtextCollection = serial && !serial.some(k => k.value?.includes("/resource/W")) ;
+
          //loggergen.log("serial:",serial)
 
          createdBy = Object.keys(this.props.assocResources).map( (k,i) => {
@@ -8858,7 +8860,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
             }
             return ( 
                <div ref={this._refs["crea-"+i]}>
-                  <Link to={"/show/"+s}><div class={"header"+(thumb?" thumb":"") + (_T === "Product"?" instance":"")} style={{backgroundImage:"url("+thumbUrl+")"}}></div></Link>
+                  <Link to={"/show/"+s}><div class={"header"+(thumb?" thumb":"") + (_T === "Product"?(isEtextCollection?" etext":" instance"):"")} style={{backgroundImage:"url("+thumbUrl+")"}}></div></Link>
                   <div><Link to={"/show/"+s}><span {...label.lang?{lang:label.lang}:{}}>{ label.value }</span></Link>{ label.lang && this.tooltip(label.lang) }</div>
                   {/* <Link to={"/show/"+s}>{I18n.t("misc.readM")}</Link> */}
                </div>
@@ -8872,7 +8874,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
             } else if(_T === "Place" || serial && _T === "Work") {
                searchUrl += "&t=Instance"+(this.props.useDLD?"&f=inDLD,inc,tmp:available":"")
             } else if( _T === "Product") {
-               searchUrl += "&t=Scan"+(this.props.useDLD?"&f=inDLD,inc,tmp:available":"")
+               searchUrl += "&t="+(isEtextCollection?"Etext":"Scan")+(this.props.useDLD?"&f=inDLD,inc,tmp:available":"")
             } else if(_T === "Corporation") {
                searchUrl += "&t=Person"
             } else {
@@ -9179,7 +9181,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          let scrollRel = (ev,next,smooth) => { 
             let rel = $(".resource .data.related > div:first-child > div:last-child") 
             let div = rel.find(".rel-or-crea > div:first-child")
-            let nb = Math.floor(rel.width()/(div.width()+Number(div.css("margin-right").replace(/[^0-9]+/g,"")))) // 4 = default in desktop
+            let nb = Math.floor(rel.width()/(div.width()+Number((""+div.css("margin-right")).replace(/[^0-9]+/g,"")))) // 4 = default in desktop
             //console.log("rel:",nb,rel,div,next,ev)
             let idx = !this.state.relatedTab&&related.length?"rel":"crea"
             let max = !this.state.relatedTab&&related.length?related.length:createdBy.length
@@ -9452,7 +9454,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                            }
                         </MySwipeable>
                         { 
-                           (!this.state.relatedTab && !this.state.relatedTabAll && related.length > 4 || this.state.relatedTab && createdBy.length > 4 || !related.length && createdBy.length > 4) &&
+                           (!this.state.relatedTab && !this.state.relatedTabAll && related.length > 4 || this.state.relatedTab && createdBy.length > 4 || !this.state.relatedTabAll && !related.length && createdBy.length > 4) &&
                            <div id="related-nav" >
                               <span class={!this.state.relatedTab&&related.length?(this.state.irel>0?"on":""):(this.state.icrea>0?"on":"")} onClick={(ev) => scrollRel(ev)}><img src="/icons/g.svg"/></span>
                               <span class={navNext?"on":""} onClick={(ev) => scrollRel(ev,true)}><img src="/icons/d.svg"/></span>
