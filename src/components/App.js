@@ -4095,6 +4095,19 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       if(enType === "instance" && (!hasImage || !hasImage.length)) hasImage = false
       else hasImage = true
 
+      access = allProps.filter(a => [tmp+"hasReproAccess", adm+"access", tmp+"access"].includes(a.type))
+      if(access.length) access = access[0].value            
+      
+      if(access && access.length) {
+         hasCopyR = "unknown"            
+         if(access.includes("FairUse")) hasCopyR = "fair_use"
+         else if(access.includes("Temporarily")) { hasCopyR = "temporarily";  hasThumb = []; }
+         else if(access.includes("Sealed")) { hasCopyR = "sealed";  hasThumb = []; }
+         else if(access.includes("Quality")) { if(this.props.auth && !this.props.auth.isAuthenticated()) hasThumb = []; }
+         else if(access.includes("Open")) hasCopyR = "copyleft"
+         //if(access.includes("Restricted")) { hasCopyR = "restricted"; hasThumb = []; }
+      }
+      
       let hasThumb = allProps.filter(a => a.type && a.type.startsWith(tmp+"thumbnailIIIFSe")), hasCopyR, viewUrl,access, quality
       if(hasThumb.length) { 
          hasThumb = hasThumb[0].value 
@@ -4111,8 +4124,6 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             else if(viewUrl) viewUrl = fullUri(viewUrl)
 
 
-            access = allProps.filter(a => [tmp+"hasReproAccess", adm+"access", tmp+"access"].includes(a.type))
-            if(access.length) access = access[0].value            
             
             if(this.props.config && this.props.config.iiif && this.props.config.iiif.endpoints[this.props.config.iiif.index].match(/iiif-dev/)) hasThumb = hasThumb.replace(/iiif([.]bdrc[.]io)/, "iiif-dev$1")
             if(!hasThumb.match(/[/]default[.][^.]+$/)) hasThumb += "/full/"+(hasThumb.includes(".bdrc.io/")?"!2000,145":",145")+"/0/default.jpg" 
@@ -4121,17 +4132,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             quality = allProps.filter(a => [ bdo+"qualityGrade", tmp+"hasReproQuality" ].includes(a.type))
             if(quality.length) quality = quality[0].value            
 
-            //loggergen.log("access",access,quality)
-
-            if(access && access.length) {
-               hasCopyR = "unknown"            
-               if(access.includes("FairUse")) hasCopyR = "fair_use"
-               else if(access.includes("Temporarily")) { hasCopyR = "temporarily";  hasThumb = []; }
-               else if(access.includes("Sealed")) { hasCopyR = "sealed";  hasThumb = []; }
-               else if(access.includes("Quality")) { if(this.props.auth && !this.props.auth.isAuthenticated()) hasThumb = []; }
-               else if(access.includes("Open")) hasCopyR = "copyleft"
-               //if(access.includes("Restricted")) { hasCopyR = "restricted"; hasThumb = []; }
-            } 
+            loggergen.log("access",access,quality)
+             
 
             if(quality === "0") {
                hasCopyR = "quality"
