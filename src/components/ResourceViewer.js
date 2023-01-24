@@ -6440,10 +6440,15 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                         if(label) { lang = label["lang"] ; if(!pageLang) pageLang = lang }
                         if(label) { label = label["value"]; pageVal += " "+label ; }
                         if(label && this.props.highlight && this.props.highlight.key) { label = highlight(label,kw.map(k => k.replace(/(.)/g,"$1\\n?")),null,false,true); current.push(label); }
-                        else if(label) label = label.split(/[\n\r]/).map(e =>(e?[e,<br/>]:[]))
+                        else if(label) { 
+                           label = label.split(/[\n\r]/)
+                           label = label.map( (e,i) =>(e?[e,i < label.length-1?<br/>:null]:[])).filter(e => e)
+                        }
                         //label = f
                         let size = this.state.etextSize
-                        //console.log("page:",pageVal,e,current)
+
+                        //console.log("page:",e.seq,pageVal,e,current)
+                        
                         if(lang === "bo") { size += 0.4 ; }
                         return ([<span lang={lang} {...this.state.etextSize?{style:{ fontSize:size+"em", lineHeight:(size * 1.0)+"em" }}:{}}>{label}</span>])})}
                         {this.hoverMenu(bdo+"EtextHasPage",{value:pageVal,lang:pageLang,start:e.start,end:e.end},current)}
