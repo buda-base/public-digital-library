@@ -2609,7 +2609,7 @@ async function startSearch(keyword,language,datatype,sourcetype,dontGetDT,inEtex
 
       let newMeta = {}
 
-      if(["Work","Instance","Scan"].includes(datatype[0])) addMeta(keyword,language,data,datatype[0],result.tree,undefined,undefined,undefined,result.genres);      
+      if(["Etext","Work","Instance","Scan"].includes(datatype[0]) && result.genres && result.tree) addMeta(keyword,language,data,datatype[0],result.tree,undefined,undefined,undefined,result.genres);      
       else addMeta(keyword,language,data,datatype[0]);      
 
       /* // deprecated

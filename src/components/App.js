@@ -4107,7 +4107,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          else if(access.includes("Open")) hasCopyR = "copyleft"
          //if(access.includes("Restricted")) { hasCopyR = "restricted"; hasThumb = []; }
       }
-      
+
       let hasThumb = allProps.filter(a => a.type && a.type.startsWith(tmp+"thumbnailIIIFSe")), hasCopyR, viewUrl,access, quality
       if(hasThumb.length) { 
          hasThumb = hasThumb[0].value 
@@ -4176,7 +4176,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
          if(bestM.length) { 
             endC = bestM[0].endChar
-            bestM = "?startChar="+(startC = bestM[0].startChar) /*+"-"+bestM[0].endChar*/ +"&keyword="+this.props.keyword+"@"+this.props.language+"#open-viewer"
+            bestM = "?startChar="+((startC = bestM[0].startChar) - 3000) /*+"-"+bestM[0].endChar*/ +"&keyword="+this.props.keyword+"@"+this.props.language+"#open-viewer"
          }
          else bestM = ""
 
