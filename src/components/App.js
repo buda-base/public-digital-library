@@ -4176,7 +4176,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
          if(bestM.length) { 
             endC = bestM[0].endChar
-            bestM = "?startChar="+((startC = bestM[0].startChar) - 3000) /*+"-"+bestM[0].endChar*/ +"&keyword="+this.props.keyword+"@"+this.props.language+"#open-viewer"
+            bestM = "?startChar="+((startC = bestM[0].startChar) - 1000) /*+"-"+bestM[0].endChar*/ +"&keyword="+this.props.keyword+"@"+this.props.language+"#open-viewer"
          }
          else bestM = ""
 
