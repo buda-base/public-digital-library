@@ -6698,13 +6698,13 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          "Place": [ "popu", "closestM", "placeN" ],  
          "WorkInstance": [ "workT", "yearP" ],  
          "Instance": [ "popu", "closestM", "title", "yearP" ],  
-         "Etext": [ "closestM", "numberMC" ],  
+         "Etext": [ "title", "closestM", "numberMC" ],  
          "Product": [ "closestM", "title" ],  
          "Scan": (!this.props.latest?["popu", "closestM", "title", "yearP"]:["lastS", "title"]) //.map(m => I18n.t("sort."+m)),
       }
 
       let sortByList = allSortByLists[this.state.filters.datatype[0]]
-      if(sortByList && (this.props.static || !this.props.language || this.props.language == "-")) sortByList = sortByList.filter(s => s != "closestM")
+      if(sortByList && (this.props.static || !this.props.language || this.props.language == "-")) sortByList = sortByList.filter(s => !["closestM", "numberMC"].includes(s))
 
       let inEtext 
       if(this.props.searches && this.props.searches[this.state.filters.datatype[0]] && this.props.searches[this.state.filters.datatype[0]][this.props.keyword+"@"+this.props.language] && this.props.searches[this.state.filters.datatype[0]][this.props.keyword+"@"+this.props.language].inEtext) {
