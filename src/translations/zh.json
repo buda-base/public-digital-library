@@ -647,7 +647,8 @@
       "firstP": "First page",
       "lastP": "Last page",
       "openIA": "Open on Internet Archive",
-      "openW":"Open Work"
+      "openW":"Open Work",
+      "fullR":"Full record"
    },
    "mirador": {
       "return": "回到BUDA",

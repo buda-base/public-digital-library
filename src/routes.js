@@ -458,7 +458,7 @@ const makeMainRoutes = () => {
                            let get = qs.parse(history.location.search)
                            if(get.part && get.part !== IRI) get.root = IRI
                            store.dispatch(initiateApp(get,IRI));                     
-                           return (<ResourceViewerContainer  auth={auth} history={history} IRI={IRI} simple={true} propid={get.for}  onlyView={get.view}/> )
+                           return (<ResourceViewerContainer  auth={auth} history={history} IRI={IRI} preview={true} simple={true} propid={get.for}  onlyView={get.view}/> )
                            }}/>
                         <Route render={(props) => { return <Redirect404  history={history}  auth={auth}/> }}/>
                         <Route path="/scripts/" onEnter={() => window.location.reload(true)} />
