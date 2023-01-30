@@ -3168,7 +3168,7 @@ class ResourceViewer extends Component<Props,State>
                                                 
                   } } data-info={info}>{info}</a>
                }
-               else link = <Link className={"urilink prefLabel " } to={"/"+show+"/"+uri}>{info}</Link>
+               else link = <Link target="_blank" className={"urilink prefLabel " } to={"/"+show+"/"+uri}>{info}</Link>
 
                if(noLink) link = info
 
@@ -6595,11 +6595,15 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                         if(label) { lang = label["lang"] ; if(!pageLang) pageLang = lang }
                         if(label) { label = label["value"]; pageVal += " "+label ; chunkVal = label }
                         if(label && this.props.highlight && this.props.highlight.key) { label = highlight(label,kw.map(k => k.replace(/(.)/g,"$1\\n?")),null,false,true); current.push(label); }
-                        else if(label) label = label.split(/[\n\r]/).map(e =>(e?[e,<br/>]:[]))                        
-
+                        else if(label) { 
+                           label = label.split(/[\n\r]/)
+                           label = label.map( (e,i) =>(e?[e,i < label.length-1?<br/>:null]:[])).filter(e => e)
+                        }
                         //label = f
                         let size = this.state.etextSize
-                        //console.log("page:",pageVal,e,current)
+
+                        //console.log("page:",e.seq,pageVal,e,current)
+                        
                         if(lang === "bo") { size += 0.4 ; }
                         return ([<span lang={lang} {...this.state.etextSize?{style:{ fontSize:size+"em", lineHeight:(size * 1.0)+"em" }}:{}}>{label}</span>])})}
                         {this.hoverMenu(bdo+"EtextHasPage",{value:pageVal,lang:pageLang,start:e.start,end:e.end},current)}
@@ -9003,6 +9007,8 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          if(!serial) serial = this.getResourceElem(bdo+"collectionMember");
          if(!serial) serial = this.getResourceElem(bdo+"corporationHasMember");
          
+         const isEtextCollection = serial && !serial.some(k => k.value?.includes("/resource/W")) ;
+
          //loggergen.log("serial:",serial)
 
          createdBy = Object.keys(this.props.assocResources).map( (k,i) => {
@@ -9062,7 +9068,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
             }
             return ( 
                <div ref={this._refs["crea-"+i]}>
-                  <Link to={"/show/"+s}><div class={"header"+(thumb?" thumb":"") + (_T === "Product"?" instance":"")} style={{backgroundImage:"url("+thumbUrl+")"}}></div></Link>
+                  <Link to={"/show/"+s}><div class={"header"+(thumb?" thumb":"") + (_T === "Product"?(isEtextCollection?" etext":" instance"):"")} style={{backgroundImage:"url("+thumbUrl+")"}}></div></Link>
                   <div><Link to={"/show/"+s}><span {...label.lang?{lang:label.lang}:{}}>{ label.value }</span></Link>{ label.lang && this.tooltip(label.lang) }</div>
                   {/* <Link to={"/show/"+s}>{I18n.t("misc.readM")}</Link> */}
                </div>
@@ -9076,7 +9082,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
             } else if(_T === "Place" || serial && _T === "Work") {
                searchUrl += "&t=Instance"+(this.props.useDLD?"&f=inDLD,inc,tmp:available":"")
             } else if( _T === "Product") {
-               searchUrl += "&t=Scan"+(this.props.useDLD?"&f=inDLD,inc,tmp:available":"")
+               searchUrl += "&t="+(isEtextCollection?"Etext":"Scan")+(this.props.useDLD?"&f=inDLD,inc,tmp:available":"")
             } else if(_T === "Corporation") {
                searchUrl += "&t=Person"
             } else {
@@ -9089,7 +9095,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
       }
 
       let hasRel = ((related && related.length > 0)||(createdBy && createdBy.length > 0))
-      if((!hasRel || this.state.relatedTabAll) && !["Instance","Images","Etext"].includes(_T)) {
+      if(!this.props.preview && (!hasRel || this.state.relatedTabAll) && !["Instance","Images","Etext"].includes(_T)) {
          if(this.props.assocResources && this.props.config &&  !this.props.assocTypes) this.props.onGetAssocTypes(this.props.IRI, "assocTypes")
       }  
       
@@ -9420,7 +9426,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          let scrollRel = (ev,next,smooth) => { 
             let rel = $(".resource .data.related > div:first-child > div:last-child") 
             let div = rel.find(".rel-or-crea > div:first-child")
-            let nb = Math.floor(rel.width()/(div.width()+Number(div.css("margin-right").replace(/[^0-9]+/g,"")))) // 4 = default in desktop
+            let nb = Math.floor(rel.width()/(div.width()+Number((""+div.css("margin-right")).replace(/[^0-9]+/g,"")))) // 4 = default in desktop
             //console.log("rel:",nb,rel,div,next,ev)
             let idx = !this.state.relatedTab&&related.length?"rel":"crea"
             let max = !this.state.relatedTab&&related.length?related.length:createdBy.length
@@ -9606,7 +9612,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          <div class={isMirador?"H100vh OF0":""}>
             { ["Images","Instance"].includes(_T) && <abbr class="unapi-id" title={this.props.IRI}></abbr> }
             { infoPanelR }
-            <div {...searchUrl?{"data-searchUrl":searchUrl}:{}} className={"resource "+hasTabs+getEntiType(this.props.IRI).toLowerCase() + (this.props.simple?" simple":"") /*+(!this.props.portraitPopupClosed?" portrait-warn-on":"")*/} {...this.props.simple?{onClick:sendMsg}:{}}>                              
+            <div {...searchUrl?{"data-searchUrl":searchUrl}:{}} className={"resource "+hasTabs+getEntiType(this.props.IRI).toLowerCase() + (this.props.simple?" simple":"") + (this.props.preview?" preview":"") /*+(!this.props.portraitPopupClosed?" portrait-warn-on":"")*/} {...this.props.simple?{onClick:sendMsg}:{}}>                              
                {searchUrl && <div class="ariane">
                   <Link to={fromStaticRoute?searchUrl:"/search?"+searchUrl} onClick={(ev) => {
                      this.props.onLoading("search",true)                     
@@ -9656,6 +9662,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                      {inTitle}
                      {dates}
                      { ( _T === "Person" && createdBy && createdBy.length > 0 ) && <div class="browse-by"><Link to={"/search?r="+this.props.IRI+"&t=Work"}><img src="/icons/sidebar/work_white.svg"/>{I18n.t("resource.assoc")}</Link></div> }
+                     { this.props.preview && <a href={"/show/"+this.props.IRI} target="_blank">{I18n.t("resource.fullR")}<img src="/icons/link-out.svg"/></a>}
                   </div>
                   { _T !== "Etext" && this.renderQuality() }
                   { _T === "Etext" && this.renderEtextAccess(etextAccessError) }
@@ -9665,7 +9672,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   { theDataTop }
                   <div class="data" id="perma">{ this.perma_menu(pdfLink,monoVol,fairUse,kZprop.filter(k => k.startsWith(adm+"seeOther")))  }</div>
                   { theDataBot }
-                  { ( /*hasRel &&*/ this.props.assocResources && !["Instance","Images","Etext"].includes(_T)) &&
+                  { ( /*hasRel &&*/ !this.props.preview && this.props.assocResources && !["Instance","Images","Etext"].includes(_T)) &&
                      <div class="data related" id="resources" data-all={all}>
                         <MySwipeable scrollRel={scrollRel}>
                            <div><h2>{I18n.t(true || _T=== "Place"||_T==="Corporation"?"index.relatedR":(_T==="Product"?"index.relatedM":(_T==="Work"&&serial?"index.relatedS":"index.related")))}</h2>{/* ( ( (this.state.relatedTabAll||!related.length&&!createdBy.length)&&t1) || related && related.length > 4 || createdBy && createdBy.length > 4) && <Link to={(this.state.relatedTabAll||!related.length&&!createdBy.length)&&t1?t1:("/search?t="+(_T==="Corporation"&&(this.state.relatedTab||!related.length)?"Person":(_T==="Place"&&this.state.relatedTab?"Instance":(_T==="Product"?"Scan":"Work")))+"&r="+this.props.IRI)}>{I18n.t("misc.seeA")}</Link> */}</div>
@@ -9693,7 +9700,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                            }
                         </MySwipeable>
                         { 
-                           (!this.state.relatedTab && !this.state.relatedTabAll && related.length > 4 || this.state.relatedTab && createdBy.length > 4 || !related.length && createdBy.length > 4) &&
+                           (!this.state.relatedTab && !this.state.relatedTabAll && related.length > 4 || this.state.relatedTab && createdBy.length > 4 || !this.state.relatedTabAll && !related.length && createdBy.length > 4) &&
                            <div id="related-nav" >
                               <span class={!this.state.relatedTab&&related.length?(this.state.irel>0?"on":""):(this.state.icrea>0?"on":"")} onClick={(ev) => scrollRel(ev)}><img src="/icons/g.svg"/></span>
                               <span class={navNext?"on":""} onClick={(ev) => scrollRel(ev,true)}><img src="/icons/d.svg"/></span>

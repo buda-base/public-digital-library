@@ -679,7 +679,8 @@
       "lastP": "Last page",
       "openIA": "Open on Internet Archive",
       "redirecting": "Redirecting...",
-      "openW":"Open Work"
+      "openW":"Open Work",
+      "fullR":"Full record"
    },
    "mirador": {
       "return": "return to BUDA",

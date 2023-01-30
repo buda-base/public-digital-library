@@ -430,12 +430,35 @@ const makeMainRoutes = () => {
                            return (<ResourceViewerContainer  auth={auth} history={history} IRI={IRI}/> )
                         }}/>
 
+                        <Route path="/preview/:IRI" render={(props) => {
+                           let IRI = props.match.params.IRI
+                           
+                           // #766
+                           if(IRI?.includes(":")) {
+                              if(IRI.match(RIDregexp)) {
+                                 IRI = IRI.split(":")
+                                 if(IRI[1] != IRI[1].toUpperCase()) {
+                                    IRI = IRI[0]+":"+IRI[1].toUpperCase()
+                                    return <Redirect404 history={history} redirecting={" "} message={" "} delay={150} to={"/show/"+IRI+history.location.search+history.location.hash} />
+                                 } else {
+                                    IRI = props.match.params.IRI
+                                 }
+                              }
+                           }
+
+                           let get = qs.parse(history.location.search)
+                           if(get.part && get.part !== IRI) get.root = IRI
+                           
+                           store.dispatch(initiateApp({...get, preview: true},IRI));
+                        
+                           return (<ResourceViewerContainer  auth={auth} history={history} IRI={IRI} preview={true} />)
+                        }}/>
                         <Route path="/simple/:IRI" render={(props) => {
                            let IRI = props.match.params.IRI
                            let get = qs.parse(history.location.search)
                            if(get.part && get.part !== IRI) get.root = IRI
                            store.dispatch(initiateApp(get,IRI));                     
-                           return (<ResourceViewerContainer  auth={auth} history={history} IRI={IRI} simple={true} propid={get.for}  onlyView={get.view}/> )
+                           return (<ResourceViewerContainer  auth={auth} history={history} IRI={IRI} preview={true} simple={true} propid={get.for}  onlyView={get.view}/> )
                            }}/>
                         <Route render={(props) => { return <Redirect404  history={history}  auth={auth}/> }}/>
                         <Route path="/scripts/" onEnter={() => window.location.reload(true)} />

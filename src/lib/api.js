@@ -587,13 +587,12 @@ export default class API {
 
    }
 
-    async loadResource(IRI:string): Promise<string>
+    async loadResource(IRI:string, preview = false): Promise<string>
     {
-
          //let resource =  JSON.parse(await this.getURLContents(this._resourcePath(IRI),false));try {
          try {
             
-            let query = "ResInfo-SameAs"
+            let query = preview ? "ResInfo-preview":"ResInfo-SameAs"            
             //let get = qs.parse(history.location.search)
             //if(get["cw"] === "none") query = "ResInfo"
 
@@ -1033,7 +1032,10 @@ export default class API {
                               ? dtyp
                               : (styp=="Product" && dtyp=="Scan"
                                  ? "IInstance"
-                                 : "SimpleType"
+                                 : (styp=="Product" && dtyp=="Etext" 
+                                    ? "EInstance"
+                                    : "SimpleType"
+                                 )
                               )
                            )+"s"
                         } 
@@ -1276,8 +1278,8 @@ export default class API {
 
             if(data && data.results && data.results.bindings) {
                return data.results.bindings.reduce( (acc,t) => {
-                  if(t.type && t.count && [bdo+"Work",bdo+"Instance",bdo+"Person",bdo+"Topic",bdo+"Role",bdo+"Corporation",bdo+"Place",bdo+"Lineage",bdo+"Chunk"].indexOf(t.type.value) !== -1) 
-                     return { ...acc, [t.type.value.endsWith("Chunk")?bdo+"Etext":t.type.value]:t.count.value}
+                  if(t.type && t.count && [bdo+"Work",bdo+"Instance",bdo+"Person",bdo+"Topic",bdo+"Role",bdo+"Corporation",bdo+"Place",bdo+"Lineage",bdo+"Chunk", bdo+"EtextInstance"].indexOf(t.type.value) !== -1) 
+                     return { ...acc, [t.type.value.endsWith("Chunk")||t.type.value.endsWith("EtextInstance")?bdo+"Etext":t.type.value]:t.count.value}
                   return acc
                },{})
             }

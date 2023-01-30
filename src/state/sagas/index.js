@@ -225,7 +225,7 @@ async function initiateApp(params,iri,myprops,route,isAuthCallback) {
 
             // TODO do not load resource again
 
-            if(!Etext) res = await api.loadResource(iri)
+            if(!Etext) res = await api.loadResource(iri, params.preview)
             else res = await api.loadEtextInfo(iri)         
          }
          catch(e){
@@ -392,7 +392,7 @@ if(params && params.osearch) {
 
 if(params && params.t /*&& !params.i */) {
    //console.log("uSb:",params)
-   store.dispatch(uiActions.updateSortBy(params.s?params.s.toLowerCase():(params.i?"year of publication reverse":(params.t==="Etext"?"closest matches":(params.t==="Scan"?(route ==="latest"?"release date":"popularity"):"popularity"))),params.t))
+   store.dispatch(uiActions.updateSortBy(params.s?params.s.toLowerCase():(params.i?"year of publication reverse":(params.t==="Etext"?(!params.lg?"title":"closest matches"):(params.t==="Scan"?(route ==="latest"?"release date":"popularity"):"popularity"))),params.t))
 }
 
 if(params && params.i) {
@@ -2609,7 +2609,7 @@ async function startSearch(keyword,language,datatype,sourcetype,dontGetDT,inEtex
 
       let newMeta = {}
 
-      if(["Work","Instance","Scan"].includes(datatype[0])) addMeta(keyword,language,data,datatype[0],result.tree,undefined,undefined,undefined,result.genres);      
+      if(["Etext","Work","Instance","Scan"].includes(datatype[0]) && result.genres && result.tree) addMeta(keyword,language,data,datatype[0],result.tree,undefined,undefined,undefined,result.genres);      
       else addMeta(keyword,language,data,datatype[0]);      
 
       /* // deprecated

@@ -4100,6 +4100,19 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       if(enType === "instance" && (!hasImage || !hasImage.length)) hasImage = false
       else hasImage = true
 
+      access = allProps.filter(a => [tmp+"hasReproAccess", adm+"access", tmp+"access"].includes(a.type))
+      if(access.length) access = access[0].value            
+      
+      if(access && access.length) {
+         hasCopyR = "unknown"            
+         if(access.includes("FairUse")) hasCopyR = "fair_use"
+         else if(access.includes("Temporarily")) { hasCopyR = "temporarily";  hasThumb = []; }
+         else if(access.includes("Sealed")) { hasCopyR = "sealed";  hasThumb = []; }
+         else if(access.includes("Quality")) { if(this.props.auth && !this.props.auth.isAuthenticated()) hasThumb = []; }
+         else if(access.includes("Open")) hasCopyR = "copyleft"
+         //if(access.includes("Restricted")) { hasCopyR = "restricted"; hasThumb = []; }
+      }
+
       let hasThumb = allProps.filter(a => a.type && a.type.startsWith(tmp+"thumbnailIIIFSe")), hasCopyR, viewUrl,access, quality
       if(hasThumb.length) { 
          hasThumb = hasThumb[0].value 
@@ -4116,8 +4129,6 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             else if(viewUrl) viewUrl = fullUri(viewUrl)
 
 
-            access = allProps.filter(a => [tmp+"hasReproAccess", adm+"access", tmp+"access"].includes(a.type))
-            if(access.length) access = access[0].value            
             
             if(this.props.config && this.props.config.iiif && this.props.config.iiif.endpoints[this.props.config.iiif.index].match(/iiif-dev/)) hasThumb = hasThumb.replace(/iiif([.]bdrc[.]io)/, "iiif-dev$1")
             if(!hasThumb.match(/[/]default[.][^.]+$/)) hasThumb += "/full/"+(hasThumb.includes(".bdrc.io/")?"!2000,145":",145")+"/0/default.jpg" 
@@ -4126,17 +4137,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             quality = allProps.filter(a => [ bdo+"qualityGrade", tmp+"hasReproQuality" ].includes(a.type))
             if(quality.length) quality = quality[0].value            
 
-            //loggergen.log("access",access,quality)
-
-            if(access && access.length) {
-               hasCopyR = "unknown"            
-               if(access.includes("FairUse")) hasCopyR = "fair_use"
-               else if(access.includes("Temporarily")) { hasCopyR = "temporarily";  hasThumb = []; }
-               else if(access.includes("Sealed")) { hasCopyR = "sealed";  hasThumb = []; }
-               else if(access.includes("Quality")) { if(this.props.auth && !this.props.auth.isAuthenticated()) hasThumb = []; }
-               else if(access.includes("Open")) hasCopyR = "copyleft"
-               //if(access.includes("Restricted")) { hasCopyR = "restricted"; hasThumb = []; }
-            } 
+            loggergen.log("access",access,quality)
+             
 
             if(quality === "0") {
                hasCopyR = "quality"
@@ -4179,7 +4181,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
          if(bestM.length) { 
             endC = bestM[0].endChar
-            bestM = "?startChar="+(startC = bestM[0].startChar) /*+"-"+bestM[0].endChar*/ +"&keyword="+this.props.keyword+"@"+this.props.language+"#open-viewer"
+            bestM = "?startChar="+((startC = bestM[0].startChar) - 1000) /*+"-"+bestM[0].endChar*/ +"&keyword="+this.props.keyword+"@"+this.props.language+"#open-viewer"
          }
          else bestM = ""
 
@@ -5628,13 +5630,16 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             if(other) other = other.datatype
             //loggergen.log("other:",other)
             if(other) other = Object.keys(other).filter(k => k !== "Any" && k !== t && other[k] !== 0 && searchTypes.includes(k))
-            loggergen.log("other:",other)
+            //loggergen.log("other:",other, this.props.loading, this.props.datatypes, this.props.datatypes?.hash)
             
             //if(other && other.length) 
             if(this.props.keyword==="tmp:subscriptions") {
                message.push(<Typography className="no-result"><span class="noR">Empty list of subscriptions<br/>(work in progress)</span></Typography>)
-            } else if(this.props.loading && this.state.filters.datatype[0] !== "Any" || !this.props.datatypes || !this.props.datatypes.hash) {
-               message.push(<Typography className="loading"></Typography>)
+            // - was related to #794
+            // - #791 fix blank page when no results
+            // - needed to prevent displaying "no result" while loading...
+            } else if(this.props.loading && this.state.filters.datatype[0] !== "Any" || !this.props.datatypes?.hash) {
+              message.push(<Typography className="loading"></Typography>)
             } else {
                message.push(<Typography className="no-result">
                   { lang && I18n.t("search.filters.noresult"+(this.props.keyword=="-"?"-":"s"),{ 
@@ -6698,13 +6703,13 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          "Place": [ "popu", "closestM", "placeN" ],  
          "WorkInstance": [ "workT", "yearP" ],  
          "Instance": [ "popu", "closestM", "title", "yearP" ],  
-         "Etext": [ "closestM", "numberMC" ],  
+         "Etext": [ "title", "closestM", "numberMC" ],  
          "Product": [ "closestM", "title" ],  
          "Scan": (!this.props.latest?["popu", "closestM", "title", "yearP"]:["lastS", "title"]) //.map(m => I18n.t("sort."+m)),
       }
 
       let sortByList = allSortByLists[this.state.filters.datatype[0]]
-      if(sortByList && (this.props.static || !this.props.language || this.props.language == "-")) sortByList = sortByList.filter(s => s != "closestM")
+      if(sortByList && (this.props.static || !this.props.language || this.props.language == "-")) sortByList = sortByList.filter(s => !["closestM", "numberMC"].includes(s))
 
       let inEtext 
       if(this.props.searches && this.props.searches[this.state.filters.datatype[0]] && this.props.searches[this.state.filters.datatype[0]][this.props.keyword+"@"+this.props.language] && this.props.searches[this.state.filters.datatype[0]][this.props.keyword+"@"+this.props.language].inEtext) {
@@ -7411,7 +7416,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      <Visibility style={{verticalAlign:"-4px",marginRight:"8px"}}/>
                      <p class="widget-title" >{I18n.t("search.toggleM")}</p>
                   </div> }
-                  { this.state.filters.datatype.includes("Etext") && <div class="widget-header etextBestM" /*style={{marginRight:!metaK.includes("hasMatch")?"auto":0}}*/ onClick={
+                  { this.state.filters.datatype.includes("Etext") && this.props.language && <div class="widget-header etextBestM" /*style={{marginRight:!metaK.includes("hasMatch")?"auto":0}}*/ onClick={
                            () => this.setState({repage:true, collapse:{...this.state.collapse,"etextOtherM":!this.state.collapse.etextOtherM}})
                      }>{ this.state.collapse.etextOtherM 
                         ? <VisibilityOff style={{verticalAlign:"-4px",marginRight:"8px"}}/>
