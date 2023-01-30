@@ -580,13 +580,12 @@ export default class API {
 
    }
 
-    async loadResource(IRI:string): Promise<string>
+    async loadResource(IRI:string, preview = false): Promise<string>
     {
-
          //let resource =  JSON.parse(await this.getURLContents(this._resourcePath(IRI),false));try {
          try {
             
-            let query = "ResInfo-SameAs"
+            let query = preview ? "ResInfo-preview":"ResInfo-SameAs"            
             //let get = qs.parse(history.location.search)
             //if(get["cw"] === "none") query = "ResInfo"
 

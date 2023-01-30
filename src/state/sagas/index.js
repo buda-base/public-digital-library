@@ -225,7 +225,7 @@ async function initiateApp(params,iri,myprops,route,isAuthCallback) {
 
             // TODO do not load resource again
 
-            if(!Etext) res = await api.loadResource(iri)
+            if(!Etext) res = await api.loadResource(iri, params.preview)
             else res = await api.loadEtextInfo(iri)         
          }
          catch(e){
