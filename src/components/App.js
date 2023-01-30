@@ -89,7 +89,7 @@ import axios from "axios"
 
 import LanguageSidePaneContainer from '../containers/LanguageSidePaneContainer';
 import ResourceViewerContainer from '../containers/ResourceViewerContainer';
-import {getOntoLabel,provImg as img,providers} from './ResourceViewer';
+import {getOntoLabel,provImg as img,providers,provNoLogo as nologo} from './ResourceViewer';
 import {humanizeEDTF, locales} from './ResourceViewer';
 import {getQueryParam} from './GuidedSearch';
 import {getEntiType, logError, staticQueries} from '../lib/api';
@@ -390,6 +390,92 @@ export const langProfile = [
 ]
 */
 
+
+export const renderBanner = (that, infoPanel, isResourcePage) => <div class={"infoPanel "+(isResourcePage?"inRes":"")}>{ infoPanel.map(m => {
+   let lab = getLangLabel(that,tmp+"bannerMessage",m.text) 
+   let icon 
+
+   //console.log("m:",m,lab,m.text,that.props.locale,that)
+   
+   if(m.severity=="info") icon = <InfoIcon className="info"/>
+   else if(m.severity=="warning") icon = <WarnIcon className="warn"/>
+   else if(m.severity=="error") icon = <ErrorIconC className="error"/>
+
+   if(lab) {      
+
+      // handle links
+      let link,img ;
+      let content = [], str = lab.value
+      while(link = str.match(/([^!]|^|\n)(\[([^\]]+?)\]\(([^)]+?)\))/m)) {
+         let arr = str.split(link[2])
+         content = content.concat([ arr[0], <a href={link[4]} target="_blank">{link[3]}</a> ])
+         str = arr.slice(1).join(" ")
+      }
+      if(str) content.push(str)
+
+      // handle images
+      let sav = content
+      content = []
+      sav.map(c => {
+         //console.log("c:",c)
+         if(c?.match) { 
+            while(img = c.match(/!\[([^\]]+)\]\(([^)]+)\)/)) {
+               let arr = c.split(img[0])
+               content = content.concat([ arr[0], <img src={img[2]} alt={img[1]}/> ])
+               c = arr.slice(1).join(" ")            
+            } 
+            if(c) content.push(c)
+         }
+         else {
+            content.push(c)
+         }
+      })
+
+      // check if popup has it recently been closed 
+      let hidden = that.state.collapse?.msgPopup 
+      if(m.popup) {
+         let showEveryNDay = 30
+         if(m.showEveryNDay != undefined) showEveryNDay = m.showEveryNDay 
+         const wasClosed = localStorage.getItem("msg-popup-closed")
+         //console.log("sENd:",showEveryNDay,m.showEveryNDay,wasClosed,Date.now())         
+         if(!hidden && (!wasClosed || Date.now() - wasClosed > showEveryNDay * 24 * 3600 * 1000)) {
+            //console.log("show!",hidden) 
+         } else if(!hidden) {
+            //console.log("hide!") 
+            that.setState({ collapse: { ...that.state.collapse, msgPopup: true }})
+            hidden = true
+         }
+      }
+
+      const closePopup = (ev) => {
+         that.setState({collapse:{ ...that.state.collapse, msgPopup: true }})
+         localStorage.setItem("msg-popup-closed", Date.now())
+      }
+      
+      // layout
+      if(!m.popup) return <p>{icon}{content}</p>
+      else if(!hidden) return <div class="msg-popup">
+         <div class="back" onClick={closePopup}></div>
+         <div class="front">
+            <Close className="close" onClick={closePopup}/>
+            { icon && <p>{icon}</p> }
+            <p>{content.map(c => { 
+               // handle newlines
+               if(c?.match && c.match(/\n/)) {
+                  const p = c.split("\n")
+                  return p.map( (d,i) => {
+                     if(i < p.length - 1) return <>{d}<br/></>
+                     else return d
+                  })
+               }
+               else return c
+            })}</p>
+         </div>
+      </div>
+   }
+}) }</div>
+
+
 let _GA = false ;
 export function report_GA(config,location) {
 
@@ -519,7 +605,9 @@ const preferUIlang = [ bdo+"placeType", bdo+"workIsAbout", bdo+"workGenre", bdo+
    bdo+"binding",
    bdo+"tradition", tmp+"hasRole",
    adm+"logWho",
-   bdo+"creationEventType" ]
+   bdo+"creationEventType",
+   tmp+"bannerMessage" 
+]
 
 export function getLangLabel(that:{},prop:string="",labels:[],proplang:boolean=false,uilang:boolean=false,otherLabels:[],dontUseUI:boolean=false)
 {
@@ -933,7 +1021,7 @@ export function top_right_menu(that,etextTitle,backUrl,etextres)
       return (<>
       {!that.props.portraitPopupClosed && portrait}
       <div class={"mobile-button top"+(!that.state.collapse.navMenu?" off":" on")} onClick={()=>that.setState({collapse:{...that.state.collapse,navMenu:!that.state.collapse.navMenu}})}><img src="/icons/burger.svg" /></div>
-      <div class={"nav etext-nav"+(onZhMirror?" zhMirror":"")+(that.state.collapse.navMenu?" on":"")}>
+      <div class={"nav etext-nav"+(onZhMirror?" zhMirror":"")+(that.state.collapse.navMenu?" on":"") +(that.props.config?.msg?.some(m => m.popup)&&!that.state.collapse?.msgPopup?" msgPopupOn":"") }>
          {uiLangPopup}
          <div>
             {logo}
@@ -1063,7 +1151,9 @@ export function top_right_menu(that,etextTitle,backUrl,etextres)
       return ([
       !that.props.portraitPopupClosed? portrait:null,
       <div class={"mobile-button top"+(!that.state.collapse.navMenu?" off":" on")} onClick={() => that.setState({collapse:{...that.state.collapse,navMenu:!that.state.collapse.navMenu}})}><img src="/icons/burger.svg" /></div>,
-      <div class={"nav"+(onZhMirror?" zhMirror":"")+ (that.state.collapse.navMenu?" on":"")+(onKhmerServer||onKhmerUrl?" khmerServer":"")}>
+      <div class={"nav"+(onZhMirror?" zhMirror":"")+ (that.state.collapse.navMenu?" on":"")+(onKhmerServer||onKhmerUrl?" khmerServer":"")
+               +(that.props.config?.msg?.some(m => m.popup)&&!that.state.collapse?.msgPopup?" msgPopupOn":"")
+         }>
          {uiLangPopup}
           <div>
          {logo}
@@ -3650,7 +3740,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                if(val === exclude || translit?.value?.replace(/_/g," ").replace(/[\/། ]+$|[↦↤]/g,"") === exclude?.replace(/_/g," ").replace(/[\/། ]+$|[↦↤]/g,"")) continue
                let lang = i["xml:lang"]
 
-               if((""+val).match(/^[0-9-]+T[0-9:.]+Z+$/)) {
+               if((""+val).match(/^[0-9-]+T[0-9:.]+(Z+|[+][0-9:]+)$/)) {
                   //val.replace(/[ZT]/g," ").replace(/:[0-9][0-9][.].*?$/,"")
                   
                   let code = "en-US"
@@ -4005,6 +4095,19 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       if(enType === "instance" && (!hasImage || !hasImage.length)) hasImage = false
       else hasImage = true
 
+      access = allProps.filter(a => [tmp+"hasReproAccess", adm+"access", tmp+"access"].includes(a.type))
+      if(access.length) access = access[0].value            
+      
+      if(access && access.length) {
+         hasCopyR = "unknown"            
+         if(access.includes("FairUse")) hasCopyR = "fair_use"
+         else if(access.includes("Temporarily")) { hasCopyR = "temporarily";  hasThumb = []; }
+         else if(access.includes("Sealed")) { hasCopyR = "sealed";  hasThumb = []; }
+         else if(access.includes("Quality")) { if(this.props.auth && !this.props.auth.isAuthenticated()) hasThumb = []; }
+         else if(access.includes("Open")) hasCopyR = "copyleft"
+         //if(access.includes("Restricted")) { hasCopyR = "restricted"; hasThumb = []; }
+      }
+
       let hasThumb = allProps.filter(a => a.type && a.type.startsWith(tmp+"thumbnailIIIFSe")), hasCopyR, viewUrl,access, quality
       if(hasThumb.length) { 
          hasThumb = hasThumb[0].value 
@@ -4021,8 +4124,6 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             else if(viewUrl) viewUrl = fullUri(viewUrl)
 
 
-            access = allProps.filter(a => [tmp+"hasReproAccess", adm+"access", tmp+"access"].includes(a.type))
-            if(access.length) access = access[0].value            
             
             if(this.props.config && this.props.config.iiif && this.props.config.iiif.endpoints[this.props.config.iiif.index].match(/iiif-dev/)) hasThumb = hasThumb.replace(/iiif([.]bdrc[.]io)/, "iiif-dev$1")
             if(!hasThumb.match(/[/]default[.][^.]+$/)) hasThumb += "/full/"+(hasThumb.includes(".bdrc.io/")?"!2000,145":",145")+"/0/default.jpg" 
@@ -4031,17 +4132,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             quality = allProps.filter(a => [ bdo+"qualityGrade", tmp+"hasReproQuality" ].includes(a.type))
             if(quality.length) quality = quality[0].value            
 
-            //loggergen.log("access",access,quality)
-
-            if(access && access.length) {
-               hasCopyR = "unknown"            
-               if(access.includes("FairUse")) hasCopyR = "fair_use"
-               else if(access.includes("Temporarily")) { hasCopyR = "temporarily";  hasThumb = []; }
-               else if(access.includes("Sealed")) { hasCopyR = "sealed";  hasThumb = []; }
-               else if(access.includes("Quality")) { if(this.props.auth && !this.props.auth.isAuthenticated()) hasThumb = []; }
-               else if(access.includes("Open")) hasCopyR = "copyleft"
-               //if(access.includes("Restricted")) { hasCopyR = "restricted"; hasThumb = []; }
-            } 
+            loggergen.log("access",access,quality)
+             
 
             if(quality === "0") {
                hasCopyR = "quality"
@@ -4053,18 +4145,24 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       let orec = allProps.filter(e => e.type === adm+"originalRecord")
 
       let hasProv, prov = allProps.filter(a => a.type === tmp+"provider")
+         
       if(prov && prov.length && this.props.dictionary) prov = this.props.dictionary[prov[0].value]
       if(prov && prov[skos+"prefLabel"] && prov[skos+"prefLabel"]) prov = (""+prov[skos+"prefLabel"].filter(p=>!p.lang || p.lang === "en")[0].value).toLowerCase()
       else prov = false
-      
-      //console.log("prov:",prov)
-
+            
       if(prov) prov = prov.replace(/(^\[ *)|( *\]$)/g,"") // CUDL
       if(prov) prov = prov.replace(/internet archives/g,"ia") 
       if(prov) prov = prov.replace(/library of congress/g,"loc") 
       if(prov) prov = prov.replace(/staatsbibliothek zu berlin/g,"sbb")
       if(prov) prov = prov.replace(/leiden university libraries/g,"lul")
-      if(prov && prov !== "bdrc" && img[prov]) hasProv = <img class={"provImg "+prov+ (orec.length?" oriRec":"")} title={I18n.t("copyright.provided",{provider:providers[prov]})} src={img[prov]}/>
+      if(prov) prov = prov.replace(/.* sat daizōkyō .*/gu,"sat")
+      
+      //console.log("prov:",prov,nologo,nologo[prov])
+
+      if(prov && prov !== "bdrc") { 
+         if(img[prov]) hasProv = <img class={"provImg "+prov+ (orec.length?" oriRec":"")} title={I18n.t("copyright.provided",{provider:providers[prov]})} src={img[prov]}/>
+         else if(nologo[prov]) hasProv = <span class={"provImg "+ prov + (orec.length?" oriRec":"")}  title={I18n.t("copyright.provided",{provider:providers[prov]})} >{nologo[prov]}</span>
+      }
 
 
     
@@ -4078,7 +4176,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
          if(bestM.length) { 
             endC = bestM[0].endChar
-            bestM = "?startChar="+(startC = bestM[0].startChar) /*+"-"+bestM[0].endChar*/ +"&keyword="+this.props.keyword+"@"+this.props.language+"#open-viewer"
+            bestM = "?startChar="+((startC = bestM[0].startChar) - 1000) /*+"-"+bestM[0].endChar*/ +"&keyword="+this.props.keyword+"@"+this.props.language+"#open-viewer"
          }
          else bestM = ""
 
@@ -5527,13 +5625,16 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             if(other) other = other.datatype
             //loggergen.log("other:",other)
             if(other) other = Object.keys(other).filter(k => k !== "Any" && k !== t && other[k] !== 0 && searchTypes.includes(k))
-            loggergen.log("other:",other)
+            //loggergen.log("other:",other, this.props.loading, this.props.datatypes, this.props.datatypes?.hash)
             
             //if(other && other.length) 
             if(this.props.keyword==="tmp:subscriptions") {
                message.push(<Typography className="no-result"><span class="noR">Empty list of subscriptions<br/>(work in progress)</span></Typography>)
-            } else if(this.props.loading && this.state.filters.datatype[0] !== "Any" || !this.props.datatypes || !this.props.datatypes.hash) {
-               message.push(<Typography className="loading"></Typography>)
+            // - was related to #794
+            // - #791 fix blank page when no results
+            // - needed to prevent displaying "no result" while loading...
+            } else if(this.props.loading && this.state.filters.datatype[0] !== "Any" || !this.props.datatypes?.hash) {
+              message.push(<Typography className="loading"></Typography>)
             } else {
                message.push(<Typography className="no-result">
                   { lang && I18n.t("search.filters.noresult"+(this.props.keyword=="-"?"-":"s"),{ 
@@ -6597,13 +6698,13 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          "Place": [ "popu", "closestM", "placeN" ],  
          "WorkInstance": [ "workT", "yearP" ],  
          "Instance": [ "popu", "closestM", "title", "yearP" ],  
-         "Etext": [ "closestM", "numberMC" ],  
+         "Etext": [ "title", "closestM", "numberMC" ],  
          "Product": [ "closestM", "title" ],  
          "Scan": (!this.props.latest?["popu", "closestM", "title", "yearP"]:["lastS", "title"]) //.map(m => I18n.t("sort."+m)),
       }
 
       let sortByList = allSortByLists[this.state.filters.datatype[0]]
-      if(sortByList && (this.props.static || !this.props.language || this.props.language == "-")) sortByList = sortByList.filter(s => s != "closestM")
+      if(sortByList && (this.props.static || !this.props.language || this.props.language == "-")) sortByList = sortByList.filter(s => !["closestM", "numberMC"].includes(s))
 
       let inEtext 
       if(this.props.searches && this.props.searches[this.state.filters.datatype[0]] && this.props.searches[this.state.filters.datatype[0]][this.props.keyword+"@"+this.props.language] && this.props.searches[this.state.filters.datatype[0]][this.props.keyword+"@"+this.props.language].inEtext) {
@@ -6935,27 +7036,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          if(message.length == 0 && !this.props.loading && !this.props.keyword) infoPanelH = this.props.config.msg.filter(m => m.display && m.display.includes("home"))
          else infoPanelR = this.props.config.msg.filter(m => m.display && m.display.includes("search"))
          
-         let rend = (infoPanel) => <div class="infoPanel">{ infoPanel.map(m => {
-            let lab = getLangLabel(this,"",m.text)
-            let icon 
-            
-            if(m.severity=="info") icon = <InfoIcon className="info"/>
-            else if(m.severity=="warning") icon = <WarnIcon className="warn"/>
-            else if(m.severity=="error") icon = <ErrorIconC className="error"/>
-
-            if(lab) {
-               let link ;
-               let content = lab.value
-               if(link = lab.value.match(/\[([^\]]+)\]\(([^)]+)\)(.*?$)/)) {
-                  content = lab.value.split(/\[[^\]]+\]\([^)]+\)/)
-                  content = [ content[0], <a href={link[2]} target="_blank">{link[1]}</a>, link[3] ]
-               } 
-               return <p>{icon}{content}</p>
-            }
-         }) }</div>
-
-         if(infoPanelH && infoPanelH.length) infoPanelH = rend(infoPanelH)
-         if(infoPanelR && infoPanelR.length) infoPanelR = rend(infoPanelR)
+         if(infoPanelH && infoPanelH.length) infoPanelH = renderBanner(this, infoPanelH)
+         if(infoPanelR && infoPanelR.length) infoPanelR = renderBanner(this, infoPanelR)
       }
 
 
@@ -7329,7 +7411,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      <Visibility style={{verticalAlign:"-4px",marginRight:"8px"}}/>
                      <p class="widget-title" >{I18n.t("search.toggleM")}</p>
                   </div> }
-                  { this.state.filters.datatype.includes("Etext") && <div class="widget-header etextBestM" /*style={{marginRight:!metaK.includes("hasMatch")?"auto":0}}*/ onClick={
+                  { this.state.filters.datatype.includes("Etext") && this.props.language && <div class="widget-header etextBestM" /*style={{marginRight:!metaK.includes("hasMatch")?"auto":0}}*/ onClick={
                            () => this.setState({repage:true, collapse:{...this.state.collapse,"etextOtherM":!this.state.collapse.etextOtherM}})
                      }>{ this.state.collapse.etextOtherM 
                         ? <VisibilityOff style={{verticalAlign:"-4px",marginRight:"8px"}}/>

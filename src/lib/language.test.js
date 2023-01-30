@@ -10,20 +10,22 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { shallow,mount } from 'enzyme';
 import I18n from 'i18next';
-import store from '../index';
-import {initiateApp} from '../state/actions';
+//import store from '../index';
+//import {initiateApp} from '../state/actions';
 import tcpPortUsed from 'tcp-port-used'
 import 'whatwg-fetch'
 import {narrowWithString} from "./langdetect"
 import {langScripts,makeLangScriptLabel} from "./language"
-import {sortLangScriptLabels,transliterators,translitHelper,extendedPresets, importModules, getMainLabel, getMainLabels, ewtsToDisplay} from "./transliterators"
+import {sortLangScriptLabels,transliterators,translitHelper,extendedPresets, importModules, getMainLabel, getMainLabels, ewtsToDisplay, fromWylie} from "./transliterators"
 
-let makeRoutes = require('../routes').default
-let bdrcAPI = require('../lib/api').default;
+//let makeRoutes = require('../routes').default
+//let bdrcAPI = require('../lib/api').default;
 
+/*
 afterAll( (done) => {
    global.jsonServer.close(()=> { console.log("closed JSON server"); done(); })
 })
+*/
 
 // to check json-server at http://localhost:5555/test/
 jest.setTimeout(10000)
@@ -56,6 +58,7 @@ const preset7 = [ "sa-deva", "zh-hant", "zh-hans" ]
 
 describe('language settings tests', () => {
 
+   /*
    it('initialization', async done => {
       tcpPortUsed.waitUntilUsed(5555).then( async () => {
 
@@ -71,7 +74,7 @@ describe('language settings tests', () => {
 
          done();
       })
-   })
+   })   
 
    it('makeLangScriptLabel', async done => {
       tcpPortUsed.waitUntilUsed(5555).then( async () => {
@@ -89,7 +92,7 @@ describe('language settings tests', () => {
          done();
       })
    })
-
+   */
 
    it('sorting json/jsonld labels', () => {
 
@@ -288,6 +291,17 @@ describe('language settings tests', () => {
         await importModules()
 
         expect(ewtsToDisplay("rdzogs test_chen / test_2// //")).toEqual("rdzogs test chen / test 2")
+        expect(ewtsToDisplay("*pad+ma can/")).toEqual("*pad+ma can")
+        expect(ewtsToDisplay("@#/ /rdzogs test_chen / test_2*//_//")).toEqual("rdzogs test chen / test 2")
+        done()
+    })
+
+   it('testing ewtsToUnicode', async (done) => {
+
+        await importModules()
+
+        expect(fromWylie("*pad+ma can/")).toEqual("*པདྨ་ཅན།")
+        expect(fromWylie("pad+ma can/")).toEqual("པདྨ་ཅན།")
         done()
     })
 

@@ -81,7 +81,9 @@ import { faLanguage } from '@fortawesome/free-solid-svg-icons'
 //import {MapComponent} from './Map';
 import {getEntiType,dPrefix,RISexportPath,staticQueries} from '../lib/api';
 import {numtobo} from '../lib/language';
-import {languages,getLangLabel,top_right_menu,prefixesMap as prefixes,sameAsMap,shortUri,fullUri,highlight,lang_selec,etext_lang_selec,langSelect,searchLangSelec,report_GA,getGDPRconsent,renderDates} from './App';
+import {languages,getLangLabel,top_right_menu,prefixesMap as prefixes,sameAsMap,shortUri,fullUri,
+   highlight,lang_selec,etext_lang_selec,langSelect,searchLangSelec,report_GA,getGDPRconsent,renderDates,
+   renderBanner} from './App';
 import {narrowWithString} from "../lib/langdetect"
 import Popover from '@material-ui/core/Popover';
 import Popper from '@material-ui/core/Popper';
@@ -281,6 +283,10 @@ export const providers = {
    "wd":"Wikidata",
 }
    
+
+export const provNoLogo = {
+   "sat":  "SAT", 
+}
 
 export const provImg = {
    "bdr":  "/logo.svg", 
@@ -561,11 +567,15 @@ let extProperties = {
       //bdo+"authorshipStatement",
       bdo+"itemBDRCHoldingStatement",
       bdo+"numberOfVolumes",
-      "tmp:dimensions",
-      bdo+"bdo:dimensionsStatement",
-      bdo+"bdo:instanceReproductionOf",
+      tmp+"dimensions",
+      tmp+"contentDimensions",
+      bdo+"dimensionsStatement",
+      bdo+"instanceReproductionOf",
       bdo+"note",
       bdo+"instanceHasVolume",
+      bdo+"paginationExtentStatement",
+      bdo+"conditionGrade",
+      bdo+"readabilityGrade"
    ],
    "Person": [,
       bf+"identifiedBy",
@@ -1115,7 +1125,10 @@ class ResourceViewer extends Component<Props,State>
                   this.props.history.push({pathname:"/search",search:get.s?get.s:backTo.replace(/^[^?]+[?]/,"")})   
                }
             } else {
-               if(backTo.startsWith("show")) this.props.history.push({pathname:"/show",search:backTo})
+               if(backTo.startsWith("/show") && backTo.includes("backToOutline=true")) { 
+                  const part = backTo.split("?")
+                  this.props.history.push({pathname:part[0],search:part[1].replace(/.backToOutline=true/,"")})
+               }
                
             }
 
@@ -1855,6 +1868,23 @@ class ResourceViewer extends Component<Props,State>
       }
       else if(h && h[0] && !h[0].value.match(/cm/)) {
          prop[bdo+"dimHeight"] = [ { ...h[0], value:h[0].value+"cm" } ]
+      }
+
+      w = prop[bdo+"contentWidth"]
+      h = prop[bdo+"contentHeight"]
+
+      //loggergen.log("propZ",prop,sorted)
+
+      if(w && h && w[0] && h[0] && !w[0].value.match(/cm/) && !h[0].value.match(/cm/)) {
+         prop[tmp+"contentDimensions"] = [ {type: "literal", value: w[0].value+"×"+h[0].value+"cm" } ]
+         delete prop[bdo+"contentWidth"]
+         delete prop[bdo+"contentHeight"]
+      }
+      else if(w && w[0] && !w[0].value.match(/cm/)) {
+         prop[bdo+"contentWidth"] = [ { ...w[0], value:w[0].value+"cm" } ]
+      }
+      else if(h && h[0] && !h[0].value.match(/cm/)) {
+         prop[bdo+"contentHeight"] = [ { ...h[0], value:h[0].value+"cm" } ]
       }
 
       const customDMS = (val, tag, obj) => {
@@ -2974,11 +3004,13 @@ class ResourceViewer extends Component<Props,State>
             }
          }
          
-         if(elem.inOutline || ((!thumbV || !thumbV.length) && ((info && infoBase && infoBase.filter(e=>e["xml:lang"]||e["lang"]).length >= 0) || (prop && prop.match && prop.match(/[/#]sameAs/))))) {
+         let noSpace
 
+         if(elem.inOutline || ((!thumbV || !thumbV.length) && ((info && infoBase && infoBase.filter(e=>e["xml:lang"]||e["lang"]).length >= 0) || (prop && prop.match && prop.match(/[/#]sameAs/))))) {
 
             //loggergen.log("svg?",svgImageS)
 
+            if(info && !info.includes(" ")) noSpace= true
 
             let link,orec,canUrl;
             if(this.props.assocResources && this.props.assocResources[elem.value]) {
@@ -3070,7 +3102,6 @@ class ResourceViewer extends Component<Props,State>
 
                      //console.log("dico:",uri,info)
                   }
-
 
                   link = <a class={"urilink prefLabel " } href={elem.url} onClick={(e) => { 
 
@@ -3213,7 +3244,7 @@ class ResourceViewer extends Component<Props,State>
                bdrcData = null
             }
             
-            ret.push([<span lang={lang} class={"ulink " + (sameAsPrefix?sameAsPrefix:'')  }>{befo}{link}</span>,lang?<Tooltip placement="bottom-end" title={
+            ret.push([<span lang={lang} class={"ulink " + (sameAsPrefix?sameAsPrefix:'') + (noSpace ? "" : " hasSpace" ) }>{befo}{link}</span>,lang?<Tooltip placement="bottom-end" title={
                <div style={{margin:"10px"}}>
                   {I18n.t(languages[lang]?languages[lang].replace(/search/,"tip"):lang)}
                </div>
@@ -4027,7 +4058,9 @@ class ResourceViewer extends Component<Props,State>
 
             if(prop === bdo+"instanceEvent")  {
                let from = e.fromEvent
+               
                //loggergen.log("fromE:",from,this.getResourceBNode(from)        )
+
                if(from) from = this.getResourceBNode(from)        
                if(from && from[rdf+"type"]) val = from[rdf+"type"]
             }
@@ -4191,6 +4224,10 @@ class ResourceViewer extends Component<Props,State>
                         //console.log("text:",text)
                         if(text) text = text.value
                         else text = this.pretty(noteData[bdo+"noteText"].value) 
+                        if(text?.includes && text.includes("\n")) { 
+                           text = text.split("\n").map(t => ([t,<br/>]))
+                        }
+
 
                         let sav = [
                               <Tag className="first type">{I18n.t("punc.num",{num:nbN++}) /*this.proplink(bdo+"noteText","Note")*/}</Tag>,
@@ -4277,6 +4314,7 @@ class ResourceViewer extends Component<Props,State>
                   else
                   {
                      let what = this.props.resources[this.props.IRI][elem[f][0].value]
+
                      //loggergen.log("what",what,elem[f])
 
                      if(!noVal)
@@ -4372,13 +4410,21 @@ class ResourceViewer extends Component<Props,State>
 
                               txt = [txt,<Tooltip placement="bottom-end" title={<div style={{margin:"10px"}}>{dateC}</div>}><span className="lang">{dateL}</span></Tooltip>]
                            }
-                           else { txt = this.fullname(v.value)
+                           else {
+                              let lang = v["lang"], label
+                              if(!lang) lang = v["xml:lang"]
+                              if(lang) {
+                                 txt = getLangLabel(this, "", [v])
+                                 if(txt?.value) { 
+                                    lang = txt.lang
+                                    txt = txt.value
+                                 }
+                              }
+                              if(!txt) txt = this.fullname(v.value)
 
-                              //loggergen.log("txt",txt)
+                              //loggergen.log("txt",txt,lang,v)
 
-                              if(v["lang"] || v["xml:lang"]) {
-                                 let lang = v["lang"]
-                                 if(!lang) lang = v["xml:lang"]
+                              if(lang) {
                                  txt = [txt,lang?<Tooltip placement="bottom-end" title={
                                     <div style={{margin:"10px"}}>
                                        {I18n.t(languages[lang]?languages[lang].replace(/search/,"tip"):lang)}
@@ -5168,12 +5214,12 @@ class ResourceViewer extends Component<Props,State>
          if(vol) str = I18n.t("resource.volume",{num:vol})+" " ;
          else monoVol = true
          if(p) str += I18n.t("resource.page",{num:p}) ;
-         if(l) str += "|"+l ;
+         if(l) str += "|"+I18n.t("location.line",{num:l}) ;
          if(!oneP) {
             if(str && p) str += " - "
             if(eV) str += I18n.t("resource.volume",{num:eV})+" " ;
             if(eP) str += I18n.t("resource.page",{num:eP}) ;
-            if(eL) str += "|"+eL ;
+            if(eL) str += "|"+I18n.t("location.line",{num:eL}) ;
          }
 
          let w = loca("Instance")
@@ -5323,7 +5369,7 @@ class ResourceViewer extends Component<Props,State>
       if(elem && elem.filter) n = elem.filter(t=>t && ( (t.type === "uri" && !this.isTransitiveSame(t.value) && (k !== bdo+"workHasInstance" || t.value.match(/[/]MW[^/]+$/))) || t.type === "literal")).length
       ret = this.insertPreprop(k, n, ret)
 
-      //loggergen.log("genP",elem,k,maxDisplay,n)
+      //loggergen.log("genP:",elem,k,maxDisplay,n)
 
       let linkToVersions, maxVersions = 20
       if(k === bdo+"workHasInstance" && ret.length > 2) {
@@ -6394,10 +6440,15 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                         if(label) { lang = label["lang"] ; if(!pageLang) pageLang = lang }
                         if(label) { label = label["value"]; pageVal += " "+label ; }
                         if(label && this.props.highlight && this.props.highlight.key) { label = highlight(label,kw.map(k => k.replace(/(.)/g,"$1\\n?")),null,false,true); current.push(label); }
-                        else if(label) label = label.split(/[\n\r]/).map(e =>(e?[e,<br/>]:[]))
+                        else if(label) { 
+                           label = label.split(/[\n\r]/)
+                           label = label.map( (e,i) =>(e?[e,i < label.length-1?<br/>:null]:[])).filter(e => e)
+                        }
                         //label = f
                         let size = this.state.etextSize
-                        //console.log("page:",pageVal,e,current)
+
+                        //console.log("page:",e.seq,pageVal,e,current)
+                        
                         if(lang === "bo") { size += 0.4 ; }
                         return ([<span lang={lang} {...this.state.etextSize?{style:{ fontSize:size+"em", lineHeight:(size * 1.0)+"em" }}:{}}>{label}</span>])})}
                         {this.hoverMenu(bdo+"EtextHasPage",{value:pageVal,lang:pageLang,start:e.start,end:e.end},current)}
@@ -6472,9 +6523,23 @@ perma_menu(pdfLink,monoVol,fairUse,other)
       let data = kZprop.map((k) => {
 
             let elem = this.getResourceElem(k);
+            // #783
+            if(k === bdo+"authorshipStatement" && this.props.outlines && !elem?.length) {
+               let nodes = this.props.outlines[this.props.IRI]
+               if(nodes && nodes["@graph"]) nodes = nodes["@graph"] 
+               if(nodes?.filter) {
+                  nodes = nodes?.filter(n => n.outlineOf && n.outlineOf["@id"] === this.props.IRI)
+                  if(nodes.length && nodes[0].authorshipStatement) {
+                     elem = nodes[0].authorshipStatement
+                     if(elem && !Array.isArray(elem)) elem = [ elem ]
+                     elem = elem.map(e => ({value:e["@value"], lang:e["@language"], type:"literal"}))
+                     k = tmp+"outlineAuthorshipStatement"
+                  }
+               }
+            }
             let hasMaxDisplay ;
 
-            //loggergen.log("prop",k,elem,this.hasSuper(k))
+            //loggergen.log("prop:",k,elem,this.hasSuper(k))
             //for(let e of elem) loggergen.log(e.value,e.label1);
 
             //if(!k.match(new RegExp("Revision|Entry|prefLabel|"+rdf+"|toberemoved"))) {
@@ -6533,7 +6598,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                      allLabels = [ label, ...sortLabel ]
                      */
                   } 
-
+                  if(k === tmp+"outlineAuthorshipStatement") allLabels = elem
                   let tags = this.format("h4",k,"",false,"sub",allLabels)
 
                   //loggergen.log("tags",tags,k,elem)
@@ -7992,19 +8057,43 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                                     nav.push(<Link onClick={g.checkDLD} to={g.hasImg} class="ulink">{I18n.t("copyright.view")}</Link>)  
                                     warn = true
                                  }
+                              } 
+                              else if(!g.contentLocation) {
+                                 let repro = this.getResourceElem(bdo+"instanceHasReproduction")
+                                 if(repro?.length && repro[0].value) {
+                                    let backToUrl = this.props.history.location.search.replace(/([?&])(part|backToOutline)=[^&]+/,"$1")
+                                    if(!backToUrl.endsWith("&")) {
+                                       if(backToUrl && backToUrl.includes("?")) backToUrl += "&"
+                                       else backToUrl += "?"
+                                    }
+                                    backToUrl += "part="+g["@id"]+"&backToOutline=true"
+                                    backToUrl = this.props.history.location.pathname+backToUrl
+                                    g.hasImg = "/show/"+shortUri(repro[0].value)+"?s="+encodeURIComponent(backToUrl)+"#open-viewer"
+                                    g.hasDetails = true
+                                    if(showDetails) {
+                                       if(!g.details) g.details = []
+                                       nav.push(<Link onClick={g.checkDLD} to={g.hasImg} class="ulink">{I18n.t("copyright.view")}</Link>)  
+                                       warn = true
+                                    }
+                                 }
                               }
                               if(warn) {
                                  let loca = mapElem(g.contentLocation)
                                  if(loca?.length) loca = loca[0]
                                  if(loca && loca.contentLocationVolume && !loca.contentLocationPage) {
                                     let ptype = g.partType
-                                    console.log("root:",loca,ptype,g)
+                                    //console.log("root:",loca,ptype,g)
                                     if(ptype && !["bdr:PartTypeVolume","bdr:PartTypeSection"].includes(ptype)) {
                                        nav.push(<div class="outline-warn"><Tooltip placement="top-end" title={
                                           <div style={{margin:"10px"}}><Trans i18nKey="location.tooltip" components={{ newL: <br /> }} /></div>
                                        }><WarnIcon/></Tooltip></div>)
                                     } 
-                                 }
+                                 } else if(loca && Array.isArray(loca) && !loca.length){
+                                    //console.log("warn:",loca,g)                                    
+                                    nav.push(<div class="outline-warn"><Tooltip placement="top-end" title={
+                                       <div style={{margin:"10px"}}><Trans i18nKey="location.tooltip" components={{ newL: <br /> }} /></div>
+                                    }><WarnIcon/></Tooltip></div>)                                 
+                                 } 
                               }
 
 
@@ -8025,6 +8114,12 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                                        nav.push(<a target="_blank" rel="noopener noreferrer" href={IAlink} class="ulink">{I18n.t("resource.openIA")}</a>)
                                     }
                                  }
+                              }
+
+
+                              if(g.instanceOf) {
+                                 if(nav.length) nav.push(<span>|</span>)
+                                 nav.push(<Link to={"/show/"+(Array.isArray(g.instanceOf)?g.instanceOf[0]:g.instanceOf)} class="ulink">{I18n.t("resource.openW")}</Link>)                                                                     
                               }
 
                               if(nav.length) { 
@@ -8073,14 +8168,16 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
                               subtime(4)
 
+                              const inst = []
                               if(g.instanceOf) {
                                  //if(Array.isArray(g.instanceOf)) g.instanceOf = 
                                  if(showDetails) {
                                     if(!g.details) g.details = []
-                                    g.details.push(<div class="sub"><h4 class="first type">{this.proplink(tmp+"instanceOfWork")}{I18n.t("punc.colon")} </h4>{this.format("h4","instacO","",false, "sub", [{type:"uri",value:fullUri(g.instanceOf)}])}</div>)
+                                    inst.push(<div class="sub"><h4 class="first type">{this.proplink(tmp+"instanceOfWork")}{I18n.t("punc.colon")} </h4>{this.format("h4","instacO","",false, "sub", [{type:"uri",value:fullUri(g.instanceOf)}])}</div>)
                                  }
                               }
                               
+                              const titleTxt = []
                               if(showDetails && g.hasTitle) {
                                  if(!g.details) g.details = []
                                  if(!Array.isArray(g.hasTitle)) g.hasTitle = [ g.hasTitle ]
@@ -8108,12 +8205,50 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
                                           //console.log("useT:",useT,title,g["tmp:titleMatch"], titleT)
 
+                                          titleTxt.push(getLangLabel(this,"",title))
+
                                           if(!g.details) g.details = []
                                           g.details.push(<div class={"sub " + (hideT?"hideT":"")}><h4 class="first type">{this.proplink(titleT)}{I18n.t("punc.colon")} </h4>{this.format("h4", "", "", false, "sub", useT?.length?useT:title)}</div>)
                                        } else {
                                           g.hidden.push(<div class={"sub " + (hideT?"hideT":"")}><h4 class="first type">{this.proplink(titleT)}{I18n.t("punc.colon")} </h4>{this.format("h4", "", "", false, "sub", title)}</div>)
                                        }
                                     }
+                                 }
+                              }
+
+                              const catInf = [], wLab = []
+                              if(showDetails && g.instanceOf) {
+                                 if(!g.details) g.details = []
+                                 if(!Array.isArray(g.instanceOf)) g.instanceOf = [ g.instanceOf ]
+                                 const cInfo = []
+                                 
+                                 for(let t of g.instanceOf) { 
+                                    t = mapElem(t)
+                                    if(t.length) {                                        
+                                       t = { ...t[0] }
+                                       const l = t["skos:prefLabel"]
+                                       if(l) {
+                                          if(!Array.isArray(l)) l = [ l ]   
+                                          wLab.push(getLangLabel(this, "", l))
+                                       }
+                                       if(t && t["catalogInfo"]) { 
+                                          t = t["catalogInfo"]
+                                          if(!Array.isArray(t)) t = [ t ]
+                                          cInfo.push(this.format("h4", "", "", false, "sub", t))
+                                       }
+                                    }
+                                 }                                 
+                                 if(cInfo?.length) catInf.push(<div class={"sub "}><h4 class="first type">{this.proplink(bdo+"catalogInfo")}{I18n.t("punc.colon")} </h4><div>{cInfo}</div></div>)
+                              }
+
+                              if(inst.length && g.details) {
+                                 if(titleTxt.length && wLab.length) {
+                                    //console.log("tTxt:",titleTxt,wLab)
+                                    if(!wLab.some(l => titleTxt.some(t => t.value === l.value))){
+                                       g.details.push(inst)   
+                                    }
+                                 } else {
+                                    g.details.push(inst)
                                  }
                               }
 
@@ -8176,9 +8311,16 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                                  if(p === "colophon" && osearch && g["tmp:colophonMatch"]) {
                                     node = node.filter(n => !g["tmp:colophonMatch"].some(t => n["@value"] && t["@value"] && t["@value"].replace(/[↦↤]/g,"") === n["@value"].replace(/[↦↤]/g,"")))
                                     //console.log("coloph:",node,g["tmp:colophonMatch"])
-                                 }
+                                 }                                 
                                  if(!p.includes(":")) p = bdo+p
-                                 if(node.length) g.hidden.push(<div class="sub"><h4 class="first type">{this.proplink(p)}{I18n.t("punc.colon")} </h4><div>{node.map(n => this.format("h4","","",false, "sub",[{ value:n["@value"], lang:n["@language"], type:"literal"}]))}</div></div>)
+                                 if(node.length) { 
+                                    
+                                    // #784
+                                    let addTo = g.hidden
+                                    if(p.endsWith("incipit")) addTo = g.details
+
+                                    addTo.push(<div class="sub"><h4 class="first type">{this.proplink(p)}{I18n.t("punc.colon")} </h4><div>{node.map(n => this.format("h4","","",false, "sub",[{ value:n["@value"], lang:n["@language"], type:"literal"}]))}</div></div>)
+                                 }
                               }
 
 
@@ -8216,8 +8358,17 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                               }
 
 
+                              if(catInf.length && g.details) g.details.push(catInf)
+
                               subtime(8)
                            }
+
+                           // #784
+                           if(g.details?.length === 1 && g.hidden?.length) {
+                              g.details = g.details.concat(g.hidden)
+                              g.hidden = []
+                           }
+
                            outline.push(g);
                         }
                      }
@@ -8653,6 +8804,8 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          if(!serial) serial = this.getResourceElem(bdo+"collectionMember");
          if(!serial) serial = this.getResourceElem(bdo+"corporationHasMember");
          
+         const isEtextCollection = serial && !serial.some(k => k.value?.includes("/resource/W")) ;
+
          //loggergen.log("serial:",serial)
 
          createdBy = Object.keys(this.props.assocResources).map( (k,i) => {
@@ -8712,7 +8865,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
             }
             return ( 
                <div ref={this._refs["crea-"+i]}>
-                  <Link to={"/show/"+s}><div class={"header"+(thumb?" thumb":"") + (_T === "Product"?" instance":"")} style={{backgroundImage:"url("+thumbUrl+")"}}></div></Link>
+                  <Link to={"/show/"+s}><div class={"header"+(thumb?" thumb":"") + (_T === "Product"?(isEtextCollection?" etext":" instance"):"")} style={{backgroundImage:"url("+thumbUrl+")"}}></div></Link>
                   <div><Link to={"/show/"+s}><span {...label.lang?{lang:label.lang}:{}}>{ label.value }</span></Link>{ label.lang && this.tooltip(label.lang) }</div>
                   {/* <Link to={"/show/"+s}>{I18n.t("misc.readM")}</Link> */}
                </div>
@@ -8726,7 +8879,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
             } else if(_T === "Place" || serial && _T === "Work") {
                searchUrl += "&t=Instance"+(this.props.useDLD?"&f=inDLD,inc,tmp:available":"")
             } else if( _T === "Product") {
-               searchUrl += "&t=Scan"+(this.props.useDLD?"&f=inDLD,inc,tmp:available":"")
+               searchUrl += "&t="+(isEtextCollection?"Etext":"Scan")+(this.props.useDLD?"&f=inDLD,inc,tmp:available":"")
             } else if(_T === "Corporation") {
                searchUrl += "&t=Person"
             } else {
@@ -8929,9 +9082,14 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          ])
       }
       else {
+
+         let listWithAS = [ ], tmpElem = this.getResourceElem(bdo+"authorshipStatement")
+         if(!tmpElem?.length && this.props.outlines && this.props.outlines[this.props.IRI]) {
+            listWithAS = [ bdo+"authorshipStatement" ]
+         }
          
          let theDataTop = this.renderData(topProps,iiifpres,title,otherLabels,"top-props","main-info")      
-         let theDataBot = this.renderData(kZprop.filter(k => !topProps.includes(k) && !extProps.includes(k)),iiifpres,title,otherLabels,"bot-props")      
+         let theDataBot = this.renderData(kZprop.filter(k => !topProps.includes(k) && !extProps.includes(k)).concat(listWithAS),iiifpres,title,otherLabels,"bot-props")      
 
          let theEtext
          if(this.props.eTextRefs && this.props.eTextRefs !== true && this.props.IRI && this.props.IRI.startsWith("bdr:IE")) { 
@@ -9028,7 +9186,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          let scrollRel = (ev,next,smooth) => { 
             let rel = $(".resource .data.related > div:first-child > div:last-child") 
             let div = rel.find(".rel-or-crea > div:first-child")
-            let nb = Math.floor(rel.width()/(div.width()+Number(div.css("margin-right").replace(/[^0-9]+/g,"")))) // 4 = default in desktop
+            let nb = Math.floor(rel.width()/(div.width()+Number((""+div.css("margin-right")).replace(/[^0-9]+/g,"")))) // 4 = default in desktop
             //console.log("rel:",nb,rel,div,next,ev)
             let idx = !this.state.relatedTab&&related.length?"rel":"crea"
             let max = !this.state.relatedTab&&related.length?related.length:createdBy.length
@@ -9113,29 +9271,8 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
          let infoPanelR
          if(this.props.config && this.props.config.msg) {
-
             infoPanelR = this.props.config.msg.filter(m => m.display && m.display.includes("resource"))            
-
-            let rend = (infoPanel) => <div class="infoPanel inRes">{ infoPanel.map(m => {
-               let lab = getLangLabel(this,"",m.text)
-               let icon 
-
-               if(m.severity=="info") icon = <InfoIcon className="info"/>
-               else if(m.severity=="warning") icon = <WarnIcon className="warn"/>
-               else if(m.severity=="error") icon = <ErrorIcon className="error"/>
-               
-               if(lab) {
-                  let link ;
-                  let content = lab.value
-                  if(link = lab.value.match(/\[([^\]]+)\]\(([^)]+)\)(.*?$)/)) {
-                     content = lab.value.split(/\[[^\]]+\]\([^)]+\)/)
-                     content = [ content[0], <a href={link[2]} target="_blank">{link[1]}</a>, link[3] ]
-                  } 
-                  return <p>{icon}{content}</p>
-               }
-            }) }</div>
-
-            if(infoPanelR && infoPanelR.length) infoPanelR = rend(infoPanelR)
+            if(infoPanelR && infoPanelR.length) infoPanelR = renderBanner(this, infoPanelR, true)
          }
 
    
@@ -9322,7 +9459,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                            }
                         </MySwipeable>
                         { 
-                           (!this.state.relatedTab && !this.state.relatedTabAll && related.length > 4 || this.state.relatedTab && createdBy.length > 4 || !related.length && createdBy.length > 4) &&
+                           (!this.state.relatedTab && !this.state.relatedTabAll && related.length > 4 || this.state.relatedTab && createdBy.length > 4 || !this.state.relatedTabAll && !related.length && createdBy.length > 4) &&
                            <div id="related-nav" >
                               <span class={!this.state.relatedTab&&related.length?(this.state.irel>0?"on":""):(this.state.icrea>0?"on":"")} onClick={(ev) => scrollRel(ev)}><img src="/icons/g.svg"/></span>
                               <span class={navNext?"on":""} onClick={(ev) => scrollRel(ev,true)}><img src="/icons/d.svg"/></span>

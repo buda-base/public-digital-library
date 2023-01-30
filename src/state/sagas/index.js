@@ -109,11 +109,11 @@ async function initiateApp(params,iri,myprops,route,isAuthCallback) {
          if(config && config.chineseMirror) locale = "zh"
 
          // 1-url param
-         if(params && params.uilang && ['bo','en','zh','km','fr'].includes(params.uilang)) locale = params.uilang
+         if(params && params.uilang && ['bo','en','zh','km'].concat(config.khmerServer?['fr']:[]).includes(params.uilang)) locale = params.uilang
          // 2-saved preference
          else if(val = localStorage.getItem('uilang')) locale = val
          // 3-browser default
-         else if(['bo','en','zh','km','fr'].includes(val = window.navigator.language.slice(0, 2))) locale = val
+         else if(['bo','en','zh','km'].concat(config.khmerServer?['fr']:[]).includes(val = window.navigator.language.slice(0, 2))) locale = val
          // 4-config file
          else locale = config.language.data.index
 
@@ -204,9 +204,9 @@ async function initiateApp(params,iri,myprops,route,isAuthCallback) {
       }
 
       // #756
-      if(params && params.q && params.q.match(/^(["(]+[^"]*)"([^"]*[")~0-9]+)$/)) {
+      if(params && params.q && params.q.match(/^(["(]+[^"]*)"([^"]*[")]+[~0-9]*)$/)) {
          let { pathname, search } = { ...history.location }
-         search = search.replace(/q=[^&]+/, "q="+params.q.replace(/^(["(]+[^"]*)"([^"]*[")~0-9]+)$/g,(m,g1,g2) => g1+(g2.includes('"')?g2:'"'+g2))) 
+         search = search.replace(/q=[^&]+/, "q="+params.q.replace(/^(["(]+[^"]*)"([^"]*[")~0-9]+)$/g,(m,g1,g2) => g1+(g2.includes('"')?g2:'"'+g2)))
          if(search != history.location.search) {
             history.replace({ pathname, search })
             return
@@ -392,7 +392,7 @@ if(params && params.osearch) {
 
 if(params && params.t /*&& !params.i */) {
    //console.log("uSb:",params)
-   store.dispatch(uiActions.updateSortBy(params.s?params.s.toLowerCase():(params.i?"year of publication reverse":(params.t==="Etext"?"closest matches":(params.t==="Scan"?(route ==="latest"?"release date":"popularity"):"popularity"))),params.t))
+   store.dispatch(uiActions.updateSortBy(params.s?params.s.toLowerCase():(params.i?"year of publication reverse":(params.t==="Etext"?(!params.lg?"title":"closest matches"):(params.t==="Scan"?(route ==="latest"?"release date":"popularity"):"popularity"))),params.t))
 }
 
 if(params && params.i) {
@@ -2609,7 +2609,7 @@ async function startSearch(keyword,language,datatype,sourcetype,dontGetDT,inEtex
 
       let newMeta = {}
 
-      if(["Work","Instance","Scan"].includes(datatype[0])) addMeta(keyword,language,data,datatype[0],result.tree,undefined,undefined,undefined,result.genres);      
+      if(["Etext","Work","Instance","Scan"].includes(datatype[0]) && result.genres && result.tree) addMeta(keyword,language,data,datatype[0],result.tree,undefined,undefined,undefined,result.genres);      
       else addMeta(keyword,language,data,datatype[0]);      
 
       /* // deprecated
