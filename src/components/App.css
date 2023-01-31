@@ -2007,7 +2007,14 @@ h4:not(:hover) > .lang
 
 .resource.preview #head { float:left; }
 
+.resource.preview .data .images-thumb, 
+.resource.preview .data [data-prop="bdo:workHasInstance"] .images-thumb,
 .resource.preview #head .header { height:70px; width:70px;  }
+
+
+.resource.preview .data .images-thumb, 
+.resource.preview .data [data-prop="bdo:workHasInstance"] .images-thumb { margin-bottom:5px; }
+
 .resource.preview #head .header::before { width:55px; height:55px; }
 .resource.preview #head + div + div { clear:both; }
 
@@ -2018,9 +2025,9 @@ h4:not(:hover) > .lang
 .resource.preview #head + div h2.on { line-height: 16px; height:auto; font-size: 0; align-items: center; display: flex; padding-left:0; min-height:18px;}
 
 .resource.preview #head + div h2.on span { font-size:13px !important; }
-.resource.preview #head + div h2.on ~ .date { margin-top:0px; display: flex; font-size: 0;  align-items: center; padding-left: 0; max-width:40%;}
+.resource.preview #head + div h2.on ~ .date { margin-top:0px; display: flex; font-size: 0;  align-items: center; padding-left: 0; }
 .resource.preview #head + div h2.on ~ .date span { font-size:13px; }
-.resource.preview #head + div h2.on ~ a { display: inline-flex; width: auto; font-size:13px; max-width:40%; position: relative; height:18px;}
+.resource.preview #head + div h2.on ~ a { display: inline-flex; width: auto; font-size:13px; position: relative; height:18px;}
 .resource.preview #head + div h2.on ~ a:hover { border:none; text-decoration: underline; }
 .resource.preview #head + div h2.on ~ a img { min-height:24px;margin-top:-2px; }
 
@@ -2053,6 +2060,9 @@ h4:not(:hover) > .lang
 
 .resource.preview .data > [data-prop="bdo:note"] .sub h4 { font-size: 12px !important; }
 
+.resource.preview .data#outline > h2,
+.resource.preview .data#outline div h2, 
+.resource.preview .data#outline div span:not(.lang),
 .resource.preview .has-collapse.custom .expand,
 .resource.preview .data > [data-prop="bdo:note"] .sub > h4 + div:not(.subsub),
 .resource.preview .data > [data-prop="bdo:note"] .sub > h4.first,
@@ -2063,6 +2073,10 @@ h4:not(:hover) > .lang
 
 
 .resource.preview .data.ext-props > div h2 { margin:25px 0 0 0;}
+
+.resource.preview .data#outline > h2 { margin-left:0 }
+
+.resource.preview .data#outline > h2::after,
 .resource.preview .data.ext-props > div h2::after { content:":"; }
 
 .resource.preview .data.ext-props + .data.ext-props > div { padding-left:40px;}
@@ -2094,7 +2108,13 @@ h4:not(:hover) > .lang
 
 
 .resource.preview .data:not(#perma) > div:not(.firstImage):not(.browse):not(.header)::after { margin: 10px 0 10px -10px; }
+.resource.preview .data.ext-props:not(#perma) > div:not(.firstImage):not(.browse):not(.header)::after { margin: 0; }
 
+.resource.preview.hasTabs .title { display:none; }
+.resource.preview.hasTabs > .index + div { top: 0 !important; }
+
+.resource.preview .data > [data-prop="bdo:note"] > .group > div:not(.no-collapse) .sub:last-child, 
+.resource.preview .data > [data-prop="bdo:note"] .sub:not(:last-child) { margin-bottom:10px;  }
 
 div:has(.resource.preview) .infoPanel.inRes { margin:0 !important; }
 
