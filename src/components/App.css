@@ -2053,6 +2053,7 @@ h4:not(:hover) > .lang
 
 .resource.preview .data > [data-prop="bdo:note"] .sub h4 { font-size: 12px !important; }
 
+.resource.preview .has-collapse.custom .expand,
 .resource.preview .data > [data-prop="bdo:note"] .sub > h4 + div:not(.subsub),
 .resource.preview .data > [data-prop="bdo:note"] .sub > h4.first,
 .resource.preview .data > [data-prop="bdo:note"] .sub,
@@ -2088,9 +2089,14 @@ h4:not(:hover) > .lang
 .resource.preview .data.legal-props > div h3 { margin-bottom:10px; }
 
 
+.resource.preview .data > [data-prop="bdo:note"] .sub > h4 + div.subsub { padding-left:0; }
+.resource.preview .data > [data-prop="bdo:note"] .sub { padding-right:0; width:100%; }
 
 
 .resource.preview .data:not(#perma) > div:not(.firstImage):not(.browse):not(.header)::after { margin: 10px 0 10px -10px; }
+
+
+div:has(.resource.preview) .infoPanel.inRes { margin:0 !important; }
 
 
 .resource .fairuse-IA-link {

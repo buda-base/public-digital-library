@@ -7032,7 +7032,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
 
       let infoPanelH, infoPanelR
-      if(this.props.config && this.props.config.msg) {
+      if(this.props.config && this.props.config.msg && !this.props.simple && !this.props.preview) {
          if(message.length == 0 && !this.props.loading && !this.props.keyword) infoPanelH = this.props.config.msg.filter(m => m.display && m.display.includes("home"))
          else infoPanelR = this.props.config.msg.filter(m => m.display && m.display.includes("search"))
          

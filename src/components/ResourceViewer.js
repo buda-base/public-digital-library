@@ -9270,7 +9270,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
 
          let infoPanelR
-         if(this.props.config && this.props.config.msg) {
+         if(this.props.config && this.props.config.msg && !this.props.preview && !this.props.simple) {
             infoPanelR = this.props.config.msg.filter(m => m.display && m.display.includes("resource"))            
             if(infoPanelR && infoPanelR.length) infoPanelR = renderBanner(this, infoPanelR, true)
          }
