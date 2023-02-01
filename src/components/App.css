@@ -2005,11 +2005,22 @@ h4:not(:hover) > .lang
 
 #root > div > .resource.preview > .index + div { background:white; }
 
+
+.resource.preview .data#first-image {  height:70px; width:70px; display: inline-block;  padding:20px;}
+
+.resource.preview .data .firstImage { height:70px; width:70px; min-height:70px; background:#fce08d; pointer-events: none; display: inline-block; box-sizing: border-box;}
+.resource.preview .data .firstImage img { width:65px; height:65px; object-fit: cover; object-position: center; }
+.resource.preview .data .firstImage .loader { width:100%; height:100%; box-sizing: border-box; filter:invert(1); margin-left:-5px; margin-top:-5px}
+
+.resource.preview .data#first-image,
 .resource.preview #head { float:left; }
+
+
+.resource.preview .data .images-title { display:inline-flex; line-height: 16px; }
 
 .resource.preview .data .images-thumb, 
 .resource.preview .data [data-prop="bdo:workHasInstance"] .images-thumb,
-.resource.preview #head .header { height:70px; width:70px;  }
+.resource.preview #head .header { height:70px; width:70px; box-sizing: border-box; }
 
 
 .resource.preview .data .images-thumb, 
@@ -2018,18 +2029,27 @@ h4:not(:hover) > .lang
 .resource.preview #head .header::before { width:55px; height:55px; }
 .resource.preview #head + div + div { clear:both; }
 
-.resource.preview #head + div { padding:15px 15px 15px 0; min-height:70px; display: flex; flex-direction: column; justify-content: center;
+.resource.preview :is(#head,#first-image) + div { padding:15px 15px 15px 0; min-height:70px; display: flex; flex-direction: column; justify-content: center;
    /*justify-content: space-between; flex-wrap:wrap; align-items: center; align-content: center*/;
 }
 
-.resource.preview #head + div h2.on { line-height: 16px; height:auto; font-size: 0; align-items: center; display: flex; padding-left:0; min-height:18px;}
+.resource.preview .data.ext-props:last-child > div:last-child { padding-bottom:25px; } 
 
-.resource.preview #head + div h2.on span { font-size:13px !important; }
+.resource.preview :is(#head,#first-image) + div h2.on.intro+h2 a { line-height: 0;}
+
+.resource.preview :is(#head,#first-image) + div h2.on.intro+h2 span { line-height: 16px;}
+
+.resource.preview :is(#head,#first-image) + div h2.on+h2,
+.resource.preview :is(#head,#first-image) + div h2.on { line-height: 16px; height:auto; font-size: 0; align-items: center; display: flex; padding-left:0; min-height:18px;}
+
+.resource.preview :is(#head,#first-image) + div h2.on.intro,
+.resource.preview :is(#head,#first-image) + div h2.on+h2 span,
+.resource.preview :is(#head,#first-image) + div h2.on span { font-size:13px !important; }
 .resource.preview #head + div h2.on ~ .date { margin-top:0px; display: flex; font-size: 0;  align-items: center; padding-left: 0; }
 .resource.preview #head + div h2.on ~ .date span { font-size:13px; }
-.resource.preview #head + div h2.on ~ a { display: inline-flex; width: auto; font-size:13px; position: relative; height:18px;}
-.resource.preview #head + div h2.on ~ a:hover { border:none; text-decoration: underline; }
-.resource.preview #head + div h2.on ~ a img { min-height:24px;margin-top:-2px; }
+.resource.preview :is(#head,#first-image) + div h2.on ~ a { display: inline-flex; width: auto; font-size:13px; position: relative; height:18px; align-items: center;}
+.resource.preview :is(#head,#first-image) + div h2.on ~ a:hover { border:none; text-decoration: underline; }
+.resource.preview :is(#head,#first-image) + div h2.on ~ a img { min-height:24px;margin-top:0px; }
 
 .resource.preview .data.top-props, 
 .resource.preview .data.bot-props { padding-left: 15px;}
@@ -2080,6 +2100,10 @@ h4:not(:hover) > .lang
 .resource.preview .data.ext-props > div h2::after { content:":"; }
 
 .resource.preview .data.ext-props + .data.ext-props > div { padding-left:40px;}
+.resource.preview > div:has(.ext-props > div > h2:last-child):has(.ext-props + .ext-props:last-child >  a + div:empty)
+      .data.ext-props { display:none; }
+
+.resource.preview > div:has(.ext-props > div > h2:last-child):has(.ext-props + .ext-props:last-child >  a + div:empty) { padding-bottom:20px;}
 
 .resource.preview .group > h4:first-child:not(.first), 
 .resource.preview .group > h4.multiple .urilink, 
@@ -2116,8 +2140,11 @@ h4:not(:hover) > .lang
 .resource.preview .data > [data-prop="bdo:note"] > .group > div:not(.no-collapse) .sub:last-child, 
 .resource.preview .data > [data-prop="bdo:note"] .sub:not(:last-child) { margin-bottom:10px;  }
 
+.resource.preview .data:last-child > [data-prop]:has(+ :not([data-prop])) { padding-bottom:25px; }
+
 div:has(.resource.preview) .infoPanel.inRes { margin:0 !important; }
 
+.resource.preview > .ariane { display:none; }
 
 .resource .fairuse-IA-link {
    display:inline-flex; 

@@ -2953,10 +2953,10 @@ class ResourceViewer extends Component<Props,State>
                
                //let vlink = "/"+show+"/"+prefix+":"+pretty+"?s="+encodeURIComponent(this.props.history.location.pathname+this.props.history.location.search)+"#open-viewer"    
                let vlink = "/"+show+"/"+prefix+":"+pretty+"?backToEtext="+this.props.IRI+"#open-reader"    
-               ret = [  <Link to={"/show/"+sUri} class={"images-thumb no-thumb"} style={{"background-image":"url(/icons/etext.png)"}}></Link> ,
+               ret = [  <Link {...this.props.preview?{ target:"_blank" }:{}} to={"/show/"+sUri} class={"images-thumb no-thumb"} style={{"background-image":"url(/icons/etext.png)"}}></Link> ,
                      <div class="images-thumb-links">
-                        <Link className={"urilink "+ prefix} to={vlink}>{I18n.t("resource.openViewer")}</Link>
-                        <Link className={"urilink "+ prefix} to={"/"+show+"/"+prefix+":"+pretty}>{I18n.t("resource.openR")}</Link>
+                        <Link {...this.props.preview?{ target:"_blank" }:{}} className={"urilink "+ prefix} to={vlink}>{I18n.t("resource.openViewer")}</Link>
+                        <Link {...this.props.preview?{ target:"_blank" }:{}} className={"urilink "+ prefix} to={"/"+show+"/"+prefix+":"+pretty}>{I18n.t("resource.openR")}</Link>
                      </div> ]
                if(prov) ret.push(prov)
             
@@ -2968,12 +2968,12 @@ class ResourceViewer extends Component<Props,State>
                thumbV =  this.getResourceElem(tmp+"thumbnailIIIFService", sUri, this.props.assocResources)
                if(!thumbV || !thumbV.length) thumbV = this.getResourceElem(tmp+"thumbnailIIIFSelected", sUri, this.props.assocResources)
                
-               if(!thumbV || !thumbV.length)  ret = [  <Link to={"/show/"+sUri} class={"images-thumb no-thumb"} style={{"background-image":"url(/icons/header/instance.svg)"}}></Link> ]
+               if(!thumbV || !thumbV.length)  ret = [  <Link {...this.props.preview?{ target:"_blank" }:{}} to={"/show/"+sUri} class={"images-thumb no-thumb"} style={{"background-image":"url(/icons/header/instance.svg)"}}></Link> ]
                else {
                   let thumbUrl = thumbV[0].value
                   if(!thumbUrl.match(/[/]default[.][^.]+$/)) thumbUrl += "/full/"+(thumbV[0].value.includes(".bdrc.io/")?"!2000,145":",145")+"/0/default.jpg"
                   else thumbUrl = thumbUrl.replace(/[/]max[/]/,"/"+(thumbUrl.includes(".bdrc.io/")?"!2000,145":",145")+"/")
-                  ret = [  <Link to={"/show/"+sUri} class={"images-thumb"} style={{"background-image":"url("+thumbUrl+")"}}></Link> ]
+                  ret = [  <Link {...this.props.preview?{ target:"_blank" }:{}} to={"/show/"+sUri} class={"images-thumb"} style={{"background-image":"url("+thumbUrl+")"}}></Link> ]
                }
             
                let inRoot =  this.getResourceElem(bdo+"inRootInstance", sUri, this.props.assocResources)
@@ -3145,7 +3145,7 @@ class ResourceViewer extends Component<Props,State>
                                                 
                   } } data-info={info}>{info}</a>
                }
-               else link = <Link target="_blank" className={"urilink prefLabel " } to={"/"+show+"/"+uri}>{info}</Link>
+               else link = <Link {...this.props.preview?{ target:"_blank" }:{}} className={"urilink prefLabel " } to={"/"+show+"/"+uri}>{info}</Link>
 
                if(noLink) link = info
 
@@ -3251,13 +3251,13 @@ class ResourceViewer extends Component<Props,State>
             }><span className="lang">{lang}</span></Tooltip>:null,bdrcData])
          }
          else if(pretty.toString().match(/^V[0-9A-Z]+_I[0-9A-Z]+$/)) { ret.push(<span>
-            <Link className={"urilink "+prefix} to={"/"+show+"/"+prefix+":"+pretty}>{pretty}</Link>&nbsp;
+            <Link {...this.props.preview?{ target:"_blank" }:{}} className={"urilink "+prefix} to={"/"+show+"/"+prefix+":"+pretty}>{pretty}</Link>&nbsp;
             {/* <Link className="goBack" target="_blank" to={"/gallery?manifest=//iiifpres.bdrc.io/v:bdr:"+pretty+"/manifest"}>{"(view image gallery)"}</Link> */}
          </span> ) }
          else if(pretty.toString().match(/^([A-Z]+[v_0-9-]*[A-Z]*)+$/)){ 
 
             if(!thumb && !thumbV) {
-               ret = (<Link className={"urilink "+ prefix} to={"/"+show+"/"+prefix+":"+pretty}><span lang="">{ret}{enti!="Etext"||prop?.endsWith("eTextInInstance")?prefix+":"+pretty:""}</span></Link>)
+               ret = (<Link {...this.props.preview?{ target:"_blank" }:{}} className={"urilink "+ prefix} to={"/"+show+"/"+prefix+":"+pretty}><span lang="">{ret}{enti!="Etext"||prop?.endsWith("eTextInInstance")?prefix+":"+pretty:""}</span></Link>)
             }
             else if(thumb && thumb.length) {
                let thumbUrl = thumb[0].value
@@ -3288,10 +3288,10 @@ class ResourceViewer extends Component<Props,State>
                   } 
                }
 
-               ret = [<Link className={"urilink "+ prefix} onClick={checkDLD.bind(this)} to={vlink}>{thumb}</Link>,
+               ret = [<Link {...this.props.preview?{ target:"_blank" }:{}} className={"urilink "+ prefix} onClick={checkDLD.bind(this)} to={vlink}>{thumb}</Link>,
                      <div class="images-thumb-links">
-                        <Link className={"urilink "+ prefix} to={vlink} onClick={checkDLD.bind(this)}>{I18n.t("index.openViewer")}</Link>
-                        <Link className={"urilink "+ prefix} to={"/"+show+"/"+prefix+":"+pretty}>{I18n.t("resource.openR")}</Link>
+                        <Link {...this.props.preview?{ target:"_blank" }:{}} className={"urilink "+ prefix} to={vlink} onClick={checkDLD.bind(this)}>{I18n.t("index.openViewer")}</Link>
+                        <Link {...this.props.preview?{ target:"_blank" }:{}} className={"urilink "+ prefix} to={"/"+show+"/"+prefix+":"+pretty}>{I18n.t("resource.openR")}</Link>
                      </div>]
             } else if(thumbV && thumbV.length) {
                let repro = this.getResourceElem(bdo+"instanceHasReproduction", shortUri(elem.value), this.props.assocResources)
@@ -3305,10 +3305,10 @@ class ResourceViewer extends Component<Props,State>
                let vlink = "/"+show+"/"+repro+"?s="+encodeURIComponent(this.props.history.location.pathname+this.props.history.location.search)+"#open-viewer"                
                thumbV = <div class={"images-thumb"+(!hasT?" no-thumb":"")} style={{"background-image":"url("+img+")"}}/>;               
 
-               ret = [<Link className={"urilink "+ prefix} to={hasT?vlink:"/"+show+"/"+prefix+":"+pretty}>{thumbV}</Link>,
+               ret = [<Link {...this.props.preview?{ target:"_blank" }:{}} className={"urilink "+ prefix} to={hasT?vlink:"/"+show+"/"+prefix+":"+pretty}>{thumbV}</Link>,
                      <div class="images-thumb-links">
-                        <Link className={"urilink "+ prefix + (!hasT?" disable":"")} to={vlink}>{I18n.t("index.openViewer")}</Link>
-                        <Link className={"urilink "+ prefix} to={"/"+show+"/"+prefix+":"+pretty}>{I18n.t("resource.openR")}</Link>
+                        <Link {...this.props.preview?{ target:"_blank" }:{}} className={"urilink "+ prefix + (!hasT?" disable":"")} to={vlink}>{I18n.t("index.openViewer")}</Link>
+                        <Link {...this.props.preview?{ target:"_blank" }:{}} className={"urilink "+ prefix} to={"/"+show+"/"+prefix+":"+pretty}>{I18n.t("resource.openR")}</Link>
                      </div>]
             }
          } 
@@ -4849,7 +4849,7 @@ class ResourceViewer extends Component<Props,State>
 
       //loggergen.log("H2?",rootC)
 
-      if(other) return <h2 title={title.value} lang={this.props.locale}><Link  {... rootC?{onClick:rootC}:{onClick:() => setTimeout(()=>window.scrollTo(0,0),10)}}  to={"/show/"+shortUri(other)+this.getTabs(T_,other)}>{_T}<span>{_befo}{title.value}</span>{this.tooltip(title.lang)}</Link></h2>
+      if(other) return <h2 title={title.value} lang={this.props.locale}><Link {...this.props.preview?{ target:"_blank" }:{}}   {... rootC?{onClick:rootC}:{onClick:() => setTimeout(()=>window.scrollTo(0,0),10)}}  to={"/show/"+shortUri(other)+this.getTabs(T_,other)}>{_T}<span>{_befo}{title.value}</span>{this.tooltip(title.lang)}</Link></h2>
       else return <h2 title={title.value} lang={this.props.locale} class="on">{_T}<span>{_befo}{title.value}</span>{this.tooltip(title.lang)}</h2>
    }
 
@@ -4872,7 +4872,7 @@ class ResourceViewer extends Component<Props,State>
       }
       else {
           let loaded = this.props.resources && this.props.resources[other?other:this.props.IRI] 
-          if(other) title = <h2 lang={this.props.locale}><Link onClick={() => setTimeout(()=>window.scrollTo(0,0),10)} to={"/show/"+shortUri(other)+this.getTabs(T_,other)}>{_T}<span>{loaded && (T_ === "Work" || T_ === "Instance")?I18n.t("resource.noT"):shortUri(other?other:this.props.IRI)}</span></Link></h2>
+          if(other) title = <h2 lang={this.props.locale}><Link {...this.props.preview?{ target:"_blank" }:{}}  onClick={() => setTimeout(()=>window.scrollTo(0,0),10)} to={"/show/"+shortUri(other)+this.getTabs(T_,other)}>{_T}<span>{loaded && (T_ === "Work" || T_ === "Instance")?I18n.t("resource.noT"):shortUri(other?other:this.props.IRI)}</span></Link></h2>
           else  title = <h2 class="on" lang={this.props.locale}>{_T}<span>{loaded && (T_ === "Work" || T_ === "Instance")?I18n.t("resource.noT"):shortUri(other?other:this.props.IRI)}</span></h2>
       }
 
@@ -5373,12 +5373,12 @@ class ResourceViewer extends Component<Props,State>
 
       let linkToVersions, maxVersions = 20
       if(k === bdo+"workHasInstance" && ret.length > 2) {
-         linkToVersions = <span class="expand linkToVersions"><Link to={"/search?i="+this.props.IRI+"&t=Work"}>{I18n.t("misc.browseA",{count: ret.length})}</Link></span>
+         linkToVersions = <span class="expand linkToVersions"><Link {...this.props.preview?{ target:"_blank" }:{}} to={"/search?i="+this.props.IRI+"&t=Work"}>{I18n.t("misc.browseA",{count: ret.length})}</Link></span>
       }
       
       let linkToPlaces
       if(k === bdo+"placeContains" && ret.length >= 2) {
-         linkToPlaces = <span class="expand linkToPlaces"><Link to={"/search?r="+this.props.IRI+"&t=Place&f=relation,inc,bdo:placeLocatedIn"}>{I18n.t("misc.browseA",{count: ret.length})}</Link></span>
+         linkToPlaces = <span class="expand linkToPlaces"><Link {...this.props.preview?{ target:"_blank" }:{}} to={"/search?r="+this.props.IRI+"&t=Place&f=relation,inc,bdo:placeLocatedIn"}>{I18n.t("misc.browseA",{count: ret.length})}</Link></span>
       }
 
       if(!isSub && n > maxDisplay) {      
@@ -8991,7 +8991,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          inTitle  = [ 
             <h3 class="inT">
                <span>{I18n.t("misc.in")}{I18n.t("punc.colon")} </span> {this.uriformat(tmp+"in",root[0])}
-               <Link onClick={() => this.setState({opartinview:""})} to={"/show/"+shortUri(root[0].value)+"?part="+this.props.IRI} class="outL"><img src="/scripts/mirador/images/collecR.svg"/>{I18n.t("result.openO")}</Link>
+               <Link {...this.props.preview?{ target:"_blank" }:{}} onClick={() => this.setState({opartinview:""})} to={"/show/"+shortUri(root[0].value)+"?part="+this.props.IRI} class="outL"><img src="/scripts/mirador/images/collecR.svg"/>{I18n.t("result.openO")}</Link>
             </h3>,
             //<br/>,
             //<h3 class="outline-link"><Link class="urilink" to={"/show/"+shortUri(root[0].value)+"?part="+this.props.IRI+"#outline"}>{"View in the outline"}</Link></h3>
