@@ -8654,8 +8654,12 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          //loggergen.log("WithD?",redir);
          if(redir[adm+"replaceWith"]) {
             redir = shortUri(redir[adm+"replaceWith"][0].value)                        
+            let path = "/show/" 
+            if(this.props.simple) path = "/simple/"
+            if(this.props.preview) path = "/preview/"
+
             return (               
-               <Redirect404 history={this.props.history} message={"Record withdrawn in favor of "+redir} to={(this.props.simple?"/simple/":"/show/")+redir+this.props.history.location.search+this.props.history.location.hash} />
+               <Redirect404 history={this.props.history} message={"Record withdrawn in favor of "+redir} to={path+redir+this.props.history.location.search+this.props.history.location.hash} />
             )
          }
          else if(this.props.auth && this.props.auth.isAuthenticated() && redir[adm+"status"] && (redir = redir[adm+"status"]).length && redir[0].value === bda+"StatusWithdrawn"){

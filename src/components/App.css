@@ -2005,6 +2005,12 @@ h4:not(:hover) > .lang
 
 #root > div > .resource.preview > .index + div { background:white; }
 
+.resource.preview .data.ext-props,
+.resource.preview .data.legal-props { padding-top:20px;}
+.resource.preview .data#perma { padding-bottom:20px;}
+.resource.preview .data { padding-bottom:0px;}
+
+
 .resource.preview .data#map { padding: 0 15px 15px 15px; }
 .resource.preview .data#map .header { padding:0; width: 100%; }
 .resource.preview .data#map .header .map .placeMap { height:200px; }
