@@ -6987,7 +6987,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
             { rootWarn }
          </div>
          )
-      else if(kZprop.length && (!this.props.config || !this.props.config.chineseMirror))
+      else if(!this.props.preview && kZprop.length && (!this.props.config || !this.props.config.chineseMirror))
          return <div class="data" id="map">{this.renderData(kZprop,null,null,null,"header")}</div>
       else if(etext && !(prov !== "BDRC" && prov && orig)) {
          let loca = this.props.history.location
@@ -9424,6 +9424,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                      { ( _T === "Person" && createdBy && createdBy.length > 0 ) && <div class="browse-by"><Link to={"/search?r="+this.props.IRI+"&t=Work"}><img src="/icons/sidebar/work_white.svg"/>{I18n.t("resource.assoc")}</Link></div> }
                      { this.props.preview && <a href={"/show/"+this.props.IRI} target="_blank">{I18n.t("resource.fullR")}<img src="/icons/link-out.svg"/></a>}
                   </div>
+                  { this.props.preview && _T === "Place" && <div class="data" id="map">{this.renderData(kZprop.filter(k => mapProps.includes(k)),null,null,null,"header")}</div> }
                   { _T !== "Etext" && this.renderQuality() }
                   { _T === "Etext" && this.renderEtextAccess(etextAccessError) }
                   { _T === "Etext" && this.renderOCR() }

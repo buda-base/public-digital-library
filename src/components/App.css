@@ -2005,6 +2005,9 @@ h4:not(:hover) > .lang
 
 #root > div > .resource.preview > .index + div { background:white; }
 
+.resource.preview .data#map { padding: 0 15px 15px 15px; }
+.resource.preview .data#map .header { padding:0; width: 100%; }
+.resource.preview .data#map .header .map .placeMap { height:200px; }
 
 .resource.preview .data#first-image {  height:70px; width:70px; display: inline-block;  padding:20px;}
 
@@ -2028,6 +2031,8 @@ h4:not(:hover) > .lang
 
 .resource.preview #head .header::before { width:55px; height:55px; }
 .resource.preview #head + div + div { clear:both; }
+
+.resource.preview.place #head .header::before { background-size:35%;}
 
 .resource.preview :is(#head,#first-image) + div { padding:15px 15px 15px 0; min-height:70px; display: flex; flex-direction: column; justify-content: center;
    /*justify-content: space-between; flex-wrap:wrap; align-items: center; align-content: center*/;
@@ -2145,6 +2150,12 @@ h4:not(:hover) > .lang
 div:has(.resource.preview) .infoPanel.inRes { margin:0 !important; }
 
 .resource.preview > .ariane { display:none; }
+
+.resource.preview .data#perma > div { flex-direction: row; justify-content: space-between;}
+.resource.preview .data#perma > div > #rid { margin: 10px 0;}
+.resource.preview .data#perma > div > :not(#rid,#permalink) { display: none; }
+
+
 
 .resource .fairuse-IA-link {
    display:inline-flex; 
@@ -4543,7 +4554,7 @@ h3 .expand svg { position:absolute; margin-top:-18px; }*/
 
 .resource .data .withLinkTo .expand.linkToPlaces,
 .resource .data .withLinkTo .expand.linkToVersions,
-.resource .data .withLinkTo .expand + .expand { bottom:-20px; }
+.resource .data .withLinkTo .expand + .expand { bottom:-20px; z-index:1; }
 
 .resource .data :is(.withLinkTo,[data-prop="bdo:workHasInstance"]) .expand.linkToPlaces a,
 .resource .data :is(.withLinkTo,[data-prop="bdo:workHasInstance"]) .expand.linkToVersions a,
