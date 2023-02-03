@@ -1623,7 +1623,7 @@ class App extends Component<Props,State> {
 
             try { 
                if(currentMarkers.length < 50) { 
-                  this._refs["cluster"].current.disableClusteringKeepSpiderfy();
+                  this._refs["cluster"].current.disableClustering() //KeepSpiderfy();
                }
                else {
                   this._refs["cluster"].current.enableClustering()
