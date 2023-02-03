@@ -5246,7 +5246,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                               />
                            </BaseLayer> }
                         </LayersControl>
-                        <MarkerClusterGroup ref={this._refs["cluster"]} spiderfyDistanceMultiplier={0.1} disableClusteringAtZoom={9} chunkedLoading maxClusterRadius={80} >{ markers }</MarkerClusterGroup>
+                        <MarkerClusterGroup ref={this._refs["cluster"]} /* spiderfyDistanceMultiplier={0.1} */ disableClusteringAtZoom={9} chunkedLoading maxClusterRadius={80} >{ markers }</MarkerClusterGroup>
                      </MapContainer>
                   </>}</>)
                   
