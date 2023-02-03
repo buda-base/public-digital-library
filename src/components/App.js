@@ -78,7 +78,7 @@ import 'leaflet/dist/leaflet.css';
 import "leaflet-gesture-handling/dist/leaflet-gesture-handling.css";
 
 import CookieConsent from "react-cookie-consent";
-import ReactGA from 'react-ga';
+import ReactGA from 'react-ga4';
 
 //import { I18n, Translate, Localize } from "react-redux-i18n" ;
 import I18n from 'i18next';
@@ -501,7 +501,7 @@ export function report_GA(config,location) {
 
       loggergen.log("GA?",GAtxt);
 
-      ReactGA.pageview(GAtxt);
+      ReactGA.send({ hitType: "pageview", page: GAtxt });
    }        
 }
 
