@@ -94,7 +94,9 @@ async function initiateApp(params,iri,myprops,route,isAuthCallback) {
 
          //I18n.setHandleMissingTranslation((key, replacements) => key);
 
-         if(config.auth) {
+         const isBot = navigator.userAgent.match(/googlebot|bingbot|yandex|baiduspider|twitterbot|facebookexternalhit|rogerbot|linkedinbot|embedly|quora link preview|showyoubot|outbrain|pinterest|slackbot|vkShare|W3C_Validator/) || params && params["_escaped_fragment"]
+
+         if(config.auth && !isBot) {
             auth.setConfig(config.auth,config.iiif,api)
 
             if(myprops) handleAuthentication(myprops, isAuthCallback);
