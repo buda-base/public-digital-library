@@ -133,8 +133,11 @@ export async function logError(error, json) {
 
    //const { isAuthenticated } = auth;
 
-   if(window.location.hostname != "localhost") {
-
+   const queryString = window.location.search;
+   const urlParams = new URLSearchParams(queryString);
+   
+   if(window.location.hostname != "localhost" && urlParams.get("prerender") != "true") {
+      
       let response = await fetch( url, {
          method: 'POST',
          headers: new Headers({
