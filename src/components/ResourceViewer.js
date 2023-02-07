@@ -2234,6 +2234,10 @@ class ResourceViewer extends Component<Props,State>
                            let sameAsData = {}, value = "", notBefore, notAfter
                            if(assoR[w.value][bdo+"onYear"]) { 
                               value = assoR[w.value][bdo+"onYear"][0].value
+                              if(assoR[w.value][bdo+"onYear"][0].datatype == xsd+"integer") { 
+                                 if(Number(value) >= 0) value = value.padStart(4,"0")
+                                 else value = "-"+value.replace(/^-/,"").padStart(4,"0")
+                              }
                               if(assoR[w.value][bdo+"onYear"][0].fromSameAs) sameAsData.fromSameAs = assoR[w.value][bdo+"onYear"][0].fromSameAs
                               if(assoR[w.value][bdo+"onYear"][0].allSameAs) sameAsData.allSameAs = [ ...assoR[w.value][bdo+"onYear"][0].allSameAs ]
                            } 
