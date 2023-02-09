@@ -8908,7 +8908,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
       let all    
       if(this.props.assocTypes && this.props.assocTypes[this.props.IRI+"@"] && this.props.assocTypes[this.props.IRI+"@"].metadata) {
-         if(/* !onKhmerServer || */ _T !== "Work") all = Object.values(this.props.assocTypes[this.props.IRI+"@"].metadata).reduce( (acc,c) => acc+Number(c), 0)
+         if(serial || /* !onKhmerServer || */ _T !== "Work") all = Object.values(this.props.assocTypes[this.props.IRI+"@"].metadata).reduce( (acc,c) => acc+Number(c), 0)
          else {
             all = 0
             for(let k of Object.keys(this.props.assocTypes[this.props.IRI+"@"].metadata)) {
@@ -8923,7 +8923,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          allRel = Object.keys(this.props.assocTypes[this.props.IRI+"@"].metadata).map(r => { 
             let v = Number(this.props.assocTypes[this.props.IRI+"@"].metadata[r])
             let t = r.replace(/^.*\/([^/]+)$/,"$1")
-            if(/* onKhmerServer && */ t === "Instance" && _T === "Work") return 
+            if(!serial && /* onKhmerServer && */ t === "Instance" && _T === "Work") return 
             let url = "/search?r="+this.props.IRI+"&t="+t
             if(!t1) t1 = url
             return (<div>                                                                           
