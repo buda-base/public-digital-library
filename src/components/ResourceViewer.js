@@ -9293,7 +9293,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                         <span>{word?.value.split(kw).map((v,j) => <>{j > 0 ? <span className="kw">{kw}</span>:null}<span>{v}</span></>)}</span>
                         <ExpandMore className={open?"on":""}/>
                      </b>
-                     <Collapse timeout={0} in={open}>{def?.value?.split(/[\r\n]+/).map(d => { 
+                     <Collapse timeout={0} className={open?"collapse-on":""} in={open}>{def?.value?.split(/[\r\n]+/).map(d => { 
                         let val = addMonlamStyle(d)
                         val = getLangLabel(this,"",[{value: val, lang: "bo"}]) 
                         if(val?.value) {
