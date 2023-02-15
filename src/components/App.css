@@ -2589,6 +2589,10 @@ div:has(.resource.preview) .infoPanel.inRes { margin:0 !important; }
 .resource ~ .monlamResults div .def > b[lang='bo'] > span { font-size:135%;}
 
 
+.resource ~ .monlamResults div .def b[lang="bo-x-ewts"] ~ div img[align="middle"] { vertical-align: text-bottom;}
+
+.resource ~ .monlamResults div .def b[lang="bo-x-ewts"] ~ div .perna.ac-ac { line-height:24px; }
+
 .resource ~ .monlamResults div .def .perna.ac-ac:first-child,
 .resource ~ .monlamResults div .def br:first-child + .perna.ac-ac { margin-top: 0;}
 
