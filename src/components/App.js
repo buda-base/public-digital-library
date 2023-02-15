@@ -78,7 +78,7 @@ import 'leaflet/dist/leaflet.css';
 import "leaflet-gesture-handling/dist/leaflet-gesture-handling.css";
 
 import CookieConsent from "react-cookie-consent";
-import ReactGA from 'react-ga';
+import ReactGA from 'react-ga4';
 
 //import { I18n, Translate, Localize } from "react-redux-i18n" ;
 import I18n from 'i18next';
@@ -501,7 +501,7 @@ export function report_GA(config,location) {
 
       loggergen.log("GA?",GAtxt);
 
-      ReactGA.pageview(GAtxt);
+      ReactGA.send({ hitType: "pageview", page: GAtxt });
    }        
 }
 
@@ -948,7 +948,7 @@ export function getGDPRconsent(that) {
    //ReactGA.pageview('/homepage');
    //loggergen.log("cookie?",document.cookie)
 
-   if(that.props.config && that.props.config.GA && !that.props.simple) return (
+   if(that.props.config && that.props.config.GA && !that.props.simple && !that.props.preview) return (
       <CookieConsent
          location="bottom"
          onAccept={() => { loggergen.log("accept!"); if(that) { report_GA(that.props.config,that.props.history.location); that.forceUpdate(); } } }
@@ -1628,7 +1628,7 @@ class App extends Component<Props,State> {
 
             try { 
                if(currentMarkers.length < 50) { 
-                  this._refs["cluster"].current.disableClusteringKeepSpiderfy();
+                  this._refs["cluster"].current.disableClustering() //KeepSpiderfy();
                }
                else {
                   this._refs["cluster"].current.enableClustering()
@@ -5251,7 +5251,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                               />
                            </BaseLayer> }
                         </LayersControl>
-                        <MarkerClusterGroup ref={this._refs["cluster"]} spiderfyDistanceMultiplier={0.1} disableClusteringAtZoom={9} chunkedLoading maxClusterRadius={80} >{ markers }</MarkerClusterGroup>
+                        <MarkerClusterGroup ref={this._refs["cluster"]} /* spiderfyDistanceMultiplier={0.1} */ disableClusteringAtZoom={9} spiderfyOnMaxZoom={false} chunkedLoading maxClusterRadius={70} >{ markers }</MarkerClusterGroup>
                      </MapContainer>
                   </>}</>)
                   
@@ -7037,7 +7037,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
 
       let infoPanelH, infoPanelR
-      if(this.props.config && this.props.config.msg) {
+      if(this.props.config && this.props.config.msg && !this.props.simple && !this.props.preview) {
          if(message.length == 0 && !this.props.loading && !this.props.keyword) infoPanelH = this.props.config.msg.filter(m => m.display && m.display.includes("home"))
          else infoPanelR = this.props.config.msg.filter(m => m.display && m.display.includes("search"))
          

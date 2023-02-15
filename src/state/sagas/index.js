@@ -94,7 +94,7 @@ async function initiateApp(params,iri,myprops,route,isAuthCallback) {
 
          //I18n.setHandleMissingTranslation((key, replacements) => key);
 
-         if(config.auth) {
+         if(config.auth && (!params || params.prerender != "true")) {
             auth.setConfig(config.auth,config.iiif,api)
 
             if(myprops) handleAuthentication(myprops, isAuthCallback);

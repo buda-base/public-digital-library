@@ -11,8 +11,10 @@
 
 @import url('//fonts.googleapis.com/css2?family=Noto+Serif+Khmer:wght@400;700;900&display=swap');
 
+@import url('//fonts.googleapis.com/css2?family=Noto+Serif+Tibetan:wght@300;400;500;600;700;900&display=swap');
 
-@import url('//fonts.googleapis.com/earlyaccess/notosanstibetan.css');
+
+/* @import url('//fonts.googleapis.com/earlyaccess/notosanstibetan.css'); */
 
 /* CSS debug mode */
 /* * {background-color:rgba(255,0,128,0.05);}   */
@@ -35,6 +37,7 @@
    font-weight: bold;
    font-style: normal;
 }
+
 
 @font-face {
    font-family: 'Noto Sans';
@@ -83,6 +86,8 @@
    font-weight: 900;
    font-style: normal;
 }
+
+
 /* ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ footer */
 
 footer#site-footer { background:#172832; color:white; padding-bottom:0px; }
@@ -104,7 +109,7 @@ footer#site-footer .p60 { width:58%; display: inline-block;}
 footer#site-footer #b2 #f1 span a { color:#111312; text-decoration: none; font-size:12px;}
 
 footer#site-footer > .foot *,
-footer#site-footer > .body * { font-size: 14px;  letter-spacing: 0.34px; font-family:"Noto Sans Tc" !important;} 
+footer#site-footer > .body * { font-size: 14px;  letter-spacing: 0.34px; font-family:"Noto Sans TC", "Noto Sans", "Noto Serif Tibetan", "Noto Serif Khmer", "Noto Sans Mongolian", "Roboto", "Helvetica", "Arial", sans-serif  !important;} 
 footer#site-footer > .body #b1 #f1 p { font-size: 20px;  letter-spacing: 0.28px;  line-height: 25px; font-weight:700; display:inline-block; width:190px;margin:0; }
 footer#site-footer > .body #b2 #f1 span { border: 2px solid #111312; text-transform: uppercase; font-size: 12px; letter-spacing: 0.35px; border-radius: 2px;padding:10px;
    margin-top:0px; display: inline-block;
@@ -122,7 +127,7 @@ footer#site-footer > .body #b2 #f2 #s1 > a:not(:last-child) > div,
 footer#site-footer > .body #b2 #f2 #s1 > a { width:52px !important;height:52px !important;display:inline-flex;align-items: center; justify-content: center; }
 footer#site-footer > .body #b2 #f2 #s1 > a { border:2px solid #111312; border-radius: 50%;margin-top:10px;margin-right:10px;}
 
-footer#site-footer > div.foot #donate { text-transform:capitalize; width:120px; float:right; font-weight:700; font-family:"Noto Sans" !important; margin-top:20px; }
+footer#site-footer > div.foot #donate { text-transform:capitalize; width:120px; float:right; font-weight:700; font-family:"Noto Sans", "Noto Serif Tibetan", "Noto Serif Khmer", "Noto Sans Mongolian", "Roboto", "Helvetica", "Arial", sans-serif !important; margin-top:20px; }
 footer#site-footer > div.foot #p2,
 footer#site-footer > div.foot #p1 { display:inline-flex; align-items: center;}
 footer#site-footer > div.foot #t1 > div { align-items: flex-start;  }
@@ -148,7 +153,7 @@ footer#site-footer.no-syncs > div.head::before { background-color:#efefef; }
 
 [role='tooltip'] *, .App *,.nav *,.App *::before,.App *::after, .react-tabs *, .resource *:not(.fa):not(.material-icons), .resource + * *,
 .inRes *, #popDL.cite *, #menu-citationLang * { 
-   font-family:"Noto Sans", "Noto Serif Khmer", "Noto Sans Mongolian", "Roboto", "Helvetica", "Arial", sans-serif !important;
+   font-family:"Noto Sans", "Noto Serif Tibetan", "Noto Serif Khmer", "Noto Sans Mongolian", "Roboto", "Helvetica", "Arial", sans-serif !important;
 }
 
 .SearchPane { width:1000px; margin:auto;margin-top:80px;max-width:90%; z-index:0;background:white;padding:50px; padding-bottom:0;
@@ -202,7 +207,7 @@ body { overflow:auto !important;padding-right:0 !important; /*font-family:"Robot
    font-size:24px;color:black;line-height:28px; display:flex; flex-direction: column; justify-content: center; align-items: flex-start;
 }
 
-.SearchPane #logo h1 { font-size:46px; color: #152631; font-size: 46px; font-weight: 900; font-family:"Noto Sans TC" !important;
+.SearchPane #logo h1 { font-size:46px; color: #152631; font-size: 46px; font-weight: 900; font-family:"Noto Sans TC","Noto Sans", "Noto Serif Tibetan", "Noto Serif Khmer", "Noto Sans Mongolian", "Roboto", "Helvetica", "Arial", sans-serif  !important;
    /* letter-spacing: 0.65px;  */
    line-height: 53px;margin-top:0; margin-bottom:14px;text-align: left;;
 }
@@ -613,7 +618,7 @@ footer #donate,
 .App.home.khmerServer .SearchPane #logo > div { justify-content: flex-start; padding-left:calc(135px + (100% - 1440px) / 2); box-sizing: border-box;}
 .App.home.khmerServer .SearchPane #logo > div > div { padding:50px; height:auto; }
 .App.home.khmer.static h1,
-.App.home.khmerServer .SearchPane #logo > div > div h1 { font-family:"Noto Sans", "Noto Serif Khmer" !important; font-weight:900; font-size:46px; line-height:53px;text-align:left;} 
+.App.home.khmerServer .SearchPane #logo > div > div h1 { font-family:"Noto Sans", "Noto Serif Tibetan", "Noto Serif Khmer", "Noto Sans Mongolian", "Roboto", "Helvetica", "Arial", sans-serif !important; font-weight:900; font-size:46px; line-height:53px;text-align:left;} 
 .App.home.khmerServer .SearchPane #logo > div > div p { text-align: left; font-size:16px;margin-bottom: 0;}
 
 .App.home.khmerServer #data-checkbox { display:none; }
@@ -2005,24 +2010,62 @@ h4:not(:hover) > .lang
 
 #root > div > .resource.preview > .index + div { background:white; }
 
+.resource.preview .data.ext-props,
+.resource.preview .data.legal-props { padding-top:20px;}
+.resource.preview .data#perma { padding-bottom:20px;}
+.resource.preview .data { padding-bottom:0px;}
+
+
+.resource.preview .data#map { padding: 0 15px 15px 15px; }
+.resource.preview .data#map .header { padding:0; width: 100%; }
+.resource.preview .data#map .header .map .placeMap { height:200px; }
+
+.resource.preview .data#first-image {  height:70px; width:70px; display: inline-block;  padding:20px;}
+
+.resource.preview .data .firstImage { height:70px; width:70px; min-height:70px; background:#fce08d; pointer-events: none; display: inline-block; box-sizing: border-box;}
+.resource.preview .data .firstImage img { width:65px; height:65px; object-fit: cover; object-position: center; }
+.resource.preview .data .firstImage .loader { width:100%; height:100%; box-sizing: border-box; filter:invert(1); margin-left:-5px; margin-top:-5px}
+
+.resource.preview .data#first-image,
 .resource.preview #head { float:left; }
 
-.resource.preview #head .header { height:70px; width:70px;  }
+
+.resource.preview .data .images-title { display:inline-flex; line-height: 16px; }
+
+.resource.preview .data .images-thumb, 
+.resource.preview .data [data-prop="bdo:workHasInstance"] .images-thumb,
+.resource.preview #head .header { height:70px; width:70px; box-sizing: border-box; }
+
+
+.resource.preview .data .images-thumb, 
+.resource.preview .data [data-prop="bdo:workHasInstance"] .images-thumb { margin-bottom:5px; }
+
 .resource.preview #head .header::before { width:55px; height:55px; }
 .resource.preview #head + div + div { clear:both; }
 
-.resource.preview #head + div { padding:15px 15px 15px 0; min-height:70px; display: flex; flex-direction: column; justify-content: center;
+.resource.preview.place #head .header::before { background-size:35%;}
+
+.resource.preview :is(#head,#first-image) + div { padding:15px 15px 15px 0; min-height:70px; display: flex; flex-direction: column; justify-content: center;
    /*justify-content: space-between; flex-wrap:wrap; align-items: center; align-content: center*/;
 }
 
-.resource.preview #head + div h2.on { line-height: 16px; height:auto; font-size: 0; align-items: center; display: flex; padding-left:0; min-height:18px;}
+.resource.preview .data.ext-props:last-child > div:last-child { padding-bottom:25px; } 
 
-.resource.preview #head + div h2.on span { font-size:13px !important; }
-.resource.preview #head + div h2.on ~ .date { margin-top:0px; display: flex; font-size: 0;  align-items: center; padding-left: 0; max-width:40%;}
+.resource.preview :is(#head,#first-image) + div h2.on.intro+h2 a { line-height: 0;}
+
+.resource.preview :is(#head,#first-image) + div h2.on.intro+h2 span { line-height: 16px;}
+
+.resource.preview :is(#head,#first-image) + div h2.on+h2,
+.resource.preview :is(#head,#first-image) + div h2.on { line-height: 16px; height:auto; font-size: 0; align-items: center; display: flex; padding-left:0; min-height:18px;}
+
+.resource.preview :is(#head,#first-image) + div h2.on.intro,
+.resource.preview :is(#head,#first-image) + div h2.on+h2 span,
+.resource.preview :is(#head,#first-image) + div h2.on span { font-size:13px !important; }
+.resource.preview #head + div h2.on ~ .date { margin-top:0px; display: flex; font-size: 0;  align-items: center; padding-left: 0; }
 .resource.preview #head + div h2.on ~ .date span { font-size:13px; }
-.resource.preview #head + div h2.on ~ a { display: inline-flex; width: auto; font-size:13px; max-width:40%; position: relative; height:18px;}
-.resource.preview #head + div h2.on ~ a:hover { border:none; text-decoration: underline; }
-.resource.preview #head + div h2.on ~ a img { min-height:24px;margin-top:-2px; }
+.resource.preview :is(#head,#first-image) + div h2.on ~ a { display: inline-flex; width: auto; font-size:13px; position: relative; height:18px; align-items: center;}
+.resource.preview :is(#head,#first-image) + div h2.on ~ a:hover { border:none; text-decoration: underline; }
+.resource.preview :is(#head,#first-image) + div h2.on ~ a img { min-height:24px;margin-top:0px; }
 
 .resource.preview .data.top-props, 
 .resource.preview .data.bot-props { padding-left: 15px;}
@@ -2053,6 +2096,10 @@ h4:not(:hover) > .lang
 
 .resource.preview .data > [data-prop="bdo:note"] .sub h4 { font-size: 12px !important; }
 
+.resource.preview .data#outline > h2,
+.resource.preview .data#outline div h2, 
+.resource.preview .data#outline div span:not(.lang),
+.resource.preview .has-collapse.custom .expand,
 .resource.preview .data > [data-prop="bdo:note"] .sub > h4 + div:not(.subsub),
 .resource.preview .data > [data-prop="bdo:note"] .sub > h4.first,
 .resource.preview .data > [data-prop="bdo:note"] .sub,
@@ -2062,9 +2109,17 @@ h4:not(:hover) > .lang
 
 
 .resource.preview .data.ext-props > div h2 { margin:25px 0 0 0;}
+
+.resource.preview .data#outline > h2 { margin-left:0 }
+
+.resource.preview .data#outline > h2::after,
 .resource.preview .data.ext-props > div h2::after { content:":"; }
 
 .resource.preview .data.ext-props + .data.ext-props > div { padding-left:40px;}
+.resource.preview > div:has(.ext-props > div > h2:last-child):has(.ext-props + .ext-props:last-child >  a + div:empty)
+      .data.ext-props { display:none; }
+
+.resource.preview > div:has(.ext-props > div > h2:last-child):has(.ext-props + .ext-props:last-child >  a + div:empty) { padding-bottom:20px;}
 
 .resource.preview .group > h4:first-child:not(.first), 
 .resource.preview .group > h4.multiple .urilink, 
@@ -2088,9 +2143,29 @@ h4:not(:hover) > .lang
 .resource.preview .data.legal-props > div h3 { margin-bottom:10px; }
 
 
+.resource.preview .data > [data-prop="bdo:note"] .sub > h4 + div.subsub { padding-left:0; }
+.resource.preview .data > [data-prop="bdo:note"] .sub { padding-right:0; width:100%; }
 
 
 .resource.preview .data:not(#perma) > div:not(.firstImage):not(.browse):not(.header)::after { margin: 10px 0 10px -10px; }
+.resource.preview .data.ext-props:not(#perma) > div:not(.firstImage):not(.browse):not(.header)::after { margin: 0; }
+
+.resource.preview.hasTabs .title { display:none; }
+.resource.preview.hasTabs > .index + div { top: 0 !important; }
+
+.resource.preview .data > [data-prop="bdo:note"] > .group > div:not(.no-collapse) .sub:last-child, 
+.resource.preview .data > [data-prop="bdo:note"] .sub:not(:last-child) { margin-bottom:10px;  }
+
+.resource.preview .data:last-child > [data-prop]:has(+ :not([data-prop])) { padding-bottom:25px; }
+
+div:has(.resource.preview) .infoPanel.inRes { margin:0 !important; }
+
+.resource.preview > .ariane { display:none; }
+
+.resource.preview .data#perma > div { flex-direction: row; justify-content: space-between;}
+.resource.preview .data#perma > div > #rid { margin: 10px 0;}
+.resource.preview .data#perma > div > :not(#rid,#permalink) { display: none; }
+
 
 
 .resource .fairuse-IA-link {
@@ -2382,7 +2457,7 @@ h4:not(:hover) > .lang
 .resource .data#outline .top:not(.is-root) .parTy + span > .ulink > a:hover { text-decoration: none; }
 .resource .data#outline .top:not(.is-root) .parTy + span > .ulink > a:hover { text-decoration: none; color:black;}
 
-.resource .data#outline .parTy div { text-transform: uppercase; font-size:11px; font-family:"Noto Sans SemCond" !important;  opacity:1; 
+.resource .data#outline .parTy div { text-transform: uppercase; font-size:11px; font-family:"Noto Sans SemCond","Noto Sans", "Noto Serif Tibetan", "Noto Serif Khmer", "Noto Sans Mongolian", "Roboto", "Helvetica", "Arial", sans-serif !important;  opacity:1; 
    /*padding:4px 1px 0 1px; text-align: center;  margin-top:-2px; */
 }
 /* .resource .data#outline .is-root .parTy:not(#a).on { border-color:rgba(215, 52, 73,1); } */
@@ -2711,7 +2786,7 @@ vertical-align:middle;}
 
 span[lang^='sa-']:not([lang$='-ewts']) { text-transform: capitalize;}
 
-.resource .nav + .title h2[lang=bo] span:not(.RID) { font-family:"Noto Sans Tibetan","Noto Sans", "Roboto", "Helvetica", "Arial", sans-serif !important;
+.resource .nav + .title h2[lang=bo] span:not(.RID) { font-family:"Noto Sans", "Noto Serif Tibetan", "Noto Serif Khmer", "Noto Sans Mongolian", "Roboto", "Helvetica", "Arial", sans-serif !important;
    font-size:20px ; 
 }
 
@@ -3076,7 +3151,7 @@ body > [id^="menu-"] > div:last-child,
 #popHoverM li,
 #popLang li,
 #popSame a li,
-#popDL a li { font-family:"Noto Sans", "Noto Sans Tibetan", "Noto Serif Khmer";color:#4a4a4a;font-weight:600;font-size:12px;  }
+#popDL a li { font-family:"Noto Sans", "Noto Serif Tibetan", "Noto Serif Khmer", "Noto Sans Mongolian", "Roboto", "Helvetica", "Arial", sans-serif;color:#4a4a4a;font-weight:600;font-size:12px;  }
 
 #popSame a b { font-weight:900; }
 #popSame a img { display: inline-block; margin-bottom:2px;margin-left:2px;}
@@ -3142,7 +3217,7 @@ body > [id^="menu-"] > div:last-child,
 
 .poPdf > div:last-child { max-height:30vh; box-shadow:0 1px 4px #cecece; }
 .poPdf > div b,
-.poPdf > div a { font-size:12px; font-family: "Noto Sans"; color:#4d4d4d; white-space: nowrap;}
+.poPdf > div a { font-size:12px; font-family: "Noto Sans", "Noto Serif Tibetan", "Noto Serif Khmer", "Noto Sans Mongolian", "Roboto", "Helvetica", "Arial", sans-serif; color:#4d4d4d; white-space: nowrap;}
 .poPdf > div li { padding:6px 17px; }
 .poPdf > div a { padding:0 6px; display:flex;}
 .poPdf > div a + a { border-left:1px solid rgba(0,0,0,0.35); }
@@ -3448,18 +3523,19 @@ h4:hover a.no-bdrc img { opacity:1; }
 
 .resource .data h2.intro,
 .resource .data h2.intro + h2 span,
-.resource .title + .data + .data h2.on .T + span { font-size:32px; font-family:'Noto Sans SemCond';font-weight:bold; }
+.resource .title + .data + .data h2.on .T + span { font-size:32px; font-family:'Noto Sans SemCond', "Noto Sans", "Noto Serif Tibetan", "Noto Serif Khmer", "Noto Sans Mongolian", "Roboto", "Helvetica", "Arial", sans-serif !important;font-weight:bold; }
 
 .resource .data h2.intro { padding-right:8px; flex-shrink: 0; line-height:42px;}
 
 .resource .data h2.intro + h2 { line-height:42px;}
 
+[lang="bo"] .resource .data h2.intro,
 .resource .data h2.intro + h2[lang=bo],
 .resource .data h2[lang=bo] { line-height:64px; }
 
 .monlamResults,
 .resource .data h2.intro + h2[lang=bo] > a > span:not(.T,.lang),
-.resource .data h2[lang=bo] > span:not(.T,.lang) { font-family: "Noto Sans Tibetan", "Noto Sans", "Roboto", "Helvetica", "Arial", sans-serif !important; }
+.resource .data h2[lang=bo] > span:not(.T,.lang) { font-family: "Noto Sans", "Noto Serif Tibetan", "Noto Serif Khmer", "Noto Sans Mongolian", "Roboto", "Helvetica", "Arial", sans-serif !important; }
 
 .resource .data h2.intro,
 .resource .data h2.intro + h2,
@@ -4530,7 +4606,7 @@ h3 .expand svg { position:absolute; margin-top:-18px; }*/
 
 .resource .data .withLinkTo .expand.linkToPlaces,
 .resource .data .withLinkTo .expand.linkToVersions,
-.resource .data .withLinkTo .expand + .expand { bottom:-20px; }
+.resource .data .withLinkTo .expand + .expand { bottom:-20px; z-index:1; }
 
 .resource .data :is(.withLinkTo,[data-prop="bdo:workHasInstance"]) .expand.linkToPlaces a,
 .resource .data :is(.withLinkTo,[data-prop="bdo:workHasInstance"]) .expand.linkToVersions a,
