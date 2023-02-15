@@ -9296,7 +9296,10 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                      <Collapse timeout={0} in={open}>{def?.value?.split(/[\r\n]+/).map(d => { 
                         let val = addMonlamStyle(d)
                         val = getLangLabel(this,"",[{value: val, lang: "bo"}]) 
-                        return <span>{HTMLparse(val?.value?.replace(/((>) *\] *)|( *\[ *(<))/g,"$2 $4"))}</span>
+                        if(val?.value) {
+                           //console.log("?", val?.value,val?.value?.replace(/((>) *\] *)|( *\[ *(<))/g,"$2 $4"))
+                           return <span>{HTMLparse(val?.value?.replace(/((>) *\] *)|( *\[ *(<))/g,"$2 $4"))}</span>
+                        }
                      })}</Collapse>
                   </div>
                })
