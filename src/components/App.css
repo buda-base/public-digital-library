@@ -2561,6 +2561,8 @@ div:has(.resource.preview) .infoPanel.inRes { margin:0 !important; }
 
 /* ------------------------------------------------------------------------------------------------------------------------ monlam*/
 
+@import "https://monlamdic.com/dictionarys/files/css/basic.css";
+
 .resource ~ .monlamResults { width:0px; position:relative; box-shadow:-2px 0 3px rgba(0,0,0,0.15);flex-shrink: 0; } 
 .resource ~ .monlamResults > div { width:0px; height:calc(100% - 2 * 80px); position:fixed; right:0; top:80px; background:white; overflow:auto;}
 
@@ -2585,7 +2587,18 @@ div:has(.resource.preview) .infoPanel.inRes { margin:0 !important; }
 .resource ~ .monlamResults div .def > b > span > .kw { background:rgba(0,128,255,0.2); }
 .resource ~ .monlamResults div .def > b > span { font-size:115%; }
 .resource ~ .monlamResults div .def > b[lang='bo'] > span { font-size:135%;}
-.resource ~ .monlamResults div .def div div div span { padding-left:15px; display: block; padding-top:12px; }
+
+
+.resource ~ .monlamResults div .def .perna.ac-ac:first-child,
+.resource ~ .monlamResults div .def br:first-child + .perna.ac-ac { margin-top: 0;}
+
+.resource ~ .monlamResults div .def br:first-child,
+.resource ~ .monlamResults div .def .spc { display:none; }
+
+.resource ~ .monlamResults div .def p.gap { margin-top:0; }  
+
+.resource ~ .monlamResults div .def > div > div > div > span { padding-left:15px; display: block; padding-top:12px; }
+
 .resource ~ .monlamResults div .def:first-child { padding-top:30px; }
 .resource ~ .monlamResults div .def:last-child { padding-bottom:30px; }
 
@@ -2597,6 +2610,15 @@ div:has(.resource.preview) .infoPanel.inRes { margin:0 !important; }
 #etext-nav #dico img.ico { width:42px; display: inline-block; vertical-align: -15px;}
 
 .monlamPopup .ico { width:32px; padding-right:12px; align-self: flex-end;} 
+
+.lobsangtooltip .lobsangtooltiptext { width: 290px; left:10px; top:30px; }
+span .lobsangtooltiph { width:310px; padding-left:10px; box-sizing: border-box;}
+.lobsangtooltip .lobsangtooltiptext::after { content: none; }
+
+.resource ~ .monlamResults div .def div div div .number { background:#eee; border-radius: 50%; width: 18px; height:18px; 
+   display: inline-flex; align-items: center; justify-content: center;
+   font-size:11px; color:#079; font-weight:500; margin-right:5px; 
+}
 
 /* ------------------------------------------------------------------------------------------------------------------------ header */
 
@@ -4118,7 +4140,7 @@ html[lang="en"] .resource .data > [data-prop="bdo:creator"] h4[data-prop="bdo:ro
 
 /* ------------------------------------------------------------------------------------------------------------------------ map */
 
-.resource .data#map { padding-left:35px;padding-right:35px;padding-bottom:45px;}
+.resource .data#map { padding-left:35px;padding-right:35px;padding-bottom:45px;}*/
 
 .resource .data#map .header > div:not(:last-child),
 .resource .data#map .header h3,
@@ -4148,8 +4170,20 @@ html[lang="en"] .resource .data > [data-prop="bdo:creator"] h4[data-prop="bdo:ro
 #root > div > .resource.etext-view .data .etextPage { display:block; width:100%; }
 #root > div > .resource.etext-view .data .etextPage:first-child { border:none; margin-top:0; padding-top:0;}
 
-.resource.etext-view [lang=bo] > span[lang],
-.resource.etext #etext-scroll [lang=bo] > span:not(.startChar) { font-family:'Tibetan Machine Uni' !important; }
+
+.withMonlam .resource.etext-view .etextPage .overpage .page .hover-menu { display:none !important; }
+
+.resource.etext-view .etextPage .overpage{ padding-top:5px;}
+
+.resource.etext-view .etextPage h4 [lang=bo],
+.resource.etext-view .etextPage h4 [lang=bo] > span,
+.resource.etext #etext-scroll [lang=bo] > span:not(.startChar) { font-family:'Tibetan Machine Uni','Noto Sans', "Roboto", "Helvetica", "Arial", sans-serif !important; 
+   line-height:38px; 
+}
+
+
+.resource.etext-view .etextPage [lang=bo] .highlight { margin-top:-12px;padding:12px 5px 0 5px ; line-height:20px; display: inline-block;}
+
 
 .resource.etext:not(#a) .data.bot-props #etext-scroll { display:none !important; }
 

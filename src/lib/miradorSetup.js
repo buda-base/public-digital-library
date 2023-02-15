@@ -29,6 +29,8 @@ let importModules = async () => {
          extendedPresets = module.extendedPresets ;
       });
 
+      //require(['./monlam.js']);
+
       __ = await require("lodash")
    }
    catch(e)

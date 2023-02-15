@@ -85,6 +85,7 @@ import {languages,getLangLabel,top_right_menu,prefixesMap as prefixes,sameAsMap,
    highlight,lang_selec,etext_lang_selec,langSelect,searchLangSelec,report_GA,getGDPRconsent,renderDates,
    renderBanner} from './App';
 import {narrowWithString} from "../lib/langdetect"
+import {addMonlamStyle} from "../lib/monlam"
 import Popover from '@material-ui/core/Popover';
 import Popper from '@material-ui/core/Popper';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
@@ -9281,8 +9282,8 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                this.props.monlamResults.map( (w,i) => { 
                   let word = //w.word
                         getLangLabel(this,"",[w.word]) 
-                  let def = //w.def 
-                        getLangLabel(this, "", [w.def])
+                  let def = w.def 
+                        //getLangLabel(this, "", [w.def])
                   let open = this.state.collapse["monlam-def-"+i] || this.props.monlamResults.length === 1 && this.state.collapse["monlam-def-"+i] === undefined
                   let kw = getLangLabel(this,"",[ { value:this.props.monlamKeyword, lang: this.props.etextLang }])
                   if(kw?.value) kw = kw.value 
@@ -9292,7 +9293,11 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                         <span>{word?.value.split(kw).map((v,j) => <>{j > 0 ? <span className="kw">{kw}</span>:null}<span>{v}</span></>)}</span>
                         <ExpandMore className={open?"on":""}/>
                      </b>
-                     <Collapse timeout={0} in={open}>{def?.value?.split(/[\r\n]+/).map(d => <span>{d}</span>)}</Collapse>
+                     <Collapse timeout={0} in={open}>{def?.value?.split(/[\r\n]+/).map(d => { 
+                        let val = addMonlamStyle(d)
+                        val = getLangLabel(this,"",[{value: val, lang: "bo"}]) 
+                        return <span>{HTMLparse(val?.value?.replace(/((>) *\] *)|( *\[ *(<))/g,"$2 $4"))}</span>
+                     })}</Collapse>
                   </div>
                })
             //}</pre>
