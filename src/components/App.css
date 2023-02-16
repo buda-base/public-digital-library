@@ -2608,6 +2608,9 @@ div:has(.resource.preview) .infoPanel.inRes { margin:0 !important; }
 .resource ~ .monlamResults div .def:first-child { padding-top:30px; }
 .resource ~ .monlamResults div .def:last-child { padding-bottom:30px; }
 
+.resource ~ .monlamResults div .def .numbers,
+.resource ~ .monlamResults div .def .numbers2 { width:18px; height:18px; padding:0; display:inline-flex; justify-content: center; align-items: center; top:0; vertical-align: middle;}
+
 #root > .withMonlam { display: flex; }
 #root > .withMonlam > .resource.etext-view { width:calc(100% - 400px - 30px * 2); }
 
