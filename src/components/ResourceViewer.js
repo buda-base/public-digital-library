@@ -9293,14 +9293,15 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                         <span>{word?.value.split(kw).map((v,j) => <>{j > 0 ? <span className="kw">{kw}</span>:null}<span>{v}</span></>)}</span>
                         <ExpandMore className={open?"on":""}/>
                      </b>
-                     <Collapse timeout={0} className={open?"collapse-on":""} in={open}>{def?.value?.split(/[\r\n]+/).map(d => { 
+                     <Collapse timeout={0} className={open?"collapse-on":""} in={open}>{HTMLparse(def?.value?.split(/[\r\n]+/).map(d => { 
                         let val = addMonlamStyle(d)
                         val = getLangLabel(this,"",[{value: val, lang: "bo"}]) 
                         if(val?.value) {
                            //console.log("?", val?.value,val?.value?.replace(/((>) *\] *)|( *\[ *(<))/g,"$2 $4"))
-                           return <span>{HTMLparse(val?.value?.replace(/((>) *\] *)|( *\[ *(<))/g,"$2 $4"))}</span>
+                           //return <span>{HTMLparse(val?.value?.replace(/((>) *\] *)|( *\[ *(<))/g,"$2 $4"))}</span>
+                           return "<span class='content-top'>"+val?.value?.replace(/((>) *\] *)|( *\[ *(<))/g,"$2 $4")+"</span>"
                         }
-                     })}</Collapse>
+                     }).join(""))}</Collapse>
                   </div>
                })
             //}</pre>
@@ -9317,7 +9318,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          return ([
             getGDPRconsent(this),
             <div class={monlamResults ? "withMonlam" : ""}>               
-               {/* { monlamResults && <link rel="stylesheet" href="https://monlamdic.com/dictionarys/files/css/basic.css" /> } */}
+               { monlamResults && <link rel="stylesheet" href="https://monlamdic.com/dictionarys/files/css/basic.css" /> }
                { top_right_menu(this,title,searchUrl,etextRes) }               
                { this.renderMirador(isMirador) }           
                <div class="resource etext-view" >

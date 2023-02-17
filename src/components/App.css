@@ -2561,7 +2561,7 @@ div:has(.resource.preview) .infoPanel.inRes { margin:0 !important; }
 
 /* ------------------------------------------------------------------------------------------------------------------------ monlam*/
 
-@import "https://monlamdic.com/dictionarys/files/css/basic.css";
+/* @import "https://monlamdic.com/dictionarys/files/css/basic.css"; */
 
 .resource ~ .monlamResults { width:0px; position:relative; box-shadow:-2px 0 3px rgba(0,0,0,0.15);flex-shrink: 0; } 
 .resource ~ .monlamResults > div { width:0px; height:calc(100% - 2 * 80px); position:fixed; right:0; top:80px; background:white; overflow:auto;}
@@ -2603,8 +2603,8 @@ div:has(.resource.preview) .infoPanel.inRes { margin:0 !important; }
 
 .resource ~ .monlamResults div .def p.gap { margin-top:0; }  
 
-.resource ~ .monlamResults div .def > div > div > div > span { padding-left:15px; display: block; padding-top:12px; }
-
+.resource ~ .monlamResults div .def > div > div > div .content-top { padding-left:15px; display: block; padding-top:12px; }
+རྡོ་རྗེ་81འཆང་
 .resource ~ .monlamResults div .def:first-child { padding-top:30px; }
 .resource ~ .monlamResults div .def:last-child { padding-bottom:30px; }
 
@@ -2620,9 +2620,12 @@ div:has(.resource.preview) .infoPanel.inRes { margin:0 !important; }
 
 .monlamPopup .ico { width:32px; padding-right:12px; align-self: flex-end;} 
 
-.lobsangtooltip .lobsangtooltiptext { width: 290px; left:10px; top:30px; }
-span .lobsangtooltiph { width:310px; padding-left:10px; box-sizing: border-box;}
-.lobsangtooltip .lobsangtooltiptext::after { content: none; }
+.resource ~ .monlamResults .lobsangtooltip .lobsangtooltiptext { width: 290px; left:10px; top:30px; }
+.resource ~ .monlamResults span .lobsangtooltiph { width:310px; padding-left:10px; box-sizing: border-box;}
+.resource ~ .monlamResults .lobsangtooltip .lobsangtooltiptext::after { content: none; }
+
+.resource ~ .monlamResults .perna,
+.resource ~ .monlamResults .dhtmlgoodies_answer { font-family:"Noto Sans", "Noto Serif Tibetan", "Noto Serif Khmer", "Noto Sans Mongolian", "Roboto", "Helvetica", "Arial", sans-serif !important; }
 
 .resource ~ .monlamResults div .def div div div .number { background:#eee; border-radius: 50%; width: 18px; height:18px; 
    display: inline-flex; align-items: center; justify-content: center;
