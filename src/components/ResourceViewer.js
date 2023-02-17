@@ -1776,6 +1776,13 @@ class ResourceViewer extends Component<Props,State>
       }      
 
       if(s) this.setState(s);
+
+      if(this.props.monlamResults) {
+         $(".dhtmlgoodies_question.collapsible").off("click").on("click",function(ev) {
+            //alert("ok!")
+            $(ev.currentTarget).toggleClass("on")
+         })
+      }
       
       this.scrollToHashID(this.props.history)
    }
@@ -9288,6 +9295,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   let kw = getLangLabel(this,"",[ { value:this.props.monlamKeyword, lang: this.props.etextLang }])
                   if(kw?.value) kw = kw.value 
                   else kw = this.props.monlamKeyword
+                  let hasCollapsible = false
                   return <div class="def">
                      <b lang={word.lang} onClick={() => this.setState({collapse:{...this.state.collapse, ["monlam-def-"+i]:!open}})}>
                         <span>{word?.value.split(kw).map((v,j) => <>{j > 0 ? <span className="kw">{kw}</span>:null}<span>{v}</span></>)}</span>
@@ -9299,7 +9307,11 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                         if(val?.value) {
                            //console.log("?", val?.value,val?.value?.replace(/((>) *\] *)|( *\[ *(<))/g,"$2 $4"))
                            //return <span>{HTMLparse(val?.value?.replace(/((>) *\] *)|( *\[ *(<))/g,"$2 $4"))}</span>
-                           return "<span class='content-top'>"+val?.value?.replace(/((>) *\] *)|( *\[ *(<))/g,"$2 $4")+"</span>"
+                           let res = "<span class='content-top'>"+val?.value?.replace(/((>) *\] *)|( *\[ *(<))/g,"$2 $4")
+                           if(hasCollapsible) res += "</div></div></span>"
+                           hasCollapsible = val.value.includes("dhtmlgoodies_answer")
+                           if(!hasCollapsible) res += "</span>"
+                           return res
                         }
                      }).join(""))}</Collapse>
                   </div>

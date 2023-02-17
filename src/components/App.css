@@ -2627,6 +2627,14 @@ div:has(.resource.preview) .infoPanel.inRes { margin:0 !important; }
 .resource ~ .monlamResults .perna,
 .resource ~ .monlamResults .dhtmlgoodies_answer { font-family:"Noto Sans", "Noto Serif Tibetan", "Noto Serif Khmer", "Noto Sans Mongolian", "Roboto", "Helvetica", "Arial", sans-serif !important; }
 
+.resource ~ .monlamResults .dhtmlgoodies_answer { box-sizing: border-box;}
+
+.resource ~ .monlamResults .dhtmlgoodies_question { height:32px; box-sizing: border-box; }
+.resource ~ .monlamResults .dhtmlgoodies_question img { vertical-align: middle; }
+
+.resource ~ .monlamResults .dhtmlgoodies_question.on { font-weight:600; }
+.resource ~ .monlamResults .dhtmlgoodies_question.on + .dhtmlgoodies_answer { display: block; }
+
 .resource ~ .monlamResults div .def div div div .number { background:#eee; border-radius: 50%; width: 18px; height:18px; 
    display: inline-flex; align-items: center; justify-content: center;
    font-size:11px; color:#079; font-weight:500; margin-right:5px; 
