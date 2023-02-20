@@ -249,7 +249,7 @@ export function miradorSetUI(closeCollec, num, withIAlink) {
 
 
 
-async function hasEtextPage(manifest) {
+async function hasEtextPage(manifest, resID) {
 
    if(jQ && jQ("#viewer.inApp").length) return
 
@@ -298,7 +298,10 @@ async function hasEtextPage(manifest) {
       let ut  = await check.json()
       if(ut) ut = ut[IRI.replace(/bdr:/,bdr)]
       if(ut) ut = ut[tmp+"hasEtextRes"]
-      if(ut && ut.length) ut = ut[0].value
+      if(ut && ut.length) { 
+         if(ut.some(u => u.value.replace(new RegExp(bdr),"bdr:") == resID)) ut = resID
+         else ut = ut[0].value
+      }
       if(ut) ut = ut.replace(new RegExp(bdr),"bdr:")
       
       console.log("ut3",ut)
@@ -534,7 +537,7 @@ export async function miradorConfig(data, manifest, canvasID, useCredentials, la
          ajaxWithCredentials:true, //useCredentials, // try always true (cf #506)
          sidePanelVisible: false,
          labelToString,         
-         getEtextPage: await hasEtextPage(manifest),
+         getEtextPage: await hasEtextPage(manifest, resID),
          
          userButtons: [
                { 
