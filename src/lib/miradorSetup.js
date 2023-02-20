@@ -297,14 +297,19 @@ async function hasEtextPage(manifest, resID) {
       let check = await window.fetch(ldspdi+"/query/graph/Etext_base?R_RES="+IRI+"&format=json") ;
       let ut  = await check.json()
       if(ut) ut = ut[IRI.replace(/bdr:/,bdr)]
-      if(ut) ut = ut[tmp+"hasEtextRes"]
+      let etextRes = ut[tmp+"hasEtextRes"]
+      ut = etextRes
       if(ut && ut.length) { 
-         if(ut.some(u => u.value.replace(new RegExp(bdr),"bdr:") == resID)) ut = resID
+         etextRes = etextRes.map(u => u.value.replace(new RegExp(bdr),"bdr:"))
+         if(resID && etextRes.includes(resID)) ut = resID
          else ut = ut[0].value
       }
       if(ut) ut = ut.replace(new RegExp(bdr),"bdr:")
       
-      console.log("ut3",ut)
+      if(etextRes.length > 1) window.multipleEtextRes = { values: etextRes, index: etextRes.indexOf(ut) }
+      else if(window.multipleEtextRes) delete window.multipleEtextRes
+
+      console.log("ut3", ut, window.etextRes)
 
       if(!ut) { 
          delete window.MiradorUseEtext
@@ -342,6 +347,10 @@ async function hasEtextPage(manifest, resID) {
 
          if(!canvas || !ut) return "(issue with canvas data: "+JSON.stringify(canvas,null,3)+")" ;
 
+         let m 
+         if((m = window.multipleEtextRes) && m.values[m.index]) {
+            ut = m.values[m.index]
+         }
          
          let id = canvas.label, id_sav ;
          if(id && !Array.isArray(id)) id = [ id ] 

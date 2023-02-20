@@ -2601,9 +2601,10 @@ div:has(.resource.preview) .infoPanel.inRes { margin:0 !important; }
 .resource ~ .monlamResults div .def br:first-child,
 .resource ~ .monlamResults div .def .spc { display:none; }
 
-.resource ~ .monlamResults div .def p.gap { margin-top:0; }  
+.resource ~ .monlamResults div .def p.gap { margin-top:12px; }  
+.resource ~ .monlamResults div .def p.gap:first-child { margin-top:0px; }  
 
-.resource ~ .monlamResults div .def > div > div > div .content-top { padding-left:15px; display: block; padding-top:12px; }
+.resource ~ .monlamResults div .def > div > div > div > div > div > div { padding-left:15px; display: block; padding-top:12px; }
 རྡོ་རྗེ་81འཆང་
 .resource ~ .monlamResults div .def:first-child { padding-top:30px; }
 .resource ~ .monlamResults div .def:last-child { padding-bottom:30px; }

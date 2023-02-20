@@ -9301,19 +9301,19 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                         <span>{word?.value.split(kw).map((v,j) => <>{j > 0 ? <span className="kw">{kw}</span>:null}<span>{v}</span></>)}</span>
                         <ExpandMore className={open?"on":""}/>
                      </b>
-                     <Collapse timeout={0} className={open?"collapse-on":""} in={open}>{HTMLparse(def?.value?.split(/[\r\n]+/).map(d => { 
+                     <Collapse timeout={0} className={open?"collapse-on":""} in={open}>{HTMLparse("<div><div><div>"+def?.value?.split(/[\r\n]+/).map(d => { 
                         let val = addMonlamStyle(d)
                         val = getLangLabel(this,"",[{value: val, lang: "bo"}]) 
                         if(val?.value) {
                            //console.log("?", val?.value,val?.value?.replace(/((>) *\] *)|( *\[ *(<))/g,"$2 $4"))
                            //return <span>{HTMLparse(val?.value?.replace(/((>) *\] *)|( *\[ *(<))/g,"$2 $4"))}</span>
-                           let res = "<span class='content-top'>"+val?.value?.replace(/((>) *\] *)|( *\[ *(<))/g,"$2 $4")
-                           if(hasCollapsible) res += "</div></div></span>"
+                           let res = ""+val?.value?.replace(/((>) *\] *)|( *\[ *(<))/g,"$2 $4")
+                           if(hasCollapsible) res += "</div></div>"
                            hasCollapsible = val.value.includes("dhtmlgoodies_answer")
-                           if(!hasCollapsible) res += "</span>"
+                           //if(!hasCollapsible) res += "</span>"
                            return res
                         }
-                     }).join(""))}</Collapse>
+                     }).join("")+"</div></div></div>")}</Collapse>
                   </div>
                })
             //}</pre>
