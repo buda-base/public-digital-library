@@ -2564,7 +2564,12 @@ div:has(.resource.preview) .infoPanel.inRes { margin:0 !important; }
 /* @import "https://monlamdic.com/dictionarys/files/css/basic.css"; */
 
 .resource ~ .monlamResults { width:0px; position:relative; box-shadow:-2px 0 3px rgba(0,0,0,0.15);flex-shrink: 0; } 
-.resource ~ .monlamResults > div { width:0px; height:calc(100% - 2 * 80px); position:fixed; right:0; top:80px; background:white; overflow:auto;}
+.resource ~ .monlamResults > div { width:0px; height:calc(100% - 2 * 80px); position:fixed; right:0; top:80px; background:white; overflow:auto; 
+   /* background-image:url(/icons/monlam.png); background-repeat: no-repeat; background-size:100px; background-position: center; */
+}
+
+.resource ~ .monlamResults > div > a:first-child { position: absolute; right:5px; top:0; padding:0; opacity:0.5; transition: all 100ms ease-in-out;}
+.resource ~ .monlamResults > div > a:first-child:hover { opacity:1; }
 
 .resource ~ .monlamResults.visible,
 .resource ~ .monlamResults.visible > div { width:400px; }
@@ -2581,10 +2586,10 @@ div:has(.resource.preview) .infoPanel.inRes { margin:0 !important; }
    -ms-user-select: none; /* IE 10+ */
    user-select: none;
 }
-.resource ~ .monlamResults div .def > b { color:#09b; display: inline-flex; align-items: center; cursor: pointer; text-decoration: underline; }
+.resource ~ .monlamResults div .def > b { /*color:#09b;*/ display: inline-flex; align-items: center; cursor: pointer; /*text-decoration: underline;*/ font-weight:500; color:#152631;}
 .resource ~ .monlamResults div .def > b > svg { transform: rotate(270deg); margin-top:-5px;}
 .resource ~ .monlamResults div .def > b > svg.on { transform: rotate(0deg); margin-top:-5px;}
-.resource ~ .monlamResults div .def > b > span > .kw { background:rgba(0,128,255,0.2); }
+.resource ~ .monlamResults div .def > b > span > .kw { background:rgba(252,224,141,0.65); }
 .resource ~ .monlamResults div .def > b > span { font-size:115%; }
 .resource ~ .monlamResults div .def > b[lang='bo'] > span { font-size:135%;}
 
@@ -2600,12 +2605,13 @@ div:has(.resource.preview) .infoPanel.inRes { margin:0 !important; }
 
 .resource ~ .monlamResults div .def br:first-child,
 .resource ~ .monlamResults div .def .spc { display:none; }
+.resource ~ .monlamResults div .def img+.spc { display:inline; }
 
 .resource ~ .monlamResults div .def p.gap { margin-top:12px; }  
 .resource ~ .monlamResults div .def p.gap:first-child { margin-top:0px; }  
 
 .resource ~ .monlamResults div .def > div > div > div > div > div > div { padding-left:15px; display: block; padding-top:12px; }
-རྡོ་རྗེ་81འཆང་
+
 .resource ~ .monlamResults div .def:first-child { padding-top:30px; }
 .resource ~ .monlamResults div .def:last-child { padding-bottom:30px; }
 
@@ -2616,8 +2622,16 @@ div:has(.resource.preview) .infoPanel.inRes { margin:0 !important; }
 #root > .withMonlam > .resource.etext-view { width:calc(100% - 400px - 30px * 2); }
 
 
-#etext-nav #dico { margin-left:auto;  }
+#etext-nav #dico { margin-left:auto; position:relative; }
 #etext-nav #dico img.ico { width:42px; display: inline-block; vertical-align: -15px;}
+
+#etext-nav #dico .new { display: block; position: absolute; top:calc(50% - 5px); right:calc(100% + 7px); font-size:10px; text-transform: uppercase; line-height: 12px; 
+   font-weight: 600; background:#d73449; border-radius: 2px; padding:2px 4px 1px 4px; box-sizing: border-box; width: max-content;
+   font-family:"Noto Sans","Noto Serif Tibetan";
+}
+#etext-nav #dico:hover .new { text-decoration: none !important; }
+
+[lang='bo'] #etext-nav #dico .new { padding:3px 3px 8px 3px; top:calc(50% - 8px); font-size:100%; }
 
 .monlamPopup .ico { width:32px; padding-right:12px; align-self: flex-end;} 
 
@@ -2628,7 +2642,7 @@ div:has(.resource.preview) .infoPanel.inRes { margin:0 !important; }
 .resource ~ .monlamResults .perna,
 .resource ~ .monlamResults .dhtmlgoodies_answer { font-family:"Noto Sans", "Noto Serif Tibetan", "Noto Serif Khmer", "Noto Sans Mongolian", "Roboto", "Helvetica", "Arial", sans-serif !important; }
 
-.resource ~ .monlamResults .dhtmlgoodies_answer { box-sizing: border-box;}
+.resource ~ .monlamResults .dhtmlgoodies_answer { box-sizing: border-box; padding:10px;}
 
 .resource ~ .monlamResults .dhtmlgoodies_question { height:32px; box-sizing: border-box; }
 .resource ~ .monlamResults .dhtmlgoodies_question img { vertical-align: middle; }

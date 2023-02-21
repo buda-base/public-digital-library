@@ -6483,7 +6483,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   let ref = React.createRef()
                   coords = coords.map( (c,i) => { 
                      if(i > 0) ref = null
-                     return <div {...ref?{ref}:{}} style={{...c.px, scrollMargin:"50vh 50px 50vh 50px", pointerEvents:"none", position:"absolute", background: "rgba(0,153,255,0.35)", display:"block", zIndex: 1, mixBlendMode: "darken" }}></div>
+                     return <div {...ref?{ref}:{}} style={{...c.px, scrollMargin:"50vh 50px 50vh 50px", pointerEvents:"none", position:"absolute", background: "rgba(252,224,141,0.65)", display:"block", zIndex: 1, mixBlendMode: "darken" }}></div>
                   })
 
                   return { hilight:coords, ref, popupCoords:Array.from(range.getClientRects()) }
@@ -7370,7 +7370,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                { this.props.config.useMonlam && <a id="dico" class="on" onClick={(e) => { 
                   if(this.state.enableDicoSearch) this.props.onCloseMonlam()
                   this.setState({enableDicoSearch:!this.state.enableDicoSearch, ...this.state.enableDicoSearch?{monlam:null}:{}})
-               }}>{this.state.enableDicoSearch?<img id="check" src="/icons/check.svg"/>:<span id="check"></span>}{I18n.t("viewer.monlam")}<span><img class="ico" src="/icons/monlam.png"/></span></a> }
+               }}><div class="new">{I18n.t("viewer.new")}</div>{this.state.enableDicoSearch?<img id="check" src="/icons/check.svg"/>:<span id="check"></span>}{I18n.t("viewer.monlam")}<span><img class="ico" src="/icons/monlam.png"/></span></a> }
                <div id="control">
                   <span title={I18n.t("mirador.decreaseFont")} class={!size||size > 0.6?"on":""} onClick={(e)=>etextSize(false)}><img src="/icons/Zm.svg"/></span>
                   <span title={I18n.t("mirador.increaseFont")} class={!size||size < 2.4?"on":""} onClick={(e)=>etextSize(true)}><img src="/icons/Zp.svg"/></span>
@@ -9344,8 +9344,9 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   </div>                  
                </div>
                { this.renderEtextNav(etextAccessError) }
-               <div class={"monlamResults "+(this.state.enableDicoSearch && (this.state.monlam && this.state.collapse.monlamPopup || monlamResults) ? "visible" : "")}>
+               <div class={"monlamResults "+(this.state.enableDicoSearch && (this.state.monlam && this.state.collapse.monlamPopup || monlamResults) ? "visible" : "")}>                  
                   <div>
+                     <a href="https://monlamdic.com" target="_blank" rel="noopener noreferrer"><img width="48" src="/icons/monlam.png" title="monlamdic.com"/></a>
                      { this.props.monlamResults == true && <Loader  /> }
                      { monlamResults }
                   </div>
