@@ -306,7 +306,7 @@ async function hasEtextPage(manifest, resID) {
       }
       if(ut) ut = ut.replace(new RegExp(bdr),"bdr:")
       
-      if(etextRes.length > 1) window.multipleEtextRes = { values: etextRes, index: etextRes.indexOf(ut) }
+      if(etextRes?.length > 1) window.multipleEtextRes = { values: etextRes, index: etextRes.indexOf(ut) }
       else if(window.multipleEtextRes) delete window.multipleEtextRes
 
       console.log("ut3", ut, window.etextRes)
