@@ -9346,7 +9346,11 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                { this.renderEtextNav(etextAccessError) }
                <div class={"monlamResults "+(this.state.enableDicoSearch && (this.state.monlam && this.state.collapse.monlamPopup || monlamResults) ? "visible" : "")}>                  
                   <div>
-                     <a href="https://monlamdic.com" target="_blank" rel="noopener noreferrer"><img width="48" src="/icons/monlam.png" title="monlamdic.com"/></a>
+                     <h2>
+                        <a href="https://monlamdic.com" target="_blank" rel="noopener noreferrer"><img width="32" src="/icons/monlam.png" title="monlamdic.com"/></a>
+                        <a href="https://monlamdic.com" target="_blank" rel="noopener noreferrer">{I18n.t("viewer.monlamTitle")}</a>
+                        <a href="https://monlamdic.com" target="_blank" rel="noopener noreferrer"><img width="32" src="/icons/monlam.png" title="monlamdic.com"/></a>
+                     </h2>
                      { this.props.monlamResults == true && <Loader  /> }
                      { monlamResults }
                   </div>

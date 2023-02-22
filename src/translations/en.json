@@ -828,6 +828,7 @@
       "metadataTooltip": "View information/metadata about this object",
       "mirrorTooltip": "Mirror image",
       "monlam":"Monlam dictionary",
+      "monlamTitle":"Definitions from the Monlam Great Dictionary",
       "more": "more",
       "mustLogin":"You must be logged in to download PDFs or image files.",
       "myManifests": "My Manifests",

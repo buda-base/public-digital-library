@@ -2626,7 +2626,7 @@ div:has(.resource.preview) .infoPanel.inRes { margin:0 !important; }
 #etext-nav #dico img.ico { width:42px; display: inline-block; vertical-align: -15px;}
 
 #etext-nav #dico .new { display: block; position: absolute; top:calc(50% - 5px); right:calc(100% + 7px); font-size:10px; text-transform: uppercase; line-height: 12px; 
-   font-weight: 600; background:#d73449; border-radius: 2px; padding:2px 4px 1px 4px; box-sizing: border-box; width: max-content;
+   font-weight: 600; background:#d73449; border-radius: 2px; padding:2px 4px 2px 4px; box-sizing: border-box; width: max-content;
    font-family:"Noto Sans","Noto Serif Tibetan";
 }
 #etext-nav #dico:hover .new { text-decoration: none !important; }
@@ -2654,6 +2654,9 @@ div:has(.resource.preview) .infoPanel.inRes { margin:0 !important; }
    display: inline-flex; align-items: center; justify-content: center;
    font-size:11px; color:#079; font-weight:500; margin-right:5px; 
 }
+
+.resource ~ .monlamResults h2 { display: flex; align-items: center; padding-top:0; margin-bottom:0; font-size:20px; font-weight:700; text-align: center; } 
+.resource ~ .monlamResults h2 a { margin-right: 10px; color:#152631; text-decoration: none;}
 
 /* ------------------------------------------------------------------------------------------------------------------------ header */
 
