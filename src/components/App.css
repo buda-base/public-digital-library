@@ -2587,12 +2587,16 @@ div:has(.resource.preview) .infoPanel.inRes { margin:0 !important; }
    user-select: none;
 }
 .resource ~ .monlamResults div .def > b { /*color:#09b;*/ display: inline-flex; align-items: center; cursor: pointer; /*text-decoration: underline;*/ font-weight:500; color:#152631;}
-.resource ~ .monlamResults div .def > b > svg { transform: rotate(270deg); margin-top:-5px;}
-.resource ~ .monlamResults div .def > b > svg.on { transform: rotate(0deg); margin-top:-5px;}
+.resource ~ .monlamResults div .def > b > svg { transform: rotate(270deg); margin-top:0px;}
+.resource ~ .monlamResults div .def > b > svg.on { transform: rotate(0deg); margin-top:0px;}
 .resource ~ .monlamResults div .def > b > span > .kw { background:rgba(252,224,141,0.65); }
 .resource ~ .monlamResults div .def > b > span { font-size:115%; }
 .resource ~ .monlamResults div .def > b[lang='bo'] > span { font-size:135%;}
 
+/*
+.resource ~ .monlamResults div .def > b[lang='bo'] > svg { margin-top:-5px;}
+.resource ~ .monlamResults div .def > b[lang='bo'] > svg.on { margin-top:-5px;}
+*/
 
 .resource ~ .monlamResults div .def .collapse-on { overflow:visible;  }
 
@@ -2657,6 +2661,7 @@ div:has(.resource.preview) .infoPanel.inRes { margin:0 !important; }
 
 .resource ~ .monlamResults h2 { display: flex; align-items: center; padding-top:0; margin-bottom:0; font-size:20px; font-weight:700; text-align: center; } 
 .resource ~ .monlamResults h2 a { margin-right: 10px; color:#152631; text-decoration: none;}
+.resource ~ .monlamResults h2 a:last-child { visibility:hidden; }
 
 /* ------------------------------------------------------------------------------------------------------------------------ header */
 
