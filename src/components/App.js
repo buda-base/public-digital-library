@@ -922,6 +922,11 @@ export function etext_lang_selec(that,black:boolean = false, elem, DL)
                                     value={i}
                                     onClick={(event) => { 
                                        localStorage.setItem('etextlang', i);
+                                       
+                                       if(that.state.monlam) {
+                                          console.log("monlam?",that.state.monlam)
+                                       }
+
                                        that.setState({...that.state,[anchor]:null,collapse: {...that.state.collapse, [lang]:false },
                                           ...that.state.monlam?{monlam:null}:{}
                                        }); 

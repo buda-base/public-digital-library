@@ -273,7 +273,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       onGetCitationData:(id:string) => {
          dispatch(data.getCitationData(id))
       },
-      onCallMonlamAPI:(obj:{}, keyword: string) => {
+      onCallMonlamAPI:(obj:{}, keyword: {}) => {
          dispatch(data.getMonlamResults(obj, keyword))
       },
       onCloseMonlam:() => {

@@ -7347,7 +7347,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                      if(k.startsWith("monlam-def-")) delete collapse[k]
                   }
                   this.setState({ collapse })
-                  this.props.onCallMonlamAPI(this.state.monlam.api, this.state.monlam.range.toString());
+                  this.props.onCallMonlamAPI(this.state.monlam.api, {value: this.state.monlam.range.toString(), lang: this.props.etextLang});
                   
                   if(!this.props.monlamResults) {
                      setTimeout( () => {
@@ -9292,13 +9292,13 @@ perma_menu(pdfLink,monoVol,fairUse,other)
             monlamResults = //<pre>{
                this.props.monlamResults.map( (w,i) => { 
                   let word = //w.word
-                        getLangLabel(this,"",[w.word]) 
+                        getLangLabel(this,bdo+"eTextHasPage",[w.word]) 
                   let def = w.def 
                         //getLangLabel(this, "", [w.def])
                   let open = this.state.collapse["monlam-def-"+i] || this.props.monlamResults.length === 1 && this.state.collapse["monlam-def-"+i] === undefined
-                  let kw = getLangLabel(this,"",[ { value:this.props.monlamKeyword, lang: this.props.etextLang }])
+                  let kw = getLangLabel(this,bdo+"eTextHasPage",[ { ...this.props.monlamKeyword }])
                   if(kw?.value) kw = kw.value 
-                  else kw = this.props.monlamKeyword
+                  else kw = this.props.monlamKeyword?.value
                   let hasCollapsible = false
                   return <div class="def">
                      <b lang={word.lang} onClick={() => this.setState({collapse:{...this.state.collapse, ["monlam-def-"+i]:!open}})}>
@@ -9307,7 +9307,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                      </b>
                      <Collapse timeout={0} className={open?"collapse-on":""} in={open}>{HTMLparse("<div><div><div>"+def?.value?.split(/[\r\n]+/).map(d => { 
                         let val = addMonlamStyle(d)
-                        val = getLangLabel(this,"",[{value: val, lang: "bo"}]) 
+                        val = getLangLabel(this,bdo+"eTextHasPage",[{value: val, lang: "bo"}]) 
                         if(val?.value) {
                            //console.log("?", val?.value,val?.value?.replace(/((>) *\] *)|( *\[ *(<))/g,"$2 $4"))
                            //return <span>{HTMLparse(val?.value?.replace(/((>) *\] *)|( *\[ *(<))/g,"$2 $4"))}</span>
@@ -9322,7 +9322,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                })
             //}</pre>
          } else if(this.props.monlamResults && this.props.monlamResults != true) {
-            monlamResults = <div>Nothing found for "{this.props.monlamKeyword}".</div>
+            monlamResults = <div>Nothing found for "{this.props.monlamKeyword?.value}".</div>
          } else if(this.state.monlam && this.state.collapse.monlamPopup) {
             monlamResults = <div></div>
          }
