@@ -6525,12 +6525,16 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                      if(!this.state.collapse["imageVolume-"+id] && imageLinks[id][e.seq]) 
                         if(!imgErr || !imgErr[imageLinks[id][e.seq].image]) return (
                            <div class="imagePage">
-                              <img class="page" title="Open image+text reading view" src={imageLinks[id][e.seq].image} onError={(ev)=> handleImageError(ev,imageLinks[id][e.seq].image,e.seq)} onClick={eve => { 
+                              {/* // TODO: use openseadragon 
+                                 <img class="page" title="Open image+text reading view" src={imageLinks[id][e.seq].image} onError={(ev)=> handleImageError(ev,imageLinks[id][e.seq].image,e.seq)} onClick={eve => { 
                                  let manif = this.props.imageVolumeManifests[id]
                                  window.MiradorUseEtext = "open" ;                                 
                                  this.showMirador(imageLinks[id][e.seq].id,manif["@id"]);
-                                 //openMiradorAtPage(imageLinks[id][e.seq].id,manif["@id"])
-                              }}/>          
+                              }}/>     */}
+                              <a href={imageLinks[id][e.seq].image} target="_blank" rel="noopener noreferrer">
+                                 <img class="page" src={imageLinks[id][e.seq].image} onError={(ev)=> handleImageError(ev,imageLinks[id][e.seq].image,e.seq)} />
+                              </a>
+
                               {/*}
                               <div class="small"><a title="Open image+text reading view" onClick={eve => { 
                                  let manif = this.props.imageVolumeManifests[id]
