@@ -5774,6 +5774,9 @@ a.result + #matches.mobile,
    .resource .data .header { height:120px;}
 
    .resource.user .data .header .before, .resource:not(.user) .data .header::before {width:100px;height:100px; background-size: 65%; }
+   
+   .resource:not(.user) .data .header.place::before { background-size:40%; }
+
 
    /* .firstImage { height: 100vh;} */
    
