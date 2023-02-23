@@ -4183,7 +4183,7 @@ html[lang="en"] .resource .data > [data-prop="bdo:creator"] h4[data-prop="bdo:ro
 
 /* ------------------------------------------------------------------------------------------------------------------------ map */
 
-.resource .data#map { padding-left:35px;padding-right:35px;padding-bottom:45px;}*/
+.resource .data#map { padding-left:35px;padding-right:35px;padding-bottom:45px;}
 
 .resource .data#map .header > div:not(:last-child),
 .resource .data#map .header h3,
