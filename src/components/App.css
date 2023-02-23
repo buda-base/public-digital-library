@@ -5388,7 +5388,24 @@ a.result .contenu ul > div:last-child h3[lang=bo] span { font-size:18px;}
 
    .resource .title h2 .RID { max-width:60%; }
 
-   #root > div > .resource { padding:155px 24px; padding-bottom:80px; margin:0; min-width:100%; box-sizing:border-box;}
+   #root > div > .resource { padding:155px 24px; padding-bottom:80px; margin:0; box-sizing:border-box;}
+
+   #root > div:not(.withMonlam) > .resource { min-width:100%; }
+   .resource ~ .monlamResults > div { top:0; height:100%; }
+   .resource ~ .monlamResults.visible, .resource ~ .monlamResults.visible > div { width:300px; }
+
+   #etext-nav #DL, 
+   #etext-nav #control + a,
+   #etext-nav #dico { font-size: 0;   white-space: nowrap;}
+
+   #etext-nav #dico { display:flex; }
+
+   #etext-nav #dico .new { display:none;}
+
+   #etext-nav #control + a #check { margin-right: 0; }
+   #etext-nav #control + a img { margin: 0 0 0 10px; }
+   #etext-nav a #check { margin-right:10px; }
+   #etext-nav #dico img.ico { margin-left:0; }
 
    .resource:not(.etext-view) > :not(.index):not(.ariane) { width:100%; margin:0;}
 
@@ -5953,6 +5970,12 @@ a.result + #matches.mobile,
 
 @media (max-width:800px)
 {
+
+   .etextPage h4.page > div:not([class]) { display:none !important; }
+
+   #etext-nav #dico,
+   .monlamResults.visible { display:none ; }
+
    .App.home.khmerServer #search-bar > div { width:calc(100vw - 100px);}
    .App.home.khmerServer #search-bar > div > div { width:100% !important; }
 
