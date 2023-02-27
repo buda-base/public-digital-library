@@ -1191,14 +1191,16 @@ class ResourceViewer extends Component<Props,State>
          // function that verifies the detection
          myEvent = myEvent || window.event; // 'myEvent' is event object
          let key = myEvent.which || myEvent.keyCode; // this is to detect keyCode         
-         // Detecting Ctrl
+         // Detecting Ctrl / Command
          let ctrl = myEvent.ctrlKey ? myEvent.ctrlKey : ((key === 17) ? true : false);
+         let cmd = myEvent.metaKey 
          
-         if (that.state?.monlam?.range && key == 67 && ctrl) {         
+         if (that.state?.monlam?.range && key == 67 && (ctrl || cmd)) {         
             navigator.clipboard.writeText(that.state.monlam.range.toString())
             console.log("copied:",that.state.monlam.range.toString())
          }
       });
+      
       
    }
 
