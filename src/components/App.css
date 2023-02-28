@@ -5984,7 +5984,7 @@ a.result + #matches.mobile,
       background: white;
    }
    .resource ~ .monlamResults.visible, .resource ~ .monlamResults.visible > div { width:min(400px,100vw - 50px); right:0; }
-   .resource ~ .monlamResults, .resource ~ .monlamResults > div { transition:all 200ms ease-in-out; right:max(-400px, calc( (100vw - 50px) * -1)); }
+   .resource ~ .monlamResults, .resource ~ .monlamResults > div { transition:all 200ms ease-in-out; right:-400px; }
 
    #root > .withMonlam > .resource.etext-view { max-width:100%; }
 
