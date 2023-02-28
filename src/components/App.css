@@ -5393,7 +5393,7 @@ a.result .contenu ul > div:last-child h3[lang=bo] span { font-size:18px;}
 
    #root > div:not(.withMonlam) > .resource { min-width:100%; }
    .resource ~ .monlamResults > div { top:0; height:100%; }
-   .resource ~ .monlamResults.visible, .resource ~ .monlamResults.visible > div { width:300px; }
+   .resource ~ .monlamResults.visible, .resource ~ .monlamResults.visible > div { width:min(400px,100vw - 75px); }
 
    #etext-nav #DL, 
    #etext-nav #control + a,

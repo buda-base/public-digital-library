@@ -7363,7 +7363,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                         const { ref, hilight } = this.state.monlam.updateHilightCoords()
                         this.setState({ monlam: { ...this.state.monlam, ref, hilight } })
                         setTimeout(() => {
-                           if(ref?.current) ref.current.scrollIntoView(({behavior:"smooth",block:"nearest",inline:"start"}))
+                           if(ref?.current && window.innerWidth > 800) ref.current.scrollIntoView(({behavior:"smooth",block:"nearest",inline:"start"}))
                         }, 10)
 
                      }, 10)
