@@ -2659,9 +2659,10 @@ div:has(.resource.preview) .infoPanel.inRes { margin:0 !important; }
    font-size:11px; color:#079; font-weight:500; margin-right:5px; 
 }
 
-.resource ~ .monlamResults h2 { display: flex; align-items: center; padding-top:0; margin-bottom:0; font-size:20px; font-weight:700; text-align: center; } 
+.resource ~ .monlamResults h2 { display: flex; align-items: center; padding-top:0; margin-bottom:0; font-size:20px; font-weight:700; text-align: left; } 
 .resource ~ .monlamResults h2 a { margin-right: 10px; color:#152631; text-decoration: none;}
-.resource ~ .monlamResults h2 a:last-child { visibility:hidden; }
+/* .resource ~ .monlamResults h2 a:last-child { visibility:hidden; } */
+.resource ~ .monlamResults h2 svg { align-self: flex-start; cursor:pointer; display: block; position:relative; left:10px; top:-10px;}
 
 /* ------------------------------------------------------------------------------------------------------------------------ header */
 
@@ -5398,7 +5399,7 @@ a.result .contenu ul > div:last-child h3[lang=bo] span { font-size:18px;}
    #etext-nav #control + a,
    #etext-nav #dico { font-size: 0;   white-space: nowrap;}
 
-   #etext-nav #dico { display:flex; }
+   #etext-nav #dico { display:flex; align-items: center;}
 
    #etext-nav #dico .new { display:none;}
 
@@ -5971,10 +5972,20 @@ a.result + #matches.mobile,
 @media (max-width:800px)
 {
 
-   .etextPage h4.page > div:not([class]) { display:none !important; }
+   /* .etextPage h4.page > div:not([class]) { display:none !important; } */
 
-   #etext-nav #dico,
-   .monlamResults.visible { display:none ; }
+   /* #etext-nav #dico,
+   .monlamResults.visible { display:none ; } */
+
+   .resource ~ .monlamResults {
+      position: absolute;
+      height: 100%;
+      z-index: 1;
+      background: white;
+      right: 0;
+   }
+
+
 
    .App.home.khmerServer #search-bar > div { width:calc(100vw - 100px);}
    .App.home.khmerServer #search-bar > div > div { width:100% !important; }
@@ -6292,7 +6303,7 @@ a.result + #matches.mobile,
    #etext-nav #control + a { font-size:0; white-space: nowrap;}
    #etext-nav #control + a #check { margin-right:0; }
    #etext-nav #control + a img { margin:0 0 0 10px;}
-   #etext-nav a#DL img { margin-left:0; margin-right:45px;}
+   #etext-nav a#DL img { margin-left:0; margin-right:0px;}
 
    #etext-scroll { align-items:center; }
    #etext-scroll h3:not(:nth-child(2)) { flex-shrink: 1;}
@@ -6571,7 +6582,17 @@ a.result + #matches.mobile,
    }
 
 
-   #etext-nav a#DL img { margin-right:10px; }
+   #etext-nav a#DL img { margin-right:0px; }
+
+   #etext-nav #control + a,
+   #etext-nav #dico { display:flex;flex-direction: column; justify-content: center; align-items: center; }
+
+   #etext-nav #control + a img { width:32px; margin-top:5px;} 
+
+   #etext-nav #dico { margin:0 0 0 20px;}
+
+   #etext-nav #dico #check { margin:0 }
+   #etext-nav #dico img.ico { width:32px; }
 
 
    .resource .data.related > div div.rel-or-crea > div {   width: calc((100vw - 40px - 30px - 20px - 30px)/1); }

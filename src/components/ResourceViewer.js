@@ -98,7 +98,7 @@ import { Decimal2DMS } from 'dms-to-decimal';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
 
-import { useSwipeable } from 'react-swipeable'
+import { Swipeable, useSwipeable } from 'react-swipeable'
 
 import {svgEtextS,svgInstanceS,svgImageS} from "./icons"
 
@@ -1054,6 +1054,13 @@ function MySwipeable(props) {
          console.log("User Swiped Left!", ev)
          props.scrollRel(ev, true)
       },
+   });
+   return <div {...handlers}>{props.children}</div>
+}
+
+function SwipeableBottomBar(props) {
+   const handlers = useSwipeable({
+      ...props,
    });
    return <div {...handlers}>{props.children}</div>
 }
@@ -6396,7 +6403,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                
                //console.log("closest:",ev.target.closest(".popper"),ev.currentTarget,ev.target)
 
-               if(!this.props.config.useMonlam || window.innerWidth <= 800 || ev.target.closest(".popper")) return
+               if(!this.props.config.useMonlam || /*window.innerWidth <= 800 ||*/ ev.target.closest(".popper")) return
                
                let langElem = selection.anchorNode?.parentElement?.getAttribute("lang")
                if(!langElem) langElem = selection.anchorNode?.parentElement?.parentElement?.getAttribute("lang")
@@ -6599,7 +6606,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
                </div> }
                <div class="overpage">
-                  <h4 class="page" onMouseUp={(ev) => monlamPopup(ev, e.seq)} >
+                  <h4 class="page" onMouseUp={(ev) => monlamPopup(ev, e.seq)} onCopy={(ev) => monlamPopup(ev, e.seq)} >
                      {e.seq == this.state.monlam?.seq && this.state.enableDicoSearch ? this.state.monlam?.hilight : null}
                      {!e.value.match(/[\n\r]/) && !e.seq ?[<span class="startChar"><span>[&nbsp;<Link to={"/show/"+this.props.IRI+"?startChar="+e.start+"#open-viewer"}>@{e.start}</Link>&nbsp;]</span></span>]:null}{(e.chunks?.length?e.chunks:[e.value]).map(f => {
 
@@ -7369,23 +7376,25 @@ perma_menu(pdfLink,monoVol,fairUse,other)
       return (<>
          { monlamPop }
          <div id="settings" onClick={() => this.setState({collapse:{...this.state.collapse, etextNav:!this.state.collapse.etextNav}})}><img src="/icons/settings.svg"/></div>
-         <div id="etext-nav" class={this.state.collapse.etextNav?"on":""}>
-            <div>
-               <a id="DL" class={!accessError?"on":""} onClick={(e) => this.setState({...this.state,anchorLangDL:e.currentTarget, collapse: {...this.state.collapse, langDL:!this.state.collapse.langDL } } ) }>{etext_lang_selec(this,true,<>{I18n.t("mirador.downloadE")}<img src="/icons/DLw.png"/></>,this.props.IRI?fullUri(this.props.IRI).replace(/^http:/,"https:")+".txt":"")}</a>
-               {/* // <a id="DL" class={!accessError?"on":""} target="_blank" rel="alternate" type="text" download href={this.props.IRI?fullUri(this.props.IRI).replace(/^http:/,"https:")+".txt":""}>{I18n.t("mirador.downloadE")}<img src="/icons/DLw.png"/></a>) */}
-               { this.props.config.useMonlam && <a id="dico" class="on" onClick={(e) => { 
-                  if(this.state.enableDicoSearch) this.props.onCloseMonlam()
-                  this.setState({enableDicoSearch:!this.state.enableDicoSearch, ...this.state.enableDicoSearch?{monlam:null}:{}})
-               }}><div class="new">{I18n.t("viewer.new")}</div>{this.state.enableDicoSearch?<img id="check" src="/icons/check.svg"/>:<span id="check"></span>}{I18n.t("viewer.monlam")}<span><img class="ico" src="/icons/monlam.png"/></span></a> }
-               <div id="control">
-                  <span title={I18n.t("mirador.decreaseFont")} class={!size||size > 0.6?"on":""} onClick={(e)=>etextSize(false)}><img src="/icons/Zm.svg"/></span>
-                  <span title={I18n.t("mirador.increaseFont")} class={!size||size < 2.4?"on":""} onClick={(e)=>etextSize(true)}><img src="/icons/Zp.svg"/></span>
-                  {etext_lang_selec(this,true)}
+         <SwipeableBottomBar onSwipedRight={() => this.setState({ collapse:{ ...this.state.collapse, etextNav:!this.state.collapse.etextNav }})}>
+            <div id="etext-nav" class={this.state.collapse.etextNav?"on":""}>
+               <div>
+                  <a id="DL" class={!accessError?"on":""} onClick={(e) => this.setState({...this.state,anchorLangDL:e.currentTarget, collapse: {...this.state.collapse, langDL:!this.state.collapse.langDL } } ) }>{etext_lang_selec(this,true,<>{I18n.t("mirador.downloadE")}<img src="/icons/DLw.png"/></>,this.props.IRI?fullUri(this.props.IRI).replace(/^http:/,"https:")+".txt":"")}</a>
+                  {/* // <a id="DL" class={!accessError?"on":""} target="_blank" rel="alternate" type="text" download href={this.props.IRI?fullUri(this.props.IRI).replace(/^http:/,"https:")+".txt":""}>{I18n.t("mirador.downloadE")}<img src="/icons/DLw.png"/></a>) */}
+                  { this.props.config.useMonlam && <a id="dico" class="on" onClick={(e) => { 
+                     if(this.state.enableDicoSearch) this.props.onCloseMonlam()
+                     this.setState({enableDicoSearch:!this.state.enableDicoSearch, ...this.state.enableDicoSearch?{monlam:null}:{}})
+                  }}><div class="new">{I18n.t("viewer.new")}</div>{this.state.enableDicoSearch?<img id="check" src="/icons/check.svg"/>:<span id="check"></span>}{I18n.t("viewer.monlam")}<span><img class="ico" src="/icons/monlam.png"/></span></a> }
+                  <div id="control">
+                     <span title={I18n.t("mirador.decreaseFont")} class={!size||size > 0.6?"on":""} onClick={(e)=>etextSize(false)}><img src="/icons/Zm.svg"/></span>
+                     <span title={I18n.t("mirador.increaseFont")} class={!size||size < 2.4?"on":""} onClick={(e)=>etextSize(true)}><img src="/icons/Zp.svg"/></span>
+                     {etext_lang_selec(this,true)}
+                  </div>
+                  <a class={showToggleScan?"on":""} onClick={(e) => this.setState({showEtextImages:!this.state.showEtextImages})}>{this.state.showEtextImages?<img id="check" src="/icons/check.svg"/>:<span id="check"></span>}{I18n.t("mirador.showI")}<img width="42" src="/icons/search/images_b.svg"/></a>
+                  <span class="X" onClick={() => this.setState({ collapse:{ ...this.state.collapse, etextNav:!this.state.collapse.etextNav }})}></span>
                </div>
-               <a class={showToggleScan?"on":""} onClick={(e) => this.setState({showEtextImages:!this.state.showEtextImages})}>{this.state.showEtextImages?<img id="check" src="/icons/check.svg"/>:<span id="check"></span>}{I18n.t("mirador.showI")}<img width="42" src="/icons/search/images_b.svg"/></a>
-               <span class="X" onClick={() => this.setState({ collapse:{ ...this.state.collapse, etextNav:!this.state.collapse.etextNav }})}></span>
             </div>
-         </div>
+         </SwipeableBottomBar>
       </>)
    }
 
@@ -9355,7 +9364,11 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                      <h2>
                         <a href="https://monlamdic.com" target="_blank" rel="noopener noreferrer"><img width="32" src="/icons/monlam.png" title="monlamdic.com"/></a>
                         <a href="https://monlamdic.com" target="_blank" rel="noopener noreferrer">{I18n.t("viewer.monlamTitle")}</a>
-                        <a href="https://monlamdic.com" target="_blank" rel="noopener noreferrer"><img width="32" src="/icons/monlam.png" title="monlamdic.com"/></a>
+                        {/* <a href="https://monlamdic.com" target="_blank" rel="noopener noreferrer"><img width="32" src="/icons/monlam.png" title="monlamdic.com"/></a> */}
+                        <Close width="32" onClick={() => { 
+                           this.setState({monlam:null, collapse:{ ...this.state.collapse, monlamPopup: true }})
+                           this.props.onCloseMonlam()
+                        }}/>
                      </h2>
                      { this.props.monlamResults == true && <Loader  /> }
                      { monlamResults }
