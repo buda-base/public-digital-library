@@ -5982,10 +5982,9 @@ a.result + #matches.mobile,
       height: 100%;
       z-index: 1;
       background: white;
-      right: 0;
    }
-   .resource ~ .monlamResults.visible, .resource ~ .monlamResults.visible > div { width:min(400px,100vw - 75px); right:calc(- min(400px,100vw - 75px)); }
-   .resource ~ .monlamResults, .resource ~ .monlamResults > div { transition:all 200ms ease-in-out; }
+   .resource ~ .monlamResults.visible, .resource ~ .monlamResults.visible > div { width:min(400px,100vw - 50px); right:0; }
+   .resource ~ .monlamResults, .resource ~ .monlamResults > div { transition:all 200ms ease-in-out; right:max(-400px, calc( (100vw - 50px) * -1)); }
 
    #root > .withMonlam > .resource.etext-view { max-width:100%; }
 
