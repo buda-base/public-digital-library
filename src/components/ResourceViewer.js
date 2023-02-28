@@ -1058,11 +1058,15 @@ function MySwipeable(props) {
    return <div {...handlers}>{props.children}</div>
 }
 
-function SwipeableBottomBar(props) {
+function GenericSwipeable(props) {
+   console.log("sw:",props)
+   const { classN } = props
+   let newProps = { ...props }
+   if(classN) delete newProps.classN 
    const handlers = useSwipeable({
-      ...props,
+      ...newProps,
    });
-   return <div {...handlers}>{props.children}</div>
+   return <div {...handlers} className={classN}>{props.children}</div>
 }
 
 
@@ -7376,7 +7380,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
       return (<>
          { monlamPop }
          <div id="settings" onClick={() => this.setState({collapse:{...this.state.collapse, etextNav:!this.state.collapse.etextNav}})}><img src="/icons/settings.svg"/></div>
-         <SwipeableBottomBar onSwipedRight={() => this.setState({ collapse:{ ...this.state.collapse, etextNav:!this.state.collapse.etextNav }})}>
+         <GenericSwipeable onSwipedRight={() => this.setState({ collapse:{ ...this.state.collapse, etextNav:!this.state.collapse.etextNav }})}>
             <div id="etext-nav" class={this.state.collapse.etextNav?"on":""}>
                <div>
                   <a id="DL" class={!accessError?"on":""} onClick={(e) => this.setState({...this.state,anchorLangDL:e.currentTarget, collapse: {...this.state.collapse, langDL:!this.state.collapse.langDL } } ) }>{etext_lang_selec(this,true,<>{I18n.t("mirador.downloadE")}<img src="/icons/DLw.png"/></>,this.props.IRI?fullUri(this.props.IRI).replace(/^http:/,"https:")+".txt":"")}</a>
@@ -7394,7 +7398,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   <span class="X" onClick={() => this.setState({ collapse:{ ...this.state.collapse, etextNav:!this.state.collapse.etextNav }})}></span>
                </div>
             </div>
-         </SwipeableBottomBar>
+         </GenericSwipeable>
       </>)
    }
 
@@ -9359,7 +9363,10 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   </div>                  
                </div>
                { this.renderEtextNav(etextAccessError) }
-               <div class={"monlamResults "+(this.state.enableDicoSearch && (this.state.monlam && this.state.collapse.monlamPopup || monlamResults) ? "visible" : "")}>                  
+               <GenericSwipeable classN={"monlamResults "+(this.state.enableDicoSearch && (this.state.monlam && this.state.collapse.monlamPopup || monlamResults) ? "visible" : "")} onSwipedRight={() => { 
+                     this.setState({monlam:null, collapse:{ ...this.state.collapse, monlamPopup: true }})
+                     this.props.onCloseMonlam()
+                  }}>                  
                   <div>
                      <h2>
                         <a href="https://monlamdic.com" target="_blank" rel="noopener noreferrer"><img width="32" src="/icons/monlam.png" title="monlamdic.com"/></a>
@@ -9373,7 +9380,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                      { this.props.monlamResults == true && <Loader  /> }
                      { monlamResults }
                   </div>
-               </div>
+               </GenericSwipeable>
             </div>,
          ])
       }

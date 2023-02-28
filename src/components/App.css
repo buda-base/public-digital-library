@@ -4341,7 +4341,7 @@ html[lang="en"] .resource .data > [data-prop="bdo:creator"] h4[data-prop="bdo:ro
 
 
 @media(max-width:1024px) {
-   #etext-nav { height:60px; transition:left 400ms ease-in-out; }
+   #etext-nav { height:60px; transition:left 200ms ease-in-out; }
    #etext-nav:not(.on) { left:calc(100% + 10px); }
 
 
@@ -5984,8 +5984,10 @@ a.result + #matches.mobile,
       background: white;
       right: 0;
    }
+   .resource ~ .monlamResults.visible, .resource ~ .monlamResults.visible > div { width:min(400px,100vw - 75px); right:calc(- min(400px,100vw - 75px)); }
+   .resource ~ .monlamResults, .resource ~ .monlamResults > div { transition:all 200ms ease-in-out; }
 
-
+   #root > .withMonlam > .resource.etext-view { max-width:100%; }
 
    .App.home.khmerServer #search-bar > div { width:calc(100vw - 100px);}
    .App.home.khmerServer #search-bar > div > div { width:100% !important; }
