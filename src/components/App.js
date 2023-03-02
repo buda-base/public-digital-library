@@ -6336,7 +6336,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                                              disabled={disabled}
                                              //{...i=="Any"?{defaultChecked:true}:{}}
                                              color="black"
-                                             checked={this.state.filters.datatype.indexOf(i) !== -1} 
+                                             checked={this.props.isInstance ? i == "Instance" : this.state.filters.datatype.indexOf(i) !== -1} 
                                              icon={<PanoramaFishEye/>}
                                              checkedIcon={<CheckCircle style={{color:"#d73449"}}/>}
                                              onChange={(event, checked) => this.handleCheck(event,i,checked)}
