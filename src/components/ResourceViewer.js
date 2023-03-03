@@ -6464,14 +6464,17 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                } 
                else if(start === end) {
 
+                  
                   // #800 keep open until closed with cross
-
                   /*  
                   if(this.state.monlam && this.state.collapse.monlamPopup) { 
                      this.setState({ noHilight:false, monlam:null })
                      this.props.onCloseMonlam()
                   }
-                  */
+                  */                 
+                  if(this.state.monlam) {
+                     this.setState({ monlam:null, ...this.state.noHilight && seq != this.state.noHilight?{noHilight:false}:{} })
+                  }
 
                   return
                } 
@@ -6528,7 +6531,8 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
                this.setState({ 
                   collapse:{...this.state.collapse, monlamPopup: false},
-                  monlam: data
+                  monlam: data,
+                  ...this.state.monlam && this.state.noHilight && seq != this.state.noHilight?{noHilight:false}:{} 
                })               
 
                if(this.state.enableDicoSearch) selection.removeAllRanges()
@@ -6620,7 +6624,11 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
                </div> }
                <div class="overpage">
-                  <h4 class="page" onMouseDown={ev => this.setState({ noHilight: e.seq })} onMouseUp={(ev) => monlamPopup(ev, e.seq)} onCopy={(ev) => monlamPopup(ev, e.seq)} >
+                  <h4 class="page"  
+                        onMouseEnter={ev => { if(!this.state.monlam && this.state.enableDicoSearch  && this.state.noHilight != e.seq) this.setState({ noHilight: e.seq})}} 
+                        onMouseDown={ev => { if((!this.state.monlam || this.state.monlam.seq != e.seq) && this.state.enableDicoSearch && this.state.noHilight != e.seq) this.setState({ noHilight: e.seq})}} 
+                        onMouseUp={(ev) => monlamPopup(ev, e.seq)} 
+                        onCopy={(ev) => monlamPopup(ev, e.seq)} >
                      {e.seq == this.state.monlam?.seq && this.state.enableDicoSearch ? this.state.monlam?.hilight : null}
                      {!e.value.match(/[\n\r]/) && !e.seq ?[<span class="startChar"><span>[&nbsp;<Link to={"/show/"+this.props.IRI+"?startChar="+e.start+"#open-viewer"}>@{e.start}</Link>&nbsp;]</span></span>]:null}{(e.chunks?.length?e.chunks:[e.value]).map(f => {
 
@@ -6633,11 +6641,13 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
                         if(label) { lang = label["lang"] ; if(!pageLang) pageLang = lang }
                         if(label) { label = label["value"]; pageVal += " "+label ; chunkVal = label }
-                        if(label && this.props.highlight && this.props.highlight.key && this.state.noHilight != e.seq) { label = highlight(label,kw.map(k => k.replace(/(.)/g,"$1\\n?")),null,false,true); current.push(label); }
+                        if(label && this.props.highlight && this.props.highlight.key && this.state.noHilight != e.seq) { 
+                           label = highlight(label,kw.map(k => k.replace(/(.)/g,"$1\\n?")),null,false,true); 
+                           current.push(label); }
                         else if(label) { 
-                           label = label.split(/[\n\r]/)
-                           label = label.map( (e,i) =>(e?[e,i < label.length-1?<br/>:null]:[])).filter(e => e)
-                        }
+                           label = [ label.startsWith("\n") ? <br/>:""].concat(label.split(/[\n\r]/))                           
+                           label = label.map( (e,i) =>(e?[e,i > 0 && i < label.length-1?<br/>:null]:[])).filter(e => e)
+                        } 
                         //label = f
                         let size = this.state.etextSize
 

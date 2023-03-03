@@ -553,9 +553,10 @@ export function highlight(val,k,expand,newline,force)
 
       const prepNewL = (w) => {
          //console.log("split:",w,w.split("\n"))
-         return w.split("\n").reduce( (acc,k) => {
+         const pre = w.split("\n")
+         return pre.reduce( (acc,k,i) => {
             let ret = [ ]
-            if(acc.length && (!k || k?.match(/[^ \n\r]/))) ret.push(<br/>) // fix for https://youtu.be/Qmxr-p-7Od8?t=4090
+            if(acc.length && (!k || k?.match(/[^ \n\r]/))) ret.push(<br data-last={i == pre.length - 1}/>) // fix for https://youtu.be/Qmxr-p-7Od8?t=4090
             ret.push(k)
             return acc.concat(ret)
          },[])
@@ -1039,22 +1040,32 @@ export function top_right_menu(that,etextTitle,backUrl,etextres)
                   // DONE add loader to wait when back to search 
                   // TODO dont go back to search when opened from button
 
+                  that.setState({ enableDicoSearch: false, openEtext: false, ...that.state.monlam?{monlam:null}:{}, noHilight: false  });
 
-                  //console.log('cV:',backUrl,etextres)
-
-                  that.props.onLoading("search",true,etextres)
-
-                  //if(!etextres) 
                   setTimeout(() => { 
-                     
-                     if(backUrl) {
-                        that.props.history.push({pathname:"/search",search:"?"+backUrl}) ; 
+                  
+
+                     if(that.state.openEtext) { 
+                        that.props.onCloseMonlam()
                      }
+                     
+                     //console.log('cV:',backUrl,etextres)
 
-                     that.props.onLoading("search",false)
-                     //setTimeout(()=>that.props.onLoading("search",false),100)                     
+                     that.props.onLoading("search",true,etextres)
 
-                  }, 100)
+                     //if(!etextres) 
+                     setTimeout(() => { 
+                        
+                        if(backUrl) {
+                           that.props.history.push({pathname:"/search",search:"?"+backUrl}) ; 
+                        }
+
+                        that.props.onLoading("search",false)
+                        //setTimeout(()=>that.props.onLoading("search",false),100)                     
+
+                        
+                     }, 100)
+                  }, 150); 
 
                }}><span style={{verticalAlign:"-3px"}}>{I18n.t("viewer.results")}</span></a></> }
                <span>{etextTitle}</span>
@@ -1083,9 +1094,12 @@ export function top_right_menu(that,etextTitle,backUrl,etextres)
                         delete loca.hash
                         that.props.history.push(loca) ; 
                      }                        
-                     if(that.state.monlam) that.props.onCloseMonlam()
+                     
 
-                     if(that.state.openEtext) that.setState({ enableDicoSearch: false, openEtext: false, ...that.state.monlam?{monlam:null}:{} });
+                     if(that.state.openEtext) { 
+                        that.setState({ enableDicoSearch: false, openEtext: false, ...that.state.monlam?{monlam:null}:{}, noHilight: false  });
+                        that.props.onCloseMonlam()
+                     }
                   
 
                      that.props.onLoading("search",false)

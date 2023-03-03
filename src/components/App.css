@@ -2581,7 +2581,8 @@ div:has(.resource.preview) .infoPanel.inRes { margin:0 !important; }
 .resource ~ .monlamResults pre:empty { display: none;}
 */
 
-.resource ~ .monlamResults div .def { margin-bottom:0px; line-height:24px; padding-bottom:15px;
+.resource ~ .monlamResults div .def  { margin-bottom:0px; line-height:24px; padding-bottom:15px; }
+.resource ~ .monlamResults div .def > div {
    -webkit-user-select: none; /* Safari */
    -ms-user-select: none; /* IE 10+ */
    user-select: none;
@@ -4417,6 +4418,7 @@ div[role="tooltip"]:not(.cite) > div b { font-weight:700; }
 #matches br[data-last=true], 
 #matches br[data-last=true] ~ br { display:none; }
 
+.hasSeq .page > span:last-of-type > span:last-of-type br[data-last=true] { display:none; } 
 
 .toggle-note span { border-bottom:1px solid transparent;}
 
