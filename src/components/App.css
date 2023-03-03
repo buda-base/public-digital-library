@@ -2645,7 +2645,7 @@ div:has(.resource.preview) .infoPanel.inRes { margin:0 !important; }
 
 .resource ~ .monlamResults .perna,
 .resource ~ .monlamResults .dhtmlgoodies_answer { font-family:"Noto Sans", "Noto Serif Tibetan", "Noto Serif Khmer", "Noto Sans Mongolian", "Roboto", "Helvetica", "Arial", sans-serif !important; }
-
+   
 .resource ~ .monlamResults .dhtmlgoodies_answer { box-sizing: border-box; padding:10px;}
 
 .resource ~ .monlamResults .dhtmlgoodies_question { height:32px; box-sizing: border-box; }
@@ -2661,6 +2661,7 @@ div:has(.resource.preview) .infoPanel.inRes { margin:0 !important; }
 
 .resource ~ .monlamResults h2 { display: flex; align-items: center; padding-top:0; margin-bottom:0; font-size:20px; font-weight:700; text-align: left; } 
 .resource ~ .monlamResults h2 a { margin-right: 10px; color:#152631; text-decoration: none;}
+.resource ~ .monlamResults h2:hover a { text-decoration: underline; }
 /* .resource ~ .monlamResults h2 a:last-child { visibility:hidden; } */
 .resource ~ .monlamResults h2 svg { align-self: flex-start; cursor:pointer; display: block; position:relative; left:10px; top:-10px;}
 

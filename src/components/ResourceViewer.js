@@ -6461,13 +6461,20 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
                   if(start + selection.toString().length != end) console.warn(start,end,start + selection.toString().length)
 
-               } else if(start === end) {
+               } 
+               else if(start === end) {
+
+                  // #800 keep open until closed with cross
+
+                  /*  
                   if(this.state.monlam && this.state.collapse.monlamPopup) { 
-                     this.setState({ monlam:null })
+                     this.setState({ noHilight:false, monlam:null })
                      this.props.onCloseMonlam()
                   }
+                  */
+
                   return
-               }
+               } 
 
                // TODO: check case when selection is made backwards? right to left 
 
@@ -6510,20 +6517,23 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   range = range.cloneRange();
                }
 
+               const data = { 
+                  target: ev.currentTarget,
+                  seq,
+                  range,
+                  ...updateHilightCoords(ev.currentTarget, selection.getRangeAt(0)),
+                  updateHilightCoords,
+                  api: {chunk, lang: langElem, cursor_start, cursor_end },
+               }
+
                this.setState({ 
                   collapse:{...this.state.collapse, monlamPopup: false},
-                  monlam:  { 
-                     target: ev.currentTarget,
-                     seq,
-                     range,
-                     ...updateHilightCoords(ev.currentTarget, selection.getRangeAt(0)),
-                     updateHilightCoords,
-                     api: {chunk, lang: langElem, cursor_start, cursor_end },
-                  }
-               })
-
+                  monlam: data
+               })               
 
                if(this.state.enableDicoSearch) selection.removeAllRanges()
+
+               if(this.props.monlamResults) this.callMonlam(data)
             }
 
 
@@ -6610,7 +6620,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
                </div> }
                <div class="overpage">
-                  <h4 class="page" onMouseUp={(ev) => monlamPopup(ev, e.seq)} onCopy={(ev) => monlamPopup(ev, e.seq)} >
+                  <h4 class="page" onMouseDown={ev => this.setState({ noHilight: e.seq })} onMouseUp={(ev) => monlamPopup(ev, e.seq)} onCopy={(ev) => monlamPopup(ev, e.seq)} >
                      {e.seq == this.state.monlam?.seq && this.state.enableDicoSearch ? this.state.monlam?.hilight : null}
                      {!e.value.match(/[\n\r]/) && !e.seq ?[<span class="startChar"><span>[&nbsp;<Link to={"/show/"+this.props.IRI+"?startChar="+e.start+"#open-viewer"}>@{e.start}</Link>&nbsp;]</span></span>]:null}{(e.chunks?.length?e.chunks:[e.value]).map(f => {
 
@@ -6623,7 +6633,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
                         if(label) { lang = label["lang"] ; if(!pageLang) pageLang = lang }
                         if(label) { label = label["value"]; pageVal += " "+label ; chunkVal = label }
-                        if(label && this.props.highlight && this.props.highlight.key) { label = highlight(label,kw.map(k => k.replace(/(.)/g,"$1\\n?")),null,false,true); current.push(label); }
+                        if(label && this.props.highlight && this.props.highlight.key && this.state.noHilight != e.seq) { label = highlight(label,kw.map(k => k.replace(/(.)/g,"$1\\n?")),null,false,true); current.push(label); }
                         else if(label) { 
                            label = label.split(/[\n\r]/)
                            label = label.map( (e,i) =>(e?[e,i < label.length-1?<br/>:null]:[])).filter(e => e)
@@ -7315,6 +7325,17 @@ perma_menu(pdfLink,monoVol,fairUse,other)
             ]
    }
 
+   callMonlam = (data = this.state.monlam) => {
+
+      const collapse = { ...this.state.collapse, monlamPopup: true  }
+      for(const k of Object.keys(collapse)) {
+         if(k.startsWith("monlam-def-")) delete collapse[k]
+      }
+      this.setState({ collapse })
+      this.props.onCallMonlamAPI(data.api, {value: data.range.toString(), lang: this.props.etextLang});
+      
+   }
+
    // to be redefined in subclass
    renderPostData = () => {}
 
@@ -7350,18 +7371,14 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                anchorReference="anchorPosition"
                anchorPosition={{ top:-50+this.state.monlam.popupCoords[0]?.top, left:this.state.monlam.popupCoords[0]?.left }}
                onClose={() => { 
-                  this.setState({monlam:null, collapse:{ ...this.state.collapse, monlamPopup: true }})
+                  this.setState({noHilight:false, monlam:null, collapse:{ ...this.state.collapse, monlamPopup: true }})
                   this.props.onCloseMonlam()
                }}
             >
                <MenuItem onClick={(ev) => {
-                  const collapse = { ...this.state.collapse, monlamPopup: true  }
-                  for(const k of Object.keys(collapse)) {
-                     if(k.startsWith("monlam-def-")) delete collapse[k]
-                  }
-                  this.setState({ collapse })
-                  this.props.onCallMonlamAPI(this.state.monlam.api, {value: this.state.monlam.range.toString(), lang: this.props.etextLang});
-                  
+
+                  this.callMonlam()
+
                   if(!this.props.monlamResults) {
                      setTimeout( () => {
                         const { ref, hilight } = this.state.monlam.updateHilightCoords()
@@ -7387,7 +7404,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   {/* // <a id="DL" class={!accessError?"on":""} target="_blank" rel="alternate" type="text" download href={this.props.IRI?fullUri(this.props.IRI).replace(/^http:/,"https:")+".txt":""}>{I18n.t("mirador.downloadE")}<img src="/icons/DLw.png"/></a>) */}
                   { this.props.config.useMonlam && <a id="dico" class="on" onClick={(e) => { 
                      if(this.state.enableDicoSearch) this.props.onCloseMonlam()
-                     this.setState({enableDicoSearch:!this.state.enableDicoSearch, ...this.state.enableDicoSearch?{monlam:null}:{}})
+                     this.setState({noHilight:false, enableDicoSearch:!this.state.enableDicoSearch, ...this.state.enableDicoSearch?{monlam:null}:{}})
                   }}><div class="new">{I18n.t("viewer.new")}</div>{this.state.enableDicoSearch?<img id="check" src="/icons/check.svg"/>:<span id="check"></span>}{I18n.t("viewer.monlam")}<span><img class="ico" src="/icons/monlam.png"/></span></a> }
                   <div id="control">
                      <span title={I18n.t("mirador.decreaseFont")} class={!size||size > 0.6?"on":""} onClick={(e)=>etextSize(false)}><img src="/icons/Zm.svg"/></span>
@@ -9364,7 +9381,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                </div>
                { this.renderEtextNav(etextAccessError) }
                <GenericSwipeable classN={"monlamResults "+(this.state.enableDicoSearch && (this.state.monlam && this.state.collapse.monlamPopup || monlamResults) ? "visible" : "")} onSwipedRight={() => { 
-                     this.setState({monlam:null, collapse:{ ...this.state.collapse, monlamPopup: true }})
+                     this.setState({noHilight:false, monlam:null, collapse:{ ...this.state.collapse, monlamPopup: true }})
                      this.props.onCloseMonlam()
                   }}>                  
                   <div>
@@ -9373,7 +9390,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                         <a href="https://monlamdic.com" target="_blank" rel="noopener noreferrer">{I18n.t("viewer.monlamTitle")}</a>
                         {/* <a href="https://monlamdic.com" target="_blank" rel="noopener noreferrer"><img width="32" src="/icons/monlam.png" title="monlamdic.com"/></a> */}
                         <Close width="32" onClick={() => { 
-                           this.setState({monlam:null, collapse:{ ...this.state.collapse, monlamPopup: true }})
+                           this.setState({noHilight:false, monlam:null, collapse:{ ...this.state.collapse, monlamPopup: true }})
                            this.props.onCloseMonlam()
                         }}/>
                      </h2>
