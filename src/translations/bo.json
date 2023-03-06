@@ -271,7 +271,8 @@
       "tmp:inDLD":"སྟབས་བདེའི་དཔེ་མཛོད་ནང་ཐོབ།",
       "tmp:available":"སྟབས་བདེའི་དཔེ་མཛོད་ནང་ཐོབ།",
       "tmp:nbMembers":"Members",
-      "tmp:nbParts":"Parts"
+      "tmp:nbParts":"Parts",
+      "tmp:quality":"Quality"
    },
    "result": {
       "open": "ཁ་ཕྱེ།",

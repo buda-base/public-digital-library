@@ -3367,6 +3367,8 @@ body > [id^="menu-"] > div:last-child,
 .resource .data [data-prop="bdo:workHasInstance"] .images-thumb { width:100px;height:100px;z-index:1;position:relative;}
 .resource .data [data-prop="bdo:workHasInstance"] .images-thumb-links { margin-left:0px;}
 
+.resource .data [data-prop="tmp:propHasScans"] .images-thumb-links + span[lang],
+.resource .data [data-prop="tmp:propHasEtext"] .images-thumb-links + span[lang],
 .resource .data [data-prop="bdo:workHasInstance"] .images-thumb-links ~ .provider { display:none;  }
 
 .resource .data > [data-prop="bdo:workHasInstance"] > h3 ~ .group > h4.multiple { display:inline-block; margin-top:4px;}

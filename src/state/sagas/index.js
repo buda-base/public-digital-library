@@ -2199,8 +2199,8 @@ function rewriteAuxMain(result,keyword,datatype,sortBy,language)
    if(!sortBy) sortBy = state.ui.sortBy
    let reverse = sortBy && sortBy.endsWith("reverse")
    let canPopuSort = false, isScan, isTypeScan = datatype.includes("Scan"), isTypeVersion = datatype.includes("Instance"), inRoot, partType, context, unreleased, hasExactM, isExactM, hasM, inDLD
-   let _kw = keyword.replace(/^"|"(~1)?$/g,"").replace(/[“”]/g,'"').replace(/[`‘’]/g,"'") // normalize quotes in user input   
-   
+   let _kw = keyword.replace(/^"|"(~1)?$/g,"").replace(/[“”]/g,'"').replace(/[`‘’]/g,"'") // normalize quotes in user input      
+
    // DONE case of tibetan unicode vs wylie
    let flags = "iu"   
    // #741 first quickfix
@@ -2222,6 +2222,8 @@ function rewriteAuxMain(result,keyword,datatype,sortBy,language)
    let _kwRegExpFullM = new RegExp("^↦.*?"+_kw+".*?↤/?$", flags), _kwRegExpM = new RegExp("↦.*?"+_kw+".*?↤", flags)
 
    let mergeLeporello = state.data.config.khmerServer
+   
+   let OCRquality
 
    result = Object.keys(result).reduce((acc,e)=>{
       if(e === "main") {
@@ -2263,7 +2265,16 @@ function rewriteAuxMain(result,keyword,datatype,sortBy,language)
             }            
 
             let res = result[e][k].map(e => { 
-               if(mergeLeporello && e.type === bdo+"binding") {
+               if(e.type === _tmp+"OCRscore"){                  
+                  if(e.value === "1.0") {
+                     return ({type:_tmp+"quality", value: _tmp+"ComputerInput"})
+                  } else if(e.value === "0.99") {
+                     return ({type:_tmp+"quality", value: _tmp+"CleanedOCR"})
+                  } else {
+                     return ({type:_tmp+"quality", value: _tmp+"RawOCR"})
+                  }
+
+               } else if(mergeLeporello && e.type === bdo+"binding") {
                   return({type:bdo+"format", value:e.value})
                } else if(e.type === bdo+"isComplete" && e.value=="true") {
                   return ({type:_tmp+"completion", value:_tmp+"complete"})

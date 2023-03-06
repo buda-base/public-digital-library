@@ -268,7 +268,8 @@
       "tmp:inDLD":"Availability on DLD",
       "tmp:available":"Available",
       "tmp:nbMembers":"Members",
-      "tmp:nbParts":"Parts"
+      "tmp:nbParts":"Parts",
+      "tmp:quality":"Quality"
    },
    "guided":{
       "keyword":"keyword",
