@@ -7,15 +7,21 @@
         if(timer) clearInterval(timer)
         timer = setInterval(function(){
           var elem = document.querySelector('body > feedbucket-app').shadowRoot           
-          if(elem && elem.querySelector('div.fw-right-0').getAttribute('part') != 'root') {
-            console.log("root:",elem)
-            elem.querySelector('div.fw-right-0').setAttribute('part','root')
-            elem.querySelector('div.fw-right-0 > button:nth-child(3)').setAttribute('part','hidden')
-            clearInterval(timer)
-            timer = 0
+          var root = elem.querySelector('div.fw-right-0')
+          if(root?.getAttribute('part') != 'root') {
+            if(root) { 
+              console.log("root:",root)
+              root?.setAttribute('part','root')
+              var button = root.querySelector('button:nth-child(3)')
+              if(button) { 
+                button?.setAttribute('part','hidden')
+                //clearInterval(timer)
+                //timer = 0
+              }
+            }
           } else {
-            clearInterval(timer)
-            timer = 0
+            //clearInterval(timer)
+            //timer = 0
           }
         },150) 
       }
