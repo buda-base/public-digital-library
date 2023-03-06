@@ -1,7 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <script type="module" src="https://cdn.feedbucket.app/assets/feedbucket.js" data-feedbucket="133FlWOBoB38VwXM7FWk" defer></script>
+    <script>
+      var timer 
+      window.initFeedbucket = function() {
+        if(timer) clearInterval(timer)
+        timer = setInterval(function(){
+          var elem = document.querySelector('body > feedbucket-app').shadowRoot           
+          if(elem && elem.querySelector('div.fw-right-0').getAttribute('part') != 'root') {
+            console.log("root:",elem)
+            elem.querySelector('div.fw-right-0').setAttribute('part','root')
+            elem.querySelector('div.fw-right-0 > button:nth-child(3)').setAttribute('part','hidden')
+            clearInterval(timer)
+            timer = 0
+          } else {
+            clearInterval(timer)
+            timer = 0
+          }
+        },150) 
+      }
+    </script>
+    <script type="module" src="https://cdn.feedbucket.app/assets/feedbucket.js" data-feedbucket="133FlWOBoB38VwXM7FWk" defer onLoad="window.initFeedbucket();"></script>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="theme-color" content="#000000">

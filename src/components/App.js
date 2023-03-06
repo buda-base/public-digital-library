@@ -1761,6 +1761,8 @@ class App extends Component<Props,State> {
          let dt = get.t.split(",").filter(d => !this.state.filters.datatype.includes(d))
          if(dt.length) this.setState({...this.state, filters:{...this.state.filters, datatype:dt}})
       }
+
+      window.initFeedbucket()
    }
 
    requestSearch(key:string,label?:string,lang?:string,forceSearch:boolean=false,dataInfo:string,menu_i?:number)

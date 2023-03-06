@@ -5239,9 +5239,9 @@ a.result .contenu ul > div:last-child h3[lang=bo] span { font-size:18px;}
 
 
 /* feedbucket */
+feedbucket-app::part(hidden)  { display:none !important; }
 
-/* this would work if widget supported shadow parts, see https://ionicframework.com/docs/theming/css-shadow-parts ...*/
-feedbucket-app::part(root) { display:none !important; }
+
 
 
 

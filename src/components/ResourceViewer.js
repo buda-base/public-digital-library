@@ -1798,6 +1798,8 @@ class ResourceViewer extends Component<Props,State>
       }
       
       this.scrollToHashID(this.props.history)
+
+      window.initFeedbucket()
    }
 
    componentWillUnmount() {
