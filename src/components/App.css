@@ -5233,6 +5233,24 @@ body {
 
 a.result .contenu ul > div:last-child h3[lang=bo] span { font-size:18px;}
 
+
+
+
+
+
+/* feedbucket */
+
+/* this would work if widget supported shadow parts, see https://ionicframework.com/docs/theming/css-shadow-parts ...*/
+feedbucket-app::part(root) { display:none !important; }
+
+
+
+
+
+
+
+
+
 /* safari css fix for columns (#227) */
 @media not all and (min-resolution:.001dpcm) { 
    @supports (-webkit-appearance:none) and (stroke-color:transparent) {
