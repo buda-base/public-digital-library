@@ -6401,7 +6401,8 @@ perma_menu(pdfLink,monoVol,fairUse,other)
             const monlamPopup = (ev, seq) => {
 
                ev.persist()
-               
+
+               const MAX_SELECTION_LENGTH = 80
                const MIN_CONTEXT_LENGTH = 40
                const selection = window.getSelection();
                
@@ -6454,7 +6455,12 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                let start = getAbsOffset(selection.anchorNode, selection.anchorOffset)
                let end = getAbsOffset(selection.focusNode, selection.focusOffset)                
 
+               // DONE: check case when selection is made backwards? right to left 
+               let invert = false
                if(start > end) {
+
+                  invert = true
+
                   let tmp = start
                   start = end
                   end = tmp
@@ -6479,8 +6485,28 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   return
                } 
 
-               // TODO: check case when selection is made backwards? right to left 
+               let range = selection.getRangeAt(0);
 
+               if(end > start + MAX_SELECTION_LENGTH) { 
+                  try {
+                     if(!invert) {
+                        end = start + MAX_SELECTION_LENGTH
+                        range.setEnd(range.startContainer, range.startOffset + MAX_SELECTION_LENGTH);
+                     } else {
+                        start = end - MAX_SELECTION_LENGTH
+                        range.setStart(range.endContainer, range.endOffset - MAX_SELECTION_LENGTH);
+                     }
+                  } catch(err) {                  
+                     console.warn("can't update range", start, end, range, selection)     
+                     if(this.state.enableDicoSearch) selection.removeAllRanges()
+                     if(this.state.monlam) {
+                        this.setState({ monlam:null, ...this.state.noHilight && seq != this.state.noHilight?{noHilight:false}:{} })
+                     }
+                     return
+                  }
+               }
+
+               
                const startOff = Math.max(0, start - MIN_CONTEXT_LENGTH)
                const endOff = Math.min(pageVal.length, end + MIN_CONTEXT_LENGTH)
 
@@ -6490,10 +6516,10 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                if(cursor_start < 0) cursor_start = start - startOff 
                let cursor_end =  cursor_start + selection.toString().length
 
-               const updateHilightCoords = (target = this.state.monlam?.target, range = this.state.monlam?.range) => {
+               const updateHilightCoords = (target = this.state.monlam?.target, _range = this.state.monlam?.range) => {
 
                   const { top, left } = target.getBoundingClientRect()
-                  let coords = Array.from(range.getClientRects()).map(r => ({ 
+                  let coords = Array.from(_range.getClientRects()).map(r => ({ 
                      ...r, 
                      px:{
                         top:(r.top - top)+"px",
@@ -6509,14 +6535,12 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                      return <div {...ref?{ref}:{}} style={{...c.px, scrollMargin:"50vh 50px 50vh 50px", pointerEvents:"none", position:"absolute", background: "rgba(252,224,141,0.65)", display:"block", zIndex: 1, mixBlendMode: "darken" }}></div>
                   })
 
-                  return { hilight:coords, ref, popupCoords:Array.from(range.getClientRects()) }
+                  return { hilight:coords, ref, popupCoords:Array.from(_range.getClientRects()) }
                }
            
                //console.log("coords:",coords,ev.currentTarget,start,end,startOff,endOff,pageVal.substring(startOff, endOff))
-
-               let range
+               
                if (selection.rangeCount > 0) {
-                  range = selection.getRangeAt(0);
                   range = range.cloneRange();
                }
 
@@ -9364,7 +9388,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                })
             //}</pre>
          } else if(this.props.monlamResults && this.props.monlamResults != true) {
-            monlamResults = <div>Nothing found for "{this.props.monlamKeyword?.value}".</div>
+            monlamResults = <div  className="monlam-no-result">Nothing found for "<span>{this.props.monlamKeyword?.value}</span>".</div>
          } else if(this.state.monlam && this.state.collapse.monlamPopup) {
             monlamResults = <div></div>
          }
