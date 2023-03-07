@@ -2153,6 +2153,38 @@ function sortResultsByLastSync(results,reverse) {
 }
 
 
+function sortResultsByQuality(results,reverse) {
+
+   if(!results) return 
+
+   let keys = Object.keys(results)
+   if(keys && keys.length) {
+      keys = keys.map(k => {
+         let n = 0, score, p = results[k].length
+         if(reverse) n = 1
+         for(let i in results[k]) {
+            let v = results[k][i]
+            if(v.type === tmp+"OCRscore") {               
+               n = Number(v.value)
+            } 
+            console.log(k,n,v)
+         }
+         return ({k, n})
+      },{})
+      keys = _.orderBy(keys,['n','p'],[(reverse?'asc':'desc'), (reverse?'asc':'desc')])
+      
+      //loggergen.log("keysY:",keys)
+
+      let sortRes = {}
+      for(let k of keys) sortRes[k.k] = results[k.k]
+
+      //loggergen.log("sortResY",sortRes)
+
+      return sortRes
+   }
+   return results
+}
+
 function sortResultsByNbChunks(results,reverse) {
    
    if(!results) return 
@@ -2264,14 +2296,14 @@ function rewriteAuxMain(result,keyword,datatype,sortBy,language)
 
             }            
 
-            let res = result[e][k].map(e => { 
+            let toAdd = [], res = result[e][k].map(e => { 
                if(e.type === _tmp+"OCRscore"){                  
                   if(e.value === "1.0") {
-                     return ({type:_tmp+"quality", value: _tmp+"ComputerInput"})
+                     toAdd.push({type:_tmp+"quality", value: _tmp+"ComputerInput"})
                   } else if(e.value === "0.99") {
-                     return ({type:_tmp+"quality", value: _tmp+"CleanedOCR"})
+                     toAdd.push({type:_tmp+"quality", value: _tmp+"CleanedOCR"})
                   } else {
-                     return ({type:_tmp+"quality", value: _tmp+"RawOCR"})
+                     toAdd.push({type:_tmp+"quality", value: _tmp+"RawOCR"})
                   }
 
                } else if(mergeLeporello && e.type === bdo+"binding") {
@@ -2335,6 +2367,8 @@ function rewriteAuxMain(result,keyword,datatype,sortBy,language)
 
                return e
             } )
+
+            res = res.concat(toAdd)
 
             if(isTypeScan && window.DLD) {
                let qn = k.replace(/.*?[/]([^/]+)$/,"$1")
@@ -2455,6 +2489,7 @@ function rewriteAuxMain(result,keyword,datatype,sortBy,language)
          else if(sortBy.startsWith("volume number")) return { ...acc, [t]: sortResultsByVolumeNb(dataWithAsset,reverse) }
          else if(sortBy.includes("title") ||  sortBy.includes("name") ) return { ...acc, [t]: sortResultsByTitle(dataWithAsset, langPreset, reverse) }
          else if(sortBy.includes("date")) return { ...acc, [t]: sortResultsByLastSync(dataWithAsset,reverse) }
+         else if(sortBy.endsWith("quality")) return { ...acc, [t]: sortResultsByQuality(dataWithAsset,reverse) }
       }
       else if(e === "aux") {                  
          store.dispatch(dataActions.gotAssocResources(keyword,{ data: result[e] } ) )

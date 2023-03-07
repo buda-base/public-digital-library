@@ -6722,7 +6722,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          "Place": [ "popu", "closestM", "placeN" ],  
          "WorkInstance": [ "workT", "yearP" ],  
          "Instance": [ "popu", "closestM", "title", "yearP" ],  
-         "Etext": [ "title", "closestM", "numberMC" ],  
+         "Etext": [ "title", "closestM", "numberMC", "quality" ],  
          "Product": [ "closestM", "title" ],  
          "Scan": (!this.props.latest?["popu", "closestM", "title", "yearP"]:["lastS", "title"]) //.map(m => I18n.t("sort."+m)),
       }
