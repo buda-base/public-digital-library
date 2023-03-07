@@ -2571,6 +2571,9 @@ div:has(.resource.preview) .infoPanel.inRes { margin:0 !important; }
 .resource ~ .monlamResults > div > a:first-child { position: absolute; right:5px; top:0; padding:0; opacity:0.5; transition: all 100ms ease-in-out;}
 .resource ~ .monlamResults > div > a:first-child:hover { opacity:1; }
 
+.resource ~ .monlamResults > div .monlam-no-result { display:flex; align-items: baseline;} 
+.resource ~ .monlamResults > div .monlam-no-result > span { white-space: nowrap; max-width:200px; text-overflow: ellipsis; overflow: hidden;  }
+
 .resource ~ .monlamResults.visible,
 .resource ~ .monlamResults.visible > div { width:400px; }
 
