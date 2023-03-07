@@ -165,7 +165,7 @@
       "exactM":"Exact match only",
       "exactF":"Exact full match only",
       "exactMF":"Any exact match",
-      "quality":"OCR Quality"
+      "quality":"Quality"
    },
    "copyright": {
       "open": "Open Access",
