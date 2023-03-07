@@ -2173,7 +2173,7 @@ function sortResultsByQuality(results,reverse) {
       },{})
       keys = _.orderBy(keys,['n','p'],[(reverse?'asc':'desc'), (reverse?'asc':'desc')])
       
-      //loggergen.log("keysY:",keys)
+      loggergen.log("keysY:",keys)
 
       let sortRes = {}
       for(let k of keys) sortRes[k.k] = results[k.k]
@@ -2489,7 +2489,7 @@ function rewriteAuxMain(result,keyword,datatype,sortBy,language)
          else if(sortBy.startsWith("volume number")) return { ...acc, [t]: sortResultsByVolumeNb(dataWithAsset,reverse) }
          else if(sortBy.includes("title") ||  sortBy.includes("name") ) return { ...acc, [t]: sortResultsByTitle(dataWithAsset, langPreset, reverse) }
          else if(sortBy.includes("date")) return { ...acc, [t]: sortResultsByLastSync(dataWithAsset,reverse) }
-         else if(sortBy.endsWith("quality")) return { ...acc, [t]: sortResultsByQuality(dataWithAsset,reverse) }
+         else if(sortBy.includes("quality")) return { ...acc, [t]: sortResultsByQuality(dataWithAsset,reverse) }
       }
       else if(e === "aux") {                  
          store.dispatch(dataActions.gotAssocResources(keyword,{ data: result[e] } ) )
@@ -2890,6 +2890,7 @@ async function updateSortBy(i,t)
    else if(i.startsWith("closest matches")) data.results.bindings[t.toLowerCase()+"s"] = sortResultsByRelevance(data.results.bindings[t.toLowerCase()+"s"], reverse) 
    else if(i.startsWith("year of")) data.results.bindings[t.toLowerCase()+"s"] = sortResultsByYear(data.results.bindings[t.toLowerCase()+"s"], reverse) 
    else if(i.startsWith("volume number")) data.results.bindings[t.toLowerCase()+"s"] = sortResultsByVolumeNb(data.results.bindings[t.toLowerCase()+"s"], reverse) 
+   else if(i.includes("quality")) data.results.bindings[t.toLowerCase()+"s"] = sortResultsByQuality(data.results.bindings[t.toLowerCase()+"s"], reverse) 
    else if(i.startsWith("number of matching chunks")) data.results.bindings[t.toLowerCase()+"s"] = sortResultsByNbChunks(data.results.bindings[t.toLowerCase()+"s"], reverse) 
    else if(i.includes("title") || i.includes("name")) { 
       let langPreset = state.ui.langPreset

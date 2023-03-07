@@ -163,7 +163,8 @@
       "exact":"partial or exact match",
       "exactM":"exact match only",
       "exactF":"exact full match only",
-      "exactMF":"any exact match"
+      "exactMF":"any exact match",
+      "quality":"Quality"
    },
    "copyright": {
       "open": "བཀག་རྒྱ་མེད་པ།",
