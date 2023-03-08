@@ -164,7 +164,7 @@
       "exactM":"exact match only",
       "exactF":"exact full match only",
       "exactMF":"any exact match",
-      "quality":"Quality"
+      "quality":"OCR Quality"
    },
    "copyright": {
       "open": "བཀག་རྒྱ་མེད་པ།",
@@ -273,7 +273,7 @@
       "tmp:available":"སྟབས་བདེའི་དཔེ་མཛོད་ནང་ཐོབ།",
       "tmp:nbMembers":"Members",
       "tmp:nbParts":"Parts",
-      "tmp:quality":"Quality"
+      "tmp:quality":"OCR Quality"
    },
    "result": {
       "open": "ཁ་ཕྱེ།",

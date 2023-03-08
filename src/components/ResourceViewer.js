@@ -6402,7 +6402,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
                ev.persist()
 
-               const MAX_SELECTION_LENGTH = 80
+               const MAX_SELECTION_LENGTH = 120
                const MIN_CONTEXT_LENGTH = 40
                const selection = window.getSelection();
                
