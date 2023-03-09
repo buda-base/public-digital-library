@@ -6588,9 +6588,11 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                                  }}/>     */}
                                  <a href={imageLinks[id][e.seq].image} target="_blank" rel="noopener noreferrer">
                                     <img class="page" ref={ref} src={imageLinks[id][e.seq].image} onLoad={(ev) => { if(ref.current) {
-                                       const elem = ref.current.closest(".imagePage")
-                                       elem.classList.add("portrait")
-                                       if(get.right) elem.classList.add("right")
+                                       if(ref.current.naturalWidth < ref.current.naturalHeight) {
+                                          const elem = ref.current.closest(".imagePage")
+                                          elem.classList.add("portrait")
+                                          if(get.right) elem.classList.add("right")
+                                       }
                                     }}} onError={(ev)=> handleImageError(ev,imageLinks[id][e.seq].image,e.seq)} />
                                  </a>
 
