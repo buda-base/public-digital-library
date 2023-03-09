@@ -4304,6 +4304,18 @@ html[lang="en"] .resource .data > [data-prop="bdo:creator"] h4[data-prop="bdo:ro
 .etextPage > .imagePage:hover .button.hide { opacity:0.54; }
 .etextPage.lang-bo h4.page { font-family:"Tibetan Machine Uni";}
 
+/* #807 image + text */
+.etextPage > .imagePage.portrait { float:left; width:50%; }
+.etextPage > .imagePage.portrait a img { margin-right:25px; }
+.etextPage > .imagePage.portrait ~ .overpage { width:50%; float:right;}
+
+
+/* text + image */
+.etextPage > .imagePage.portrait.right { float:right; width:50%; }
+.etextPage > .imagePage.portrait.right a img { margin-left:0px; }
+.etextPage > .imagePage.portrait.right ~ .overpage { width:50%; float:left;}
+
+
 .etextPage h5 a.unpag { color: #343434; cursor:auto;}
 .etextPage h5 a.unpag:hover { border:none; }
 

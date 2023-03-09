@@ -29,7 +29,7 @@
       "subsubmessage_account3": "",
       "subsubmessage_account4": "",
       "subsubmessage_account5": "",
-      "subsubmessage_auth": "All users, including users with existing accounts on tbrc.org, will need to register for a free BDRC account for full access.",
+      "subsubmessage_auth": "",
       "search": "ស្វែងរក",
       "choose": "ជ្រើសរើសភាសា",
       "start": "ចាប់ផ្តើមវាយអក្សរ បន្ទាប់មកជ្រើសរើសស្វែងរកភាសា",
@@ -55,6 +55,7 @@
       "female-authors":"Female authors",
       "works-by-female-authors":"Works by female authors",
       "instances-by-female-authors":"Versions by female authors"
+
    },
    "types": {
       "any": "ណាមួយ",
@@ -160,11 +161,11 @@
       "roleN": "ឈ្មោះតួនាទី",
       "showAll":"បង្ហាញការផ្គូផ្គងទាំងអស់",
       "hideAll":"ការផ្គូផ្គងដែលត្រូវគ្នាបំផុតប៉ុណ្ណោះ",
-      "exact":"partial or exact match",
-      "exactM":"exact match only",
-      "exactF":"exact full match only",
-      "exactMF":"any exact match",
-      "quality":"Quality"
+      "exact":"Partial or exact match",
+      "exactM":"Exact match only",
+      "exactF":"Exact full match only",
+      "exactMF":"Any exact match",
+      "quality":"OCR Quality"
    },
    "copyright": {
       "open": "បើកការចូលប្រើប្រាស់",
@@ -266,11 +267,14 @@
       "tmp:GISCoordinates":"កូអ័រដោនេ GIS",
       "tmp:altLabelName":"ឈ្មោះផ្សេងទៀត",
       "tmp:altLabelTitle":"ចំណងជើងផ្សេងទៀត",
+      "tmp:hasMatch":"Exact Match",
+      "tmp:hasExactMatch":"Exact Match",
+      "tmp:isExactMatch":"Exact Full Match",
       "tmp:inDLD":"Availability on DLD",
       "tmp:available":"Available",
       "tmp:nbMembers":"Members",
       "tmp:nbParts":"Parts",
-      "tmp:quality":"Quality"
+      "tmp:quality":"OCR Quality"
    },
    "guided":{
       "keyword":"keyword",
@@ -344,6 +348,7 @@
       "photo": {
          "hover": "ធ្វើបច្ចុប្បន្នភាពរូបភាពកម្រងព័ត៌មានគណនី",
          "label": "Url រូបភាពកម្រងព័ត៌មានគណនី",
+         "info": "Leave empty to use your profile picture from {{google}}",
          "helperText": "ដាក់តំណភ្ជាប់ដោយផ្ទាល់ទៅរូបភាពដែលមានស្រាប់",
          "error": "បញ្ហា៖ មិនអាចរកឃើញរូបភាពបាន សូមពិនិត្យមើលតំណភ្ជាប់របស់អ្នក"
       },
@@ -457,6 +462,7 @@
          "saXIast": "សំស្ក្រឹត (IAST)",
          "saXNdia": "សំស្ក្រឹត (Lenient)",
          "saDeva": "សំស្ក្រឹត (Devanagari)",
+         "incXIast": "Indic (Sanskrit or Pāli, IAST)",
          "incXNdia": "ឥណ្ឌូ (សំស្ក្រឹត ឬបាលី ឬ Lenient)",
          "en": "អង់គ្លេស",
          "pi": "បាលី",
@@ -468,6 +474,7 @@
          "boAlaLc": "ទីបេ (ALA-LC)",
          "other": "ផ្សេងទៀត",
          "km": "ខ្មែរ",
+         "kmXIast": "Khmer (IAST)",
          "inc": "ហិណ្ឌូ",
          "sa": "សំស្ក្រឹត",
          "hans": "ទំនើប",
@@ -493,7 +500,11 @@
          "saXIast": "សំស្ក្រឹតសរសេរជាសូរស័ព្ទជា IAST",
          "saDeva": "សំស្ក្រឹតជា Devanagari",
          "bo": "ទីបេជា Unicode",
-         "boXEwts": "ទីបេសរសេរជាសូរស័ព្ទជា Wylie"
+         "boXEwts": "ទីបេសរសេរជាសូរស័ព្ទជា Wylie",
+         "piXIast": "Pāli transliterated in IAST",
+         "piKhmr": "Pāli in Khmer",
+         "kmXIast": "Khmer transliterated in IAST",
+         "kmXTwktt":"Khmer transliterated with Trent Walker Khmer-Tai Transliteration scheme"
       },
       "langscript": {
          "zh": "ចិន",
@@ -515,10 +526,13 @@
          "alalc97": "ALA-LC",
          "latnPinyin": "ភីងអ៊ីង",
          "xTwktt":"ការសរសេរជាសូរស័ព្ទថៃខ្មែរ Trent Walker",
+         "xNdia":"Sanskrit or Pāli, Lenient",
+         "incHelper": "Sanskrit or Pāli",
+         "unicode": "Unicode",
          "xBdrc":"BDRC Translit.",
          "xFemc":"FEMC Translit.",
          "hani": "Original - no conversion",
-         "fr":"Français"
+         "fr":"French"
       },
       "x": "បានសរសេរជាសូរស័ព្ទ",
       "latn": "បានសរសេរជាសូរស័ព្ទ"
@@ -557,7 +571,8 @@
    "Rsidebar": {
       "title": "បង្ហាញជម្រើសដែលពេញចិត្ត",
       "UI": {
-         "title": "ភាសា UI"
+         "title": "User Interface Language",
+         "help": "Please select the language you want to have the user interface displayed in"
       },
       "results": {
          "title": "លទ្ធផលភាសាដែលចង់បាន"
@@ -665,6 +680,7 @@
       "firstP": "ទំព័រទីមួយ",
       "lastP": "ទំព័រចុងក្រោយ",
       "openIA": "បើកនៅលើបណ្ណសារអ៊ីនធឺណិត",
+      "redirecting": "Redirecting...",
       "openW":"Open Work",
       "fullR":"Full record"
    },
@@ -726,7 +742,7 @@
    },
    "viewer":{
       "_dash":" — ",
-      "addItem": "បន្ថែមធាតុ",
+      "addItem": "Add Item",
       "addNewObject": "Add new object from URL",
       "addSlotAbove": "Add Slot Above",
       "addSlotBelow": "Add Slot Below",
@@ -797,6 +813,7 @@
       "goto":"Go to img.",
       "grayscaleTooltip": "Toggle grayscale",
       "imageManipulationTooltip": "Toggle image manipulation",
+      "image": "Image",
       "images": "Images",
       "imagesFor": "Images for",
       "imageView": "Image View",
@@ -817,8 +834,8 @@
       "more": "more",
       "mustLogin":"You must be logged in to download PDFs or image files.",
       "myManifests": "My Manifests",
-      "new": "ថ្មី!",
       "newObject": "Replace Object",
+      "new":"new!",
       "no": "No",
       "noIndex": "No index available",
       "noLabel": "No Label",
