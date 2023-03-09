@@ -6564,6 +6564,8 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                if(this.props.monlamResults) this.callMonlam(data)
             }
 
+            // #807 debug mode
+            let get = qs.parse(this.props.history.location.search)
 
             return (
             <div class={"etextPage"+(this.props.manifestError&&!imageLinks?" manifest-error":"")+ (!e.value.match(/[\n\r]/)?" unformated":"") + (e.seq?" hasSeq":"")/*+(e.language === "bo"?" lang-bo":"")*/ }>
@@ -6574,34 +6576,41 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                {
                   e.seq && showIm && Object.keys(imageLinks).sort().map(id => {
                      if(!this.state.collapse["imageVolume-"+id] && imageLinks[id][e.seq]) 
-                        if(!imgErr || !imgErr[imageLinks[id][e.seq].image]) return (
-                           <div class="imagePage">
-                              {/* // TODO: use openseadragon 
-                                 <img class="page" title="Open image+text reading view" src={imageLinks[id][e.seq].image} onError={(ev)=> handleImageError(ev,imageLinks[id][e.seq].image,e.seq)} onClick={eve => { 
-                                 let manif = this.props.imageVolumeManifests[id]
-                                 window.MiradorUseEtext = "open" ;                                 
-                                 this.showMirador(imageLinks[id][e.seq].id,manif["@id"]);
-                              }}/>     */}
-                              <a href={imageLinks[id][e.seq].image} target="_blank" rel="noopener noreferrer">
-                                 <img class="page" src={imageLinks[id][e.seq].image} onError={(ev)=> handleImageError(ev,imageLinks[id][e.seq].image,e.seq)} />
-                              </a>
+                        if(!imgErr || !imgErr[imageLinks[id][e.seq].image]) { 
+                           const ref = React.createRef()
+                           return (
+                              <div class="imagePage">
+                                 {/* // TODO: use openseadragon 
+                                    <img class="page" title="Open image+text reading view" src={imageLinks[id][e.seq].image} onError={(ev)=> handleImageError(ev,imageLinks[id][e.seq].image,e.seq)} onClick={eve => { 
+                                    let manif = this.props.imageVolumeManifests[id]
+                                    window.MiradorUseEtext = "open" ;                                 
+                                    this.showMirador(imageLinks[id][e.seq].id,manif["@id"]);
+                                 }}/>     */}
+                                 <a href={imageLinks[id][e.seq].image} target="_blank" rel="noopener noreferrer">
+                                    <img class="page" ref={ref} src={imageLinks[id][e.seq].image} onLoad={(ev) => { if(ref.current) {
+                                       const elem = ref.current.closest(".imagePage")
+                                       elem.classList.add("portrait")
+                                       if(get.right) elem.classList.add("right")
+                                    }}} onError={(ev)=> handleImageError(ev,imageLinks[id][e.seq].image,e.seq)} />
+                                 </a>
 
-                              {/*}
-                              <div class="small"><a title="Open image+text reading view" onClick={eve => { 
-                                 let manif = this.props.imageVolumeManifests[id]
-                                 openMiradorAtPage(imageLinks[id][e.seq].id,manif["@id"])
-                              }}>p.{e.seq}</a> from {this.uriformat(null,{value:id.replace(/bdr:/,bdr).replace(/[/]V([^_]+)_I.+$/,"/W$1")})}                                                      
-                              { imageLinks && Object.keys(imageLinks).length > 1 && <span class="button hide" title={"Hide this image volume"} 
-                                 onClick={(eve) => {
-                                    this.setState({...this.state, collapse:{...this.state.collapse, ["imageVolume-"+id]:true}}) 
-                                 }}> 
-                                 <VisibilityOff/>
-                              </span>  }
-                              <br/>
+                                 {/*}
+                                 <div class="small"><a title="Open image+text reading view" onClick={eve => { 
+                                    let manif = this.props.imageVolumeManifests[id]
+                                    openMiradorAtPage(imageLinks[id][e.seq].id,manif["@id"])
+                                 }}>p.{e.seq}</a> from {this.uriformat(null,{value:id.replace(/bdr:/,bdr).replace(/[/]V([^_]+)_I.+$/,"/W$1")})}                                                      
+                                 { imageLinks && Object.keys(imageLinks).length > 1 && <span class="button hide" title={"Hide this image volume"} 
+                                    onClick={(eve) => {
+                                       this.setState({...this.state, collapse:{...this.state.collapse, ["imageVolume-"+id]:true}}) 
+                                    }}> 
+                                    <VisibilityOff/>
+                                 </span>  }
+                                 <br/>
+                                 </div>
+                                 */}        
                               </div>
-                              */}        
-                           </div>
-                        )
+                           )
+                        }
                         //else return <p class="copyrighted">copyrighted</p>
                   })
                }
