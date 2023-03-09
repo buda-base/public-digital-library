@@ -4,6 +4,10 @@
     <script>
       var timer 
       window.initFeedbucket = function() {
+        
+        // #804 trying to configure feedback scope
+        return
+
         if(timer) clearInterval(timer)
         timer = setInterval(function(){
           var elem = document.querySelector('body > feedbucket-app').shadowRoot           

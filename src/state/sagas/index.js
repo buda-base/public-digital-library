@@ -38,6 +38,7 @@ const bdo  = "http://purl.bdrc.io/ontology/core/";
 const bdou  = "http://purl.bdrc.io/ontology/ext/user/" ;
 const bdu   = "http://purl.bdrc.io/resource-nc/user/";
 const bdr  = "http://purl.bdrc.io/resource/";
+const foaf  = "http://xmlns.com/foaf/0.1/" ;
 const owl   = "http://www.w3.org/2002/07/owl#" ;
 const rdf   = "http://www.w3.org/1999/02/22-rdf-syntax-ns#";
 const rdfs  = "http://www.w3.org/2000/01/rdf-schema#"; 
@@ -803,11 +804,33 @@ async function getUser(profile)
          else return acc ;
       },{}) }
 
+      
       user[id].profile = profile
 
       store.dispatch(uiActions.gotUserID(id, etag));
       store.dispatch(dataActions.gotResource(id, user));
       loggergen.log("user!",id,profile,user)
+
+      try {
+
+         const name = user[id][skos+"prefLabel"][0].value
+         const email = user[id][foaf+"mbox"][0].value
+         const token = id
+
+         if(name && email && token) {
+            window.feedbucketConfig = {
+               reporter: {
+                  name,
+                  email,
+                  token
+               }
+            }         
+         } else {
+            throw new Error("unknown:"+[name,email,token])
+         }
+      } catch(e){
+         console.warn("could find user info for feedbucket",e)
+      }
    }
 
 }
