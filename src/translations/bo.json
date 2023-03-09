@@ -165,7 +165,7 @@
       "exactM":"ཧ་ཅང་མཐུན་པ་ཁོ་ན།་",
       "exactF":"ཡོངས་རྫོགས་མཐུན་པ་ཁོ་ན།",
       "exactMF":"རེ་ཟུང་ཧ་ཅང་མཐུན་པ།",
-      "quality":"OCR Quality"
+      "quality":"OCR ཡི་སྤུས་ཚད།"
    },
    "copyright": {
       "open": "བཀག་རྒྱ་མེད་པ།",
@@ -274,7 +274,7 @@
       "tmp:available":"ཡོད་པ།",
       "tmp:nbMembers":"ཁོངས་མི་རྣམས།",
       "tmp:nbParts":"ཆ་ཤས།",
-      "tmp:quality":"OCR Quality"
+      "tmp:quality":"OCR ཡི་སྤུས་ཚད།"
    },
    "guided":{
       "keyword":"གཙོ་ཚིག",
@@ -681,7 +681,7 @@
       "lastP": "ཤོག་ལྡེབས་ཐ་མ།",
       "openIA": "དྲ་ཐོག་ཡིག་མཛོད་ནང་ཁ་ཕྱེས།",
       "redirecting": "ཁ་ཕྱོགས་བསྐྱར་སྒྲིག་བྱེད་བཞིན་ཡོད་་་",
-      "openW":"Open Work",
+      "openW":"བརྩམ་ཆོས་ཁ་ཕྱེ།",
       "fullR":"Full record"
    },
    "mirador": {
@@ -799,7 +799,7 @@
       "fairUseIA3": "To return to the record for this text, please use the \"back\" button",
       "fillColorTooltip": "ནང་འཇུག་གི་ཚོན་མདོག་འདེམ།",
       "filterObjects": "དངོས་རིགས་ཚགས་སྒྲིག་བྱེད།",
-      "find":"Look up in Monlam Dictionary",
+      "find":"སྨོན་ལམ་ཚིག་མཛོད་ནང་ཚོལ།",
       "freehandTooltip": "རྣམ་པ་མེད་པའི་མཆན་འགྲེལ།",
       "full":"ཧྲིལ་བོ།",
       "fullScreen": "འཆར་ངོས་ཧྲིལ་བོ།",
@@ -829,8 +829,8 @@
       "manifest": "IIIF Manifest",
       "metadataTooltip": "འདིའི་སྐོར་གྱི་གནས་ཚུལ་/གཞི་གྲངས་རྒྱས་པ་སྟོན།",
       "mirrorTooltip": "Mirror image",
-      "monlam":"Monlam Dictionary",
-      "monlamTitle":"Definitions from the Monlam Grand Dictionary",
+      "monlam":"སྨོན་ལམ་ཚིག་མཛོད།",
+      "monlamTitle":"སྨོན་ལམ་ཚིག་མཛོད་ནང་གི་ཚིག་འགྲེལ།",
       "more": "འདི་ལས་མང་བ་",
       "mustLogin":"ཁྱེད་ཀྱིས་PDFs དང་ཡང་ན་བཤེར་པར་གང་ཞིག་ཕབ་ལེན་བྱེད་རུང་ཐོག་མར་ངེས་པར་དུ་ནང་འཛུལ་བྱ་དགོས། ",
       "myManifests": "My Manifests",
