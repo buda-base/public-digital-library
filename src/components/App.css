@@ -2563,8 +2563,9 @@ div:has(.resource.preview) .infoPanel.inRes { margin:0 !important; }
 
 /* @import "https://monlamdic.com/dictionarys/files/css/basic.css"; */
 
-.resource ~ .monlamResults { width:0px; position:relative; box-shadow:-2px 0 3px rgba(0,0,0,0.15);flex-shrink: 0; } 
+.resource ~ .monlamResults { width:0px; position:relative; flex-shrink: 0; } 
 .resource ~ .monlamResults > div { width:0px; height:calc(100% - 2 * 80px); position:fixed; right:0; top:80px; background:white; overflow:auto; 
+   box-shadow:-2px 0 3px rgba(0,0,0,0.15);
    /* background-image:url(/icons/monlam.png); background-repeat: no-repeat; background-size:100px; background-position: center; */
 }
 
@@ -4304,17 +4305,33 @@ html[lang="en"] .resource .data > [data-prop="bdo:creator"] h4[data-prop="bdo:ro
 .etextPage > .imagePage:hover .button.hide { opacity:0.54; }
 .etextPage.lang-bo h4.page { font-family:"Tibetan Machine Uni";}
 
-/* #807 image + text */
-.etextPage > .imagePage.portrait { float:left; width:50%; }
-.etextPage > .imagePage.portrait a img { margin-right:25px; }
-.etextPage > .imagePage.portrait ~ .overpage { width:50%; float:right;}
 
 
-/* text + image */
-.etextPage > .imagePage.portrait.right { float:right; width:50%; }
-.etextPage > .imagePage.portrait.right a img { margin-left:0px; }
-.etextPage > .imagePage.portrait.right ~ .overpage { width:50%; float:left;}
+@media(min-width:1225px) {
+   /* #807 image + text */
+   .etextPage > .imagePage.portrait { float:left; width:50%; }
+   .etextPage > .imagePage.portrait a img { margin-right:25px; }
+   .etextPage > .imagePage.portrait ~ .overpage { width:50%; float:right;}
 
+
+   /* text + image */
+   .etextPage > .imagePage.portrait.right { float:right; width:50%; }
+   .etextPage > .imagePage.portrait.right a img { margin-left:0px; }
+   .etextPage > .imagePage.portrait.right ~ .overpage { width:50%; float:left;}
+}
+
+@media(min-width:1025px) {
+   /* #807 image + text */
+   #root > :not(.withMonlam) .etextPage > .imagePage.portrait { float:left; width:50%; }
+   #root > :not(.withMonlam) .etextPage > .imagePage.portrait a img { margin-right:25px; }
+   #root > :not(.withMonlam) .etextPage > .imagePage.portrait ~ .overpage { width:50%; float:right;}
+
+
+   /* text + image */
+   #root > :not(.withMonlam) .etextPage > .imagePage.portrait.right { float:right; width:50%; }
+   #root > :not(.withMonlam) .etextPage > .imagePage.portrait.right a img { margin-left:0px; }
+   #root > :not(.withMonlam) .etextPage > .imagePage.portrait.right ~ .overpage { width:50%; float:left;}
+}
 
 .etextPage h5 a.unpag { color: #343434; cursor:auto;}
 .etextPage h5 a.unpag:hover { border:none; }
