@@ -137,10 +137,15 @@ export function miradorSetUI(closeCollec, num, withIAlink) {
 
 
    window.Mousetrap.bind("esc", function(ev){
-      console.log("kp:",ev)
       var elem = jQ("#breadcrumbs #return"), href = elem.attr("href")
-      if(!href) elem.click()
-      else { 
+      console.log("kp:",ev,elem,href)
+      if(!href) {
+         //elem.click()
+
+         // #809
+         jQ("#breadcrumbs+.X").click()
+
+      } else {          
          href = window.location.href.replace(/^(https?:\/\/[^/]+)\/.*/,"$1"+href)
          window.location.assign(href); 
       }
