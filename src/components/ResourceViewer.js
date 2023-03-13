@@ -3054,7 +3054,7 @@ class ResourceViewer extends Component<Props,State>
          
          let noSpace
 
-         if(elem.inOutline || ((!thumbV || !thumbV.length) && ((info && infoBase && infoBase.filter(e=>e["xml:lang"]||e["lang"]).length >= 0) || (prop && prop.match && prop.match(/[/#]sameAs/))))) {
+         if(elem.inOutline || ((!thumbV || !thumbV.length) && enti != "Images" && ((info && infoBase && infoBase.filter(e=>e["xml:lang"]||e["lang"]).length >= 0) || (prop && prop.match && prop.match(/[/#]sameAs/))))) {
 
             //loggergen.log("svg?",svgImageS)
 
