@@ -274,7 +274,10 @@
       "tmp:available":"Available",
       "tmp:nbMembers":"Members",
       "tmp:nbParts":"Parts",
-      "tmp:quality":"OCR Accuracy"
+      "tmp:quality":"OCR Accuracy",
+      "tmp:RawOCR": "average",
+      "tmp:CleanedOCR": "high",
+      "tmp:ComputerInputOCR": "very high"
    },
    "guided":{
       "keyword":"keyword",
