@@ -94,6 +94,8 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import L from 'leaflet';    
 import { Decimal2DMS } from 'dms-to-decimal';
+import rangy from "rangy"
+import "rangy/lib/rangy-textrange"
 
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
@@ -6489,15 +6491,32 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
                if(end > start + MAX_SELECTION_LENGTH) { 
                   try {
+                     let sameElem = range.startContainer === range.endContainer || range.startContainer.parentElement === range.endContainer.parentElement
+                     console.log("range:", sameElem, range, start, end, range.startOffset + MAX_SELECTION_LENGTH)
                      if(!invert) {
                         end = start + MAX_SELECTION_LENGTH
-                        range.setEnd(range.startContainer, range.startOffset + MAX_SELECTION_LENGTH);
+                        if(sameElem) range.setEnd(range.startContainer, range.startOffset + MAX_SELECTION_LENGTH);
+                        else {
+                           let mutRange = rangy.createRange();
+                           mutRange.setStart(range.startContainer, range.startOffset) 
+                           mutRange.setEnd(range.endContainer, range.endOffset)                      
+                           mutRange.moveEnd("character", MAX_SELECTION_LENGTH - range.toString().length)
+                           range.setEnd(mutRange.endContainer, mutRange.endOffset)
+                           //console.log(mutRange, mutRange.toString(), mutRange.toString().length, range, range.toString(), range.toString().length)     
+                        }
                      } else {
                         start = end - MAX_SELECTION_LENGTH
-                        range.setStart(range.endContainer, range.endOffset - MAX_SELECTION_LENGTH);
+                        if(sameElem) range.setStart(range.endContainer, range.endOffset - MAX_SELECTION_LENGTH);
+                        else {
+                           let mutRange = rangy.createRange();
+                           mutRange.setStart(range.startContainer, range.startOffset) 
+                           mutRange.setEnd(range.endContainer, range.endOffset)                      
+                           mutRange.moveStart("character", range.toString().length - MAX_SELECTION_LENGTH)
+                           range.setStart(mutRange.startContainer, mutRange.startOffset)
+                        }
                      }
                   } catch(err) {                  
-                     console.warn("can't update range", start, end, range, selection)     
+                     console.warn("can't update range", err, start, end, range, selection)     
                      if(this.state.enableDicoSearch) selection.removeAllRanges()
                      if(this.state.monlam) {
                         this.setState({ monlam:null, ...this.state.noHilight && seq != this.state.noHilight?{noHilight:false}:{} })
@@ -6676,7 +6695,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
                         if(label) { lang = label["lang"] ; if(!pageLang) pageLang = lang }
                         if(label) { label = label["value"]; pageVal += " "+label ; chunkVal = label }
-                        if(label && this.props.highlight && this.props.highlight.key && this.state.noHilight != e.seq) { 
+                        if(label && this.props.highlight && this.props.highlight.key /*&& this.state.noHilight != e.seq*/) { 
                            label = highlight(label,kw.map(k => k.replace(/(.)/g,"$1\\n?")),null,false,true); 
                            current.push(label); }
                         else if(label) { 

@@ -165,7 +165,7 @@
       "exactM":"ཧ་ཅང་མཐུན་པ་ཁོ་ན།་",
       "exactF":"ཡོངས་རྫོགས་མཐུན་པ་ཁོ་ན།",
       "exactMF":"རེ་ཟུང་ཧ་ཅང་མཐུན་པ།",
-      "quality":"OCR ཡི་སྤུས་ཚད།"
+      "quality":"OCR Accuracy"
    },
    "copyright": {
       "open": "བཀག་རྒྱ་མེད་པ།",
@@ -274,7 +274,7 @@
       "tmp:available":"ཡོད་པ།",
       "tmp:nbMembers":"ཁོངས་མི་རྣམས།",
       "tmp:nbParts":"ཆ་ཤས།",
-      "tmp:quality":"OCR ཡི་སྤུས་ཚད།"
+      "tmp:quality":"OCR Accuracy"
    },
    "guided":{
       "keyword":"གཙོ་ཚིག",

@@ -165,7 +165,7 @@
       "exactM":"Exact match only",
       "exactF":"Exact full match only",
       "exactMF":"Any exact match",
-      "quality":"OCR Quality"
+      "quality":"OCR Accuracy"
    },
    "copyright": {
       "open": "开放访问",
@@ -274,7 +274,7 @@
       "tmp:available":"Available",
       "tmp:nbMembers":"Members",
       "tmp:nbParts":"Parts",
-      "tmp:quality":"OCR Quality"
+      "tmp:quality":"OCR Accuracy"
    },
    "guided":{
       "keyword":"keyword",
