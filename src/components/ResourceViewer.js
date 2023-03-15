@@ -9355,6 +9355,8 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   searchTerm = I18n.t("topbar.instances")+" "+searchUrl.replace(/.*i=([^&]+).*/,"$1") 
                else if(searchUrl.match(/id=/))               
                   searchTerm = searchUrl.replace(/.*id=([^&]+).*/,"$1")
+               else if(searchUrl.match(/date=/))               
+                  searchTerm = searchUrl.replace(/.*date=([^&]+).*/,"$1")
             }
             else { 
                backTo = decodeURIComponent(backTo.replace(new RegExp("(([?])|&)"+withW),"$2"))+"&"+withW
