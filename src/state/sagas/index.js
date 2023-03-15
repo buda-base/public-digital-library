@@ -2239,7 +2239,7 @@ function rewriteAuxMain(result,keyword,datatype,sortBy,language)
    if(!keyword.includes(" AND ")){ 
       if(language === "bo") { 
          let translit = getMainLabel([ { lang: language, value: _kw } ], extendedPresets([ "bo-x-ewts" ]))
-         _kw = "(("+_kw.replace(/([\{\}\[\]()|])/g,"\\$1")+")|("+translit?.value?.replace(/([\{\}|()\[\]])/g,"\\$1").replace(/[_ ]/g,"[_ ]")+(translit?.value?.endsWith("/")?"?":"/?") +"))"  // #756
+         _kw = "(("+_kw.replace(/([\{\}\[\]()|])/g,"\\$1")+")|("+translit?.value?.replace(/([\{\}|()\[\]])/g,"\\$1").replace(/[_ ]/g,"[_ ]").replace(/\[_ \]$/,"[_ ]?")+(translit?.value?.endsWith("/")?"?":"/?") +"))"  // #756
          flags = "u" // case sensitive in Tibetan/Wylie
       } else if(language === "bo-x-ewts") { 
          let translit = getMainLabel([ { lang: language, value: _kw } ], extendedPresets([ "bo" ]))

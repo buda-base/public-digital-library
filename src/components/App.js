@@ -6998,9 +6998,12 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          else {
             if(this.state.filters.facets) {
                if(this.state.filters.facets[tmp+"hasMatch"].includes(tmp+"isExactMatch")) {
+                  /* // no need for "any" as exact matches include exact full matches
                   if(this.state.filters.facets[tmp+"hasMatch"].includes(tmp+"hasExactMatch")) {
                      hasMatchTitle = I18n.t("sort.exactMF")
-                  } else hasMatchTitle = I18n.t("sort.exactF")
+                  } else hasMathTitle = I18n.t("sort.exactF")
+                  */
+                  hasMatchTitle = I18n.t("sort.exactF")
                } else hasMatchTitle = I18n.t("sort.exactM")
             }
          }
@@ -7029,6 +7032,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             </div> )
          }))       
 
+         /*
          if(matchK.length > 1) {
 
             hasMatchPopup.push(         
@@ -7051,7 +7055,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   />
                </div> 
             )            
-         }                           
+         } 
+         */                          
       }
 
 
