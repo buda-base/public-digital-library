@@ -8589,7 +8589,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                                     if(!g.details) g.details = []
                                     let note = mapElem(g.note)
                                     //console.log("note:",note)
-                                    if(note?.length && note[0].noteText) notes.push(note[0].noteText)
+                                    if(note?.length && note[0].noteText) notes.push(note[0].noteText["@value"]?note[0].noteText:{"@value":note[0].noteText, "@language":"en" })
                                  }
                                  if(notes.length) g.details.push(<div class="sub"><h4 class="first type">{this.proplink(bdo+"note",undefined,notes.length,true)}{I18n.t("punc.colon")} </h4><div>{notes.map(n => this.format("h4","","",false, "sub",[{ value:n["@value"], lang:n["@language"], type:"literal"}]))}</div></div>)
                               }
