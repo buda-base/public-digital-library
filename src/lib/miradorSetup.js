@@ -302,6 +302,7 @@ async function hasEtextPage(manifest, resID) {
       let check = await window.fetch(ldspdi+"/query/graph/Etext_base?R_RES="+IRI+"&format=json") ;
       let ut  = await check.json()
       if(ut) ut = ut[IRI.replace(/bdr:/,bdr)]
+      if(!ut) ut = {}
       let etextRes = ut[tmp+"hasEtextRes"]
       ut = etextRes
       if(ut && ut.length) { 
