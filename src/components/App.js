@@ -6855,7 +6855,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          }
 
          if(value.match(/(^[0-9]{3,4}$)/) && Number(value) < 2100)  dataSource.unshift(value+"@find as a date")         
-         if(value) dataSource.push(value.replace(/^d([0-9]+)/,"D$1")+"@find as an identifier")
+         if(value && this.state.searchTypes.some(d => ["Instance","Work"].includes(d))) dataSource.push(value.replace(/^d([0-9]+)/,"D$1")+"@find as an identifier")
 
          this.setState({...this.state,keyword:value, language, dataSource,blurSearch:false   } ) 
          
