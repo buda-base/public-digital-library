@@ -5426,7 +5426,7 @@ class ResourceViewer extends Component<Props,State>
          linkToVersions = <span class="expand linkToVersions"><Link {...this.props.preview?{ target:"_blank" }:{}} to={"/search?i="+this.props.IRI+"&t=Work"}>{I18n.t("misc.browseA",{count: ret.length})}</Link></span>
       }
       
-      let linkToPlaces
+      let linkToPlaces, maxPlaces = 20
       if(k === bdo+"placeContains" && ret.length >= 2) {
          linkToPlaces = <span class="expand linkToPlaces"><Link {...this.props.preview?{ target:"_blank" }:{}} to={"/search?r="+this.props.IRI+"&t=Place&f=relation,inc,bdo:placeLocatedIn"}>{I18n.t("misc.browseA",{count: ret.length})}</Link></span>
       }
@@ -5450,7 +5450,7 @@ class ResourceViewer extends Component<Props,State>
                   { (false || (!this.state.collapse[k] && hasMaxDisplay !== -1) ) && <><span
                      onClick={(e) => this.setState({...this.state,collapse:{...this.state.collapse,[k]:!this.state.collapse[k]}})}
                      className="expand">
-                        {I18n.t("misc."+(this.state.collapse[k]?"hide":"see"+(linkToVersions&&ret.length > maxVersions?"10":"")+"More")).toLowerCase()}&nbsp;<span
+                        {I18n.t("misc."+(this.state.collapse[k]?"hide":"see"+(linkToVersions&&ret.length > maxVersions||linkToPlaces&&ret.length > maxPlaces?"10":"")+"More")).toLowerCase()}&nbsp;<span
                         className="toggle-expand">
                            { this.state.collapse[k] && <ExpandLess/>}
                            { !this.state.collapse[k] && <ExpandMore/>}
@@ -5463,7 +5463,9 @@ class ResourceViewer extends Component<Props,State>
                <Collapse timeout={{enter:0,exit:0}} className={"propCollapse in-"+(show===true)} in={show}>
                   { k === bdo+"workHasInstance"
                      ? ret.slice(0,maxVersions)
-                     : ret }
+                     : (k === bdo+"placeContains"
+                        ? ret.slice(0,maxPlaces)
+                        : ret)  }
                </Collapse>
                {/* // failure with CSS columns
                <div className={"propCollapseHeader in-"+(this.state.collapse[k]===true)}>
