@@ -249,7 +249,7 @@
       "tmp:associatedCentury": "Century",
       "tmp:associatedAuthorCentury": "Author's Century",
       "tmp:ontologyProperty": "Ontology Property",
-      "tmp:hasRole": "Has Role",
+      "tmp:hasRole": "Role",
       "tmp:matchContext": "Match Context",
       "tmp:titleContext": "Title",
       "tmp:nameContext": "Name",
