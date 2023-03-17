@@ -249,7 +249,7 @@
       "tmp:associatedCentury": "དུས་རབས།",
       "tmp:associatedAuthorCentury": "མཛད་པ་པོའི་དུས་རབས།",
       "tmp:ontologyProperty": "ཤེས་བྱའི་རིགས་དབྱེ།",
-      "tmp:hasRole": "མི་སྣའི་འགན་འཁྲི།",
+      "tmp:hasRole": "Role",
       "tmp:matchContext": "སྐབས་ཐོག་དང་མཐུན་པ་ཁག",
       "tmp:titleContext": "མཚན་བྱང་།",
       "tmp:nameContext": "མཚན།",
