@@ -9757,6 +9757,19 @@ perma_menu(pdfLink,monoVol,fairUse,other)
             if(fromStaticRoute != "latest") searchTerm = I18n.t("home."+fromStaticRoute).toLowerCase()
          }
 
+         let tablist = [
+            <>{ (related.length > 0) && <Tab onClick={(ev)=>this.setState({relatedTab:false,relatedTabAll:false,irel:0,icrea:0})}>{I18n.t(_T=== "Place"?"resource.wAbout":"resource.about",{resLabel, count:related.length, interpolation: {escapeValue: false}})} </Tab> }</>,
+            <>{ (createdBy.length > 0) && <Tab onClick={(ev)=>this.setState({relatedTab:true,relatedTabAll:false,irel:0,icrea:0})}>{I18n.t(_T=== "Place"?"resource.printedA":(_T==="Corporation"?"resource.memberO":(_T==="Product"?"index.relatedM":(_T==="Work"&&serial?"index.relatedS":"resource.createdB"))),{resLabel, count:createdBy.length, interpolation: {escapeValue: false}})}</Tab> }</>,
+         ], tabpanels = [
+            <>{ (related.length > 0) &&  <TabPanel><div class={"rel-or-crea"}>{related}</div></TabPanel> }</>,
+            <>{ (createdBy.length > 0) && <TabPanel><div class={"rel-or-crea"+(_T==="Corporation"?" person":"")}>{createdBy}</div></TabPanel> }</>,
+         ]
+
+         if(_T == "Person") {
+            tablist = tablist.filter(t => t).reverse()
+            tabpanels = tabpanels.filter(t => t).reverse()            
+         } 
+
          return (
          [getGDPRconsent(this),   
          <div class={isMirador?"H100vh OF0":""}>
@@ -9833,12 +9846,10 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                            <div>
                               <Tabs>
                                  <TabList>
-                                    { (related.length > 0) && <Tab onClick={(ev)=>this.setState({relatedTab:false,relatedTabAll:false,irel:0,icrea:0})}>{I18n.t(_T=== "Place"?"resource.wAbout":"resource.about",{resLabel, count:related.length, interpolation: {escapeValue: false}})} </Tab> }
-                                    { (createdBy.length > 0) && <Tab onClick={(ev)=>this.setState({relatedTab:true,relatedTabAll:false,irel:0,icrea:0})}>{I18n.t(_T=== "Place"?"resource.printedA":(_T==="Corporation"?"resource.memberO":(_T==="Product"?"index.relatedM":(_T==="Work"&&serial?"index.relatedS":"resource.createdB"))),{resLabel, count:createdBy.length, interpolation: {escapeValue: false}})}</Tab> }
+                                    {tablist}
                                     <Tab onClick={(ev)=>this.setState({relatedTab:false,relatedTabAll:true,irel:0,icrea:0})}>{I18n.t(all=== undefined?"misc.all":"misc.allC",{count:all})} </Tab>
                                  </TabList>
-                                 { (related.length > 0) &&  <TabPanel><div class={"rel-or-crea"}>{related}</div></TabPanel> }
-                                 { (createdBy.length > 0) && <TabPanel><div class={"rel-or-crea"+(_T==="Corporation"?" person":"")}>{createdBy}</div></TabPanel> }
+                                 {tabpanels}                                    
                                  <TabPanel>
                                     <div class={"rel-or-crea all"+(allRel && !allRel.length?" noAssoc":"")}>
                                     { this.props.loading && <Loader loaded={false} /> }
