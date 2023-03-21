@@ -249,7 +249,7 @@
       "tmp:associatedCentury": "សតវត្ស",
       "tmp:associatedAuthorCentury": "សតវត្សរបស់អ្នកនិពន្ធ",
       "tmp:ontologyProperty": "លក្ខណៈសម្បត្តិនៃទស្សនៈការយល់ឃើញ",
-      "tmp:hasRole": "មានតួនាទី",
+      "tmp:hasRole": "Role",
       "tmp:matchContext": "បរិបទផ្គូផ្គង",
       "tmp:titleContext": "ចំណងជើង",
       "tmp:nameContext": "ឈ្មោះ",
