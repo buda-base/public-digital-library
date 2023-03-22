@@ -6497,25 +6497,30 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                      console.log("range:", sameElem, range, start, end, range.startOffset + MAX_SELECTION_LENGTH)
                      if(!invert) {
                         end = start + MAX_SELECTION_LENGTH
+                        
+                        /*
+                        // use rangy in every case 
                         if(sameElem) range.setEnd(range.startContainer, range.startOffset + MAX_SELECTION_LENGTH);
                         else {
+                        */
+
                            let mutRange = rangy.createRange();
                            mutRange.setStart(range.startContainer, range.startOffset) 
                            mutRange.setEnd(range.endContainer, range.endOffset)                      
                            mutRange.moveEnd("character", MAX_SELECTION_LENGTH - range.toString().length)
                            range.setEnd(mutRange.endContainer, mutRange.endOffset)
                            //console.log(mutRange, mutRange.toString(), mutRange.toString().length, range, range.toString(), range.toString().length)     
-                        }
+                        //}
                      } else {
                         start = end - MAX_SELECTION_LENGTH
-                        if(sameElem) range.setStart(range.endContainer, range.endOffset - MAX_SELECTION_LENGTH);
-                        else {
+                        //if(sameElem) range.setStart(range.endContainer, range.endOffset - MAX_SELECTION_LENGTH);
+                        //else {
                            let mutRange = rangy.createRange();
                            mutRange.setStart(range.startContainer, range.startOffset) 
                            mutRange.setEnd(range.endContainer, range.endOffset)                      
                            mutRange.moveStart("character", range.toString().length - MAX_SELECTION_LENGTH)
                            range.setStart(mutRange.startContainer, mutRange.startOffset)
-                        }
+                        //}
                      }
                   } catch(err) {                  
                      console.warn("can't update range", err, start, end, range, selection)     
@@ -7320,10 +7325,17 @@ perma_menu(pdfLink,monoVol,fairUse,other)
    }
 
    renderOCR = () => {
-      let elem = this.getResourceElem(bdo+"contentMethod");
-      //console.log("OCR:",elem)
+      // #817
+      let elem = this.getResourceElem(bdo+"OPFOCRWordMedianConfidenceIndex")
+      /*
+      let elem = this.getResourceElem(bdo+"contentMethod");            
       if(elem && elem.length) elem = elem[0].value ;
       if(elem === bdr+"ContentMethod_OCR") {
+      */
+
+      //console.log("OCR:",elem)
+
+      if(elem) {
          return <div class="data access"><h3><span style={{textTransform:"none"}}>{I18n.t("access.OCR")}</span></h3></div>
       }
    }
