@@ -24,8 +24,10 @@ const mapStateToProps = (state,ownProps) => {
    }
 
    let portraitPopupClosed = state.ui.portraitPopupClosed
+   
+   let isNewUser = state.ui.isNewUser
 
-   let props = { config, locale, profileName, portraitPopupClosed }
+   let props = { config, locale, profileName, portraitPopupClosed, isNewUser }
 
    return props
 
