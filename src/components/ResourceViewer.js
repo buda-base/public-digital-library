@@ -2612,9 +2612,12 @@ class ResourceViewer extends Component<Props,State>
          let lab = this.props.dictionary[prop][rdfs+"label"]
          if(!lab) lab = this.props.dictionary[prop][skos+"prefLabel"]
          let ret = getLangLabel(this, prop, lab, useUIlang)
-         if(ret && ret.value && ret.value != "")
-            if(canSpan) return <span lang={ret.lang}>{ret.value}</span>
+         if(ret && ret.value && ret.value != "") {
+            let hasSpace = false
+            if(ret.value.includes(" ")) hasSpace = true            
+            if(canSpan) return <span lang={ret.lang} {...hasSpace?{className:"hasSpace"}:{}}>{ret.value}</span>
             else return ret.value
+         }
 
        //&& this.props.ontology[prop][rdfs+"label"][0] && this.props.ontology[prop][rdfs+"label"][0].value) {
          //let comment = this.props.ontology[prop][rdfs+"comment"]
@@ -2624,7 +2627,11 @@ class ResourceViewer extends Component<Props,State>
       }
 
     
-      if(canSpan) return <span lang={lang}>{this.pretty(prop,isUrl,noNewline)}</span>
+      if(canSpan) { 
+         let hasSpace = false
+         if(prop.includes(" ")) hasSpace = true            
+         return <span {...hasSpace?{className:"hasSpace"}:{}} lang={lang}>{this.pretty(prop,isUrl,noNewline)}</span>
+      }
       else return this.pretty(prop,isUrl,noNewline)
     
 
@@ -3810,7 +3817,7 @@ class ResourceViewer extends Component<Props,State>
       })
       */
 
-      //loggergen.log("format",Tag, prop,JSON.stringify(elem,null,3),txt,bnode,div);
+      //loggergen.log("format:",Tag, prop,JSON.stringify(elem,null,3),txt,bnode,div);
 
       let ret = [],pre = []
       let note = []
@@ -3883,6 +3890,9 @@ class ResourceViewer extends Component<Props,State>
                   if(!tVal) tVal = tLab["@value"]
                   if(!tVal) tVal = ""
 
+                  let hasSpace = false
+                  if(tVal.includes(" ")) hasSpace = true
+
                   if(tLab.start !== undefined) tmp = [ <span class="startChar">
                      <span>[&nbsp;
                         <Link to={"/show/"+this.props.IRI+"?startChar="+tLab.start+(this.props.highlight?'&keyword="'+this.props.highlight.key+'"@'+this.props.highlight.lang:"")+"#open-viewer"}>@{tLab.start}</Link>
@@ -3894,7 +3904,7 @@ class ResourceViewer extends Component<Props,State>
 
                   if(lang) {
                      let size = this.state.etextSize
-                     tmp = [ <span lang={lang} {...this.state.etextSize?{style:{ fontSize:size+"em", lineHeight:(Math.max(1.0, size + 0.75))+"em" }}:{}}>{tmp}</span> ]
+                     tmp = [ <span {...hasSpace?{className:"hasSpace"}:{}} lang={lang} {...this.state.etextSize?{style:{ fontSize:size+"em", lineHeight:(Math.max(1.0, size + 0.75))+"em" }}:{}}>{tmp}</span> ]
                   }
 
                   if(tLab.start === undefined) tmp.push(<Tooltip placement="bottom-end" title={
@@ -6417,6 +6427,9 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                let langElem = selection.anchorNode?.parentElement?.getAttribute("lang")
                if(!langElem) langElem = selection.anchorNode?.parentElement?.parentElement?.getAttribute("lang")
                
+               // #818
+               if(langElem && !langElem.startsWith("bo")) return
+
                let parent = selection.anchorNode?.parentElement
                if(!parent?.getAttribute("lang")) parent = parent?.parentElement
 
@@ -6593,6 +6606,9 @@ perma_menu(pdfLink,monoVol,fairUse,other)
             // #807 debug mode
             let get = qs.parse(this.props.history.location.search)
 
+            // #818 etext in sa-deva --> disable Monlam
+            let hasBo = this.state.etextHasBo
+
             return (
             <div class={"etextPage"+(this.props.manifestError&&!imageLinks?" manifest-error":"")+ (!e.value.match(/[\n\r]/)?" unformated":"") + (e.seq?" hasSeq":"")/*+(e.language === "bo"?" lang-bo":"")*/ }>
                {/*                                          
@@ -6693,14 +6709,17 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                      {e.seq == this.state.monlam?.seq && this.state.enableDicoSearch ? this.state.monlam?.hilight : null}
                      {!e.value.match(/[\n\r]/) && !e.seq ?[<span class="startChar"><span>[&nbsp;<Link to={"/show/"+this.props.IRI+"?startChar="+e.start+"#open-viewer"}>@{e.start}</Link>&nbsp;]</span></span>]:null}{(e.chunks?.length?e.chunks:[e.value]).map(f => {
 
-                        // #771 multiple language in on epage
+                        // #771 multiple language in one page
                         let lang = e.language
                         if(f["@language"]) lang = f["@language"]                        
                         if(f["@value"] != undefined) f = f["@value"];
 
                         let label = getLangLabel(this,bdo+"eTextHasPage",[{"lang":lang,"value":f}]), chunkVal
 
-                        if(label) { lang = label["lang"] ; if(!pageLang) pageLang = lang }
+                        if(label) { lang = label["lang"] ; if(!pageLang) pageLang = lang; 
+                           // #818
+                           if(!hasBo && lang?.startsWith("bo") && label.value.match(/[^0-9\n \[\]]/)) this.setState({etextHasBo: label}) ; 
+                        }
                         if(label) { label = label["value"]; pageVal += " "+label ; chunkVal = label }
                         if(label && this.props.highlight && this.props.highlight.key /*&& this.state.noHilight != e.seq*/) { 
                            label = highlight(label,kw.map(k => k.replace(/(.)/g,"$1\\n?")),null,false,true); 
@@ -7480,7 +7499,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                <div>
                   <a id="DL" class={!accessError?"on":""} onClick={(e) => this.setState({...this.state,anchorLangDL:e.currentTarget, collapse: {...this.state.collapse, langDL:!this.state.collapse.langDL } } ) }>{etext_lang_selec(this,true,<>{I18n.t("mirador.downloadE")}<img src="/icons/DLw.png"/></>,this.props.IRI?fullUri(this.props.IRI).replace(/^http:/,"https:")+".txt":"")}</a>
                   {/* // <a id="DL" class={!accessError?"on":""} target="_blank" rel="alternate" type="text" download href={this.props.IRI?fullUri(this.props.IRI).replace(/^http:/,"https:")+".txt":""}>{I18n.t("mirador.downloadE")}<img src="/icons/DLw.png"/></a>) */}
-                  { this.props.config.useMonlam && <a id="dico" class="on" onClick={(e) => { 
+                  { this.props.config.useMonlam && this.state.etextHasBo && <a id="dico" class="on" onClick={(e) => { 
                      if(this.state.enableDicoSearch) this.props.onCloseMonlam()
                      this.setState({noHilight:false, enableDicoSearch:!this.state.enableDicoSearch, ...this.state.enableDicoSearch?{monlam:null}:{}})
                   }}><div class="new">{I18n.t("viewer.new")}</div>{this.state.enableDicoSearch?<img id="check" src="/icons/check.svg"/>:<span id="check"></span>}{I18n.t("viewer.monlam")}<span><img class="ico" src="/icons/monlam.png"/></span></a> }
