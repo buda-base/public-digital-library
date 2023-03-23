@@ -258,12 +258,16 @@ export default class Auth {
             console.error("ERROR with cookie",e,localStorage.getItem('id_token'))
          }
 
+         // #812
+         store.dispatch(ui.newUser(false))
+         localStorage.removeItem('msg-popup-closed-register');
+
          // Clear Access Token and ID Token from local storage
          localStorage.removeItem('access_token');
          localStorage.removeItem('id_token');
          localStorage.removeItem('expires_at');
-         localStorage.removeItem('msg-popup-closed-register');
          // navigate to previous route if any
+
          // history.replace(redirect); // must be after auth0 logout call
          store.dispatch(ui.logEvent(false))
 

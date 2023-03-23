@@ -391,94 +391,110 @@ export const langProfile = [
 */
 
 
-export const renderBanner = (that, infoPanel, isResourcePage) => <div class={"infoPanel "+(isResourcePage?"inRes":"")}>{ infoPanel.map(m => {
-   let lab = getLangLabel(that,tmp+"bannerMessage",m.text) 
-   let icon 
+export const renderBanner = (that, infoPanel, isResourcePage) => {
 
-   //console.log("m:",m,lab,m.text,that.props.locale,that)
-   
-   if(m.severity=="info") icon = <InfoIcon className="info"/>
-   else if(m.severity=="warning") icon = <WarnIcon className="warn"/>
-   else if(m.severity=="error") icon = <ErrorIconC className="error"/>
+   // check if popup has it recently been closed 
+   let hidden = that.state.collapse?.msgPopup 
 
-   if(lab) {      
+   return (<div class={"infoPanel "+(isResourcePage?"inRes":"")}>{ infoPanel.map(m => {
+      let lab = getLangLabel(that,tmp+"bannerMessage",m.text) 
+      let icon 
 
-      // handle links
-      let link,img ;
-      let content = [], str = lab.value
-      while(link = str.match(/([^!]|^|\n)(\[([^\]]+?)\]\(([^)]+?)\))/m)) {
-         let arr = str.split(link[2])
-         content = content.concat([ arr[0], <a href={link[4]} target="_blank">{link[3]}</a> ])
-         str = arr.slice(1).join(" ")
-      }
-      if(str) content.push(str)
-
-      // handle images
-      let sav = content
-      content = []
-      sav.map(c => {
-         //console.log("c:",c)
-         if(c?.match) { 
-            while(img = c.match(/!\[([^\]]+)\]\(([^)]+)\)/)) {
-               let arr = c.split(img[0])
-               content = content.concat([ arr[0], <img src={img[2]} alt={img[1]}/> ])
-               c = arr.slice(1).join(" ")            
-            } 
-            if(c) content.push(c)
-         }
-         else {
-            content.push(c)
-         }
-      })
-
-      // check if popup has it recently been closed 
-      let hidden = that.state.collapse?.msgPopup 
-      let condition
-      if(m.condition && m.condition.match(/^[.a-zA-Z]+$/)) {         
-         condition = eval(m.condition) ? true: false;
-         console.log("condition:", m.condition, condition)
-      } 
-      if(m.popup) {         
-         let showEveryNDay = 30
-         if(m.showEveryNDay != undefined) showEveryNDay = m.showEveryNDay
-         const wasClosed = localStorage.getItem("msg-popup-closed"+(m.id?"-"+m.id:"")) 
-         console.log("sENd:",showEveryNDay,m.showEveryNDay,wasClosed,Date.now())         
-         if(!hidden && condition != false && (!wasClosed || showEveryNDay != -1 && Date.now() - wasClosed > showEveryNDay * 24 * 3600 * 1000)) {
-            console.log("show!",hidden) 
-         } else if(condition === undefined && !hidden || condition == false && !hidden) {
-            console.log("hide!") 
-            that.setState({ collapse: { ...that.state.collapse, msgPopup: true }})
-            hidden = true
-         }
-      }
-
-      const closePopup = (ev) => {
-         that.setState({collapse:{ ...that.state.collapse, msgPopup: true }})
-         localStorage.setItem("msg-popup-closed"+(m.id?"-"+m.id:""), Date.now())
-      }
+      //console.log("m:",m,lab,m.text,that.props.locale,that)
       
-      // layout
-      if(!m.popup) return <p>{icon}{content}</p>
-      else if(!hidden) return <div class="msg-popup">
-         <div class="back" onClick={closePopup}></div>
-         <div class="front">
-            <Close className="close" onClick={closePopup}/>
-            { icon && <p>{icon}</p> }
-            <p>{content.map(c => { 
-               // handle newlines
-               if(c?.match && c.match(/\n/)) {
-                  const p = c.split("\n")
-                  return p.map( (d,i) => {
-                     if(i < p.length - 1) return <>{d}<br/></>
-                     else return d
-                  })
-               }
-               else return c
-            })}</p>
+      if(m.severity=="info") icon = <InfoIcon className="info"/>
+      else if(m.severity=="warning") icon = <WarnIcon className="warn"/>
+      else if(m.severity=="error") icon = <ErrorIconC className="error"/>
+
+      if(lab) {      
+
+         // handle links
+         let link,img ;
+         let content = [], str = lab.value
+         while(link = str.match(/([^!]|^|\n)(\[([^\]]+?)\]\(([^)]+?)\))/m)) {
+            let arr = str.split(link[2])
+            content = content.concat([ arr[0], <a href={link[4]} target="_blank">{link[3]}</a> ])
+            str = arr.slice(1).join(" ")
+         }
+         if(str) content.push(str)
+
+         // handle images
+         let sav = content
+         content = []
+         sav.map(c => {
+            //console.log("c:",c)
+            if(c?.match) { 
+               while(img = c.match(/!\[([^\]]+)\]\(([^)]+)\)/)) {
+                  let arr = c.split(img[0])
+                  content = content.concat([ arr[0], <img src={img[2]} alt={img[1]}/> ])
+                  c = arr.slice(1).join(" ")            
+               } 
+               if(c) content.push(c)
+            }
+            else {
+               content.push(c)
+            }
+         })
+
+
+         // condition to show popup 
+         let condition      
+         if(!m.condition) 
+            condition = true
+         else if(m.condition && m.condition.match(/^[.a-zA-Z]+$/)) {         
+            condition = eval(m.condition) ? true: false;
+         } 
+         console.log("condition:", m.condition, condition)
+
+         if(m.popup) {         
+            let showEveryNDay = 30
+            if(m.showEveryNDay != undefined) showEveryNDay = m.showEveryNDay
+            const wasClosed = localStorage.getItem("msg-popup-closed"+(m.id?"-"+m.id:"")) 
+            console.log("sENd:",showEveryNDay,m.showEveryNDay,wasClosed,Date.now())         
+            if(!hidden && condition && (!wasClosed || showEveryNDay != -1 && Date.now() - wasClosed > showEveryNDay * 24 * 3600 * 1000)) {
+               console.log("show!",hidden) 
+            } else if(condition === undefined && !hidden || condition == false && !hidden || condition && wasClosed && !hidden) {
+               console.log("hide!")                
+               hidden = true
+            } else if(condition && hidden && !wasClosed) {
+               hidden = false
+               console.log("show!!",hidden) 
+            }
+         }
+
+         const closePopup = (ev) => {
+            that.setState({collapse:{ ...that.state.collapse, msgPopup: true }})
+            localStorage.setItem("msg-popup-closed"+(m.id?"-"+m.id:""), Date.now())
+         }
+         
+         // layout
+         if(!m.popup) return <p>{icon}{content}</p>
+         else if(!hidden) return <div class="msg-popup">
+            <div class="back" onClick={closePopup}></div>
+            <div class="front">
+               <Close className="close" onClick={closePopup}/>
+               { icon && <p>{icon}</p> }
+               <p>{content.map(c => { 
+                  // handle newlines
+                  if(c?.match && c.match(/\n/)) {
+                     const p = c.split("\n")
+                     return p.map( (d,i) => {
+                        if(i < p.length - 1) return <>{d}<br/></>
+                        else return d
+                     })
+                  }
+                  else return c
+               })}</p>
+            </div>
          </div>
-      </div>
+      }
+   }) }</div>)
+
+   // #812 when more than one popup
+   if(hidden != that.state.collapse.msgPopup) {
+      that.setState({ collapse: { ...that.state.collapse, msgPopup: hidden }})
    }
-}) }</div>
+}
 
 
 let _GA = false ;
