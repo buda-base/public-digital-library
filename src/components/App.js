@@ -393,10 +393,7 @@ export const langProfile = [
 
 export const renderBanner = (that, infoPanel, isResourcePage) => {
 
-   // check if popup has it recently been closed 
-   let hidden = that.state.collapse?.msgPopup 
-
-   return (<div class={"infoPanel "+(isResourcePage?"inRes":"")}>{ infoPanel.map(m => {
+   return (<div class={"infoPanel "+(isResourcePage?"inRes":"")}>{ infoPanel.map((m,i) => {
       let lab = getLangLabel(that,tmp+"bannerMessage",m.text) 
       let icon 
 
@@ -437,6 +434,9 @@ export const renderBanner = (that, infoPanel, isResourcePage) => {
          })
 
 
+         // check if popup has it recently been closed 
+         let hidden = that.state.collapse?.["msgPopup"+(m.id?"-"+m.id:"")]
+
          // condition to show popup 
          let condition      
          if(!m.condition) 
@@ -444,26 +444,30 @@ export const renderBanner = (that, infoPanel, isResourcePage) => {
          else if(m.condition && m.condition.match(/^[.a-zA-Z]+$/)) {         
             condition = eval(m.condition) ? true: false;
          } 
-         console.log("condition:", m.condition, condition)
+         //console.log("condition:", m.condition, condition)
 
          if(m.popup) {         
             let showEveryNDay = 30
             if(m.showEveryNDay != undefined) showEveryNDay = m.showEveryNDay
             const wasClosed = localStorage.getItem("msg-popup-closed"+(m.id?"-"+m.id:"")) 
-            console.log("sENd:",showEveryNDay,m.showEveryNDay,wasClosed,Date.now())         
-            if(!hidden && condition && (!wasClosed || showEveryNDay != -1 && Date.now() - wasClosed > showEveryNDay * 24 * 3600 * 1000)) {
-               console.log("show!",hidden) 
-            } else if(condition === undefined && !hidden || condition == false && !hidden || condition && wasClosed && !hidden) {
-               console.log("hide!")                
+            const tooOld = showEveryNDay != -1 && Date.now() - wasClosed > showEveryNDay * 24 * 3600 * 1000
+            //console.log("sENd:",showEveryNDay,m.showEveryNDay,wasClosed,Date.now(),tooOld)         
+            if(!hidden && condition && (!wasClosed || tooOld)) {
+               //console.log("show!",hidden) 
+               hidden = false               
+            } else if(condition === undefined && !hidden || condition == false && !hidden || condition && wasClosed && !tooOld && !hidden) {
+               //console.log("hide!")                
                hidden = true
             } else if(condition && hidden && !wasClosed) {
                hidden = false
-               console.log("show!!",hidden) 
+               //console.log("show!!",hidden) 
             }
          }
+         
+         if(hidden != that.state.collapse["msgPopup"+(m.id?"-"+m.id:"")]) that.setState({collapse:{ ...that.state.collapse, ["msgPopup"+(m.id?"-"+m.id:"")]: hidden }})
 
          const closePopup = (ev) => {
-            that.setState({collapse:{ ...that.state.collapse, msgPopup: true }})
+            that.setState({collapse:{ ...that.state.collapse, ["msgPopup"+(m.id?"-"+m.id:"")]: true }})
             localStorage.setItem("msg-popup-closed"+(m.id?"-"+m.id:""), Date.now())
          }
          
@@ -489,11 +493,6 @@ export const renderBanner = (that, infoPanel, isResourcePage) => {
          </div>
       }
    }) }</div>)
-
-   // #812 when more than one popup
-   if(hidden != that.state.collapse.msgPopup) {
-      that.setState({ collapse: { ...that.state.collapse, msgPopup: hidden }})
-   }
 }
 
 
@@ -1046,11 +1045,14 @@ export function top_right_menu(that,etextTitle,backUrl,etextres)
    // no need anymore
    const portrait = null //<div class="portrait-warn" onClick={()=>store.dispatch(closePortraitPopup())}><div><span></span><p data-tilt1={I18n.t("misc.tilt1")} data-tilt2={I18n.t("misc.tilt2")}></p></div></div>
 
+   let msgPopupOn = that.props.config?.msg?.some((m,i) => m.popup && (!m.condition || eval(m.condition)) && !that.state.collapse["msgPopup"+(m.id?"-"+m.id:"")])
+   
+
    if(etextTitle)
       return (<>
       {!that.props.portraitPopupClosed && portrait}
       <div class={"mobile-button top"+(!that.state.collapse.navMenu?" off":" on")} onClick={()=>that.setState({collapse:{...that.state.collapse,navMenu:!that.state.collapse.navMenu}})}><img src="/icons/burger.svg" /></div>
-      <div class={"nav etext-nav"+(onZhMirror?" zhMirror":"")+(that.state.collapse.navMenu?" on":"") +(that.props.config?.msg?.some(m => m.popup)&&!that.state.collapse?.msgPopup?" msgPopupOn":"") }>
+      <div class={"nav etext-nav"+(onZhMirror?" zhMirror":"")+(that.state.collapse.navMenu?" on":"") +(msgPopupOn?" msgPopupOn":"") }>
          {uiLangPopup}
          <div>
             {logo}
@@ -1197,7 +1199,7 @@ export function top_right_menu(that,etextTitle,backUrl,etextres)
       !that.props.portraitPopupClosed? portrait:null,
       <div class={"mobile-button top"+(!that.state.collapse.navMenu?" off":" on")} onClick={() => that.setState({collapse:{...that.state.collapse,navMenu:!that.state.collapse.navMenu}})}><img src="/icons/burger.svg" /></div>,
       <div class={"nav"+(onZhMirror?" zhMirror":"")+ (that.state.collapse.navMenu?" on":"")+(onKhmerServer||onKhmerUrl?" khmerServer":"")
-               +(that.props.config?.msg?.some(m => m.popup)&&!that.state.collapse?.msgPopup?" msgPopupOn":"")
+               +(msgPopupOn?" msgPopupOn":"")
          }>
          {uiLangPopup}
           <div>
