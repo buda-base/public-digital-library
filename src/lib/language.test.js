@@ -328,6 +328,53 @@ describe('language settings tests', () => {
       done()
    })
 
+
+   it('strange behavior on DLD offline page', async (done) => {
+      let topic =  {
+         "label": [
+             {
+                 "@language": "zh-hans",
+                 "@value": "量学"
+             },
+             {
+                 "@language": "bo-x-ewts",
+                 "@value": "tshad ma/"
+             },
+             {
+                 "@language": "en",
+                 "@value": "valid knowledge"
+             },
+             {
+                 "@language": "sa-x-iast",
+                 "@value": "Pramāṇa"
+             }
+         ]
+      }
+      let langs = [ "bo", "zh-latn-pinyin", "sa-deva", "en" ] 
+      let extP = extendedPresets(langs) 
+
+      expect(sortLangScriptLabels(topic.label, extP.flat, extP.translit)).toEqual([
+         {
+            "@language": "bo",
+            "@value": "ཚད་མ།",
+            "_val": "ཚད་མ།",
+         }, {
+            "@language": "zh-latn-pinyin",
+            "@value": "liàng xué",
+            "_val": "liàng xué",
+         }, {
+            "@language": "sa-deva",
+            "@value": "प्रमाण",
+            "_val": "प्रमाण",
+         }, {
+            "@language": "en",
+            "@value": "valid knowledge",
+            "_val": "valid knowledge",
+         }
+      ])
+
+      done()
+   })
 })
 
 

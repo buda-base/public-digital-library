@@ -67,6 +67,7 @@ if (!console.groupEnd) {
   };
 }
 
+/*
 tcpPortUsed.check(5555).then((inUse) => {
    if(!inUse)
    {
@@ -83,3 +84,4 @@ tcpPortUsed.check(5555).then((inUse) => {
 
    }
 })
+*/
