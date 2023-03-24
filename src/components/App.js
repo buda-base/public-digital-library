@@ -861,7 +861,7 @@ export function etext_lang_selec(that,black:boolean = false, elem, DL)
 {
    if(!elem) elem = <span id="lang" title={I18n.t("home.choose")} onClick={(e) => that.setState({...that.state,anchorLang:e.currentTarget, collapse: {...that.state.collapse, lang:!that.state.collapse.lang } } ) }><img src={"/icons/LANGUE"+(black?"b":"")+".svg"}/></span>
    
-   let text = { "bo":"lang.tip.original","bo-x-ewts":"lang.tip.roman", "sa":"lang.tip.original","sa-x-iast":"lang.tip.roman"  }, prio = ["bo", "bo-x-ewts" ]
+   let text = { "bo":"lang.tip.bo","bo-x-ewts":"lang.tip.boXEwts", "sa":"lang.tip.saDeva","sa-x-iast":"lang.tip.saXIast"  }, prio = ["bo", "bo-x-ewts" ]
 
    // #818
    let script = that.props.resources[that.props.IRI]
