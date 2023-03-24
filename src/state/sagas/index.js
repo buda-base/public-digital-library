@@ -716,7 +716,7 @@ export async function updateConfigFromProfile() {
             if(allPresets[i] === litLangsStr) preset = k
          })
       }
-
+      
       localStorage.setItem('uilang', locale);
       store.dispatch(i18nextChangeLanguage(locale));
 

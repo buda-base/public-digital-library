@@ -861,12 +861,26 @@ export function etext_lang_selec(that,black:boolean = false, elem, DL)
 {
    if(!elem) elem = <span id="lang" title={I18n.t("home.choose")} onClick={(e) => that.setState({...that.state,anchorLang:e.currentTarget, collapse: {...that.state.collapse, lang:!that.state.collapse.lang } } ) }><img src={"/icons/LANGUE"+(black?"b":"")+".svg"}/></span>
    
-   let text = { "bo":"lang.tip.bo","bo-x-ewts":"lang.tip.boXEwts" }, prio = ["bo", "bo-x-ewts" ]
+   let text = { "bo":"lang.tip.original","bo-x-ewts":"lang.tip.roman", "sa":"lang.tip.original","sa-x-iast":"lang.tip.roman"  }, prio = ["bo", "bo-x-ewts" ]
+
+   // #818
+   let script = that.props.resources[that.props.IRI]
+   if(script) script = script[fullUri(that.props.IRI)]
+   if(script) script = script[bdo+"instanceReproductionOf"]
+   if(script) script = script.map(s => that.props.resources[shortUri(s.value)] ? that.props.resources[shortUri(s.value)][s.value]:null).map(s => s?s[bdo+"script"]:null).filter(s=>s)
+   if(script && script.length) script = script[0] 
+   if(script && script.length) script = script[0].value
+   console.log("script:", script)
+
+   if(script === bdr+"ScriptDeva") {
+      prio = ["sa", "sa-x-iast" ]
+   }
+
 
    let current = that.props.etextLang
    if(!current || !text[current]) {
-      if(that.props.locale === "en") current = "bo-x-ewts"
-      else current = "bo"
+      if(that.props.locale === "en") current = prio[1]
+      else current = prio[0]
    }
 
    const anchor = "anchorLang"+(DL?"DL":"")
@@ -922,15 +936,15 @@ export function etext_lang_selec(that,black:boolean = false, elem, DL)
                                    const link = document.createElement("a")
                                    link.href = temp
                                    let filename = DL.split(/[/]/).pop().split(/[.]/)[0]+"_"+i+".txt"
-                                   //debug("filename:",filename)
                                    link.setAttribute("download", filename)
                                    link.click()
+                                   //console.log("filename:",filename,link,link.click)
                                    window.URL.revokeObjectURL(link)
                          
                                  })
                                  .catch(function (error) {
                                     logError(error)
-                                   //console.error("error:", error.message)
+                                    //console.error("error:", error.message)
                                  })
 
                                  that.props.onLoading("outline",false)
