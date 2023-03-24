@@ -507,7 +507,9 @@
          "piXIast": "Pāli transliterated in IAST",
          "piKhmr": "Pāli in Khmer",
          "kmXIast": "Khmer transliterated in IAST",
-         "kmXTwktt":"Khmer transliterated with Trent Walker Khmer-Tai Transliteration scheme"
+         "kmXTwktt": "Khmer transliterated with Trent Walker Khmer-Tai Transliteration scheme",
+         "original": "Original script",
+         "roman": "Romanization"
       },
       "langscript": {
          "zh": "ចិន",
