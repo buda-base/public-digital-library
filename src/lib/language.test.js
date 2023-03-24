@@ -330,6 +330,9 @@ describe('language settings tests', () => {
 
 
    it('strange behavior on DLD offline page', async (done) => {
+
+      await importModules()
+      
       let topic =  {
          "label": [
              {
@@ -352,7 +355,8 @@ describe('language settings tests', () => {
       }
       let langs = [ "bo", "zh-latn-pinyin", "sa-deva", "en" ] 
       let extP = extendedPresets(langs) 
-
+      
+      
       expect(sortLangScriptLabels(topic.label, extP.flat, extP.translit)).toEqual([
          {
             "@language": "bo",
@@ -370,6 +374,30 @@ describe('language settings tests', () => {
             "@language": "en",
             "@value": "valid knowledge",
             "_val": "valid knowledge",
+         }
+      ])
+      
+      
+      langs = [ "en", "bo-x-ewts", "sa-x-iast", "zh-latn-pinyin" ] 
+      extP = extendedPresets(langs) 
+
+      expect(sortLangScriptLabels(topic.label, extP.flat, extP.translit)).toEqual([
+          {
+            "@language": "en",
+            "@value": "valid knowledge",
+            "_val": "valid knowledge",
+         },{
+            "@language": "bo-x-ewts",
+            "@value": "tshad ma",
+            "_val": "tshad ma",
+         }, {
+            "@language": "sa-x-iast",
+            "@value": "Pramāṇa",
+            "_val": "Pramāṇa",
+         }, {
+            "@language": "zh-latn-pinyin",
+            "@value": "liàng xué",
+            "_val": "liàng xué",
          }
       ])
 

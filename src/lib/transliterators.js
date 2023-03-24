@@ -234,7 +234,7 @@ export function sortLangScriptLabels(data,preset,translit,mergeXs = false, caseI
 
       //console.log("tLit",tLit,i)
       
-      return {e,tLit,i,k}
+      return {e,tLit,i:Number(i),k}
    })
 
    //console.log("_",data_)
