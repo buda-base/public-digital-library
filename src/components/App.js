@@ -647,8 +647,9 @@ export function getLangLabel(that:{},prop:string="",labels:[],proplang:boolean=f
 
       
       if(that.props.etextLang && (prop == bdo+"eTextHasPage" || prop == bdo+"eTextHasChunk")) { 
-         langs = [ that.props.etextLang ]
-         //console.log("prop:",langs,prop)
+         langs = that.props.etextLang 
+         if(!Array.isArray(langs)) langs = [ langs ]
+         console.log("prop:",langs,prop,labels)
       }
       
 
@@ -861,9 +862,12 @@ export function etext_lang_selec(that,black:boolean = false, elem, DL)
 {
    if(!elem) elem = <span id="lang" title={I18n.t("home.choose")} onClick={(e) => that.setState({...that.state,anchorLang:e.currentTarget, collapse: {...that.state.collapse, lang:!that.state.collapse.lang } } ) }><img src={"/icons/LANGUE"+(black?"b":"")+".svg"}/></span>
    
-   let text = { "bo":"lang.tip.bo","bo-x-ewts":"lang.tip.boXEwts", "sa":"lang.tip.saDeva","sa-x-iast":"lang.tip.saXIast"  }, prio = ["bo", "bo-x-ewts" ]
-
    // #818
+   let text = [ "lang.tip.original", "lang.tip.roman"], //{ "bo":"lang.tip.bo","bo-x-ewts":"lang.tip.boXEwts", "sa":"lang.tip.saDeva","sa-x-iast":"lang.tip.saXIast"  }, 
+      prio = [ [ "bo", "sa", "zh" ], [ "bo-x-ewts", "sa-x-iast", "zh-latn-pinyin" ] ]
+
+   /* 
+   // not ok when multiple scripts, commenting out
    let script = that.props.resources[that.props.IRI]
    if(script) script = script[fullUri(that.props.IRI)]
    if(script) script = script[bdo+"instanceReproductionOf"]
@@ -875,12 +879,12 @@ export function etext_lang_selec(that,black:boolean = false, elem, DL)
    if(script === bdr+"ScriptDeva") {
       prio = ["sa", "sa-x-iast" ]
    }
+   */
 
-
-   let current = that.props.etextLang
-   if(!current || !text[current]) {
-      if(that.props.locale === "en") current = prio[1]
-      else current = prio[0]
+   let current = prio.findIndex(p => that.props.etextLang.some(q => p.includes(q)))
+   if(current === -1 || !text[current]) {
+      if(that.props.locale === "en") current = 1
+      else current = 0
    }
 
    const anchor = "anchorLang"+(DL?"DL":"")
@@ -902,9 +906,9 @@ export function etext_lang_selec(that,black:boolean = false, elem, DL)
               <FormControl className="formControl">
                 {/* <InputLabel htmlFor="datatype">In</InputLabel> */}
                   
-                  { prio.map((i) => {
+                  { prio.map((i, k) => {
 
-                        let label = I18n.t(text[i]);
+                        let label = I18n.t(text[k]);
 
                         // TODO add link to user profile / language preferences
 
@@ -953,7 +957,7 @@ export function etext_lang_selec(that,black:boolean = false, elem, DL)
                               </MenuItem> 
                         )
                         else return ( <MenuItem
-                                    className={current===i?"is-locale":""}     
+                                    className={current===k?"is-locale":""}     
                                     value={i}
                                     onClick={(event) => { 
                                        localStorage.setItem('etextlang', i);

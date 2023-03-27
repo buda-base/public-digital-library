@@ -140,7 +140,7 @@ async function initiateApp(params,iri,myprops,route,isAuthCallback) {
 
 
          if(val = localStorage.getItem('etextlang')) {
-            store.dispatch(uiActions.setEtextLang(val))
+            store.dispatch(uiActions.setEtextLang(val.split(",")))
          }
 
       }

@@ -7429,7 +7429,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          if(k.startsWith("monlam-def-")) delete collapse[k]
       }
       this.setState({ collapse })
-      this.props.onCallMonlamAPI(data.api, {value: data.range.toString(), lang: this.props.etextLang});
+      this.props.onCallMonlamAPI(data.api, {value: data.range.toString(), lang: this.props.etextLang.filter(l => l.startsWith("bo"))[0]});
       
    }
 

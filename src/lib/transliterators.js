@@ -68,6 +68,9 @@ export const transliterators = {
       "pi-khmr": (val) => Sanscript.t(val.toLowerCase(),"iast","khmer") 
    },
    
+   "zh":{ 
+      "zh-latn-pinyin" : (val) => pinyin4js.convertToPinyinString(val, ' ', pinyin4js.WITH_TONE_MARK) 
+   },
    "zh-hans":{ 
       "zh-latn-pinyin" : (val) => pinyin4js.convertToPinyinString(val, ' ', pinyin4js.WITH_TONE_MARK) , 
       "zh-hant" : (val) => hanziConv.sc2tc(val) 
