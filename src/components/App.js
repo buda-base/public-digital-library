@@ -881,7 +881,7 @@ export function etext_lang_selec(that,black:boolean = false, elem, DL)
    }
    */
 
-   let current = prio.findIndex(p => that.props.etextLang.some(q => p.includes(q)))
+   let current = prio.findIndex(p => that.props.etextLang?.some(q => p.includes(q)))
    if(current === -1 || !text[current]) {
       if(that.props.locale === "en") current = 1
       else current = 0
