@@ -319,7 +319,7 @@ body { overflow:auto !important;padding-right:0 !important; /*font-family:"Robot
 
 .static .doc-content .index .c15 { display: none;}
 
-.static-container > #samples > .doc-content [id] { scroll-margin:135px; }
+.static-container > #samples > .doc-content [id] { scroll-margin:80px; }
 
 .static .doc-content .index + div > h3.c8 > span:not(.c18),
 .static .doc-content .index + div > p.c2.subtitle,
