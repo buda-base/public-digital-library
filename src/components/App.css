@@ -310,12 +310,14 @@ body { overflow:auto !important;padding-right:0 !important; /*font-family:"Robot
 #root > div > :not(.static):first-child ~ .nav:not(.etext-nav).msgPopupOn { box-shadow: 0 2px 4px rgba(0,0,0,0.35); }
 
 .static-container > #samples > .doc-content { max-width:100%; padding-top:0; padding-bottom:100px;}
-.static .doc-content .index { position:fixed; width:317px; background:white; top:100px; padding:0; padding-top:30px; }
-.static .doc-content .index > div { height:calc(100vh - 80px - 50px); overflow: auto; }
+.static .doc-content .index { position:fixed; width:300px; background:white; top:100px; padding:0; padding-top:30px; }
+.static .doc-content .index > div { height:calc(100vh - 80px - 50px - 40px); overflow: auto; }
 .static .doc-content .index ~ * { padding-left:317px; }
-.static .doc-content .index .c19 a { font-size:16px; font-weight:600;}
+.static .doc-content .index .c19:not(.c22) a { font-size:16px; font-weight:600; margin-top:5px; display: block;}
 .static .doc-content .index .c14 a { font-size:14px; font-weight:500;}
-.static .doc-content .index .c22 a { font-size:12px; font-weight:400;}
+.static .doc-content .index .c22 a { font-size:13px; font-weight:400;}
+
+.static .doc-content .index .c15 { display: none;}
 
 .static-container > #samples > .doc-content [id] { scroll-margin:135px; }
 
@@ -325,13 +327,15 @@ body { overflow:auto !important;padding-right:0 !important; /*font-family:"Robot
 
 .static .doc-content .index + div > p > span > img { max-width:100%; object-fit: contain; object-position: center bottom;}
 
-.static .doc-content .index + div > p:not(.subtitle) > span:not(.c18) { padding:40px 0 0 0 !important; }
+.static .doc-content .index + div > p:not(.subtitle) > span:not(.c18,.c1) { padding:40px 0 0 0 !important; }
 
 .static .doc-content .index + div > p.c2.subtitle { padding: 0 0 40px 0 !important; margin-top:-10px;}
 
 .static-container > #samples > .doc-content h3 { text-align: left; text-transform: none;}
 
-.static-container[data-dir^="user-guide"] #samples { margin-bottom:40px; }
+.static-container > #samples > .doc-content .c17 { text-decoration:none; }
+
+.static-container[data-dir^="user-guide"] #samples { margin-bottom:40px; padding-top:55px;}
 
 @media(max-width:1024px) {
    .static-container[data-dir^="user-guide"] #samples { padding:20px;}
@@ -342,6 +346,7 @@ body { overflow:auto !important;padding-right:0 !important; /*font-family:"Robot
 
 @media(max-width:800px) {
    .static-container[data-dir^="user-guide"] #samples .doc-content .index { position: relative; top:0; }
+   .static-container[data-dir^="user-guide"] #samples .doc-content .index > div { height:auto; }
    .static-container[data-dir^="user-guide"] #samples .doc-content .index + div { padding-left:0;  }
 }
 
