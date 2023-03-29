@@ -1063,7 +1063,7 @@ export function top_right_menu(that,etextTitle,backUrl,etextres)
    // no need anymore
    const portrait = null //<div class="portrait-warn" onClick={()=>store.dispatch(closePortraitPopup())}><div><span></span><p data-tilt1={I18n.t("misc.tilt1")} data-tilt2={I18n.t("misc.tilt2")}></p></div></div>
 
-   let msgPopupOn = that.props.config?.msg?.some((m,i) => m.popup && (!m.condition || eval(m.condition)) && !that.state.collapse["msgPopup"+(m.id?"-"+m.id:"")])
+   let msgPopupOn = !that.props.history.location.pathname.includes("/static/") && that.props.config?.msg?.some((m,i) => m.popup && (!m.condition || eval(m.condition)) && !that.state.collapse["msgPopup"+(m.id?"-"+m.id:"")])
    
 
    if(etextTitle)

@@ -306,8 +306,47 @@ body { overflow:auto !important;padding-right:0 !important; /*font-family:"Robot
 }
 .msg-popup .front .close { color:#555; position:absolute; right:15px; top:15px; cursor: pointer;}
 
-#root > div > .nav:not(.etext-nav).msgPopupOn::after { content:''; position: absolute; width:100%;height:100%;background:rgba(0,0,0,0.5); z-index: 1;}
-#root > div > .nav:not(.etext-nav).msgPopupOn { box-shadow: 0 2px 4px rgba(0,0,0,0.35); }
+#root > div > :not(.static):first-child ~ .nav:not(.etext-nav).msgPopupOn::after { content:''; position: absolute; width:100%;height:100%;background:rgba(0,0,0,0.5); z-index: 1;}
+#root > div > :not(.static):first-child ~ .nav:not(.etext-nav).msgPopupOn { box-shadow: 0 2px 4px rgba(0,0,0,0.35); }
+
+.static-container > #samples > .doc-content { max-width:100%; padding-top:0; padding-bottom:100px;}
+.static .doc-content .index { position:fixed; width:317px; background:white; top:100px; padding:0; padding-top:30px; }
+.static .doc-content .index > div { height:calc(100vh - 80px - 50px); overflow: auto; }
+.static .doc-content .index ~ * { padding-left:317px; }
+.static .doc-content .index .c19 a { font-size:16px; font-weight:600;}
+.static .doc-content .index .c14 a { font-size:14px; font-weight:500;}
+.static .doc-content .index .c22 a { font-size:12px; font-weight:400;}
+
+.static-container > #samples > .doc-content [id] { scroll-margin:135px; }
+
+.static .doc-content .index + div > h3.c8 > span:not(.c18),
+.static .doc-content .index + div > p.c2.subtitle,
+.static .doc-content .index + div > p > span:not(.c18) {width:100% !important; text-align: center; }
+
+.static .doc-content .index + div > p > span > img { max-width:100%; object-fit: contain; object-position: center bottom;}
+
+.static .doc-content .index + div > p:not(.subtitle) > span:not(.c18) { padding:40px 0 0 0 !important; }
+
+.static .doc-content .index + div > p.c2.subtitle { padding: 0 0 40px 0 !important; margin-top:-10px;}
+
+.static-container > #samples > .doc-content h3 { text-align: left; text-transform: none;}
+
+.static-container[data-dir^="user-guide"] #samples { margin-bottom:40px; }
+
+@media(max-width:1024px) {
+   .static-container[data-dir^="user-guide"] #samples { padding:20px;}
+   .static-container[data-dir^="user-guide"] #samples .doc-content { padding:0;  }
+   .static-container[data-dir^="user-guide"] #samples .doc-content .index { top:50px; }
+}
+
+
+@media(max-width:800px) {
+   .static-container[data-dir^="user-guide"] #samples .doc-content .index { position: relative; top:0; }
+   .static-container[data-dir^="user-guide"] #samples .doc-content .index + div { padding-left:0;  }
+}
+
+/* .static .doc-content .index + div > p.c2.subtitle > span { padding:} */
+
 
 html[lang="bo"] .msg-popup .front p { font-size:18px;}
 
