@@ -311,13 +311,13 @@ body { overflow:auto !important;padding-right:0 !important; /*font-family:"Robot
 
 .static-container > #samples > .doc-content { max-width:100%; padding-top:0; padding-bottom:100px;}
 .static .doc-content .index { position:fixed; width:300px; background:white; top:100px; padding:0; padding-top:30px; }
-.static .doc-content .index > div { height:calc(100vh - 80px - 50px - 40px); overflow: auto; }
+.static .doc-content .index > div { height:calc(100vh - 80px - 50px - 40px); overflow: auto; box-sizing: border-box;}
 .static .doc-content .index ~ * { padding-left:317px; }
-.static .doc-content .index .c19:not(.c22) a { font-size:16px; font-weight:600; margin-top:5px; display: block;}
-.static .doc-content .index .c14 a { font-size:14px; font-weight:500;}
-.static .doc-content .index .c22 a { font-size:13px; font-weight:400;}
+.static .doc-content .index .c9:not(.c19,.c10) a { font-size:16px; font-weight:600; margin-top:5px; display: block;}
+.static .doc-content .index .c10 a { font-size:14px; font-weight:500;}
+.static .doc-content .index .c19 a { font-size:13px; font-weight:400;}
 
-.static .doc-content .index .c15 { display: none;}
+.static .doc-content .index .c14 { display: none;}
 
 .static-container > #samples > .doc-content [id] { scroll-margin:80px; }
 
@@ -327,13 +327,13 @@ body { overflow:auto !important;padding-right:0 !important; /*font-family:"Robot
 
 .static .doc-content .index + div > p > span > img { max-width:100%; object-fit: contain; object-position: center bottom;}
 
-.static .doc-content .index + div > p:not(.subtitle) > span:not(.c18,.c1) { padding:40px 0 0 0 !important; }
+.static .doc-content .index + div > p:not(.subtitle) > span:not(.c18,.c1) { padding:0px 0 0 0 !important; margin-top:40px;}
 
-.static .doc-content .index + div > p.c2.subtitle { padding: 0 0 40px 0 !important; margin-top:-10px;}
+.static .doc-content .index + div > p.c2.subtitle { padding: 0 0 0px 0 !important; margin-top:-10px;margin-bottom:40px;}
 
 .static-container > #samples > .doc-content h3 { text-align: left; text-transform: none;}
 
-.static-container > #samples > .doc-content .c17 { text-decoration:none; }
+.static-container > #samples > .doc-content .c27 { text-decoration:none; }
 
 .static-container[data-dir^="user-guide"] #samples { margin-bottom:40px; padding-top:55px;}
 
@@ -593,6 +593,7 @@ footer #donate,
 .nav #donate, 
 .nav #login { font-weight:700; font-size:14px;letter-spacing: 0.29px; text-transform: uppercase; text-decoration: none; }
 
+.nav #guide { margin-left:25px;}
 
 .nav a#collections { margin-left:50px; }
 
@@ -600,7 +601,7 @@ footer #donate,
 
 .nav #logo.khmer + .links a { color:#192229; margin:0 20px; }
 
-.nav #login > div { display: flex;  }
+.nav #login > div { display: flex; align-items: center; }
 .nav #logo.khmer ~ #lang { margin-left:35px;}
 .nav #logo.khmer ~ #login > div.logged { flex-direction: column; align-items: center; }
 .nav #logo.khmer ~ #login > div.logged > span:first-child { margin-bottom:10px; }
@@ -621,19 +622,19 @@ footer #donate,
 #login { top:0;right:0;z-index:1; display:inline-block; margin-left:auto;  color:#d73449; }
 #login button {color:rgba(0,0,0,0.54); }
 
-.nav #logo:not(.khmer)  + a { margin-left:52px; margin-right:52px; }
+.nav #logo:not(.khmer)  + a { margin-left:52px; margin-right:25px; }
 /* .nav #about  { margin-left:105px; margin-right:105px;  } */
 
 .nav a > span { color:#192229; display:inline-block;   }
 
-#login span { display:inline-block; margin-left:20px; cursor:pointer; /*pointer-events:none; opacity:0.65;*/}
+#login span { display:inline-block; margin-left:25px; cursor:pointer; /*pointer-events:none; opacity:0.65;*/}
 
 footer #donate,
 .nav #donate { width:150px;height:50px;border-radius: 4px; color:white;background-color: #d73449; line-height:50px; 
-   text-align:center; display:inline-block;  margin-left:35px; }
+   text-align:center; display:inline-block;  margin-left:25px; }
 .nav #donate img { vertical-align: middle; display: inline-block; margin-right:10px;}
 
-.nav #lang { cursor:pointer; margin-top:7px; margin-left:50px; display: inline-block;}
+.nav #lang { cursor:pointer; margin-top:7px; margin-left:25px; display: inline-block;}
 .nav #lang img { display: inline-block; width:28px; } 
 
 /* .resource .title + .data + .data .browse { display:none; } */

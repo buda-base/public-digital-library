@@ -1240,6 +1240,8 @@ export function top_right_menu(that,etextTitle,backUrl,etextres)
                ev.preventDefault()
             } }><span>{I18n.t("topbar.search")}</span></Link> }         
 
+         { !onZhMirror  && <Link id="guide" to={"/static/user-guide/index"} ><span>{I18n.t("topbar.guide")}</span></Link> }
+
          { onKhmerServer && khmerLinks }
 
          { proxied &&   
