@@ -316,6 +316,7 @@ body { overflow:auto !important;padding-right:0 !important; /*font-family:"Robot
 .static .doc-content .index .c11:not(.c18,.c10) a { font-size:16px; font-weight:600; margin-top:5px; display: block;}
 .static .doc-content .index .c10 a { font-size:14px; font-weight:500;}
 .static .doc-content .index .c18 a { font-size:13px; font-weight:400;}
+.static .doc-content a:focus-visible { outline:none; }
 
 .static .doc-content .index .c25 { display: none;}
 
@@ -3418,7 +3419,9 @@ body > [id^="menu-"] > div:last-child,
 /* full width when hovering... */
 
 .resource .data .urilink { text-decoration: underline; text-decoration-color:transparent; border:none; }
-.resource .data .urilink:hover {  text-decoration-color:#d73449; border:none;}
+.resource .data .urilink:hover  {  text-decoration-color:#d73449; border:none;}
+
+.resource .data [data-prop="tmp:propHasEtext"] h4 > .urilink:hover { text-decoration: none;}
 
 .resource .data .images-thumb { margin:0px 0px; width:145px; height:145px; background-size:cover;background-position:center;background-repeat:no-repeat; 
    border:1px solid #ccc;display:inline-block;vertical-align: top;
