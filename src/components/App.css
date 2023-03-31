@@ -313,27 +313,27 @@ body { overflow:auto !important;padding-right:0 !important; /*font-family:"Robot
 .static .doc-content .index { position:fixed; width:300px; background:white; top:100px; padding:0; padding-top:30px; }
 .static .doc-content .index > div { height:calc(100vh - 80px - 50px - 40px); overflow: auto; box-sizing: border-box;}
 .static .doc-content .index ~ * { padding-left:317px; }
-.static .doc-content .index .c9:not(.c19,.c10) a { font-size:16px; font-weight:600; margin-top:5px; display: block;}
+.static .doc-content .index .c11:not(.c18,.c10) a { font-size:16px; font-weight:600; margin-top:5px; display: block;}
 .static .doc-content .index .c10 a { font-size:14px; font-weight:500;}
-.static .doc-content .index .c19 a { font-size:13px; font-weight:400;}
+.static .doc-content .index .c18 a { font-size:13px; font-weight:400;}
 
-.static .doc-content .index .c14 { display: none;}
+.static .doc-content .index .c25 { display: none;}
 
 .static-container > #samples > .doc-content [id] { scroll-margin:80px; }
 
 .static .doc-content .index + div > h3.c8 > span:not(.c18),
-.static .doc-content .index + div > p.c2.subtitle,
+.static .doc-content .index + div > p.c4.subtitle,
 .static .doc-content .index + div > p > span:not(.c18) {width:100% !important; text-align: center; }
 
 .static .doc-content .index + div > p > span > img { max-width:100%; object-fit: contain; object-position: center bottom;}
 
 .static .doc-content .index + div > p:not(.subtitle) > span:not(.c18,.c1) { padding:0px 0 0 0 !important; margin-top:40px;}
 
-.static .doc-content .index + div > p.c2.subtitle { padding: 0 0 0px 0 !important; margin-top:-10px;margin-bottom:40px;}
+.static .doc-content .index + div > p.c4.subtitle { padding: 0 0 0px 0 !important; margin-top:-10px;margin-bottom:40px;}
 
 .static-container > #samples > .doc-content h3 { text-align: left; text-transform: none;}
 
-.static-container > #samples > .doc-content .c27 { text-decoration:none; }
+.static-container > #samples > .doc-content .c20 { text-decoration:none; }
 
 .static-container[data-dir^="user-guide"] #samples { margin-bottom:40px; padding-top:55px;}
 
@@ -2297,8 +2297,8 @@ div:has(.resource.preview) .infoPanel.inRes { margin:0 !important; }
 .static-container #samples a { color:#d73449;}
 .static-container #samples a:hover { text-decoration: underline;}
 
-.static-container #samples h3 { margin-bottom:32px;}
-.static-container #samples p + h3 { margin-top:65px;}
+.static-container #samples h3:not([id]) { margin-bottom:32px;}
+.static-container #samples p + h3:not([id]) { margin-top:65px;}
 
 .nav.zhMirror a#about { margin-right:0; margin-left:20px;  }
 .nav.zhMirror a#about + a { margin-left:-95px;  }
