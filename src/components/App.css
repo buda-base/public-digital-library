@@ -325,7 +325,7 @@ body { overflow:auto !important;padding-right:0 !important; /*font-family:"Robot
 .static .doc-content .index + div > p.c4.subtitle,
 .static .doc-content .index + div > p > span:not(.c18) {width:100% !important; text-align: center; }
 
-.static .doc-content .index + div > p > span > img { max-width:100%; object-fit: contain; object-position: center bottom;}
+.static .doc-content .index + div > p > span > img { max-width:100%; object-fit: contain; object-position: center bottom; width:auto;height:auto;}
 
 .static .doc-content .index + div > p:not(.subtitle) > span:not(.c18,.c1) { padding:0px 0 0 0 !important; margin-top:40px;}
 
