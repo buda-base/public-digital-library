@@ -325,7 +325,8 @@ body { overflow:auto !important;padding-right:0 !important; /*font-family:"Robot
 .static .doc-content .index + div > p.c4.subtitle,
 .static .doc-content .index + div > p > span:not(.c18) {width:100% !important; text-align: center; }
 
-.static .doc-content .index + div > p > span > img { max-width:100%; object-fit: contain; object-position: center bottom; width:auto;height:auto;}
+.static .doc-content .index + div > p > span { height:auto !important; }
+.static .doc-content .index + div > p > span > img { max-width:100%; object-fit: contain; object-position: center bottom; width:auto !important;height:auto !important;}
 
 .static .doc-content .index + div > p:not(.subtitle) > span:not(.c18,.c1) { padding:0px 0 0 0 !important; margin-top:40px;}
 
@@ -358,6 +359,7 @@ body { overflow:auto !important;padding-right:0 !important; /*font-family:"Robot
    .static-container[data-dir^="user-guide"] #samples .doc-content .index + div { padding-left:0;  }
    .static-container[data-dir^="user-guide"] #samples .doc-content .index + div > .title:first-child { position: absolute; top:55px; }
 }
+
 
 @media(max-width:400px) {
    .static-container[data-dir^="user-guide"] #samples .doc-content .index + div > .title:first-child span { font-size:34px; }
