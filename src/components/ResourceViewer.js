@@ -9270,6 +9270,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
             let v = Number(this.props.assocTypes[this.props.IRI+"@"].metadata[r])
             let t = r.replace(/^.*\/([^/]+)$/,"$1")
             if(!serial && /* onKhmerServer && */ t === "Instance" && _T === "Work") return 
+            if(t == "Instance" && _T == "Product") t = "Scan"
             let url = "/search?r="+this.props.IRI+"&t="+t
             if(!t1) t1 = url
             return (<div>                                                                           

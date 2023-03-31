@@ -311,7 +311,7 @@ body { overflow:auto !important;padding-right:0 !important; /*font-family:"Robot
 
 .static-container > #samples > .doc-content { max-width:100%; padding-top:0; padding-bottom:100px;}
 .static .doc-content .index { position:fixed; width:300px; background:white; top:100px; padding:0; padding-top:30px; }
-.static .doc-content .index > div { height:calc(100vh - 80px - 50px - 40px); overflow: auto; box-sizing: border-box;}
+.static .doc-content .index > div { height:calc(100vh - 80px - 50px - 40px); overflow: auto; box-sizing: border-box; padding-bottom:40px;}
 .static .doc-content .index ~ * { padding-left:317px; }
 .static .doc-content .index .c11:not(.c18,.c10) a { font-size:16px; font-weight:600; margin-top:5px; display: block;}
 .static .doc-content .index .c10 a { font-size:14px; font-weight:500;}
@@ -321,7 +321,7 @@ body { overflow:auto !important;padding-right:0 !important; /*font-family:"Robot
 
 .static-container > #samples > .doc-content [id] { scroll-margin:80px; }
 
-.static .doc-content .index + div > h3.c8 > span:not(.c18),
+.static .doc-content .index + div > h3.c13 > span:not(.c18),
 .static .doc-content .index + div > p.c4.subtitle,
 .static .doc-content .index + div > p > span:not(.c18) {width:100% !important; text-align: center; }
 
@@ -342,7 +342,7 @@ body { overflow:auto !important;padding-right:0 !important; /*font-family:"Robot
 .static .doc-content h1 > span { font-weight:700;}
 
 .static .doc-content .title span { font-family: "Noto Sans TC","Noto Sans", "Noto Serif Tibetan", "Noto Serif Khmer", "Noto Sans Mongolian", "Roboto", "Helvetica", "Arial", sans-serif !important; 
-   font-weight: 900; font-size:42px; line-height:44px;
+   font-weight: 900; font-size:42px; line-height:44px; white-space: nowrap;
 }
 
 @media(max-width:1024px) {
@@ -357,6 +357,10 @@ body { overflow:auto !important;padding-right:0 !important; /*font-family:"Robot
    .static-container[data-dir^="user-guide"] #samples .doc-content .index > div { height:auto; overflow:visible; padding:60px 0 0 0; }
    .static-container[data-dir^="user-guide"] #samples .doc-content .index + div { padding-left:0;  }
    .static-container[data-dir^="user-guide"] #samples .doc-content .index + div > .title:first-child { position: absolute; top:55px; }
+}
+
+@media(max-width:400px) {
+   .static-container[data-dir^="user-guide"] #samples .doc-content .index + div > .title:first-child span { font-size:34px; }
 }
 
 /* .static .doc-content .index + div > p.c2.subtitle > span { padding:} */
@@ -2858,6 +2862,7 @@ vertical-align:middle;}
 .resource .data.related .rel-or-crea.all .header.instance::before,
 .resource .data.related .header.instance::before,
 .resource.instance .data .header::before { background-image:url("/icons/header/instance.svg"); background-size:64px auto; }
+.resource .data.related .rel-or-crea.all .header.scan::before,
 .resource.volume .data .header::before,
 .resource.images .data .header::before { background-image:url("/icons/image.svg"); background-size:58px auto;  }
 .resource .data.related .rel-or-crea.all .header.person::before,
@@ -6130,12 +6135,15 @@ a.result + #matches.mobile,
 
 }
 
-
+#guide svg,
 .not-logged svg,
 .logged svg { display:none; }
 
 @media (max-width:665px)
 {
+   #guide svg { display:block; }
+   #guide > span { font-size:0; }
+
    .not-logged svg { display:block; }
    .not-logged > span { font-size:0; }
 
@@ -6144,7 +6152,7 @@ a.result + #matches.mobile,
 
    .nav #logo a#BDRC span, 
    .nav #logo a:last-child span, 
-   .nav #logo a:first-child span { font-size: 22px; }
+   .nav #logo a:first-child span { font-size: 0px; }
 
    .nav #logo.khmer + .links a { margin-left:0; margin-right:0px;}
 
@@ -6647,13 +6655,27 @@ a.result + #matches.mobile,
 
 }
 
+
+@media (max-width:480px)
+{
+   
+   .nav > div > #lang,
+   .nav > div > #login,
+   .nav > div > #login > div > span, 
+   .nav > div > :is(a,div,span) { margin:0 0 0 17px !important; }
+   
+   .nav > div > #login { margin-left:8px !important;}
+
+}
+
 @media (max-width:375px)
 {
    .nav > div > #lang,
    .nav > div > #login,
    .nav > div > #login > div > span, 
-   .nav > div > :is(a,div,span) { margin:0 0 0 17px !important; }
+   .nav > div > :is(a,div,span) { margin:0 0 0 8px !important; }
 
+   .nav > div > #login { margin-left:4px !important;}
 
    .nav.khmerServer > div > #lang,
    .nav.khmerServer > div > #login > div > span, 
