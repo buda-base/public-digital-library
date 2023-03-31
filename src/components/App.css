@@ -337,6 +337,8 @@ body { overflow:auto !important;padding-right:0 !important; /*font-family:"Robot
 
 .static-container[data-dir^="user-guide"] #samples { margin-bottom:40px; padding-top:55px;}
 
+.static-container[data-dir^="user-guide"] #samples img {}
+
 .static .doc-content h1 > span { font-weight:700;}
 
 .static .doc-content .title span { font-family: "Noto Sans TC","Noto Sans", "Noto Serif Tibetan", "Noto Serif Khmer", "Noto Sans Mongolian", "Roboto", "Helvetica", "Arial", sans-serif !important; 
