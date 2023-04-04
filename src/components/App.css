@@ -333,6 +333,14 @@ body { overflow:auto !important;padding-right:0 !important; /*font-family:"Robot
 
 .static .doc-content .index + div > p.c4.subtitle { padding: 0 0 0px 0 !important; margin-top:-10px;margin-bottom:40px;}
 
+
+[lang='bo'] .static-container[data-dir^="user-guide"] #samples { padding-bottom:0; margin:0 !important; }
+.static-container[data-dir^="user-guide"] #samples .doc-content.bo { padding-bottom:0px; padding-right:0;}
+.static .doc-content.bo iframe { width:100%; height:calc(100vh - 90px); border:none; top:-50px; position: relative; margin-bottom:-50px;}
+.static .doc-content.bo .index { padding-top:45px; }
+.static .doc-content.bo .index p { margin-bottom:0px;margin-top:10px; }
+
+
 .static-container > #samples > .doc-content h3 { text-align: left; text-transform: none;}
 
 .static-container > #samples > .doc-content .c20 { text-decoration:none; }
