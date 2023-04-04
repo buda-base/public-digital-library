@@ -312,7 +312,7 @@ body { overflow:auto !important;padding-right:0 !important; /*font-family:"Robot
 .static-container > #samples > .doc-content { max-width:100%; padding-top:0; padding-bottom:100px;}
 .static .doc-content .index { position:fixed; width:300px; background:white; top:100px; padding:0; padding-top:30px; }
 .static .doc-content .index > div { height:calc(100vh - 80px - 50px - 40px); overflow: auto; box-sizing: border-box; padding-bottom:40px;}
-.static .doc-content .index ~ * { padding-left:317px; }
+.static .doc-content .index ~ * { padding-left:350px; }
 .static .doc-content .index .c11:not(.c18,.c10) a { font-size:16px; font-weight:600; margin-top:5px; display: block;}
 .static .doc-content .index .c10 a { font-size:14px; font-weight:500;}
 .static .doc-content .index .c18 a { font-size:13px; font-weight:400;}
@@ -339,7 +339,7 @@ body { overflow:auto !important;padding-right:0 !important; /*font-family:"Robot
 .static .doc-content.bo iframe { width:100%; height:calc(100vh - 90px); border:none; top:-50px; position: relative; margin-bottom:-50px;}
 .static .doc-content.bo .index { padding-top:45px; width:310px;}
 .static .doc-content.bo .index p { margin-bottom:0px;margin-top:10px; }
-.static .doc-content.bo .index~* { padding-left:325px; }
+.static .doc-content.bo .index~* { padding-left:350px; }
 
 
 .static-container > #samples > .doc-content h3 { text-align: left; text-transform: none;}
