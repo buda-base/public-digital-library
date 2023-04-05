@@ -17,6 +17,12 @@ import Footer from "./Footer"
 import $ from 'jquery' ;
 
 
+import SimpleBar from 'simplebar';
+import 'simplebar/dist/simplebar.min.css';
+// You will need a ResizeObserver polyfill for browsers that don't support it! (iOS Safari, Edge, ...)
+import ResizeObserver from 'resize-observer-polyfill';
+window.ResizeObserver = ResizeObserver;
+
 type State = { content:any, error:integer, collapse:{}, route:"" }
 
 type Props = { history:{}, locale:string, config:{} }
@@ -48,6 +54,8 @@ export class StaticRouteNoExt extends Component<State, Props>
             }
         }
         */
+
+        this._scrollRef = React.createRef()
     }
 
     componentDidUpdate() { 
@@ -76,6 +84,13 @@ export class StaticRouteNoExt extends Component<State, Props>
                 //console.log("h:",f,h)
                 f.height(h*1.1)
             })
+        }
+        console.log("scrR:",this._scrollRef)
+        if(!this._scrollRef.current){            
+            const elem = document.querySelector('[data-simplebar]')
+            if(elem) this._scrollRef.current = new SimpleBar(elem);
+        } else {
+            this._scrollRef.current.recalculate()
         }
     }
 
