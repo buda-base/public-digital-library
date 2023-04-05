@@ -367,9 +367,9 @@ body { overflow:auto !important;padding-right:0 !important; /*font-family:"Robot
 
 
 @media(max-width:800px) {
-   .static-container[data-dir^="user-guide"] #samples .doc-content .index { position: relative; top:0; }
+   .static-container[data-dir^="user-guide"] #samples .doc-content .index { position: relative; top:110px; }
    .static-container[data-dir^="user-guide"] #samples .doc-content .index > div { height:auto; overflow:visible; padding:60px 0 0 0; }
-   .static-container[data-dir^="user-guide"] #samples .doc-content .index + div { padding-left:0;  }
+   .static-container[data-dir^="user-guide"] #samples .doc-content .index + div { padding-left:0; margin-top:115px; }
    .static-container[data-dir^="user-guide"] #samples .doc-content .index + div > .title:first-child { position: absolute; top:55px; }
 }
 
