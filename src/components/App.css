@@ -338,7 +338,7 @@ body { overflow:auto !important;padding-right:0 !important; /*font-family:"Robot
 [lang='bo'] .static-container[data-dir^="user-guide"] #samples { padding-bottom:0; margin:0 !important; }
 .static-container[data-dir^="user-guide"] #samples .doc-content.bo { padding-bottom:0px; padding-right:0;}
 .static .doc-content.bo iframe { width:100%; height:calc(100vh - 90px); border:none; top:-50px; position: relative; margin-bottom:-50px;}
-.static .doc-content.bo .index { padding-top:45px; width:310px;}
+.static .doc-content.bo .index { padding-top:16px; width:310px;}
 .static .doc-content.bo .index p { margin-bottom:0px;margin-top:10px; }
 .static .doc-content.bo .index~* { padding-left:350px; }
 
