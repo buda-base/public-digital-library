@@ -374,6 +374,7 @@ body { overflow:auto !important;padding-right:0 !important; /*font-family:"Robot
 }
 
 
+
 @media(max-width:400px) {
    .static-container[data-dir^="user-guide"] #samples .doc-content .index + div > .title:first-child span { font-size:34px; }
 }
@@ -4481,6 +4482,13 @@ html[lang="en"] .resource .data > [data-prop="bdo:creator"] h4[data-prop="bdo:ro
       transition: all 400ms ease-in-out;
       transform: rotate(180deg);
    }
+}
+
+
+@media(max-width:750px) {
+   #root .nav #lang, #root .nav #login span { margin-left:25px; }
+   .nav #login > div > span:first-child { max-width: 120px; }
+   .nav #logo a:first-child span { font-size:0; }
 }
 
 @font-face {

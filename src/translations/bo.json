@@ -50,7 +50,7 @@
             "text":"<parag>Relevant bibliographies and secondary sources concerning Cambodian manuscripts <nbsp>—coming soon</nbsp>. </parag>"
          }
       },
-      "help":"<bold>བུདྡྷ་དཔེ་མཛོད་ཀྱི་སྐོར་ལ་ཤེས་རྟོགས་ཆེད་<lk href='https://www.bdrc.io/buda-user-guide/'>བཀོལ་སྤྱོད་ལམ་སྟོན་</lk> དང་ <lk href='https://www.bdrc.io/buda-user-guide/frequently-asked-questions/'>དོགས་གཅོད་དྲི་བ་ཁག་ལ་</lk> གཟིགས།</bold>\n\n",
+      "help":"<bold>བུདྡྷ་དཔེ་མཛོད་ཀྱི་སྐོར་ལ་ཤེས་རྟོགས་ཆེད་<lk href='/static/user-guide/index'>བཀོལ་སྤྱོད་ལམ་སྟོན་</lk> དང་ <lk href='https://www.bdrc.io/buda-user-guide/frequently-asked-questions/'>དོགས་གཅོད་དྲི་བ་ཁག་ལ་</lk> གཟིགས།</bold>\n\n",
       "all-collections":"ཕྱོགས་བསྒྲིགས་ཆ་ཚང་།",
       "female-authors":"བུད་མེད་རྩོམ་པ་བོ།",
       "works-by-female-authors":"བུད་མེད་རྩོམ་པ་བོའི་བརྩམས་ཆོས་ཁག",
@@ -111,7 +111,7 @@
       "home":"གཙོ་ངོས།",
       "collections":"ཁྱེད་ཀྱི་སློབ་གླིང་གིས་སྔོན་མངགས་བྱས་ཡོད་པའི་ཕྱོགས་བསྒྲིགས་ལ་མིག་བཤེར་བྱོས།",
       "update":"བུདྡྷ་ཐོན་གསར་ཤོས་ལ་གསར་བསྒྱུར་བྱོས།",
-      "guide":"user guide"
+      "guide":"བཀོལ་སྤྱོད་ལམ་སྟོན་"
    },
    "Lsidebar": {
       "sortBy": {
