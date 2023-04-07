@@ -717,8 +717,9 @@ export async function updateConfigFromProfile() {
          })
       }
       
-      localStorage.setItem('uilang', locale);
-      store.dispatch(i18nextChangeLanguage(locale));
+      // keep language selector value 
+      //localStorage.setItem('uilang', locale);
+      //store.dispatch(i18nextChangeLanguage(locale));
 
       localStorage.setItem('lang', litLangs);
       
