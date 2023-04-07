@@ -50,7 +50,7 @@
             "text":"<parag>គន្ថនិទ្ទេសដែលពាក់ព័ន្ធ និងធនធានបន្ទាប់បន្សំដែលទាក់ទងនឹងសាស្ត្រាស្លឹករឹតកម្ពុជា <nbsp>—មកដល់ឆាប់ៗនេះ</nbsp>។ </parag>"
          }
       },
-      "help":"<bold>Please consult the <lk href='/static/user-guide/index'>user guide</lk> and <lk href='https://www.bdrc.io/buda-user-guide/frequently-asked-questions/'>FAQ</lk> to learn more about BUDA</bold>",
+      "help":"<bold>Please consult the <lk href='/buda-user-guide'>user guide</lk> and <lk href='https://www.bdrc.io/buda-user-guide/frequently-asked-questions/'>FAQ</lk> to learn more about BUDA</bold>",
       "all-collections":"All collections",
       "female-authors":"Female authors",
       "works-by-female-authors":"Works by female authors",
