@@ -1063,7 +1063,9 @@ export function top_right_menu(that,etextTitle,backUrl,etextres)
    // no need anymore
    const portrait = null //<div class="portrait-warn" onClick={()=>store.dispatch(closePortraitPopup())}><div><span></span><p data-tilt1={I18n.t("misc.tilt1")} data-tilt2={I18n.t("misc.tilt2")}></p></div></div>
 
-   let msgPopupOn = !that.props.history.location.pathname.includes("/static/") && that.props.config?.msg?.some((m,i) => m.popup && (!m.condition || eval(m.condition)) && !that.state.collapse["msgPopup"+(m.id?"-"+m.id:"")])
+   let msgPopupOn = !that.props.history.location.pathname.includes("/static/") 
+      && !that.props.history.location.pathname.includes("/buda-user-guide") 
+      && that.props.config?.msg?.some((m,i) => m.popup && (!m.condition || eval(m.condition)) && !that.state.collapse["msgPopup"+(m.id?"-"+m.id:"")])
    
 
    if(etextTitle)
@@ -1240,7 +1242,7 @@ export function top_right_menu(that,etextTitle,backUrl,etextres)
                ev.preventDefault()
             } }><span>{I18n.t("topbar.search")}</span></Link> }         
 
-         { !onZhMirror  && <Link id="guide" to={"/static/user-guide/index"} >
+         { !onZhMirror  && <Link id="guide" to={"/buda-user-guide"} >
                <span>
                   {I18n.t("topbar.guide")}
                   <svg style={{ fill:"#d73449", width:"28px" }} version="1.1" id="Layer_1"x="0px" y="0px" viewBox="0 0 103.19 122.88">
