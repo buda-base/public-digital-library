@@ -313,10 +313,12 @@ body { overflow:auto !important;padding-right:0 !important; /*font-family:"Robot
 .static .doc-content .index { position:fixed; width:310px; background:white; top:130px; padding:0; padding-top:0px; padding-bottom:40px;}
 .static .doc-content .index > div { height:calc(100vh - 80px - 50px /*- 40px*/); overflow: auto; box-sizing: border-box; padding-bottom:40px; box-sizing: border-box;}
 .static .doc-content .index ~ * { padding-left:350px; }
-.static .doc-content .index .c25:not(.c19,.c8) a { font-size:16px; font-weight:600; margin-top:5px; display: block;}
+.static .doc-content .index .c25:not(.c19,.c8) a { font-size:16px; font-weight:600; margin-top:5px; display: block; color:#;}
 .static .doc-content .index .c19 a { font-size:14px; font-weight:500;}
 .static .doc-content .index .c8 a { font-size:13px; font-weight:400;}
 .static .doc-content a:focus-visible { outline:none; }
+
+.static-container > #samples > .doc-content .index a {  color:#000; }
 
 .static .doc-content .index .c27 { display: none;}
 
