@@ -400,6 +400,52 @@ describe('language settings tests', () => {
             "_val": "liàng xué",
          }
       ])
+      
+      const extPuni = extendedPresets(["bo"]) 
+      const extPewts = extendedPresets(["bo-x-ewts"]) 
+      
+      let tibetSort = window["tibetan-sort-js"].default      
+      expect(tibetSort.compare("ཐ","ཐུ")).toEqual(tibetSort.compareEwts("tha","thu")) // passes
+      expect(tibetSort.compare("ཐར","ཐུགས")).toEqual(tibetSort.compareEwts("thar","thugs")) // fails
+      
+      
+      /* // not in the same order in wylie or in unicode
+
+      labels = [{
+         "value":"thar",
+         "lang":"bo-x-ewts",
+         "k":"W123"
+      },{
+         "value":"thugs",
+         "lang":"bo-x-ewts",
+         "k":"W456"
+      }]
+
+      // fails
+      expect(sortLangScriptLabels(labels, extPewts.flat, extPewts.translit).map(l => l.k)).toEqual(sortLangScriptLabels(labels, extPuni.flat, extPuni.translit).map(l => l.k))
+
+      
+      const labels = [{
+            "@value": "thar 'od sbyong gsum/ (dpal spungs par ma/)",
+            "@language": "bo-x-ewts",
+            "k": "W1KG12138"
+         }, {
+            "@value": "thugs rje chen po ye shes 'od mchog",
+            "@language": "bo-x-ewts",
+            "k": "W1KG10137"
+         },{
+            "@value": "chos skyong ba'i rgyal po srong btsan sgam po'i zhal gdams/",
+            "@language": "bo-x-ewts",
+            "k": "W1KG9749"
+         },{
+            "@value": "thugs rje chen po 'khor 'das zil gnon/",
+            "@language": "bo-x-ewts",
+            "k": "W1KG10101"
+         }
+      ]
+      console.log(sortLangScriptLabels(labels, extPewts.flat, extPewts.translit))
+      console.log(sortLangScriptLabels(labels, extPuni.flat, extPuni.translit))
+      */
 
       done()
    })
