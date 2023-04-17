@@ -6422,7 +6422,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                
                //console.log("closest:",ev.target.closest(".popper"),ev.currentTarget,ev.target)
 
-               if(!this.props.config.useMonlam || /*window.innerWidth <= 800 ||*/ ev.target.closest(".popper")) return
+               if(!this.props.config.useMonlam || !this.state.enableDicoSearch || ev.target.closest(".popper")) return
                
                let langElem = selection.anchorNode?.parentElement?.getAttribute("lang")
                if(!langElem) langElem = selection.anchorNode?.parentElement?.parentElement?.getAttribute("lang")
