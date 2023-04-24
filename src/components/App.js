@@ -649,7 +649,7 @@ export function getLangLabel(that:{},prop:string="",labels:[],proplang:boolean=f
       if(that.props.etextLang && (prop == bdo+"eTextHasPage" || prop == bdo+"eTextHasChunk")) { 
          langs = that.props.etextLang 
          if(!Array.isArray(langs)) langs = [ langs ]
-         console.log("prop:",langs,prop,labels)
+         //console.log("prop:",langs,prop,labels)
       }
       
 
@@ -4069,6 +4069,11 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             }), " ]" ]}<br/><br/></div>	
          }	
 
+
+         let urlBase, staticRegExp = new RegExp(".*?[/](latest|"+Object.keys(staticQueries).join("|")+")[/]?")  ;
+         if(window.location.href.match(staticRegExp)) urlBase = window.location.href.replace(staticRegExp,"$1?");
+         else urlBase = window.location.href.replace(/^https?:[/][/][^?]+[?]?/gi,"")+"&"
+
          return (<div className={"match "+prop}>	
             <span className={"label " +(lastP === prop?"invisible":"")}>{(!from?prop:from)}{I18n.t("punc.colon")}&nbsp;</span>	
                <span>{expand!==true?null:inPart}{[!uri?val:<Link className="urilink" to={uri}><span {...(lang?{lang:lang}:{})}>{val}</span></Link>,lang?<Tooltip placement="bottom-end" title={	
@@ -4087,7 +4092,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   toggleExpand(e,prettId+"@"+startC); 
                }}>{expand!==true?I18n.t("result.expandC"):I18n.t("result.hideC")}</span>	
                <span> {I18n.t("misc.or")} </span>	
-               <Link to={"/show/"+prettId+bestM} class="uri-link">{I18n.t("result.openEin")}</Link>	
+               <Link to={"/show/"+prettId+"?s="+ encodeURIComponent((urlBase.replace(/((([?])?&*|^)n=[^&]*)/g,"$3")+(!urlBase.match(/[\?&]$/)?"&":"")+"n="+n).replace(/\?+&?/,"?"))+(!bestM?"":"&"+bestM.replace(/^\?/,""))} class="uri-link">{I18n.t("result.openEin")}</Link>	
                </span>:null}</span>	                      	
             </div>)	
          
@@ -4252,9 +4257,14 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
          //loggergen.log("bestM",bestM)
 
+
+         let inRoot = allProps.filter(e => e.type?.endsWith("inRootInstance"))
+         if (inRoot.length > 0) inRoot = inRoot[0].value
+         else inRoot = false
+
          if(bestM.length) { 
             endC = bestM[0].endChar
-            bestM = "?startChar="+((startC = bestM[0].startChar) - 1000) /*+"-"+bestM[0].endChar*/ +"&keyword="+this.props.keyword+"@"+this.props.language+"#open-viewer"
+            bestM = "?"+(inRoot?"backToEtext="+shortUri(inRoot)+"&":"") +"startChar="+((startC = bestM[0].startChar) - 1000) /*+"-"+bestM[0].endChar*/ +"&keyword="+this.props.keyword+"@"+this.props.language+"#open-viewer"
          }
          else bestM = ""
 

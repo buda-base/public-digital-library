@@ -3139,7 +3139,7 @@ class ResourceViewer extends Component<Props,State>
                         
                         //console.log("iB:",infoBase,elem.volume,dico)
 
-                        if(infoBase) infoBase = infoBase.filter(e => [bdo+"volumeNumber",skos+"prefLabel", /*skos+"altLabel",*/ foaf+"name" /*,"literal"*/].reduce( (acc,f) => ((acc || f === e.type || f === e.fromKey) && !e.fromSameAs), false))
+                        if(infoBase) infoBase = infoBase.filter(e => !e.fromIRI && [bdo+"volumeNumber",skos+"prefLabel", /*skos+"altLabel",*/ foaf+"name" /*,"literal"*/].reduce( (acc,f) => ((acc || f === e.type || f === e.fromKey) && !e.fromSameAs), false))
                         if(infoBase) {
                            let { _info, _lang } = this.getInfo(prop,infoBase,withProp) 
                            if(_info) {
