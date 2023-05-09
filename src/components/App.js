@@ -649,7 +649,7 @@ export function getLangLabel(that:{},prop:string="",labels:[],proplang:boolean=f
       if(that.props.etextLang && (prop == bdo+"eTextHasPage" || prop == bdo+"eTextHasChunk")) { 
          langs = that.props.etextLang 
          if(!Array.isArray(langs)) langs = [ langs ]
-         console.log("prop:",langs,prop,labels)
+         //console.log("prop:",langs,prop,labels)
       }
       
 
@@ -5509,6 +5509,10 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   lit = val.value
                   lang = ""
                } else if(val && this.props.language) {
+                  lit = highlight(val.value,kw.value.replace(/ *\[?EEEE\]? */g,"|"))
+                  lang = val.lang
+               } else if(r.lit?.value == "" && this.props.language) { // #825 case of empty prefLlabel
+                  val = { ...r.lit }
                   lit = highlight(val.value,kw.value.replace(/ *\[?EEEE\]? */g,"|"))
                   lang = val.lang
                } else {
