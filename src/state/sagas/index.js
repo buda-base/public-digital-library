@@ -318,9 +318,11 @@ async function initiateApp(params,iri,myprops,route,isAuthCallback) {
                (acc,f) => { 
                   if(f.match(/[Ll]abel/))
                      return ([...acc, ...res[e][f] ]) 
-                  else return acc ;
+                  else 
+                  return acc ;
                   },
                [])
+            console.log("val:",val)
             if(!val.length) return acc ;
             else return ({...acc, [e]:val })
          },{})}
@@ -333,7 +335,7 @@ async function initiateApp(params,iri,myprops,route,isAuthCallback) {
 
          //if(Object.keys(res[e]).indexOf(skos+"prefLabel") === -1)
          return ({...acc, ...Object.keys(res[e]).filter(k => k !== bdo+"itemHasVolume").reduce(
-            (acc,f) => ({...acc,[f]:res[e][f]}),
+            (acc,f) => ({...acc,[f]:res[e][f].map(g => ({ ...g, ...e!=bdrIRI ? {fromIRI:shortUri(e)}:{} })) }),
             {}) })
             //else
             //   return acc
@@ -366,7 +368,9 @@ async function initiateApp(params,iri,myprops,route,isAuthCallback) {
          }
 
       }         
-   
+
+      //console.log("res::",iri,JSON.stringify(res[Object.keys(res)[0]][skos+"prefLabel"],null,3))
+
       store.dispatch(dataActions.gotResource(iri,res));
 
    }
