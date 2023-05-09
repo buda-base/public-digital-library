@@ -4938,6 +4938,8 @@ class ResourceViewer extends Component<Props,State>
 
       if(!title) {
          if(titlElem) {
+            
+            
             if(typeof titlElem !== 'object') titlElem =  { "value" : titlElem, "lang":""}
             if(noSame) {
                let asArray = titlElem
@@ -4957,7 +4959,7 @@ class ResourceViewer extends Component<Props,State>
                _befo = befo
             }
          }
-         if(!title) title = { value:"", lang:"" }
+         if(!title || title.value == "") title = { value: I18n.t("resource.noT"), lang: this.props.locale } // #825
          title = this.getH2(title,_befo,_T,other,T_,rootC)         
 
       }
