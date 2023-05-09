@@ -1129,7 +1129,10 @@ export function top_right_menu(that,etextTitle,backUrl,etextres)
                         loca.pathname = "/show/"+rid
                         delete loca.search
                         delete loca.hash
-                        if(!rid.startsWith("bdr:MW")) loca.hash = "outline"
+                        if(!rid.startsWith("bdr:MW")) { 
+                           loca.hash = "outline"
+                           loca.search = "?fromText="+that.props.IRI
+                        }
                         console.log("loca:",loca)
                         that.props.history.push(loca) ; 
                      }

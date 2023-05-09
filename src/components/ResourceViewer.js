@@ -7657,6 +7657,8 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                }
             }         
          } 
+         
+         let get = qs.parse(this.props.history.location.search)
 
          etextrefs = _.orderBy(etextrefs,["index"],["asc"]).map(e => {
             
@@ -7675,9 +7677,33 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                tLabel = tLabel[0].toUpperCase() + tLabel.slice(1)
                // TODO use translation from ontology
             }
-            let open = this.state.collapse[tag]                         
+            
+            // #821
+            console.log("tag:",tag,e,get)
+            let ut = null
+            if(get.fromText) { 
+               if(e.volumeHasEtext) {
+                  let t = e.volumeHasEtext
+                  if(!Array.isArray(t)) t = [t]
+                  ut = elem.filter(f => t.includes(f["@id"]))
+                  if(ut.length) { 
+                     ut = ut.filter(u => u.eTextResource == get.fromText) 
+                     console.log("ut:",ut)
+                     if(ut.length) ut = true
+                     else ut = false
+                  }
+                  else ut = null
+               } else if(e.eTextResource == get.fromText) {
+                  ut = true
+               }
+
+            } 
+
+            
+            let open = this.state.collapse[tag] || this.state.collapse[tag]  === undefined && ut // #821
             let mono = etextrefs.length === 1
-            let openD = this.state.collapse[tag+"-details"] || this.state.collapse[tag+"-details"]  === undefined && mono
+            let openD = this.state.collapse[tag+"-details"] || this.state.collapse[tag+"-details"]  === undefined && (mono || ut) // #821
+
 
             ret.push(<span class={'top'+ (this.state.collapse[tag]?" on":"") }>
                   {(e.hasPart && !open) && <img src="/icons/triangle.png" onClick={(ev) => toggle(null,root,e["@id"],!e.hasPart?"details":"",!e.hasPart && mono)} className="xpd right"/>}
@@ -9527,9 +9553,8 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          let theOutline ;
          if(!root || !root.length) theOutline = this.renderOutline()      
 
-         let etext = this.isEtext()
+         let etext = this.isEtext(), etextRes = etext ? this.getResourceElem(bdo+"eTextInInstance") : false, backToET = etextRes?.length ? shortUri(etextRes[0].value) : this.props.IRI
          if(etext && !this.props.eTextRefs) { 
-            let etextRes = this.getResourceElem(bdo+"eTextInInstance")
             if(!etextRes || !etextRes.length) this.props.onGetETextRefs(this.props.IRI);
          }
 
@@ -9849,7 +9874,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   { this.renderWithdrawn() }             
                   <div class="title">{ wTitle }{ iTitle }{ rTitle }</div>
                   { this.renderHeader(kZprop.filter(k => mapProps.includes(k)), _T, etextUT, root) }
-                  { (etext && !orig) && <div class={"data open-etext"+(etextAccessError?" disable":"")}><div><Link to={etextUT+(etextUT.includes("?")?"&":"?")+"backToEtext="+this.props.IRI+"#open-viewer"}>{etextLoca}</Link></div></div> }
+                  { (etext && !orig) && <div class={"data open-etext"+(etextAccessError?" disable":"")}><div><Link to={etextUT+(etextUT.includes("?")?"&":"?")+"backToEtext="+backToET+"#open-viewer"}>{etextLoca}</Link></div></div> }
                   { (etext && orig) && <div class="data open-etext"><div><a target="_blank" href={orig}>{I18n.t("resource.openO",{src:prov})}<img src="/icons/link-out_.svg"/></a></div></div> }
                   <div class={"data" + (_T === "Etext"?" etext-title":"")+(_T === "Images"?" images-title":"")}>
                      {_T === "Images" && iTitle?[<h2 class="on intro">{I18n.t("resource.scanF")}</h2>,iTitle]
