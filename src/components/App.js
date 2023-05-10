@@ -391,89 +391,109 @@ export const langProfile = [
 */
 
 
-export const renderBanner = (that, infoPanel, isResourcePage) => <div class={"infoPanel "+(isResourcePage?"inRes":"")}>{ infoPanel.map(m => {
-   let lab = getLangLabel(that,tmp+"bannerMessage",m.text) 
-   let icon 
+export const renderBanner = (that, infoPanel, isResourcePage) => {
 
-   //console.log("m:",m,lab,m.text,that.props.locale,that)
-   
-   if(m.severity=="info") icon = <InfoIcon className="info"/>
-   else if(m.severity=="warning") icon = <WarnIcon className="warn"/>
-   else if(m.severity=="error") icon = <ErrorIconC className="error"/>
+   return (<div class={"infoPanel "+(isResourcePage?"inRes":"")}>{ infoPanel.map((m,i) => {
+      let lab = getLangLabel(that,tmp+"bannerMessage",m.text) 
+      let icon 
 
-   if(lab) {      
-
-      // handle links
-      let link,img ;
-      let content = [], str = lab.value
-      while(link = str.match(/([^!]|^|\n)(\[([^\]]+?)\]\(([^)]+?)\))/m)) {
-         let arr = str.split(link[2])
-         content = content.concat([ arr[0], <a href={link[4]} target="_blank">{link[3]}</a> ])
-         str = arr.slice(1).join(" ")
-      }
-      if(str) content.push(str)
-
-      // handle images
-      let sav = content
-      content = []
-      sav.map(c => {
-         //console.log("c:",c)
-         if(c?.match) { 
-            while(img = c.match(/!\[([^\]]+)\]\(([^)]+)\)/)) {
-               let arr = c.split(img[0])
-               content = content.concat([ arr[0], <img src={img[2]} alt={img[1]}/> ])
-               c = arr.slice(1).join(" ")            
-            } 
-            if(c) content.push(c)
-         }
-         else {
-            content.push(c)
-         }
-      })
-
-      // check if popup has it recently been closed 
-      let hidden = that.state.collapse?.msgPopup 
-      if(m.popup) {
-         let showEveryNDay = 30
-         if(m.showEveryNDay != undefined) showEveryNDay = m.showEveryNDay 
-         const wasClosed = localStorage.getItem("msg-popup-closed")
-         //console.log("sENd:",showEveryNDay,m.showEveryNDay,wasClosed,Date.now())         
-         if(!hidden && (!wasClosed || Date.now() - wasClosed > showEveryNDay * 24 * 3600 * 1000)) {
-            //console.log("show!",hidden) 
-         } else if(!hidden) {
-            //console.log("hide!") 
-            that.setState({ collapse: { ...that.state.collapse, msgPopup: true }})
-            hidden = true
-         }
-      }
-
-      const closePopup = (ev) => {
-         that.setState({collapse:{ ...that.state.collapse, msgPopup: true }})
-         localStorage.setItem("msg-popup-closed", Date.now())
-      }
+      //console.log("m:",m,lab,m.text,that.props.locale,that)
       
-      // layout
-      if(!m.popup) return <p>{icon}{content}</p>
-      else if(!hidden) return <div class="msg-popup">
-         <div class="back" onClick={closePopup}></div>
-         <div class="front">
-            <Close className="close" onClick={closePopup}/>
-            { icon && <p>{icon}</p> }
-            <p>{content.map(c => { 
-               // handle newlines
-               if(c?.match && c.match(/\n/)) {
-                  const p = c.split("\n")
-                  return p.map( (d,i) => {
-                     if(i < p.length - 1) return <>{d}<br/></>
-                     else return d
-                  })
-               }
-               else return c
-            })}</p>
+      if(m.severity=="info") icon = <InfoIcon className="info"/>
+      else if(m.severity=="warning") icon = <WarnIcon className="warn"/>
+      else if(m.severity=="error") icon = <ErrorIconC className="error"/>
+
+      if(lab) {      
+
+         // handle links
+         let link,img ;
+         let content = [], str = lab.value
+         while(link = str.match(/([^!]|^|\n)(\[([^\]]+?)\]\(([^)]+?)\))/m)) {
+            let arr = str.split(link[2])
+            content = content.concat([ arr[0], <a href={link[4]} target="_blank">{link[3]}</a> ])
+            str = arr.slice(1).join(" ")
+         }
+         if(str) content.push(str)
+
+         // handle images
+         let sav = content
+         content = []
+         sav.map(c => {
+            //console.log("c:",c)
+            if(c?.match) { 
+               while(img = c.match(/!\[([^\]]+)\]\(([^)]+)\)/)) {
+                  let arr = c.split(img[0])
+                  content = content.concat([ arr[0], <img src={img[2]} alt={img[1]}/> ])
+                  c = arr.slice(1).join(" ")            
+               } 
+               if(c) content.push(c)
+            }
+            else {
+               content.push(c)
+            }
+         })
+
+
+         // check if popup has it recently been closed 
+         let hidden = that.state.collapse?.["msgPopup"+(m.id?"-"+m.id:"")]
+
+         // condition to show popup 
+         let condition      
+         if(!m.condition) 
+            condition = true
+         else if(m.condition && m.condition.match(/^[.a-zA-Z]+$/)) {         
+            condition = eval(m.condition) ? true: false;
+         } 
+         //console.log("condition:", m.condition, condition)
+
+         if(m.popup) {         
+            let showEveryNDay = 30
+            if(m.showEveryNDay != undefined) showEveryNDay = m.showEveryNDay
+            const wasClosed = localStorage.getItem("msg-popup-closed"+(m.id?"-"+m.id:"")) 
+            const tooOld = showEveryNDay != -1 && Date.now() - wasClosed > showEveryNDay * 24 * 3600 * 1000
+            //console.log("sENd:",showEveryNDay,m.showEveryNDay,wasClosed,Date.now(),tooOld)         
+            if(!hidden && condition && (!wasClosed || tooOld)) {
+               //console.log("show!",hidden) 
+               hidden = false               
+            } else if(condition === undefined && !hidden || condition == false && !hidden || condition && wasClosed && !tooOld && !hidden) {
+               //console.log("hide!")                
+               hidden = true
+            } else if(condition && hidden && !wasClosed) {
+               hidden = false
+               //console.log("show!!",hidden) 
+            }
+         }
+         
+         if(hidden != that.state.collapse["msgPopup"+(m.id?"-"+m.id:"")]) that.setState({collapse:{ ...that.state.collapse, ["msgPopup"+(m.id?"-"+m.id:"")]: hidden }})
+
+         const closePopup = (ev) => {
+            that.setState({collapse:{ ...that.state.collapse, ["msgPopup"+(m.id?"-"+m.id:"")]: true }})
+            localStorage.setItem("msg-popup-closed"+(m.id?"-"+m.id:""), Date.now())
+         }
+         
+         // layout
+         if(!m.popup) return <p>{icon}{content}</p>
+         else if(!hidden) return <div class="msg-popup">
+            <div class="back" onClick={closePopup}></div>
+            <div class="front">
+               <Close className="close" onClick={closePopup}/>
+               { icon && <p>{icon}</p> }
+               <p>{content.map(c => { 
+                  // handle newlines
+                  if(c?.match && c.match(/\n/)) {
+                     const p = c.split("\n")
+                     return p.map( (d,i) => {
+                        if(i < p.length - 1) return <>{d}<br/></>
+                        else return d
+                     })
+                  }
+                  else return c
+               })}</p>
+            </div>
          </div>
-      </div>
-   }
-}) }</div>
+      }
+   }) }</div>)
+}
 
 
 let _GA = false ;
@@ -627,8 +647,9 @@ export function getLangLabel(that:{},prop:string="",labels:[],proplang:boolean=f
 
       
       if(that.props.etextLang && (prop == bdo+"eTextHasPage" || prop == bdo+"eTextHasChunk")) { 
-         langs = [ that.props.etextLang ]
-         //console.log("prop:",langs,prop)
+         langs = that.props.etextLang 
+         if(!Array.isArray(langs)) langs = [ langs ]
+         //console.log("prop:",langs,prop,labels)
       }
       
 
@@ -841,12 +862,29 @@ export function etext_lang_selec(that,black:boolean = false, elem, DL)
 {
    if(!elem) elem = <span id="lang" title={I18n.t("home.choose")} onClick={(e) => that.setState({...that.state,anchorLang:e.currentTarget, collapse: {...that.state.collapse, lang:!that.state.collapse.lang } } ) }><img src={"/icons/LANGUE"+(black?"b":"")+".svg"}/></span>
    
-   let text = { "bo":"lang.tip.bo","bo-x-ewts":"lang.tip.boXEwts" }, prio = ["bo", "bo-x-ewts" ]
+   // #818
+   let text = [ "lang.tip.original", "lang.tip.roman"], //{ "bo":"lang.tip.bo","bo-x-ewts":"lang.tip.boXEwts", "sa":"lang.tip.saDeva","sa-x-iast":"lang.tip.saXIast"  }, 
+      prio = [ [ "bo", "sa", "zh" ], [ "bo-x-ewts", "sa-x-iast", "zh-latn-pinyin" ] ]
 
-   let current = that.props.etextLang
-   if(!current || !text[current]) {
-      if(that.props.locale === "en") current = "bo-x-ewts"
-      else current = "bo"
+   /* 
+   // not ok when multiple scripts, commenting out
+   let script = that.props.resources[that.props.IRI]
+   if(script) script = script[fullUri(that.props.IRI)]
+   if(script) script = script[bdo+"instanceReproductionOf"]
+   if(script) script = script.map(s => that.props.resources[shortUri(s.value)] ? that.props.resources[shortUri(s.value)][s.value]:null).map(s => s?s[bdo+"script"]:null).filter(s=>s)
+   if(script && script.length) script = script[0] 
+   if(script && script.length) script = script[0].value
+   console.log("script:", script)
+
+   if(script === bdr+"ScriptDeva") {
+      prio = ["sa", "sa-x-iast" ]
+   }
+   */
+
+   let current = prio.findIndex(p => that.props.etextLang?.some(q => p.includes(q)))
+   if(current === -1 || !text[current]) {
+      if(that.props.locale === "en") current = 1
+      else current = 0
    }
 
    const anchor = "anchorLang"+(DL?"DL":"")
@@ -868,9 +906,9 @@ export function etext_lang_selec(that,black:boolean = false, elem, DL)
               <FormControl className="formControl">
                 {/* <InputLabel htmlFor="datatype">In</InputLabel> */}
                   
-                  { prio.map((i) => {
+                  { prio.map((i, k) => {
 
-                        let label = I18n.t(text[i]);
+                        let label = I18n.t(text[k]);
 
                         // TODO add link to user profile / language preferences
 
@@ -902,15 +940,15 @@ export function etext_lang_selec(that,black:boolean = false, elem, DL)
                                    const link = document.createElement("a")
                                    link.href = temp
                                    let filename = DL.split(/[/]/).pop().split(/[.]/)[0]+"_"+i+".txt"
-                                   //debug("filename:",filename)
                                    link.setAttribute("download", filename)
                                    link.click()
+                                   //console.log("filename:",filename,link,link.click)
                                    window.URL.revokeObjectURL(link)
                          
                                  })
                                  .catch(function (error) {
                                     logError(error)
-                                   //console.error("error:", error.message)
+                                    //console.error("error:", error.message)
                                  })
 
                                  that.props.onLoading("outline",false)
@@ -919,7 +957,7 @@ export function etext_lang_selec(that,black:boolean = false, elem, DL)
                               </MenuItem> 
                         )
                         else return ( <MenuItem
-                                    className={current===i?"is-locale":""}     
+                                    className={current===k?"is-locale":""}     
                                     value={i}
                                     onClick={(event) => { 
                                        localStorage.setItem('etextlang', i);
@@ -1025,11 +1063,16 @@ export function top_right_menu(that,etextTitle,backUrl,etextres)
    // no need anymore
    const portrait = null //<div class="portrait-warn" onClick={()=>store.dispatch(closePortraitPopup())}><div><span></span><p data-tilt1={I18n.t("misc.tilt1")} data-tilt2={I18n.t("misc.tilt2")}></p></div></div>
 
+   let msgPopupOn = !that.props.history.location.pathname.includes("/static/") 
+      && !that.props.history.location.pathname.includes("/buda-user-guide") 
+      && that.props.config?.msg?.some((m,i) => m.popup && (!m.condition || eval(m.condition)) && !that.state.collapse["msgPopup"+(m.id?"-"+m.id:"")])
+   
+
    if(etextTitle)
       return (<>
       {!that.props.portraitPopupClosed && portrait}
       <div class={"mobile-button top"+(!that.state.collapse.navMenu?" off":" on")} onClick={()=>that.setState({collapse:{...that.state.collapse,navMenu:!that.state.collapse.navMenu}})}><img src="/icons/burger.svg" /></div>
-      <div class={"nav etext-nav"+(onZhMirror?" zhMirror":"")+(that.state.collapse.navMenu?" on":"") +(that.props.config?.msg?.some(m => m.popup)&&!that.state.collapse?.msgPopup?" msgPopupOn":"") }>
+      <div class={"nav etext-nav"+(onZhMirror?" zhMirror":"")+(that.state.collapse.navMenu?" on":"") +(msgPopupOn?" msgPopupOn":"") }>
          {uiLangPopup}
          <div>
             {logo}
@@ -1086,7 +1129,10 @@ export function top_right_menu(that,etextTitle,backUrl,etextres)
                         loca.pathname = "/show/"+rid
                         delete loca.search
                         delete loca.hash
-                        if(!rid.startsWith("bdr:MW")) loca.hash = "outline"
+                        if(!rid.startsWith("bdr:MW")) { 
+                           loca.hash = "outline"
+                           loca.search = "?fromText="+that.props.IRI
+                        }
                         console.log("loca:",loca)
                         that.props.history.push(loca) ; 
                      }
@@ -1176,7 +1222,7 @@ export function top_right_menu(that,etextTitle,backUrl,etextres)
       !that.props.portraitPopupClosed? portrait:null,
       <div class={"mobile-button top"+(!that.state.collapse.navMenu?" off":" on")} onClick={() => that.setState({collapse:{...that.state.collapse,navMenu:!that.state.collapse.navMenu}})}><img src="/icons/burger.svg" /></div>,
       <div class={"nav"+(onZhMirror?" zhMirror":"")+ (that.state.collapse.navMenu?" on":"")+(onKhmerServer||onKhmerUrl?" khmerServer":"")
-               +(that.props.config?.msg?.some(m => m.popup)&&!that.state.collapse?.msgPopup?" msgPopupOn":"")
+               +(msgPopupOn?" msgPopupOn":"")
          }>
          {uiLangPopup}
           <div>
@@ -1198,6 +1244,17 @@ export function top_right_menu(that,etextTitle,backUrl,etextres)
                },350)
                ev.preventDefault()
             } }><span>{I18n.t("topbar.search")}</span></Link> }         
+
+         { !onZhMirror  && <Link id="guide" to={"/buda-user-guide"} >
+               <span>
+                  {I18n.t("topbar.guide")}
+                  <svg style={{ fill:"#d73449", width:"28px" }} version="1.1" id="Layer_1"x="0px" y="0px" viewBox="0 0 103.19 122.88">
+                     <g>
+                        <path style={{ "fill-rule": "evenodd", "clip-rule": "evenodd" }} d="M17.16,0h82.72c1.82,0,3.31,1.49,3.31,3.31v92.32c-0.15,2.58-3.48,2.64-7.08,2.48H15.94 c-4.98,0-9.05,4.07-9.05,9.05c0,4.98,4.07,9.05,9.05,9.05l80.17,0v-9.63l7.08,0v12.24c0,2.23-1.82,4.05-4.05,4.05l-82.85,0 C7.33,122.88,0,115.55,0,106.59V17.16C0,7.72,7.72,0,17.16,0L17.16,0z M54.53,14.05c20.05,0,36.3,16.25,36.3,36.3 c0,20.05-16.25,36.3-36.3,36.3c-20.05,0-36.3-16.25-36.3-36.3C18.23,30.3,34.48,14.05,54.53,14.05L54.53,14.05z M52.5,36.67 c0.6,0.21,1.29,0.32,2.05,0.32c0.8,0,1.49-0.11,2.1-0.32c0.58-0.2,1.1-0.51,1.55-0.92c0.43-0.38,0.77-0.84,0.98-1.36 c0.23-0.54,0.34-1.15,0.34-1.84c0-0.7-0.11-1.33-0.34-1.87c-0.21-0.52-0.54-0.98-0.98-1.38l-0.02-0.02 c-0.44-0.41-0.97-0.72-1.55-0.93c-0.61-0.21-1.3-0.32-2.1-0.32c-0.77,0-1.46,0.11-2.04,0.32c-0.57,0.2-1.07,0.51-1.52,0.92 l-0.03,0.03c-0.44,0.4-0.77,0.87-0.98,1.38c-0.23,0.54-0.34,1.16-0.34,1.87c0,0.69,0.11,1.3,0.34,1.84 c0.21,0.49,0.52,0.93,0.92,1.3c0.02,0.02,0.05,0.03,0.06,0.05c0.44,0.41,0.97,0.72,1.55,0.92V36.67L52.5,36.67z M46.11,67.64v5.03 h17.01v-5.03h-0.38c-0.35,0-0.7-0.09-1.06-0.29c-0.28-0.15-0.54-0.35-0.78-0.61c-0.25-0.24-0.46-0.52-0.61-0.8 C60.1,65.59,60,65.24,60,64.9V44.93c0-0.8-0.09-1.36-0.29-1.69c-0.08-0.12-0.18-0.18-0.35-0.18H45.93v5.5h0.57 c0.35,0,0.72,0.11,1.07,0.31c0.25,0.14,0.48,0.32,0.7,0.57c0.03,0.02,0.05,0.05,0.08,0.08c0.25,0.26,0.43,0.52,0.57,0.78 c0.17,0.34,0.26,0.67,0.26,1.01V64.9c0,0.32-0.08,0.63-0.23,0.95l-0.05,0.09c-0.14,0.26-0.32,0.52-0.57,0.78 c-0.25,0.26-0.51,0.48-0.77,0.63c-0.35,0.2-0.7,0.29-1.07,0.29H46.11L46.11,67.64z"></path>
+                     </g>
+                  </svg>
+               </span>
+            </Link> }
 
          { onKhmerServer && khmerLinks }
 
@@ -4017,6 +4074,11 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             }), " ]" ]}<br/><br/></div>	
          }	
 
+
+         let urlBase, staticRegExp = new RegExp(".*?[/](latest|"+Object.keys(staticQueries).join("|")+")[/]?")  ;
+         if(window.location.href.match(staticRegExp)) urlBase = window.location.href.replace(staticRegExp,"$1?");
+         else urlBase = window.location.href.replace(/^https?:[/][/][^?]+[?]?/gi,"")+"&"
+
          return (<div className={"match "+prop}>	
             <span className={"label " +(lastP === prop?"invisible":"")}>{(!from?prop:from)}{I18n.t("punc.colon")}&nbsp;</span>	
                <span>{expand!==true?null:inPart}{[!uri?val:<Link className="urilink" to={uri}><span {...(lang?{lang:lang}:{})}>{val}</span></Link>,lang?<Tooltip placement="bottom-end" title={	
@@ -4035,7 +4097,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   toggleExpand(e,prettId+"@"+startC); 
                }}>{expand!==true?I18n.t("result.expandC"):I18n.t("result.hideC")}</span>	
                <span> {I18n.t("misc.or")} </span>	
-               <Link to={"/show/"+prettId+bestM} class="uri-link">{I18n.t("result.openEin")}</Link>	
+               <Link to={"/show/"+prettId+"?s="+ encodeURIComponent((urlBase.replace(/((([?])?&*|^)n=[^&]*)/g,"$3")+(!urlBase.match(/[\?&]$/)?"&":"")+"n="+n).replace(/\?+&?/,"?"))+(!bestM?"":"&"+bestM.replace(/^\?/,""))} class="uri-link">{I18n.t("result.openEin")}</Link>	
                </span>:null}</span>	                      	
             </div>)	
          
@@ -4200,9 +4262,14 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
          //loggergen.log("bestM",bestM)
 
+
+         let inRoot = allProps.filter(e => e.type?.endsWith("inRootInstance"))
+         if (inRoot.length > 0) inRoot = inRoot[0].value
+         else inRoot = false
+
          if(bestM.length) { 
             endC = bestM[0].endChar
-            bestM = "?startChar="+((startC = bestM[0].startChar) - 1000) /*+"-"+bestM[0].endChar*/ +"&keyword="+this.props.keyword+"@"+this.props.language+"#open-viewer"
+            bestM = "?"+(inRoot?"backToEtext="+shortUri(inRoot)+"&":"") +"startChar="+((startC = bestM[0].startChar) - 1000) /*+"-"+bestM[0].endChar*/ +"&keyword="+this.props.keyword+"@"+this.props.language+"#open-viewer"
          }
          else bestM = ""
 
@@ -5457,6 +5524,10 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   lit = val.value
                   lang = ""
                } else if(val && this.props.language) {
+                  lit = highlight(val.value,kw.value.replace(/ *\[?EEEE\]? */g,"|"))
+                  lang = val.lang
+               } else if(r.lit?.value == "" && this.props.language) { // #825 case of empty prefLlabel
+                  val = { ...r.lit }
                   lit = highlight(val.value,kw.value.replace(/ *\[?EEEE\]? */g,"|"))
                   lang = val.lang
                } else {
@@ -6857,7 +6928,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          }
 
          if(value.match(/(^[0-9]{3,4}$)/) && Number(value) < 2100)  dataSource.unshift(value+"@find as a date")         
-         if(value) dataSource.push(value.replace(/^d([0-9]+)/,"D$1")+"@find as an identifier")
+         if(value && this.state.searchTypes.some(d => ["Instance","Work"].includes(d))) dataSource.push(value.replace(/^d([0-9]+)/,"D$1")+"@find as an identifier")
 
          this.setState({...this.state,keyword:value, language, dataSource,blurSearch:false   } ) 
          
@@ -7000,9 +7071,12 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          else {
             if(this.state.filters.facets) {
                if(this.state.filters.facets[tmp+"hasMatch"].includes(tmp+"isExactMatch")) {
+                  /* // no need for "any" as exact matches include exact full matches
                   if(this.state.filters.facets[tmp+"hasMatch"].includes(tmp+"hasExactMatch")) {
                      hasMatchTitle = I18n.t("sort.exactMF")
-                  } else hasMatchTitle = I18n.t("sort.exactF")
+                  } else hasMathTitle = I18n.t("sort.exactF")
+                  */
+                  hasMatchTitle = I18n.t("sort.exactF")
                } else hasMatchTitle = I18n.t("sort.exactM")
             }
          }
@@ -7031,6 +7105,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             </div> )
          }))       
 
+         /*
          if(matchK.length > 1) {
 
             hasMatchPopup.push(         
@@ -7053,7 +7128,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   />
                </div> 
             )            
-         }                           
+         } 
+         */                          
       }
 
 

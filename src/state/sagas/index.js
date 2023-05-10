@@ -141,7 +141,7 @@ async function initiateApp(params,iri,myprops,route,isAuthCallback) {
 
 
          if(val = localStorage.getItem('etextlang')) {
-            store.dispatch(uiActions.setEtextLang(val))
+            store.dispatch(uiActions.setEtextLang(val.split(",")))
          }
 
       }
@@ -319,9 +319,11 @@ async function initiateApp(params,iri,myprops,route,isAuthCallback) {
                (acc,f) => { 
                   if(f.match(/[Ll]abel/))
                      return ([...acc, ...res[e][f] ]) 
-                  else return acc ;
+                  else 
+                  return acc ;
                   },
                [])
+            console.log("val:",val)
             if(!val.length) return acc ;
             else return ({...acc, [e]:val })
          },{})}
@@ -334,7 +336,7 @@ async function initiateApp(params,iri,myprops,route,isAuthCallback) {
 
          //if(Object.keys(res[e]).indexOf(skos+"prefLabel") === -1)
          return ({...acc, ...Object.keys(res[e]).filter(k => k !== bdo+"itemHasVolume").reduce(
-            (acc,f) => ({...acc,[f]:res[e][f]}),
+            (acc,f) => ({...acc,[f]:res[e][f].map(g => ({ ...g, ...e!=bdrIRI ? {fromIRI:shortUri(e)}:{} })) }),
             {}) })
             //else
             //   return acc
@@ -367,7 +369,9 @@ async function initiateApp(params,iri,myprops,route,isAuthCallback) {
          }
 
       }         
-   
+
+      //console.log("res::",iri,JSON.stringify(res[Object.keys(res)[0]][skos+"prefLabel"],null,3))
+
       store.dispatch(dataActions.gotResource(iri,res));
 
    }
@@ -717,9 +721,10 @@ export async function updateConfigFromProfile() {
             if(allPresets[i] === litLangsStr) preset = k
          })
       }
-
-      localStorage.setItem('uilang', locale);
-      store.dispatch(i18nextChangeLanguage(locale));
+      
+      // keep language selector value 
+      //localStorage.setItem('uilang', locale);
+      //store.dispatch(i18nextChangeLanguage(locale));
 
       localStorage.setItem('lang', litLangs);
       
@@ -2262,7 +2267,7 @@ function rewriteAuxMain(result,keyword,datatype,sortBy,language)
    if(!keyword.includes(" AND ")){ 
       if(language === "bo") { 
          let translit = getMainLabel([ { lang: language, value: _kw } ], extendedPresets([ "bo-x-ewts" ]))
-         _kw = "(("+_kw.replace(/([\{\}\[\]()|])/g,"\\$1")+")|("+translit?.value?.replace(/([\{\}|()\[\]])/g,"\\$1").replace(/[_ ]/g,"[_ ]")+(translit?.value?.endsWith("/")?"?":"/?") +"))"  // #756
+         _kw = "(("+_kw.replace(/([\{\}\[\]()|])/g,"\\$1")+")|("+translit?.value?.replace(/([\{\}|()\[\]])/g,"\\$1").replace(/[_ ]/g,"[_ ]").replace(/\[_ \]$/,"[_ ]?")+(translit?.value?.endsWith("/")?"?":"/?") +"))"  // #756
          flags = "u" // case sensitive in Tibetan/Wylie
       } else if(language === "bo-x-ewts") { 
          let translit = getMainLabel([ { lang: language, value: _kw } ], extendedPresets([ "bo" ]))
@@ -2322,7 +2327,7 @@ function rewriteAuxMain(result,keyword,datatype,sortBy,language)
             let toAdd = [], res = result[e][k].map(e => { 
                if(e.type === _tmp+"OCRscore"){                  
                   if(e.value === "1.0") {
-                     toAdd.push({type:_tmp+"quality", value: _tmp+"ComputerInput"})
+                     toAdd.push({type:_tmp+"quality", value: _tmp+"ComputerInputOCR"})
                   } else if(e.value === "0.99") {
                      toAdd.push({type:_tmp+"quality", value: _tmp+"CleanedOCR"})
                   } else {
@@ -2512,7 +2517,7 @@ function rewriteAuxMain(result,keyword,datatype,sortBy,language)
          else if(sortBy.startsWith("volume number")) return { ...acc, [t]: sortResultsByVolumeNb(dataWithAsset,reverse) }
          else if(sortBy.includes("title") ||  sortBy.includes("name") ) return { ...acc, [t]: sortResultsByTitle(dataWithAsset, langPreset, reverse) }
          else if(sortBy.includes("date")) return { ...acc, [t]: sortResultsByLastSync(dataWithAsset,reverse) }
-         else if(sortBy.includes("quality")) return { ...acc, [t]: sortResultsByQuality(dataWithAsset,reverse) }
+         else if(sortBy.includes("accuracy")) return { ...acc, [t]: sortResultsByQuality(dataWithAsset,reverse) }
       }
       else if(e === "aux") {                  
          store.dispatch(dataActions.gotAssocResources(keyword,{ data: result[e] } ) )
@@ -2913,7 +2918,7 @@ async function updateSortBy(i,t)
    else if(i.startsWith("closest matches")) data.results.bindings[t.toLowerCase()+"s"] = sortResultsByRelevance(data.results.bindings[t.toLowerCase()+"s"], reverse) 
    else if(i.startsWith("year of")) data.results.bindings[t.toLowerCase()+"s"] = sortResultsByYear(data.results.bindings[t.toLowerCase()+"s"], reverse) 
    else if(i.startsWith("volume number")) data.results.bindings[t.toLowerCase()+"s"] = sortResultsByVolumeNb(data.results.bindings[t.toLowerCase()+"s"], reverse) 
-   else if(i.includes("quality")) data.results.bindings[t.toLowerCase()+"s"] = sortResultsByQuality(data.results.bindings[t.toLowerCase()+"s"], reverse) 
+   else if(i.includes("accuracy")) data.results.bindings[t.toLowerCase()+"s"] = sortResultsByQuality(data.results.bindings[t.toLowerCase()+"s"], reverse) 
    else if(i.startsWith("number of matching chunks")) data.results.bindings[t.toLowerCase()+"s"] = sortResultsByNbChunks(data.results.bindings[t.toLowerCase()+"s"], reverse) 
    else if(i.includes("title") || i.includes("name")) { 
       let langPreset = state.ui.langPreset

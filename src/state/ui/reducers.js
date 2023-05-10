@@ -237,6 +237,14 @@ export const updateSortBy = (state: UIState, action: Action) => {
 }
 reducers[actions.TYPES.updateSortBy] = updateSortBy;
 
+export const newUser = (state: UIState, action: Action) => {
+
+    return {
+        ...state,
+        isNewUser:action.payload
+   }
+}
+reducers[actions.TYPES.newUser] = newUser;
 
 export const updateFacets = (state: UIState, action: actions.LoadingAction) => {
 

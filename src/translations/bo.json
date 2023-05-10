@@ -24,12 +24,12 @@
       "submessage": "ཉམས་ཞིབ་ཞིབ་ཚགས་པ་དང་སྔར་ལས་མགྱོགས་པ་ཡོང་ཕྱིར་འདིའི་ནང་ཁྱད་ཆོས་དང་རྒྱུ་ཆ་གསར་པ། ལག་ཆ་གསར་པ་མང་པོ་ཁ་སྣོན་བྱས་ཡོད།",
       "subsubmessage": "ངེད་ཚོགས་པའི་ལས་རིགས་ཀྱི་སྤུས་ཀ་ཇེ་ལེགས་སུ་གཏོང་བར་བསམ་ཚུལ་དང་སློབ་སྟོན་རེ་ཡོད་ཚེ་འདི་ནས་འགོད་རོགས།",
       "subsubmessage_afteremail": ".",
-      "subsubmessage_account1": "བུདྡྷ་དཔེ་མཛོད་ནང་གི་དཔེ་ཆ་ཚང་མ་བལྟ་ཀློག་དང་ཕབ་ལེན་ཆེད་ཐོ་འགོད་བྱེད་དགོས། འདིར་སྣུན།",
-      "subsubmessage_account2": "ཡོངས་རྫོགས་བལྟ་ཀློག་བྱེདཔར་ BDRC ནང་རིན་མེད་ཁ་བྱང་བཟོ་དགོས། འདིའི་སྒང་ལ་སྣུན། ",
-      "subsubmessage_account3": "སྒང་གི་དྲ་ཐག་བརྒྱུད་ནས་ཁ་བྱང་གསར་བཟོ་བྱོས།",
-      "subsubmessage_account4": "ཐོ་འགོད།",
-      "subsubmessage_account5": "ཐོ་འགོད།",
-      "subsubmessage_auth": "BDRC དྲ་ཚིགས་ནང་བལྟ་ཀློག་གི་ཆོག་མཆན་ཆ་ཚང་ཐོབ་པ་ལ་དྲ་ཚིགས་ tbrc.org འདིའི་ནང་ཐོ་འགོད་བྱས་ཟིན་པའི་སྤྱོད་མཁན་ཡང་ཚུད་པའི་སྤྱོད་མཁན་གཞན་ཡོངས་ཀྱིས་BDRC དྲ་ཚིགས་ནང་རིན་འབབ་སྤྲོད་མི་དགོས་པའི་ཁ་བྱང་ཐོ་འགོད་བྱ་དགོས།",
+      "subsubmessage_account1": "བུདྡྷ་དཔེ་མཛོད་ནང་གི་དཔེ་ཆ་ཁག་བལྟ་ཀློག་དང་ཕབ་ལེན་གྱི་ཆོག་མཆན་ཆ་ཚང་ཐོབ་པ་ལ་ད་སྔ་ངེད་ཚོགས་པའི་དྲ་ཚིགས་རྙིང་པ་ tbrc.org ནང་",
+      "subsubmessage_account2": "བྱས་ཟིན་པ་དང་། གསར་ཞུགས་པ་སུ་ཡིན་རུང་དྲ་ཐག་འདི་བརྒྱུད་ནས་",
+      "subsubmessage_account3": "ངེས་པར་དུ་བྱ་དགོས།",
+      "subsubmessage_account4": "ཐོ་འགོད་",
+      "subsubmessage_account5": "ཐོ་འགོད་",
+      "subsubmessage_auth": "བུདྡྷ་དཔེ་མཛོད་ནང་གི་དཔེ་ཆ་ཁག་ལྟ་ཀློག་དང་ཕབ་ལེན་གྱི་ཆོག་མཆན་ཆ་ཚང་ཐོབ་པ་ལ་ད་སྔ་ངེད་ཚོགས་པའི་དྲ་ཚིགས་རྙིང་པ་ tbrc.org ནང་ཐོ་འགོད་བྱས་ཟིན་པ་དང་། གསར་ཞུགས་པ་སུ་ཡིན་རུང་ཐོ་འགོད་ངེས་པར་དུ་བྱ་དགོས།",
       "search": "འཚོལ།",
       "choose": "སྐད་རིགས་འདེམ།",
       "start": "དཔེ་མཛོད་སྔོགས།",
@@ -50,7 +50,7 @@
             "text":"<parag>Relevant bibliographies and secondary sources concerning Cambodian manuscripts <nbsp>—coming soon</nbsp>. </parag>"
          }
       },
-      "help":"<bold>བུདྡྷ་དཔེ་མཛོད་ཀྱི་སྐོར་ལ་ཤེས་རྟོགས་ཆེད་<lk href='https://www.bdrc.io/buda-user-guide/'>བཀོལ་སྤྱོད་ལམ་སྟོན་</lk> དང་ <lk href='https://www.bdrc.io/buda-user-guide/frequently-asked-questions/'>དོགས་གཅོད་དྲི་བ་ཁག་ལ་</lk> གཟིགས།</bold>\n\n",
+      "help":"<bold>བུདྡྷ་དཔེ་མཛོད་ཀྱི་སྐོར་ལ་ཤེས་རྟོགས་ཆེད་<lk href='/buda-user-guide?uilang=bo'>བཀོལ་སྤྱོད་ལམ་སྟོན་</lk> དང་ <lk href='https://www.bdrc.io/buda-user-guide/frequently-asked-questions/'>དོགས་གཅོད་དྲི་བ་ཁག་ལ་</lk> གཟིགས།</bold>\n\n",  
       "all-collections":"ཕྱོགས་བསྒྲིགས་ཆ་ཚང་།",
       "female-authors":"བུད་མེད་རྩོམ་པ་བོ།",
       "works-by-female-authors":"བུད་མེད་རྩོམ་པ་བོའི་བརྩམས་ཆོས་ཁག",
@@ -110,7 +110,8 @@
       "browse":"མིག་བཤེར།",
       "home":"གཙོ་ངོས།",
       "collections":"ཁྱེད་ཀྱི་སློབ་གླིང་གིས་སྔོན་མངགས་བྱས་ཡོད་པའི་ཕྱོགས་བསྒྲིགས་ལ་མིག་བཤེར་བྱོས།",
-      "update":"བུདྡྷ་ཐོན་གསར་ཤོས་ལ་གསར་བསྒྱུར་བྱོས།"
+      "update":"བུདྡྷ་ཐོན་གསར་ཤོས་ལ་གསར་བསྒྱུར་བྱོས།",
+      "guide":"བཀོལ་སྤྱོད་ལམ་སྟོན།"
    },
    "Lsidebar": {
       "sortBy": {
@@ -165,7 +166,7 @@
       "exactM":"ཧ་ཅང་མཐུན་པ་ཁོ་ན།་",
       "exactF":"ཡོངས་རྫོགས་མཐུན་པ་ཁོ་ན།",
       "exactMF":"རེ་ཟུང་ཧ་ཅང་མཐུན་པ།",
-      "quality":"OCR ཡི་སྤུས་ཚད།"
+      "quality":"OCR སྐྱོན་བྲལ།"
    },
    "copyright": {
       "open": "བཀག་རྒྱ་མེད་པ།",
@@ -249,7 +250,7 @@
       "tmp:associatedCentury": "དུས་རབས།",
       "tmp:associatedAuthorCentury": "མཛད་པ་པོའི་དུས་རབས།",
       "tmp:ontologyProperty": "ཤེས་བྱའི་རིགས་དབྱེ།",
-      "tmp:hasRole": "མི་སྣའི་འགན་འཁྲི།",
+      "tmp:hasRole": "ལས་འགན།",
       "tmp:matchContext": "སྐབས་ཐོག་དང་མཐུན་པ་ཁག",
       "tmp:titleContext": "མཚན་བྱང་།",
       "tmp:nameContext": "མཚན།",
@@ -274,7 +275,10 @@
       "tmp:available":"ཡོད་པ།",
       "tmp:nbMembers":"ཁོངས་མི་རྣམས།",
       "tmp:nbParts":"ཆ་ཤས།",
-      "tmp:quality":"OCR ཡི་སྤུས་ཚད།"
+      "tmp:quality":"OCR སྐྱོན་བྲལ།",
+      "tmp:RawOCR": "ཆ་སྙོམས།",
+      "tmp:CleanedOCR": "high",
+      "tmp:ComputerInputOCR": "very high"
    },
    "guided":{
       "keyword":"གཙོ་ཚིག",
@@ -504,7 +508,9 @@
          "piXIast": "IASTནང་གི་པཱ་ལི་Pāliསྒྲ་བསྒྱུར།",
          "piKhmr": "ཁའ་མེར་སྐད་ནང་གི་པཱ་ལི། Pāli",
          "kmXIast": "IASTནང་གི་ཁའ་མེར་སྒྲ་བསྒྱུར།",
-         "kmXTwktt":"Khmer transliterated with Trent Walker Khmer-Tai Transliteration scheme"
+         "kmXTwktt": "Khmer transliterated with Trent Walker Khmer-Tai Transliteration scheme",
+         "original": "Original script",
+         "roman": "Romanization"
       },
       "langscript": {
          "zh": "རྒྱ་ཡིག",

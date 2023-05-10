@@ -78,6 +78,14 @@ export const closePortraitPopup = (): Action => {
    }
 }
 
+TYPES.newUser = 'NEW_USER';
+export const newUser = (isNew): Action => {
+   return {
+      type: TYPES.newUser,
+      payload: isNew,
+   }
+}
+
 
 TYPES.setPrefLang = 'SET_PREFLANG';
 export const setPrefLang = (lang: string): Action => {

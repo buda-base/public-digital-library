@@ -137,10 +137,15 @@ export function miradorSetUI(closeCollec, num, withIAlink) {
 
 
    window.Mousetrap.bind("esc", function(ev){
-      console.log("kp:",ev)
       var elem = jQ("#breadcrumbs #return"), href = elem.attr("href")
-      if(!href) elem.click()
-      else { 
+      console.log("kp:",ev,elem,href)
+      if(!href) {
+         //elem.click()
+
+         // #809
+         jQ("#breadcrumbs+.X").click()
+
+      } else {          
          href = window.location.href.replace(/^(https?:\/\/[^/]+)\/.*/,"$1"+href)
          window.location.assign(href); 
       }
@@ -297,6 +302,7 @@ async function hasEtextPage(manifest, resID) {
       let check = await window.fetch(ldspdi+"/query/graph/Etext_base?R_RES="+IRI+"&format=json") ;
       let ut  = await check.json()
       if(ut) ut = ut[IRI.replace(/bdr:/,bdr)]
+      if(!ut) ut = {}
       let etextRes = ut[tmp+"hasEtextRes"]
       ut = etextRes
       if(ut && ut.length) { 

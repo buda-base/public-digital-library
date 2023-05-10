@@ -328,6 +328,127 @@ describe('language settings tests', () => {
       done()
    })
 
+
+   it('strange behavior on DLD offline page', async (done) => {
+
+      await importModules()
+      
+      let topic =  {
+         "label": [
+             {
+                 "@language": "zh-hans",
+                 "@value": "量学"
+             },
+             {
+                 "@language": "bo-x-ewts",
+                 "@value": "tshad ma/"
+             },
+             {
+                 "@language": "en",
+                 "@value": "valid knowledge"
+             },
+             {
+                 "@language": "sa-x-iast",
+                 "@value": "Pramāṇa"
+             }
+         ]
+      }
+      let langs = [ "bo", "zh-latn-pinyin", "sa-deva", "en" ] 
+      let extP = extendedPresets(langs) 
+      
+      
+      expect(sortLangScriptLabels(topic.label, extP.flat, extP.translit)).toEqual([
+         {
+            "@language": "bo",
+            "@value": "ཚད་མ།",
+            "_val": "ཚད་མ།",
+         }, {
+            "@language": "zh-latn-pinyin",
+            "@value": "liàng xué",
+            "_val": "liàng xué",
+         }, {
+            "@language": "sa-deva",
+            "@value": "प्रमाण",
+            "_val": "प्रमाण",
+         }, {
+            "@language": "en",
+            "@value": "valid knowledge",
+            "_val": "valid knowledge",
+         }
+      ])
+      
+      
+      langs = [ "en", "bo-x-ewts", "sa-x-iast", "zh-latn-pinyin" ] 
+      extP = extendedPresets(langs) 
+
+      expect(sortLangScriptLabels(topic.label, extP.flat, extP.translit)).toEqual([
+          {
+            "@language": "en",
+            "@value": "valid knowledge",
+            "_val": "valid knowledge",
+         },{
+            "@language": "bo-x-ewts",
+            "@value": "tshad ma",
+            "_val": "tshad ma",
+         }, {
+            "@language": "sa-x-iast",
+            "@value": "Pramāṇa",
+            "_val": "Pramāṇa",
+         }, {
+            "@language": "zh-latn-pinyin",
+            "@value": "liàng xué",
+            "_val": "liàng xué",
+         }
+      ])
+      
+      const extPuni = extendedPresets(["bo"]) 
+      const extPewts = extendedPresets(["bo-x-ewts"]) 
+      
+      let tibetSort = window["tibetan-sort-js"].default      
+      expect(tibetSort.compare("ཐ","ཐུ")).toEqual(tibetSort.compareEwts("tha","thu")) // passes
+      expect(tibetSort.compare("ཐར","ཐུགས")).toEqual(tibetSort.compareEwts("thar","thugs")) // fails
+      
+      
+      /* // not in the same order in wylie or in unicode
+
+      labels = [{
+         "value":"thar",
+         "lang":"bo-x-ewts",
+         "k":"W123"
+      },{
+         "value":"thugs",
+         "lang":"bo-x-ewts",
+         "k":"W456"
+      }]
+
+      // fails
+      expect(sortLangScriptLabels(labels, extPewts.flat, extPewts.translit).map(l => l.k)).toEqual(sortLangScriptLabels(labels, extPuni.flat, extPuni.translit).map(l => l.k))
+
+      
+      const labels = [{
+            "@value": "thar 'od sbyong gsum/ (dpal spungs par ma/)",
+            "@language": "bo-x-ewts",
+            "k": "W1KG12138"
+         }, {
+            "@value": "thugs rje chen po ye shes 'od mchog",
+            "@language": "bo-x-ewts",
+            "k": "W1KG10137"
+         },{
+            "@value": "chos skyong ba'i rgyal po srong btsan sgam po'i zhal gdams/",
+            "@language": "bo-x-ewts",
+            "k": "W1KG9749"
+         },{
+            "@value": "thugs rje chen po 'khor 'das zil gnon/",
+            "@language": "bo-x-ewts",
+            "k": "W1KG10101"
+         }
+      ]
+      console.log(sortLangScriptLabels(labels, extPewts.flat, extPewts.translit))
+      console.log(sortLangScriptLabels(labels, extPuni.flat, extPuni.translit))
+      */
+
+      done()
+   })
 })
 
 

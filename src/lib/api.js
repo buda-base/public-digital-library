@@ -661,7 +661,7 @@ export default class API {
          let param = {"searchType":"Etext_base","R_RES":IRI,"L_NAME":"","LG_NAME":"" }
          let data = await this.getQueryResults(url, IRI, param,"GET") //,"application/json");
 
-         console.log("etextinfo",data) //JSON.stringify(data,null,3))
+         //console.log("etextinfo",JSON.stringify(data,null,3))
 
          return data ;
       }

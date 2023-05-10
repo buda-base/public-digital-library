@@ -50,7 +50,7 @@
             "text":"<parag>គន្ថនិទ្ទេសដែលពាក់ព័ន្ធ និងធនធានបន្ទាប់បន្សំដែលទាក់ទងនឹងសាស្ត្រាស្លឹករឹតកម្ពុជា <nbsp>—មកដល់ឆាប់ៗនេះ</nbsp>។ </parag>"
          }
       },
-      "help":"",
+      "help":"<bold>Please consult the <lk href='/buda-user-guide'>user guide</lk> and <lk href='https://www.bdrc.io/buda-user-guide/frequently-asked-questions/'>FAQ</lk> to learn more about BUDA</bold>",
       "all-collections":"All collections",
       "female-authors":"Female authors",
       "works-by-female-authors":"Works by female authors",
@@ -110,7 +110,8 @@
       "browse":"រុករក",
       "home":"ទំព័រដើម",
       "collections":"",
-      "update":"Update to latest version of BUDA"
+      "update":"Update to latest version of BUDA",
+      "guide":"user guide"
    },
    "Lsidebar": {
       "sortBy": {
@@ -165,7 +166,7 @@
       "exactM":"Exact match only",
       "exactF":"Exact full match only",
       "exactMF":"Any exact match",
-      "quality":"OCR Quality"
+      "quality":"OCR Accuracy"
    },
    "copyright": {
       "open": "បើកការចូលប្រើប្រាស់",
@@ -249,7 +250,7 @@
       "tmp:associatedCentury": "សតវត្ស",
       "tmp:associatedAuthorCentury": "សតវត្សរបស់អ្នកនិពន្ធ",
       "tmp:ontologyProperty": "លក្ខណៈសម្បត្តិនៃទស្សនៈការយល់ឃើញ",
-      "tmp:hasRole": "មានតួនាទី",
+      "tmp:hasRole": "Role",
       "tmp:matchContext": "បរិបទផ្គូផ្គង",
       "tmp:titleContext": "ចំណងជើង",
       "tmp:nameContext": "ឈ្មោះ",
@@ -274,7 +275,10 @@
       "tmp:available":"Available",
       "tmp:nbMembers":"Members",
       "tmp:nbParts":"Parts",
-      "tmp:quality":"OCR Quality"
+      "tmp:quality":"OCR Accuracy",
+      "tmp:RawOCR": "average",
+      "tmp:CleanedOCR": "high",
+      "tmp:ComputerInputOCR": "very high"
    },
    "guided":{
       "keyword":"keyword",
@@ -504,7 +508,9 @@
          "piXIast": "Pāli transliterated in IAST",
          "piKhmr": "Pāli in Khmer",
          "kmXIast": "Khmer transliterated in IAST",
-         "kmXTwktt":"Khmer transliterated with Trent Walker Khmer-Tai Transliteration scheme"
+         "kmXTwktt": "Khmer transliterated with Trent Walker Khmer-Tai Transliteration scheme",
+         "original": "Original script",
+         "roman": "Romanization"
       },
       "langscript": {
          "zh": "ចិន",

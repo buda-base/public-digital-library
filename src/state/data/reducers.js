@@ -440,13 +440,6 @@ export const gotResource = (state: DataState, action: Action) => {
                         if(v_ev && w_ev && v_ev[rdf+"type"] && w_ev[rdf+"type"] && v_ev[rdf+"type"].length && w_ev[rdf+"type"].length && v_ev[rdf+"type"][0].value === w_ev[rdf+"type"][0].value) {
 
                            //console.log("nodes:",v_ev,w_ev)
-                           
-                           // found same year
-                           if(v_ev[bdo+"onYear"] && w_ev[bdo+"onYear"] && v_ev[bdo+"onYear"].length && w_ev[bdo+"onYear"].length && v_ev[bdo+"onYear"][0].value === w_ev[bdo+"onYear"][0].value) {
-                              found = w_ev[bdo+"onYear"][0] ;
-                              found.bnode = true 
-                              break ;
-                           }
 
                            // #771 
                            if(v_ev[bdo+"onYear"] && w_ev[bdo+"eventWhen"] && v_ev[bdo+"onYear"].length && w_ev[bdo+"eventWhen"].length && v_ev[bdo+"onYear"][0].value === w_ev[bdo+"eventWhen"][0].value) {
@@ -454,6 +447,17 @@ export const gotResource = (state: DataState, action: Action) => {
                               found.bnode = true 
                               break ;
                            }
+
+                           // found same year
+                           if(v_ev[bdo+"onYear"] && w_ev[bdo+"onYear"] && v_ev[bdo+"onYear"].length && w_ev[bdo+"onYear"].length && v_ev[bdo+"onYear"][0].value === w_ev[bdo+"onYear"][0].value) {
+                              found = w_ev[bdo+"onYear"][0] ;
+                              found.bnode = true 
+
+                              //console.log("found:",found,v_ev,w_ev)
+
+                              break ;
+                           }
+
 
                            // TODO example with :eventWhere ?
                         }                        

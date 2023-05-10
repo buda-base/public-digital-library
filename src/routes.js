@@ -253,6 +253,9 @@ const makeMainRoutes = () => {
                         <Route exact path="/static/:DIR/:PAGE" render={(props) => {
                            return <StaticRouteContainer dir={props.match.params.DIR} page={props.match.params.PAGE} history={history} auth={auth}/>
                         }}/>
+                        <Route exact path="/buda-user-guide" render={(props) => {
+                           return <StaticRouteContainer dir={"user-guide"} page={"index"} history={history} auth={auth}/>
+                        }}/>
                         <Route exact path="/static/:PAGE" render={(props) => {
                            return <StaticRouteContainer dir={""} page={props.match.params.PAGE} history={history}  auth={auth}/>
                         }}/>                                                

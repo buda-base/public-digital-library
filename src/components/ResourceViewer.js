@@ -94,6 +94,8 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import L from 'leaflet';    
 import { Decimal2DMS } from 'dms-to-decimal';
+import rangy from "rangy"
+import "rangy/lib/rangy-textrange"
 
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
@@ -1692,17 +1694,24 @@ class ResourceViewer extends Component<Props,State>
             }, 100)
             */
          }
-         else setTimeout( 
-            window.requestAnimationFrame(function () {
-               const el = document.getElementById(hash)
-               if(el) { 
-                  el.scrollIntoView()      
-                  delete loca.hash      
-                  history.replace(loca)
-               }
-            }), 
-            3000 
-         )
+         else { 
+            let _this = this
+            setTimeout( 
+               window.requestAnimationFrame(function () {
+                  let el 
+                  
+                  if(_this._refs["fromText"] && _this._refs["fromText"].current) el = _this._refs["fromText"].current
+                  else el = document.getElementById(hash)
+
+                  if(el) { 
+                     el.scrollIntoView()      
+                     delete loca.hash      
+                     history.replace(loca)
+                  }
+               }), 
+               3000 
+            )
+         }
       }
       else if(this.state.openEtext) {         
          this.setState({openEtext:false })
@@ -2612,9 +2621,12 @@ class ResourceViewer extends Component<Props,State>
          let lab = this.props.dictionary[prop][rdfs+"label"]
          if(!lab) lab = this.props.dictionary[prop][skos+"prefLabel"]
          let ret = getLangLabel(this, prop, lab, useUIlang)
-         if(ret && ret.value && ret.value != "")
-            if(canSpan) return <span lang={ret.lang}>{ret.value}</span>
+         if(ret && ret.value && ret.value != "") {
+            let hasSpace = false
+            if(ret.value.includes(" ")) hasSpace = true            
+            if(canSpan) return <span lang={ret.lang} {...hasSpace?{className:"hasSpace"}:{}}>{ret.value}</span>
             else return ret.value
+         }
 
        //&& this.props.ontology[prop][rdfs+"label"][0] && this.props.ontology[prop][rdfs+"label"][0].value) {
          //let comment = this.props.ontology[prop][rdfs+"comment"]
@@ -2624,7 +2636,11 @@ class ResourceViewer extends Component<Props,State>
       }
 
     
-      if(canSpan) return <span lang={lang}>{this.pretty(prop,isUrl,noNewline)}</span>
+      if(canSpan) { 
+         let hasSpace = false
+         if(prop.includes(" ")) hasSpace = true            
+         return <span {...hasSpace?{className:"hasSpace"}:{}} lang={lang}>{this.pretty(prop,isUrl,noNewline)}</span>
+      }
       else return this.pretty(prop,isUrl,noNewline)
     
 
@@ -3056,7 +3072,7 @@ class ResourceViewer extends Component<Props,State>
          
          let noSpace
 
-         if(elem.inOutline || ((!thumbV || !thumbV.length) && ((info && infoBase && infoBase.filter(e=>e["xml:lang"]||e["lang"]).length >= 0) || (prop && prop.match && prop.match(/[/#]sameAs/))))) {
+         if(elem.inOutline || ((!thumbV || !thumbV.length) && enti != "Images" && ((info && infoBase && infoBase.filter(e=>e["xml:lang"]||e["lang"]).length >= 0) || (prop && prop.match && prop.match(/[/#]sameAs/))))) {
 
             //loggergen.log("svg?",svgImageS)
 
@@ -3132,7 +3148,7 @@ class ResourceViewer extends Component<Props,State>
                         
                         //console.log("iB:",infoBase,elem.volume,dico)
 
-                        if(infoBase) infoBase = infoBase.filter(e => [bdo+"volumeNumber",skos+"prefLabel", /*skos+"altLabel",*/ foaf+"name" /*,"literal"*/].reduce( (acc,f) => ((acc || f === e.type || f === e.fromKey) && !e.fromSameAs), false))
+                        if(infoBase) infoBase = infoBase.filter(e => !e.fromIRI && [bdo+"volumeNumber",skos+"prefLabel", /*skos+"altLabel",*/ foaf+"name" /*,"literal"*/].reduce( (acc,f) => ((acc || f === e.type || f === e.fromKey) && !e.fromSameAs), false))
                         if(infoBase) {
                            let { _info, _lang } = this.getInfo(prop,infoBase,withProp) 
                            if(_info) {
@@ -3810,7 +3826,7 @@ class ResourceViewer extends Component<Props,State>
       })
       */
 
-      //loggergen.log("format",Tag, prop,JSON.stringify(elem,null,3),txt,bnode,div);
+      //loggergen.log("format:",Tag, prop,JSON.stringify(elem,null,3),txt,bnode,div);
 
       let ret = [],pre = []
       let note = []
@@ -3883,6 +3899,9 @@ class ResourceViewer extends Component<Props,State>
                   if(!tVal) tVal = tLab["@value"]
                   if(!tVal) tVal = ""
 
+                  let hasSpace = false
+                  if(tVal.includes(" ")) hasSpace = true
+
                   if(tLab.start !== undefined) tmp = [ <span class="startChar">
                      <span>[&nbsp;
                         <Link to={"/show/"+this.props.IRI+"?startChar="+tLab.start+(this.props.highlight?'&keyword="'+this.props.highlight.key+'"@'+this.props.highlight.lang:"")+"#open-viewer"}>@{tLab.start}</Link>
@@ -3894,7 +3913,7 @@ class ResourceViewer extends Component<Props,State>
 
                   if(lang) {
                      let size = this.state.etextSize
-                     tmp = [ <span lang={lang} {...this.state.etextSize?{style:{ fontSize:size+"em", lineHeight:(Math.max(1.0, size + 0.75))+"em" }}:{}}>{tmp}</span> ]
+                     tmp = [ <span {...hasSpace?{className:"hasSpace"}:{}} lang={lang} {...this.state.etextSize?{style:{ fontSize:size+"em", lineHeight:(Math.max(1.0, size + 0.75))+"em" }}:{}}>{tmp}</span> ]
                   }
 
                   if(tLab.start === undefined) tmp.push(<Tooltip placement="bottom-end" title={
@@ -4928,6 +4947,8 @@ class ResourceViewer extends Component<Props,State>
 
       if(!title) {
          if(titlElem) {
+            
+            
             if(typeof titlElem !== 'object') titlElem =  { "value" : titlElem, "lang":""}
             if(noSame) {
                let asArray = titlElem
@@ -4947,7 +4968,7 @@ class ResourceViewer extends Component<Props,State>
                _befo = befo
             }
          }
-         if(!title) title = { value:"", lang:"" }
+         if(!title || title.value == "") title = { value: I18n.t("resource.noT"), lang: this.props.locale } // #825
          title = this.getH2(title,_befo,_T,other,T_,rootC)         
 
       }
@@ -5426,7 +5447,7 @@ class ResourceViewer extends Component<Props,State>
          linkToVersions = <span class="expand linkToVersions"><Link {...this.props.preview?{ target:"_blank" }:{}} to={"/search?i="+this.props.IRI+"&t=Work"}>{I18n.t("misc.browseA",{count: ret.length})}</Link></span>
       }
       
-      let linkToPlaces
+      let linkToPlaces, maxPlaces = 20
       if(k === bdo+"placeContains" && ret.length >= 2) {
          linkToPlaces = <span class="expand linkToPlaces"><Link {...this.props.preview?{ target:"_blank" }:{}} to={"/search?r="+this.props.IRI+"&t=Place&f=relation,inc,bdo:placeLocatedIn"}>{I18n.t("misc.browseA",{count: ret.length})}</Link></span>
       }
@@ -5450,7 +5471,7 @@ class ResourceViewer extends Component<Props,State>
                   { (false || (!this.state.collapse[k] && hasMaxDisplay !== -1) ) && <><span
                      onClick={(e) => this.setState({...this.state,collapse:{...this.state.collapse,[k]:!this.state.collapse[k]}})}
                      className="expand">
-                        {I18n.t("misc."+(this.state.collapse[k]?"hide":"see"+(linkToVersions&&ret.length > maxVersions?"10":"")+"More")).toLowerCase()}&nbsp;<span
+                        {I18n.t("misc."+(this.state.collapse[k]?"hide":"see"+(linkToVersions&&ret.length > maxVersions||linkToPlaces&&ret.length > maxPlaces?"10":"")+"More")).toLowerCase()}&nbsp;<span
                         className="toggle-expand">
                            { this.state.collapse[k] && <ExpandLess/>}
                            { !this.state.collapse[k] && <ExpandMore/>}
@@ -5463,7 +5484,9 @@ class ResourceViewer extends Component<Props,State>
                <Collapse timeout={{enter:0,exit:0}} className={"propCollapse in-"+(show===true)} in={show}>
                   { k === bdo+"workHasInstance"
                      ? ret.slice(0,maxVersions)
-                     : ret }
+                     : (k === bdo+"placeContains"
+                        ? ret.slice(0,maxPlaces)
+                        : ret)  }
                </Collapse>
                {/* // failure with CSS columns
                <div className={"propCollapseHeader in-"+(this.state.collapse[k]===true)}>
@@ -6410,11 +6433,14 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                
                //console.log("closest:",ev.target.closest(".popper"),ev.currentTarget,ev.target)
 
-               if(!this.props.config.useMonlam || /*window.innerWidth <= 800 ||*/ ev.target.closest(".popper")) return
+               if(!this.props.config.useMonlam || !this.state.enableDicoSearch || ev.target.closest(".popper")) return
                
                let langElem = selection.anchorNode?.parentElement?.getAttribute("lang")
                if(!langElem) langElem = selection.anchorNode?.parentElement?.parentElement?.getAttribute("lang")
                
+               // #818
+               if(langElem && !langElem.startsWith("bo")) return
+
                let parent = selection.anchorNode?.parentElement
                if(!parent?.getAttribute("lang")) parent = parent?.parentElement
 
@@ -6491,15 +6517,37 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
                if(end > start + MAX_SELECTION_LENGTH) { 
                   try {
+                     let sameElem = range.startContainer === range.endContainer || range.startContainer.parentElement === range.endContainer.parentElement
+                     console.log("range:", sameElem, range, start, end, range.startOffset + MAX_SELECTION_LENGTH)
                      if(!invert) {
                         end = start + MAX_SELECTION_LENGTH
-                        range.setEnd(range.startContainer, range.startOffset + MAX_SELECTION_LENGTH);
+                        
+                        /*
+                        // use rangy in every case 
+                        if(sameElem) range.setEnd(range.startContainer, range.startOffset + MAX_SELECTION_LENGTH);
+                        else {
+                        */
+
+                           let mutRange = rangy.createRange();
+                           mutRange.setStart(range.startContainer, range.startOffset) 
+                           mutRange.setEnd(range.endContainer, range.endOffset)                      
+                           mutRange.moveEnd("character", MAX_SELECTION_LENGTH - range.toString().length)
+                           range.setEnd(mutRange.endContainer, mutRange.endOffset)
+                           //console.log(mutRange, mutRange.toString(), mutRange.toString().length, range, range.toString(), range.toString().length)     
+                        //}
                      } else {
                         start = end - MAX_SELECTION_LENGTH
-                        range.setStart(range.endContainer, range.endOffset - MAX_SELECTION_LENGTH);
+                        //if(sameElem) range.setStart(range.endContainer, range.endOffset - MAX_SELECTION_LENGTH);
+                        //else {
+                           let mutRange = rangy.createRange();
+                           mutRange.setStart(range.startContainer, range.startOffset) 
+                           mutRange.setEnd(range.endContainer, range.endOffset)                      
+                           mutRange.moveStart("character", range.toString().length - MAX_SELECTION_LENGTH)
+                           range.setStart(mutRange.startContainer, mutRange.startOffset)
+                        //}
                      }
                   } catch(err) {                  
-                     console.warn("can't update range", start, end, range, selection)     
+                     console.warn("can't update range", err, start, end, range, selection)     
                      if(this.state.enableDicoSearch) selection.removeAllRanges()
                      if(this.state.monlam) {
                         this.setState({ monlam:null, ...this.state.noHilight && seq != this.state.noHilight?{noHilight:false}:{} })
@@ -6568,6 +6616,9 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
             // #807 debug mode
             let get = qs.parse(this.props.history.location.search)
+
+            // #818 etext in sa-deva --> disable Monlam
+            let hasBo = this.state.etextHasBo
 
             return (
             <div class={"etextPage"+(this.props.manifestError&&!imageLinks?" manifest-error":"")+ (!e.value.match(/[\n\r]/)?" unformated":"") + (e.seq?" hasSeq":"")/*+(e.language === "bo"?" lang-bo":"")*/ }>
@@ -6669,16 +6720,19 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                      {e.seq == this.state.monlam?.seq && this.state.enableDicoSearch ? this.state.monlam?.hilight : null}
                      {!e.value.match(/[\n\r]/) && !e.seq ?[<span class="startChar"><span>[&nbsp;<Link to={"/show/"+this.props.IRI+"?startChar="+e.start+"#open-viewer"}>@{e.start}</Link>&nbsp;]</span></span>]:null}{(e.chunks?.length?e.chunks:[e.value]).map(f => {
 
-                        // #771 multiple language in on epage
+                        // #771 multiple language in one page
                         let lang = e.language
                         if(f["@language"]) lang = f["@language"]                        
                         if(f["@value"] != undefined) f = f["@value"];
 
                         let label = getLangLabel(this,bdo+"eTextHasPage",[{"lang":lang,"value":f}]), chunkVal
 
-                        if(label) { lang = label["lang"] ; if(!pageLang) pageLang = lang }
+                        if(label) { lang = label["lang"] ; if(!pageLang) pageLang = lang; 
+                           // #818
+                           if(!hasBo && lang?.startsWith("bo") && label.value.match(/[^0-9\n \[\]]/)) this.setState({etextHasBo: label}) ; 
+                        }
                         if(label) { label = label["value"]; pageVal += " "+label ; chunkVal = label }
-                        if(label && this.props.highlight && this.props.highlight.key && this.state.noHilight != e.seq) { 
+                        if(label && this.props.highlight && this.props.highlight.key /*&& this.state.noHilight != e.seq*/) { 
                            label = highlight(label,kw.map(k => k.replace(/(.)/g,"$1\\n?")),null,false,true); 
                            current.push(label); }
                         else if(label) { 
@@ -7301,10 +7355,17 @@ perma_menu(pdfLink,monoVol,fairUse,other)
    }
 
    renderOCR = () => {
-      let elem = this.getResourceElem(bdo+"contentMethod");
-      //console.log("OCR:",elem)
+      // #817
+      let elem = this.getResourceElem(bdo+"OPFOCRWordMedianConfidenceIndex")
+      /*
+      let elem = this.getResourceElem(bdo+"contentMethod");            
       if(elem && elem.length) elem = elem[0].value ;
       if(elem === bdr+"ContentMethod_OCR") {
+      */
+
+      //console.log("OCR:",elem)
+
+      if(elem) {
          return <div class="data access"><h3><span style={{textTransform:"none"}}>{I18n.t("access.OCR")}</span></h3></div>
       }
    }
@@ -7379,7 +7440,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          if(k.startsWith("monlam-def-")) delete collapse[k]
       }
       this.setState({ collapse })
-      this.props.onCallMonlamAPI(data.api, {value: data.range.toString(), lang: this.props.etextLang});
+      this.props.onCallMonlamAPI(data.api, {value: data.range.toString(), lang: this.props.etextLang.filter(l => l.startsWith("bo"))[0]});
       
    }
 
@@ -7449,7 +7510,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                <div>
                   <a id="DL" class={!accessError?"on":""} onClick={(e) => this.setState({...this.state,anchorLangDL:e.currentTarget, collapse: {...this.state.collapse, langDL:!this.state.collapse.langDL } } ) }>{etext_lang_selec(this,true,<>{I18n.t("mirador.downloadE")}<img src="/icons/DLw.png"/></>,this.props.IRI?fullUri(this.props.IRI).replace(/^http:/,"https:")+".txt":"")}</a>
                   {/* // <a id="DL" class={!accessError?"on":""} target="_blank" rel="alternate" type="text" download href={this.props.IRI?fullUri(this.props.IRI).replace(/^http:/,"https:")+".txt":""}>{I18n.t("mirador.downloadE")}<img src="/icons/DLw.png"/></a>) */}
-                  { this.props.config.useMonlam && <a id="dico" class="on" onClick={(e) => { 
+                  { this.props.config.useMonlam && this.state.etextHasBo && <a id="dico" class="on" onClick={(e) => { 
                      if(this.state.enableDicoSearch) this.props.onCloseMonlam()
                      this.setState({noHilight:false, enableDicoSearch:!this.state.enableDicoSearch, ...this.state.enableDicoSearch?{monlam:null}:{}})
                   }}><div class="new">{I18n.t("viewer.new")}</div>{this.state.enableDicoSearch?<img id="check" src="/icons/check.svg"/>:<span id="check"></span>}{I18n.t("viewer.monlam")}<span><img class="ico" src="/icons/monlam.png"/></span></a> }
@@ -7605,6 +7666,8 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                }
             }         
          } 
+         
+         let get = qs.parse(this.props.history.location.search)
 
          etextrefs = _.orderBy(etextrefs,["index"],["asc"]).map(e => {
             
@@ -7623,20 +7686,52 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                tLabel = tLabel[0].toUpperCase() + tLabel.slice(1)
                // TODO use translation from ontology
             }
-            let open = this.state.collapse[tag]                         
-            let mono = etextrefs.length === 1
-            let openD = this.state.collapse[tag+"-details"] || this.state.collapse[tag+"-details"]  === undefined && mono
+            
+            // #821 open etext node in outline after closing reader
+            let ut = null, ref = {}
+            //console.log("tag:",tag,e,get)
+            if(get.fromText) { 
+               if(e.volumeHasEtext) {
+                  let t = e.volumeHasEtext
+                  if(!Array.isArray(t)) t = [t]
+                  ut = elem.filter(f => t.includes(f["@id"]))
+                  if(ut.length) { 
+                     ut = ut.filter(u => u.eTextResource == get.fromText) 
+                     console.log("ut:",ut)
+                     if(ut.length) ut = true
+                     else ut = false
+                  }
+                  else ut = null
+               } else if(e.eTextResource == get.fromText) {
+                  ut = true
+               }
 
-            ret.push(<span class={'top'+ (this.state.collapse[tag]?" on":"") }>
+               if(ut) {
+                  this._refs["fromText"] = React.createRef()
+                  ref = { ref: this._refs["fromText"] }
+               }                  
+
+            } else {
+               if(this._refs["fromText"] && this._refs["fromText"].current) this._refs["fromText"].current = null
+            }
+            
+
+            
+            let open = this.state.collapse[tag] || this.state.collapse[tag]  === undefined && ut // #821
+            let mono = etextrefs.length === 1
+            let openD = this.state.collapse[tag+"-details"] || this.state.collapse[tag+"-details"]  === undefined && (mono || ut) // #821
+
+
+            ret.push(<span {...ref} class={'top'+ (this.state.collapse[tag]?" on":"") }>
                   {(e.hasPart && !open) && <img src="/icons/triangle.png" onClick={(ev) => toggle(null,root,e["@id"],!e.hasPart?"details":"",!e.hasPart && mono)} className="xpd right"/>}
                   {(e.hasPart && open) && <img src="/icons/triangle_.png" onClick={(ev) => toggle(null,root,e["@id"],!e.hasPart?"details":"",!e.hasPart && mono)} className="xpd"/>}
                   <span class={"parTy "+(e.details?"on":"")} {...e.details?{title: I18n.t("resource."+(openD?"hideD":"showD")), onClick:(ev) => toggle(ev,root,e["@id"],"details",!e.hasPart && mono)}:{title:tLabel}} >
                      {pType && parts[pType] ? <div>{parts[pType]}</div> : <div>{parts["?"]}</div> }
                   </span>
-                  <span>{this.uriformat(null,{type:'uri', value:gUri, volume:fUri, inOutline: (!e.hasPart?tag+"-details":tag), url:"/show/"+e.link, debug:false, toggle:() => toggle(null,root,e["@id"],!e.hasPart?"details":"",!e.hasPart && mono) })}</span>
+                  <span>{this.uriformat(null,{type:'uri', value:gUri, volume:fUri, inOutline: (!e.hasPart?tag+"-details":tag), url:"/show/"+e.link, debug:false, toggle:() => toggle(null,root,e["@id"],!e.hasPart?"details":"",!e.hasPart && (mono || ut)) })}</span>
                   <div class="abs">                  
                      { !e.hasPart && <Link className="hasImg hasTxt" title={I18n.t("result.openE")}  to={"/show/"+e.link}><img src="/icons/search/etext.svg"/><img src="/icons/search/etext_r.svg"/></Link> }                   
-                     { e.details && <span id="anchor" title={I18n.t("resource."+(openD?"hideD":"showD"))} onClick={(ev) => toggle(ev,root,e["@id"],"details",!e.hasPart && mono)}>
+                     { e.details && <span id="anchor" title={I18n.t("resource."+(openD?"hideD":"showD"))} onClick={(ev) => toggle(ev,root,e["@id"],"details",!e.hasPart && (mono || ut))}>
                         <img src="/icons/info.svg"/>
                      </span> }
                      <CopyToClipboard text={gUri} onCopy={(e) => prompt(I18n.t("misc.clipboard"),gUri)}>
@@ -8572,7 +8667,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                                     if(!g.details) g.details = []
                                     let note = mapElem(g.note)
                                     //console.log("note:",note)
-                                    if(note?.length && note[0].noteText) notes.push(note[0].noteText)
+                                    if(note?.length && note[0].noteText) notes.push(note[0].noteText["@value"]?note[0].noteText:{"@value":note[0].noteText, "@language":"en" })
                                  }
                                  if(notes.length) g.details.push(<div class="sub"><h4 class="first type">{this.proplink(bdo+"note",undefined,notes.length,true)}{I18n.t("punc.colon")} </h4><div>{notes.map(n => this.format("h4","","",false, "sub",[{ value:n["@value"], lang:n["@language"], type:"literal"}]))}</div></div>)
                               }
@@ -9220,6 +9315,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
             let v = Number(this.props.assocTypes[this.props.IRI+"@"].metadata[r])
             let t = r.replace(/^.*\/([^/]+)$/,"$1")
             if(!serial && /* onKhmerServer && */ t === "Instance" && _T === "Work") return 
+            if(t == "Instance" && _T == "Product") t = "Scan"
             let url = "/search?r="+this.props.IRI+"&t="+t
             if(!t1) t1 = url
             return (<div>                                                                           
@@ -9336,6 +9432,10 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   searchTerm = lucenequerytokeyword(searchUrl.replace(/.*r=([^&]+).*/,"$1")) 
                else if(searchUrl.match(/i=/))               
                   searchTerm = I18n.t("topbar.instances")+" "+searchUrl.replace(/.*i=([^&]+).*/,"$1") 
+               else if(searchUrl.match(/id=/))               
+                  searchTerm = searchUrl.replace(/.*id=([^&]+).*/,"$1")
+               else if(searchUrl.match(/date=/))               
+                  searchTerm = searchUrl.replace(/.*date=([^&]+).*/,"$1")
             }
             else { 
                backTo = decodeURIComponent(backTo.replace(new RegExp("(([?])|&)"+withW),"$2"))+"&"+withW
@@ -9470,9 +9570,8 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          let theOutline ;
          if(!root || !root.length) theOutline = this.renderOutline()      
 
-         let etext = this.isEtext()
+         let etext = this.isEtext(), etextRes = etext ? this.getResourceElem(bdo+"eTextInInstance") : false, backToET = etextRes?.length ? shortUri(etextRes[0].value) : this.props.IRI
          if(etext && !this.props.eTextRefs) { 
-            let etextRes = this.getResourceElem(bdo+"eTextInInstance")
             if(!etextRes || !etextRes.length) this.props.onGetETextRefs(this.props.IRI);
          }
 
@@ -9734,6 +9833,19 @@ perma_menu(pdfLink,monoVol,fairUse,other)
             if(fromStaticRoute != "latest") searchTerm = I18n.t("home."+fromStaticRoute).toLowerCase()
          }
 
+         let tablist = [
+            <>{ (related.length > 0) && <Tab onClick={(ev)=>this.setState({relatedTab:false,relatedTabAll:false,irel:0,icrea:0})}>{I18n.t(_T=== "Place"?"resource.wAbout":"resource.about",{resLabel, count:related.length, interpolation: {escapeValue: false}})} </Tab> }</>,
+            <>{ (createdBy.length > 0) && <Tab onClick={(ev)=>this.setState({relatedTab:true,relatedTabAll:false,irel:0,icrea:0})}>{I18n.t(_T=== "Place"?"resource.printedA":(_T==="Corporation"?"resource.memberO":(_T==="Product"?"index.relatedM":(_T==="Work"&&serial?"index.relatedS":"resource.createdB"))),{resLabel, count:createdBy.length, interpolation: {escapeValue: false}})}</Tab> }</>,
+         ], tabpanels = [
+            <>{ (related.length > 0) &&  <TabPanel><div class={"rel-or-crea"}>{related}</div></TabPanel> }</>,
+            <>{ (createdBy.length > 0) && <TabPanel><div class={"rel-or-crea"+(_T==="Corporation"?" person":"")}>{createdBy}</div></TabPanel> }</>,
+         ]
+
+         if(_T == "Person") {
+            tablist = tablist.filter(t => t).reverse()
+            tabpanels = tabpanels.filter(t => t).reverse()            
+         } 
+
          return (
          [getGDPRconsent(this),   
          <div class={isMirador?"H100vh OF0":""}>
@@ -9779,7 +9891,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   { this.renderWithdrawn() }             
                   <div class="title">{ wTitle }{ iTitle }{ rTitle }</div>
                   { this.renderHeader(kZprop.filter(k => mapProps.includes(k)), _T, etextUT, root) }
-                  { (etext && !orig) && <div class={"data open-etext"+(etextAccessError?" disable":"")}><div><Link to={etextUT+(etextUT.includes("?")?"&":"?")+"backToEtext="+this.props.IRI+"#open-viewer"}>{etextLoca}</Link></div></div> }
+                  { (etext && !orig) && <div class={"data open-etext"+(etextAccessError?" disable":"")}><div><Link to={etextUT+(etextUT.includes("?")?"&":"?")+"backToEtext="+backToET+"#open-viewer"}>{etextLoca}</Link></div></div> }
                   { (etext && orig) && <div class="data open-etext"><div><a target="_blank" href={orig}>{I18n.t("resource.openO",{src:prov})}<img src="/icons/link-out_.svg"/></a></div></div> }
                   <div class={"data" + (_T === "Etext"?" etext-title":"")+(_T === "Images"?" images-title":"")}>
                      {_T === "Images" && iTitle?[<h2 class="on intro">{I18n.t("resource.scanF")}</h2>,iTitle]
@@ -9810,12 +9922,10 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                            <div>
                               <Tabs>
                                  <TabList>
-                                    { (related.length > 0) && <Tab onClick={(ev)=>this.setState({relatedTab:false,relatedTabAll:false,irel:0,icrea:0})}>{I18n.t(_T=== "Place"?"resource.wAbout":"resource.about",{resLabel, count:related.length, interpolation: {escapeValue: false}})} </Tab> }
-                                    { (createdBy.length > 0) && <Tab onClick={(ev)=>this.setState({relatedTab:true,relatedTabAll:false,irel:0,icrea:0})}>{I18n.t(_T=== "Place"?"resource.printedA":(_T==="Corporation"?"resource.memberO":(_T==="Product"?"index.relatedM":(_T==="Work"&&serial?"index.relatedS":"resource.createdB"))),{resLabel, count:createdBy.length, interpolation: {escapeValue: false}})}</Tab> }
+                                    {tablist}
                                     <Tab onClick={(ev)=>this.setState({relatedTab:false,relatedTabAll:true,irel:0,icrea:0})}>{I18n.t(all=== undefined?"misc.all":"misc.allC",{count:all})} </Tab>
                                  </TabList>
-                                 { (related.length > 0) &&  <TabPanel><div class={"rel-or-crea"}>{related}</div></TabPanel> }
-                                 { (createdBy.length > 0) && <TabPanel><div class={"rel-or-crea"+(_T==="Corporation"?" person":"")}>{createdBy}</div></TabPanel> }
+                                 {tabpanels}                                    
                                  <TabPanel>
                                     <div class={"rel-or-crea all"+(allRel && !allRel.length?" noAssoc":"")}>
                                     { this.props.loading && <Loader loaded={false} /> }

@@ -68,6 +68,9 @@ export const transliterators = {
       "pi-khmr": (val) => Sanscript.t(val.toLowerCase(),"iast","khmer") 
    },
    
+   "zh":{ 
+      "zh-latn-pinyin" : (val) => pinyin4js.convertToPinyinString(val, ' ', pinyin4js.WITH_TONE_MARK) 
+   },
    "zh-hans":{ 
       "zh-latn-pinyin" : (val) => pinyin4js.convertToPinyinString(val, ' ', pinyin4js.WITH_TONE_MARK) , 
       "zh-hant" : (val) => hanziConv.sc2tc(val) 
@@ -234,7 +237,7 @@ export function sortLangScriptLabels(data,preset,translit,mergeXs = false, caseI
 
       //console.log("tLit",tLit,i)
       
-      return {e,tLit,i,k}
+      return {e,tLit,i:Number(i),k}
    })
 
    //console.log("_",data_)

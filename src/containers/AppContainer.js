@@ -72,6 +72,8 @@ const mapStateToProps = (state) => {
    let portraitPopupClosed = state.ui.portraitPopupClosed
 
    let useDLD = state.ui.useDLD
+   
+   let isNewUser = state.ui.isNewUser
 
    let newState = { logged,config, hostFailure, searches, keyword, language,loading,datatypes,ontology,facets,
       locale,prefLang,resources,ontoSearch,rightPanel,langPreset, langIndex, langExt, failures,dictionary,metadata, assoRes, 
@@ -79,7 +81,8 @@ const mapStateToProps = (state) => {
       latestSyncs,latestSyncsNb, profileName,
       checkResults,
       portraitPopupClosed,
-      useDLD
+      useDLD,
+      isNewUser
    }
 
    if(config && !config.auth) newState.auth = false

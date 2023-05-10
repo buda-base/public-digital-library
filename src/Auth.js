@@ -81,6 +81,21 @@ export default class Auth {
    api:{};
    config:{}
 
+  async checkNewUser(profile = this.userProfile, token = localStorage.getItem('access_token')) {
+    let response = await (await fetch( 'https://bdrc-io.auth0.com/api/v2/users/'+encodeURI(profile.sub)+"?fields=last_login,logins_count",  {
+      method: 'GET',
+      headers:new Headers({ 'authorization': "Bearer " + token, 'content-type': 'application/json'})
+    })).json()         
+
+    console.log("info:",response)
+
+    if(response.logins_count === 1) {
+      console.log("new user!")
+      store.dispatch(ui.newUser(true))
+    } else {
+      store.dispatch(ui.newUser(false))
+    }
+  }
 
   getProfile(cb) {
     let tO = setInterval( () => {
@@ -88,13 +103,15 @@ export default class Auth {
       if(this.auth1)  {
         clearInterval(tO);
         var token = localStorage.getItem('access_token')
-        if(token) this.auth1.client.userInfo(token, (err, profile) => {
+        if(token) this.auth1.client.userInfo(token, async (err, profile) => {
           if (profile) {
             this.userProfile = profile;       
             let val = "profile", groups
             if((groups = profile["https://auth.bdrc.io/groups"]) && groups.includes("admin")) val = "admin"     
             if(store.getState().ui.logged !== val) store.dispatch(ui.logEvent(val))
             updateConfigFromProfile()
+
+            this.checkNewUser()
           }
           cb(err, profile);
         });
@@ -172,14 +189,18 @@ export default class Auth {
         console.log("renewAuth:",error,authResult,this.isAuthenticated())
         if(authResult) {
           this.setSession(authResult);
-          this.getProfile(() => {})
+          this.getProfile(() => { 
+            this.checkNewUser()
+          })
         }
       }); 
     }
     else this.auth1.parseHash(async (err, authResult) => {
       if (authResult && authResult.accessToken && authResult.idToken) {
         this.setSession(authResult);
-        this.getProfile(() => {})
+        this.getProfile(() => {
+          this.checkNewUser()
+        })
         let redirect = JSON.parse(localStorage.getItem('auth0_redirect'))
         if(!redirect) redirect = '/'
         if(redirect && redirect.startsWith && redirect.startsWith("http")) window.location.href = redirect
@@ -237,11 +258,16 @@ export default class Auth {
             console.error("ERROR with cookie",e,localStorage.getItem('id_token'))
          }
 
+         // #812
+         store.dispatch(ui.newUser(false))
+         localStorage.removeItem('msg-popup-closed-register');
+
          // Clear Access Token and ID Token from local storage
          localStorage.removeItem('access_token');
          localStorage.removeItem('id_token');
          localStorage.removeItem('expires_at');
          // navigate to previous route if any
+
          // history.replace(redirect); // must be after auth0 logout call
          store.dispatch(ui.logEvent(false))
 
