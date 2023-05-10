@@ -1694,17 +1694,24 @@ class ResourceViewer extends Component<Props,State>
             }, 100)
             */
          }
-         else setTimeout( 
-            window.requestAnimationFrame(function () {
-               const el = document.getElementById(hash)
-               if(el) { 
-                  el.scrollIntoView()      
-                  delete loca.hash      
-                  history.replace(loca)
-               }
-            }), 
-            3000 
-         )
+         else { 
+            let _this = this
+            setTimeout( 
+               window.requestAnimationFrame(function () {
+                  let el 
+                  
+                  if(_this._refs["fromText"] && _this._refs["fromText"].current) el = _this._refs["fromText"].current
+                  else el = document.getElementById(hash)
+
+                  if(el) { 
+                     el.scrollIntoView()      
+                     delete loca.hash      
+                     history.replace(loca)
+                  }
+               }), 
+               3000 
+            )
+         }
       }
       else if(this.state.openEtext) {         
          this.setState({openEtext:false })
@@ -7678,9 +7685,9 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                // TODO use translation from ontology
             }
             
-            // #821
-            console.log("tag:",tag,e,get)
-            let ut = null
+            // #821 open etext node in outline after closing reader
+            let ut = null, ref = {}
+            //console.log("tag:",tag,e,get)
             if(get.fromText) { 
                if(e.volumeHasEtext) {
                   let t = e.volumeHasEtext
@@ -7697,7 +7704,15 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   ut = true
                }
 
-            } 
+               if(ut) {
+                  this._refs["fromText"] = React.createRef()
+                  ref = { ref: this._refs["fromText"] }
+               }                  
+
+            } else {
+               if(this._refs["fromText"] && this._refs["fromText"].current) this._refs["fromText"].current = null
+            }
+            
 
             
             let open = this.state.collapse[tag] || this.state.collapse[tag]  === undefined && ut // #821
@@ -7705,16 +7720,16 @@ perma_menu(pdfLink,monoVol,fairUse,other)
             let openD = this.state.collapse[tag+"-details"] || this.state.collapse[tag+"-details"]  === undefined && (mono || ut) // #821
 
 
-            ret.push(<span class={'top'+ (this.state.collapse[tag]?" on":"") }>
+            ret.push(<span {...ref} class={'top'+ (this.state.collapse[tag]?" on":"") }>
                   {(e.hasPart && !open) && <img src="/icons/triangle.png" onClick={(ev) => toggle(null,root,e["@id"],!e.hasPart?"details":"",!e.hasPart && mono)} className="xpd right"/>}
                   {(e.hasPart && open) && <img src="/icons/triangle_.png" onClick={(ev) => toggle(null,root,e["@id"],!e.hasPart?"details":"",!e.hasPart && mono)} className="xpd"/>}
                   <span class={"parTy "+(e.details?"on":"")} {...e.details?{title: I18n.t("resource."+(openD?"hideD":"showD")), onClick:(ev) => toggle(ev,root,e["@id"],"details",!e.hasPart && mono)}:{title:tLabel}} >
                      {pType && parts[pType] ? <div>{parts[pType]}</div> : <div>{parts["?"]}</div> }
                   </span>
-                  <span>{this.uriformat(null,{type:'uri', value:gUri, volume:fUri, inOutline: (!e.hasPart?tag+"-details":tag), url:"/show/"+e.link, debug:false, toggle:() => toggle(null,root,e["@id"],!e.hasPart?"details":"",!e.hasPart && mono) })}</span>
+                  <span>{this.uriformat(null,{type:'uri', value:gUri, volume:fUri, inOutline: (!e.hasPart?tag+"-details":tag), url:"/show/"+e.link, debug:false, toggle:() => toggle(null,root,e["@id"],!e.hasPart?"details":"",!e.hasPart && (mono || ut)) })}</span>
                   <div class="abs">                  
                      { !e.hasPart && <Link className="hasImg hasTxt" title={I18n.t("result.openE")}  to={"/show/"+e.link}><img src="/icons/search/etext.svg"/><img src="/icons/search/etext_r.svg"/></Link> }                   
-                     { e.details && <span id="anchor" title={I18n.t("resource."+(openD?"hideD":"showD"))} onClick={(ev) => toggle(ev,root,e["@id"],"details",!e.hasPart && mono)}>
+                     { e.details && <span id="anchor" title={I18n.t("resource."+(openD?"hideD":"showD"))} onClick={(ev) => toggle(ev,root,e["@id"],"details",!e.hasPart && (mono || ut))}>
                         <img src="/icons/info.svg"/>
                      </span> }
                      <CopyToClipboard text={gUri} onCopy={(e) => prompt(I18n.t("misc.clipboard"),gUri)}>
