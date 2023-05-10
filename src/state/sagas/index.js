@@ -91,6 +91,29 @@ async function initiateApp(params,iri,myprops,route,isAuthCallback) {
       {
          const config = await api.loadConfig();
 
+
+         var timer       
+         if(config.feedbucketID) window.initFeedbucket = function() {        
+            // #804 trying to configure feedback scope
+            if(timer) clearInterval(timer)
+            timer = setInterval(function(){
+            if(window.feedbucketConfig) {
+               clearInterval(timer)
+               timer = 0
+               if(document.querySelector('[data-feedbucket="'+config.feedbucketID+'"]')) return ;
+               var head = document.getElementsByTagName('head')[0];
+               var js = document.createElement("script");
+               js.type = "text/javascript";  
+               js.src = "https://cdn.feedbucket.app/assets/feedbucket.js" 
+               js.setAttribute("data-feedbucket", config.feedbucketID)            
+               head.appendChild(js);
+            } else {
+               console.log("trying...")
+            }
+            }, 650);
+            return
+         }
+
          //console.log("is khmer server ?",config.khmerServer)
 
          //I18n.setHandleMissingTranslation((key, replacements) => key);
