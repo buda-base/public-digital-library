@@ -841,7 +841,7 @@ async function getUser(profile)
 
       try {
 
-         const name = user[id][skos+"prefLabel"][0].value
+         const name = user[id][skos+"prefLabel"] && user[id][skos+"prefLabel"][0].value || user[id][foaf+"mbox"][0].value
          const email = user[id][foaf+"mbox"][0].value
          const token = id
 
