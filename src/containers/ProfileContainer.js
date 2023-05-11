@@ -49,7 +49,9 @@ const mapStateToProps = (state,ownProps) => {
 
    let isNewUser = state.ui.isNewUser
    
-   let props = { userID, profile, dictionary, rightPanel, resetLink, config, locale, profileName, langPreset, langIndex, portraitPopupClosed, isNewUser }
+   let feedbucket = state.ui.feedbucket
+
+   let props = { userID, profile, dictionary, rightPanel, resetLink, config, locale, profileName, langPreset, langIndex, portraitPopupClosed, isNewUser, feedbucket }
 
    return props
 
@@ -70,6 +72,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
          localStorage.setItem('lang', langs);
          dispatch(ui.langPreset(langs,i))
       },
+      onFeedbucketClick(cls:string) {
+         dispatch(ui.feedbucket(cls))
+      }
    }
 }
 

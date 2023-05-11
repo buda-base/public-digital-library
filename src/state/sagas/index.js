@@ -2,6 +2,7 @@
 //import download from "downloadjs";
 //import fileDownload from "js-file-download" ;
 import _ from "lodash";
+import jQuery from 'jquery' ;
 import { call, put, takeLatest, select, all } from 'redux-saga/effects';
 import { INITIATE_APP } from '../actions';
 import * as dataActions from '../data/actions';
@@ -16,6 +17,7 @@ import {getQueryParam, GUIDED_LIMIT} from '../../components/GuidedSearch'
 import qs from 'query-string'
 import history from '../../history.js'
 import {locales} from '../../components/ResourceViewer';
+
 
 import logdown from 'logdown'
 import edtf, { parse } from "edtf"
@@ -107,6 +109,7 @@ async function initiateApp(params,iri,myprops,route,isAuthCallback) {
                js.src = "https://cdn.feedbucket.app/assets/feedbucket.js" 
                js.setAttribute("data-feedbucket", config.feedbucketID)            
                head.appendChild(js);
+               store.dispatch(uiActions.feedbucket("on"))               
             } else {
                console.log("trying...")
             }

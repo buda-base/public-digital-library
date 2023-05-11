@@ -5362,9 +5362,22 @@ a.result .contenu ul > div:last-child h3[lang=bo] span { font-size:18px;}
 
 
 /* feedbucket */
-feedbucket-app::part(hidden)  { display:none !important; }
+.nav + #feedback:not(.on),
+feedbucket-app:not(.on)  { display:none !important; }
 
+.nav + #feedback { position:fixed; color:#d73449; background:white; display: flex; border-radius: 20px 20px; width:40px; height: 40px; box-sizing: border-box; 
+   box-shadow: 0 2px 4px rgba(187, 187, 187, 0.5); bottom:20px; right:20px ; cursor: pointer; justify-content: center; align-items: center; z-index:1000000;
+}
+.nav + #feedback svg { width:24px; height:24px; display:none; }
+.nav + #feedback:not(.X) svg:first-child { display: block;}
+.nav + #feedback.X svg:last-child { display: block;}
 
+.nav + #feedback.X { top:calc(50% + 117px); right:10px; bottom:auto; }
+
+.H100vh .nav + #feedback:not(.X),
+.nav.etext-nav + #feedback:not(.X) {
+   right:30px; top:100px;
+}
 
 
 

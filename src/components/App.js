@@ -38,6 +38,7 @@ import ExpandMore from '@material-ui/icons/ExpandMore';
 import NavigateBefore from '@material-ui/icons/NavigateBefore';
 import NavigateNext from '@material-ui/icons/NavigateNext';
 import PanoramaFishEye from '@material-ui/icons/PanoramaFishEye';
+import Feedback from '@material-ui/icons/Feedback';
 import CheckCircle from '@material-ui/icons/CheckCircle';
 import CheckBoxOutlineBlank from '@material-ui/icons/CheckBoxOutlineBlank';
 import CheckBox from '@material-ui/icons/CheckBox';
@@ -1016,6 +1017,11 @@ export function top_right_menu(that,etextTitle,backUrl,etextres)
    let onZhMirror = (that.props.config && that.props.config.chineseMirror)
    let onKhmerServer = (that.props.config && that.props.config.khmerServer)
 
+   let feedbucket = <a id="feedback" title={I18n.t("topbar.feedback")} className={that.props.feedbucket} onClick={(ev) => {
+      $("feedbucket-app").toggleClass("on")
+      that.props.onFeedbucketClick("on "+(that.props.feedbucket?.endsWith("X")?"":"X"))
+   }}><Feedback /><Close /></a>
+
    let logo = [
             <div id="logo">
                <Link to="/"  onClick={() => { 
@@ -1156,7 +1162,7 @@ export function top_right_menu(that,etextTitle,backUrl,etextres)
                   
                }}>+</div> 
          </div>
-      </div></>)
+      </div>{feedbucket}</>)
    else {
 
       const toggleHoverLogin = (hoverLogin,e) => {
@@ -1277,7 +1283,8 @@ export function top_right_menu(that,etextTitle,backUrl,etextres)
 
          { <div class="close" onClick={()=>that.setState({collapse:{...that.state.collapse,navMenu:false}})}>+</div> }
        </div>
-     </div>]
+     </div>,
+     feedbucket]
    )}
 }
 

@@ -44,6 +44,14 @@ export const useDLD = (): Action => {
    }
 }
 
+TYPES.feedbucket = 'FEEDBUCKET';
+export const feedbucket = (cls: string): Action => {
+   return {
+      type: TYPES.feedbucket,
+      payload: cls
+   }
+}
+
 TYPES.langPreset = 'LANG_PRESET';
 export const langPreset = (lang: string[],i?:number): Action => {
    let ext = extendedPresets(lang)

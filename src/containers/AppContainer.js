@@ -73,6 +73,8 @@ const mapStateToProps = (state) => {
 
    let useDLD = state.ui.useDLD
    
+   let feedbucket = state.ui.feedbucket
+
    let isNewUser = state.ui.isNewUser
 
    let newState = { logged,config, hostFailure, searches, keyword, language,loading,datatypes,ontology,facets,
@@ -82,6 +84,7 @@ const mapStateToProps = (state) => {
       checkResults,
       portraitPopupClosed,
       useDLD,
+      feedbucket,
       isNewUser
    }
 
@@ -158,6 +161,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       onLoading:(kw:string,load:boolean) => {
          dispatch(ui.loading(kw,load))
       },
+      onFeedbucketClick(cls:string) {
+         dispatch(ui.feedbucket(cls))
+      }
    }
 }
 
