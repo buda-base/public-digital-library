@@ -2659,7 +2659,15 @@ div:has(.resource.preview) .infoPanel.inRes { margin:0 !important; }
 .resource ~ .monlamResults.visible,
 .resource ~ .monlamResults.visible > div { width:400px; }
 
-.resource ~ .monlamResults > div > * { padding:15px; font-size:15px; }
+.resource ~ .monlamResults .simplebar-content > h2,
+.resource ~ .monlamResults .def { padding:15px; font-size:15px; }
+
+.resource ~ .monlamResults .react-tabs li { display: inline-flex; max-width:100%; box-sizing: border-box; font-size:15px; padding-left:15px; margin-bottom:10px; cursor: pointer;}
+.resource ~ .monlamResults .react-tabs li.on { font-weight: 600; margin-bottom:0; text-decoration: underline;}
+.resource ~ .monlamResults .react-tabs li:hover { text-decoration: underline; }
+.resource ~ .monlamResults .react-tabs li.react-tabs__tab--disabled { pointer-events: none;}
+
+.resource ~ .monlamResults .react-tabs__tab-panel { padding-left:15px;  }
 
 /*
 .resource ~ .monlamResults pre { white-space: pre-wrap; margin:0; }
@@ -2675,6 +2683,7 @@ div:has(.resource.preview) .infoPanel.inRes { margin:0 !important; }
 .resource ~ .monlamResults div .def > b { /*color:#09b;*/ display: inline-flex; align-items: center; cursor: pointer; /*text-decoration: underline;*/ font-weight:500; color:#152631;}
 .resource ~ .monlamResults div .def > b > svg { transform: rotate(270deg); margin-top:0px;}
 .resource ~ .monlamResults div .def > b > svg.on { transform: rotate(0deg); margin-top:0px;}
+.resource ~ .monlamResults div .def > b > span > .highlight,
 .resource ~ .monlamResults div .def > b > span > .kw { background:rgba(252,224,141,0.65); }
 .resource ~ .monlamResults div .def > b > span { font-size:115%; }
 .resource ~ .monlamResults div .def > b[lang='bo'] > span { font-size:135%;}
@@ -2702,7 +2711,8 @@ div:has(.resource.preview) .infoPanel.inRes { margin:0 !important; }
 
 .resource ~ .monlamResults div .def > div > div > div > div > div > div { padding-left:15px; display: block; padding-top:12px; }
 
-.resource ~ .monlamResults div .def:first-child { padding-top:30px; }
+/* .resource ~ .monlamResults div .def:first-child { padding-top:30px; } */
+
 .resource ~ .monlamResults div .def:last-child { padding-bottom:30px; }
 
 .resource ~ .monlamResults div .def .numbers,
@@ -2745,11 +2755,11 @@ div:has(.resource.preview) .infoPanel.inRes { margin:0 !important; }
    font-size:11px; color:#079; font-weight:500; margin-right:5px; 
 }
 
-.resource ~ .monlamResults h2 { display: flex; align-items: center; padding-top:0; margin-bottom:0; font-size:20px; font-weight:700; text-align: left; } 
-.resource ~ .monlamResults h2 a { margin-right: 10px; color:#152631; text-decoration: none;}
-.resource ~ .monlamResults h2:hover a { text-decoration: underline; }
+.resource ~ .monlamResults  .simplebar-content > h2 { display: flex; align-items: center; padding-top:0; margin-bottom:0; font-size:20px; font-weight:700; text-align: left; } 
+.resource ~ .monlamResults  .simplebar-content > h2 a { margin-right: 10px; color:#152631; text-decoration: none; max-width:285px;}
+.resource ~ .monlamResults  .simplebar-content > h2:hover a { text-decoration: underline; }
 /* .resource ~ .monlamResults h2 a:last-child { visibility:hidden; } */
-.resource ~ .monlamResults h2 svg { align-self: flex-start; cursor:pointer; display: block; position:relative; left:10px; top:-10px;}
+.resource ~ .monlamResults  .simplebar-content > h2 svg { align-self: flex-start; cursor:pointer; display: block; position:absolute; right:5px; top:7px; }
 
 /* ------------------------------------------------------------------------------------------------------------------------ header */
 

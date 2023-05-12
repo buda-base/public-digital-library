@@ -110,6 +110,11 @@ import HTMLparse from 'html-react-parser';
 
 import logdown from 'logdown'
 
+
+import SimpleBar from 'simplebar-react';
+import 'simplebar/dist/simplebar.min.css';
+
+
 //import edtf, { parse } from "edtf/dist/../index.js" // finally got it to work!! not in prod...
 import edtf, { parse } from "edtf" // see https://github.com/inukshuk/edtf.js/issues/36#issuecomment-1073778277
 
@@ -9468,38 +9473,62 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          if(!this.state.enableDicoSearch) { 
 
          } else if(Array.isArray(this.props.monlamResults) && this.props.monlamResults.length > 0) { 
-            monlamResults = //<pre>{
-               this.props.monlamResults.map( (w,i) => { 
-                  let word = //w.word
-                        getLangLabel(this,bdo+"eTextHasPage",[w.word]) 
-                  let def = w.def 
-                        //getLangLabel(this, "", [w.def])
-                  let open = this.state.collapse["monlam-def-"+i] || this.props.monlamResults.length === 1 && this.state.collapse["monlam-def-"+i] === undefined
-                  let kw = getLangLabel(this,bdo+"eTextHasPage",[ { ...this.props.monlamKeyword }])
-                  if(kw?.value) kw = kw.value 
-                  else kw = this.props.monlamKeyword?.value
-                  let hasCollapsible = false
-                  return <div class="def">
-                     <b lang={word.lang} onClick={() => this.setState({collapse:{...this.state.collapse, ["monlam-def-"+i]:!open}})}>
-                        <span>{word?.value.split(kw).map((v,j) => <>{j > 0 ? <span className="kw">{kw}</span>:null}<span>{v}</span></>)}</span>
-                        <ExpandMore className={open?"on":""}/>
-                     </b>
-                     <Collapse timeout={0} className={open?"collapse-on":""} in={open}>{HTMLparse("<div><div><div>"+def?.value?.split(/[\r\n]+/).map(d => { 
-                        let val = addMonlamStyle(d)
-                        val = getLangLabel(this,bdo+"eTextHasPage",[{value: val, lang: "bo"}]) 
-                        if(val?.value) {
-                           //console.log("?", val?.value,val?.value?.replace(/((>) *\] *)|( *\[ *(<))/g,"$2 $4"))
-                           //return <span>{HTMLparse(val?.value?.replace(/((>) *\] *)|( *\[ *(<))/g,"$2 $4"))}</span>
-                           let res = ""+val?.value?.replace(/((>) *\] *)|( *\[ *(<))/g,"$2 $4")
-                           if(hasCollapsible) res += "</div></div>"
-                           hasCollapsible = val.value.includes("dhtmlgoodies_answer")
-                           //if(!hasCollapsible) res += "</span>"
-                           return res
-                        }
-                     }).join("")+"</div></div></div>")}</Collapse>
-                  </div>
-               })
-            //}</pre>
+            let renderMonlamResults = (j, res) => res.map( (w,i) => { 
+               let word = //w.word
+                     getLangLabel(this,bdo+"eTextHasPage",[w.word]) 
+               let def = w.def 
+                     //getLangLabel(this, "", [w.def])
+               let open = this.state.collapse["monlam-def-"+j+"-"+i] || res.length === 1 && this.state.collapse["monlam-def-"+j+"-"+i] === undefined
+               let kw = getLangLabel(this,bdo+"eTextHasPage",[ { ...this.props.monlamKeyword }])
+               if(kw?.value) kw = kw.value 
+               else kw = this.props.monlamKeyword?.value                  
+               kw = kw.replace(/(^[ ་།/]+)|([ ་།/]+$)/g, "")
+
+               console.log("kw:",kw,word?.value)
+
+               let hasCollapsible = false
+               return <div class="def">
+                  <b lang={word.lang} onClick={() => this.setState({collapse:{...this.state.collapse, ["monlam-def-"+j+"-"+i]:!open}})}>
+                     <span>{
+                        word?.value.includes("↦") 
+                        ? highlight(word?.value)
+                        : word?.value.split(kw).map((v,j) => <>{j > 0 ? <span className="kw">{kw}</span>:null}<span>{v}</span></>)
+                     }</span>
+                     <ExpandMore className={open?"on":""}/>
+                  </b>
+                  <Collapse timeout={0} className={open?"collapse-on":""} in={open}>{HTMLparse("<div><div><div>"+def?.value?.split(/[\r\n]+/).map(d => { 
+                     let val = addMonlamStyle(d)
+                     val = getLangLabel(this,bdo+"eTextHasPage",[{value: val, lang: "bo"}]) 
+                     if(val?.value) {
+                        //console.log("?", val?.value,val?.value?.replace(/((>) *\] *)|( *\[ *(<))/g,"$2 $4"))
+                        //return <span>{HTMLparse(val?.value?.replace(/((>) *\] *)|( *\[ *(<))/g,"$2 $4"))}</span>
+                        let res = ""+val?.value?.replace(/((>) *\] *)|( *\[ *(<))/g,"$2 $4")
+                        if(hasCollapsible) res += "</div></div>"
+                        hasCollapsible = val.value.includes("dhtmlgoodies_answer")
+                        //if(!hasCollapsible) res += "</span>"
+                        return res
+                     }
+                  }).join("")+"</div></div></div>")}</Collapse>
+               </div>
+            })
+            let results = [ 
+               renderMonlamResults(0, this.props.monlamResults.filter(m => ["e","c"].includes(m.type))),
+               renderMonlamResults(1, this.props.monlamResults.filter(m => ["k"].includes(m.type))),
+               renderMonlamResults(2, this.props.monlamResults.filter(m => ["d"].includes(m.type)))
+            ]
+
+            let isSelected = (n) => this.state.monlamTab == n || n == 0 && this.state.monlamTab == undefined? "on" : "" 
+
+            monlamResults = <Tabs>
+               <Tab {...{onClick:() => this.setState({monlamTab:0}), className: isSelected(0)}} {...results[0].length == 0 ? {"disabled":true}:{}}>Exact matches of the context ({results[0].length})</Tab>
+               <TabPanel>{results[0]}</TabPanel>
+               <Tab {...{onClick:() => this.setState({monlamTab:1}), className: isSelected(1)}} {...results[1].length == 0 ? {"disabled":true}:{}}>Entries containing the highlighted text ({results[1].length})</Tab>
+               <TabPanel>{results[1]}</TabPanel>
+               <Tab {...{onClick:() => this.setState({monlamTab:2}), className: isSelected(2)}} {...results[2].length == 0 ? {"disabled":true}:{}} >Definitions containing the highlighted word ({results[2].length})</Tab>
+               <TabPanel>{results[2]}</TabPanel>
+            </Tabs>
+
+            
          } else if(this.props.monlamResults && this.props.monlamResults != true) {
             monlamResults = <div  className="monlam-no-result">Nothing found for "<span>{this.props.monlamKeyword?.value}</span>".</div>
          } else if(this.state.monlam && this.state.collapse.monlamPopup) {
@@ -9531,7 +9560,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                      this.setState({noHilight:false, monlam:null, collapse:{ ...this.state.collapse, monlamPopup: true }})
                      this.props.onCloseMonlam()
                   }}>                  
-                  <div>
+                  <SimpleBar>
                      <h2>
                         <a href="https://monlamdic.com" target="_blank" rel="noopener noreferrer"><img width="32" src="/icons/monlam.png" title="monlamdic.com"/></a>
                         <a href="https://monlamdic.com" target="_blank" rel="noopener noreferrer">{I18n.t("viewer.monlamTitle")}</a>
@@ -9543,7 +9572,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                      </h2>
                      { this.props.monlamResults == true && <Loader  /> }
                      { monlamResults }
-                  </div>
+                  </SimpleBar>
                </GenericSwipeable>
             </div>,
          ])
