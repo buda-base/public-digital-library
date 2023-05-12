@@ -1826,7 +1826,7 @@ class App extends Component<Props,State> {
          if(dt.length) this.setState({...this.state, filters:{...this.state.filters, datatype:dt}})
       }
 
-      window.initFeedbucket()
+      if(window.initFeedbucket) window.initFeedbucket()
    }
 
    requestSearch(key:string,label?:string,lang?:string,forceSearch:boolean=false,dataInfo:string,menu_i?:number)

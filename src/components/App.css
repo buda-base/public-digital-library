@@ -5403,6 +5403,16 @@ feedbucket-app:not(.on)  { display:none !important; }
 }
 
 
+/* TODO: when is video disabled?  */
+
+/*
+@media (pointer:coarse) {
+   .nav + #feedback.X { top:calc(50% + 60px); }
+}
+*/
+
+
+
 
 
 
