@@ -5380,7 +5380,27 @@ feedbucket-app:not(.on)  { display:none !important; }
 }
 
 
+@media (max-width:1024px)
+{
+   .nav + #feedback {z-index:100000; }
 
+   
+   .nav + #feedback:not(.X) { width:52px; height:52px; border-radius:26px; right:5px; bottom:5px; }
+   
+   .nav.etext-nav + #feedback:not(.X),
+   .nav + #feedback.top:not(.X) { top: 5px; right:5px;}
+   
+   
+   .nav + #feedback svg { width:28px; height:28px; }
+
+   .H100vh .nav + #feedback {z-index:1000000;display:flex !important; }
+}
+
+@media (max-width:800px)
+{
+
+   .H100vh .nav + #feedback:not(.X) {left:5px;bottom:5px;top:auto;}
+}
 
 
 

@@ -1017,7 +1017,7 @@ export function top_right_menu(that,etextTitle,backUrl,etextres)
    let onZhMirror = (that.props.config && that.props.config.chineseMirror)
    let onKhmerServer = (that.props.config && that.props.config.khmerServer)
 
-   let feedbucket = <a id="feedback" title={I18n.t("topbar.feedback")} className={that.props.feedbucket} onClick={(ev) => {
+   let feedbucket = <a id="feedback" title={I18n.t("topbar.feedback")} className={that.props.feedbucket + (that.props.keyword&&!that.props.IRI?" top":"")} onClick={(ev) => {
       $("feedbucket-app").toggleClass("on")
       that.props.onFeedbucketClick("on "+(that.props.feedbucket?.endsWith("X")?"":"X"))
    }}><Feedback /><Close /></a>
