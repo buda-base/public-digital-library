@@ -3,7 +3,7 @@ import store from '../index';
 import {auth} from '../routes'
 import qs from 'query-string'
 import history from '../history';
-import {shortUri} from '../components/App';
+import {shortUri,isAdmin} from '../components/App';
 
 import * as rdflib from "rdflib"
 const urlParams = qs.parse(history.location.search)
@@ -384,7 +384,7 @@ export default class API {
 
    async loadMonlamResults(params): Promise<string>
    {
-      let res =  JSON.parse(await this.getURLContents(this._monlamPath()+"?"+qs.stringify(params),false,"application/json"));
+      let res =  JSON.parse(await this.getURLContents(isAdmin(auth) ? "/example.json" : this._monlamPath()+"?"+qs.stringify(params),false,"application/json"));
       console.log("monlam:",res)
       return res;
   }
