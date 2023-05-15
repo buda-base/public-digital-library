@@ -5384,22 +5384,26 @@ feedbucket-app:not(.on)  { display:none !important; }
 
 .nav + #feedback.X { top:calc(50% + 117px); right:10px; bottom:auto; }
 
-.H100vh .nav + #feedback:not(.X),
-.nav.etext-nav + #feedback:not(.X) {
-   right:30px; top:100px;
+.H100vh .nav + #feedback:not(.X) {
+   left :5px; top:90px;
 }
 
+
+.nav.etext-nav + #feedback:not(.X) {
+   left:15px; bottom:100px;
+}
 
 @media (max-width:1024px)
 {
    .nav + #feedback {z-index:100000; }
 
    
-   .nav + #feedback:not(.X) { width:52px; height:52px; border-radius:26px; right:5px; bottom:5px; }
+   .nav + #feedback:not(.X) { right:5px; bottom:5px; }
    
    .nav.etext-nav + #feedback:not(.X),
-   .nav + #feedback.top:not(.X) { top: 5px; right:5px;}
+   .nav + #feedback.top:not(.X) { bottom: 5px; left:5px;}
    
+   .nav.etext-nav + #feedback:not(.X) { width:52px; height:52px; border-radius:26px; }
    
    .nav + #feedback svg { width:28px; height:28px; }
 
@@ -5408,8 +5412,12 @@ feedbucket-app:not(.on)  { display:none !important; }
 
 @media (max-width:800px)
 {
-
-   .H100vh .nav + #feedback:not(.X) {left:5px;bottom:5px;top:auto;}
+   .nav + #feedback:not(.X) { width:52px; height:52px; border-radius:26px; }
+   
+   /*
+   .H100vh .nav + #feedback:not(.X) {right:5px;top:5px; left:auto;}
+   */
+   .H100vh .nav + #feedback { display: none !important; }
 }
 
 

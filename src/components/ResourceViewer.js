@@ -4737,6 +4737,8 @@ class ResourceViewer extends Component<Props,State>
 
                $("#fond").addClass("hidden");
 
+               console.log("fdbk?",window.useFeedbucket)
+
                let data = [], manif, canvasID
                if(useManifest)
                {

@@ -96,23 +96,25 @@ async function initiateApp(params,iri,myprops,route,isAuthCallback) {
 
          var timer       
          if(config.feedbucketID) window.initFeedbucket = function() {        
-            // #804 trying to configure feedback scope
+            // #804 DONE: configure feedback scope
             if(timer) clearInterval(timer)
             timer = setInterval(function(){
-            if(window.feedbucketConfig) {
-               clearInterval(timer)
-               timer = 0
-               if(document.querySelector('[data-feedbucket="'+config.feedbucketID+'"]')) return ;
-               var head = document.getElementsByTagName('head')[0];
-               var js = document.createElement("script");
-               js.type = "text/javascript";  
-               js.src = "https://cdn.feedbucket.app/assets/feedbucket.js" 
-               js.setAttribute("data-feedbucket", config.feedbucketID)            
-               head.appendChild(js);
-               store.dispatch(uiActions.feedbucket("on"))               
-            } else {
-               console.log("trying...")
-            }
+               if(window.feedbucketConfig) {
+                  clearInterval(timer)
+                  timer = 0
+                  if(document.querySelector('[data-feedbucket="'+config.feedbucketID+'"]')) return ;
+                  var head = document.getElementsByTagName('head')[0];
+                  var js = document.createElement("script");
+                  js.type = "text/javascript";  
+                  js.src = "https://cdn.feedbucket.app/assets/feedbucket.js" 
+                  js.setAttribute("data-feedbucket", config.feedbucketID)            
+                  head.appendChild(js);
+                  store.dispatch(uiActions.feedbucket("on"))           
+                  window.useFeedbucket = true    
+               } else {
+                  console.log("trying...")
+                  if(window.useFeedbucket) delete window.useFeedbucket
+               }
             }, 650);
             return
          }
