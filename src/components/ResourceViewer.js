@@ -9476,6 +9476,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   let kw = getLangLabel(this,bdo+"eTextHasPage",[ { ...this.props.monlamKeyword }])
                   if(kw?.value) kw = kw.value 
                   else kw = this.props.monlamKeyword?.value
+                  kw = kw.replace(/(^[ ་།/]+)|([ ་།/]+$)/g, "")
                   let hasCollapsible = false
                   return <div class="def">
                      <b lang={word.lang} onClick={() => this.setState({collapse:{...this.state.collapse, ["monlam-def-"+i]:!open}})}>

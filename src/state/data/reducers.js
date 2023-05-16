@@ -70,6 +70,8 @@ export const loadedOntology = (state: DataState, action: Action) => {
 
    let ontology = action.payload
 
+   if(!ontology["http://purl.bdrc.io/ontology/core/workHasTranslation"]) ontology["http://purl.bdrc.io/ontology/core/workHasTranslation"] = {}
+
    ontology["http://purl.bdrc.io/ontology/core/workHasTranslation"]["http://purl.bdrc.io/ontology/core/inferSubTree"] = [{type: "literal", value: "true", datatype: "http://www.w3.org/2001/XMLSchema#boolean"}]
   
    ontology["http://purl.bdrc.io/ontology/tmp/workHasTranslationInCanonicalLanguage"] = {
@@ -93,6 +95,8 @@ export const loadedDictionary = (state: DataState, action: Action) => {
    let dictionary = state.dictionary
    if(dictionary) dictionary = { ...dictionary, ...action.payload }
    else dictionary = action.payload
+
+   if(!dictionary["http://purl.bdrc.io/ontology/core/workHasTranslation"]) dictionary["http://purl.bdrc.io/ontology/core/workHasTranslation"] = {}
 
    dictionary["http://purl.bdrc.io/ontology/core/workHasTranslation"]["http://purl.bdrc.io/ontology/core/inferSubTree"] = [{type: "literal", value: "true", datatype: "http://www.w3.org/2001/XMLSchema#boolean"}]
   
@@ -297,7 +301,7 @@ reducers[actions.TYPES.getMonlamResults] = getMonlamResults;
 export const gotMonlamResults = (state: DataState, action: Action) => {
    return {
        ...state,
-       monlamResults: action.payload
+       monlamResults: action.payload?.filter(r => !r.type || r.type === "e" || r.type === "c")
    }
 }
 reducers[actions.TYPES.gotMonlamResults] = gotMonlamResults;
