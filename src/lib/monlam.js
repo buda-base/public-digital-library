@@ -1,6 +1,9 @@
 
 
 export function addMonlamStyle(txt) {
+
+
+
   txt = txt.replace(/^[ \t]*(\[ *)?([0-9])\.( *\])?/,"</div></div><div><div><span class='numbers'>$2</span>")
   txt = txt.replace(/^[ \t]*(\[ *)?([0-9][0-9])\.( *\])?/,"</div></div><div><div><span class='numbers2'>$2</span>")
 
@@ -183,7 +186,9 @@ export function addMonlamStyle(txt) {
     //txt.replace(/མཛོད། /g, "<span style='color: rgb(45, 97, 234);'>མཛོད། </span>", txt);
   txt = txt.replace(/རྣམ་འགྲེལ། /g, "<span style='color: rgb(158,81, 36);'>རྣམ་འགྲེལ། </span>", txt);
   txt = txt.replace(/སྡོམ་གསུམ། /g, "<span style='color: rgb(158,81, 36);'>སྡོམ་གསུམ། </span>", txt);
-    
+
+  
+  txt = txt.replace(/↦([^↤]+)↤/g,"<span class='kw'>$1</span>")
     
  
   return txt

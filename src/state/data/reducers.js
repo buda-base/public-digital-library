@@ -70,6 +70,8 @@ export const loadedOntology = (state: DataState, action: Action) => {
 
    let ontology = action.payload
 
+   if(!ontology["http://purl.bdrc.io/ontology/core/workHasTranslation"]) ontology["http://purl.bdrc.io/ontology/core/workHasTranslation"] = {}
+
    ontology["http://purl.bdrc.io/ontology/core/workHasTranslation"]["http://purl.bdrc.io/ontology/core/inferSubTree"] = [{type: "literal", value: "true", datatype: "http://www.w3.org/2001/XMLSchema#boolean"}]
   
    ontology["http://purl.bdrc.io/ontology/tmp/workHasTranslationInCanonicalLanguage"] = {
@@ -94,6 +96,8 @@ export const loadedDictionary = (state: DataState, action: Action) => {
    if(dictionary) dictionary = { ...dictionary, ...action.payload }
    else dictionary = action.payload
 
+   if(!dictionary["http://purl.bdrc.io/ontology/core/workHasTranslation"]) dictionary["http://purl.bdrc.io/ontology/core/workHasTranslation"] = {}
+   
    dictionary["http://purl.bdrc.io/ontology/core/workHasTranslation"]["http://purl.bdrc.io/ontology/core/inferSubTree"] = [{type: "literal", value: "true", datatype: "http://www.w3.org/2001/XMLSchema#boolean"}]
   
    dictionary["http://purl.bdrc.io/ontology/tmp/workHasTranslationInCanonicalLanguage"] = {

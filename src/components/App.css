@@ -2688,6 +2688,9 @@ div:has(.resource.preview) .infoPanel.inRes { margin:0 !important; }
 .resource ~ .monlamResults div .def > b > span { font-size:115%; }
 .resource ~ .monlamResults div .def > b[lang='bo'] > span { font-size:135%;}
 
+.resource ~ .monlamResults div .def > b + div .kw { background:rgba(252,224,141,0.65); }
+
+
 /*
 .resource ~ .monlamResults div .def > b[lang='bo'] > svg { margin-top:-5px;}
 .resource ~ .monlamResults div .def > b[lang='bo'] > svg.on { margin-top:-5px;}
