@@ -384,7 +384,7 @@ export default class API {
 
    async loadMonlamResults(params): Promise<string>
    {
-      let res =  JSON.parse(await this.getURLContents(isAdmin(auth) ? "/example.json" : this._monlamPath()+"?"+qs.stringify(params),false,"application/json"));
+      let res =  JSON.parse(await this.getURLContents(this._monlamPath()+"?"+qs.stringify(params),false,"application/json"));
       console.log("monlam:",res)
       return res;
   }
