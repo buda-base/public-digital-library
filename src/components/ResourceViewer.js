@@ -6612,6 +6612,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
                this.setState({ 
                   collapse:{...this.state.collapse, monlamPopup: false},
+                  monlamTab:null, 
                   monlam: data,
                   ...this.state.monlam && this.state.noHilight && seq != this.state.noHilight?{noHilight:false}:{} 
                })               
@@ -9032,6 +9033,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
       return unpag
    }
 
+
    render()
    {
       loggergen.log("render",this.props,this.state,this._refs)
@@ -9486,7 +9488,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                else kw = this.props.monlamKeyword?.value                  
                kw = kw.replace(/(^[ ་།/]+)|([ ་།/]+$)/g, "")
 
-               console.log("kw:",kw,word?.value)
+               //console.log("kw:",kw,word?.value)
 
                let hasCollapsible = false
                return <div class="def">
@@ -9519,14 +9521,18 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                renderMonlamResults(2, this.props.monlamResults.filter(m => ["d"].includes(m.type)))
             ]
 
-            let isSelected = (n) => this.state.monlamTab == n || n == 0 && this.state.monlamTab == undefined? "on" : "" 
 
-            monlamResults = <Tabs>
-               <Tab {...{onClick:() => this.setState({monlamTab:0}), className: isSelected(0)}} {...results[0].length == 0 ? {"disabled":true}:{}}>Exact matches of the context ({results[0].length})</Tab>
+            const firstNonZero = results[0].length ? 0 : results[1].length ? 1 : results[2].length ? 2 : -1,
+               selectedIndex = this.state.monlamTab || firstNonZero, 
+               onSelect = (i) => this.setState({monlamTab: i == this.state.monlamTab || this.state.monlamTab == undefined && i == firstNonZero ? -1 : i}),
+               isSelected = (n) => selectedIndex == n ? "on" : "" 
+
+            monlamResults = <Tabs {...{selectedIndex, onSelect}} >
+               <Tab {...{className: isSelected(0)}} {...results[0].length == 0 ? {"disabled":true}:{}}>Exact matches of the context ({results[0].length})</Tab>
                <TabPanel>{results[0]}</TabPanel>
-               <Tab {...{onClick:() => this.setState({monlamTab:1}), className: isSelected(1)}} {...results[1].length == 0 ? {"disabled":true}:{}}>Entries containing the highlighted text ({results[1].length})</Tab>
+               <Tab {...{className: isSelected(1)}} {...results[1].length == 0 ? {"disabled":true}:{}}>Entries containing the highlighted text ({results[1].length})</Tab>
                <TabPanel>{results[1]}</TabPanel>
-               <Tab {...{onClick:() => this.setState({monlamTab:2}), className: isSelected(2)}} {...results[2].length == 0 ? {"disabled":true}:{}} >Definitions containing the highlighted word ({results[2].length})</Tab>
+               <Tab {...{className: isSelected(2)}} {...results[2].length == 0 ? {"disabled":true}:{}} >Definitions containing the highlighted word ({results[2].length})</Tab>
                <TabPanel>{results[2]}</TabPanel>
             </Tabs>
 
