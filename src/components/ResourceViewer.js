@@ -9524,11 +9524,11 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                isSelected = (n) => selectedIndex == n ? "on" : "" 
 
             monlamResults = <Tabs {...{selectedIndex, onSelect}} >
-               <Tab {...{className: isSelected(0)}} {...results[0].length == 0 ? {"disabled":true}:{}}>Exact matches of the context ({results[0].length})</Tab>
+               <Tab {...{className: isSelected(0)}} {...results[0].length == 0 ? {"disabled":true}:{}}>{I18n.t("viewer.monlamExact",{count: results[0].length})}</Tab>
                <TabPanel>{results[0]}</TabPanel>
-               <Tab {...{className: isSelected(1)}} {...results[1].length == 0 ? {"disabled":true}:{}}>Entries containing the highlighted text ({results[1].length})</Tab>
+               <Tab {...{className: isSelected(1)}} {...results[1].length == 0 ? {"disabled":true}:{}}>{I18n.t("viewer.monlamContain",{count: results[1].length})}</Tab>
                <TabPanel>{results[1]}</TabPanel>
-               <Tab {...{className: isSelected(2)}} {...results[2].length == 0 ? {"disabled":true}:{}} >Definitions containing the highlighted word ({results[2].length})</Tab>
+               <Tab {...{className: isSelected(2)}} {...results[2].length == 0 ? {"disabled":true}:{}} >{I18n.t("viewer.monlamDef",{count: results[2].length})}</Tab>
                <TabPanel>{results[2]}</TabPanel>
             </Tabs>
 
