@@ -9512,7 +9512,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                </div>
             })
             let results = [ 
-               renderMonlamResults(0, this.props.monlamResults.filter(m => ["e","c"].includes(m.type))),
+               renderMonlamResults(0, this.props.monlamResults.filter(m => !m.type ||["e","c"].includes(m.type))),
                renderMonlamResults(1, this.props.monlamResults.filter(m => ["k"].includes(m.type))),
                renderMonlamResults(2, this.props.monlamResults.filter(m => ["d"].includes(m.type)))
             ]
