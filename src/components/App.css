@@ -2662,6 +2662,10 @@ div:has(.resource.preview) .infoPanel.inRes { margin:0 !important; }
 .resource ~ .monlamResults .simplebar-content > h2,
 .resource ~ .monlamResults .def { padding:15px; font-size:15px; }
 
+.resource ~ .monlamResults .def b[lang='bo'] { line-height:32px; }
+
+.resource ~ .monlamResults .react-tabs { padding-bottom: 20px; }
+
 .resource ~ .monlamResults .react-tabs li { display: inline-flex; max-width:100%; box-sizing: border-box; font-size:15px; padding-left:15px; margin-bottom:10px; cursor: pointer;}
 .resource ~ .monlamResults .react-tabs li.on { font-weight: 600; margin-bottom:0; text-decoration: underline;}
 .resource ~ .monlamResults .react-tabs li:hover { text-decoration: underline; }

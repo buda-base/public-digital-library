@@ -478,7 +478,7 @@ async function hasEtextPage(manifest, resID) {
 const NB_PAGES = 20 ; 
 let etextPages = {};
 
-export async function miradorConfig(data, manifest, canvasID, useCredentials, langList, cornerButton, resID, locale)
+export async function miradorConfig(data, manifest, canvasID, useCredentials, langList, cornerButton, resID, locale, etextLang)
 {
    console.log("mConf:",cornerButton,data,resID,manifest)
 
@@ -501,8 +501,9 @@ export async function miradorConfig(data, manifest, canvasID, useCredentials, la
    if(langList === undefined) langList = [ "bo", "zh-hans" ]
    let langs = _extendedPresets(langList)
    let langsUI = _extendedPresets([ locale ].concat(langList))
+   let langsEtext = _extendedPresets(etextLang)
 
-   let labelToString = (labels,labelArray,forceUIlg,keepAll) => {
+   let labelToString = (labels,labelArray,forceUIlg,keepAll,useEtextLang) => {
 
       //console.warn("labels:",labels,labelArray,forceUIlg,keepAll,langs,langsUI);
 
@@ -517,7 +518,7 @@ export async function miradorConfig(data, manifest, canvasID, useCredentials, la
          if(typeof labels == "string") return labels
          else if(labels.length && typeof labels[0] === "string")  return labels[0] 
 
-         label = _getMainLabel(labels,forceUIlg?langsUI:langs)
+         label = _getMainLabel(labels,useEtextLang?langsEtext:forceUIlg?langsUI:langs)
          if(labelArray) labelArray.push(label);
          return label["value"]
          
@@ -525,7 +526,7 @@ export async function miradorConfig(data, manifest, canvasID, useCredentials, la
          if(typeof labels == "string") return ({ values: [ labels ] })
          else if(labels.length && typeof labels[0] === "string")  return ({ values: labels }) 
 
-         label = _getMainLabels(labels,forceUIlg?langsUI:langs)
+         label = _getMainLabels(labels,useEtextLang?langsEtext:forceUIlg?langsUI:langs)
          return label
       }
    }
