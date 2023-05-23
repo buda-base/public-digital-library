@@ -5419,7 +5419,7 @@ feedbucket-app:not(.on)  { display:none !important; }
 
 @media (max-width:800px)
 {
-   .nav + #feedback:not(.X) { width:52px; height:52px; border-radius:26px; }
+   .nav + #feedback:not(.X) { width:50px; height:50px; border-radius:25px; }
    
    /*
    .H100vh .nav + #feedback:not(.X) {right:5px;top:5px; left:auto;}

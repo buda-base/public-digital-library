@@ -1176,6 +1176,11 @@ class ResourceViewer extends Component<Props,State>
             this.props.history.push(loca);            
          }
 
+         if(this.props.feedbucket) {
+            $("feedbucket-app").removeClass("on");
+            this.props.onFeedbucketClick("on");
+         }
+
          this.setState({...this.state, openUV:false, openMirador:false, openDiva:false, ...(fromSearch?{fromSearch}:{}) } ); 
 
       }
