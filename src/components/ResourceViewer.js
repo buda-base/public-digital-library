@@ -5818,7 +5818,7 @@ renderPopupPrint(IRI,place = "bottom-start") {
    )
 }
 
-perma_menu(pdfLink,monoVol,fairUse,other)
+perma_menu(pdfLink,monoVol,fairUse,other,accessET)
 {
    let that = this
 
@@ -5984,12 +5984,12 @@ perma_menu(pdfLink,monoVol,fairUse,other)
             onClose={e => { this.setState({...this.state, /*anchorPermaDL:null,*/ collapse: {...this.state.collapse, permaDL:false } } ) }}
             >
 
-               { (this.props.eTextRefs && this.props.eTextRefs.mono) && 
+               { (this.props.eTextRefs && this.props.eTextRefs.mono && accessET) && 
                      <a target="_blank" title={I18n.t("resource.version",{format:"TXT"})} rel="alternate" type="text"  download href={fullUri(this.props.eTextRefs.mono).replace(/^http:/,"https:")+".txt"}>
                         <MenuItem>{I18n.t("resource.exportDataAs",{data: I18n.t("types.etext"), format:"TXT"})}</MenuItem>
                      </a> }
 
-               { isEtextVol && 
+               { (isEtextVol && accessET) &&
                      <a target="_blank" title={I18n.t("resource.version",{format:"TXT"})} rel="alternate" type="text"  download href={this.props.IRI?fullUri(this.props.IRI).replace(/^http:/,"https:")+".txt":""}>
                         <MenuItem>{I18n.t("resource.exportDataAs",{data: I18n.t("types.etext"), format:"TXT"})}</MenuItem>
                      </a> }
@@ -7541,7 +7541,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
    }
 
 
-   renderEtextRefs() {
+   renderEtextRefs(access = true) {
 
       let toggle = (e,r,i,x = "",force) => {         
          let tag = "etextrefs-"+r+"-"+i+(x?"-"+x:"")
@@ -7624,7 +7624,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   */
 
                   const etextDL = (qname) => (
-                     <a onClick={(e) => this.setState({...this.state,anchorLangDL:e.currentTarget, collapse: {...this.state.collapse, langDL:!this.state.collapse.langDL } } ) } 
+                     <a  {...!access?{disabled:true}:{}} onClick={(e) => this.setState({...this.state,anchorLangDL:e.currentTarget, collapse: {...this.state.collapse, langDL:!this.state.collapse.langDL } } ) } 
                         class="ulink" style={{cursor:"pointer"}}>
                            {etext_lang_selec(this,true,<>{I18n.t("mirador.downloadE")}</>,fullUri(qname).replace(/^http:/,"https:")+".txt")}
                      </a>
@@ -7642,7 +7642,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
                            //nav.push(<Link to={"/show/"+txt[0].eTextResource} class="ulink">{I18n.t("resource.openR")}</Link>)
                            //nav.push(<span>|</span>)
-                           nav.push(<Link to={"/show/"+txt[0].eTextResource+"?backToEtext="+this.props.IRI+"#open-viewer"} class="ulink">{I18n.t("result.openE")}</Link>)
+                           nav.push(<Link  {...!access?{disabled:true}:{}} to={"/show/"+txt[0].eTextResource+"?backToEtext="+this.props.IRI+"#open-viewer"} class="ulink">{I18n.t("result.openE")}</Link>)
                            nav.push(<span>|</span>)
                            //nav.push(<a href={fullUri(txt[0].eTextResource).replace(/^http:/,"https:")+".txt"} class="ulink"  download type="text" target="_blank">{I18n.t("mirador.downloadE")}</a>)
                            nav.push(etextDL(txt[0].eTextResource))
@@ -7660,7 +7660,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
                      //nav.push(<Link to={"/show/"+g.eTextResource} class="ulink">{I18n.t("resource.openR")}</Link>)
                      //nav.push(<span>|</span>)
-                     nav.push(<Link to={"/show/"+g.eTextResource+"?backToEtext="+this.props.IRI+"#open-viewer"} class="ulink">{I18n.t("result.openE")}</Link>)
+                     nav.push(<Link {...!access?{disabled:true}:{}} to={"/show/"+g.eTextResource+"?backToEtext="+this.props.IRI+"#open-viewer"} class="ulink">{I18n.t("result.openE")}</Link>)
                      nav.push(<span>|</span>)
                      //nav.push(<a href={fullUri(g.eTextResource).replace(/^http:/,"https:")+".txt"} class="ulink" download type="text" target="_blank">{I18n.t("mirador.downloadE")}</a>)                     
                      nav.push(etextDL(g.eTextResource))
@@ -7670,7 +7670,9 @@ perma_menu(pdfLink,monoVol,fairUse,other)
 
                   if(nav.length) { 
                      if(!g.details) g.details = []
-                     g.details.push(<div class="sub view">{nav}</div>)
+                     let title ;
+                     if(!access) title = I18n.t("access.fairuseEtext").replace(/<[^>]+>/g,"")
+                     g.details.push(<div class="sub view" {...{title}}>{nav}</div>)
                   }
 
                   //else if(g.)
@@ -7743,7 +7745,15 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   </span>
                   <span>{this.uriformat(null,{type:'uri', value:gUri, volume:fUri, inOutline: (!e.hasPart?tag+"-details":tag), url:"/show/"+e.link, debug:false, toggle:() => toggle(null,root,e["@id"],!e.hasPart?"details":"",!e.hasPart && (mono || ut)) })}</span>
                   <div class="abs">                  
-                     { !e.hasPart && <Link className="hasImg hasTxt" title={I18n.t("result.openE")}  to={"/show/"+e.link}><img src="/icons/search/etext.svg"/><img src="/icons/search/etext_r.svg"/></Link> }                   
+                     { !e.hasPart && (
+                           access 
+                           ?  <Link className="hasImg hasTxt" title={I18n.t("result.openE")}  to={"/show/"+e.link}>
+                                 <img src="/icons/search/etext.svg"/><img src="/icons/search/etext_r.svg"/>
+                              </Link> 
+                           :  <a disabled="true" className="hasImg hasTxt" title={I18n.t("access.fairuseEtext").replace(/<[^>]+>/g,"")}>
+                                 <img src="/icons/search/etext.svg"/><img src="/icons/search/etext.svg"/>
+                              </a> 
+                     )}                   
                      { e.details && <span id="anchor" title={I18n.t("resource."+(openD?"hideD":"showD"))} onClick={(ev) => toggle(ev,root,e["@id"],"details",!e.hasPart && (mono || ut))}>
                         <img src="/icons/info.svg"/>
                      </span> }
@@ -9465,9 +9475,13 @@ perma_menu(pdfLink,monoVol,fairUse,other)
       
       let hasChunks = this.getResourceElem(bdo+"eTextHasChunk")
 
-      //loggergen.log("chunks?",hasChunks)
+      let accessET = this.getResourceElem(adm+"access")
+      if(accessET && accessET.filter(e => e.value.match(/(AccessFairUse)|(Restricted.*)$/)).length) accessET = false
+      else accessET = true
 
-      let etextAccessError = this.props.etextErrors && this.props.etextErrors[this.props.IRI] && [401, 403].includes(this.props.etextErrors[this.props.IRI])
+      loggergen.log("chunks?",hasChunks,accessET)
+
+      let etextAccessError = !accessET || this.props.etextErrors && this.props.etextErrors[this.props.IRI] && [401, 403].includes(this.props.etextErrors[this.props.IRI])
 
       if(hasChunks && hasChunks.length && this.state.openEtext) {
          
@@ -9603,7 +9617,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
          let theEtext
          if(this.props.eTextRefs && this.props.eTextRefs !== true && this.props.IRI && this.props.IRI.startsWith("bdr:IE")) { 
             extProps = extProps.filter(p => p !== bdo+"instanceHasVolume")
-            theEtext = this.renderEtextRefs()      
+            theEtext = this.renderEtextRefs(accessET)      
          }
 
          let theDataExt = this.renderData(extProps,iiifpres,title,otherLabels,"ext-props")      
@@ -9952,7 +9966,7 @@ perma_menu(pdfLink,monoVol,fairUse,other)
                   { _T !== "Etext" && this.renderNoAccess(fairUse) }                  
                   { this.renderMirador(isMirador) }           
                   { theDataTop }
-                  <div class="data" id="perma">{ this.perma_menu(pdfLink,monoVol,fairUse,kZprop.filter(k => k.startsWith(adm+"seeOther")))  }</div>
+                  <div class="data" id="perma">{ this.perma_menu(pdfLink,monoVol,fairUse,kZprop.filter(k => k.startsWith(adm+"seeOther")), accessET && !etextAccessError)  }</div>
                   { theDataBot }
                   { ( /*hasRel &&*/ !this.props.preview && this.props.assocResources && !["Instance","Images","Etext"].includes(_T)) &&
                      <div class="data related" id="resources" data-all={all}>

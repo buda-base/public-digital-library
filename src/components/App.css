@@ -623,7 +623,7 @@ footer #donate,
 
 .nav #guide { margin-left:25px;}
 
-.nav a#collections { margin-left:50px; }
+.nav a#collections { margin-left:25px; }
 
 .nav #logo.khmer + .links  { margin-left:15px; }
 
@@ -1778,7 +1778,7 @@ a.result + #matches .result-content #icon > :not(.thumb) img { width:40px; }
 .result-content .contenu h3 > span:first-of-type:empty + span.highlight { margin-left:-10px;}
 */
 
-.samePop, [role=tooltip] { z-index:100000 !important;}
+.samePop, [role=tooltip] { z-index:1000000 !important;}
 
 #results > li + .result-content { scroll-margin:430px; }
 
@@ -2492,6 +2492,9 @@ div:has(.resource.preview) .infoPanel.inRes { margin:0 !important; }
 .resource .data#outline .root + div .hasImg img { width:18px; opacity:0.8; vertical-align: middle !important; }
 .resource .data#outline .root + div .hasImg.hasTxt img { width:17px; }
 
+.resource .data#outline .root + div .hasImg.hasTxt[disabled] { cursor:auto; }
+.resource .data#outline .root + div .hasImg.hasTxt[disabled] img { opacity:0.8 !important; }
+
 .resource .data#outline .root + div .top.is-root .permalink img:first-child,
 .resource .data#outline .root + div .top:not(.is-root) .permalink img:last-child,
 .resource .data#outline .root + div .top.is-root .hasImg img:first-child,
@@ -2596,6 +2599,8 @@ div:has(.resource.preview) .infoPanel.inRes { margin:0 !important; }
 .resource .data#outline .root + div .top + .details .sub.view::before,
 .resource .data#outline .root + div .top + .details .sub.view span { font-size:14px; padding:0 5px; font-weight:700;color:#d73449;}
 .resource .data#outline .root + div .top + .details .sub.view::before { content:">";padding:0 5px 0 0; }
+
+.resource .data#outline .root + div .top + .details .sub.view a[disabled] { pointer-events: none; opacity:0.65; }
 
 .resource .data#outline .root + div .top + .details .sub.loca .urilink { display:inline; }
 .resource .data#outline .root + div .top + .details .sub.loca .urilink span { color:#d73449;}
@@ -5721,6 +5726,8 @@ a.result + #matches.mobile,
 #root .nav #donate + .close { display:none;}
 
 
+#search-bar > div:first-child input { line-height:35px; }
+
    
 @media (max-width:1024px)
 {
@@ -5759,6 +5766,8 @@ a.result + #matches.mobile,
 
    #root .App #res-container,
    #search-bar > div:first-child > div:first-child { width:calc(100vw - 80px) !important; }
+
+   
 
    .mobile-button.top {
       top: 5px;

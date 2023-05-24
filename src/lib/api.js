@@ -1021,7 +1021,7 @@ export default class API {
             
             // case of proxied site
             let subscrip = key == "tmp:subscriptions" && styp == "Product"
-            if(subscrip) url = "https://ldspdi.bdrc.io"
+            if(subscrip) url = "https://ldspdi.bdrc.io/lib"
             
             let param = {
                "R_RES":key,

@@ -301,7 +301,7 @@ reducers[actions.TYPES.getMonlamResults] = getMonlamResults;
 export const gotMonlamResults = (state: DataState, action: Action) => {
    return {
        ...state,
-       monlamResults: action.payload
+       monlamResults: action.payload?.filter(r => !r.type || r.type === "e" || r.type === "c")
    }
 }
 reducers[actions.TYPES.gotMonlamResults] = gotMonlamResults;
