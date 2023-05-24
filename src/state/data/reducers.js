@@ -97,7 +97,7 @@ export const loadedDictionary = (state: DataState, action: Action) => {
    else dictionary = action.payload
 
    if(!dictionary["http://purl.bdrc.io/ontology/core/workHasTranslation"]) dictionary["http://purl.bdrc.io/ontology/core/workHasTranslation"] = {}
-
+   
    dictionary["http://purl.bdrc.io/ontology/core/workHasTranslation"]["http://purl.bdrc.io/ontology/core/inferSubTree"] = [{type: "literal", value: "true", datatype: "http://www.w3.org/2001/XMLSchema#boolean"}]
   
    dictionary["http://purl.bdrc.io/ontology/tmp/workHasTranslationInCanonicalLanguage"] = {

@@ -3,7 +3,7 @@ import store from '../index';
 import {auth} from '../routes'
 import qs from 'query-string'
 import history from '../history';
-import {shortUri} from '../components/App';
+import {shortUri,isAdmin} from '../components/App';
 
 import * as rdflib from "rdflib"
 const urlParams = qs.parse(history.location.search)
