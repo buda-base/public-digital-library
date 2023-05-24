@@ -6564,7 +6564,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
                const endOff = Math.min(pageVal.length, end + MIN_CONTEXT_LENGTH)
 
                // let's use indexOf to get exact coordinates of selection in page
-               const chunk =  pageVal.substring(startOff, endOff)
+               const chunk =  pageVal.substring(startOff, endOff).replace(/[\r\n]/g," ");
                let cursor_start = chunk.indexOf(selection.toString())
                if(cursor_start < 0) cursor_start = start - startOff 
                let cursor_end =  cursor_start + selection.toString().length
