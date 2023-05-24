@@ -1165,7 +1165,7 @@ export function top_right_menu(that,etextTitle,backUrl,etextres)
          that.setState({collapse:{...that.state.collapse, hoverLogin } } )
       }
 
-      let proxied = !window.location.host.includes("localhost") && 
+      let proxied = //!window.location.host.includes("localhost") && 
             that.props.config && that.props.config.primaryUrl && !window.location.host.match(new RegExp(that.props.config.primaryUrl))
 
       //console.log("proxied?",!window.location.host.includes("localhost"), that.props.config?.primaryUrl, that.props.config?.primaryUrl != window.location.host)
@@ -5725,12 +5725,18 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             //loggergen.log("other:",other, this.props.loading, this.props.datatypes, this.props.datatypes?.hash)
             
             //if(other && other.length) 
-            if(this.props.keyword==="tmp:subscriptions") {
-               message.push(<Typography className="no-result"><span class="noR">Empty list of subscriptions<br/>(work in progress)</span></Typography>)
+            
+            
+            
+            if(this.props.keyword==="tmp:subscriptions" && this.props.loading) {
+               //message.push(<Typography className="no-result"><span class="noR">Empty list of subscriptions<br/>(work in progress)</span></Typography>)
+            } else             
+
             // - was related to #794
             // - #791 fix blank page when no results
             // - needed to prevent displaying "no result" while loading...
-            } else if(this.props.loading && this.state.filters.datatype[0] !== "Any" || !this.props.datatypes?.hash) {
+            
+            if(this.props.loading && this.state.filters.datatype[0] !== "Any" || !this.props.datatypes?.hash) {
               message.push(<Typography className="loading"></Typography>)
             } else {
                message.push(<Typography className="no-result">
