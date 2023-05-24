@@ -1165,10 +1165,10 @@ export function top_right_menu(that,etextTitle,backUrl,etextres)
          that.setState({collapse:{...that.state.collapse, hoverLogin } } )
       }
 
-      let proxied = !window.location.host.includes("localhost") && 
-            that.props.config && that.props.config.primaryUrl && that.props.config.primaryUrl != window.location.host
+      let proxied = //!window.location.host.includes("localhost") && 
+            that.props.config && that.props.config.primaryUrl && !window.location.host.match(new RegExp(that.props.config.primaryUrl))
 
-      console.log("proxied?",!window.location.host.includes("localhost"), that.props.config?.primaryUrl, that.props.config?.primaryUrl != window.location.host)
+      //console.log("proxied?",!window.location.host.includes("localhost"), that.props.config?.primaryUrl, that.props.config?.primaryUrl != window.location.host)
 
       let login       
       if(that.props.auth) login = <div id="login" {...(proxied?{class:"proxied"}:{})}>

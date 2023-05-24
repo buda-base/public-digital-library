@@ -623,7 +623,7 @@ footer #donate,
 
 .nav #guide { margin-left:25px;}
 
-.nav a#collections { margin-left:50px; }
+.nav a#collections { margin-left:25px; }
 
 .nav #logo.khmer + .links  { margin-left:15px; }
 
@@ -1778,7 +1778,7 @@ a.result + #matches .result-content #icon > :not(.thumb) img { width:40px; }
 .result-content .contenu h3 > span:first-of-type:empty + span.highlight { margin-left:-10px;}
 */
 
-.samePop, [role=tooltip] { z-index:100000 !important;}
+.samePop, [role=tooltip] { z-index:1000000 !important;}
 
 #results > li + .result-content { scroll-margin:430px; }
 
