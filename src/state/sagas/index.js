@@ -110,10 +110,12 @@ async function initiateApp(params,iri,myprops,route,isAuthCallback) {
                   js.setAttribute("data-feedbucket", config.feedbucketID)            
                   head.appendChild(js);
                   store.dispatch(uiActions.feedbucket("on"))           
-                  window.useFeedbucket = true    
+                  window.useFeedbucket = true
+                  if(window.initFeedbucketInMirador) window.initFeedbucketInMirador();
                } else {
                   console.log("trying...")
-                  if(window.useFeedbucket) delete window.useFeedbucket
+                  if(window.useFeedbucket) delete window.useFeedbucket;
+                  if(window.initFeedbucketInMirador) delete window.initFeedbucketInMirador;
                }
             }, 650);
             return
