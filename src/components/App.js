@@ -1165,7 +1165,7 @@ export function top_right_menu(that,etextTitle,backUrl,etextres)
          that.setState({collapse:{...that.state.collapse, hoverLogin } } )
       }
 
-      let proxied = //!window.location.host.includes("localhost") && 
+      let proxied = !window.location.host.includes("localhost") && 
             that.props.config && that.props.config.primaryUrl && !window.location.host.match(new RegExp(that.props.config.primaryUrl))
 
       //console.log("proxied?",!window.location.host.includes("localhost"), that.props.config?.primaryUrl, that.props.config?.primaryUrl != window.location.host)
@@ -3723,7 +3723,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                
                ret.push(<div>{this.makeResult(iri /*i[0]["@id"]*/,n+"_"+cpt,null,"@"+startChar+"~"+endChar,"?",null,null,null,
                   [{lang,value:val,type:tmp+"textMatch",expand,context,startChar,endChar,inPart} ], //...i.filter(e => [bdo+"sliceStartChar",tmp+"matchScore"].includes(e.type) )],
-                  null,[],null,true)}</div>)
+                  null,[...allProps.filter(a => [tmp+"hasReproAccess", adm+"access", tmp+"access"].includes(a.type))],null,true)}</div>)
 
                cpt++
             }
@@ -3992,7 +3992,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       }
    }
 
-   getEtextMatches(prettId,startC,endC,bestM,rmatch,facet,n) { 
+   getEtextMatches(prettId,startC,endC,bestM,rmatch,facet,n,access) { 
       let lastP,prop = ""
 
       return rmatch.filter(m => !([ tmp+"nameMatch", bdo+"biblioNote", bdo+"catalogInfo", rdfs+"comment", tmp+"noteMatch", bdo+"colophon", bdo+"incipit" ].includes(m.type)) ).map((m) => {
@@ -4074,10 +4074,13 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             }), " ]" ]}<br/><br/></div>	
          }	
 
+         console.log("acc:",prettId,access)
 
          let urlBase, staticRegExp = new RegExp(".*?[/](latest|"+Object.keys(staticQueries).join("|")+")[/]?")  ;
          if(window.location.href.match(staticRegExp)) urlBase = window.location.href.replace(staticRegExp,"$1?");
          else urlBase = window.location.href.replace(/^https?:[/][/][^?]+[?]?/gi,"")+"&"
+
+         let openAccess = access?.endsWith && access?.endsWith("/AccessOpen")
 
          return (<div className={"match "+prop}>	
             <span className={"label " +(lastP === prop?"invisible":"")}>{(!from?prop:from)}{I18n.t("punc.colon")}&nbsp;</span>	
@@ -4085,20 +4088,31 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                <div style={{margin:"10px"}}>	
                   {I18n.t(languages[lang]?languages[lang].replace(/search/,"tip"):lang)}/>	
                </div>	
-            }><span className="lang">&nbsp;{lang}</span></Tooltip>:null]}{expand?<span class="etext-match"><br/>&gt;&nbsp;	
-               <span class="uri-link" onClick={(e) => { 	
-                  if(!this.state.collapse[prettId+"@"+startC] && !m.context) this.props.onGetContext(prettId,startC,endC) ; 	
-                  if(this.state.collapse[prettId+"@"+startC]) {  
-                     if(this._refs && this._refs[n] && this._refs[n].current) {
-                        this._refs[n].current.scrollIntoView(); 
-                        console.log("ref:",n,this._refs[n].current)
+            }><span className="lang">&nbsp;{lang}</span></Tooltip>:null]}{expand?<span class="etext-match"><br/>
+               { (openAccess || expand !== true) && <>
+                  &gt;&nbsp;	
+                  <span class="uri-link" onClick={(e) => { 	
+                     if(!this.state.collapse[prettId+"@"+startC] && !m.context) this.props.onGetContext(prettId,startC,endC) ; 	
+                     if(this.state.collapse[prettId+"@"+startC]) {  
+                        if(this._refs && this._refs[n] && this._refs[n].current) {
+                           this._refs[n].current.scrollIntoView(); 
+                           console.log("ref:",n,this._refs[n].current)
+                        }
                      }
-                  }
-                  toggleExpand(e,prettId+"@"+startC); 
-               }}>{expand!==true?I18n.t("result.expandC"):I18n.t("result.hideC")}</span>	
-               <span> {I18n.t("misc.or")} </span>	
-               <Link to={"/show/"+prettId+"?s="+ encodeURIComponent((urlBase.replace(/((([?])?&*|^)n=[^&]*)/g,"$3")+(!urlBase.match(/[\?&]$/)?"&":"")+"n="+n).replace(/\?+&?/,"?"))+(!bestM?"":"&"+bestM.replace(/^\?/,""))} class="uri-link">{I18n.t("result.openEin")}</Link>	
-               </span>:null}</span>	                      	
+                     toggleExpand(e,prettId+"@"+startC); 
+                  }}>{openAccess 
+                     ? expand!==true
+                        ? I18n.t("result.expandC")
+                        : I18n.t("result.hideC")
+                     : expand!==true
+                        ? I18n.t("resource.showD")
+                        : null
+                     }</span>	
+                  { openAccess && <>
+                     <span> {I18n.t("misc.or")} </span>	
+                     <Link to={"/show/"+prettId+"?s="+ encodeURIComponent((urlBase.replace(/((([?])?&*|^)n=[^&]*)/g,"$3")+(!urlBase.match(/[\?&]$/)?"&":"")+"n="+n).replace(/\?+&?/,"?"))+(!bestM?"":"&"+bestM.replace(/^\?/,""))} class="uri-link">{I18n.t("result.openEin")}</Link>	
+                  </> }
+                  </> }</span>:null}</span>	                      	
             </div>)	
          
       })	
@@ -4739,7 +4753,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             { type === "Etext" && this.getResultProp(I18n.t("result.inInstance"),allProps,false,true,[tmp+"inInstance"]) }
             { type === "Etext" && this.getResultProp(I18n.t("result.inInstancePart"),allProps,false,true,[tmp+"inInstancePart"]) }
 
-            { type === "Etext" && this.getEtextMatches(prettId,startC,endC,bestM,rmatch,null,nsub) }
+            { type === "Etext" && this.getEtextMatches(prettId,startC,endC,bestM,rmatch,null,nsub,access) }
 
             {/* { this.getResultProp("tmp:nameMatch",allLabels,true,false,[ tmp+"nameMatch" ], !preLit?preLit:preLit.replace(/[↦↤]/g,"") ) } */}
 
