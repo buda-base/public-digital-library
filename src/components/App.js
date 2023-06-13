@@ -735,9 +735,12 @@ export function getPropLabel(that, i, withSpan = true, withLang = false) {
 
    let lang
    if(labels) {
-      label = getLangLabel(that,"",labels,true)
+      // fix for "Author: False" in facets on /search?r=bdr:P1KG13161&t=Work
+      let filteredLabels = labels.filter(l => l.lang != undefined || l.fromKey == skos+"prefLabel")
+      if(!filteredLabels.length) filteredLabels = labels
+      label = getLangLabel(that,"",filteredLabels,true)
 
-      //loggergen.log("label",i,label)
+      //loggergen.log("label:",i,label,labels)
 
       if(label) {
          if(label.lang) lang = label.lang
@@ -2934,7 +2937,7 @@ class App extends Component<Props,State> {
 
    handleCheck = (ev:Event,lab:string,val:boolean,params?:{},force?:boolean) => {
 
-      loggergen.log("check::",lab,val,this.props.keyword,'('+this.state.keyword+')')
+      //loggergen.log("check::",lab,val,this.props.keyword,'('+this.state.keyword+')')
 
       //if(this.props.language == "") return
 
@@ -6234,7 +6237,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          //else if(label && label["@value"]) label = label["@value"]
          if(!label) label = { value: this.fullname(e,elem["skos:prefLabel"],true) }
 
-         //loggergen.log("check",e,label,elem,disable);
+         //loggergen.log("check:",e,label,elem,disable);
 
          let cpt   = tree.filter(f => f["@id"] == e)[0]["tmp:count"]
          let cpt_i                
@@ -6758,7 +6761,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
                   if(checked) idx_check = idx
 
-                  //loggergen.log("checked:"+i+";",checked)
+                  //loggergen.log("checked:"+i+";",checked,label)
 
                   let isExclu = this.state.filters.exclude && this.state.filters.exclude[jpre] && this.state.filters.exclude[jpre].includes(i)
 
