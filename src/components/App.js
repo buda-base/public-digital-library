@@ -1168,8 +1168,7 @@ export function top_right_menu(that,etextTitle,backUrl,etextres)
          that.setState({collapse:{...that.state.collapse, hoverLogin } } )
       }
 
-      let proxied = !window.location.host.includes("localhost") && 
-            that.props.config && that.props.config.primaryUrl && !window.location.host.match(new RegExp(that.props.config.primaryUrl))
+      let proxied = isProxied(that)
 
       //console.log("proxied?",!window.location.host.includes("localhost"), that.props.config?.primaryUrl, that.props.config?.primaryUrl != window.location.host)
 
@@ -1308,6 +1307,12 @@ export function isAdmin(auth) {
    //console.log("isAdm:",result)
    return result
 }
+
+export function isProxied(that) {
+   return !window.location.host.includes("localhost") && 
+      that?.props?.config && that.props.config.primaryUrl && !window.location.host.match(new RegExp(that.props.config.primaryUrl))
+}
+
 
 
 export function renderDates(birth,death,floruit,locale) {
@@ -1884,6 +1889,11 @@ class App extends Component<Props,State> {
       let khmerCollec = ""
       if(onKhmerUrl && label.includes("Instance")) khmerCollec = "&f=collection,inc,bdr:PR1KDPP00" // not working for Works yet
 
+      // #827
+      let proxiedCollec = ""
+      if(false && // we're not ready yet
+         isProxied(this) && label.includes("Instance")) proxiedCollec = "&f=collection,inc,tmp:subscribed"
+
       loggergen.log("search::",key,_key,label,searchDT) //,this.state,!global.inTest ? this.props:null)
 
       let hasOpenPossibly = ""
@@ -1895,7 +1905,7 @@ class App extends Component<Props,State> {
       if(dataInfo) {
          console.log("new route:",dataInfo)
 
-         this.props.history.push({pathname:"/search",search:"?"+(dataInfo==="date"?"date":"id")+"="+key+"&t="+label+khmerCollec})
+         this.props.history.push({pathname:"/search",search:"?"+(dataInfo==="date"?"date":"id")+"="+key+"&t="+label+khmerCollec+proxiedCollec})
       }
       else if(_key.match(RIDregexp) || prefixesMap[key.replace(/^([^:]+):.*$/,"$1")])
       {
@@ -1909,12 +1919,12 @@ class App extends Component<Props,State> {
          }
          else {
             if(!label) label = this.state.filters.datatype.filter((f)=>["Person","Work"].indexOf(f) !== -1)[0]
-            this.props.history.push({pathname:"/search",search:"?r="+_key+(label?"&t="+label+khmerCollec+hasOpenPossibly:"")})
+            this.props.history.push({pathname:"/search",search:"?r="+_key+(label?"&t="+label+khmerCollec+proxiedCollec+hasOpenPossibly:"")})
          }
       }
       else if(key.match(/^[^:]*:[^ ]+/))
       {
-         this.props.history.push({pathname:"/search",search:"?p="+key+khmerCollec})
+         this.props.history.push({pathname:"/search",search:"?p="+key+khmerCollec+proxiedCollec})
 
       }
       else {
@@ -1928,7 +1938,7 @@ class App extends Component<Props,State> {
          if(this.props.searches && this.props.searches[this.state.filters.datatype[0]] && this.props.searches[this.state.filters.datatype[0]][this.props.keyword+"@"+this.props.language] && this.props.searches[this.state.filters.datatype[0]][this.props.keyword+"@"+this.props.language].inEtext) {
             inEtext = this.props.searches[this.state.filters.datatype[0]][this.props.keyword+"@"+this.props.language].inEtext
          }
-         const newLoca = {pathname:"/search",search:"?q="+key+"&lg="+lang+"&t="+label+khmerCollec+hasOpenPossibly+(inEtext?"&r="+inEtext:"")}
+         const newLoca = {pathname:"/search",search:"?q="+key+"&lg="+lang+"&t="+label+khmerCollec+proxiedCollec+hasOpenPossibly+(inEtext?"&r="+inEtext:"")}
          console.log("newL?",newLoca)
          this.props.history.push(newLoca)
          

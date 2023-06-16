@@ -2740,7 +2740,8 @@ class ResourceViewer extends Component<Props,State>
 
    hasSub(k:string)
    {
-      if(!k.match(/^http:\/\/purl\.bdrc\.io/)) return false
+      // related to #828
+      if(!k.includes("purl.bdrc.io")) return false
       else return (this.props.dictionary && this.props.dictionary[k] && this.props.dictionary[k][bdo+"inferSubTree"])
 
    }
@@ -2925,7 +2926,8 @@ class ResourceViewer extends Component<Props,State>
          
          if(elem?.value?.startsWith("bdr:")) elem.value = elem.value.replace(/^bdr:/,bdr)
 
-         if(!elem.value.match(/^http:\/\/purl\.bdrc\.io/) /* && !hasExtPref */ && ((!dic || !dic[elem.value]) && !prop.match(/[/#]sameAs/))) {
+         // related to #828
+         if(!elem.value.includes("purl.bdrc.io") /* && !hasExtPref */ && ((!dic || !dic[elem.value]) && !prop.match(/[/#]sameAs/))) {
             let link = elem.value
 
             if(this.props.config && this.props.config.chineseMirror) link = link.replace(new RegExp(cbeta), "http://cbetaonline.cn/")
