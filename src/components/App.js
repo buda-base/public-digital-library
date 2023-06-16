@@ -1309,8 +1309,12 @@ export function isAdmin(auth) {
 }
 
 export function isProxied(that) {
-   return !window.location.host.includes("localhost") && 
-      that?.props?.config && that.props.config.primaryUrl && !window.location.host.match(new RegExp(that.props.config.primaryUrl))
+   return ( 
+      /* dev/debug */
+      //true || 
+         !window.location.host.includes("localhost") && 
+         that?.props?.config && that.props.config.primaryUrl && !window.location.host.match(new RegExp(that.props.config.primaryUrl))
+   )
 }
 
 

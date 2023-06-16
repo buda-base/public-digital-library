@@ -2922,7 +2922,7 @@ class ResourceViewer extends Component<Props,State>
             return JSON.stringify(elem);
          }
 
-         //loggergen.log("uriformat",prop,elem.value,elem,dic,withProp,show)
+         loggergen.log("uriformat",prop,elem.value,elem,dic,withProp,show)
          
          if(elem?.value?.startsWith("bdr:")) elem.value = elem.value.replace(/^bdr:/,bdr)
 
