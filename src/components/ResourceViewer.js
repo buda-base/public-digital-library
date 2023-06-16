@@ -3108,7 +3108,8 @@ class ResourceViewer extends Component<Props,State>
 
             //loggergen.log("sameBDRC",sameBDRC)
 
-            if(!elem.value.match(/[.]bdrc[.]/)) { 
+            // #828
+            if(!elem.value.includes("purl.bdrc.io")) { 
                if(orec && orec.length) link = <a class="urilink prefLabel no-bdrc" href={orec[0].value} target="_blank">{info}<Tooltip placement="bottom-end" title={<span>See on <b>{providers[prefix]}</b></span>}><img src="/icons/link-out.svg"/></Tooltip></a>
                else if(sameBDRC) {
                   if(!info) info = shortUri(elem.value)
