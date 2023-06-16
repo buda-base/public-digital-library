@@ -1790,8 +1790,9 @@ function mergeSameAs(result,withSameAs,init = true,rootRes = result, force = fal
          let fullT = bdo+t[0].toUpperCase()+t.substring(1,t.length - 1)
          let keys = Object.keys(result[t])
          if(keys) for(let k of keys) {
-            if(!k.match(/purl[.]bdrc/)) { 
-               let same = result[t][k].filter(s => (s.type && s.type === owl+"sameAs" && s.value !== k && s.value.match(/purl[.]bdrc/)) || (s.type === tmp+"relationType" && s.value === owl+"sameAs"))
+            // #828
+            if(!k.includes("purl.bdrc.io")) { 
+               let same = result[t][k].filter(s => (s.type && s.type === owl+"sameAs" && s.value !== k && s.value.includes("purl.bdrc.io")) || (s.type === tmp+"relationType" && s.value === owl+"sameAs"))
                if(same.length || force) withSameAs[k] = { t, fullT, props:[ ...result[t][k] ], same:same.map(s=>s.type!==tmp+"relationType"?s.value:(sameBDRC?sameBDRC:(keyword?fullKW:"?"))) }
             }
          }
