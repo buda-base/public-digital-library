@@ -278,7 +278,8 @@
       "tmp:quality":"OCR Accuracy",
       "tmp:RawOCR": "average",
       "tmp:CleanedOCR": "high",
-      "tmp:ComputerInputOCR": "very high"
+      "tmp:ComputerInputOCR": "very high",
+      "tmp:subscribed":"Subscribed Collections"
    },
    "guided":{
       "keyword":"keyword",
