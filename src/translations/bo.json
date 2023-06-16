@@ -278,7 +278,8 @@
       "tmp:quality":"OCR སྐྱོན་བྲལ།",
       "tmp:RawOCR": "ཆ་སྙོམས།",
       "tmp:CleanedOCR": "high",
-      "tmp:ComputerInputOCR": "very high"
+      "tmp:ComputerInputOCR": "very high",
+      "tmp:subscribed":"Subscribed Collections"
    },
    "guided":{
       "keyword":"གཙོ་ཚིག",
