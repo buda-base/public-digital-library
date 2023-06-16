@@ -857,7 +857,7 @@ export default class API {
          method: method,
          ...( method == "POST" && {body:body} ),//body:body,
          headers: new Headers({
-            "Accept": accept,
+            "Accept": accept || "*",
             ...other,
             // CORS issue - to be continued
             ...( isAuthenticated() && {"Authorization":"Bearer "+id_token } ),
