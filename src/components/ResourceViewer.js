@@ -83,7 +83,7 @@ import {getEntiType,dPrefix,RISexportPath,staticQueries} from '../lib/api';
 import {numtobo} from '../lib/language';
 import {languages,getLangLabel,top_right_menu,prefixesMap as prefixes,sameAsMap,shortUri,fullUri,
    highlight,lang_selec,etext_lang_selec,langSelect,searchLangSelec,report_GA,getGDPRconsent,renderDates,
-   renderBanner} from './App';
+   renderBanner, isProxied} from './App';
 import {narrowWithString} from "../lib/langdetect"
 import {addMonlamStyle} from "../lib/monlam"
 import Popover from '@material-ui/core/Popover';
@@ -6067,7 +6067,11 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
                           [<MenuItem onClick={e => that.setState({...that.state,pdfOpen:false})}><a href={that.props.pdfUrl} target="_blank">Download</a></MenuItem>
                           ,<hr/>]
                          */}
-                         { !this.props.useDLD && authError && <ListItem><a className="mustLogin" onClick={() => that.props.auth.login(that.props.history.location)}>{I18n.t("resource.mustLogin")}</a></ListItem>}
+                         { !this.props.useDLD && authError && (
+                           isProxied(that)
+                              ? <ListItem><div className="mustLogin"><Trans i18nKey="resource.notInList" components={{lk:<a class='uri-link' target='_blank' href={"https://library"+"."+"bdrc"+"."+"io/show/"+that.props.IRI} />, nl:<br/>}}/></div></ListItem>
+                              : <ListItem><a className="mustLogin" onClick={() => that.props.auth.login(that.props.history.location)}>{I18n.t("resource.mustLogin")}</a></ListItem>
+                         )}
                          {
                            (!authError || this.props.useDLD) && that.props.pdfVolumes.map(e => {
 

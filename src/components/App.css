@@ -3393,6 +3393,7 @@ body > [id^="menu-"] > div:last-child,
 
 .poPdf > div:last-child { max-height:30vh; box-shadow:0 1px 4px #cecece; }
 .poPdf > div b,
+.poPdf > div div.mustLogin,
 .poPdf > div a { font-size:12px; font-family: "Noto Sans", "Noto Serif Tibetan", "Noto Serif Khmer", "Noto Sans Mongolian", "Roboto", "Helvetica", "Arial", sans-serif; color:#4d4d4d; white-space: nowrap;}
 .poPdf > div li { padding:6px 17px; }
 .poPdf > div a { padding:0 6px; display:flex;}
@@ -3424,7 +3425,10 @@ body > [id^="menu-"] > div:last-child,
 
 
 
-.mustLogin:hover { text-decoration: underline;}
+a.mustLogin:hover { text-decoration: underline;}
+
+div.mustLogin a { display:inline; padding:0; color:#d73449; line-height:24px;}
+div.mustLogin a:hover { border:none; text-decoration: underline;}
 
 /* ------------------------------------------------------------------------------------------------------------------------ hover panel */
 
