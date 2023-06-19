@@ -5132,12 +5132,12 @@ class ResourceViewer extends Component<Props,State>
 
       let pdfLink,monoVol = -1 ;
       // allow pdf download on chinese server too + #829 
-      if(this.props.firstImage &&  !this.props.manifestError && (this.props.firstImage.includes("bdrc.io") || this.props.firstImage.includes("buda.zju"))) 
+      if(this.props.firstImage &&  !this.props.manifestError && (this.props.firstImage.includes("iiif.bdrc.io") || this.props.firstImage.includes("buda.zju"))) 
       {
          let iiif = "//iiif.bdrc.io" ;
          if(this.props.config && this.props.config.iiif) iiif = this.props.config.iiif.endpoints[this.props.config.iiif.index]
 
-         loggergen.log("iiif",this.props.imageAsset,iiif,this.props.config)
+         //loggergen.log("iiif:",this.props.firstImage,this.props.imageAsset,iiif,this.props.config)
 
          let id = this.props.IRI.replace(/^[^:]+:./,"")
          if(this.props.imageAsset.match(/[/]i:/) || (this.props.imageAsset.match(/[/]wio:/) && this.props.manifests)) {
