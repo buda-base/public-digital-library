@@ -2922,7 +2922,7 @@ class ResourceViewer extends Component<Props,State>
             return JSON.stringify(elem);
          }
 
-         loggergen.log("uriformat",prop,elem.value,elem,dic,withProp,show)
+         //loggergen.log("uriformat",prop,elem.value,elem,dic,withProp,show)
          
          if(elem?.value?.startsWith("bdr:")) elem.value = elem.value.replace(/^bdr:/,bdr)
 
@@ -5131,7 +5131,8 @@ class ResourceViewer extends Component<Props,State>
    getPdfLink = (data) =>  {
 
       let pdfLink,monoVol = -1 ;
-      if(this.props.firstImage &&  !this.props.manifestError && this.props.firstImage.match(/([.]bdrc[.]io)|(buda[.]zju)/)) // allow pdf download on chinese server too
+      // allow pdf download on chinese server too + #829 
+      if(this.props.firstImage &&  !this.props.manifestError && (this.props.firstImage.includes("bdrc.io") || this.props.firstImage.includes("buda.zju"))) 
       {
          let iiif = "//iiif.bdrc.io" ;
          if(this.props.config && this.props.config.iiif) iiif = this.props.config.iiif.endpoints[this.props.config.iiif.index]
