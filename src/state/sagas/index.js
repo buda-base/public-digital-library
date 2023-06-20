@@ -3534,7 +3534,7 @@ async function getSubscribedCollections() {
 
    try {
       let res = await api.loadSubscribedCollections()      
-      res = rewriteAuxMain(res,"(subscriptions)",["Product"])
+      res = Object.keys(res.main) || []
       store.dispatch(dataActions.gotSubscribedCollections(res));
    } catch(e) {
       store.dispatch(dataActions.gotSubscribedCollections([]))
