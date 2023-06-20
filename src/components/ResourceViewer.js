@@ -4706,6 +4706,8 @@ class ResourceViewer extends Component<Props,State>
 
       if(!this.state.openMirador) // || !$("#viewer").hasClass("hidden"))
       {
+
+         window.isProxied = isProxied(this)
          
          document.getElementsByName("viewport")[0].content = "width=device-width, initial-scale=1.0, maximum-scale=1.0" ;
 

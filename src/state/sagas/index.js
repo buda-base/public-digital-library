@@ -11,7 +11,7 @@ import store from '../../index';
 import bdrcApi, { getEntiType, ResourceNotFound, logError, staticQueries } from '../../lib/api';
 import {sortLangScriptLabels, extendedPresets, getMainLabel} from '../../lib/transliterators';
 import {auth} from '../../routes';
-import {shortUri,fullUri,isAdmin,sublabels,subtime} from '../../components/App'
+import {shortUri,fullUri,isAdmin,sublabels,subtime,isProxied} from '../../components/App'
 import {getQueryParam, GUIDED_LIMIT} from '../../components/GuidedSearch'
 import qs from 'query-string'
 import history from '../../history.js'
@@ -101,6 +101,8 @@ async function initiateApp(params,iri,myprops,route,isAuthCallback) {
             else handleAuthentication(null, isAuthCallback)
          }
          store.dispatch(dataActions.loadedConfig(config));
+
+         window.isProxied = isProxied({props:{config}})
          
          loggergen.log("config?",auth.isAuthenticated(),config,params)
          

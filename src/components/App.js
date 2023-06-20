@@ -434,8 +434,8 @@ export const renderBanner = (that, infoPanel, isResourcePage) => {
          })
 
 
-         // check if popup has it recently been closed 
-         let hidden = that.state.collapse?.["msgPopup"+(m.id?"-"+m.id:"")]
+         // check if popup has it recently been closed + #829
+         let hidden = isProxied(that) && lab.value.includes("/donation/") ? true : that.state.collapse?.["msgPopup"+(m.id?"-"+m.id:"")]
 
          // condition to show popup 
          let condition      
@@ -1050,7 +1050,7 @@ export function top_right_menu(that,etextTitle,backUrl,etextres)
 
 
    let uiLangPopup
-   if(!that.state?.collapse?.uiLangPopup && !localStorage.getItem('uilang')) {
+   if(!that.state?.collapse?.uiLangPopup && !localStorage.getItem('uilang') && isProxied(that)) {
       uiLangPopup = <div id="uiLangPopup">
          <div class="bg" onClick={() => that.setState({collapse:{...that.state?.collapse,uiLangPopup:true}})}></div>
          <div class="fg">
