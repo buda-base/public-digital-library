@@ -397,7 +397,7 @@ export const renderBanner = (that, infoPanel, isResourcePage) => {
       let lab = getLangLabel(that,tmp+"bannerMessage",m.text) 
       let icon 
 
-      //console.log("m:",m,lab,m.text,that.props.locale,that)
+      //console.log("popup/m:",m,lab,m.text,that.props.locale,that)
       
       if(m.severity=="info") icon = <InfoIcon className="info"/>
       else if(m.severity=="warning") icon = <WarnIcon className="warn"/>
@@ -435,7 +435,7 @@ export const renderBanner = (that, infoPanel, isResourcePage) => {
 
 
          // check if popup has it recently been closed + #829
-         let hidden = isProxied(that) && lab.value.includes("/donation/") ? true : that.state.collapse?.["msgPopup"+(m.id?"-"+m.id:"")]
+         let hidden = that.state.collapse?.["msgPopup"+(m.id?"-"+m.id:"")]
 
          // condition to show popup 
          let condition      
@@ -464,6 +464,8 @@ export const renderBanner = (that, infoPanel, isResourcePage) => {
             }
          }
          
+         hidden = hidden || isProxied(that) && lab.value.includes("/donation/") 
+
          if(hidden != that.state.collapse["msgPopup"+(m.id?"-"+m.id:"")]) that.setState({collapse:{ ...that.state.collapse, ["msgPopup"+(m.id?"-"+m.id:"")]: hidden }})
 
          const closePopup = (ev) => {
@@ -1050,7 +1052,7 @@ export function top_right_menu(that,etextTitle,backUrl,etextres)
 
 
    let uiLangPopup
-   if(!that.state?.collapse?.uiLangPopup && !localStorage.getItem('uilang') && isProxied(that)) {
+   if(!that.state?.collapse?.uiLangPopup && !localStorage.getItem('uilang') && !isProxied(that)) {
       uiLangPopup = <div id="uiLangPopup">
          <div class="bg" onClick={() => that.setState({collapse:{...that.state?.collapse,uiLangPopup:true}})}></div>
          <div class="fg">
@@ -1311,7 +1313,7 @@ export function isAdmin(auth) {
 export function isProxied(that) {
    return ( 
       /* just comment 1st line for dev/debug */
-      //!window.location.host.includes("localhost") && 
+      !window.location.host.includes("localhost") && 
       that?.props?.config && that.props.config.primaryUrl && !window.location.host.match(new RegExp(that.props.config.primaryUrl))
    )
 }
