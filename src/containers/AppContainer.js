@@ -75,6 +75,10 @@ const mapStateToProps = (state) => {
    
    let isNewUser = state.ui.isNewUser
 
+
+   let subscribedCollections = state.data.subscribedCollections
+
+
    let newState = { logged,config, hostFailure, searches, keyword, language,loading,datatypes,ontology,facets,
       locale,prefLang,resources,ontoSearch,rightPanel,langPreset, langIndex, langExt, failures,dictionary,metadata, assoRes, 
       sortBy, topicParents, genresParents, instances, isInstance,
@@ -82,7 +86,8 @@ const mapStateToProps = (state) => {
       checkResults,
       portraitPopupClosed,
       useDLD,
-      isNewUser
+      isNewUser,
+      subscribedCollections
    }
 
    if(config && !config.auth) newState.auth = false

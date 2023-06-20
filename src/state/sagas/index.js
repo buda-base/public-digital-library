@@ -103,6 +103,9 @@ async function initiateApp(params,iri,myprops,route,isAuthCallback) {
          store.dispatch(dataActions.loadedConfig(config));
 
          window.isProxied = isProxied({props:{config}})
+         if(window.isProxied && !state.data.subscribedCollections) {
+            store.dispatch(dataActions.getSubscribedCollections());  
+         }
          
          loggergen.log("config?",auth.isAuthenticated(),config,params)
          
@@ -3525,6 +3528,28 @@ async function getFacetInfo(keyword,language:string,property:string) {
 
 }
 
+async function getSubscribedCollections() {
+
+   //console.log("go getSC")
+
+   try {
+      const res = await api.loadSubscribedCollections()
+      store.dispatch(dataActions.gotSubscribedCollections(res))
+   } catch(e) {
+      store.dispatch(dataActions.gotSubscribedCollections([]))
+   }
+}
+
+export function* watchGetSubscribedCollections() {
+
+   yield takeLatest(
+      dataActions.TYPES.getSubscribedCollections,
+      (action) => getSubscribedCollections()
+   );
+}
+
+
+
 export function* watchSearchingKeyword() {
 
    yield takeLatest(
@@ -3678,6 +3703,7 @@ export default function* rootSaga() {
       watchSearchingKeyword(),
       watchStartSearch(),
       watchGetStaticQueryAsResults(),
-      watchGetMonlamResults()
+      watchGetMonlamResults(),
+      watchGetSubscribedCollections()
    ])
 }

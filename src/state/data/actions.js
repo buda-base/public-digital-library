@@ -198,6 +198,21 @@ export const closeMonlamResults = (): Action => {
     }
 }
 
+TYPES.getSubscribedCollections = 'GET_SUBSCRIBED_COLLECTIONS';
+export const getSubscribedCollections = (): Action => {
+    return {
+        type: TYPES.getSubscribedCollections,
+    }
+}
+
+TYPES.gotSubscribedCollections = 'GOT_SUBSCRIBED_COLLECTIONS';
+export const gotSubscribedCollections = (obj:{}): Action => {
+    return {
+        type: TYPES.gotSubscribedCollections,
+        payload: obj
+    }
+}
+
 TYPES.etextError = 'ETEXT_ERROR';
 export const etextError = (code: string, iri:string): Action => {
     return {

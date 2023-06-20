@@ -745,6 +745,11 @@ export default class API {
 
    }
 
+   async loadSubscribedCollections(): Promise<string>
+   {
+      let resource =  await this.getURLContents(this._subscribedCollectionsPath(),false);
+      return resource ;
+   }
 
    async loadCitationData(id:string): Promise<string>
    {
@@ -765,6 +770,7 @@ export default class API {
    }
 
 
+   
    async loadAssocResources(IRI:string): Promise<string>
    {
       let resource =  JSON.parse(await this.getURLContents(this._assocResourcesPath(IRI),false));
@@ -1463,6 +1469,16 @@ export default class API {
          let url = config.endpoints[config.index] ;
 
           let path = url +  "/lib/allAssocResource?R_RES=" + IRI;
+
+          return path;
+      }
+
+      _subscribedCollectionsPath(): string {
+
+         let config = store.getState().data.config.ldspdi
+         let url = config.endpoints[config.index] ;
+
+          let path = url +  "/lib/subscribedCollectionsGraph²";
 
           return path;
       }
