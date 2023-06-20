@@ -1896,8 +1896,7 @@ class App extends Component<Props,State> {
 
       // #827
       let proxiedCollec = ""
-      if(false && // we're not ready yet
-         isProxied(this) && label.includes("Instance")) proxiedCollec = "&f=collection,inc,tmp:subscribed"
+      if(isProxied(this) && label.includes("Instance")) proxiedCollec = "&f=collection,inc,tmp:subscribed"
 
       loggergen.log("search::",key,_key,label,searchDT) //,this.state,!global.inTest ? this.props:null)
 
@@ -4252,7 +4251,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             quality = allProps.filter(a => [ bdo+"qualityGrade", tmp+"hasReproQuality" ].includes(a.type))
             if(quality.length) quality = quality[0].value            
 
-            loggergen.log("access",access,quality)
+            //loggergen.log("access",access,quality)
              
 
             if(quality === "0") {
