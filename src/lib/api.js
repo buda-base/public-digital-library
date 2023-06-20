@@ -1478,7 +1478,7 @@ export default class API {
          let config = store.getState().data.config.ldspdi
          let url = config.endpoints[config.index] ;
 
-          let path = url +  "/lib/subscribedCollectionsGraph²";
+          let path = url +  "/lib/subscribedCollectionsGraph";
 
           return path;
       }
