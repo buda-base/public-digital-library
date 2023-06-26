@@ -1313,7 +1313,7 @@ export function isAdmin(auth) {
 export function isProxied(that) {
    return ( 
       /* just comment 1st line for dev/debug */
-      //!window.location.host.includes("localhost") && 
+      !window.location.host.includes("localhost") && 
       that?.props?.config && that.props.config.primaryUrl && !window.location.host.match(new RegExp(that.props.config.primaryUrl))
    )
 }
@@ -1902,7 +1902,12 @@ class App extends Component<Props,State> {
 
       let hasOpenPossibly = ""
       if(label.includes("Instance") || label.includes("Scan")) { 
-         hasOpenPossibly = "&f=asset,inc,tmp:possibleAccess&f=asset,inc,tmp:catalogOnly" ;
+         // #827
+         if(isProxied(this)) { 
+            hasOpenPossibly = "&f=asset,inc,tmp:hasOpen" ;
+         } else {
+            hasOpenPossibly = "&f=asset,inc,tmp:possibleAccess&f=asset,inc,tmp:catalogOnly" ;
+         }
          if(this.props.useDLD) hasOpenPossibly += (hasOpenPossibly?"&":"")+"&f=inDLD,inc,tmp:available"
       }
 

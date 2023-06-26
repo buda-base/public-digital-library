@@ -3546,6 +3546,7 @@ async function getSubscribedCollections() {
       let res = await api.loadSubscribedCollections()      
       res = Object.keys(res.main) 
 
+      /*
       // debug 
       if(!res?.length) {
          res = [
@@ -3566,6 +3567,7 @@ async function getSubscribedCollections() {
             "http://purl-1bdrc-1io-1e7aa8f3q09da.erf.sbb.spk-berlin.de/resource/PR3JW7543"
          ].map(p => p.replace(/http:\/\/purl-1bdrc-1io-1e7aa8f3q09da.erf.sbb.spk-berlin.de\/resource\//,bdr))
       }
+      */
 
       store.dispatch(dataActions.gotSubscribedCollections(res));
    } catch(e) {
