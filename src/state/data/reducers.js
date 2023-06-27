@@ -288,6 +288,18 @@ export const getPages = (state: DataState, action: Action) => {
 reducers[actions.TYPES.getPages] = getPages;
 
 
+
+
+export const gotSubscribedCollections = (state: DataState, action: Action) => {
+   return {
+       ...state,
+       subscribedCollections: action.payload 
+   }
+}
+reducers[actions.TYPES.gotSubscribedCollections] = gotSubscribedCollections;
+
+
+
 export const getMonlamResults = (state: DataState, action: Action) => {
    return {
        ...state,

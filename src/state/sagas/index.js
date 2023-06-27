@@ -11,7 +11,7 @@ import store from '../../index';
 import bdrcApi, { getEntiType, ResourceNotFound, logError, staticQueries } from '../../lib/api';
 import {sortLangScriptLabels, extendedPresets, getMainLabel} from '../../lib/transliterators';
 import {auth} from '../../routes';
-import {shortUri,fullUri,isAdmin,sublabels,subtime} from '../../components/App'
+import {shortUri,fullUri,isAdmin,sublabels,subtime,isProxied} from '../../components/App'
 import {getQueryParam, GUIDED_LIMIT} from '../../components/GuidedSearch'
 import qs from 'query-string'
 import history from '../../history.js'
@@ -101,6 +101,11 @@ async function initiateApp(params,iri,myprops,route,isAuthCallback) {
             else handleAuthentication(null, isAuthCallback)
          }
          store.dispatch(dataActions.loadedConfig(config));
+
+         window.isProxied = isProxied({props:{config}})
+         if(window.isProxied && !state.data.subscribedCollections) {
+            store.dispatch(dataActions.getSubscribedCollections());  
+         }
          
          loggergen.log("config?",auth.isAuthenticated(),config,params)
          
@@ -2238,6 +2243,7 @@ function rewriteAuxMain(result,keyword,datatype,sortBy,language)
    let reverse = sortBy && sortBy.endsWith("reverse")
    let canPopuSort = false, isScan, isTypeScan = datatype.includes("Scan"), isTypeVersion = datatype.includes("Instance"), inRoot, partType, context, unreleased, hasExactM, isExactM, hasM, inDLD
    let _kw = keyword.replace(/^"|"(~1)?$/g,"").replace(/[“”]/g,'"').replace(/[`‘’]/g,"'") // normalize quotes in user input      
+   let inCollec
 
    // DONE case of tibetan unicode vs wylie
    let flags = "iu"   
@@ -2277,6 +2283,8 @@ function rewriteAuxMain(result,keyword,datatype,sortBy,language)
          }
          let t = datatype[0].toLowerCase()+"s"
 
+         let subscribedCollec = state.data.subscribedCollections
+
          canPopuSort = false 
          //let dataWithAsset = keys.reduce( (acc,k) => { // > 4sec!
          let dataWithAsset = {}
@@ -2291,6 +2299,7 @@ function rewriteAuxMain(result,keyword,datatype,sortBy,language)
             isExactM = false
             hasM = false
             inDLD = false
+            inCollec = false
 
             if(auth && !auth.isAuthenticated() || !isAdmin(auth)) {	
                let status = result[e][k].filter(k => k.type === adm+"status" || k.type === tmp+"status")	
@@ -2301,9 +2310,11 @@ function rewriteAuxMain(result,keyword,datatype,sortBy,language)
                   continue; //return acc ;	
 
             }            
-
-            let toAdd = [], res = result[e][k].map(e => { 
-               if(e.type === _tmp+"OCRscore"){                  
+               
+            let toAdd = [],  res = result[e][k].map(e => { 
+               if(subscribedCollec && e.type === bdo+"inCollection"){                  
+                  if(subscribedCollec.includes(e.value)) inCollec = true
+               } else if(e.type === _tmp+"OCRscore"){                  
                   if(e.value === "1.0") {
                      toAdd.push({type:_tmp+"quality", value: _tmp+"ComputerInputOCR"})
                   } else if(e.value === "0.99") {
@@ -2394,6 +2405,10 @@ function rewriteAuxMain(result,keyword,datatype,sortBy,language)
 
             for(let ctx of context){
                res.push({ type:_tmp+"matchContext", value: ctx})
+            }
+
+            if(inCollec) {
+               res.push({ type:bdo+"inCollection", value: _tmp + "subscribed"})
             }
 
             if(unreleased) {
@@ -3523,6 +3538,54 @@ async function getFacetInfo(keyword,language:string,property:string) {
 
 }
 
+async function getSubscribedCollections() {
+
+   //console.log("go getSC")
+
+   try {
+      let res = await api.loadSubscribedCollections()      
+      res = Object.keys(res.main) 
+
+      /*
+      // debug 
+      if(!res?.length) {
+         res = [
+            "http://purl-1bdrc-1io-1e7aa8f3q09da.erf.sbb.spk-berlin.de/resource/PRHD03",
+            "http://purl-1bdrc-1io-1e7aa8f3q09da.erf.sbb.spk-berlin.de/resource/PR01CTC09",
+            "http://purl-1bdrc-1io-1e7aa8f3q09da.erf.sbb.spk-berlin.de/resource/PRHD02",
+            "http://purl-1bdrc-1io-1e7aa8f3q09da.erf.sbb.spk-berlin.de/resource/PRHD01",
+            "http://purl-1bdrc-1io-1e7aa8f3q09da.erf.sbb.spk-berlin.de/resource/PR01JW11672",
+            "http://purl-1bdrc-1io-1e7aa8f3q09da.erf.sbb.spk-berlin.de/resource/PR00JW501092",
+            "http://purl-1bdrc-1io-1e7aa8f3q09da.erf.sbb.spk-berlin.de/resource/PR60CTX96",
+            "http://purl-1bdrc-1io-1e7aa8f3q09da.erf.sbb.spk-berlin.de/resource/PR1CTC10",
+            "http://purl-1bdrc-1io-1e7aa8f3q09da.erf.sbb.spk-berlin.de/resource/PR1GS49488",
+            "http://purl-1bdrc-1io-1e7aa8f3q09da.erf.sbb.spk-berlin.de/resource/PR1CTC11",
+            "http://purl-1bdrc-1io-1e7aa8f3q09da.erf.sbb.spk-berlin.de/resource/PR1CTC12",
+            "http://purl-1bdrc-1io-1e7aa8f3q09da.erf.sbb.spk-berlin.de/resource/PR1CTC13",
+            "http://purl-1bdrc-1io-1e7aa8f3q09da.erf.sbb.spk-berlin.de/resource/PR1CTC14",
+            "http://purl-1bdrc-1io-1e7aa8f3q09da.erf.sbb.spk-berlin.de/resource/PR1CTC15",
+            "http://purl-1bdrc-1io-1e7aa8f3q09da.erf.sbb.spk-berlin.de/resource/PR3JW7543"
+         ].map(p => p.replace(/http:\/\/purl-1bdrc-1io-1e7aa8f3q09da.erf.sbb.spk-berlin.de\/resource\//,bdr))
+      }
+      */
+
+      store.dispatch(dataActions.gotSubscribedCollections(res));
+   } catch(e) {
+      let fallback = []
+      store.dispatch(dataActions.gotSubscribedCollections(fallback))
+   }
+}
+
+export function* watchGetSubscribedCollections() {
+
+   yield takeLatest(
+      dataActions.TYPES.getSubscribedCollections,
+      (action) => getSubscribedCollections()
+   );
+}
+
+
+
 export function* watchSearchingKeyword() {
 
    yield takeLatest(
@@ -3676,6 +3739,7 @@ export default function* rootSaga() {
       watchSearchingKeyword(),
       watchStartSearch(),
       watchGetStaticQueryAsResults(),
-      watchGetMonlamResults()
+      watchGetMonlamResults(),
+      watchGetSubscribedCollections()
    ])
 }

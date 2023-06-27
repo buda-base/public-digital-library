@@ -745,6 +745,16 @@ export default class API {
 
    }
 
+   async loadSubscribedCollections(): Promise<string>
+   {
+      
+      let config = store.getState().data.config.ldspdi
+      let url = config.endpoints[config.index] + "/lib" ;            
+      let param = {"searchType":"subscribedCollectionsGraph","L_NAME":"","LG_NAME":"", "I_LIM":"" }
+      let data = await this.getQueryResults(url, "", param,"GET","application/json");               
+
+      return data ;
+   }
 
    async loadCitationData(id:string): Promise<string>
    {
@@ -765,6 +775,7 @@ export default class API {
    }
 
 
+   
    async loadAssocResources(IRI:string): Promise<string>
    {
       let resource =  JSON.parse(await this.getURLContents(this._assocResourcesPath(IRI),false));
@@ -1464,7 +1475,7 @@ export default class API {
 
           let path = url +  "/lib/allAssocResource?R_RES=" + IRI;
 
-          return path;
+          return path;   
       }
 
       get _userEditPoliciesPath(): string {

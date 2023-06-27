@@ -387,6 +387,8 @@ const makeMainRoutes = () => {
                         )) }
                         <Route path="/view/:IRI" render={(props) =>
                            {
+                              store.dispatch(initiateApp())
+
                               let get = qs.parse(history.location.search)
                               console.log("props",props,get)
                               let lang = get["lang"] || localStorage.getItem('lang')  || "bo-x-ewts,sa-x-ewts"

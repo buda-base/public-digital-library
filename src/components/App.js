@@ -397,7 +397,7 @@ export const renderBanner = (that, infoPanel, isResourcePage) => {
       let lab = getLangLabel(that,tmp+"bannerMessage",m.text) 
       let icon 
 
-      //console.log("m:",m,lab,m.text,that.props.locale,that)
+      //console.log("popup/m:",m,lab,m.text,that.props.locale,that)
       
       if(m.severity=="info") icon = <InfoIcon className="info"/>
       else if(m.severity=="warning") icon = <WarnIcon className="warn"/>
@@ -434,7 +434,7 @@ export const renderBanner = (that, infoPanel, isResourcePage) => {
          })
 
 
-         // check if popup has it recently been closed 
+         // check if popup has it recently been closed + #829
          let hidden = that.state.collapse?.["msgPopup"+(m.id?"-"+m.id:"")]
 
          // condition to show popup 
@@ -464,6 +464,8 @@ export const renderBanner = (that, infoPanel, isResourcePage) => {
             }
          }
          
+         hidden = hidden || isProxied(that) && lab.value.includes("/donation/") 
+
          if(hidden != that.state.collapse["msgPopup"+(m.id?"-"+m.id:"")]) that.setState({collapse:{ ...that.state.collapse, ["msgPopup"+(m.id?"-"+m.id:"")]: hidden }})
 
          const closePopup = (ev) => {
@@ -995,7 +997,7 @@ export function getGDPRconsent(that) {
    //ReactGA.pageview('/homepage');
    //loggergen.log("cookie?",document.cookie)
 
-   if(that.props.config && that.props.config.GA && !that.props.simple && !that.props.preview) return (
+   if(that.props.config && that.props.config.GA && !that.props.simple && !that.props.preview && !isProxied(that)) return (
       <CookieConsent
          location="bottom"
          onAccept={() => { loggergen.log("accept!"); if(that) { report_GA(that.props.config,that.props.history.location); that.forceUpdate(); } } }
@@ -1050,7 +1052,7 @@ export function top_right_menu(that,etextTitle,backUrl,etextres)
 
 
    let uiLangPopup
-   if(!that.state?.collapse?.uiLangPopup && !localStorage.getItem('uilang')) {
+   if(!that.state?.collapse?.uiLangPopup && !localStorage.getItem('uilang') && !isProxied(that)) {
       uiLangPopup = <div id="uiLangPopup">
          <div class="bg" onClick={() => that.setState({collapse:{...that.state?.collapse,uiLangPopup:true}})}></div>
          <div class="fg">
@@ -1310,10 +1312,9 @@ export function isAdmin(auth) {
 
 export function isProxied(that) {
    return ( 
-      /* dev/debug */
-      //true || 
-         !window.location.host.includes("localhost") && 
-         that?.props?.config && that.props.config.primaryUrl && !window.location.host.match(new RegExp(that.props.config.primaryUrl))
+      /* just comment 1st line for dev/debug */
+      !window.location.host.includes("localhost") && 
+      that?.props?.config && that.props.config.primaryUrl && !window.location.host.match(new RegExp(that.props.config.primaryUrl))
    )
 }
 
@@ -1895,14 +1896,18 @@ class App extends Component<Props,State> {
 
       // #827
       let proxiedCollec = ""
-      if(false && // we're not ready yet
-         isProxied(this) && label.includes("Instance")) proxiedCollec = "&f=collection,inc,tmp:subscribed"
+      if(isProxied(this) && label.includes("Instance")) proxiedCollec = "&f=collection,inc,tmp:subscribed"
 
       loggergen.log("search::",key,_key,label,searchDT) //,this.state,!global.inTest ? this.props:null)
 
       let hasOpenPossibly = ""
       if(label.includes("Instance") || label.includes("Scan")) { 
-         hasOpenPossibly = "&f=asset,inc,tmp:possibleAccess&f=asset,inc,tmp:catalogOnly" ;
+         // #827
+         if(isProxied(this)) { 
+            hasOpenPossibly = "&f=asset,inc,tmp:hasOpen" ;
+         } else {
+            hasOpenPossibly = "&f=asset,inc,tmp:possibleAccess&f=asset,inc,tmp:catalogOnly" ;
+         }
          if(this.props.useDLD) hasOpenPossibly += (hasOpenPossibly?"&":"")+"&f=inDLD,inc,tmp:available"
       }
 
@@ -4251,7 +4256,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             quality = allProps.filter(a => [ bdo+"qualityGrade", tmp+"hasReproQuality" ].includes(a.type))
             if(quality.length) quality = quality[0].value            
 
-            loggergen.log("access",access,quality)
+            //loggergen.log("access",access,quality)
              
 
             if(quality === "0") {

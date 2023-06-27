@@ -689,7 +689,8 @@
       "openIA": "បើកនៅលើបណ្ណសារអ៊ីនធឺណិត",
       "redirecting": "Redirecting...",
       "openW":"Open Work",
-      "fullR":"Full record"
+      "fullR":"Full record",
+      "notInList":"This PDF is not part of a collection subscribed to by your institution.<nl/>Please <lk>visit the BDRC platform</lk> and log in for access."
    },
    "mirador": {
       "return": "ត្រលប់ទៅកាន់ BUDA",
@@ -849,6 +850,8 @@
       "no": "No",
       "noIndex": "No index available",
       "noLabel": "No Label",
+      "notInList1":"This PDF is not part of a collection subscribed to by your institution. {{lnk}} and log in for access.",
+      "notInList2":"Visit the BDRC platform",
       "objectMetadata": "Object Metadata",
       "opacityLabel": "opacity",
       "or":"or",
