@@ -1539,7 +1539,7 @@ function getStats(cat:string,data:{},tree:{},genres:{})
    if(auth && !auth.isAuthenticated() || auth && auth.userProfile && (groups = auth.userProfile["https://auth.bdrc.io/groups"])) {    
       let hide = config["facets-hide-notadmin"]
       //loggergen.log("hide admin",hide,groups)
-      if(!groups || !groups.includes("admin")) {
+      if(!groups || !groups.includes("editors")) {
          if(hide && hide.length) {
             keys = keys.reduce( (acc,k) => (hide.indexOf(k)===-1?[...acc,k]:acc),[])
          }

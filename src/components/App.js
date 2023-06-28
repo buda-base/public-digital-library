@@ -7617,7 +7617,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                         {/* { messageD } */}
                         <h3>{ I18n.t("home.message") }</h3>
                         <h4>{ I18n.t("home.submessage") }</h4>
-                        { ((!this.props.config || !this.props.config.chineseMirror) && !this.props.auth?.isAuthenticated()) && <h4 class="subsubtitleFront">
+                        { ((!this.props.config || !this.props.config.chineseMirror) && !this.props.auth?.isAuthenticated() && !isProxied(this)) && <h4 class="subsubtitleFront">
                            { I18n.t("home.subsubmessage_account1")}
                            {this.props.locale==="bo"?<span> </span>:""}
                            <span class="uri-link" onClick={() => this.props.auth.login(this.props.history.location,true)} >{I18n.t("home.subsubmessage_account4")}</span>
@@ -7626,6 +7626,9 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                            { I18n.t("home.subsubmessage_account3")}</h4> }
                         <h4 class="subsubtitleFront feedB">{ I18n.t("home.subsubmessage") }<a title="email us" href="mailto:help@bdrc.io" lang={this.props.locale}>help@bdrc.io</a>{ I18n.t("home.subsubmessage_afteremail") }</h4>
                         <h4 class="subsubtitleFront"><Trans i18nKey="home.help" components={{bold:<b/>, lk:<a class='uri-link' target='_blank' />}}/></h4>
+                        { this.props.subscribedCollections?.length >= 1 && 
+                            <Trans i18nKey="home.collec" components={{h:<h4 class="subsubtitleFront"/>, nl:<br/>, bold:<b/>, lk:<a class='uri-link' target='_blank' />}}/>
+                        }
                      </List> }
                { /* (this.props.datatypes && this.props.datatypes.hash && this.props.datatypes.metadata[bdo+this.state.filters.datatype[0]] && message.length === 0 && !this.props.loading) && 
                   <List id="results">
