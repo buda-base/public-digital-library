@@ -192,25 +192,34 @@ export default class Auth {
           this.getProfile(() => { 
             this.checkNewUser()
           })
+          store.dispatch(ui.logEvent(true))
+        } else {
+          store.dispatch(ui.logEvent(false))
         }
       }); 
     }
-    else this.auth1.parseHash(async (err, authResult) => {
-      if (authResult && authResult.accessToken && authResult.idToken) {
-        this.setSession(authResult);
-        this.getProfile(() => {
-          this.checkNewUser()
-        })
-        let redirect = JSON.parse(localStorage.getItem('auth0_redirect'))
-        if(!redirect) redirect = '/'
-        if(redirect && redirect.startsWith && redirect.startsWith("http")) window.location.href = redirect
-        else history.replace(redirect);
-        //store.dispatch(ui.loggedIn())
-      } else if (err) {
-        history.replace('/');
-        console.log(err);
-      }
-    });
+    else { 
+      this.auth1.parseHash(async (err, authResult) => {        
+        if (authResult && authResult.accessToken && authResult.idToken) {
+          this.setSession(authResult);
+          this.getProfile(() => {
+            this.checkNewUser()
+          })
+          let redirect = JSON.parse(localStorage.getItem('auth0_redirect'))
+          if(!redirect) redirect = '/'
+          store.dispatch(ui.logEvent(true))
+          if(redirect && redirect.startsWith && redirect.startsWith("http")) window.location.href = redirect
+          else history.replace(redirect);
+          //store.dispatch(ui.loggedIn())
+        } else { 
+          store.dispatch(ui.logEvent(false))
+          if (err) {
+            history.replace('/');
+            console.log(err);
+          }
+        }
+      });
+    }
   }
 
   async setSession(authResult) {

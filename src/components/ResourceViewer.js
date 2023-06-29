@@ -9059,7 +9059,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
       let status = this.getResourceElem(adm+"status");
       if(status && status.length) status = status[0].value ;
 
-      if(!this.props.IRI || (this.props.failures && this.props.failures[this.props.IRI]) || status === bda+"StatusHidden" && this.props.auth.isAuthenticated() && !isGroup(this.props.auth, "admin"))
+      if(!this.props.IRI || (this.props.failures && this.props.failures[this.props.IRI]) || status === bda+"StatusHidden" && this.props.logged !== undefined && !isGroup(this.props.auth, "admin"))
       {
          let msg = "IRI undefined" ;
          if(this.props.IRI) msg = "Resource "+this.props.IRI+" does not exist."
