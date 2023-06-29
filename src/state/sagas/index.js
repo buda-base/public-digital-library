@@ -11,7 +11,7 @@ import store from '../../index';
 import bdrcApi, { getEntiType, ResourceNotFound, logError, staticQueries } from '../../lib/api';
 import {sortLangScriptLabels, extendedPresets, getMainLabel} from '../../lib/transliterators';
 import {auth} from '../../routes';
-import {shortUri,fullUri,isAdmin,sublabels,subtime,isProxied} from '../../components/App'
+import {shortUri,fullUri,isGroup,sublabels,subtime,isProxied} from '../../components/App'
 import {getQueryParam, GUIDED_LIMIT} from '../../components/GuidedSearch'
 import qs from 'query-string'
 import history from '../../history.js'
@@ -2301,7 +2301,7 @@ function rewriteAuxMain(result,keyword,datatype,sortBy,language)
             inDLD = false
             inCollec = false
 
-            if(auth && !auth.isAuthenticated() || !isAdmin(auth)) {	
+            if(auth && !auth.isAuthenticated() || !isGroup(auth, "editors")) {	
                let status = result[e][k].filter(k => k.type === adm+"status" || k.type === tmp+"status")	
                if(status && status.length) status = status[0].value	
                else status = null	

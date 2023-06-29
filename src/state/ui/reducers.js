@@ -5,7 +5,7 @@ import type { Action } from '../actions';
 import createReducer from '../../lib/createReducer';
 import * as actions from './actions';
 import {auth} from '../../routes';
-import {isAdmin} from '../../components/App';
+import {isGroup} from '../../components/App';
 
 let reducers = {};
 
@@ -255,7 +255,7 @@ export const updateFacets = (state: UIState, action: actions.LoadingAction) => {
 
     // #548
     const _tmp = "http://purl.bdrc.io/ontology/tmp/"
-    const removeUnreleased = !isAdmin(auth)  // || !action.payload[_tmp+"nonReleasedItems"]
+    const removeUnreleased = !isGroup(auth, "editors")  // || !action.payload[_tmp+"nonReleasedItems"]
     console.log("removeU:",removeUnreleased)
 
     let facets = Object.keys(action.meta.facets)

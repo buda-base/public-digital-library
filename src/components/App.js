@@ -1304,9 +1304,9 @@ function getVal(label)
    return val
 }
 
-export function isAdmin(auth) {
-   let groups, result = auth && auth.isAuthenticated() && auth.userProfile && (groups = auth.userProfile["https://auth.bdrc.io/groups"]) && groups.includes("editors")
-   //console.log("isAdm:",result)
+export function isGroup(auth, group) {
+   let groups, result = group && auth && auth.isAuthenticated() && auth.userProfile && (groups = auth.userProfile["https://auth.bdrc.io/groups"]) && groups.includes(group)
+   console.log("isGrp:", group, result)
    return result
 }
 
@@ -4177,7 +4177,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
       let status = "",warnStatus,warnLabel
 
-      if(isAdmin(this.props.auth))
+      if(isGroup(this.props.auth, "editors"))
       {
          if(allProps) status = allProps.filter(k => k.type === adm+"status" || k.type === tmp+"status")
          if(status && status.length) status = status[0].value
@@ -5205,7 +5205,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
 
       // hide status if not admin, step 2 (#522)
-      const removeUnreleased = !isAdmin(this.props.auth) || !this.state.filters.facets || !this.state.filters.facets[tmp+"nonReleasedItems"]
+      const removeUnreleased = !isGroup(this.props.auth, "editors") || !this.state.filters.facets || !this.state.filters.facets[tmp+"nonReleasedItems"]
 
 
       for(let t of displayTypes) {

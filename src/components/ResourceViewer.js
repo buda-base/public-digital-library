@@ -104,7 +104,7 @@ import { Swipeable, useSwipeable } from 'react-swipeable'
 
 import {svgEtextS,svgInstanceS,svgImageS} from "./icons"
 
-import {keywordtolucenequery,lucenequerytokeyword,lucenequerytokeywordmulti, isAdmin} from './App';
+import {keywordtolucenequery,lucenequerytokeyword,lucenequerytokeywordmulti, isGroup} from './App';
 
 import HTMLparse from 'html-react-parser';
 
@@ -2853,7 +2853,7 @@ class ResourceViewer extends Component<Props,State>
                if(lang) info = infoBase[0].value 
                else info = null
                if(infoBase[0].type && (infoBase[0].type == bdo+"volumeNumber" || infoBase[0].fromKey == bdo+"volumeNumber"))  {
-                  if(parent && isAdmin(this.props.auth)) info = I18n.t("types.volume_num",{num:infoBase[0].value, id:shortUri(parent).replace(/^[^:]+:/,"")}) ;
+                  if(parent && isGroup(this.props.auth, "editors")) info = I18n.t("types.volume_num",{num:infoBase[0].value, id:shortUri(parent).replace(/^[^:]+:/,"")}) ;
                   else info = I18n.t("types.volume_num_noid",{num:infoBase[0].value }) ;
                }
                else if(info && info.match(/purl[.]bdrc/)) info = null
@@ -9055,8 +9055,11 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
       loggergen.log("render",this.props,this.state,this._refs)
    
       this._annoPane = []
-//
-      if(!this.props.IRI || (this.props.failures && this.props.failures[this.props.IRI]))
+
+      let status = this.getResourceElem(adm+"status");
+      if(status && status.length) status = status[0].value ;
+
+      if(!this.props.IRI || (this.props.failures && this.props.failures[this.props.IRI]) || status === bda+"StatusHidden" && !isGroup(this.props.auth, "admin"))
       {
          let msg = "IRI undefined" ;
          if(this.props.IRI) msg = "Resource "+this.props.IRI+" does not exist."
