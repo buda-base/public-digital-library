@@ -20,14 +20,22 @@ async function init() {
    miradorSetUI();
 }
 
+const urlParams = new URLSearchParams(window.location.search);
+let origin = urlParams.get('origin') ;
+
+// #831
+const token = urlParams.get('token')
+if(origin && token) {
+   const url = "https://iiif.bdrc.io/setcookie"         
+   const headers = new Headers({ "Authorization": "Bearer " + token })
+   const response = await fetch( url, { method:"GET", headers })
+   console.log("response:",await response.text())
+} 
+
 let waiter = setInterval( async ()=>{
    console.log("waiting")
 
-   const urlParams = new URLSearchParams(window.location.search);
-   let origin = urlParams.get('origin') ;
-
-   if(!origin)
-   {
+   if(!origin) {
       window.$("#viewer").html("<div style='margin:20px'><h2>Embedded iframe must set <i>origin</i> parameter.<br/>See <a target='_blank' href='https://github.com/buda-base/public-digital-library/blob/master/BDRC_Embedded_Reader.md'>documentation</a> for further information.</h2></div>")
       clearInterval(waiter)
    }
