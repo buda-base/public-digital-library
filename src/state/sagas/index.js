@@ -91,7 +91,7 @@ async function initiateApp(params,iri,myprops,route,isAuthCallback) {
 
       if(!state.data.config)
       {
-         if(params.feedbucketRecording == "true") {
+         if(params && params.feedbucketRecording == "true") {
             console.log("recording")
             jQuery("#root").addClass("recording")
          }
