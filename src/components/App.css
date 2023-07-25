@@ -5382,6 +5382,88 @@ body {
 
 a.result .contenu ul > div:last-child h3[lang=bo] span { font-size:18px;}
 
+
+
+
+
+
+/* feedbucket */
+.nav + #feedback:not(.on),
+feedbucket-app:not(.on)  { display:none !important; }
+
+#root.recording ~ feedbucket-app  { display:block !important; }
+
+.nav + #feedback { position:fixed; color:#d73449; background:white; display: flex; border-radius: 20px 20px; width:40px; height: 40px; box-sizing: border-box; 
+   box-shadow: 0 2px 4px rgba(187, 187, 187, 0.5); bottom:calc(50% - 20px); right:10px ; cursor: pointer; justify-content: center; align-items: center; z-index:1000000;
+}
+.nav + #feedback svg { width:24px; height:24px; display:none; }
+.nav + #feedback:not(.X) svg:first-child { display: block;}
+.nav + #feedback.X svg:last-child { display: block;}
+
+.nav + #feedback.X { top:calc(50% + 117px); right:10px; bottom:auto; }
+
+
+.H100vh .nav + #feedback:not(.X) {
+   right:20px;
+}
+
+
+/* better not hide Monlam data in etext viewer */
+.nav.etext-nav + #feedback:not(.X) {
+   left:15px; bottom:100px;
+}
+
+
+@media (max-width:1024px)
+{
+   .H100vh .nav + #feedback:not(.X) {
+      bottom:calc(50% - 20px); right:20px;
+   }
+
+   .nav + #feedback {z-index:100000; }
+
+   
+   .nav + #feedback:not(.X) { right:10px; bottom:5px;    
+      width: 52px;
+      height: 52px;
+      border-radius: 26px;
+   }
+   
+   .nav.etext-nav + #feedback:not(.X),
+   .nav + #feedback.top:not(.X) { bottom: 5px; left:5px;}
+   
+   .nav.etext-nav + #feedback:not(.X) { width:52px; height:52px; border-radius:26px; }
+   
+   .nav + #feedback svg { width:28px; height:28px; }
+
+   .H100vh .nav + #feedback {z-index:1000000;display:flex !important; }
+}
+
+@media (max-width:800px)
+{
+   .nav + #feedback:not(.X) { width:50px; height:50px; border-radius:25px; }
+   
+   /*
+   .H100vh .nav + #feedback:not(.X) {right:5px;top:5px; left:auto;}
+   */
+   .H100vh .nav + #feedback { display: none !important; }
+}
+
+
+/* TODO: when is video disabled?  */
+
+/*
+@media (pointer:coarse) {
+   .nav + #feedback.X { top:calc(50% + 60px); }
+}
+*/
+
+
+
+
+
+
+
 /* safari css fix for columns (#227) */
 @media not all and (min-resolution:.001dpcm) { 
    @supports (-webkit-appearance:none) and (stroke-color:transparent) {

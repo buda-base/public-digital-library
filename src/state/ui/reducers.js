@@ -32,13 +32,15 @@ export type UIState = {
        lang:string 
     },
     type?:string,
-    browse?:{}
+    browse?:{},
+    feedbucket:string
 }
 
 const DEFAULT_STATE: UIState = {
    prefLang:"bo-x-ewts",
    collapse:{"locale":true,"priority":true},
-   type:"work"
+   type:"work",
+   feedbucket:""
    //rightPanel:true
 }
 
@@ -137,6 +139,16 @@ export const useDLD = (state: UIState, action: Action) => {
  }
 }
 reducers[actions.TYPES.useDLD] = useDLD;
+
+
+export const feedbucket = (state: UIState, action: Action) => {
+
+    return {
+    ...state,
+    feedbucket:action.payload
+ }
+}
+reducers[actions.TYPES.feedbucket] = feedbucket;
 
 
 export const setEtextLang = (state: UIState, action: Action) => {

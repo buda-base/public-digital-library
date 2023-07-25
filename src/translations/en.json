@@ -111,7 +111,8 @@
       "home":"home",
       "collections":"Browse collections subscribed to by your institution",
       "update":"Update to latest version of BUDA",
-      "guide":"user guide"
+      "guide":"user guide",
+      "feedback":"Feedback"
    },
    "Lsidebar": {
       "sortBy": {

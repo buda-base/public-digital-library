@@ -2,6 +2,7 @@
 //import download from "downloadjs";
 //import fileDownload from "js-file-download" ;
 import _ from "lodash";
+import jQuery from 'jquery' ;
 import { call, put, takeLatest, select, all } from 'redux-saga/effects';
 import { INITIATE_APP } from '../actions';
 import * as dataActions from '../data/actions';
@@ -16,6 +17,7 @@ import {getQueryParam, GUIDED_LIMIT} from '../../components/GuidedSearch'
 import qs from 'query-string'
 import history from '../../history.js'
 import {locales} from '../../components/ResourceViewer';
+
 
 import logdown from 'logdown'
 import edtf, { parse } from "edtf"
@@ -38,6 +40,7 @@ const bdo  = "http://purl.bdrc.io/ontology/core/";
 const bdou  = "http://purl.bdrc.io/ontology/ext/user/" ;
 const bdu   = "http://purl.bdrc.io/resource-nc/user/";
 const bdr  = "http://purl.bdrc.io/resource/";
+const foaf  = "http://xmlns.com/foaf/0.1/" ;
 const owl   = "http://www.w3.org/2002/07/owl#" ;
 const rdf   = "http://www.w3.org/1999/02/22-rdf-syntax-ns#";
 const rdfs  = "http://www.w3.org/2000/01/rdf-schema#"; 
@@ -88,7 +91,41 @@ async function initiateApp(params,iri,myprops,route,isAuthCallback) {
 
       if(!state.data.config)
       {
+         if(params.feedbucketRecording == "true") {
+            console.log("recording")
+            jQuery("#root").addClass("recording")
+         }
+
          const config = await api.loadConfig();
+
+         var timer       
+         if(config.feedbucketID) { 
+            window.initFeedbucket = function() {        
+               // #804 DONE: configure feedback scope
+               if(timer) clearInterval(timer)
+               timer = setInterval(function(){
+                  if(window.feedbucketConfig) {
+                     clearInterval(timer)
+                     timer = 0
+                     if(document.querySelector('[data-feedbucket="'+config.feedbucketID+'"]')) return ;
+                     var head = document.getElementsByTagName('head')[0];
+                     var js = document.createElement("script");
+                     js.type = "text/javascript";  
+                     js.src = "https://cdn.feedbucket.app/assets/feedbucket.js" 
+                     js.setAttribute("data-feedbucket", config.feedbucketID)            
+                     head.appendChild(js);
+                     store.dispatch(uiActions.feedbucket("on"))           
+                     window.useFeedbucket = true
+                     if(window.initFeedbucketInMirador) window.initFeedbucketInMirador();
+                  } else {
+                     console.log("trying...")
+                     if(window.useFeedbucket) delete window.useFeedbucket;
+                     if(window.initFeedbucketInMirador) delete window.initFeedbucketInMirador;
+                  }
+               }, 650);
+               return
+            }
+         }
 
          //console.log("is khmer server ?",config.khmerServer)
 
@@ -813,11 +850,33 @@ async function getUser(profile)
          else return acc ;
       },{}) }
 
+      
       user[id].profile = profile
 
       store.dispatch(uiActions.gotUserID(id, etag));
       store.dispatch(dataActions.gotResource(id, user));
       loggergen.log("user!",id,profile,user)
+
+      try {
+
+         const name = user[id][skos+"prefLabel"] && user[id][skos+"prefLabel"][0].value || user[id][foaf+"mbox"] && user[id][foaf+"mbox"][0].value
+         const email = user[id][skos+"prefLabel"] && user[id][skos+"prefLabel"][0].value || user[id][foaf+"mbox"] && user[id][foaf+"mbox"][0].value
+         const token = id
+
+         if(name && email && token) {
+            window.feedbucketConfig = {
+               reporter: {
+                  name,
+                  email,
+                  token
+               }
+            }         
+         } else {
+            throw new Error("unknown:"+[name,email,token])
+         }
+      } catch(e){
+         console.warn("could find user info for feedbucket",e)
+      }
    }
 
 }

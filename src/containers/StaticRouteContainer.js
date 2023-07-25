@@ -27,7 +27,9 @@ const mapStateToProps = (state,ownProps) => {
    
    let isNewUser = state.ui.isNewUser
 
-   let props = { config, locale, profileName, portraitPopupClosed, isNewUser }
+   let feedbucket = state.ui.feedbucket
+
+   let props = { config, locale, profileName, portraitPopupClosed, isNewUser, feedbucket }
 
    return props
 
@@ -47,6 +49,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       },
       onUserProfile:(url:{}) => {
          dispatch(ui.userProfile(url));
+      },
+      onFeedbucketClick(cls:string) {
+         dispatch(ui.feedbucket(cls))
       }
    }
 }

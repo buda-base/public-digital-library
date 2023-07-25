@@ -1176,6 +1176,17 @@ class ResourceViewer extends Component<Props,State>
             this.props.history.push(loca);            
          }
 
+         if(this.props.feedbucket && window.innerWidth <= 800) {
+            if(window.initFeedbucketInMirador) delete window.initFeedbucketInMirador;
+            $(".nav+#feedback").css("display","flex");
+            if(!$("#feedbucket.X").length) {
+               $("feedbucket-app").removeClass("on");
+               this.props.onFeedbucketClick("on");
+            } else {
+               this.props.onFeedbucketClick("on X");
+            }
+         }
+
          this.setState({...this.state, openUV:false, openMirador:false, openDiva:false, ...(fromSearch?{fromSearch}:{}) } ); 
 
       }
@@ -1812,6 +1823,8 @@ class ResourceViewer extends Component<Props,State>
       }
       
       this.scrollToHashID(this.props.history)
+
+      if(window.initFeedbucket) window.initFeedbucket()
    }
 
    componentWillUnmount() {
@@ -4739,6 +4752,8 @@ class ResourceViewer extends Component<Props,State>
                tiMir = 0
 
                $("#fond").addClass("hidden");
+
+               console.log("fdbk?",window.useFeedbucket)
 
                let data = [], manif, canvasID
                if(useManifest)
@@ -8169,7 +8184,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
                if(parent_nodes.length) { 
                   let update = false
                   for(let n of parent_nodes) {
-                     if(n["@id"].startsWith("bdr:I")) { 
+                     if(n["@id"] && n["@id"].startsWith("bdr:I")) { 
                         if(collapse["outline-"+root+"-"+opart+";"+n["@id"]+"-details"]) {
                            //break ;
                         } else if(collapse["outline-"+root+"-"+opart+";"+n["@id"]+"-details"] === undefined) {

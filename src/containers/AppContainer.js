@@ -73,6 +73,8 @@ const mapStateToProps = (state) => {
 
    let useDLD = state.ui.useDLD
    
+   let feedbucket = state.ui.feedbucket
+
    let isNewUser = state.ui.isNewUser
 
 
@@ -87,7 +89,8 @@ const mapStateToProps = (state) => {
       portraitPopupClosed,
       useDLD,
       isNewUser,
-      subscribedCollections
+      subscribedCollections,
+      feedbucket
    }
 
    if(config && !config.auth) newState.auth = false
@@ -163,6 +166,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       onLoading:(kw:string,load:boolean) => {
          dispatch(ui.loading(kw,load))
       },
+      onFeedbucketClick(cls:string) {
+         dispatch(ui.feedbucket(cls))
+      }
    }
 }
 

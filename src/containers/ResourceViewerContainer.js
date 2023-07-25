@@ -160,6 +160,7 @@ const mapStateToProps = (state,ownProps) => {
 
    let useDLD = state.ui.useDLD
 
+   let feedbucket = state.ui.feedbucket
 
    let isNewUser = state.ui.isNewUser
 
@@ -179,6 +180,7 @@ const mapStateToProps = (state,ownProps) => {
       etextErrors,
       portraitPopupClosed,
       useDLD,
+      feedbucket,
       monlamResults, monlamKeyword,
       isNewUser
    }
@@ -282,7 +284,10 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       },
       onCloseMonlam:() => {
          dispatch(data.closeMonlamResults())
-      }
+      },
+      onFeedbucketClick(cls:string) {
+         dispatch(ui.feedbucket(cls))
+      },
    }
 }
 
