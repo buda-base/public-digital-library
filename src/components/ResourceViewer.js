@@ -2940,7 +2940,7 @@ class ResourceViewer extends Component<Props,State>
          if(elem?.value?.startsWith("bdr:")) elem.value = elem.value.replace(/^bdr:/,bdr)
 
          // related to #828
-         if(!elem.value.includes("purl.bdrc.io") /* && !hasExtPref */ && ((!dic || !dic[elem.value]) && !prop.match(/[/#]sameAs/))) {
+         if(!elem.value.includes("purl.bdrc.io") /* && !hasExtPref */ && ((!dic || !dic[elem.value]) && !prop?.match(/[/#]sameAs/))) {
             let link = elem.value
 
             if(this.props.config && this.props.config.chineseMirror) link = link.replace(new RegExp(cbeta), "http://cbetaonline.cn/")
@@ -7582,6 +7582,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
 
 
       const parts = {
+         "bdo:EtextVolume":"vol",
          "bdo:VolumeEtextAsset":"vol",
          "bdo:EtextRef":"txt",
          "?":"unk",
@@ -7652,35 +7653,40 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
                      g.link = g["@id"]
                      if(g.volumeHasEtext) {
                         if(!Array.isArray(g.volumeHasEtext)) {
-                           let txt = elem.filter(e => e["@id"] === g.volumeHasEtext)
-                           if(txt.length) g.link = txt[0].eTextResource + "?backToEtext="+this.props.IRI + "#open-viewer"
+                           let txt = elem.filter(e => e["@id"] === g.volumeHasEtext)                           
+                           const ETres = txt[0]?.eTextResource || txt[0]?.etextResource["@id"]
+                           if(ETres) {
 
+                              if(txt.length) g.link = ETres + "?backToEtext="+this.props.IRI + "#open-viewer"
+                              
+                              //nav.push(<Link to={"/show/"+txt[0].eTextResource} class="ulink">{I18n.t("resource.openR")}</Link>)
+                              //nav.push(<span>|</span>)
+                              nav.push(<Link  {...!access?{disabled:true}:{}} to={"/show/"+ETres+"?backToEtext="+this.props.IRI+"#open-viewer"} class="ulink">{I18n.t("result.openE")}</Link>)
+                              nav.push(<span>|</span>)
+                              //nav.push(<a href={fullUri(txt[0].eTextResource).replace(/^http:/,"https:")+".txt"} class="ulink"  download type="text" target="_blank">{I18n.t("mirador.downloadE")}</a>)
+                              nav.push(etextDL(ETres))
 
-                           //nav.push(<Link to={"/show/"+txt[0].eTextResource} class="ulink">{I18n.t("resource.openR")}</Link>)
-                           //nav.push(<span>|</span>)
-                           nav.push(<Link  {...!access?{disabled:true}:{}} to={"/show/"+txt[0].eTextResource+"?backToEtext="+this.props.IRI+"#open-viewer"} class="ulink">{I18n.t("result.openE")}</Link>)
-                           nav.push(<span>|</span>)
-                           //nav.push(<a href={fullUri(txt[0].eTextResource).replace(/^http:/,"https:")+".txt"} class="ulink"  download type="text" target="_blank">{I18n.t("mirador.downloadE")}</a>)
-                           nav.push(etextDL(txt[0].eTextResource))
-
+                           }
                         }
                         else {
                            g.hasPart = true
                            
                         }
                      }
-                  } else if(g.seqNum && g.eTextResource) {
+                  } else if(g.seqNum && (g.eTextResource || g.etextResource && g.etextResource["@id"])) {
                      g.index = g.seqNum
-                     g.link = g.eTextResource + "?backToEtext="+this.props.IRI + "#open-viewer"
-
+                     const ETres = g.eTextResource || g.etextResource["@id"]
+                     g.link = ETres + "?backToEtext="+this.props.IRI + "#open-viewer"
 
                      //nav.push(<Link to={"/show/"+g.eTextResource} class="ulink">{I18n.t("resource.openR")}</Link>)
                      //nav.push(<span>|</span>)
-                     nav.push(<Link {...!access?{disabled:true}:{}} to={"/show/"+g.eTextResource+"?backToEtext="+this.props.IRI+"#open-viewer"} class="ulink">{I18n.t("result.openE")}</Link>)
+                     nav.push(<Link {...!access?{disabled:true}:{}} to={"/show/"+ETres+"?backToEtext="+this.props.IRI+"#open-viewer"} class="ulink">{I18n.t("result.openE")}</Link>)
                      nav.push(<span>|</span>)
                      //nav.push(<a href={fullUri(g.eTextResource).replace(/^http:/,"https:")+".txt"} class="ulink" download type="text" target="_blank">{I18n.t("mirador.downloadE")}</a>)                     
-                     nav.push(etextDL(g.eTextResource))
+                     nav.push(etextDL(ETres))
 
+                  } else {
+                     console.log("no link:", g)
                   }
 
 
@@ -7727,13 +7733,13 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
                   if(!Array.isArray(t)) t = [t]
                   ut = elem.filter(f => t.includes(f["@id"]))
                   if(ut.length) { 
-                     ut = ut.filter(u => u.eTextResource == get.fromText) 
-                     console.log("ut:",ut)
+                     ut = ut.filter(u => u.eTextResource == get.fromText || u.etextResource && u.etextResource["@id"] == get.fromText ) 
+                     //console.log("ut:",ut)
                      if(ut.length) ut = true
                      else ut = false
                   }
                   else ut = null
-               } else if(e.eTextResource == get.fromText) {
+               } else if(e.eTextResource == get.fromText || e.etextResource && e.etextResource["@id"] == get.fromText ) {
                   ut = true
                }
 

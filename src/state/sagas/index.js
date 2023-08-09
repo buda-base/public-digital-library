@@ -3350,7 +3350,7 @@ export function* watchGetETextRefs() {
 async function getETextRefs(iri) {
 
    store.dispatch(uiActions.loading(iri, "ETextRefs"));
-   let res = await api.loadETextRefs(iri) 
+   let res = await api.loadETextRefs(iri)   
    store.dispatch(uiActions.loading(iri, false));
    
    loggergen.log("ETextRefs",res)
