@@ -24,13 +24,18 @@ const urlParams = new URLSearchParams(window.location.search);
 let origin = urlParams.get('origin') ;
 
 // #831
-const token = urlParams.get('token')
-if(origin && token) {
-   const url = "https://iiif.bdrc.io/setcookie"         
-   const headers = new Headers({ "Authorization": "Bearer " + token })
-   const response = await fetch( url, { method:"GET", headers })
-   console.log("response:",await response.text())
-} 
+const setAppToken = async (token) => {
+   if(origin && token) {
+      const url = "https://iiif.bdrc.io/setcookie"         
+      const headers = new Headers({ "Authorization": "Bearer " + token })
+      const response = await fetch( url, { method:"GET", headers })
+      console.log("response:",await response.text())
+   } 
+}
+const mainToken = urlParams.get('token')
+const urlToken = urlParams.get('urlToken')
+setAppToken(mainToken)
+setAppToken(urlToken)
 
 let waiter = setInterval( async ()=>{
    console.log("waiting")
