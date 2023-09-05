@@ -4939,13 +4939,15 @@ class ResourceViewer extends Component<Props,State>
 
    getH2 = (title,_befo,_T,other,T_,rootC) => {
 
-      //loggergen.log("H2?",rootC)
+      //loggergen.log("H2?",title, rootC, other)
 
-      if(other) return <h2 title={title.value} lang={this.props.locale}><Link {...this.props.preview?{ target:"_blank" }:{}}   {... rootC?{onClick:rootC}:{onClick:() => setTimeout(()=>window.scrollTo(0,0),10)}}  to={"/show/"+shortUri(other)+this.getTabs(T_,other)}>{_T}<span>{_befo}{title.value}</span>{this.tooltip(title.lang)}</Link></h2>
-      else return <h2 title={title.value} lang={this.props.locale} class="on">{_T}<span>{_befo}{title.value}</span>{this.tooltip(title.lang)}</h2>
+      if(other) return <h2 title={title.value} lang={title.lang || this.props.locale}><Link {...this.props.preview?{ target:"_blank" }:{}}   {... rootC?{onClick:rootC}:{onClick:() => setTimeout(()=>window.scrollTo(0,0),10)}}  to={"/show/"+shortUri(other)+this.getTabs(T_,other)}>{_T}<span>{_befo}{title.value}</span>{this.tooltip(title.lang)}</Link></h2>
+      else return <h2 title={title.value} lang={title.lang || this.props.locale} class="on">{_T}<span>{_befo}{title.value}</span>{this.tooltip(title.lang)}</h2>
    }
 
    setTitle = (kZprop,_T,other,rootC,noSame:boolean=false) => {
+
+      //loggergen.log("setT:", rootC, other)
 
       let title,titlElem,otherLabels = [], T_ = _T ;
       _T = [<span class={"T "+_T.toLowerCase()}>
@@ -7469,7 +7471,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
          if(k.startsWith("monlam-def-")) delete collapse[k]
       }
       this.setState({ collapse })
-      this.props.onCallMonlamAPI(data.api, {value: data.range.toString(), lang: this.props.etextLang.filter(l => l.startsWith("bo"))[0]});
+      this.props.onCallMonlamAPI(data.api, {value: data.range.toString(), lang: (this.props.etextLang || ["bo"]).filter(l => l.startsWith("bo"))[0]});
       
    }
 
@@ -9039,7 +9041,9 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
          }
          let _T = getEntiType(shortUri(baseW[0].value))
          let { title,titlElem,otherLabels } = this.setTitle(baseData,_T,baseW[0].value,rootC,titleRaw) ;
+         
          //console.log("tEl:",titlElem)
+
          if(titleRaw && titlElem) titleRaw.label = titlElem
          return title
       }
