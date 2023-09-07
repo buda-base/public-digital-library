@@ -188,7 +188,7 @@ export function shortUri(id:string, nobdo?:boolean=false) {
    return id.replace(/[/]$/,"") ;
 }
 
-console.log("loca:",window.location.hostname)
+loggergen.log("loca:",window.location.hostname)
 
 const onKhmerUrl = (
       window.location.host.startsWith("khmer-manuscripts")   
@@ -281,7 +281,7 @@ export function lucenequerytokeywordmulti(key:string) {
       if (k)
          res.push(k.replace(/["()]/g, "").trim())
    }
-   //console.log("multi:",res)
+   //loggergen.log("multi:",res)
    return res
 }
 
@@ -398,7 +398,7 @@ export const renderBanner = (that, infoPanel, isResourcePage) => {
       let lab = getLangLabel(that,tmp+"bannerMessage",m.text) 
       let icon 
 
-      //console.log("popup/m:",m,lab,m.text,that.props.locale,that)
+      //loggergen.log("popup/m:",m,lab,m.text,that.props.locale,that)
       
       if(m.severity=="info") icon = <InfoIcon className="info"/>
       else if(m.severity=="warning") icon = <WarnIcon className="warn"/>
@@ -420,7 +420,7 @@ export const renderBanner = (that, infoPanel, isResourcePage) => {
          let sav = content
          content = []
          sav.map(c => {
-            //console.log("c:",c)
+            //loggergen.log("c:",c)
             if(c?.match) { 
                while(img = c.match(/!\[([^\]]+)\]\(([^)]+)\)/)) {
                   let arr = c.split(img[0])
@@ -445,23 +445,23 @@ export const renderBanner = (that, infoPanel, isResourcePage) => {
          else if(m.condition && m.condition.match(/^[.a-zA-Z]+$/)) {         
             condition = eval(m.condition) ? true: false;
          } 
-         //console.log("condition:", m.condition, condition)
+         //loggergen.log("condition:", m.condition, condition)
 
          if(m.popup) {         
             let showEveryNDay = 30
             if(m.showEveryNDay != undefined) showEveryNDay = m.showEveryNDay
             const wasClosed = localStorage.getItem("msg-popup-closed"+(m.id?"-"+m.id:"")) 
             const tooOld = showEveryNDay != -1 && Date.now() - wasClosed > showEveryNDay * 24 * 3600 * 1000
-            //console.log("sENd:",showEveryNDay,m.showEveryNDay,wasClosed,Date.now(),tooOld)         
+            //loggergen.log("sENd:",showEveryNDay,m.showEveryNDay,wasClosed,Date.now(),tooOld)         
             if(!hidden && condition && (!wasClosed || tooOld)) {
-               //console.log("show!",hidden) 
+               //loggergen.log("show!",hidden) 
                hidden = false               
             } else if(condition === undefined && !hidden || condition == false && !hidden || condition && wasClosed && !tooOld && !hidden) {
-               //console.log("hide!")                
+               //loggergen.log("hide!")                
                hidden = true
             } else if(condition && hidden && !wasClosed) {
                hidden = false
-               //console.log("show!!",hidden) 
+               //loggergen.log("show!!",hidden) 
             }
          }
          
@@ -542,7 +542,7 @@ export function highlight(val,k,expand,newline,force)
 
       //val = /*val.replace(/@.* /,"")*/ val.split(new RegExp(k.replace(/[ -'ʾ_]/g,"[ -'ʾ_]+"))).map((l) => ([<span>{l}</span>,<span className="highlight">{k}</span>])) ;
 
-      //console.log("val:",val)
+      //loggergen.log("val:",val)
       
       // DONE fix highlight bug when keyword is a number
       if(!((""+k).match(/^"?[0-9]+"?$/))) {
@@ -561,7 +561,7 @@ export function highlight(val,k,expand,newline,force)
          }
       }
 
-      //console.log("k:",val,k.replace(/[ -'ʾ_/  \[\]0-9\n\r།]+/gu,"[ -'ʾ_/  \\[\\]0-9\n\r།]+"))
+      //loggergen.log("k:",val,k.replace(/[ -'ʾ_/  \[\]0-9\n\r།]+/gu,"[ -'ʾ_/  \\[\\]0-9\n\r།]+"))
    }
 
    val = val.replace(/(\[[^\]]*?)([↦])([^\]]*?\])/g,"$1$3$2");
@@ -575,7 +575,7 @@ export function highlight(val,k,expand,newline,force)
       //loggergen.log("e:",_idx,e,e.length,newline,force)
 
       const prepNewL = (w) => {
-         //console.log("split:",w,w.split("\n"))
+         //loggergen.log("split:",w,w.split("\n"))
          const pre = w.split("\n")
          return pre.reduce( (acc,k,i) => {
             let ret = [ ]
@@ -652,7 +652,7 @@ export function getLangLabel(that:{},prop:string="",labels:[],proplang:boolean=f
       if(that.props.etextLang && (prop == bdo+"eTextHasPage" || prop == bdo+"eTextHasChunk")) { 
          langs = that.props.etextLang 
          if(!Array.isArray(langs)) langs = [ langs ]
-         //console.log("prop:",langs,prop,labels)
+         //loggergen.log("prop:",langs,prop,labels)
       }
       
 
@@ -660,7 +660,7 @@ export function getLangLabel(that:{},prop:string="",labels:[],proplang:boolean=f
       // not that simple because UI lang has to be used first or not
       /*
       if(!that.props.langExt) { 
-         console.log("regenerate langExt");
+         loggergen.log("regenerate langExt");
          langs = extendedPresets(langs)
       } else {
          langs = that.props.langExt      
@@ -880,7 +880,7 @@ export function etext_lang_selec(that,black:boolean = false, elem, DL)
    if(script) script = script.map(s => that.props.resources[shortUri(s.value)] ? that.props.resources[shortUri(s.value)][s.value]:null).map(s => s?s[bdo+"script"]:null).filter(s=>s)
    if(script && script.length) script = script[0] 
    if(script && script.length) script = script[0].value
-   console.log("script:", script)
+   loggergen.log("script:", script)
 
    if(script === bdr+"ScriptDeva") {
       prio = ["sa", "sa-x-iast" ]
@@ -939,7 +939,7 @@ export function etext_lang_selec(that,black:boolean = false, elem, DL)
                                    ...token?{headers: {Authorization: `Bearer ${token}`}}:{},
                                  })
                                  .then(function (response) {
-                                   //console.log("loaded:", response.data)
+                                   //loggergen.log("loaded:", response.data)
                          
                                    // download file
                                    const temp = window.URL.createObjectURL(new Blob([response.data]))
@@ -948,7 +948,7 @@ export function etext_lang_selec(that,black:boolean = false, elem, DL)
                                    let filename = DL.split(/[/]/).pop().split(/[.]/)[0]+"_"+i+".txt"
                                    link.setAttribute("download", filename)
                                    link.click()
-                                   //console.log("filename:",filename,link,link.click)
+                                   //loggergen.log("filename:",filename,link,link.click)
                                    window.URL.revokeObjectURL(link)
                          
                                  })
@@ -969,7 +969,7 @@ export function etext_lang_selec(that,black:boolean = false, elem, DL)
                                        localStorage.setItem('etextlang', i);
                                        
                                        if(that.state.monlam) {
-                                          console.log("monlam?",that.state.monlam)
+                                          loggergen.log("monlam?",that.state.monlam)
                                        }
 
                                        that.setState({...that.state,[anchor]:null,collapse: {...that.state.collapse, [lang]:false },
@@ -1103,7 +1103,7 @@ export function top_right_menu(that,etextTitle,backUrl,etextres)
                         that.props.onCloseMonlam()
                      }
                      
-                     //console.log('cV:',backUrl,etextres)
+                     //loggergen.log('cV:',backUrl,etextres)
 
                      that.props.onLoading("search",true,etextres)
 
@@ -1144,7 +1144,7 @@ export function top_right_menu(that,etextTitle,backUrl,etextres)
                            loca.hash = "outline"
                            loca.search = "?fromText="+that.props.IRI
                         }
-                        console.log("loca:",loca)
+                        loggergen.log("loca:",loca)
                         that.props.history.push(loca) ; 
                      }
                      else {
@@ -1178,7 +1178,7 @@ export function top_right_menu(that,etextTitle,backUrl,etextres)
 
       let proxied = isProxied(that)
 
-      //console.log("proxied?",!window.location.host.includes("localhost"), that.props.config?.primaryUrl, that.props.config?.primaryUrl != window.location.host)
+      //loggergen.log("proxied?",!window.location.host.includes("localhost"), that.props.config?.primaryUrl, that.props.config?.primaryUrl != window.location.host)
 
       let login       
       if(that.props.auth) login = <div id="login" {...(proxied?{class:"proxied"}:{})}>
@@ -1313,7 +1313,7 @@ function getVal(label)
 
 export function isGroup(auth, group) {
    let groups, result = group && auth && auth.isAuthenticated() && auth.userProfile && (groups = auth.userProfile["https://auth.bdrc.io/groups"]) && groups.includes(group)
-   console.log("isGrp:", group, result)
+   loggergen.log("isGrp:", group, result)
    return result
 }
 
@@ -1329,14 +1329,14 @@ export function isProxied(that) {
 
 export function renderDates(birth,death,floruit,locale) {
       
-   //console.log("b/d/f:",birth,death,floruit)
+   //loggergen.log("b/d/f:",birth,death,floruit)
 
    const formatDate = (dates) => {
       const clean = (d) => (""+d).replace(/^([^0-9]*)0+/,"$1")
       let date = "", min, max, val, isCentury, uncertain, approx
       for(let d of dates) {
          val = clean(d.value)
-         //console.log("d:",min,max,val,JSON.stringify(d))
+         //loggergen.log("d:",min,max,val,JSON.stringify(d))
          if(d.type === bdo+"notBefore") {
             if(min === undefined || val < min) min = val
             if(max === undefined) max = val
@@ -1356,7 +1356,7 @@ export function renderDates(birth,death,floruit,locale) {
                obj = parse(value)
                edtfObj = edtf(value)
                readable = humanizeEDTF(obj, value, locales[locale])
-               //console.log("edtf:",readable, edtfObj, obj)
+               //loggergen.log("edtf:",readable, edtfObj, obj)
 
                let minEdtf = edtf(edtfObj.min)?.values[0]
                let maxEdtf = edtf(edtfObj.max)?.values[0]
@@ -1389,7 +1389,7 @@ export function renderDates(birth,death,floruit,locale) {
       if(uncertain) date = date + " ?" 
       if(approx) date = "~"+date
       
-      //console.log("date:",dates,date);
+      //loggergen.log("date:",dates,date);
 
       return { date, isCentury }
    }
@@ -1566,7 +1566,7 @@ export const subtime = (label = "", init) => {
          sublabels[k].last = time
       }
    }
-   //if(init !== 0) console.log("subtime:", label, init, "\n"+timesToString(),"\nsubtime;"+(time - start))
+   //if(init !== 0) loggergen.log("subtime:", label, init, "\n"+timesToString(),"\nsubtime;"+(time - start))
 }
 
 
@@ -1649,13 +1649,13 @@ class App extends Component<Props,State> {
       /*
       window.onresize = function(ev) { 
          if(window.innerWidth < window.innerHeight && window.screen.width < 800) {
-            console.log("resize:",window.innerHeight);
+            loggergen.log("resize:",window.innerHeight);
             $("body").height(window.innerHeight)
          }
       }
       */ 
 
-      //console.log("dld?",window.top.DLD)
+      //loggergen.log("dld?",window.top.DLD)
    }
 
    componentDidUpdate() {
@@ -1677,7 +1677,7 @@ class App extends Component<Props,State> {
             const rect = ref.getBoundingClientRect()
             const stuck = rect.y > 230
             if(stuck !== this.state.stuck) {
-               //console.log("stuck?",stuck,ref,rect.y)
+               //loggergen.log("stuck?",stuck,ref,rect.y)
                this.setState({stuck})
             } 
             const toph = $("#filters-UI").height() 
@@ -1713,13 +1713,13 @@ class App extends Component<Props,State> {
             const vals = Object.values(this.state.mapInfo)
             for(let v of vals) {
                if(this.hasAllFacets(v.data)) {
-                  //console.log("on map:",v)
+                  //loggergen.log("on map:",v)
                   
                   if(v.ref?.current) v.ref.current.addTo(this._refs["cluster"].current) 
 
                   currentMarkers.push(v.latLong)
                } else {                  
-                  //console.log("not on map:",v)
+                  //loggergen.log("not on map:",v)
                   if(v.ref?.current) this._refs["cluster"].current.removeLayer(v.ref.current)
                }
             }
@@ -1832,7 +1832,7 @@ class App extends Component<Props,State> {
       }
       
 
-      //console.log("uriP:",uriPage,updatePagin)
+      //loggergen.log("uriP:",uriPage,updatePagin)
 
       if(this.state.uriPage !== uriPage || updatePagin || this.state.backToWorks !== backToWorks || (encoded !== this.state.filters.encoded ) || (scrolled && this.state.scrolled !== scrolled) )
          this.setState({...this.state, repage:true, uriPage, backToWorks, scrolled, collapse, ...(filters?{filters}:{})})
@@ -1921,7 +1921,7 @@ class App extends Component<Props,State> {
       }
 
       if(dataInfo) {
-         console.log("new route:",dataInfo)
+         loggergen.log("new route:",dataInfo)
 
          this.props.history.push({pathname:"/search",search:"?"+(dataInfo==="date"?"date":"id")+"="+key+"&t="+label+khmerCollec+proxiedCollec})
       }
@@ -1957,7 +1957,7 @@ class App extends Component<Props,State> {
             inEtext = this.props.searches[this.state.filters.datatype[0]][this.props.keyword+"@"+this.props.language].inEtext
          }
          const newLoca = {pathname:"/search",search:"?q="+key+"&lg="+lang+"&t="+label+khmerCollec+proxiedCollec+hasOpenPossibly+(inEtext?"&r="+inEtext:"")}
-         console.log("newL?",newLoca)
+         loggergen.log("newL?",newLoca)
          this.props.history.push(newLoca)
          
          // TODO add permanent filters (here ?)
@@ -2048,7 +2048,7 @@ class App extends Component<Props,State> {
       }
 
       if(props.genresParents && state.filters.facets && state.filters.facets[bdo+"workGenre"]) {
-         console.log("genresParents",props.genresParents)
+         loggergen.log("genresParents",props.genresParents)
          if(!s) s = { ...state }
          let genre = state.filters.facets[bdo+"workGenre"]
          if(genre.val) genre = genre.val
@@ -2056,13 +2056,13 @@ class App extends Component<Props,State> {
             if(props.genresParents[p]) 
                for(let q of props.genresParents[p]) 
                   if(s.collapse[q] === undefined) {
-                     //console.log("genres:collapse",q,p)
+                     //loggergen.log("genres:collapse",q,p)
                      s.collapse[q] = true
                   }
       }
 
       if(props.topicParents && state.filters.facets && state.filters.facets[bdo+"workIsAbout"]) {
-         console.log("topicParents",props.topicParents)
+         loggergen.log("topicParents",props.topicParents)
          if(!s) s = { ...state }
          let topic = state.filters.facets[bdo+"workIsAbout"]
          if(topic.val) topic = topic.val
@@ -2070,7 +2070,7 @@ class App extends Component<Props,State> {
             if(props.topicParents[p]) 
                for(let q of props.topicParents[p]) 
                   if(s.collapse[q] === undefined) {
-                     //console.log("topic:collapse",q,p)
+                     //loggergen.log("topic:collapse",q,p)
                      s.collapse[q] = true
                   }
       }
@@ -2318,7 +2318,7 @@ class App extends Component<Props,State> {
          }
       }
 
-      //console.log("time:",time,state.id,needRefresh,current)
+      //loggergen.log("time:",time,state.id,needRefresh,current)
 
       // 
       if(state.id && needRefresh && time && (!current || time > current))
@@ -2502,7 +2502,7 @@ class App extends Component<Props,State> {
                const mapInfo = {}
                const sublist = s.results[s.id]?.results?.results?.bindings[t+"s"];
                const keys = Object.keys(sublist?sublist:{})
-               //console.log("keys:",keys,s.results[s.id])
+               //loggergen.log("keys:",keys,s.results[s.id])
                for(let n in keys) {
                   let o = keys[n]
                   let lat = sublist[o].filter(k => k.type === bdo+"placeLat"),
@@ -2541,7 +2541,7 @@ class App extends Component<Props,State> {
                               +',"tmp:propid":"'+this.props.propid+'"'
                               +(otherData?',"tmp:otherData":'+JSON.stringify(otherData):'')
                               +'}'
-                           console.log("(MSG)",this.props.propid,JSON.stringify(otherData,null,3),msg)
+                           loggergen.log("(MSG)",this.props.propid,JSON.stringify(otherData,null,3),msg)
                            window.top.postMessage(msg, "*") // TODO set target url for message
                            ev.preventDefault()
                            ev.stopPropagation()
@@ -2807,12 +2807,12 @@ class App extends Component<Props,State> {
                   let node                  
                   if(prop == bdo+"workIsAbout" && meta.tree && meta.tree["@graph"]) node =  meta.tree["@graph"].filter(n => n["@id"] === p)
                   else if(prop == bdo+"workGenre" && meta.genres && meta.genres["@graph"]) node =  meta.genres["@graph"].filter(n => n["@id"] === p)
-                  //console.log("check:",p,meta,node)
+                  //loggergen.log("check:",p,meta,node)
                   if(node?.length && !node.some(n => n.taxHasSubClass?.includes("Any"))) {
-                     //console.log("check?",node[0]["@id"])
+                     //loggergen.log("check?",node[0]["@id"])
                      if(!node[0].taxHasSubClass.some(n => !lab.includes(n) && !propSet.includes(n) && !already.includes(n)) ){
                         if(!node[0].taxHasSubClass.some(n => !lab.includes(n) && !propSet.includes(n) && !already.includes(n)) ){
-                           //console.log("check!")
+                           //loggergen.log("check!")
                            if(excl) exclude[prop].push(node[0]["@id"])
                            acc.push(node[0]["@id"])
                            let k = node[0]["@id"]
@@ -2995,7 +2995,7 @@ class App extends Component<Props,State> {
          
          if([ /*"Any",*/ "Person","Place","Work","Etext","Role","Topic","Corporation","Lineage","Instance","Product","Scan"].indexOf(lab) !== -1)
          {
-            console.log("rs??1")
+            loggergen.log("rs??1")
             this.requestSearch(this.props.keyword.replace(/(^[(")]+)|([")]+(~1)?$)/g,""),[ lab ], this.props.language, true, ["date","id"].includes(this.props.language)?this.props.language:null);
          }
          
@@ -3789,7 +3789,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                if(id[p]) {
                   
                   let val = id[p].filter(e => fromProp.includes(e.type) )
-                  //console.log("p:",p,val)
+                  //loggergen.log("p:",p,val)
                   if(val.length) {
                      if(p.endsWith("Death")) death = death.concat(val)
                      else if(p.endsWith("Birth")) birth = birth.concat(val)
@@ -3820,7 +3820,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                }
             }
 
-            //console.log("B/D:",JSON.stringify(birth,null,3),JSON.stringify(death,null,3))
+            //loggergen.log("B/D:",JSON.stringify(birth,null,3),JSON.stringify(death,null,3))
 
             if(!other.length) {
                const vals = renderDates(birth, death, floruit, this.props.locale)
@@ -3849,7 +3849,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
                const translit = getLangLabel(this, "", [i])
 
-               //console.log("val/excl:",val,exclude,translit)
+               //loggergen.log("val/excl:",val,exclude,translit)
 
                if(val === exclude || translit?.value?.replace(/_/g," ").replace(/[\/། ]+$|[↦↤]/g,"") === exclude?.replace(/_/g," ").replace(/[\/། ]+$|[↦↤]/g,"")) continue
                let lang = i["xml:lang"]
@@ -3917,7 +3917,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   }
 
                }
-               //console.log("1 val:",val,lang,i)
+               //loggergen.log("1 val:",val,lang,i)
 
                if(!lang) lang = i["lang"]
                if(!lang) lang = i["xml:lang"]
@@ -3998,7 +3998,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      outlineB.push(<Link class="rec" to={iri.replace(/(show[/]).*?part=([^&]+)&/,"$1$2?")}><img src="/icons/rec.svg"/>{I18n.t("resource.openR")}</Link>)
                   }
 
-                  //console.log("2 val:",i.lang,i)
+                  //loggergen.log("2 val:",i.lang,i)
 
                   ret.push(<span {...i.lang?{lang:i.lang}:{}}>{urilink}{outlineB}
                      {
@@ -4035,7 +4035,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          let sTmp = shortUri(m.type), trad = I18n.t("prop."+sTmp)	
          if(trad !== sTmp) from = trad	
 
-         //console.log("m:",m)
+         //loggergen.log("m:",m)
 
          let val,isArray = false ;	
          let lang = m["lang"]	
@@ -4069,12 +4069,12 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   facet = lucenequerytokeyword(this.props.keyword) 
                   facet = getLangLabel(this,"",[{value:facet, lang:this.props.language}]) 
                   facet = facet.value
-                  //console.log("facet2:",facet)
+                  //loggergen.log("facet2:",facet)
                } else if(!facet && this.props.keyword || facet && facet.indexOf(" AND ") !== -1) {
                   facet = []
                   for(let k of lucenequerytokeywordmulti(this.props.keyword)) facet.push(getLangLabel(this,"",[{value:k, lang:this.props.language}]))
                   if(facet.length) facet = facet.map(k => k.value)                  
-                  //console.log("facet1:",facet)
+                  //loggergen.log("facet1:",facet)
                }
                val = highlight(mLit["value"], facet, context?context:expand, context)	
                //val =  mLit["value"]	
@@ -4105,7 +4105,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             }), " ]" ]}<br/><br/></div>	
          }	
 
-         console.log("acc:",prettId,access)
+         loggergen.log("acc:",prettId,access)
 
          let urlBase, staticRegExp = new RegExp(".*?[/](latest|"+Object.keys(staticQueries).join("|")+")[/]?")  ;
          if(window.location.href.match(staticRegExp)) urlBase = window.location.href.replace(staticRegExp,"$1?");
@@ -4127,7 +4127,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      if(this.state.collapse[prettId+"@"+startC]) {  
                         if(this._refs && this._refs[n] && this._refs[n].current) {
                            this._refs[n].current.scrollIntoView(); 
-                           console.log("ref:",n,this._refs[n].current)
+                           loggergen.log("ref:",n,this._refs[n].current)
                         }
                      }
                      toggleExpand(e,prettId+"@"+startC); 
@@ -4290,7 +4290,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       if(prov) prov = prov.replace(/leiden university libraries/g,"lul")
       if(prov) prov = prov.replace(/.* sat daizōkyō .*/gu,"sat")
       
-      //console.log("prov:",prov,nologo,nologo[prov])
+      //loggergen.log("prov:",prov,nologo,nologo[prov])
 
       if(prov && prov !== "bdrc") { 
          if(img[prov]) hasProv = <img class={"provImg "+prov+ (orec.length?" oriRec":"")} title={I18n.t("copyright.provided",{provider:providers[prov]})} src={img[prov]}/>
@@ -4350,7 +4350,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             let urlBase, staticRegExp = new RegExp(".*?[/](latest|"+Object.keys(staticQueries).join("|")+")[/]?")  ;
             if(window.location.href.match(staticRegExp)) urlBase = window.location.href.replace(staticRegExp,"$1?");
             else urlBase = window.location.href.replace(/^https?:[/][/][^?]+[?]?/gi,"")+"&"
-            //console.log("urlB",urlBase)
+            //loggergen.log("urlB",urlBase)
             resUrl = "/show/"+urlpart+"s="+ encodeURIComponent((urlBase.replace(/((([?])?&*|^)n=[^&]*)/g,"$3")+(!urlBase.match(/[\?&]$/)?"&":"")+"n="+n).replace(/\?+&?/,"?"))+(!bestM?"":"&"+bestM.replace(/^\?/,""))
             //retList.push( <Link key={n} to={"/show/"+prettId+bestM} className="result">{ret}</Link> )
          }
@@ -4373,7 +4373,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                let scans = allProps.filter(a => a.type === bdo+"instanceHasReproduction" && !a.value.includes("/resource/IE"))
                let version = allProps.filter(a => a.type === bdo+"instanceReproductionOf")               
                let hasRoot = allProps.filter(a => a.type === bdo+"inRootInstance")               
-               //console.log("resU:",resUrl,scans,version,hasRoot,allProps)
+               //loggergen.log("resU:",resUrl,scans,version,hasRoot,allProps)
                if(scans.length || version.length || hasRoot.length) {
                   const rid = resUrl.replace(/^[/]show[/]bdr:([^?]+)[?].*/,"$1")
                   const nbVol = allProps.filter(a => a.type === bdo+"numberOfVolumes").map(v => v.value)               
@@ -4383,7 +4383,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      ev.stopPropagation();
                      return false ;
                   } else {
-                     //console.log("hR:",hasRoot)
+                     //loggergen.log("hR:",hasRoot)
                      if(hasRoot.length && (hasRoot = hasRoot[0]?.value?.replace(/.*[/]M([^/]+)$/,"$1")) && window.DLD && window.DLD[hasRoot]) {
                         window.top.postMessage(JSON.stringify({"open-viewer":{ rid, label: [ preLit ], nbVol: ""+nbVol }}),"*")        
                         ev.preventDefault();
@@ -4402,11 +4402,11 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             } else if(this.props.simple) {
                let otherData =  {} ;
                if(T === "Person") {
-                  //console.log("allP:",allProps)
+                  //loggergen.log("allP:",allProps)
                   otherData = allProps.filter(e => [bdo+"personEvent"].includes(e.type)).map(e => this.props.assoRes[e.value]).reduce( (acc,e) =>{
                      let t = e.filter(f => f.type === rdf+"type")
                      let k = shortUri(t[0].value, true)
-                     //console.log("t,k",t,k)
+                     //loggergen.log("t,k",t,k)
                      if(t.length) return { ...acc, 
                         [k]:[ ...acc[k]?acc[k]:[],
                            e.filter(e => [bdo+"onYear", bdo+"notBefore", bdo+"notAfter", bdo+"eventWhere", bdo+"eventWhen"].includes(e.type))
@@ -4425,7 +4425,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   +',"tmp:propid":"'+this.props.propid+'"'
                   +(otherData?',"tmp:otherData":'+JSON.stringify(otherData):'')
                   +'}'
-               console.log("(MSG)",this.props.propid,JSON.stringify(otherData,null,3),msg)
+               loggergen.log("(MSG)",this.props.propid,JSON.stringify(otherData,null,3),msg)
                window.top.postMessage(msg, "*") // TODO set target url for message
                if(prevent) {
                   ev.preventDefault()
@@ -4753,7 +4753,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
          for(let p of allProps) {
             if(p.type.endsWith("#sameAs") && p.value != fullId && this.props.assoRes[p.value]) {
-               //console.log("sA?",p,this.props.assoRes[p.value])
+               //loggergen.log("sA?",p,this.props.assoRes[p.value])
                for(let q of this.props.assoRes[p.value]) {
                   if(q.type.match(/[Ll]abel$/) && !allLabelsNoMatch.filter(a => slashEq(a.value,q.value)).length) {
                      allLabels.push(q)
@@ -4764,7 +4764,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
          let onKhmerServer = (this.props.config && this.props.config.khmerServer)
 
-         //console.log("allM:",allLabels)
+         //loggergen.log("allM:",allLabels)
 
          let hasNbRepro
 
@@ -5321,7 +5321,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   this._refs["cluster"] = React.createRef()
                   
 
-                  console.log("latlongs:",latLongs, markers)
+                  loggergen.log("latlongs:",latLongs, markers)
                   
                   // latLongs.length && 
                   const map =  (this.props.config && <> 
@@ -5344,12 +5344,12 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                         }}
                         whenReady={ () => {                            
                            let timeo = setInterval(() => {
-                              console.log("timeo:",this._map)
+                              loggergen.log("timeo:",this._map)
                               latLongs = latLongs.filter(m => m)
                               if(this._map) {
                                  clearInterval(timeo)
                                  if( latLongs.length) {                                                         
-                                    console.log(":map:",this._map,latLongs)
+                                    loggergen.log(":map:",this._map,latLongs)
                                     this._map.fitBounds(latLongs, latLongs.length === 1 ?{maxZoom: 10}:{padding:[50,50]})                                    
                                  }
                                  $(".resultsMap").attr("data-nb-markers", latLongs.length)
@@ -5757,7 +5757,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             }
          }
 
-         //console.log("cpt:",cpt)
+         //loggergen.log("cpt:",cpt)
 
          if(cpt == 0 ) { 
             let lang = languages[this.props.language]
@@ -6581,7 +6581,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   if(max > paginate.pages.length) max = paginate.pages.length
                }
 
-               //console.log("pages:",min,max, nbResu, paginate.pages[paginate.pages.length-1], paginate.pages )
+               //loggergen.log("pages:",min,max, nbResu, paginate.pages[paginate.pages.length-1], paginate.pages )
 
                if(min > 1) pageLinks.push(<a onClick={this.goPage.bind(this,id,1)}>{I18n.t("punc.num",{num:1})}</a>) 
                if(min > 2) pageLinks.push(" ... ") 
@@ -6743,13 +6743,13 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                // #580 auto add facet value with count 0 when selected from url but no occurrence in data
                if(this.state.filters.facets && this.state.filters.facets[jpre]) for(let f of this.state.filters.facets[jpre]) {
                   if(meta[j] && !meta[j][f] && !meta[j][" "+f] /* case of century facet js numerical key sort hack */ ) {        
-                     console.log("new:",j,f,meta,jpre,this.state.filters.facets[jpre])        
+                     loggergen.log("new:",j,f,meta,jpre,this.state.filters.facets[jpre])        
                      meta[j][f] = { dict:{}, n:0 }
                   }
                }
 
                let meta_sort = Object.keys(meta[j])
-               //console.log("meta:",j,jpre,meta_sort,meta)
+               //loggergen.log("meta:",j,jpre,meta_sort,meta)
 
                /* // deprecated 
                .sort((a,b) => {
@@ -6857,7 +6857,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       let inEtext 
       if(this.props.searches && this.props.searches[this.state.filters.datatype[0]] && this.props.searches[this.state.filters.datatype[0]][this.props.keyword+"@"+this.props.language] && this.props.searches[this.state.filters.datatype[0]][this.props.keyword+"@"+this.props.language].inEtext) {
          inEtext = this.props.searches[this.state.filters.datatype[0]][this.props.keyword+"@"+this.props.language].inEtext
-         //console.log("inEt:",inEtext)         
+         //loggergen.log("inEt:",inEtext)         
          if(inEtext) {
             sortByList.push("volumeN")
          }
@@ -7059,7 +7059,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             || (this.props.sortBy?.startsWith("title") && ["workT","personN","placeN","roleN","title"].includes(t))
             || (!this.props.sortBy && n === 0)
 
-         //console.log("sB:",this.props.sortBy,t,check,(this.props.sortBy?.startsWith("title"),["workT","personN","placeN","roleN","title"].includes(t)))
+         //loggergen.log("sB:",this.props.sortBy,t,check,(this.props.sortBy?.startsWith("title"),["workT","personN","placeN","roleN","title"].includes(t)))
 
          if(check) by = label
          if(reverseSort) reverse = I18n.t("sort.reverseS")
@@ -7215,7 +7215,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       if(tags && tags.props?.children?.length && !tags.props?.children?.some(e=>e)) tags = null
 
 
-      //console.log("tags:",tags,message)
+      //loggergen.log("tags:",tags,message)
 
       const requestSearchOnClick = (tab,i) => {
 
@@ -7241,7 +7241,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             }
          } 
 
-         console.log("rs??2")
+         loggergen.log("rs??2")
          if(this.state.keyword) this.requestSearch(kw,null,tab[1], isRID && i === 1, (isRID == "IDorDate"?tab[1].replace(/^.*(date|identifier).*$/,"$1"):null), i)
          this.setState({...this.state,langIndex:i,dataSource:[]});
          
@@ -7349,7 +7349,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      onBlur={(ev) => { loggergen.log("BLUR"); setTimeout(() => this.setState({...this.state,dataSource:[],blurSearch:true}),100); $("#search-bar input[type=text][placeholder]").attr("placeholder", I18n.t("home.search"));  } }
                      onChange={(value:string) => changeKW(value)}
                      onKeyDown={(ev) => { 
-                        //console.log("kd:",ev)
+                        //loggergen.log("kd:",ev)
                         let idx = this.state.langIndex, max = this.state.dataSource.length
                         if(!idx) idx = 0
                         if (ev.key === 'ArrowUp') idx -- ;
@@ -7681,7 +7681,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                         { (this.props.latestSyncs && this.props.latestSyncs !== true) &&
                            <div class={"slide-bg "+(this.state.syncsSlided?"slided":"")} >
                               { Object.keys(this.props.latestSyncs).map(s => {
-                                 //console.log("s:",s);
+                                 //loggergen.log("s:",s);
                                  let label = getLangLabel(this,"",this.props.latestSyncs[s][skos+"prefLabel"])
                                  let uri = "/show/"+shortUri(s), value = I18n.t("resource.noT"), lang = this.props.locale
                                  if(label && label.value != "") {
@@ -7692,7 +7692,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                                  let thumb = this.props.latestSyncs[s][tmp+"thumbnailIIIFService"]
                                  if(!thumb || !thumb.length) thumb = this.props.latestSyncs[s][tmp+"thumbnailIIIFSelected"]
                                  if(thumb && thumb.length) thumb = thumb[0].value 
-                                 //console.log("thumb",thumb)
+                                 //loggergen.log("thumb",thumb)
                                  return (
                                     <div>
                                        <Link to={uri}><div class={"header "+(thumb?"thumb":"")} {...thumb?{style:{"backgroundImage":"url("+ thumb+"/full/"+(thumb.includes(".bdrc.io/")?"!2000,195":",195")+"/0/default.jpg)"}}:{}}></div></Link>
