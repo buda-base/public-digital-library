@@ -45,6 +45,10 @@ import qs from 'query-string'
 
 import makeMainRoutes from './routes'
 
+import logdown from 'logdown'
+
+const loggergen = new logdown('gen', { markdown: false });
+
 const enTranslation = require("./translations/en.json") ;
 const zhTranslation = require("./translations/zh.json") ;
 const boTranslation = require("./translations/bo.json") ;
@@ -79,7 +83,7 @@ const i18nextConfig = {
    interpolation: {
       format: function(value, format, lng) {
          if (format === 'counttobo') { 
-            //console.log("numtobo?",value,format,numtobo(value),numtobo(""+value))
+            //loggergen.log("numtobo?",value,format,numtobo(value),numtobo(""+value))
             return numtobo(""+value);
          }
          else if (format === 'counttozh' && value) { 
@@ -151,7 +155,7 @@ const logger = store => next => action => {
   console.group(action.type)
   console.info('dispatching', action)
   let result = next(action)
-  if(!global.inTest) console.log('next state', store.getState())
+  if(!global.inTest) loggergen.log('next state', store.getState())
   console.groupEnd(action.type)
   return result
 }
@@ -197,7 +201,7 @@ store.dispatch(i18nextInit(i18nextConfig));
 
 export default store ;
 //const parsed = qs.parse(history.location.search);
-//console.log(parsed);
+//loggergen.log(parsed);
 
 
 const theme = createMuiTheme({
@@ -223,7 +227,7 @@ window.addEventListener("message",async function(ev){
    try {
       const data = await JSON.parse(ev.data)
       if(data.list) {
-         console.log("list:",data.list)
+         loggergen.log("list:",data.list)
          window.DLD = data.list
          if(window.top) window.top.postMessage(JSON.stringify({listSent:true}), "*")
       }

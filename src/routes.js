@@ -38,6 +38,10 @@ import I18n from 'i18next';
 
 import {UAContext, UserAgentProvider} from '@quentin-sommer/react-useragent'
 
+import logdown from 'logdown'
+
+const loggergen = new logdown('gen', { markdown: false });
+
 export const auth = new Auth();
 
 
@@ -47,11 +51,11 @@ let previousLocation, newLocation;
 const routerSetState = Router.prototype.setState;
 Router.prototype.setState = function(...args) {
 
-   console.log("args:",args)
+   loggergen.log("args:",args)
 
     const loc = this.props.history.location;
 
-    //console.log("hash",JSON.stringify(previousLocation,null,3),JSON.stringify(loc,null,3),JSON.stringify(args,null,3))
+    //loggergen.log("hash",JSON.stringify(previousLocation,null,3),JSON.stringify(loc,null,3),JSON.stringify(args,null,3))
 
     /* 
     if (loc.pathname === previousLocation.pathname &&
@@ -101,7 +105,7 @@ export class ScriptLoader extends Component
     let fic = await fetch("/"+this.props.url)
     this._text = await fic.text()
 
-    console.log("script",this.props,fic,this._text)
+    loggergen.log("script",this.props,fic,this._text)
   }
 
   render()
@@ -127,7 +131,7 @@ class LogErrorBoundary extends React.Component {
   
     componentDidCatch(error, errorInfo) {
       // Vous pouvez aussi enregistrer l'erreur au sein d'un service de rapport.
-      console.log("catch:",error,errorInfo,previousLocation)
+      loggergen.log("catch:",error,errorInfo,previousLocation)
       logError(error, { previousLocation });
     }
   
@@ -151,7 +155,7 @@ export class Redirect404 extends Component<Props>
    {
       super(props);
 
-      console.log("props404",props,to)
+      loggergen.log("props404",props,to)
 
       let to = "/"
       if(props.to) to = props.to
@@ -202,7 +206,7 @@ const UAContextHook = () => {
   useEffect( () => {
      const browser = parser.getBrowser()
      if(browser?.name) document.documentElement.setAttribute('data-browser', browser.name);
-     //console.log("parser:",parser.getBrowser(),parser)
+     //loggergen.log("parser:",parser.getBrowser(),parser)
   }, [parser])
   return []
 }
@@ -344,7 +348,7 @@ const makeMainRoutes = () => {
                            )
                         }}/>
                         <Route exact path="/" render={(props) => {
-                           console.log("refresh?")
+                           loggergen.log("refresh?")
                            store.dispatch(initiateApp(qs.parse(history.location.search)));                           
                            return (<AppContainer history={history} auth={auth}/> )
                            }}/>
@@ -358,7 +362,7 @@ const makeMainRoutes = () => {
                            let get = qs.parse(history.location.search)
                            //if(!store.getState().data.ontology)
                            {
-                              console.log("new route",props,store.getState())
+                              loggergen.log("new route",props,store.getState())
                               //if(!store.getState().ui.loading)
                               store.dispatch(initiateApp(qs.parse(history.location.search)))
                            }
@@ -371,7 +375,7 @@ const makeMainRoutes = () => {
                            let get = qs.parse(history.location.search)
                            //if(!store.getState().data.ontology)
                            {
-                              console.log("new route",props,store.getState())
+                              loggergen.log("new route",props,store.getState())
                               //if(!store.getState().ui.loading)
                               store.dispatch(initiateApp(qs.parse(history.location.search), null, null, "latest"))
                            }
@@ -380,7 +384,7 @@ const makeMainRoutes = () => {
                         { Object.keys(staticQueries).map(q => (
                            <Route path={"/"+q} render={(props) => {
                               let get = qs.parse(history.location.search), path = props.location.pathname.split("/")[1]
-                              console.log("new route",props,store.getState())                           
+                              loggergen.log("new route",props,store.getState())                           
                               store.dispatch(initiateApp(qs.parse(history.location.search), null, null, path))
                               return (<AppContainer history={history} auth={auth} static={path}/> )
                            }}/>
@@ -390,7 +394,7 @@ const makeMainRoutes = () => {
                               store.dispatch(initiateApp())
 
                               let get = qs.parse(history.location.search)
-                              console.log("props",props,get)
+                              loggergen.log("props",props,get)
                               let lang = get["lang"] || localStorage.getItem('lang')  || "bo-x-ewts,sa-x-ewts"
                               let uilang = get["uilang"] || localStorage.getItem('uilang') || "en"
                               if(lang) lang = lang.split(",")

@@ -28,6 +28,9 @@ import IconButton from '@material-ui/core/IconButton';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faLanguage,faUserCircle,faSignOutAlt } from '@fortawesome/free-solid-svg-icons'
 
+import logdown from 'logdown'
+
+const loggergen = new logdown('gen', { markdown: false });
 
 var tokenRenewalTimeout;
 
@@ -36,7 +39,7 @@ function scheduleRenewal() {
   if(!token) return
   var expiresAt = JSON.parse(token) - 5*60*1000 ;
   var delay = expiresAt - Date.now();
-  console.log("delay:",delay)
+  loggergen.log("delay:",delay)
   if (delay > 0) {
     tokenRenewalTimeout = setTimeout(function() {
       renewToken();
@@ -48,9 +51,9 @@ function renewToken() {
   if(auth && auth.auth1) auth.auth1.checkSession({},
     function(err, result) {
       if (err) {
-        console.log("renew token error",err);
+        loggergen.log("renew token error",err);
       } else {
-      console.log("renew token ok!",result)
+      loggergen.log("renew token ok!",result)
         setSession(result);
       }
     }
@@ -87,10 +90,10 @@ export default class Auth {
       headers:new Headers({ 'authorization': "Bearer " + token, 'content-type': 'application/json'})
     })).json()         
 
-    console.log("info:",response)
+    loggergen.log("info:",response)
 
     if(response.logins_count === 1) {
-      console.log("new user!")
+      loggergen.log("new user!")
       store.dispatch(ui.newUser(true))
     } else {
       store.dispatch(ui.newUser(false))
@@ -99,7 +102,7 @@ export default class Auth {
 
   getProfile(cb) {
     let tO = setInterval( () => {
-      console.log("getP:",this.auth1)
+      loggergen.log("getP:",this.auth1)
       if(this.auth1)  {
         clearInterval(tO);
         var token = localStorage.getItem('access_token')
@@ -123,7 +126,7 @@ export default class Auth {
   async setConfig(config,iiif,api)
   {
      this.auth1 = new auth0.WebAuth(config)
-     console.log("auth1",this.isAuthenticated())
+     loggergen.log("auth1",this.isAuthenticated())
      this.iiif = iiif
      this.api = api         
      this.config = config
@@ -131,7 +134,7 @@ export default class Auth {
       if(iiif && api && this.isAuthenticated()) {
           try{
             let cookie = await api.getURLContents(iiif.endpoints[iiif.index]+"/setcookie",false)
-            console.log("cookie",cookie)
+            loggergen.log("cookie",cookie)
           }
           catch(e)
           {
@@ -142,8 +145,8 @@ export default class Auth {
   }
 
   login(redirect,signup = false) {
-     // console.log("auth1",this.auth1,auth0)
-    console.log("redirect",redirect)
+     // loggergen.log("auth1",this.auth1,auth0)
+    loggergen.log("redirect",redirect)
     if(redirect) localStorage.setItem('auth0_redirect', JSON.stringify(redirect));
     else localStorage.setItem('auth0_redirect', '/');
 
@@ -186,7 +189,7 @@ export default class Auth {
           postMessageDataType: 'my-custom-data-type', 
           redirectUri: window.location.origin+"/scripts/silent_callback.html" 
         }, (error, authResult) => {         
-        console.log("renewAuth:",error,authResult,this.isAuthenticated())
+        loggergen.log("renewAuth:",error,authResult,this.isAuthenticated())
         if(authResult) {
           this.setSession(authResult);
           this.getProfile(() => { 
@@ -215,7 +218,7 @@ export default class Auth {
           store.dispatch(ui.logEvent(false))
           if (err) {
             history.replace('/');
-            console.log(err);
+            loggergen.log(err);
           }
         }
       });
@@ -230,7 +233,7 @@ export default class Auth {
     localStorage.setItem('expires_at', expiresAt);
     scheduleRenewal();
 
-    console.log("session",authResult)
+    loggergen.log("session",authResult)
 
     /* popup is blocked...
     if(this.isAuthenticated() && window.opener) { 
@@ -241,7 +244,7 @@ export default class Auth {
     if(this.isAuthenticated() && this.iiif && this.api) {
       try {
          let cookie = await this.api.getURLContents(this.iiif.endpoints[this.iiif.index]+"/setcookie",false)
-         console.log("cookie",cookie)
+         loggergen.log("cookie",cookie)
       }
       catch(e)
       {
@@ -258,7 +261,7 @@ export default class Auth {
             if(this.isAuthenticated()) {
               let token = localStorage.getItem('id_token');
               let cookie = await api.getURLContents(iiif.endpoints[iiif.index]+"/setcookie",false,null,null,false,"bdrc-auth-token="+token)
-              console.log("unset cookie",cookie)
+              loggergen.log("unset cookie",cookie)
             }
          }
          catch(e)
@@ -319,12 +322,12 @@ export default class Auth {
    handleAuthentication() {
      this.auth0.parseHash((err, authResult) => {
         if (authResult && authResult.accessToken && authResult.idToken) {
-           console.log("authRes",authResult)
+           loggergen.log("authRes",authResult)
          this.setSession(authResult);
          history.replace('/');
         } else if (err) {
          history.replace('/');
-         console.log(err);
+         loggergen.log(err);
         }
      });
    }
@@ -393,7 +396,7 @@ export class TestToken extends Component<TTState> {
   }
   render() {
     const { profile } = this.state;
-    //console.log("profile",profile)
+    //loggergen.log("profile",profile)
 
     let isAuth = auth.isAuthenticated()
 

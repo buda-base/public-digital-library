@@ -15,12 +15,18 @@ const CONFIG_PATH = onKhmerUrl?'/config-khmer_v2.json':'/config_v2.json'
 
 let jQ,extendedPresets,sortLangScriptLabels,getMainLabel,getMainLabels,__
 
+let loggergen = console
+
 let importModules = async () => {
    
 
    try {
+
+      const logdown = require("logdown")
+      loggergen = new logdown('gen', { markdown: false });
+
       const val = await require("jquery")
-      console.log("jQ",val)
+      loggergen.log("jQ",val)
       jQ = val //.default
 
       require(['./transliterators.js'],(module) => {
@@ -47,7 +53,7 @@ try {
    if(process.env.NODE_ENV !== 'test') importModules();
 }
 catch(e){
-   console.log("(not running in a node environment)")
+   loggergen.log("(not running in a node environment)")
 }
 
 // Fullscreen API polyfill (see https://github.com/rafgraph/fscreen/blob/main/src/index.js )
@@ -138,7 +144,7 @@ export function miradorSetUI(closeCollec, num, withIAlink) {
 
    window.Mousetrap.bind("esc", function(ev){
       var elem = jQ("#breadcrumbs #return"), href = elem.attr("href")
-      console.log("kp:",ev,elem,href)
+      loggergen.log("kp:",ev,elem,href)
       if(!href) {
          //elem.click()
 
@@ -161,13 +167,13 @@ export function miradorSetUI(closeCollec, num, withIAlink) {
    clearInterval(timerConf)
    timerConf = setInterval( () => {
 
-      //console.log("Mtrap",window.Mousetrap)      
+      //loggergen.log("Mtrap",window.Mousetrap)      
       window.Mousetrap.unbind("left")
       window.Mousetrap.unbind("right")
       window.Mousetrap.unbind("space")
 
 
-      //console.log("miraconf...",window.maxW)
+      //loggergen.log("miraconf...",window.maxW)
       jQ(".mirador-container .mirador-main-menu li a").addClass('on');
       jQ(".mirador-container .mirador-main-menu li:nth-child(1) a").addClass('selec');
 
@@ -176,7 +182,7 @@ export function miradorSetUI(closeCollec, num, withIAlink) {
       miradorAddZoomer();
 
       jQ("#collection-tree li.jstree-node").click( (e) => {
-         //console.log("jstree")
+         //loggergen.log("jstree")
          //$(e.target).closest("li").addClass("added-click");
 
          miradorSetUI(false);
@@ -189,7 +195,7 @@ export function miradorSetUI(closeCollec, num, withIAlink) {
          jQ(".mirador-container .mirador-main-menu li:nth-child(1) a").addClass('selec');
          jQ(".mirador-container .scroll-view").attr("tabindex",-1).focus()
 
-         //console.log("ici")
+         //loggergen.log("ici")
          if(window.MiradorHasNoEtext) jQ("#showEtext").parent().hide()
 
          miradorAddZoom();
@@ -315,7 +321,7 @@ async function hasEtextPage(manifest, resID) {
       if(etextRes?.length > 1) window.multipleEtextRes = { values: etextRes, index: etextRes.indexOf(ut) }
       else if(window.multipleEtextRes) delete window.multipleEtextRes
 
-      console.log("ut3", ut, window.etextRes)
+      loggergen.log("ut3", ut, window.etextRes)
 
       if(!ut) { 
          delete window.MiradorUseEtext
@@ -331,7 +337,7 @@ async function hasEtextPage(manifest, resID) {
       /* // deprecated
       if(!window.setEtext) { 
          window.setEtext = (obj,e) => {
-            console.log("setetext",obj,e,e.target.tagName)
+            loggergen.log("setetext",obj,e,e.target.tagName)
             let checkB = jQ(obj).find("input[type=checkbox]").get(0)
             if(e.target.tagName.toLowerCase() !== 'input') checkB.checked = !checkB.checked
             if(!checkB.checked) {  
@@ -377,14 +383,14 @@ async function hasEtextPage(manifest, resID) {
 
          if(!etextPages[ut]) etextPages[ut] = {}
 
-         //console.log("page " +id,etextPages[ut][id]);
+         //loggergen.log("page " +id,etextPages[ut][id]);
 
          if(etextPages[ut][id] === true) {            
             return new Promise((resolve,reject) => {
                let timer = setInterval(()=>{
-                  //console.log("id?",id_sav,etextPages[ut][id_sav])
+                  //loggergen.log("id?",id_sav,etextPages[ut][id_sav])
                   if(etextPages[ut][id_sav] && etextPages[ut][id_sav] !== true) {
-                     //console.log("resolve:",id_sav,id,etextPages[ut][id_sav])
+                     //loggergen.log("resolve:",id_sav,id,etextPages[ut][id_sav])
                      resolve(etextPages[ut][id_sav].chunks);
                      clearInterval(timer);
                      timer = 0 ;
@@ -397,10 +403,10 @@ async function hasEtextPage(manifest, resID) {
          }
          else if(!etextPages[ut][id]) {            
             
-            //console.log("loading DATA",id);
+            //loggergen.log("loading DATA",id);
             const id_token = localStorage.getItem('id_token');
             const expires_at = localStorage.getItem('expires_at');
-            console.log("token:", id_token, expires_at, Date.now());
+            loggergen.log("token:", id_token, expires_at, Date.now());
 
             let start = id;
             while(id > 0 && start - id < NB_PAGES && !etextPages[ut][id - 1] ) { id -- ; } 
@@ -415,7 +421,7 @@ async function hasEtextPage(manifest, resID) {
             
             let json = await data.json() ;
 
-            //console.log("DATA OK",start,json);
+            //loggergen.log("DATA OK",start,json);
 
             if(json && json["@graph"]) json = json["@graph"]
             if(json.status === 404 || !json.filter) {
@@ -432,7 +438,7 @@ async function hasEtextPage(manifest, resID) {
                
                if(!p.chunks) p.chunks = []
                for(let c of chunks) {
-                  //console.log(p,c)
+                  //loggergen.log(p,c)
                   let content = c["chunkContents"], start = -1, end = -1
                   
                   if( p.sliceStartChar >= c.sliceStartChar && p.sliceStartChar <= c.sliceEndChar 
@@ -460,7 +466,7 @@ async function hasEtextPage(manifest, resID) {
          }
 
          if(etextPages[ut][id_sav] && etextPages[ut][id_sav] !== true && etextPages[ut][id_sav].chunks && etextPages[ut][id_sav].chunks.length) {
-            console.log("return:",ut,id_sav,etextPages[ut][id_sav].chunks,etextPages[ut][id_sav])
+            loggergen.log("return:",ut,id_sav,etextPages[ut][id_sav].chunks,etextPages[ut][id_sav])
             return etextPages[ut][id_sav].chunks ;
          }
          
@@ -480,7 +486,7 @@ let etextPages = {};
 
 export async function miradorConfig(data, manifest, canvasID, useCredentials, langList, cornerButton, resID, locale, etextLang)
 {
-   console.log("mConf:",cornerButton,data,resID,manifest)
+   loggergen.log("mConf:",cornerButton,data,resID,manifest)
 
    if(cornerButton === undefined) cornerButton = 
    { 
@@ -635,7 +641,7 @@ function miradorAddClick(firstInit){
 
       window.setMiradorClick = (firstInit,e) => {
 
-         //console.log("cliked",e,firstInit)
+         //loggergen.log("cliked",e,firstInit)
          window.itemClick = 0 ;
 
          if(jQ(".mirador-container .mirador-main-menu li:nth-child(1) a").hasClass('selec')) {
@@ -653,7 +659,7 @@ function miradorAddClick(firstInit){
 
          clearInterval(clickTimer);
          clickTimer = setInterval(() => {
-            //console.log("click interval")
+            //loggergen.log("click interval")
             let added = false
             jQ(".mirador-viewer .member-select-results li[data-index-number]").each( (i,e) => {
                let item = jQ(e)
@@ -679,7 +685,7 @@ function miradorAddClick(firstInit){
                         let manif = jQ(e.target);
                         if(manif.length) manif = manif.parent().parent().attr("data-manifest")
                         let getEtext = await hasEtextPage(manif);
-                        //console.log("manif",manif,getEtext)
+                        //loggergen.log("manif",manif,getEtext)
                         if(getEtext) window.getEtextPage = getEtext;
                         else if(window.getEtextPage) delete window.getEtextPage ;
                         if(jQ("#showEtext").length && getEtext) { 
@@ -716,7 +722,7 @@ function miradorAddClick(firstInit){
                               let elem = jQ(".scroll-view")                              
                               if(jQ("#viewer.inApp").length) elem = jQ("body,html").scrollTop(0)
 
-                              //console.log(jQ(".mirador-container ul.scroll-listing-thumbs ").width(),jQ(window).width())
+                              //loggergen.log(jQ(".mirador-container ul.scroll-listing-thumbs ").width(),jQ(window).width())
                               elem
                               .scrollLeft((jQ(".mirador-container ul.scroll-listing-thumbs ").width() - jQ(window).width()) / 2)
                               .scrollTop(0) //jQ(".scroll-view").scrollTop()+1)
@@ -742,7 +748,7 @@ function miradorAddClick(firstInit){
             })
             if(!added && window.itemClick > 0) {
                clearInterval(clickTimer)
-               //console.log("clear Inter...");
+               //loggergen.log("clear Inter...");
                setTimeout(window.setMiradorClick, 250);
             }
          }, 100) ;
@@ -783,7 +789,7 @@ function miradorAddScroll(toImage)
 
       window.scrollToImage = (id) => {
 
-            console.log("id:",id)
+            loggergen.log("id:",id)
 
 
             let fromInp = false 
@@ -793,14 +799,14 @@ function miradorAddScroll(toImage)
                   if(id.match(/^[0-9]+$/)) { 
                      let num = id
                      id = jQ(".scroll-view img[title~='"+num+"']").first()
-                     //console.log("id=",id)
+                     //loggergen.log("id=",id)
                      if(!id.length) id = jQ(".scroll-view img[title~='\["+num+"\]']").first()
-                     //console.log("id==",id)
+                     //loggergen.log("id==",id)
                   }
                   else if(id.match(/^[0-9]+[rv]$/))
                   {
                      id = jQ(".scroll-view img[title~='"+id+"']").first()
-                     //console.log("id=",id)
+                     //loggergen.log("id=",id)
                   }
                   else id = false
                }
@@ -809,7 +815,7 @@ function miradorAddScroll(toImage)
             
             if(!id || !id.length) id = jQ(".panel-listing-thumbs li.highlight img").first()
             
-            console.log("id?",id.length,id,fromInp)
+            loggergen.log("id?",id.length,id,fromInp)
 
             if(!id || !id.length) { 
                if(fromInp) {
@@ -853,7 +859,7 @@ function miradorAddScroll(toImage)
                let sTd = jQ(document).scrollTop()
                if(!sTd) sTd = 0
 
-               //console.log("y",sT,sTd,imgY,im)
+               //loggergen.log("y",sT,sTd,imgY,im)
 
                jQ(".scroll-view").stop().animate({scrollTop:-sTd+sT+imgY-90}
                   //,"scrollLeft": (jQ(".mirador-container ul.scroll-listing-thumbs ").width() - jQ(window).width()) / 2}
@@ -865,7 +871,7 @@ function miradorAddScroll(toImage)
 
       window.setMiradorScroll = (notToImage) => {
 
-         //console.log("setScroll")
+         //loggergen.log("setScroll")
 
          setTimeout(() => { jQ(".mirador-container .scroll-view").show().fadeTo(250,1); }, 250)
 
@@ -916,7 +922,7 @@ function miradorAddZoomer() {
          let scrollT = jQ(".mirador-container ul.scroll-listing-thumbs")
          let scrollV = jQ(".scroll-view")
 
-         //console.log("sZ:",val,window.maxW,window.maxH,scrollV.innerWidth())
+         //loggergen.log("sZ:",val,window.maxW,window.maxH,scrollV.innerWidth())
 
          let maxW = window.maxW
          let maxH = window.maxH
@@ -936,8 +942,8 @@ function miradorAddZoomer() {
             coef = coefW            
             nuW = maxW * coef
 
-            //console.log("coef",coef)
-            //console.log("nuW",nuW);
+            //loggergen.log("coef",coef)
+            //loggergen.log("nuW",nuW);
 
          }
 
@@ -953,8 +959,8 @@ function miradorAddZoomer() {
             nuW = maxW * coef
             
             
-            //console.log("nuW",nuW,trX);
-            //console.log("coefH",coef)
+            //loggergen.log("nuW",nuW,trX);
+            //loggergen.log("coefH",coef)
 
          }
 
@@ -973,10 +979,10 @@ function miradorAddZoomer() {
          }
 
 
-         //console.log("trX/",trX/coefW,trX/coefH);
+         //loggergen.log("trX/",trX/coefW,trX/coefH);
 
-         //console.log("coef1",coef,val)
-         //console.log("nuW",nuW,scrollV.innerWidth(),trX);
+         //loggergen.log("coef1",coef,val)
+         //loggergen.log("nuW",nuW,scrollV.innerWidth(),trX);
 
          if(scrollT.length)  {
 
@@ -1007,7 +1013,7 @@ function miradorAddZoomer() {
             
             let selec = jQ(".view-nav #Zmenu ul.select li[data-selected]")
             if(window.currentZoom === undefined) {
-               //console.log("set zoom menu");
+               //loggergen.log("set zoom menu");
 
                if(selec.length) { 
                   selec.removeAttr("data-selected");
@@ -1066,7 +1072,7 @@ function miradorAddZoomer() {
             scrollT.find(".etext-content.loaded").map( (i,e) => {
                let rect = e.getBoundingClientRect()
                if(rect.top < 0) { 
-                  //console.log("e:",e,JSON.stringify(rect))
+                  //loggergen.log("e:",e,JSON.stringify(rect))
                   fixed += rect.height
                }
             })
@@ -1084,11 +1090,11 @@ function miradorAddZoomer() {
                //if(window.innerWidth > window.innerHeight) body = jQ("html,body");
                //else body = jQ("body")
 
-               //console.log(body.scrollTop())
+               //loggergen.log(body.scrollTop())
                sT = body.scrollTop() + (nuH - oldH)*((body.scrollTop() - fixed)/(oldH - fixed))
                if(!window.miradorNoScroll) body.scrollTop(sT) 
             }
-            //console.log("sT:",sT,fixed,nuH,oldH,body)
+            //loggergen.log("sT:",sT,fixed,nuH,oldH,body)
 
             // TODO not always centered when zoom > 135% (bdr:W1KG18629)
             scrollV.scrollLeft((nuW - scrollV.innerWidth() ) / 2)
@@ -1107,7 +1113,7 @@ function miradorInitMenu(maxWonly) {
 
    if(maxWonly == undefined) maxWonly = false
 
-   //console.log("maxWo",maxWonly)
+   //loggergen.log("maxWo",maxWonly)
 
    if(!maxWonly) jQ(".user-buttons.mirador-main-menu li:nth-last-child(n-5):nth-last-child(n+2)").addClass("on")
    window.maxW = jQ(".mirador-container ul.scroll-listing-thumbs ").width()
@@ -1117,7 +1123,7 @@ function miradorInitMenu(maxWonly) {
       let im = jQ(v), w = im.width(), h = im.height()
       if(h > maxH) { 
          maxH = h
-         //console.log("h",h,window.Himg,maxH,im.attr("height"),im.height())
+         //loggergen.log("h",h,window.Himg,maxH,im.attr("height"),im.height())
       }
 
    })
@@ -1130,7 +1136,7 @@ function miradorInitMenu(maxWonly) {
       if(window.Hratio) delete window.Hratio
    }
 
-   //console.log("w",jQ(".mirador-container ul.scroll-listing-thumbs ").width())
+   //loggergen.log("w",jQ(".mirador-container ul.scroll-listing-thumbs ").width())
 
 
    if(window.maxW < jQ(".scroll-view").innerWidth())
@@ -1146,7 +1152,7 @@ function miradorInitMenu(maxWonly) {
  
    if(!maxWonly) jQ("input#zoomer").trigger("input")
 
-   //console.log("maxW",window.maxW)
+   //loggergen.log("maxW",window.maxW)
 }
 
 export async function miradorInitView(work,lang,callerURI,locale,extManif) {
@@ -1165,7 +1171,7 @@ export async function miradorInitView(work,lang,callerURI,locale,extManif) {
    ]
 
    let conf = await (await fetch(CONFIG_PATH)).json()
-   //console.log("conf:",conf)
+   //loggergen.log("conf:",conf)
    if(conf.iiifpres) iiifpres = conf.iiifpres.endpoints[conf.iiifpres.index]
    
    const urlParams = new URLSearchParams(window.location.search);
@@ -1175,7 +1181,7 @@ export async function miradorInitView(work,lang,callerURI,locale,extManif) {
 
    //const work = props.match.params.IRI;
    if(!extManif && work) {
-      console.log("work",work)
+      loggergen.log("work",work)
 
       const resData = await(await fetch(ldspdi+"/query/graph/ResInfo-SameAs?R_RES="+work+"&format=jsonld")).json()
       console.warn("resData:",resData, resData["@graph"]?resData["@graph"]:"", resData["@graph"]?resData["@graph"].filter(d => d["id"] == work):"")
@@ -1183,7 +1189,7 @@ export async function miradorInitView(work,lang,callerURI,locale,extManif) {
       if(resData["qualityGrade"] != undefined) opt["qualityGrade"] = resData["qualityGrade"]
 
       let propK ;
-      if(resData.status && resData.status == 404) { console.log("echec",work)}
+      if(resData.status && resData.status == 404) { loggergen.log("echec",work)}
       else if(resData["@graph"]) {          
          propK = resData["@graph"].filter(d => d["id"] == work)[0]
          console.warn("else1",propK,resData,resData["@graph"],resData["@graph"].filter(d => d["id"] == work),resData["@graph"].filter(d => d["id"] == work)[0])
@@ -1192,7 +1198,7 @@ export async function miradorInitView(work,lang,callerURI,locale,extManif) {
          propK = resData
          console.warn("else2")
       }
-      console.log("pK",propK)
+      loggergen.log("pK",propK)
       if(propK)
       {
          if(propK["tmp:addIALink"] === true) {
@@ -1223,7 +1229,7 @@ export async function miradorInitView(work,lang,callerURI,locale,extManif) {
                { "collectionUri" : iiifpres+"/collection/wio:"+repro, location:"" }
             ]
 
-            console.log("data:",data)
+            loggergen.log("data:",data)
          }
          else if(propK["workHasItemImageAsset"] || propK["workLocation"]) { //workHasItemImageAsset
 
@@ -1232,14 +1238,14 @@ export async function miradorInitView(work,lang,callerURI,locale,extManif) {
             let assocData = await(await fetch(ldspdi+"/query/table/IIIFView-workInfo?R_RES="+work+"&format=json")).json()
             if(assocData && assocData.results && assocData.results.bindings)
               assocData = assocData.results.bindings
-            console.log("aD",assocData)
+            loggergen.log("aD",assocData)
 
             let hasParts = assocData.filter(e => e.hasParts)[0]
             if(hasParts && hasParts["hasParts"] && hasParts["hasParts"].value) hasParts = hasParts["hasParts"].value === "true"
             let nbVol = assocData.filter(e => e.nbVolumes)[0]
             if(nbVol && nbVol["nbVolumes"] && nbVol["nbVolumes"].value) nbVol = Number(nbVol["nbVolumes"].value)
 
-            console.log(nbVol,hasParts)
+            loggergen.log(nbVol,hasParts)
 
             if( hasParts == true || nbVol > 1 ) {
                data = [
@@ -1269,7 +1275,7 @@ export async function miradorInitView(work,lang,callerURI,locale,extManif) {
                ]
             }
 
-            console.log("cV:",checkV,data)
+            loggergen.log("cV:",checkV,data)
             
          } else if(propK["type"] === "ImageGroup") {
             data = [
@@ -1290,7 +1296,7 @@ export async function miradorInitView(work,lang,callerURI,locale,extManif) {
    } else {
       manif  = data.filter(e => e.manifestUri)[0]
       if(manif && manif.manifestUri) manif = manif.manifestUri
-      console.log("data",data,manif,callerURI)
+      loggergen.log("data",data,manif,callerURI)
    }
 
    
@@ -1315,7 +1321,7 @@ export async function miradorInitView(work,lang,callerURI,locale,extManif) {
    let config = await miradorConfig(data,manif,null,true,lang,corner,work,locale);
 
    let initTimer = setInterval( ((cfg) => () => {
-      console.log("init?",cfg,window.Mirador)
+      loggergen.log("init?",cfg,window.Mirador)
       if(window.Mirador !== undefined) {
          clearInterval(initTimer);
          window.mirador = window.Mirador( { ...cfg, windowSettings:{ ...cfg.windowSettings, ...opt } } )

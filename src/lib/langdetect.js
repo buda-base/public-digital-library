@@ -41,7 +41,7 @@ var transinfos = {
 
 function guessFromRange(char) {
 	var cp = char.codePointAt(0);
-	//console.log("cp:",Number(cp).toString(16))
+	//loggergen.log("cp:",Number(cp).toString(16))
 	for (const nl of nativeranges) {
 		if (cp >= nl['range'][0] && cp <= nl['range'][1]) {
 			return nl['lt'];
@@ -76,7 +76,7 @@ export function narrowWithString(strtoguess, transtotest = ['ewts', 'iast', 'pin
 	// #756
 	strtoguess = strtoguess.replace(/[\[\]()|_]/g, " ")
 
-	//console.log("nWs:",strtoguess,transtotest)
+	//loggergen.log("nWs:",strtoguess,transtotest)
 	var wordlen = 0;
 	var triedrange = false;
 	for (let char of strtoguess) { // iterates on Unicode code points, not code units

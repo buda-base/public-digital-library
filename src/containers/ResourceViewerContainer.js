@@ -16,6 +16,10 @@ import UserViewer from '../components/UserViewer';
 
 import {auth} from '../routes';
 
+import logdown from 'logdown'
+
+const loggergen = new logdown('gen', { markdown: false });
+
 const mapStateToProps = (state,ownProps) => {
 
   let logged = state.ui.logged ;
@@ -41,7 +45,7 @@ const mapStateToProps = (state,ownProps) => {
       let flatAssocResources = {}
       for(let id of Object.keys(assocResources)) {
          if(!id.startsWith('"')) { 
-            //console.log("id?",id)
+            //loggergen.log("id?",id)
             for(let k of Object.keys(assocResources[id])) {
                let val = flatAssocResources[k]
                flatAssocResources[k] = [ ...(val?val:[]), ...assocResources[id][k] ]
@@ -100,7 +104,7 @@ const mapStateToProps = (state,ownProps) => {
          manifestWpdf = IIIFinfo.manifestWpdf
          monovolume = IIIFinfo.single
 
-         //console.log("IIIF",pdfVolumes,IIIFinfo)
+         //loggergen.log("IIIF",pdfVolumes,IIIFinfo)
       }
    }
 
@@ -187,7 +191,7 @@ const mapStateToProps = (state,ownProps) => {
 
    if(config && !config.auth) props.auth = false
 
-   console.log("mS2p",state,props)
+   loggergen.log("mS2p",state,props)
 
    return props
 

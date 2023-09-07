@@ -76,12 +76,12 @@ export function makeLangScriptLabel(code:string,span:boolean=false,incAsSaPi:fal
    if(useLang && code == "-") return I18n.t("lang.langscript.unicode")
    if(!langScripts[lang]) throw new Error("Unknown lang code ("+lang+")")
    if(script && !langScripts[script]) throw new Error("Unknown script code ("+script+")")
-   //console.log("code",code,lang,script)
+   //loggergen.log("code",code,lang,script)
    
    let langLabel = I18n.t(langScripts[lang])
    let scriptLabel = lang != "en" ? "Unicode" : ""
    if(script.length) scriptLabel = I18n.t(langScripts[script])
-   //console.log("label",langLabel,scriptLabel)
+   //loggergen.log("label",langLabel,scriptLabel)
 
    let incHelper = ""
    if(incAsSaPi && lang == "inc") incHelper = I18n.t("lang.langscript.incHelper")+", "

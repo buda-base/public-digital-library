@@ -2,6 +2,10 @@ import React,{ Component } from 'react';
 import { Route } from 'react-router-dom';
 import bdrcApi from './api';
 
+import logdown from 'logdown'
+
+const loggergen = new logdown('gen', { markdown: false });
+
 class IIIFCookieLogin extends Component
 {
    async componentWillMount()
@@ -13,7 +17,7 @@ class IIIFCookieLogin extends Component
 
        let isAuth = isAuth = this.props.auth.isAuthenticated()
        let origin = this.props.get["origin"], messageId = this.props.get["messageId"]
-       console.log("cookies",document.cookie,isAuth,origin,messageId)
+       loggergen.log("cookies",document.cookie,isAuth,origin,messageId)
        let error, description
        if(!origin || !messageId) {
           error = "invalidRequest"
@@ -26,7 +30,7 @@ class IIIFCookieLogin extends Component
        {
           error = false ;
           //document.cookie = 'auth0token='+localStorage.getItem("access_token")+";path=*.bdrc.io;";
-          //console.log("cookies",document.cookie)
+          //loggergen.log("cookies",document.cookie)
        }
        else
        {
@@ -44,7 +48,7 @@ class IIIFCookieLogin extends Component
 
    render()
    {
-     console.log("render IIIF")
+     loggergen.log("render IIIF")
       return (<div>Cookie store<br/>Closing window</div>)
 
    }

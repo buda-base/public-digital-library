@@ -8,6 +8,10 @@ import {fullUri} from '../../components/App'
 import qs from 'query-string'
 import history from '../../history';
 
+import logdown from 'logdown'
+
+const loggergen = new logdown('gen', { markdown: false });
+
 let reducers = {};
 
 export type DataState = {
@@ -383,16 +387,16 @@ export const gotResource = (state: DataState, action: Action) => {
          }                   
       }
 
-      //console.log("sameR",sameR,sameP,uri,data,sameAsInfo)
+      //loggergen.log("sameR",sameR,sameP,uri,data,sameAsInfo)
 
       // merging data into resource
       if(get["cw"] !== "none") for(let k of Object.keys(sameR)) {
          
-         //console.log("same k",k)
+         //loggergen.log("same k",k)
          
          if(sameR[k]) for(let p of Object.keys(sameR[k])) {
             
-            //console.log("p",p)
+            //loggergen.log("p",p)
             
             if(p.match(/purl\.bdrc\.io/) || p.match(/(pref|alt)Label$/) ) { 
                if(!data[uri][p]) data[uri][p] = []
@@ -403,14 +407,14 @@ export const gotResource = (state: DataState, action: Action) => {
                let val = sameR[k][p].filter(e => !e.value || e.value !== uri) 
                for(let v of val) {
                   
-                  //console.log("check",v)
+                  //loggergen.log("check",v)
 
                   let found = false
                   let v_val = getVal(v), w_val
                   for(let w of data[uri][p]) {
                      w_val = getVal(w)
                      
-                     //console.log("vs",v_val,w_val,v,w)
+                     //loggergen.log("vs",v_val,w_val,v,w)
 
                      if(v_val === w_val && getLg(v) === getLg(w)) { 
                         found = w
@@ -428,12 +432,12 @@ export const gotResource = (state: DataState, action: Action) => {
                            // DONE merge labels (same name/title type + label)
 
 
-                           //console.log("nodes:",v_nm,w_nm)
+                           //loggergen.log("nodes:",v_nm,w_nm)
                            
                            if(v_nm && v_nm[rdfs+"label"] && v_nm[rdfs+"label"].length) for(let r of v_nm[rdfs+"label"]) {
                               if(w_nm && w_nm[rdfs+"label"] && w_nm[rdfs+"label"].length) for(let q of w_nm[rdfs+"label"]) {
                                  
-                                 //console.log("r/q:",r,q)
+                                 //loggergen.log("r/q:",r,q)
 
                                  if( q.value === r.value || q.value === r.value + "/" || q.value + "/" === r.value ) {
                                     found = true
@@ -455,7 +459,7 @@ export const gotResource = (state: DataState, action: Action) => {
                         // found same event type
                         if(v_ev && w_ev && v_ev[rdf+"type"] && w_ev[rdf+"type"] && v_ev[rdf+"type"].length && w_ev[rdf+"type"].length && v_ev[rdf+"type"][0].value === w_ev[rdf+"type"][0].value) {
 
-                           //console.log("nodes:",v_ev,w_ev)
+                           //loggergen.log("nodes:",v_ev,w_ev)
 
                            // #771 
                            if(v_ev[bdo+"onYear"] && w_ev[bdo+"eventWhen"] && v_ev[bdo+"onYear"].length && w_ev[bdo+"eventWhen"].length && v_ev[bdo+"onYear"][0].value === w_ev[bdo+"eventWhen"][0].value) {
@@ -469,7 +473,7 @@ export const gotResource = (state: DataState, action: Action) => {
                               found = w_ev[bdo+"onYear"][0] ;
                               found.bnode = true 
 
-                              //console.log("found:",found,v_ev,w_ev)
+                              //loggergen.log("found:",found,v_ev,w_ev)
 
                               break ;
                            }
@@ -489,11 +493,11 @@ export const gotResource = (state: DataState, action: Action) => {
                               v_ev[q][0].fromSameAs = k
                            }
                         }  
-                        //console.log("v_ev",v_ev)
+                        //loggergen.log("v_ev",v_ev)
                      } 
                      else if(p.endsWith("Name")) { 
                         let v_nm = data[v.value]
-                        //console.log("!found",v_nm,v.value)
+                        //loggergen.log("!found",v_nm,v.value)
                         if(v_nm && v_nm[rdfs+"label"] && v_nm[rdfs+"label"].length) for(let q of v_nm[rdfs+"label"]) {
                            q.allSameAs = [ k ]
                            q.fromSameAs = k
@@ -506,7 +510,7 @@ export const gotResource = (state: DataState, action: Action) => {
                      
                      data[uri][p].push(v)
 
-                     //console.log("new v",JSON.stringify(v,null,3))
+                     //loggergen.log("new v",JSON.stringify(v,null,3))
                   } 
                   else if(found !== true) {
                      if(!found.allSameAs) { found.allSameAs = [ uri ] ; }
@@ -519,7 +523,7 @@ export const gotResource = (state: DataState, action: Action) => {
 
                      if(found.allSameAs.indexOf(k) === -1) found.allSameAs.push(k) ;
 
-                     //console.log("found v",JSON.stringify(found))
+                     //loggergen.log("found v",JSON.stringify(found))
                   }
                }
                   
@@ -535,7 +539,7 @@ export const gotResource = (state: DataState, action: Action) => {
          if(k.match(/[/#]sameAs[^/]+$/)) {             
             data[uri][k] = data[uri][k].filter(e => !sameP[owl+"sameAs"] || !sameP[owl+"sameAs"].filter(s => s.value === e.value).length) 
             if(!data[uri][k].length) delete data[uri][k]
-            console.log("filtered",k)
+            loggergen.log("filtered",k)
          }
       }
 
@@ -544,7 +548,7 @@ export const gotResource = (state: DataState, action: Action) => {
 
 
 
-   console.log("sameAs data", sameP, sameR, data)
+   loggergen.log("sameAs data", sameP, sameR, data)
 
 
     return {
@@ -555,7 +559,7 @@ export const gotResource = (state: DataState, action: Action) => {
              const bdo  = "http://purl.bdrc.io/ontology/core/";
              const bdr  = "http://purl.bdrc.io/resource/";
              let k = action.payload.replace(/bdr:/,bdr)
-             //console.log("k",k,k1)
+             //loggergen.log("k",k,k1)
              if(k1 != k) return { ...acc1,[k1]:Object.keys(data[k1]).reduce( (acc2,k2) => {
                 if(k2 != bdo+"volumeHasEtext") return { ...acc2, [k2]:data[k1][k2] }
                 else {
@@ -633,7 +637,7 @@ export const gotAssocResources = (state: DataState, action: Action) => {
           }
        }
 
-       console.log("assocR",res,state,action)
+       loggergen.log("assocR",res,state,action)
 
        return state ;
 }
@@ -651,7 +655,7 @@ export const getAnnotations = (state: DataState, action: Action) => {
       }
 
 
-    console.log("gAnno",state,action)
+    loggergen.log("gAnno",state,action)
 
     return state ;
 }
@@ -673,7 +677,7 @@ export const gotAnnoResource = (state: DataState, action: Action) => {
 
 
    if(res) {
-      console.log("res",res,action)
+      loggergen.log("res",res,action)
       let colId = action.meta.collecId //.replace(new RegExp("^"+bdac),"bdac")
 
       let asso = action.meta.data
@@ -687,7 +691,7 @@ export const gotAnnoResource = (state: DataState, action: Action) => {
          let anno = assoK.filter(e => e.type && /*e.type == rdf+"type" &&*/ e.value == oa+"Annotation")
          if(anno && anno.length > 0)
          {
-            console.log("anno",anno,assoK)
+            loggergen.log("anno",anno,assoK)
 
             let targ = asso[k][oa+"hasTarget"]
             let body = asso[k][oa+"hasBody"]
@@ -697,7 +701,7 @@ export const gotAnnoResource = (state: DataState, action: Action) => {
                let sta = action.meta.data[targ[0].value]
                if(sta)
                {
-                  console.log("sta",sta)
+                  loggergen.log("sta",sta)
 
                   // + (AN_001)  target [ statement  WCBC2237 :translator PCBC7  ] / motiv [ assessing ] / body [ supportedBy Assertion [ comment workLocation ] score ]
                   // + (AN_002)     "         "        "          "       PCBC47 ] /   "          "           "          "           x          "          "
@@ -726,13 +730,13 @@ export const gotAnnoResource = (state: DataState, action: Action) => {
                   let obj = sta[rdf+"object"]
                   if(pred && pred.length > 0 && obj && obj.length > 0)
                   {
-                     console.log("pred obj",pred,obj)
+                     loggergen.log("pred obj",pred,obj)
                      if(pred[0] && pred[0].value && obj[0] && obj[0].value)
                      {
                         let prop = res[action.payload.replace(/bdr:/,bdr)][pred[0].value] ;
                         if(prop)
                         {
-                           console.log("prop",prop)
+                           loggergen.log("prop",prop)
 
                            let newP = []
 
@@ -744,13 +748,13 @@ export const gotAnnoResource = (state: DataState, action: Action) => {
                               {
                                  if(body && body[0] && body[0].value && action.meta.data[body[0].value])
                                  {
-                                    console.log("body",body)
+                                    loggergen.log("body",body)
                                     let bnode = { type: "bnode",value: body[0].value }
                                     newP.push(bnode);
 
                                     let support = action.meta.data[body[0].value]
                                     if(support) support = support[adm+"supportedBy"] ;
-                                    console.log("support",support)
+                                    loggergen.log("support",support)
 
                                     if(support && support[0] && support[0].value)
                                     {
@@ -778,7 +782,7 @@ export const gotAnnoResource = (state: DataState, action: Action) => {
                                                    .filter(e => e.match(/[Ww]orkLocation(Work)?$/))
                                                    .reduce((acc,e) => ([...acc,...assert[e].map(f => ({...f,type:e}))]),[])
 
-                                          console.log("assert",assert,t,c,w) //,c[0])
+                                          loggergen.log("assert",assert,t,c,w) //,c[0])
                                           if(t && t[0] && t[0].value) // && c && c[0])
                                           {
 
@@ -795,8 +799,8 @@ export const gotAnnoResource = (state: DataState, action: Action) => {
                                                 if(w && w[0]){
                                                    let work = action.meta.data[w[0]["value"]]
 
-                                                   console.log("work",work,w[0],w[0].value)
-                                                   w.map(e => console.log(e))
+                                                   loggergen.log("work",work,w[0],w[0].value)
+                                                   w.map(e => loggergen.log(e))
 
                                                    if(work) work = work[bdo+"workLocationWork"]
                                                    if(work && work[0])
@@ -810,7 +814,7 @@ export const gotAnnoResource = (state: DataState, action: Action) => {
                                                    }
                                                 }
 
-                                                console.log("o1",o,res)
+                                                loggergen.log("o1",o,res)
                                              }
                                              else if(w && w[0]){
 
@@ -818,7 +822,7 @@ export const gotAnnoResource = (state: DataState, action: Action) => {
 
                                                 o["hasAnno"] = w[0]["value"] ;
 
-                                                console.log("o2",o,res)
+                                                loggergen.log("o2",o,res)
                                              }
 
 
@@ -830,8 +834,8 @@ export const gotAnnoResource = (state: DataState, action: Action) => {
                            }
 
                            res[action.payload.replace(/bdr:/,bdr)][pred[0].value] = newP
-                           console.log("newP",newP)
-                           //newP.map(e => console.log(e))
+                           loggergen.log("newP",newP)
+                           //newP.map(e => loggergen.log(e))
                         }
                      }
                   }
@@ -856,7 +860,7 @@ export const gotAnnoResource = (state: DataState, action: Action) => {
                      ]),[])
             }),{}) }
 
-            console.log("assoRes",action.meta,state.assocResources,assoRes)
+            loggergen.log("assoRes",action.meta,state.assocResources,assoRes)
 
       state = {
         ...state,
@@ -883,7 +887,7 @@ export const gotAnnoResource = (state: DataState, action: Action) => {
       }
 
 
-    console.log("annoR",res,state,action)
+    loggergen.log("annoR",res,state,action)
 
     return state ;
 }
@@ -898,7 +902,7 @@ export const gotNextChunks = (state: DataState, action: Action) => {
       {
          res = state.resources[action.payload]["http://purl.bdrc.io/resource/"+action.payload.replace(/bdr:/,"")]
 
-         //console.log("av",JSON.stringify(res,null,3))
+         //loggergen.log("av",JSON.stringify(res,null,3))
 
          if(!res["http://purl.bdrc.io/ontology/core/eTextHasChunk"]) res["http://purl.bdrc.io/ontology/core/eTextHasChunk"] = []
          if(!action.meta.prev) res["http://purl.bdrc.io/ontology/core/eTextHasChunk"] = res["http://purl.bdrc.io/ontology/core/eTextHasChunk"].filter(e => e.start !== undefined).concat(action.meta.data)
@@ -918,9 +922,9 @@ export const gotNextChunks = (state: DataState, action: Action) => {
          }
       }
 
-    console.log("nextC",state,action)
+    loggergen.log("nextC",state,action)
 
-    //console.log("ap",JSON.stringify(res,null,3))
+    //loggergen.log("ap",JSON.stringify(res,null,3))
 
     return state ;
 }
@@ -952,7 +956,7 @@ export const gotNextPages = (state: DataState, action: Action) => {
          }
       }
 
-    console.log("nextP",state,action)
+    loggergen.log("nextP",state,action)
 
     return state ;
 }
@@ -1183,7 +1187,7 @@ export const gotOutline = (state: DataState, action: Action) => {
                if(parent === action.payload && !e.contentLocation) volumesToUpdate.push(e)
             }
          })
-         //console.log("root_map:",root_map)
+         //loggergen.log("root_map:",root_map)
       }
          
       for(let i in elem) {
@@ -1198,7 +1202,7 @@ export const gotOutline = (state: DataState, action: Action) => {
                if(v) {
                   v["@id"] = e["@id"]
                   // to be continued... sort volumes + open volume if in path of search result
-                  console.log("vol:",volumesToUpdate,vol,v)
+                  loggergen.log("vol:",volumesToUpdate,vol,v)
                }
                volumesToUpdate.splice(vol,1)
             }
@@ -1218,7 +1222,7 @@ export const gotOutline = (state: DataState, action: Action) => {
 
          elem_map[e["@id"]] = [ elem[i] ]
       }
-      //console.log("elem_map:",elem_map)
+      //loggergen.log("elem_map:",elem_map)
 
       root = state.outlineKW.split("/")
       if(root.length > 0) {
@@ -1267,7 +1271,7 @@ export const gotETextRefs = (state: DataState, action: Action) => {
       root = { ...action.meta["@graph"].filter(e => e["@id"] === action.payload)[0] }
       mono = root.instanceHasVolume
       if(mono && !Array.isArray(mono)) {
-         //console.log("mono:",mono)
+         //loggergen.log("mono:",mono)
          mono = action.meta["@graph"].filter(e => e["@id"] === mono["@id"])
          if(mono && mono.length && mono[0].volumeHasEtext && !Array.isArray(mono[0].volumeHasEtext)) {
             mono = action.meta["@graph"].filter(e => e["@id"] === mono[0].volumeHasEtext)
@@ -1293,7 +1297,7 @@ export const gotETextRefs = (state: DataState, action: Action) => {
       }
    })
 
-   console.log("assoR:",assoR)
+   loggergen.log("assoR:",assoR)
 
    return {
       ...state,
@@ -1322,7 +1326,7 @@ reducers[actions.TYPES.resetOutlineSearch] = resetOutlineSearch;
 
 export const getOneDatatype = (state: DataState, action: Action) => {
 
-console.log("get1DT")
+loggergen.log("get1DT")
 
     return {
         ...state,
@@ -1346,7 +1350,7 @@ reducers[actions.TYPES.getAssocTypes] = getAssocTypes;
 
 export const getDatatypes = (state: DataState, action: Action) => {
 
-   console.log("getDTs")
+   loggergen.log("getDTs")
 
     return {
         ...state,
@@ -1438,7 +1442,7 @@ export const foundResults = (state: DataState, action: actions.FoundResultsActio
          }
       }
 
-      //console.log("DT1",JSON.stringify(datatypes),JSON.stringify(state.datatypes))
+      //loggergen.log("DT1",JSON.stringify(datatypes),JSON.stringify(state.datatypes))
 
    }
    
@@ -1465,7 +1469,7 @@ export const foundDatatypes = (state: DataState, action: actions.FoundResultsAct
 
    if(tag !== "datatypes") DT = {}
 
-   //console.log("DT2",JSON.stringify(DT))
+   //loggergen.log("DT2",JSON.stringify(DT))
 
    // + keep if already present
    // DONE 
@@ -1508,7 +1512,7 @@ export const pdfReady = (state: DataState, action: Action) => {
          }  
          return e ;
       })
-      console.log("pdfV",pdfVolumes,action,id)
+      loggergen.log("pdfV",pdfVolumes,action,id)
 
       return {
       ...state,
@@ -1541,7 +1545,7 @@ export const pdfError = (state: DataState, action: Action) => {
       if(pdfVolumes) { 
          let found = false
          pdfVolumes = pdfVolumes.map(e => {
-            //console.log("e/lnk:",e.link,e)
+            //loggergen.log("e/lnk:",e.link,e)
             if(e.link && e.link.match && e.link.replace(/[-0-9]+$/,"1-").match(id)) {
                found = true ;
                return { ...e, [fileT+"Error"]: action.payload, [fileT+"Range"]:action.meta.url.replace(/^.*?([-0-9]+)$/,"$1") } 
@@ -1694,7 +1698,7 @@ export const gotContext = (state: DataState, action: Action) => {
             }
       }
 
-      //console.log("searches",time,searches,results)
+      //loggergen.log("searches",time,searches,results)
 
       return {
          ...state,
@@ -1730,7 +1734,7 @@ export const foundFacetInfo = (state: DataState, action: actions.FoundResultsAct
       const skos  = "http://www.w3.org/2004/02/skos/core#"; 
       let topics = action.payload.results.tree["@graph"].reduce( (acc,v) => { 
          let prefL = v["skos:prefLabel"]
-         //console.log("preFL",prefL)
+         //loggergen.log("preFL",prefL)
          if(prefL) { 
             if(v["@id"]) {
                if(!Array.isArray(prefL)) prefL = [ prefL ]
@@ -1741,7 +1745,7 @@ export const foundFacetInfo = (state: DataState, action: actions.FoundResultsAct
          return acc
       },{})
       dictionary = { ...state.dictionary, ...topics }
-      //console.log("dico",topics,dictionary)
+      //loggergen.log("dico",topics,dictionary)
    }
 
    return {
@@ -1759,7 +1763,7 @@ reducers[actions.TYPES.foundFacetInfo] = foundFacetInfo;
 
 export const getManifest = (state: DataState, action: Action) => {
 
-   //console.log("getMa",action)
+   //loggergen.log("getMa",action)
 
     state = {
         ...state,
@@ -1828,7 +1832,7 @@ reducers[actions.TYPES.gotImageVolumeManifest] = gotImageVolumeManifest;
 
 export const gotManifest = (state: DataState, action: Action) => {
 
-   //console.log("gotMa",action)
+   //loggergen.log("gotMa",action)
 
     state = {
         ...state,
@@ -1861,7 +1865,7 @@ reducers[actions.TYPES.manifestError] = manifestError;
 
 export const firstImage = (state: DataState, action: Action) => {
 
-    //console.log("1im",action)
+    //loggergen.log("1im",action)
 
     state = {
         ...state,

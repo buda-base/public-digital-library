@@ -6,6 +6,11 @@ import history from '../history';
 import {shortUri,isAdmin} from '../components/App';
 
 import * as rdflib from "rdflib"
+
+import logdown from 'logdown'
+
+const loggergen = new logdown('gen', { markdown: false });
+
 const urlParams = qs.parse(history.location.search)
 
 const onKhmerUrl = (
@@ -147,7 +152,7 @@ export async function logError(error, json) {
          body: JSON.stringify(json)
       })
    } else {
-      console.log("(localhost/not sending)")
+      loggergen.log("(localhost/not sending)")
    }
 
    console.error("sent:",json)
@@ -167,7 +172,7 @@ export function getEntiType(t:string):string {
    if(p === "src") v = uri.replace(/^[^:]+:([a-z]+)\/[0-9]+/,"$1")
    else if(p === "tol") v = uri.replace(/^[^:]+:([a-zA-Z]+)[0-9]+/,"$1")
    else v = uri.replace(/^([^:]+:)?([ACEILGPQMRTWOVU][AERTLWP]?).*$/,"$2")
-   //console.log("gEt?",v,p)
+   //loggergen.log("gEt?",v,p)
    if(!dPrefix[p] || !dPrefix[p][v]) return "" ;
    else return dPrefix[p][v]; }
 
@@ -212,7 +217,7 @@ export default class API {
            else this._fetch = window.fetch.bind(window);
         }
 
-        //console.log("api options",options,this,process.env.NODE_ENV)
+        //loggergen.log("api options",options,this,process.env.NODE_ENV)
       }
 
      async getURLContents(url: string, minSize : boolean = true,acc?:string,lang?:string[],binary:boolean=false,cookie:string,etag = false): Promise<string> {
@@ -236,13 +241,13 @@ export default class API {
             if(!cookie) head = { ...head, "Authorization":"Bearer "+id_token }
          }
 
-         //console.log("access:",{id_token,access_token,isAuth:isAuthenticated(),url,minSize,acc,cookie,xhrArgs,head});
+         //loggergen.log("access:",{id_token,access_token,isAuth:isAuthenticated(),url,minSize,acc,cookie,xhrArgs,head});
 
          // force refresh if ?v=... in url
          if(urlParams.v) url += (url.includes("?")?"&":"?")+"v="+urlParams.v
 
          let response = await this._fetch( url, { method:"GET",headers:new Headers(head), ...xhrArgs } )
-         //console.log("response:",response,etag)
+         //loggergen.log("response:",response,etag)
          
          if (!response.ok) {
             if (response.status === 404) {
@@ -260,16 +265,16 @@ export default class API {
             }
          }
             
-         console.log("FETCH ok",url,response )
+         loggergen.log("FETCH ok",url,response )
          /*
          for(let c of response.headers.keys()) {
-            console.log(c,response.headers.get(c))
+            loggergen.log(c,response.headers.get(c))
          }
          */
          /*
          let cookie = response.headers.get("Set-Cookie")
          if(cookie) {
-            console.log("cookie!",cookie)
+            loggergen.log("cookie!",cookie)
          }
          */
          if(etag) {
@@ -278,13 +283,13 @@ export default class API {
             return { text, etag }
          } else if(!binary) {
             let text = await response.text()
-            //console.log("RESPONSE text",text)
+            //loggergen.log("RESPONSE text",text)
             if(minSize && text.length <= 553) { throw new ResourceNotFound('The resource does not exist.'); }
             return text ;
          }
          else {
             let buffer = await response.arrayBuffer() ;
-            //console.log("buffer",buffer,response)
+            //loggergen.log("buffer",buffer,response)
             return buffer
          }
       }
@@ -299,15 +304,15 @@ export default class API {
                          throw new ResourceNotFound('The resource does not exist.');
                      }
                      else {
-                        console.log("FETCH pb",response)
+                        loggergen.log("FETCH pb",response)
                          throw new ResourceNotFound('Problem fetching the resource');
                      }
                  }
-                 console.log("FETCH ok",url,response)
+                 loggergen.log("FETCH ok",url,response)
                  response.text().then((reqText) => {
                      text = reqText;
 
-                     //console.log("RESPONSE text",reqText)
+                     //loggergen.log("RESPONSE text",reqText)
 
                      if(minSize && reqText.length <= 553) { throw new ResourceNotFound('The resource does not exist.'); }
 
@@ -326,7 +331,7 @@ export default class API {
     {
       try {
          let config =  JSON.parse(await this.getURLContents(this._configPath,false));
-         console.log("config",config)
+         loggergen.log("config",config)
          return config ;
       }
       catch(e) {
@@ -335,7 +340,7 @@ export default class API {
          console.error("fetching config.json",e);
 
          let config =  JSON.parse(await this.getURLContents(this._configDefaultsPath,false));
-         console.log("config-defaults",config)
+         loggergen.log("config-defaults",config)
          return config ;
       }
    }
@@ -344,7 +349,7 @@ export default class API {
        {
 
             let manif =  JSON.parse(await this.getURLContents(url,false,null,["bo-Tibt"]));
-            //console.log("manif",manif)
+            //loggergen.log("manif",manif)
             return manif ;
       }
 
@@ -358,7 +363,7 @@ export default class API {
     async loadUser(mime) {
        if(!mime) {
           let { text, etag } =  await this.getURLContents(this._userPath,false,"application/json", undefined, undefined, undefined, true);
-          console.log("user:etag",etag)
+          loggergen.log("user:etag",etag)
           let user = JSON.parse(text)
           return { user, etag }
        } else {
@@ -370,14 +375,14 @@ export default class API {
     async loadOntology(): Promise<string>
     {
          let onto =  JSON.parse(await this.getURLContents(this._ontologyPath,false));
-         //console.log("onto",onto)
+         //loggergen.log("onto",onto)
          return onto ;
    }
 
     async loadDictionary(): Promise<string>
     {
          let dico =  JSON.parse(await this.getURLContents(this._dictionaryPath,false));
-         console.log("dico",dico)
+         loggergen.log("dico",dico)
          return dico ;
    }
 
@@ -385,7 +390,7 @@ export default class API {
    async loadMonlamResults(params): Promise<string>
    {
       let res =  JSON.parse(await this.getURLContents(this._monlamPath()+"?"+qs.stringify(params),false,"application/json"));
-      console.log("monlam:",res)
+      loggergen.log("monlam:",res)
       return res;
   }
 
@@ -394,7 +399,7 @@ export default class API {
          let config = store.getState().data.config.ldspdi
          let url = config.endpoints[config.index] + "/query/table/countInstancesInCollectionWithProperties" + params
          let count=  JSON.parse(await this.getURLContents(url,false));
-         console.log("count:",count)
+         loggergen.log("count:",count)
          return count ;
    }
 
@@ -403,7 +408,7 @@ export default class API {
          let config = store.getState().data.config.ldspdi
          let url = config.endpoints[config.index] + "/lib/instancesInCollectionWithProperties" + params
          let results =  JSON.parse(await this.getURLContents(url,false));
-         console.log("results:",results)
+         loggergen.log("results:",results)
          return results ;
    }
 
@@ -501,7 +506,7 @@ export default class API {
             let searchType = "Outline_root", extraParam, isTaishoNode
             const initParams = { IRI, searchType } 
             //if(IRI.match(/bdr:MW0T[ST]0/)) isTaishoNode = true; // quickfix for Taisho to keep working
-            //console.log("loadO:",IRI,searchType,node,volFromUri)
+            //loggergen.log("loadO:",IRI,searchType,node,volFromUri)
             if(node && !isTaishoNode) {
                if(node["tmp:hasNonVolumeParts"] == true) { 
                   if(node.volumeNumber !== undefined && node.partType === "bdr:PartTypeVolume") { 
@@ -512,7 +517,7 @@ export default class API {
                   else if(node["partType"] !== "bdr:PartTypeVolume" && node["partType"] !== "bdr:PartTypeText" && node["partType"] !== "bdr:PartTypeChapter") searchType += "_volumes"
                }
             }
-            //console.log("loadO?",initParams,IRI,searchType)
+            //loggergen.log("loadO?",initParams,IRI,searchType)
             let param = {searchType,"R_RES":IRI,"L_NAME":"","LG_NAME":"", "I_LIM":"" }
             if(extraParam) param = { ...param, ...extraParam }
             let data 
@@ -553,7 +558,7 @@ export default class API {
                      return e
                   })
                }
-               console.log("graph?",data["@graph"])
+               loggergen.log("graph?",data["@graph"])
             }
 
             return data ;
@@ -605,7 +610,7 @@ export default class API {
             let param = {"searchType":query,"R_RES":IRI,"L_NAME":"","LG_NAME":"", "I_LIM":"" }
             let data = await this.getQueryResults(url, IRI, param,"GET");
             
-            console.log("r e source",param,data)
+            loggergen.log("r e source",param,data)
             
 
             /*
@@ -615,7 +620,7 @@ export default class API {
             let url = config.endpoints[config.index]+"/resource/"+IRI+".json" ;
             let data = await JSON.parse(await  this.getURLContents(url))
 
-            console.log("resource",data)
+            loggergen.log("resource",data)
             */
 
 
@@ -638,7 +643,7 @@ export default class API {
             let url = config.endpoints[config.index]+"/query/graph" ;
             let param = {"searchType":"AnnCollection-forResource","R_RES":IRI,"L_NAME":"","LG_NAME":"" }
             let data = await this.getQueryResults(url, IRI, param,"GET") //,"application/ld+json");
-            console.log("r e source",data)
+            loggergen.log("r e source",data)
             return data ;
          }
          catch(e)
@@ -654,14 +659,14 @@ export default class API {
 
       if(!IRI.indexOf(':') === -1 ) IRI = "bdr:"+IRI
 
-      //console.log("etext",resource)
+      //loggergen.log("etext",resource)
       try {
          let config = store.getState().data.config.ldspdi
          let url = config.endpoints[config.index]+"/query/graph" ;
          let param = {"searchType":"Etext_base","R_RES":IRI,"L_NAME":"","LG_NAME":"" }
          let data = await this.getQueryResults(url, IRI, param,"GET") //,"application/json");
 
-         //console.log("etextinfo",JSON.stringify(data,null,3))
+         //loggergen.log("etextinfo",JSON.stringify(data,null,3))
 
          return data ;
       }
@@ -679,7 +684,7 @@ export default class API {
 
       if(next < 0) next = (-next) - nb
 
-      console.log("etext",IRI,next,nb)
+      loggergen.log("etext",IRI,next,nb)
 
       try {
          let config = store.getState().data.config.ldspdi
@@ -687,7 +692,7 @@ export default class API {
          let param = {"searchType":useContext?"chunkContext":"Chunks",...(useContext?{"R_UT":IRI}:{"R_RES":IRI}),"I_START":next,"I_END":next+nb,"L_NAME":"","LG_NAME":"", "I_LIM":"" }
          let data = await this.getQueryResults(url, IRI, param,"GET","application/ld+json");
 
-         //console.log("etextchunks",JSON.stringify(data,null,3))
+         //loggergen.log("etextchunks",JSON.stringify(data,null,3))
 
          return data ;
       }
@@ -704,14 +709,14 @@ export default class API {
 
       if(!IRI.indexOf(':') === -1) IRI = "bdr:"+IRI
 
-      //console.log("etext",resource)
+      //loggergen.log("etext",resource)
       try {
          let config = store.getState().data.config.ldspdi
          let url = config.endpoints[config.index]+"/lib" // "/query/graph" ;
          let param = {"searchType":"ChunksByPage","R_RES":IRI,"I_START":next,"I_END":next+10,"L_NAME":"","LG_NAME":"" }
          let data = await this.getQueryResults(url, IRI, param,"GET","application/ld+json");
 
-         //console.log("etextchunks",JSON.stringify(data,null,3))
+         //loggergen.log("etextchunks",JSON.stringify(data,null,3))
 
          return data ;
       }
@@ -779,7 +784,7 @@ export default class API {
    async loadAssocResources(IRI:string): Promise<string>
    {
       let resource =  JSON.parse(await this.getURLContents(this._assocResourcesPath(IRI),false));
-      console.log("assocResources",resource)
+      loggergen.log("assocResources",resource)
       return resource ;
    }
 
@@ -791,7 +796,7 @@ export default class API {
          {
             if (response.ok)
             {
-               console.log("response ok",host,response)
+               loggergen.log("response ok",host,response)
                resolve(true);
             }
             else
@@ -810,7 +815,7 @@ export default class API {
    async getQueryResults(url: string, key:string, param:{}={}, method:string = "POST", accept:string="application/json",other?:{}): Promise<{}>
    {
 
-      //console.log("key",key, param)
+      //loggergen.log("key",key, param)
 
       let res = {}
       param = { "searchType":"Res_withType","LG_NAME":"bo-x-ewts","I_LIM":500, ...param }
@@ -838,7 +843,7 @@ export default class API {
 
       if(accept === "application/json") param["format"] = "json"
 
-      //console.log("query",url,key,param,method,accept,other);
+      //loggergen.log("query",url,key,param,method,accept,other);
 
       // let body = Object.keys(param).map( (k) => k+"="+param[k] ).join('&') +"&L_NAME="+key
       //searchType=Res_withFacet&"+param+"L_NAME=\""+key+"\"",
@@ -856,7 +861,7 @@ export default class API {
                      .map(e => encodeURIComponent(e[0]) + "=" + encodeURIComponent(e[1]))
                      .join('&')
 
-      console.log("body",body,param);
+      loggergen.log("body",body,param);
 
       const access_token = localStorage.getItem('access_token');
       const id_token = localStorage.getItem('id_token');
@@ -876,7 +881,7 @@ export default class API {
          })
       })
 
-      //console.log("apres fetch",response)
+      //loggergen.log("apres fetch",response)
 
       /*
       if (!response.ok) {
@@ -884,7 +889,7 @@ export default class API {
              throw new ResourceNotFound('The search server '+url+' seem to have moved...');
          }
          else {
-            console.log("FETCH pb",response)
+            loggergen.log("FETCH pb",response)
              throw new ResourceNotFound('Problem fetching the results ['+response.message+']');
          }
       }
@@ -907,18 +912,18 @@ export default class API {
          }
       }
 
-     //console.log("FETCH ok",url,response)
+     //loggergen.log("FETCH ok",url,response)
 
      let txt = await response.text()
 
-     //console.log("txt",txt)
+     //loggergen.log("txt",txt)
 
      res = JSON.parse(txt)
 
-     //console.log("res",res)
+     //loggergen.log("res",res)
 
 
-      //console.log("resolving",res)
+      //loggergen.log("resolving",res)
 
       return res ;
    }
@@ -943,18 +948,18 @@ export default class API {
                       throw new ResourceNotFound('The search server '+url+' seem to have moved...');
                   }
                   else {
-                     console.log("FETCH pb",response)
+                     loggergen.log("FETCH pb",response)
                       throw new ResourceNotFound('Problem fetching the results ['+response.message+']');
                   }
               }
-              console.log("FETCH ok",url,response)
+              loggergen.log("FETCH ok",url,response)
 
               response.text().then((req) => {
 
 
                   res = JSON.parse(req) //.results.bindings ;
 
-                  console.log("resolving",res)
+                  loggergen.log("resolving",res)
 
                   resolve(res);
               }).catch((e) => {
@@ -1062,7 +1067,7 @@ export default class API {
                delete param["R_TYPE"] 
             }
 
-            console.log("param:",param, key, styp, dtyp)
+            loggergen.log("param:",param, key, styp, dtyp)
             let data = this.getQueryResults(url, key, param,"GET");
             // let data = this.getSearchContents(url, key);
 
@@ -1074,13 +1079,13 @@ export default class API {
 
      async getResultsSimpleFacet(key: string,lang: string,property:string): Promise<{} | null> {
         try {
-            //console.log("simpleFacet start",key,lang,property)
+            //loggergen.log("simpleFacet start",key,lang,property)
 
              let config = store.getState().data.config.ldspdi
              let url = config.endpoints[config.index]+"/query/table" ;
              let data = this.getQueryResults(url, key, {"LG_NAME":lang,"searchType":"Res_simpleFacet","R_PROP":property});
 
-             //console.log("simpleFacet end",data)
+             //loggergen.log("simpleFacet end",data)
 
              return data ;
         } catch(e) {
@@ -1094,7 +1099,7 @@ export default class API {
            let url = config.endpoints[config.index]+"/query/table" ;
            let data = this.getQueryResults(url, key, {"LG_NAME":lang,"searchType":"Res_allTypes_withCount"});
 
-           console.log("datatypes",data)
+           loggergen.log("datatypes",data)
 
 
 
@@ -1112,9 +1117,9 @@ export default class API {
       const jsonld2turtle = ( jsonldString, rdfStore, uri ) => {
          return new Promise(resolve=>{
             rdflib.parse( jsonldString, rdfStore, uri, "application/ld+json", e => {
-                  if(e) { console.log("Parse Error! "); return resolve(e) }
+                  if(e) { loggergen.log("Parse Error! "); return resolve(e) }
                   rdflib.serialize(null,rdfStore, uri,'text/turtle',(e,s)=>{
-                     if(e) { console.log("Serialize Error! "); return resolve(e) }
+                     if(e) { loggergen.log("Serialize Error! "); return resolve(e) }
                      return resolve(s)
                   })
             })
@@ -1159,7 +1164,7 @@ export default class API {
             //ttl = ttl.replace(new RegExp(p+" *(.*?) *; *\n","m"),(m,g1) => p+" ( "+g1.replace(/,/g," ")+" ); \n")
             ttl = ttl.replace(new RegExp(p+" *([^;]+) *;","m"),(m,g1) => p+" ( "+user[RID.replace(/bdu:/,bdu)][bdou+"preferredUiLiteralLangs"].map(v => '"'+v.value+'"').join(" ") +" );")                     
          } 
-         console.log("upload:",RID,ttl,user) //,ttl0)
+         loggergen.log("upload:",RID,ttl,user) //,ttl0)
 
       } catch(e) {
          logError(e)
@@ -1187,7 +1192,7 @@ export default class API {
 
       } catch(e) {
          logError(e)
-         console.log("patch",e)
+         loggergen.log("patch",e)
       }
 
       return response
@@ -1206,7 +1211,7 @@ export default class API {
 
       } catch(e) {
          logError(e)
-         console.log("patch",e)
+         loggergen.log("patch",e)
       }
 
       return response
@@ -1223,7 +1228,7 @@ export default class API {
          headers:new Headers({ 'content-type': 'application/json'})
       })).json()
 
-      //console.log("aD", authData);
+      //loggergen.log("aD", authData);
 
       try {
          let response = await (await this._fetch( 'https://bdrc-io.auth0.com/api/v2/users/'+encodeURI(user_id),  {
@@ -1246,7 +1251,7 @@ export default class API {
          return { statusCode:-1, error:"auth0 email update failed", message:e  }
       }
 
-      //console.log("rL", resetLink);
+      //loggergen.log("rL", resetLink);
 
   }
 
@@ -1259,7 +1264,7 @@ export default class API {
          headers:new Headers({ 'content-type': 'application/json'})
       })).json()
 
-      console.log("aD", authData);
+      loggergen.log("aD", authData);
 
       let resetLink = await (await this._fetch( passwordData.audience + "tickets/password-change",  {
          method: 'POST',
@@ -1267,7 +1272,7 @@ export default class API {
          headers:new Headers({ 'authorization': "Bearer " + authData.access_token, 'content-type': 'application/json'})
       })).json()
 
-      console.log("rL", resetLink);
+      loggergen.log("rL", resetLink);
 
       if(resetLink.statusCode === 400) throw new Error(resetLink.message)
       else if(resetLink.ticket) return resetLink.ticket
@@ -1298,7 +1303,7 @@ export default class API {
                },{})
             }
 
-           console.log("datatypes",data)
+           loggergen.log("datatypes",data)
 
            return data ;
       } catch(e) {
@@ -1314,7 +1319,7 @@ export default class API {
              let url = config.endpoints[config.index]+"/query/table" ;
              let data = this.getQueryResults(url, key, {"LG_NAME":lang,"searchType":"Res_oneType","R_RES":":"+datatype});
 
-             console.log("oneDatatype",data)
+             loggergen.log("oneDatatype",data)
 
              return data ;
         } catch(e) {
@@ -1339,7 +1344,7 @@ export default class API {
 
                   let data = this.getQueryResults(url, key, params )
 
-                 console.log("oneFacet",data)
+                 loggergen.log("oneFacet",data)
 
                  return data ;
             } catch(e) {
@@ -1550,7 +1555,7 @@ export default class API {
           path = this._server + CONFIG_PATH;
       }
 
-      console.log("path",path)
+      loggergen.log("path",path)
 
       return path;
   }

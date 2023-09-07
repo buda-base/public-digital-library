@@ -20,6 +20,10 @@ import { top_right_menu, getPropLabel, fullUri, getLangLabel } from './App'
 import { sortResultsByTitle } from '../state/sagas/index'
 import { narrowWithString } from "../lib/langdetect"
 
+import logdown from 'logdown'
+
+const loggergen = new logdown('gen', { markdown: false });
+
 type Props = { auth:{}, history:{}, dictionary:{}, classes:{}, type:string, checkResults:boolean|{}, langPreset: [] }
 type State = { collapse:{}, checked:{}, titles:[], codes:[], topics:[], keyword:string, searchRoute:string, checkParams:string, mustRecheck: boolean, ldspdi?: string }
 
@@ -210,7 +214,7 @@ class GuidedSearch extends Component<Props,State> {
     if(this.props.config?.ldspdi) { 
       if(!this.state.ldspdi) {
         let ldspdi = this.props.config?.ldspdi?.endpoints[this.props.config?.ldspdi?.index]
-        console.log("ldspdi:",ldspdi)
+        loggergen.log("ldspdi:",ldspdi)
         this.fetchFEMCTitles(ldspdi);
         this.fetchFEMCCodes(ldspdi);
         this.fetchFEMCTopics(ldspdi);
@@ -236,9 +240,9 @@ class GuidedSearch extends Component<Props,State> {
         + (this.props.type === "instance"&&this.state.keyword&&this.state.language ? "&f=collection,inc,bdr:PR1KDPP00":"")
         + (this.state.keyword&&this.state.language?"&q="+this.state.keyword+"&lg="+this.state.language+"&":(this.props.type==="work"?"&r=bdr:PR1KDPP00&":"&"))
         + Object.keys(this.state.checked).map( k => {
-          //console.log("k:",k)
+          //loggergen.log("k:",k)
           return Object.keys(this.state.checked[k]).map(i => {
-            //console.log("i:",i,settings[k].values[i].facet)
+            //loggergen.log("i:",i,settings[k].values[i].facet)
             if(this.state.checked[k][i] ) { 
               let val = settings[k].values[i].facet.value              
               if(!Array.isArray(val)) val = [val] 
@@ -261,10 +265,10 @@ class GuidedSearch extends Component<Props,State> {
       let params = {}
       checkParams = "?R_COLLECTION=bdr:PR1KDPP00&"
       Object.keys(this.state.checked).map( k => {
-        //console.log("k:",k)
+        //loggergen.log("k:",k)
         let param = ""
         Object.keys(this.state.checked[k]).map(i => {
-          //console.log("i:",i,settings[k].values[i].facet.property)
+          //loggergen.log("i:",i,settings[k].values[i].facet.property)
           param = getQueryParam(settings[k].values[i].facet.property)
           if(!params[param]) params[param] = []
           if(this.state.checked[k][i]) { 
@@ -299,7 +303,7 @@ class GuidedSearch extends Component<Props,State> {
         }
         titles.push({ value: k.replace(new RegExp(bdr), "bdr:"), label: label.value })
       }
-      //console.log("FEMCTitles:",titles)
+      //loggergen.log("FEMCTitles:",titles)
       this.setState({titles})
     })
   }
@@ -314,7 +318,7 @@ class GuidedSearch extends Component<Props,State> {
         else if(a.label > b.label) return 1
         return 0
       })
-      //console.log("FEMCCodes:",codes)
+      //loggergen.log("FEMCCodes:",codes)
       this.setState({codes})
     })
   }
@@ -335,7 +339,7 @@ class GuidedSearch extends Component<Props,State> {
           })
         }
       }
-      //console.log("FEMCTopics:",json,JSON.stringify(topics, null,3))
+      //loggergen.log("FEMCTopics:",json,JSON.stringify(topics, null,3))
       this.setState({topics})
     }) 
   }
@@ -354,7 +358,7 @@ class GuidedSearch extends Component<Props,State> {
         let tag = "guided."
         if(arg != "label") tag += arg + "."
         let tr = I18n.t(tag+o,{ returnObjects: true})
-        //console.log("tr:",tr)
+        //loggergen.log("tr:",tr)
         if(typeof tr === 'object') res = tr[this.props.type]        
         else res = tr
         lang = this.props.locale
@@ -365,7 +369,7 @@ class GuidedSearch extends Component<Props,State> {
         }
         if(!res || res.startsWith("guided.")) {
           const label = getLangLabel(this, "", Object.keys(o[arg]).map(k => ({lang:k, value:o[arg][k]})))
-          //console.log("label:",label,o,this.props.langPreset)
+          //loggergen.log("label:",label,o,this.props.langPreset)
           res = label.value
           lang = label.lang
         }
@@ -426,7 +430,7 @@ class GuidedSearch extends Component<Props,State> {
     const links = settings.filters.map(renderLink)
 
 
-    console.log("render:", this.props, this.state, settings)
+    loggergen.log("render:", this.props, this.state, settings)
 
 
     let { searchRoute, checkParams } = this.state
@@ -516,7 +520,7 @@ class GuidedSearch extends Component<Props,State> {
                             let keyword = event.target.value, language = "pi-x-ndia", detec
                             if(keyword) {
                               detec = narrowWithString(keyword)
-                              console.log("detec:",detec) 
+                              loggergen.log("detec:",detec) 
                               if(detec.length && detec[0] === "khmr") language = "km"
                             } else {
                               language = ""
@@ -531,7 +535,7 @@ class GuidedSearch extends Component<Props,State> {
                           styles={selectStyles}
                           options={this.state.titles}
                           onChange={(v) => { 
-                            console.log("val:",v)
+                            loggergen.log("val:",v)
                             this.props.history.push("/show/"+v.value)
                           }}
                           placeholder={I18n.t("search.choose")}
@@ -553,7 +557,7 @@ class GuidedSearch extends Component<Props,State> {
                             let keyword = event.target.value, language = "pi-x-ndia", detec
                             if(keyword) {
                               detec = narrowWithString(keyword)
-                              console.log("detec:",detec) 
+                              loggergen.log("detec:",detec) 
                               if(detec.length && detec[0] === "khmr") language = "km"
                             } else {
                               language = ""
@@ -568,12 +572,12 @@ class GuidedSearch extends Component<Props,State> {
                           styles={selectStyles}
                           options={this.state.codes}
                           filterOption={ ({label}, input) => {
-                            //console.log("input",input)
+                            //loggergen.log("input",input)
                             if(input.length < 2) return false
                             else return label.includes(input)
                           }}
                           onChange={(v) => { 
-                            console.log("val:",v)
+                            loggergen.log("val:",v)
                             this.props.history.push("/show/"+v.value)
                           }}
                           placeholder={I18n.t("search.choose")}

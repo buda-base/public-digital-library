@@ -30,6 +30,10 @@ import Footer from "./Footer"
 
 import I18n from 'i18next';
 
+import logdown from 'logdown'
+
+const loggergen = new logdown('gen', { markdown: false });
+
 const api = new bdrcApi();
 
 const bdg   = "http://purl.bdrc.io/graph/" ;
@@ -112,13 +116,13 @@ export class Profile extends Component<Props,State> {
 
   componentDidUpdate() {
 
-      console.log("didU",this.props)
+      loggergen.log("didU",this.props)
       report_GA(this.props.config,this.props.history.location);
   }
 
   static getDerivedStateFromProps(props,state) {
     
-    console.log("gDsFp",props,state)
+    loggergen.log("gDsFp",props,state)
 
     let s
     if(!state.profile) {
@@ -152,7 +156,7 @@ export class Profile extends Component<Props,State> {
         let p
         if(p = propsMap[k]) {
           if(props.profile[p] && s[k] && s[k].value === undefined) { 
-            console.log("kp",k,p,props.profile[p])
+            loggergen.log("kp",k,p,props.profile[p])
             let type = s[k].type
             if(!type) type = "uri"
 
@@ -166,7 +170,7 @@ export class Profile extends Component<Props,State> {
             else if(props.profile[p].length === 1) s[k] = { type, value: fullUri(props.profile[p][0].value) }
             else s[k] = props.profile[p].map(e => e.value)
             
-            console.log("sk",s[k])
+            loggergen.log("sk",s[k])
           }
         }
       }
@@ -221,7 +225,7 @@ export class Profile extends Component<Props,State> {
       if(!response.statusCode || response.statusCode === 200) response = null
       else if(response.message) {
 
-        console.log("response",response)
+        loggergen.log("response",response)
 
         if(!s) s = { ...this.state, updating:false }
         s.errors.email = response.message.replace(/.*validation error.*/,I18n.t("user.errors.email"))
@@ -273,7 +277,7 @@ export class Profile extends Component<Props,State> {
           [bdou+"preferredUiLiteralLangs"]: props.langPreset.map(p => ({ "type": "literal", "value": p })) 
         }      
 
-      console.log("new user:", props.langPreset, user, mods, id, that)
+      loggergen.log("new user:", props.langPreset, user, mods, id, that)
 
       state.newUserValues = {  [props.userID]:{  ...user } }
       if(state.newUserValues[props.userID].profile) delete state.newUserValues[props.userID].profile
@@ -286,7 +290,7 @@ export class Profile extends Component<Props,State> {
 
 
   async validateURI(url) {
-    console.log("validate",url)
+    loggergen.log("validate",url)
 
     if(!url) return true ;
     else if(!url.match(/^https?:[/][/]/i)) return false
@@ -305,7 +309,7 @@ export class Profile extends Component<Props,State> {
         _this.setState({errors:{..._this.state.errors, picture:I18n.t("user.photo.error")}})
       }
       img.onload = function () {
-        console.log("validate:success "+url);        
+        loggergen.log("validate:success "+url);        
         let errors = { ..._this.state.errors }
         delete errors.picture
         _this.setState({errors})
@@ -325,7 +329,7 @@ export class Profile extends Component<Props,State> {
 
     const { profile } = this.state;
     
-    console.log("render",profile,this.state,this.props)
+    loggergen.log("render",profile,this.state,this.props)
     
     let message = I18n.t("user.get");
 
@@ -346,7 +350,7 @@ export class Profile extends Component<Props,State> {
         
         let handleChange = (e,val1,val2,forceText:boolean=false) => {
           
-          console.log("change:",e,val1,val2,forceText)
+          loggergen.log("change:",e,val1,val2,forceText)
 
           let type = this.state[e.target.name].type
           if(!type) type = 'uri'
@@ -355,7 +359,7 @@ export class Profile extends Component<Props,State> {
 
           if(val1 === "agree") value = val2.toString()
 
-          console.log("e",e.target,val1,val2,type,value)
+          loggergen.log("e",e.target,val1,val2,type,value)
 
           let lang
           if(type === "literal") lang = this.props.locale
@@ -380,7 +384,7 @@ export class Profile extends Component<Props,State> {
         // deprecated / support for property like "tmp:kham"
         // if(val.region && val.region.startsWith(tmp)) val.region = val.region.replace(new RegExp(tmp),"")
 
-        console.log("val",val)
+        loggergen.log("val",val)
 
         if(this.props.profile && this.state.profile && !this.props.resetLink) store.dispatch(data.getResetLink(this.props.userID, this.props.profile, this.state.profile))
 
@@ -395,7 +399,7 @@ export class Profile extends Component<Props,State> {
 
         /*
         const classes = createStyles({root:"green"})
-        console.log("makeS:",classes)
+        loggergen.log("makeS:",classes)
         */
 
         let picUrl = "/icons/header/user.png" 
@@ -509,7 +513,7 @@ export class Profile extends Component<Props,State> {
                           let value = ev.currentTarget.getAttribute('value') 
                           if(value) {
                             let valid = await this.validateURI(value)
-                            console.log("valid:", ev,ev.currenTarget, value, valid)
+                            loggergen.log("valid:", ev,ev.currenTarget, value, valid)
                             if(!valid) {
                               this.setState({errors:{...this.state.errors, picture:I18n.t("user.photo.error")}})
                             } else if(this.state.errors.picture) {
@@ -574,7 +578,7 @@ export class Profile extends Component<Props,State> {
                         multiple
                         input={<Input id="select-multiple-chip" />}
                         renderValue={(selected) => {
-                          //console.log("selec:",selected)
+                          //loggergen.log("selec:",selected)
                           return (
                             <div>
                               { selected.map((value) => <Chip key={value} className="chip" label={I18n.t("prop."+shortUri(value))} /> ) }

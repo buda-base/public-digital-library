@@ -21,6 +21,11 @@ import SimpleBar from 'simplebar';
 import 'simplebar/dist/simplebar.min.css';
 // You will need a ResizeObserver polyfill for browsers that don't support it! (iOS Safari, Edge, ...)
 import ResizeObserver from 'resize-observer-polyfill';
+
+import logdown from 'logdown'
+
+const loggergen = new logdown('gen', { markdown: false });
+
 window.ResizeObserver = ResizeObserver;
 
 type State = { content:any, error:integer, collapse:{}, route:"" }
@@ -38,7 +43,7 @@ export class StaticRouteNoExt extends Component<State, Props>
         if(!this.props.config) store.dispatch(initiateApp(this._urlParams,null,null,"static"))
 
         let i18nLoaded = setInterval(() => {
-            console.log("i18n",I18n,I18n.language,I18n.languages);
+            loggergen.log("i18n",I18n,I18n.language,I18n.languages);
             if(I18n.language) {                
                 clearInterval(i18nLoaded);
                 this.updateContent();
@@ -60,7 +65,7 @@ export class StaticRouteNoExt extends Component<State, Props>
 
     componentDidUpdate() { 
         this._urlParams = qs.parse(history.location.search) 
-        //console.log("u:", I18n.language, this.state.locale, this.props.locale)
+        //loggergen.log("u:", I18n.language, this.state.locale, this.props.locale)
         if(I18n.language && this.state.locale !== this.props.locale || this.state.route != this.props.dir+"/"+this.props.page ) {
             if(this.state.route != this.props.dir+"/"+this.props.page) { 
                 this.setState({ route: this.props.dir+"/"+this.props.page, 
@@ -81,11 +86,11 @@ export class StaticRouteNoExt extends Component<State, Props>
         if(window.innerWidth <= 840) {
             $("iframe[src*=shimowendang]").off('load').on("load",(ev)=>{
                 let f = $(ev.target), h = f.height() 
-                //console.log("h:",f,h)
+                //loggergen.log("h:",f,h)
                 f.height(h*1.1)
             })
         }
-        console.log("scrR:",this._scrollRef)
+        loggergen.log("scrR:",this._scrollRef)
         if(!this._scrollRef.current){            
             const elem = document.querySelector('[data-simplebar]')
             if(elem) this._scrollRef.current = new SimpleBar(elem);
@@ -96,11 +101,11 @@ export class StaticRouteNoExt extends Component<State, Props>
 
     async updateContent() {
 
-        //console.log("content!",  I18n.language, this.state.locale, this.props.locale)
+        //loggergen.log("content!",  I18n.language, this.state.locale, this.props.locale)
 
         const budaxIframePatch = (html) => {
             html = html.replace(/src="(https:\/\/shimowendang.com\/[^?"]+)[^"]*/g, (m,g1) => {
-                //console.log("replaced:",m)
+                //loggergen.log("replaced:",m)
                 let channel
                 if((channel = this._urlParams.budaxChannel) != undefined) return "src=\""+g1+"?channel="+channel
                 else return "src=\""+g1
@@ -112,11 +117,11 @@ export class StaticRouteNoExt extends Component<State, Props>
             let content = await data.text()
             if(loading !== this.props.locale) return
 
-            //console.log("data?",data,content)
+            //loggergen.log("data?",data,content)
             // #561
             if(this.props.dir.includes("budax/")) {
                 content = budaxIframePatch(content)
-                //console.log("patched:",content)
+                //loggergen.log("patched:",content)
             }
             if(!content.includes("You need to enable JavaScript to run this app.")) this.setState({content,locale:this.props.locale})
             else this.setState({error:true,locale:this.props.locale})

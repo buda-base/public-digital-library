@@ -17,16 +17,16 @@ export const importModules = async () => {
        //htmlEntities = await require("html-entities") ;
    }
    catch(f) { // in embed iframe
-      //console.log("exception",f)
+      //loggergen.log("exception",f)
        window.moduleLoaded = {}
        __ = eval('_')
        jsEWTS = window.moduleLoaded.JsEWTS = window.jsEWTS ;
-       eval('require(["https://cdn.jsdelivr.net/npm/@sanskrit-coders/sanscript@1.0.2/sanscript.min.js"],(obj) => { Sanscript = obj; console.log("obj",obj); window.moduleLoaded.Sanscript = obj ; })')
+       eval('require(["https://cdn.jsdelivr.net/npm/@sanskrit-coders/sanscript@1.0.2/sanscript.min.js"],(obj) => { Sanscript = obj; loggergen.log("obj",obj); window.moduleLoaded.Sanscript = obj ; })')
        eval('require(["https://cdn.jsdelivr.net/npm/pinyin4js@1.3.18/dist/pinyin4js.js"],(obj) => { pinyin4js = PinyinHelper; window.moduleLoaded.pinyin4js = PinyinHelper ; })')       
-       eval('require(["https://cdn.jsdelivr.net/npm/hanzi-tsconv@0.1.2/dist/main.js"],(obj) => { hanziConv = window["hanzi-tsconv"].conv ; console.log("obj/hzCv",hanziConv); window.moduleLoaded.hanziConv = hanziConv ; })')
-       eval('require(["https://cdn.jsdelivr.net/npm/tibetan-sort-js@2.1.2"],(obj) => { tibetSort = window["tibetan-sort-js"].default ; console.log("obj/tS",obj,tibetSort); window.moduleLoaded.tibetSort = tibetSort ; })')
+       eval('require(["https://cdn.jsdelivr.net/npm/hanzi-tsconv@0.1.2/dist/main.js"],(obj) => { hanziConv = window["hanzi-tsconv"].conv ; loggergen.log("obj/hzCv",hanziConv); window.moduleLoaded.hanziConv = hanziConv ; })')
+       eval('require(["https://cdn.jsdelivr.net/npm/tibetan-sort-js@2.1.2"],(obj) => { tibetSort = window["tibetan-sort-js"].default ; loggergen.log("obj/tS",obj,tibetSort); window.moduleLoaded.tibetSort = tibetSort ; })')
        // TODO: can't load module in embedded/iframe viewer
-       //eval('require(["https://cdn.jsdelivr.net/npm/html-entities@2.3.2/lib/index.min.js"],(obj) => { htmlEntities = obj; console.log("obj htmlE",obj); window.moduleLoaded.htmlEntities = obj ; })')
+       //eval('require(["https://cdn.jsdelivr.net/npm/html-entities@2.3.2/lib/index.min.js"],(obj) => { htmlEntities = obj; loggergen.log("obj htmlE",obj); window.moduleLoaded.htmlEntities = obj ; })')
    }
 }
 importModules();
@@ -160,12 +160,12 @@ export function extendedPresets(preset)
       //  - when a user asks bo, they "automatically" ask "dz" and "sa-tibt", but at a slightly lower score:
       //  - when a user asks "zh-latn-pinyin", they automatically ask for a transformed "zh-han[tsi]", but at a slightly lower score
       for(let src of Object.keys(transliterators)) {
-         //console.log("  src",src)
+         //loggergen.log("  src",src)
          for(let dst of Object.keys(transliterators[src])) {
-            //console.log("    dst",dst)
+            //loggergen.log("    dst",dst)
             let regexp 
             if (regexp = lg.match(new RegExp("^"+dst+"$"))) {
-               //console.log("rx",regexp)
+               //loggergen.log("rx",regexp)
                if(src.indexOf("(.*?)") !== -1) src = src.replace(/\(([^)]+)\)/,regexp[1])
                if(dst.indexOf("(.*?)") !== -1) dst = dst.replace(/\(([^)]+)\)/,regexp[1])
 
@@ -178,7 +178,7 @@ export function extendedPresets(preset)
       curscore += 1;
    }
 
-   //console.log("extP:",JSON.stringify(extPreset, null, 3),preset)
+   //loggergen.log("extP:",JSON.stringify(extPreset, null, 3),preset)
 
    return extPreset
 }
@@ -188,7 +188,7 @@ export function sortLangScriptLabels(data,preset,translit,mergeXs = false, caseI
    if(translit == undefined) translit={}
    if(!Array.isArray(data)) data = [ data ]
    
-   //console.log("sort", JSON.stringify(data,null,3), preset,translit,data)
+   //loggergen.log("sort", JSON.stringify(data,null,3), preset,translit,data)
 
    let data_ = data.filter(e => e && (e.value || e["@value"] || e.k)).map(e => {
       let k = e["lang"]
@@ -216,7 +216,7 @@ export function sortLangScriptLabels(data,preset,translit,mergeXs = false, caseI
          }
       //}      
 
-      //console.log("k v",k,v,translit[k],e) //,transliterators)
+      //loggergen.log("k v",k,v,translit[k],e) //,transliterators)
 
       let tLit
       if (translit[k]) {
@@ -235,12 +235,12 @@ export function sortLangScriptLabels(data,preset,translit,mergeXs = false, caseI
          if(tLit["xml:lang"]) delete tLit["xml:lang"]
       }
 
-      //console.log("tLit",tLit,i)
+      //loggergen.log("tLit",tLit,i)
       
       return {e,tLit,i:Number(i),k}
    })
 
-   //console.log("_",data_)
+   //loggergen.log("_",data_)
 
    data_ = __.orderBy(data_,['i'],["asc"]).map(e => e.tLit?e.tLit:e.e )
 
@@ -253,12 +253,12 @@ export function sortLangScriptLabels(data,preset,translit,mergeXs = false, caseI
       if(!data[lang]) data[lang] = []
       data[lang].push(d)
 
-      //console.log("d",d)
+      //loggergen.log("d",d)
    }
 
    data_ = []
 
-   //console.log("data",data)
+   //loggergen.log("data",data)
 
    // #622 WIP: cant tell yet if it actually sorts anything?? actually it does once altLabels are not wrongly used anymore!
    const khmerSort = (a,b) => {
@@ -271,26 +271,26 @@ export function sortLangScriptLabels(data,preset,translit,mergeXs = false, caseI
 
    for(let k of Object.keys(data)) {
 
-      //console.log("k",k)
+      //loggergen.log("k",k)
 
       data[k] = data[k].map(e =>({...e, _val:(e.value !== undefined?e.value:(e["@value"]?e["@value"]:"")).replace(/[↦↤]/g,"")}))
 
       if(k === "bo" || k === "bo-Tibt") {
-         //console.log("sorting bo:",JSON.stringify(data[k],null,3))
+         //loggergen.log("sorting bo:",JSON.stringify(data[k],null,3))
          data_ = data_.concat(data[k].sort((a,b) => tibetSort.compare(a._val,b._val)))
       } else if(k.endsWith("ewts")) {
-         //console.log("sorting ewts:",JSON.stringify(data[k],null,3))
+         //loggergen.log("sorting ewts:",JSON.stringify(data[k],null,3))
          data_ = data_.concat(data[k].sort((a,b) => tibetSort.compareEwts(a._val,b._val)))
       } else if(k.startsWith("km") || k.endsWith("khmr")) {
-         //console.log("sorting km:",JSON.stringify(data[k],null,3))
+         //loggergen.log("sorting km:",JSON.stringify(data[k],null,3))
          data_ = data_.concat(data[k].sort(khmerSort))
       } else {
-         //console.log("sorting ?:",k,JSON.stringify(data[k],null,3))
+         //loggergen.log("sorting ?:",k,JSON.stringify(data[k],null,3))
          data_ = data_.concat(__.orderBy(data[k],[ d => caseInsensitive?d._val.toLowerCase():d._val ],['asc']))
       }
    }
    
-   //console.log("data_",JSON.stringify(data_,null,3))
+   //loggergen.log("data_",JSON.stringify(data_,null,3))
 
    return data_
 }
@@ -312,7 +312,7 @@ export function htmlEntitiesDecode(val) {
 
 export function getMainLabel(data,extpreset)
 {
-   //console.log("gMl:",data,extpreset)
+   //loggergen.log("gMl:",data,extpreset)
    if(!data) return ;
    else if(!Array.isArray(data)) data = [ data ]
 
@@ -349,7 +349,7 @@ export function getMainLabel(data,extpreset)
       val = ewtsToDisplay(val)
    }
 
-   //console.log("ret:",val,bestlt)
+   //loggergen.log("ret:",val,bestlt)
 
    // no need, data should not have entities
    // val = htmlEntitiesDecode(val) 
@@ -359,7 +359,7 @@ export function getMainLabel(data,extpreset)
 
 export function getMainLabels(data,extpreset)
 {
-   //console.log("gMs:",data,extpreset)
+   //loggergen.log("gMs:",data,extpreset)
    if(!data) return ;
    else if(!Array.isArray(data)) data = [ data ]
 
@@ -397,7 +397,7 @@ export function getMainLabels(data,extpreset)
         val = ewtsToDisplay(val)
      }   
      
-     //console.log("ret:",val,bestlt)
+     //loggergen.log("ret:",val,bestlt)
 
      // no need, data should not have entities
      // val = htmlEntitiesDecode(val)

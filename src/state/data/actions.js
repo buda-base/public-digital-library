@@ -2,6 +2,10 @@
 import { createAction } from 'redux-actions';
 import type { Action } from '../actions';
 
+import logdown from 'logdown'
+
+const loggergen = new logdown('gen', { markdown: false });
+
 export const TYPES = {};
 
 TYPES.loadedConfig = 'LOADED_CONFIG';
@@ -505,7 +509,7 @@ export const gotAnnoResource = (iri: string,data:{},collecId:string): Action => 
 TYPES.gotAssocResources = 'GOT_ASSOCIATED_RESOURCES';
 export const gotAssocResources = (iri: string,res:{}): Action => {
 
-   console.log("assocE",iri,res)
+   loggergen.log("assocE",iri,res)
 
     return {
         type: TYPES.gotAssocResources,
@@ -518,7 +522,7 @@ export const gotAssocResources = (iri: string,res:{}): Action => {
 TYPES.getContext = 'GET_CONTEXT';
 export const getContext = (iri: string,start:integer,end:integer,nb:integer): Action => {
 
-   console.log("getCtx",iri,start,end)
+   loggergen.log("getCtx",iri,start,end)
 
     return {
         type: TYPES.getContext,
@@ -540,7 +544,7 @@ export const gotContext = (search:string, iri: string,start:integer,end:integer,
 TYPES.getChunks = 'GET_CHUNKS';
 export const getChunks = (iri: string,next:number=0): Action => {
 
-   console.log("getC",iri,next)
+   loggergen.log("getC",iri,next)
 
     return {
         type: TYPES.getChunks,
@@ -552,7 +556,7 @@ export const getChunks = (iri: string,next:number=0): Action => {
 TYPES.getPages = 'GET_PAGES';
 export const getPages = (iri: string,next:number=0): Action => {
 
-   console.log("getP",iri,next)
+   loggergen.log("getP",iri,next)
 
     return {
         type: TYPES.getPages,
@@ -565,7 +569,7 @@ export const getPages = (iri: string,next:number=0): Action => {
 TYPES.gotNextChunks = 'GOT_NEXT_CHUNKS';
 export const gotNextChunks = (iri: string,data:{},prev:boolean=false): Action => {
 
-   //console.log("nextC",iri,next,data)
+   //loggergen.log("nextC",iri,next,data)
 
     return {
         type: TYPES.gotNextChunks,
@@ -577,7 +581,7 @@ export const gotNextChunks = (iri: string,data:{},prev:boolean=false): Action =>
 TYPES.gotNextPages = 'GOT_NEXT_PAGES';
 export const gotNextPages = (iri: string,data:{},prev:boolean=false): Action => {
 
-   //console.log("nextP",iri,next,data)
+   //loggergen.log("nextP",iri,next,data)
 
     return {
         type: TYPES.gotNextPages,
