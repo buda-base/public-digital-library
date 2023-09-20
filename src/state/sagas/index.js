@@ -84,7 +84,7 @@ async function initiateApp(params,iri,myprops,route,isAuthCallback) {
          window.top.postMessage(JSON.stringify({"url":{"path":history.location.pathname,"search":history.location.search}}),"*")
          
          new MutationObserver(function() {
-            //console.log("newT:",document.title);
+            //loggergen.log("newT:",document.title);
             window.top.postMessage(JSON.stringify({"title": document.title }),"*")
          }).observe(document.querySelector('title'),{ childList: true });
       }
@@ -92,7 +92,7 @@ async function initiateApp(params,iri,myprops,route,isAuthCallback) {
       if(!state.data.config)
       {
          if(params && params.feedbucketRecording == "true") {
-            console.log("recording")
+            loggergen.log("recording")
             jQuery("#root").addClass("recording")
          }
 
@@ -118,7 +118,7 @@ async function initiateApp(params,iri,myprops,route,isAuthCallback) {
                      window.useFeedbucket = true
                      if(window.initFeedbucketInMirador) window.initFeedbucketInMirador();
                   } else {
-                     console.log("trying...")
+                     loggergen.log("trying...")
                      if(window.useFeedbucket) delete window.useFeedbucket;
                      if(window.initFeedbucketInMirador) delete window.initFeedbucketInMirador;
                   }
@@ -127,7 +127,7 @@ async function initiateApp(params,iri,myprops,route,isAuthCallback) {
             }
          }
 
-         //console.log("is khmer server ?",config.khmerServer)
+         //loggergen.log("is khmer server ?",config.khmerServer)
 
          //I18n.setHandleMissingTranslation((key, replacements) => key);
 
@@ -364,7 +364,7 @@ async function initiateApp(params,iri,myprops,route,isAuthCallback) {
                   return acc ;
                   },
                [])
-            console.log("val:",val)
+            loggergen.log("val:",val)
             if(!val.length) return acc ;
             else return ({...acc, [e]:val })
          },{})}
@@ -411,7 +411,7 @@ async function initiateApp(params,iri,myprops,route,isAuthCallback) {
 
       }         
 
-      //console.log("res::",iri,JSON.stringify(res[Object.keys(res)[0]][skos+"prefLabel"],null,3))
+      //loggergen.log("res::",iri,JSON.stringify(res[Object.keys(res)[0]][skos+"prefLabel"],null,3))
 
       store.dispatch(dataActions.gotResource(iri,res));
 
@@ -437,7 +437,7 @@ if(params && params.osearch) {
 
 
 if(params && params.t /*&& !params.i */) {
-   //console.log("uSb:",params)
+   //loggergen.log("uSb:",params)
    store.dispatch(uiActions.updateSortBy(params.s?params.s.toLowerCase():(params.i?"year of publication reverse":(params.t==="Etext"?(!params.lg?"title":"closest matches"):(params.t==="Scan"?(route ==="latest"?"release date":"popularity"):"popularity"))),params.t))
 }
 
@@ -470,7 +470,7 @@ else if(params && params.q) {
             let p = getQueryParam(k)
             if(p) url += "&"+p+"="+facets[k].join(",")
          }
-         console.log("facets:",url,params.f, facets)
+         loggergen.log("facets:",url,params.f, facets)
          store.dispatch(dataActions.checkResults({init:true,url,route:history.location.pathname+history.location.search}))
          return
       } else {
@@ -636,7 +636,7 @@ function extractAssoRes(iri,res) {
             if(res[e.value] && res[e.value][bdo+"eventWho"]?.length) {
                // DONE: must also check what's in eventWho (ok for bdr:MW23703_4150 but not bdr:MW3KG19)
                let who = res[res[e.value][bdo+"eventWho"][0].value]
-               //console.log("who:",who)
+               //loggergen.log("who:",who)
                if(who[rdf+"type"]?.some(t => t.value === bdo+"AgentAsCreator")) {
                   return ([...acc,...res[e.value][bdo+"eventWho"].map(f => ({fromEvent:e.value,type:'uri',value:f.value}) ) ])
                }
@@ -698,9 +698,9 @@ function* watchGetResetLink() {
 function turtle2jsonld( turtleString, rdfStore, uri ){
    return new Promise(resolve=>{
       rdflib.parse( turtleString, rdfStore, uri, "text/turtle", e => {
-         if(e) { console.log("Parse Error! "); return resolve(e) }
+         if(e) { loggergen.log("Parse Error! "); return resolve(e) }
          rdflib.serialize(null,rdfStore, uri,'application/ld+json',(e,s)=>{
-            if(e) { console.log("Serialize Error! "); return resolve(e) }
+            if(e) { loggergen.log("Serialize Error! "); return resolve(e) }
             return resolve(s)
          })
       })
@@ -710,9 +710,9 @@ function turtle2jsonld( turtleString, rdfStore, uri ){
 function jsonld2turtle( jsonldString, rdfStore, uri ){
    return new Promise(resolve=>{
      rdflib.parse( jsonldString, rdfStore, uri, "application/ld+json", e => {
-         if(e) { console.log("Parse Error! "); return resolve(e) }
+         if(e) { loggergen.log("Parse Error! "); return resolve(e) }
          rdflib.serialize(null,rdfStore, uri,'text/turtle',(e,s)=>{
-             if(e) { console.log("Serialize Error! "); return resolve(e) }
+             if(e) { loggergen.log("Serialize Error! "); return resolve(e) }
              return resolve(s)
          })
      })
@@ -731,7 +731,7 @@ export async function updateConfigFromProfile() {
       let head = allNodes[node[0]?.value], rest = []
       if(head[rdf+"rest"] && head[rdf+"rest"][0].value !== rdf + "nil") rest = toArray(allNodes, head[rdf+"rest"])
       if(head[rdf+"first"]) head = head[rdf+"first"][0].value
-      //console.log("n:",head, rest, head[rdf+"rest"], node[0]?.value,allNodes[node[0]?.value],allNodes)
+      //loggergen.log("n:",head, rest, head[rdf+"rest"], node[0]?.value,allNodes[node[0]?.value],allNodes)
       return [ head ].concat(rest)
    }
 
@@ -773,7 +773,7 @@ export async function updateConfigFromProfile() {
       store.dispatch(uiActions.langPreset(litLangs, preset));
 
 
-      console.log("state:", state, res, litLangs, locale, isCustom,litLangs.toString(),state.data.config.language.data.presets[locale])
+      loggergen.log("state:", state, res, litLangs, locale, isCustom,litLangs.toString(),state.data.config.language.data.presets[locale])
    }
 
    try {
@@ -807,7 +807,7 @@ async function getUser(profile)
 
    let { user, etag } = await api.loadUser()
    
-   console.log("user:",etag, user) //,JSON.stringify(json,null,3),JSON.stringify(user,null,3), JSON.stringify(myjsonld,null,3))
+   loggergen.log("user:",etag, user) //,JSON.stringify(json,null,3),JSON.stringify(user,null,3), JSON.stringify(myjsonld,null,3))
 
    if(user) {
       
@@ -937,7 +937,7 @@ async function getContext(iri,start,end,nb:integer = 1000) {
       results.results.bindings['etexts'][uri] = results.results.bindings['etexts'][uri].concat(inInst.filter(e => results.results.bindings['etexts'][uri].filter(f => f.type === tmp+"inInstance" && f.value === fullUri(e["id"])).length === 0).map(e => ({value:fullUri(e["id"]),type:tmp+"inInstance"})))      
 
       chunk = results.results.bindings['etexts'][uri].filter(e => e.startChar == start && e.endChar == end)
-      //console.log("iIP:",inInstP,sav)
+      //loggergen.log("iIP:",inInstP,sav)
       if(chunk.length && inInstP.length) chunk[0].inPart = [...new Set(inInstP.map(e => fullUri(e["id"])))].sort()
 
    }
@@ -949,7 +949,7 @@ async function getContext(iri,start,end,nb:integer = 1000) {
    } else {
       const inP = sav.filter(e => e.seqNum !== undefined)
       const labels = sav.filter(e => inP.some(f => f["tmp:inInstancePart"] && (Array.isArray(f["tmp:inInstancePart"])?f["tmp:inInstancePart"]:[f["tmp:inInstancePart"]]).some(g => g.id === e.id)))
-      console.log("inPart:", iri, inP, labels)
+      loggergen.log("inPart:", iri, inP, labels)
       let data = {} 
       inP.map(e => {
          let iIp = e["tmp:inInstancePart"]
@@ -2143,7 +2143,7 @@ function sortResultsByYear(results,reverse,aux) {
             let obj
             if(v.type === bdo+"personEvent" && aux && (obj = aux[v.value]) && obj.some(o => o.type === rdf+"type" && o.value === bdo+"PersonBirth")) {
                obj = _.orderBy(obj.filter(o => o.type === bdo+"notBefore" || o.type === bdo+"notAfter" || o.type === bdo+"onYear").map(o => Number(o.value)))
-               //console.log("birth:",obj)
+               //loggergen.log("birth:",obj)
                if(obj.length) n = obj[0]
             } else  
             */
@@ -2156,7 +2156,7 @@ function sortResultsByYear(results,reverse,aux) {
                   if(value?.includes("XX?")) value = value.replace(/XX\?/,"?") // #771
                   try {
                      edtfObj = edtf(value)
-                     //console.log("edtfObj:",edtfObj)
+                     //loggergen.log("edtfObj:",edtfObj)
                      multi_n.push(Number(edtf(edtfObj.min)?.values[0]))
 
                   } catch(e) {
@@ -2237,7 +2237,7 @@ function sortResultsByQuality(results,reverse) {
             if(v.type === tmp+"OCRscore") {               
                n = Number(v.value)
             } 
-            console.log(k,n,v)
+            loggergen.log(k,n,v)
          }
          return ({k, n})
       },{})
@@ -2321,7 +2321,7 @@ function rewriteAuxMain(result,keyword,datatype,sortBy,language)
       }
    }
    
-   //console.log("_kw:",_kw,keyword,window.DLD)
+   //loggergen.log("_kw:",_kw,keyword,window.DLD)
    let _kwRegExpFullM = new RegExp("^↦.*?"+_kw+".*?↤/?$", flags), _kwRegExpM = new RegExp("↦.*?"+_kw+".*?↤", flags)
 
    let mergeLeporello = state.data.config.khmerServer
@@ -2424,14 +2424,14 @@ function rewriteAuxMain(result,keyword,datatype,sortBy,language)
                   if(!keyword.includes(" AND ")){
                      // #718 check if match is full/exact
                      if(e.value.match(_kwRegExpM)) {                                          
-                        //console.log("exact:",e)
+                        //loggergen.log("exact:",e)
                         hasExactM = true
                         if(e.value.match(_kwRegExpFullM)) {
-                           //console.log("full exact")
+                           //loggergen.log("full exact")
                            isExactM = true
                         } 
                      } else {
-                        //console.log("exact?",e,_kw)
+                        //loggergen.log("exact?",e,_kw)
                      }
                   }
 
@@ -2448,7 +2448,7 @@ function rewriteAuxMain(result,keyword,datatype,sortBy,language)
 
             if(isTypeScan && window.DLD) {
                let qn = k.replace(/.*?[/]([^/]+)$/,"$1")
-               console.log("qn:",isTypeScan,qn,window.DLD[qn])
+               loggergen.log("qn:",isTypeScan,qn,window.DLD[qn])
                if(window.DLD && window.DLD[qn]) {
                   inDLD = true
                }
@@ -2514,7 +2514,7 @@ function rewriteAuxMain(result,keyword,datatype,sortBy,language)
                         hasM = true   
                         content.value = content.value.replace(/↤\/_↦/g,"/ ")
                         if(content.value.match(_kwRegExpM)) {                                          
-                           //console.log("exact:",e)
+                           //loggergen.log("exact:",e)
                            hasExactM = true
                         }
                      }
@@ -2619,7 +2619,7 @@ async function startSearch(keyword,language,datatype,sourcetype,dontGetDT,inEtex
    let last = Date.now(), subtimes = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]              
    const subT = (n) => {
       subtimes[n] += Date.now() - last
-      console.log("subT["+n+"]:",subtimes[n])
+      loggergen.log("subT["+n+"]:",subtimes[n])
       last = Date.now()
    }
       
@@ -2857,7 +2857,7 @@ store.dispatch(uiActions.loading(keyword, false));
 }
 
 subT(9)
-console.log("subT:",subtimes)
+loggergen.log("subT:",subtimes)
 subtime("startSearch")
 
 }
@@ -2873,7 +2873,7 @@ export function* watchCheckResults() {
 
 async function checkResults(params, route) {
    
-   console.log("ckR params:",params,route)   
+   loggergen.log("ckR params:",params,route)   
 
    if(!params || params.count || params.init && params.route && !params.url) return
 
@@ -3073,7 +3073,7 @@ async function getReproductions(uri,init=false) {
    let keyword = store.getState().data.keyword
    
    let results = await api.getReproductions(uri);
-   console.log("repro:",results)
+   loggergen.log("repro:",results)
 
    let sortBy = "year of publication reverse" 
 
@@ -3104,7 +3104,7 @@ async function getResultsByDateOrId(date, t, dateOrId) {
    // DONE fix using already loaded data
    if(state.data.searches && state.data.searches[t] && state.data.searches[t][date+"@"+ dateOrId] && state.data.searches[t][date+"@"+ dateOrId].numResults){
 
-      //console.log("deja:",JSON.stringify(state.data.searches[t][date+"@date"], null, 3 ))
+      //loggergen.log("deja:",JSON.stringify(state.data.searches[t][date+"@date"], null, 3 ))
 
       // no need, already done
       //store.dispatch(dataActions.foundResults(date, "date", { results: {bindings: {} } } ) ); // needed to initialize ("Any" / legacy code)
@@ -3162,12 +3162,12 @@ export function* watchGetResultsByDate() {
 
 
 async function getMonlamResults(params){
-   //console.log("go:",params)
+   //loggergen.log("go:",params)
    
    try {
       const res = await api.loadMonlamResults(params)
       store.dispatch(dataActions.gotMonlamResults(res))
-      //console.log("monlam?",res)
+      //loggergen.log("monlam?",res)
    } catch(e) {
       store.dispatch(dataActions.gotMonlamResults([]))
    }
@@ -3306,7 +3306,7 @@ async function getOutline(iri,node?,volFromUri?) {
    store.dispatch(uiActions.loading(iri, "outline"));
    let res = await api.loadOutline(iri,node,volFromUri) 
 
-   //console.log("gotO:",iri,JSON.stringify(res,null,3),node,volFromUri)
+   //loggergen.log("gotO:",iri,JSON.stringify(res,null,3),node,volFromUri)
 
    if(res && res["@graph"] && volFromUri) res["@graph"].map(r => { 
       // patch main node
@@ -3328,7 +3328,7 @@ async function getOutline(iri,node?,volFromUri?) {
          r.id = iri
          if(r["skos:prefLabel"]) delete r["skos:prefLabel"]
       }
-      //console.log("foundem?",r,volFromUri)
+      //loggergen.log("foundem?",r,volFromUri)
    })
    store.dispatch(uiActions.loading(iri, false));
    
@@ -3350,7 +3350,7 @@ export function* watchGetETextRefs() {
 async function getETextRefs(iri) {
 
    store.dispatch(uiActions.loading(iri, "ETextRefs"));
-   let res = await api.loadETextRefs(iri) 
+   let res = await api.loadETextRefs(iri)   
    store.dispatch(uiActions.loading(iri, false));
    
    loggergen.log("ETextRefs",res)
@@ -3450,7 +3450,7 @@ async function outlineSearch(iri,kw,lg) {
       if(n["tmp:titleMatch"] || n["tmp:labelMatch"]|| n["tmp:colophonMatch"]) matches.push(n)
    }
    
-   //console.log("matches:",JSON.stringify(matches,null,3))
+   //loggergen.log("matches:",JSON.stringify(matches,null,3))
 
    for(let m of matches) {
       let loca 
@@ -3463,7 +3463,7 @@ async function outlineSearch(iri,kw,lg) {
       while(p) {
          if(p_node[0]["tmp:hasNonVolumeParts"] && p_node[0]["partType"] === "bdr:PartTypeSection" || p_node[0].id === iri) {
             volid = "bdr:I0000"+volnum+";"+p_node[0].id
-            //console.log("gotcha:",p_node)
+            //loggergen.log("gotcha:",p_node)
 
             if(!p_node[0].hasPartSav) { 
                p_node[0].hasPartSav = p_node[0].hasPart               
@@ -3473,11 +3473,11 @@ async function outlineSearch(iri,kw,lg) {
 
             if(!newVol[volid]) { 
                newVol[volid] = {id:volid, hasPart:m.id, volumeNumber:volnum, partType:"bdr:PartTypeVolume", "tmp:hasNonVolumeParts": true } //, contentLocation:"bdr:WL0000_"+volid}
-               //console.log("newV1:",volid,newVol[volid])
+               //loggergen.log("newV1:",volid,newVol[volid])
             } else {
                if(!Array.isArray(newVol[volid].hasPart)) newVol[volid].hasPart = [ newVol[volid].hasPart ]
                newVol[volid].hasPart.push(m.id)
-               //console.log("newV2:",volid,newVol[volid])
+               //loggergen.log("newV2:",volid,newVol[volid])
             }
          }
          p = p_node[0].partOf
@@ -3599,7 +3599,7 @@ async function getFacetInfo(keyword,language:string,property:string) {
 
 async function getSubscribedCollections() {
 
-   //console.log("go getSC")
+   //loggergen.log("go getSC")
 
    try {
       let res = await api.loadSubscribedCollections()      

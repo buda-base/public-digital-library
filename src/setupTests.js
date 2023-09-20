@@ -45,7 +45,7 @@ Object.defineProperty(window, 'localStorage', { value: localStorageMock });
 // deprecated - use json-server instead
 Object.defineProperty(window, 'fetch', { value: function(url,options,param)
    {
-      console.log("fetching",url,options,param);
+      loggergen.log("fetching",url,options,param);
    }
 });
 */
@@ -57,13 +57,13 @@ const hr = '-'.repeat(80); // 80 dashes row line
 if (!console.group) {
   console.group = function logGroupStart(label) {
     groups.push(label);
-    console.log(hr+'\nBEGIN GROUP: '+ label);
+    loggergen.log(hr+'\nBEGIN GROUP: '+ label);
   };
 }
 
 if (!console.groupEnd) {
   console.groupEnd = function logGroupEnd() {
-    console.log('END GROUP: '+ groups.pop() +"\n"+ hr);
+    loggergen.log('END GROUP: '+ groups.pop() +"\n"+ hr);
   };
 }
 
@@ -78,7 +78,7 @@ tcpPortUsed.check(5555).then((inUse) => {
       server.use(middlewares)
       server.use('/test',router)
       server = server.listen(5555, () => {
-         console.log('JSON Server is running')
+         loggergen.log('JSON Server is running')
          global.jsonServer = server
       })
 

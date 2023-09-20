@@ -23,7 +23,7 @@ import {sortLangScriptLabels,transliterators,translitHelper,extendedPresets, imp
 
 /*
 afterAll( (done) => {
-   global.jsonServer.close(()=> { console.log("closed JSON server"); done(); })
+   global.jsonServer.close(()=> { loggergen.log("closed JSON server"); done(); })
 })
 */
 
@@ -443,8 +443,8 @@ describe('language settings tests', () => {
             "k": "W1KG10101"
          }
       ]
-      console.log(sortLangScriptLabels(labels, extPewts.flat, extPewts.translit))
-      console.log(sortLangScriptLabels(labels, extPuni.flat, extPuni.translit))
+      loggergen.log(sortLangScriptLabels(labels, extPewts.flat, extPewts.translit))
+      loggergen.log(sortLangScriptLabels(labels, extPuni.flat, extPuni.translit))
       */
 
       done()

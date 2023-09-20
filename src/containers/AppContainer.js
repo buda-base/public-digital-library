@@ -15,7 +15,9 @@ import App from '../components/App';
 
 import {auth} from '../routes';
 
+import logdown from 'logdown'
 
+const loggergen = new logdown('gen', { markdown: false });
 
 const mapStateToProps = (state) => {
 
@@ -95,7 +97,7 @@ const mapStateToProps = (state) => {
 
    if(config && !config.auth) newState.auth = false
 
-   if(!global.inTest) console.log("mS2p",state,newState)
+   if(!global.inTest) loggergen.log("mS2p",state,newState)
 
    return newState ;
 

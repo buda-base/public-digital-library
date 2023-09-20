@@ -10,6 +10,10 @@ import { i18nextChangeLanguage } from 'i18next-redux-saga';
 import store from '../index';
 import LanguageSidePane,{LangPrefTree} from '../components/LanguageSidePane';
 
+import logdown from 'logdown'
+
+const loggergen = new logdown('gen', { markdown: false });
+
 const mapStateToProps = (state,ownProps) => {
 
       let langIndex = state.ui.langIndex
@@ -30,7 +34,7 @@ const mapStateToProps = (state,ownProps) => {
 
       let props = { ...ownProps, langIndex, langPriority, open:rightPanel, locale, collapse, anchor, config }
 
-      console.log("mS2p LSP",state,props)
+      loggergen.log("mS2p LSP",state,props)
 
       return props
 

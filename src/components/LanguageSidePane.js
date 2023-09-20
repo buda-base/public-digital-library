@@ -27,6 +27,10 @@ import Popover from '@material-ui/core/Popover';
 import MenuItem from '@material-ui/core/MenuItem';
 import RefreshIcon from '@material-ui/icons/Refresh';
 
+import logdown from 'logdown'
+
+const loggergen = new logdown('gen', { markdown: false });
+
 type Props = {
    anchor?:{},
    locale?:string,
@@ -66,7 +70,7 @@ class LanguageSidePane extends Component<Props,State> {
 
    handleCheckUI = (ev:Event,prop:string,lab:string,val:boolean,list:string[]) => {
 
-      console.log("checkUI",prop,lab,val,this.props)
+      loggergen.log("checkUI",prop,lab,val,this.props)
 
       let state =  this.state
       
@@ -88,9 +92,9 @@ class LanguageSidePane extends Component<Props,State> {
    }
 
    static getDerivedStateFromProps(props,state) {
-      //console.log("gDsFp:",state,state.custom)
+      //loggergen.log("gDsFp:",state,state.custom)
       if(props.langIndex === "custom" && Array.isArray(props.langPriority?.presets["custom"]) && !state.custom?.length) { //.toString() !== props.langPriority?.presets["custom"]?.toString())
-         //console.log("custom:",props.langPriority?.presets["custom"])
+         //loggergen.log("custom:",props.langPriority?.presets["custom"])
          return ({...state, custom: [ ...props.langPriority?.presets["custom"] ]})
       } else if(props.langIndex != "custom" && state.custom.length && Array.isArray(state.custom)) {
          let defPref = props.langPriority?.presets["custom"]
@@ -103,7 +107,7 @@ class LanguageSidePane extends Component<Props,State> {
                   break ;
                }
             }
-            //console.log("not custom but",isDef, state.custom)
+            //loggergen.log("not custom but",isDef, state.custom)
             if(isDef) return ({...state, custom: [ ]})
          } 
       }
@@ -123,7 +127,7 @@ class LanguageSidePane extends Component<Props,State> {
             if(customlist) list = customlist
             else list = list[this.props.locale]
             
-            //console.log("list:",this.state.custom,list,k,this.props.locale)
+            //loggergen.log("list:",this.state.custom,list,k,this.props.locale)
          } 
          let label,subcollapse
          let disab = false ;
@@ -181,7 +185,7 @@ class LanguageSidePane extends Component<Props,State> {
             );
 
             const SortableList = SortableContainer(({items}) => {
-               console.log("items:",items)
+               loggergen.log("items:",items)
                return ([
                   <ol>
                      {items.map((value, index) => (
@@ -225,7 +229,7 @@ class LanguageSidePane extends Component<Props,State> {
             ]
          }
 
-         console.log("props:", this.props, k, i, this.props.langIndex)
+         loggergen.log("props:", this.props, k, i, this.props.langIndex)
 
          let checked = k === this.props.langIndex || i === this.props.langIndex  
 
@@ -249,7 +253,7 @@ class LanguageSidePane extends Component<Props,State> {
 
    render()
    {
-      console.log("LsP render",this.props,this.state)
+      loggergen.log("LsP render",this.props,this.state)
 
       let widget = (title:string,txt:string,help:string,inCollapse:Component) => (
          [<ListItem key={1}
@@ -271,7 +275,7 @@ class LanguageSidePane extends Component<Props,State> {
 
       let rect 
       if(this.props.anchor) rect = this.props.anchor.getBoundingClientRect();
-      //console.log("rect",rect)
+      //loggergen.log("rect",rect)
 
       return ( <div className={"SidePane right "+(this.props.open?"visible":"")}>
          <IconButton className="close" onClick={e => this.props.onToggleLanguagePanel()} ><Close/></IconButton>

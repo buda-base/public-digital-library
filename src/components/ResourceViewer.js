@@ -663,7 +663,7 @@ function formatUrl(url) {
          .replace(/([=&])/giu, '<wbr>$1<wbr>')
       ).join('//<wbr>')
 
-   //console.log("fU:",formatted)
+   //loggergen.log("fU:",formatted)
 
    return formatted
 }
@@ -861,7 +861,7 @@ class PdfZipSelector extends Component<Props,State> {
       return <>
          <emph>{I18n.t("resource.full")}</emph>
          <span onClick={(ev) => ev.stopPropagation()}>{I18n.t("misc.or")} {I18n.t("resource.range")[0].toUpperCase()+I18n.t("resource.range").substring(1)}: <input type="text" onKeyPress={ (ev) => { 
-                  //console.log("key:",ev,this.state.ranges[this.props.type+"_"+e.link])
+                  //loggergen.log("key:",ev,this.state.ranges[this.props.type+"_"+e.link])
                   if(ev.key === 'Enter' && this.state.ranges[this.props.type+"_"+e.link]) {
                      that.handlePdfClick(ev,e.link,e[this.props.type+"File"],this.props.type,this.state.ranges[this.props.type+"_"+e.link])
                   } 
@@ -891,13 +891,13 @@ class OutlineSearchBar extends Component<Props,State>
 
    changeOutlineKW(e, value) {
 
-      console.log("osb:change:",this,this.props.that)
+      loggergen.log("osb:change:",this,this.props.that)
 
       if(!this.props.that.state) return
 
       if(!value && e) value = e.target.value
 
-      //console.log("value:",value)
+      //loggergen.log("value:",value)
 
       let language = this.state.language
       let detec = narrowWithString(value, this.props.that.state.langDetect)
@@ -926,7 +926,7 @@ class OutlineSearchBar extends Component<Props,State>
 
    render() {
 
-      console.log("osb:",this,this.props,this.state)
+      loggergen.log("osb:",this,this.props,this.state)
 
 
       let cleanOutlineCollapse = () => {
@@ -984,7 +984,7 @@ class OutlineSearchBar extends Component<Props,State>
 export const locales = { en: "en-US", zh: "zh-Hans-CN", bo: "bo-CN", km:"km-KH" }
 
 export const intervalToEDTF = (notBefore = null, notAfter = null) => {
-   //console.log("inter2edtf:", notBefore, notAfter)
+   //loggergen.log("inter2edtf:", notBefore, notAfter)
    if (notBefore == null && notAfter == null)
        return null;
    if (notBefore == null)
@@ -1003,7 +1003,7 @@ export const intervalToEDTF = (notBefore = null, notAfter = null) => {
 }
 export const humanizeEDTF = (obj, str, locale = "en-US", dbg = false) => {
 
-   //console.log("edtf2H:", obj, str, locale, dbg)
+   //loggergen.log("edtf2H:", obj, str, locale, dbg)
    if (!obj) return ""
  
    const conc = (values, sepa) => {
@@ -1039,7 +1039,7 @@ export const humanizeEDTF = (obj, str, locale = "en-US", dbg = false) => {
        const event = new Date(Date.UTC(obj.values[0], obj.values[1], obj.values[2], 0, 0, 0))
        const options = { year: "numeric", month: "numeric", day: "numeric" }
        const val = event.toLocaleDateString(locale, options)
-       console.log("val:",locale,val)
+       loggergen.log("val:",locale,val)
        return val
      } catch (e) {
        console.warn("locale error:", e, str, obj)
@@ -1054,11 +1054,11 @@ export const humanizeEDTF = (obj, str, locale = "en-US", dbg = false) => {
 function MySwipeable(props) {
    const handlers = useSwipeable({
       onSwipedRight: (ev) => {
-         console.log("User Swiped Right!", ev)
+         loggergen.log("User Swiped Right!", ev)
          props.scrollRel(ev)
       },
       onSwipedLeft: (ev) => { 
-         console.log("User Swiped Left!", ev)
+         loggergen.log("User Swiped Left!", ev)
          props.scrollRel(ev, true)
       },
    });
@@ -1066,7 +1066,7 @@ function MySwipeable(props) {
 }
 
 function GenericSwipeable(props) {
-   console.log("sw:",props)
+   loggergen.log("sw:",props)
    const { classN } = props
    let newProps = { ...props }
    if(classN) delete newProps.classN 
@@ -1109,13 +1109,13 @@ class ResourceViewer extends Component<Props,State>
 
          //loggergen.log("closeV",this.state.fromSearch,this.state,this.props)
 
-         console.log("ev:", ev, gotoResults)
+         loggergen.log("ev:", ev, gotoResults)
 
          let get = qs.parse(this.props.history.location.search)
          let hasQinS, backToPart
          if(get.s && !get.part) {
             get = qs.parse(get.s.replace(/^[^?]+[?]/,""))
-            //console.log("hQinS:",get) 
+            //loggergen.log("hQinS:",get) 
             if((get.q || get.r || get.w)) { hasQinS = true
                //fromSearch = this.state.fromSearch               
             }                
@@ -1226,7 +1226,7 @@ class ResourceViewer extends Component<Props,State>
          
          if (that.state?.monlam?.range && key == 67 && (ctrl || cmd)) {         
             navigator.clipboard.writeText(that.state.monlam.range.toString())
-            console.log("copied:",that.state.monlam.range.toString())
+            loggergen.log("copied:",that.state.monlam.range.toString())
          }
       });
       
@@ -1271,7 +1271,7 @@ class ResourceViewer extends Component<Props,State>
          if(Cite && Cite.plugins && Cite.plugins.config) {
 
             if(!citationConfig) citationConfig = Cite.plugins.config.get('@csl')
-            //console.log("_cite:",citationConfig,props.citationData)
+            //loggergen.log("_cite:",citationConfig,props.citationData)
             
             let citaSty = "mla"
             if(state.citationStyle) citaSty = state.citationStyle
@@ -1284,7 +1284,7 @@ class ResourceViewer extends Component<Props,State>
                   s.initCitation.push(citaSty)
                } else if(props.citationData && props.citationData.styles && props.citationData.styles[citaSty]){
                   citationConfig.templates.add(citaSty, props.citationData.styles[citaSty])
-                  //console.log("added:",citaSty,citationConfig)
+                  //loggergen.log("added:",citaSty,citationConfig)
                }
             } 
 
@@ -1304,7 +1304,7 @@ class ResourceViewer extends Component<Props,State>
                   s.initCitation.push(citaLg)
                } else if(props.citationData && props.citationData.locales && props.citationData.locales[supportedLocales[citaLg]]){
                   citationConfig.locales.add(supportedLocales[citaLg], props.citationData.locales[supportedLocales[citaLg]])
-                  //console.log("added:",citaLg,citationConfig)
+                  //loggergen.log("added:",citaLg,citationConfig)
                }
             }
 
@@ -1319,7 +1319,7 @@ class ResourceViewer extends Component<Props,State>
                /* // moved to getDerivedStateFromProp
                } else if(props.citationData && props.citationData.data && props.citationData.data[props.IRI]){
                   //citationConfig.templates.add(citaSty, props.citationData.styles[citaSty])
-                  console.log("added:",props.citationData.data[props.IRI])
+                  loggergen.log("added:",props.citationData.data[props.IRI])
                }
                */
             } 
@@ -1365,7 +1365,7 @@ class ResourceViewer extends Component<Props,State>
             s.fetchedProfile = true
             // this will set props.auth.userProfile
             getProfile((err, profile) => {
-               // console.log("profile:",profile,this.props.auth.userProfile)
+               // loggergen.log("profile:",profile,this.props.auth.userProfile)
             });
          }
 
@@ -1373,7 +1373,7 @@ class ResourceViewer extends Component<Props,State>
             let logs = props.resources[props.IRI][bda+props.IRI.replace(/bdr:/,"")]
             if(logs && logs[adm+"logEntry"]) {
                logs = logs[adm+"logEntry"]
-               //console.log("logs:",logs)
+               //loggergen.log("logs:",logs)
             }
          }
       }
@@ -1507,7 +1507,7 @@ class ResourceViewer extends Component<Props,State>
             if(!s) s = { ...state }
             if(!work && s.title.work) work = s.title.work
             else if( /* _T === "Etext" && */ instance?.length) {
-               //console.log(instance)
+               //loggergen.log(instance)
                work = getElem(bdo+"instanceOf",shortUri(instance[0].value));
             }
             if(!instance && s.title.instance && s.title.instance[0].value !== fullUri(props.IRI)) instance = s.title.instance
@@ -2038,7 +2038,7 @@ class ResourceViewer extends Component<Props,State>
                         extData.push({...p, from, to})                        
                      }
                   }
-                  //console.log("lh:",extData)
+                  //loggergen.log("lh:",extData)
                   for(let p of extData) {
                      if(!sorted.length) sorted.push(p)
                      else {   
@@ -2053,7 +2053,7 @@ class ResourceViewer extends Component<Props,State>
                         sorted.splice( idx, 0, p );
                      }
                   }
-                  //console.log("sorted:",sorted)
+                  //loggergen.log("sorted:",sorted)
                   return sorted.reverse()
                }
                return parts ;
@@ -2193,7 +2193,7 @@ class ResourceViewer extends Component<Props,State>
                if(assoR) { 
                   valSort = valSort.map(v => {
                      if(assoR[v?.value]) {
-                        //console.log("assoR:",assoR[v.value],assoR[v.value][bdo+"agent"][0].value,assoR[assoR[v.value][bdo+"agent"][0].value])
+                        //loggergen.log("assoR:",assoR[v.value],assoR[v.value][bdo+"agent"][0].value,assoR[assoR[v.value][bdo+"agent"][0].value])
 
                         let evT = assoR[v.value][bdo+"creationEventType"]
                         if(!evT) evT = [{ idx:9, value: "" }]
@@ -2219,7 +2219,7 @@ class ResourceViewer extends Component<Props,State>
                         return v
                      }
                   })
-                  //console.log("vS:",valSort)
+                  //loggergen.log("vS:",valSort)
                   valSort = _.orderBy(valSort,['evT', 'role', 'lang','label'],['desc','desc','asc','asc']).map(v => ({value:v.value, type:v.type}))
                }
             }
@@ -2246,7 +2246,7 @@ class ResourceViewer extends Component<Props,State>
                      let d
                      if(assoR[w.value]) {
 
-                        //console.log("sBeD:",w,assoR[w.value])
+                        //loggergen.log("sBeD:",w,assoR[w.value])
 
                         if(assoR[w.value][rdf+"type"]) {
                            for(let t of assoR[w.value][rdf+"type"]) { 
@@ -2278,7 +2278,7 @@ class ResourceViewer extends Component<Props,State>
 
                               assoR[w.value][bdo+"eventWhen"][0].parsed = true
                               
-                              //console.log("eW:",JSON.stringify(assoR[w.value][bdo+"eventWhen"][0], null,3))
+                              //loggergen.log("eW:",JSON.stringify(assoR[w.value][bdo+"eventWhen"][0], null,3))
                               
                               let value = assoR[w.value][bdo+"eventWhen"][0].value, obj, edtfObj, readable = value
                               if(value?.includes("XX?")) value = value.replace(/XX\?/,"?") // #771
@@ -2288,7 +2288,7 @@ class ResourceViewer extends Component<Props,State>
                                  readable = humanizeEDTF(obj, value, locales[this.props.locale])
 
                                  d = Number(edtf(edtfObj.min)?.values[0])
-                                 console.log("date:",d)
+                                 loggergen.log("date:",d)
 
                               } catch(e) {
                                  console.warn("EDTF error:",e,value,obj,edtfObj,readable)
@@ -2356,7 +2356,7 @@ class ResourceViewer extends Component<Props,State>
                         // DONE: keep fromSameAs
                         /*
                         if(assoR[w.value][bdo+"eventWhen"]) {
-                           console.log("del?",w.value,JSON.stringify(assoR[w.value],null,3))
+                           loggergen.log("del?",w.value,JSON.stringify(assoR[w.value],null,3))
                            if(assoR[w.value][bdo+"onYear"]) delete assoR[w.value][bdo+"onYear"]
                            if(assoR[w.value][bdo+"notBefore"]) delete assoR[w.value][bdo+"notBefore"]
                            if(assoR[w.value][bdo+"notAfter"]) delete assoR[w.value][bdo+"notAfter"]
@@ -2940,7 +2940,7 @@ class ResourceViewer extends Component<Props,State>
          if(elem?.value?.startsWith("bdr:")) elem.value = elem.value.replace(/^bdr:/,bdr)
 
          // related to #828
-         if(!elem.value.includes("purl.bdrc.io") /* && !hasExtPref */ && ((!dic || !dic[elem.value]) && !prop.match(/[/#]sameAs/))) {
+         if(!elem.value.includes("purl.bdrc.io") /* && !hasExtPref */ && ((!dic || !dic[elem.value]) && !prop?.match(/[/#]sameAs/))) {
             let link = elem.value
 
             if(this.props.config && this.props.config.chineseMirror) link = link.replace(new RegExp(cbeta), "http://cbetaonline.cn/")
@@ -3154,7 +3154,7 @@ class ResourceViewer extends Component<Props,State>
                   //if(pI) uri = this.props.IRI+"?part="+uri
                   //else uri = uri.replace(/^((bdr:MW[^_]+)_[^_]+)/,"$2?part=$1")
 
-                  //console.log("inOutL:",elem,info,uri,dico)
+                  //loggergen.log("inOutL:",elem,info,uri,dico)
 
                   if(info === uri) {                      
                      if(elem.volume) {
@@ -3165,7 +3165,7 @@ class ResourceViewer extends Component<Props,State>
                            else infoBase = infoBase.concat(dico[fUri])
                         }
                         
-                        //console.log("iB:",infoBase,elem.volume,dico)
+                        //loggergen.log("iB:",infoBase,elem.volume,dico)
 
                         if(infoBase) infoBase = infoBase.filter(e => !e.fromIRI && [bdo+"volumeNumber",skos+"prefLabel", /*skos+"altLabel",*/ foaf+"name" /*,"literal"*/].reduce( (acc,f) => ((acc || f === e.type || f === e.fromKey) && !e.fromSameAs), false))
                         if(infoBase) {
@@ -3185,7 +3185,7 @@ class ResourceViewer extends Component<Props,State>
                      
                      if(!info || info === uri) info = I18n.t("resource.noT")
 
-                     //console.log("dico:",uri,info)
+                     //loggergen.log("dico:",uri,info)
                   }
 
                   link = <a class={"urilink prefLabel " } href={elem.url} onClick={(e) => { 
@@ -3352,7 +3352,7 @@ class ResourceViewer extends Component<Props,State>
                thumb = <div class="images-thumb" style={{"background-image":"url("+thumbUrl+")"}}/>;               
 
                const checkDLD = (ev) => {
-                  console.log("CDLD:",this.props.useDLD)
+                  loggergen.log("CDLD:",this.props.useDLD)
                   if(this.props.useDLD) { 
                      let nbVol =  this.getResourceElem(bdo+"numberOfVolumes")
                      if(nbVol) nbVol = nbVol.map(v => v.value)
@@ -3534,7 +3534,7 @@ class ResourceViewer extends Component<Props,State>
             let h = elem.closest("[data-prop='bdo:workHasInstance']")
             
             let etext = $(ev.target).closest("h5.withHoverM").index() 
-            //console.log("i/n",i,n,etext)
+            //loggergen.log("i/n",i,n,etext)
             
             if(/*!p.length &&*/ (elem.hasClass("propCollapse") && !elem.closest("[data-prop]") === "adm:logEntry" 
                || x.length || h.length) && (i < Math.floor(n/2) || (n%2 == 1 && i == Math.floor(n/2)) || i === 0 && n === 1)) 
@@ -3551,7 +3551,7 @@ class ResourceViewer extends Component<Props,State>
 
             if(popperFix === "etext") target = $(ev.currentTarget).closest("h5").prev()
 
-            //console.log("tg:",target)
+            //loggergen.log("tg:",target)
          }
          if(!dontClose || !this.state.collapse["hover"+ID]) if(!noSame || ev.target === ev.currentTarget) this.setState({...this.state,collapse:{...this.state.collapse,["hover"+ID]:!this.state.collapse["hover"+ID],popperFix}, anchorEl:{...this.state.anchorEl,["hover"+ID]:target} } ) 
          if(wTip !== undefined) (this.toggleHoverMtooltip(ID,wTip))(ev)
@@ -3566,7 +3566,7 @@ class ResourceViewer extends Component<Props,State>
          if(that.state.collapse[prop]) elem = $(".propCollapse [data-id=\""+ID.replace(/["]/g,"")+"\"]")
          else elem = $("[data-id=\""+ID.replace(/["]/g,"")+"\"]")
          
-         //console.log("ID:",prop,ID,val,elem)
+         //loggergen.log("ID:",prop,ID,val,elem)
 
          if(elem.length) for(let e of elem) {
             if(val && (!that._mouseover[ID] || that._mouseover[ID] < 20)) {  // must be triggered twice ...              
@@ -3628,7 +3628,7 @@ class ResourceViewer extends Component<Props,State>
          if(this.props.assocResources) data = this.props.assocResources[e.value]
          if(!data && this.props.dictionary && this.props.dictionary[e.value]) data = Object.keys(this.props.dictionary[e.value]).filter(k => [skos+"prefLabel",skos+"altLabel",rdfs+"label"].includes(k)).reduce( (acc,k)=>([...acc,...this.props.dictionary[e.value][k].map(d => ({...d,fromKey:k})) ]),[])
          if(data && data.length) data = getLangLabel(this,prop,data.filter(d => [skos+"prefLabel",skos+"altLabel",rdfs+"label"].includes(d.type) || [skos+"prefLabel",skos+"altLabel",rdfs+"label"].includes(d.fromKey)),false,false,other)
-        // console.log("other:",other,data)
+        // loggergen.log("other:",other,data)
          if(data) {
             lang = data.lang
             if(!lang) lang = data["xml:lang"]
@@ -3646,7 +3646,7 @@ class ResourceViewer extends Component<Props,State>
             }
             ontolink = shortUri(e.value)
 
-            //console.log("comm:",comment)
+            //loggergen.log("comm:",comment)
          }
       }
 
@@ -3661,12 +3661,12 @@ class ResourceViewer extends Component<Props,State>
       let repro, inPart = [] //[ this.uriformat("", { type:"uri", value:fullUri("bdr:MW4CZ5369_0001-1") }) ]
       if(e.value === "etextMoreInfo") { 
          repro = <span class="etextMoreInfo" onClick={(ev) => { 
-               //console.log("repro:",ID,this.state.collapse,ev.target)
+               //loggergen.log("repro:",ID,this.state.collapse,ev.target)
                if($(ev.target).closest("a").length) this.setState({collapse:{...this.state.collapse, ["hover"+ID]:false }}) 
             }}>
                {this.format("span",bdo+"instanceReproductionOf","",false,"sub")}
             </span>
-         //console.log("repro:",repro,e.elem)
+         //loggergen.log("repro:",repro,e.elem)
          if(e.elem?.id && this.props.assocResources[e.elem.id]) inPart = this.props.assocResources[e.elem.id]?.filter(v => v.type === _tmp+"inInstancePart").map(e => this.uriformat("",e))
       }
 
@@ -3721,7 +3721,7 @@ class ResourceViewer extends Component<Props,State>
                >
                { prop && 
                   <ClickAwayListener onClickAway={(ev) => {
-                     //console.log("clickA",ID,ev,ev.target,ev.currentTarget)                     
+                     //loggergen.log("clickA",ID,ev,ev.target,ev.currentTarget)                     
                      if(!$(ev.target).closest(".popper").length) this.setState({collapse:{...this.state.collapse, ["hover"+ID]:false}})
                   }}>
                <div class="popper">                     
@@ -4088,7 +4088,7 @@ class ResourceViewer extends Component<Props,State>
             let ID = "ID-"+prop+"-"+(e&&e.value?e.value:e)      
             /*
             let toggleHoverM = (ev) => {
-               //console.log("togHovM",ev,ev.currentTarget)
+               //loggergen.log("togHovM",ev,ev.currentTarget)
                if(ev.target === ev.currentTarget) this.setState({...this.state,collapse:{...this.state.collapse,["hover"+ID]:!this.state.collapse["hover"+ID]}, anchorEl:{...this.state.anchorEl,["hover"+ID]:ev.currentTarget} } ) 
             }
             */
@@ -4309,7 +4309,7 @@ class ResourceViewer extends Component<Props,State>
                         }
 
                         let text = getLangLabel(this,"",[ noteData[bdo+"noteText"] ])
-                        //console.log("text:",text)
+                        //loggergen.log("text:",text)
                         if(text) text = text.value
                         else text = this.pretty(noteData[bdo+"noteText"].value) 
                         if(text?.includes && text.includes("\n")) { 
@@ -4418,7 +4418,7 @@ class ResourceViewer extends Component<Props,State>
 
                         if(f == bdo+"contentLocation" || f == bdo+"contentLocationStatement" || f == bdo+"noteSource" || f == bdo+"noteText") {
                            noteData[f] = v
-                           //console.log("nD:",f,v,noteData)
+                           //loggergen.log("nD:",f,v,noteData)
                         }
                         else if(f.match(/([Ll]ineage)/) && elem[f][0] && elem[f][0].value && this.props.resources && this.props.resources[this.props.IRI] && this.props.resources[this.props.IRI][elem[f][0].value])
                         {
@@ -4474,7 +4474,7 @@ class ResourceViewer extends Component<Props,State>
                                  code = "en-US-u-nu-tibt"; 
                                  opt = { year:'numeric', day:'2-digit', month:'2-digit' } 
                                  let dtf = new Intl.DateTimeFormat(code, opt).formatToParts(new Date(v.value))
-                                 //console.log("dtf:",dtf)
+                                 //loggergen.log("dtf:",dtf)
                                  txt = "སྤྱི་ལོ་"+dtf[4].value + " ཟླ་" + dtf[0].value + " ཚེས་" +  dtf[2].value 
                                  //txt = 'ཟླ་' + (new Intl.DateTimeFormat(code, opt).formatToParts(new Date(v.value)).map(p => p.type === 'literal'?' ཚེས་':p.value).join(''))
                               }
@@ -4744,7 +4744,7 @@ class ResourceViewer extends Component<Props,State>
 
          if(!tiMir) tiMir = setInterval( async () => {
 
-            //console.log("tiMir")
+            //loggergen.log("tiMir")
 
             if(window.Mirador && $("#viewer").length && window.Mirador.Viewer.prototype.setupViewer.toString().match(/going to previous page/) && !window.mirador) {
 
@@ -4753,7 +4753,7 @@ class ResourceViewer extends Component<Props,State>
 
                $("#fond").addClass("hidden");
 
-               console.log("fdbk?",window.useFeedbucket)
+               loggergen.log("fdbk?",window.useFeedbucket)
 
                let data = [], manif, canvasID
                if(useManifest)
@@ -4765,7 +4765,7 @@ class ResourceViewer extends Component<Props,State>
                }
                else if(this.props.imageAsset) 
                {
-                  console.log("here:",this.props.collecManif)
+                  loggergen.log("here:",this.props.collecManif)
 
                   if(this.props.imageAsset.match(/[/]collection[/]/) && (!this.props.collecManif || this.props.monovolume === false))
                   {
@@ -4939,13 +4939,15 @@ class ResourceViewer extends Component<Props,State>
 
    getH2 = (title,_befo,_T,other,T_,rootC) => {
 
-      //loggergen.log("H2?",rootC)
+      //loggergen.log("H2?",title, rootC, other)
 
-      if(other) return <h2 title={title.value} lang={this.props.locale}><Link {...this.props.preview?{ target:"_blank" }:{}}   {... rootC?{onClick:rootC}:{onClick:() => setTimeout(()=>window.scrollTo(0,0),10)}}  to={"/show/"+shortUri(other)+this.getTabs(T_,other)}>{_T}<span>{_befo}{title.value}</span>{this.tooltip(title.lang)}</Link></h2>
-      else return <h2 title={title.value} lang={this.props.locale} class="on">{_T}<span>{_befo}{title.value}</span>{this.tooltip(title.lang)}</h2>
+      if(other) return <h2 title={title.value} lang={title.lang || this.props.locale}><Link {...this.props.preview?{ target:"_blank" }:{}}   {... rootC?{onClick:rootC}:{onClick:() => setTimeout(()=>window.scrollTo(0,0),10)}}  to={"/show/"+shortUri(other)+this.getTabs(T_,other)}>{_T}<span>{_befo}{title.value}</span>{this.tooltip(title.lang)}</Link></h2>
+      else return <h2 title={title.value} lang={title.lang || this.props.locale} class="on">{_T}<span>{_befo}{title.value}</span>{this.tooltip(title.lang)}</h2>
    }
 
    setTitle = (kZprop,_T,other,rootC,noSame:boolean=false) => {
+
+      //loggergen.log("setT:", rootC, other)
 
       let title,titlElem,otherLabels = [], T_ = _T ;
       _T = [<span class={"T "+_T.toLowerCase()}>
@@ -5004,7 +5006,7 @@ class ResourceViewer extends Component<Props,State>
 
    setManifest = (kZprop,iiifpres, rid = this.props.IRI, fullRid = fullUri(this.props.IRI)) => {
 
-      //console.log("kZprop:",kZprop,iiifpres,rid)
+      //loggergen.log("kZprop:",kZprop,iiifpres,rid)
 
       let iiifThumb = this.getResourceElem(tmp+"thumbnailIIIFService"), assetUrl
       if(!iiifThumb || !iiifThumb.length) iiifThumb = this.getResourceElem(tmp+"thumbnailIIIFSelected")
@@ -5082,7 +5084,7 @@ class ResourceViewer extends Component<Props,State>
 
          if(elem[0] && elem[0].value && !this.props.imageAsset && !this.props.manifestError) {
             
-            //console.log("iHv:",elem,nbVol,work)
+            //loggergen.log("iHv:",elem,nbVol,work)
 
             if(rid !== this.props.IRI)this.setState({...this.state, imageLoaded:false})
             let manif = iiifpres + "/vo:"+elem[0].value.replace(new RegExp(bdr),"bdr:")+"/manifest"
@@ -5628,7 +5630,7 @@ class ResourceViewer extends Component<Props,State>
 
 renderPopupCitation(IRI) {
 
-   //console.log("rPc:",IRI)
+   //loggergen.log("rPc:",IRI)
    
    let citation = "", citaD, popupCitation = [];
    if(this.state.collapse.citation && IRI && (citaD = this.props.citationData)) {
@@ -5641,13 +5643,13 @@ renderPopupCitation(IRI) {
       let citaSty = "mla"
       if(this.state.citationStyle) citaSty = this.state.citationStyle
 
-      //console.log("citaD:",citaD,citaSty,citaLg,supportedLocales[citaLg],citationConfig)
+      //loggergen.log("citaD:",citaD,citaSty,citaLg,supportedLocales[citaLg],citationConfig)
 
       if(citationConfig.templates.data[citaSty] && supportedLocales[citaLg] && citationConfig.locales.data[supportedLocales[citaLg]] && citaD.data && citaD.data[IRI]&& citaD.data[IRI][citaLg]) {
 
          let cite = new Cite(citaD.data[IRI][citaLg], { 'forceType': '@csl/object' })
 
-         //console.log("cite:",cite,citaD.data[IRI][citaLg])
+         //loggergen.log("cite:",cite,citaD.data[IRI][citaLg])
 
          if(cite) citation = cite.format('bibliography', {
             format: 'html',
@@ -5678,13 +5680,13 @@ renderPopupCitation(IRI) {
                { ...(IRI !== this.props.IRI?{popperOptions:{modifiers:{ offset: { enabled: true, offset: '350,0' }}}}:{}) }
             >
                <ClickAwayListener onClickAway={ev => { 
-                     //console.log("ev1:",ev.target,ev.currentTarget)
+                     //loggergen.log("ev1:",ev.target,ev.currentTarget)
                      if(!$(ev.target).closest("[role='tooltip'],#popDL,#menu-citationLang,#cite").length){
                         if(this.state.collapse.export){
-                           //console.log("ev1a:",ev.target,ev.currentTarget)
+                           //loggergen.log("ev1a:",ev.target,ev.currentTarget)
                            this.setState({ collapse:{ ...this.state.collapse, export:false }}) 
                         } else {
-                           //console.log("ev1b:",ev.target,ev.currentTarget)
+                           //loggergen.log("ev1b:",ev.target,ev.currentTarget)
                            this.setState({ citationRID:false, collapse:{ ...this.state.collapse, citation:false }})
                         } 
                      }  
@@ -5732,7 +5734,7 @@ renderPopupCitation(IRI) {
                               </a>
                         </CopyToClipboard>
                         <a id="export" onClick={ev => {
-                           //console.log("ev3:",ev.target,ev.currentTarget)
+                           //loggergen.log("ev3:",ev.target,ev.currentTarget)
                            this.setState({
                               collapse:{ ...this.state.collapse, export:!this.state.collapse.export },
                               anchorEl:{ ...this.state.anchorEl, export:({...ev}).currentTarget }
@@ -5759,9 +5761,9 @@ renderPopupCitation(IRI) {
                placement={"bottom-end"}
             >
                <ClickAwayListener onClickAway={ev => {
-                     //console.log("ev2:",ev.target,ev.currentTarget)
+                     //loggergen.log("ev2:",ev.target,ev.currentTarget)
                      if(!$(ev.target).closest("#popDL.export,#export").length) {
-                        //console.log("ev2a:",ev.target,ev.currentTarget)
+                        //loggergen.log("ev2a:",ev.target,ev.currentTarget)
                         this.setState({ collapse:{ ...this.state.collapse, export:false }}) 
                      }
                   }}> 
@@ -6152,7 +6154,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
                                  
                               }
 
-                              //console.log("pdfMenu:",e)
+                              //loggergen.log("pdfMenu:",e)
 
                               const nbVol = (e.volume !== undefined?e.volume:monoVol.replace(/[^0-9]+/,""))
                               if(this.props.useDLD)  return (<ListItem className="pdfMenu">
@@ -6408,13 +6410,13 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
 
             const that = this
             const handleImageError = (evt, src, num) => {
-               //console.log("Image URL '" + src + "' is invalid.");
+               //loggergen.log("Image URL '" + src + "' is invalid.");
                $.ajax({
                   type: 'GET',
                   url: src,
                   data: null,
                   error:function (xhr, ajaxOptions, thrownError){
-                     //console.log("code:",xhr.status)
+                     //loggergen.log("code:",xhr.status)
                      switch (xhr.status) {
                         case 401:
                         case 403:
@@ -6442,7 +6444,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
             let imgErr = that.state.errors[that.props.IRI]
             if(imgErr) imgErr = imgErr[e.seq]
 
-            //console.log("links:",imageLinks,e)
+            //loggergen.log("links:",imageLinks,e)
 
             const imgElem = !unpag && !imgErr && <h5><a title={I18n.t("misc."+(!showIm?"show":"hide"))+" "+I18n.t("available scans for this page")} onClick={(eve) => {
                let id = "image-"+this.props.IRI+"-"+e.seq
@@ -6459,7 +6461,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
                const MIN_CONTEXT_LENGTH = 40
                const selection = window.getSelection();
                
-               //console.log("closest:",ev.target.closest(".popper"),ev.currentTarget,ev.target)
+               //loggergen.log("closest:",ev.target.closest(".popper"),ev.currentTarget,ev.target)
 
                if(!this.props.config.useMonlam || !this.state.enableDicoSearch || ev.target.closest(".popper")) return
                
@@ -6472,7 +6474,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
                let parent = selection.anchorNode?.parentElement
                if(!parent?.getAttribute("lang")) parent = parent?.parentElement
 
-               //console.log("parent:",langElem,ev.currentTarget,parent,selection.toString(),selection,parent.children,selection.anchorNode)
+               //loggergen.log("parent:",langElem,ev.currentTarget,parent,selection.toString(),selection,parent.children,selection.anchorNode)
                
                const getAbsOffset = (node, nodeOffset) => {
 
@@ -6488,13 +6490,13 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
                   if(nodes?.length) for(let i in nodes) {
                      if(nodes[i] == node.parentElement) break ;
                      start += nodes[i].textContent?.length || 0
-                     //console.log("i:",i,start)
+                     //loggergen.log("i:",i,start)
                   }
                   
                   // case when there are <br/>, must count inner nodes as well 
                   let previousElement = node?.previousSibling
                   while (previousElement) {
-                     //console.log("prev:",previousElement)
+                     //loggergen.log("prev:",previousElement)
                      if (previousElement.nodeType === Node.TEXT_NODE) {
                         start += previousElement.nodeValue.length;
                      } 
@@ -6546,7 +6548,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
                if(end > start + MAX_SELECTION_LENGTH) { 
                   try {
                      let sameElem = range.startContainer === range.endContainer || range.startContainer.parentElement === range.endContainer.parentElement
-                     console.log("range:", sameElem, range, start, end, range.startOffset + MAX_SELECTION_LENGTH)
+                     loggergen.log("range:", sameElem, range, start, end, range.startOffset + MAX_SELECTION_LENGTH)
                      if(!invert) {
                         end = start + MAX_SELECTION_LENGTH
                         
@@ -6561,7 +6563,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
                            mutRange.setEnd(range.endContainer, range.endOffset)                      
                            mutRange.moveEnd("character", MAX_SELECTION_LENGTH - range.toString().length)
                            range.setEnd(mutRange.endContainer, mutRange.endOffset)
-                           //console.log(mutRange, mutRange.toString(), mutRange.toString().length, range, range.toString(), range.toString().length)     
+                           //loggergen.log(mutRange, mutRange.toString(), mutRange.toString().length, range, range.toString(), range.toString().length)     
                         //}
                      } else {
                         start = end - MAX_SELECTION_LENGTH
@@ -6616,7 +6618,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
                   return { hilight:coords, ref, popupCoords:Array.from(_range.getClientRects()) }
                }
            
-               //console.log("coords:",coords,ev.currentTarget,start,end,startOff,endOff,pageVal.substring(startOff, endOff))
+               //loggergen.log("coords:",coords,ev.currentTarget,start,end,startOff,endOff,pageVal.substring(startOff, endOff))
                
                if (selection.rangeCount > 0) {
                   range = range.cloneRange();
@@ -6711,7 +6713,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
                      { (unpag || imgErr ) && <h5><a class="unpag" title={I18n.t("resource.unpag")}>{I18n.t("resource.pageN",{num:e.seq})}</a></h5>}
                      &nbsp;
                      { Object.keys(imageLinks).sort().map(id => {
-                        //console.log("id:",id,e)
+                        //loggergen.log("id:",id,e)
                         let iIp = this.props.assocResources[e.id]
                         const withHoverM = <>{I18n.t("misc.from")} {this.uriformat(null,{noid:true,value:id.replace(/bdr:/,bdr).replace(/[/]V([^_]+)_I.+$/,"/W$1")})} </>
                         if( /* !this.state.collapse["imageVolume-"+id] &&*/ imageLinks[id][e.seq]) 
@@ -6719,7 +6721,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
                                  <h5 className="withHoverM">
                                     {withHoverM}
                                     <span onClick={() => { 
-                                       //console.log("elem:",e,iIp)
+                                       //loggergen.log("elem:",e,iIp)
                                        if(!iIp) this.props.onGetContext(this.props.IRI,e.start,e.end, 1650)	
                                     }}>
                                        {this.hoverMenu(" "+e.id,{ value:"etextMoreInfo", elem: e },[ imgElem, <>&nbsp;</>, withHoverM ])}
@@ -6771,7 +6773,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
                         //label = f
                         let size = this.state.etextSize
 
-                        //console.log("page:",e.seq,pageVal,e,current)
+                        //loggergen.log("page:",e.seq,pageVal,e,current)
                         
                         if(lang === "bo") { size += 0.4 ; }
                         return ([<span lang={lang} {...this.state.etextSize?{style:{ fontSize:size+"em", lineHeight:(size * 1.0)+"em" }}:{}}>{label}</span>])})}
@@ -6972,7 +6974,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
                         for(let p of parts) {
                            let le = assoR[p.value]
                            if(le) {
-                              //console.log("le?",le)
+                              //loggergen.log("le?",le)
                               let ty = le.filter(t => t.fromKey == rdf+"type")
                               if(ty.length) ty = ty[0].value
                               else ty = null
@@ -6982,7 +6984,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
                               extData.push({...p, ty, da})                        
                            }
                         }
-                        //console.log("le:",extData) 
+                        //loggergen.log("le:",extData) 
                         return _.orderBy(extData, ["ty","da"], ["asc","asc"])
                      }
                      return parts
@@ -6996,7 +6998,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
                   if(this.state.collapse["commit"]) data.push(logs)
                   else if(logs /*&& logs.length*/ ) data.push(<div></div>)
 
-                  //console.log("logs:",logs, data)
+                  //loggergen.log("logs:",logs, data)
                   
                   if(logs /*&& logs.length*/) {
                      data.unshift(
@@ -7011,7 +7013,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
          }
       }
 
-      //console.log("data:",data)      
+      //loggergen.log("data:",data)      
 
       if(data && data.length) return <div className={div!=="header"?"data "+div:div} {...hash?{id:hash}:{}}>
          {data}
@@ -7169,7 +7171,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
       let handleViewer = (ev) => {
          if(ev.type === 'click') {
             
-            console.log("hv:",this.props.useDLD)
+            loggergen.log("hv:",this.props.useDLD)
 
             if(this.props.useDLD) { 
 
@@ -7234,7 +7236,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
          if(loca?.length) loca = this.getResourceBNode(loca[0].value)
          if(root?.length && loca && loca[bdo+"contentLocationVolume"] && !loca[bdo+"contentLocationPage"]) {
             let ptype = this.getResourceElem(bdo+"partType")
-            console.log("root:",root,loca,ptype)
+            loggergen.log("root:",root,loca,ptype)
             if(ptype?.length && ![bdr+"PartTypeVolume",bdr+"PartTypeSection"].includes(ptype[0].value)) {
                rootWarn =  <Tooltip placement="top-end" title={
                   <div style={{margin:"10px"}}><Trans i18nKey="location.tooltip" components={{ newL: <br /> }} /></div>
@@ -7334,7 +7336,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
 
          let fairTxt, hasIA, elem = this.getResourceElem(bdo+"digitalLendingPossible");
          if(this.props.config && !this.props.config.chineseMirror) {
-            //console.log("elemIA:",elem)
+            //loggergen.log("elemIA:",elem)
             if(!elem || elem.length && elem[0].value == "true" ) { 
                hasIA = true
             }
@@ -7376,7 +7378,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
 
    renderQuality = () => {
       let elem = this.getResourceElem(bdo+"qualityGrade");
-      //console.log("QG:",elem)
+      //loggergen.log("QG:",elem)
       if(elem && elem.length) elem = elem[0].value ;
       if(elem === "0") {
          return <div class="data access"><h3><span style={{textTransform:"none"}}>{I18n.t("access.quality0")}</span></h3></div>
@@ -7392,7 +7394,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
       if(elem === bdr+"ContentMethod_OCR") {
       */
 
-      //console.log("OCR:",elem)
+      //loggergen.log("OCR:",elem)
 
       if(elem) {
          return <div class="data access"><h3><span style={{textTransform:"none"}}>{I18n.t("access.OCR")}</span></h3></div>
@@ -7469,7 +7471,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
          if(k.startsWith("monlam-def-")) delete collapse[k]
       }
       this.setState({ collapse })
-      this.props.onCallMonlamAPI(data.api, {value: data.range.toString(), lang: this.props.etextLang.filter(l => l.startsWith("bo"))[0]});
+      this.props.onCallMonlamAPI(data.api, {value: data.range.toString(), lang: (this.props.etextLang || ["bo"]).filter(l => l.startsWith("bo"))[0]});
       
    }
 
@@ -7562,7 +7564,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
       let toggle = (e,r,i,x = "",force) => {         
          let tag = "etextrefs-"+r+"-"+i+(x?"-"+x:"")
          let val = this.state.collapse[tag];
-         //console.log("tog:",e,force,val,tag,JSON.stringify(this.state.collapse),this.state.collapse[tag]);
+         //loggergen.log("tog:",e,force,val,tag,JSON.stringify(this.state.collapse),this.state.collapse[tag]);
          if((r === i || force) && val === undefined) val = true ;
          this.setState( { collapse:{...this.state.collapse, [tag]:!val } })         
       }
@@ -7582,6 +7584,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
 
 
       const parts = {
+         "bdo:EtextVolume":"vol",
          "bdo:VolumeEtextAsset":"vol",
          "bdo:EtextRef":"txt",
          "?":"unk",
@@ -7594,7 +7597,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
          if(elem) node = elem.filter(e => e["@id"] === top) 
          let etextrefs = []
 
-         //console.log("node:",this.props.eTextRefs,node,top)
+         //loggergen.log("node:",this.props.eTextRefs,node,top)
 
          if(node.length && (node[0].instanceHasVolume || node[0].volumeHasEtext))
          {
@@ -7602,10 +7605,10 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
             if(!children) children = node[0].volumeHasEtext 
             if(children && !Array.isArray(children)) children = [ children ]
             
-            //console.log("chil:",children);
+            //loggergen.log("chil:",children);
 
             for(let e of children) {
-               //console.log("e:",e);
+               //loggergen.log("e:",e);
 
                let w_idx = elem.filter(f => e["@id"] && f["@id"] === e["@id"] || f["@id"] === e) 
                if(w_idx.length) {
@@ -7652,35 +7655,40 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
                      g.link = g["@id"]
                      if(g.volumeHasEtext) {
                         if(!Array.isArray(g.volumeHasEtext)) {
-                           let txt = elem.filter(e => e["@id"] === g.volumeHasEtext)
-                           if(txt.length) g.link = txt[0].eTextResource + "?backToEtext="+this.props.IRI + "#open-viewer"
+                           let txt = elem.filter(e => e["@id"] === g.volumeHasEtext)                           
+                           const ETres = txt[0]?.eTextResource || txt[0]?.etextResource["@id"]
+                           if(ETres) {
 
+                              if(txt.length) g.link = ETres + "?backToEtext="+this.props.IRI + "#open-viewer"
+                              
+                              //nav.push(<Link to={"/show/"+txt[0].eTextResource} class="ulink">{I18n.t("resource.openR")}</Link>)
+                              //nav.push(<span>|</span>)
+                              nav.push(<Link  {...!access?{disabled:true}:{}} to={"/show/"+ETres+"?backToEtext="+this.props.IRI+"#open-viewer"} class="ulink">{I18n.t("result.openE")}</Link>)
+                              nav.push(<span>|</span>)
+                              //nav.push(<a href={fullUri(txt[0].eTextResource).replace(/^http:/,"https:")+".txt"} class="ulink"  download type="text" target="_blank">{I18n.t("mirador.downloadE")}</a>)
+                              nav.push(etextDL(ETres))
 
-                           //nav.push(<Link to={"/show/"+txt[0].eTextResource} class="ulink">{I18n.t("resource.openR")}</Link>)
-                           //nav.push(<span>|</span>)
-                           nav.push(<Link  {...!access?{disabled:true}:{}} to={"/show/"+txt[0].eTextResource+"?backToEtext="+this.props.IRI+"#open-viewer"} class="ulink">{I18n.t("result.openE")}</Link>)
-                           nav.push(<span>|</span>)
-                           //nav.push(<a href={fullUri(txt[0].eTextResource).replace(/^http:/,"https:")+".txt"} class="ulink"  download type="text" target="_blank">{I18n.t("mirador.downloadE")}</a>)
-                           nav.push(etextDL(txt[0].eTextResource))
-
+                           }
                         }
                         else {
                            g.hasPart = true
                            
                         }
                      }
-                  } else if(g.seqNum && g.eTextResource) {
+                  } else if(g.seqNum && (g.eTextResource || g.etextResource && g.etextResource["@id"])) {
                      g.index = g.seqNum
-                     g.link = g.eTextResource + "?backToEtext="+this.props.IRI + "#open-viewer"
-
+                     const ETres = g.eTextResource || g.etextResource["@id"]
+                     g.link = ETres + "?backToEtext="+this.props.IRI + "#open-viewer"
 
                      //nav.push(<Link to={"/show/"+g.eTextResource} class="ulink">{I18n.t("resource.openR")}</Link>)
                      //nav.push(<span>|</span>)
-                     nav.push(<Link {...!access?{disabled:true}:{}} to={"/show/"+g.eTextResource+"?backToEtext="+this.props.IRI+"#open-viewer"} class="ulink">{I18n.t("result.openE")}</Link>)
+                     nav.push(<Link {...!access?{disabled:true}:{}} to={"/show/"+ETres+"?backToEtext="+this.props.IRI+"#open-viewer"} class="ulink">{I18n.t("result.openE")}</Link>)
                      nav.push(<span>|</span>)
                      //nav.push(<a href={fullUri(g.eTextResource).replace(/^http:/,"https:")+".txt"} class="ulink" download type="text" target="_blank">{I18n.t("mirador.downloadE")}</a>)                     
-                     nav.push(etextDL(g.eTextResource))
+                     nav.push(etextDL(ETres))
 
+                  } else {
+                     loggergen.log("no link:", g)
                   }
 
 
@@ -7710,7 +7718,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
             if(pType && pType["@id"]) pType = pType["@id"]
             else pType = "bdo:"+pType
             let tLabel 
-            //console.log("e:",e,tag,pType,parts);
+            //loggergen.log("e:",e,tag,pType,parts);
             if(pType) {
                if(Array.isArray(pType)) pType = pType[0]
                tLabel = getOntoLabel(this.props.dictionary,this.props.locale,fullUri(pType))
@@ -7720,20 +7728,20 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
             
             // #821 open etext node in outline after closing reader
             let ut = null, ref = {}
-            //console.log("tag:",tag,e,get)
+            //loggergen.log("tag:",tag,e,get)
             if(get.fromText) { 
                if(e.volumeHasEtext) {
                   let t = e.volumeHasEtext
                   if(!Array.isArray(t)) t = [t]
                   ut = elem.filter(f => t.includes(f["@id"]))
                   if(ut.length) { 
-                     ut = ut.filter(u => u.eTextResource == get.fromText) 
-                     console.log("ut:",ut)
+                     ut = ut.filter(u => u.eTextResource == get.fromText || u.etextResource && u.etextResource["@id"] == get.fromText ) 
+                     //loggergen.log("ut:",ut)
                      if(ut.length) ut = true
                      else ut = false
                   }
                   else ut = null
-               } else if(e.eTextResource == get.fromText) {
+               } else if(e.eTextResource == get.fromText || e.etextResource && e.etextResource["@id"] == get.fromText ) {
                   ut = true
                }
 
@@ -7913,7 +7921,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
       if(page) { 
          if(page > 1) pid = "page/n"+(page - 1)+"/"
       }
-      //console.log("loca:",loca,vol,page,prefix)
+      //loggergen.log("loca:",loca,vol,page,prefix)
       return "https://archive.org/details/bdrc-"+id+"/"+vid+pid      
    }
 
@@ -7949,7 +7957,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
 
                if(i === root) {
                   let hasPartB = this.getResourceElem(tmp+"hasNonVolumeParts")
-                  //console.log("hasPartB:",hasPartB,i)
+                  //loggergen.log("hasPartB:",hasPartB,i)
                   if(hasPartB?.length && hasPartB[0].value == "true") this.props.onGetOutline(i, { "tmp:hasNonVolumeParts": true})
                   else this.props.onGetOutline(i,node,volFromUri);
                } 
@@ -8023,7 +8031,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
 
             if(!osearch && !get.osearch && !this.props.outlines[opart]) {             
                let parent_nodes = nodes.filter(n => n["@id"] === opart) //n => n.hasPart && (n.hasPart === opart || n.hasPart.includes(opart)))
-               //console.log("pNode:",nodes,parent_nodes)
+               //loggergen.log("pNode:",nodes,parent_nodes)
                if(opart_node.length && opart_node[0] !== true && opart_node[0]["tmp:hasNonVolumeParts"] && parent_nodes.length && parent_nodes[0] !== true) {
                   
                   this.props.onGetOutline(parent_nodes[0]["@id"], parent_nodes[0]);
@@ -8047,7 +8055,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
                let hasContentLoc = nodes.filter(o => o["@id"] === opart_node[0].contentLocation)
                if(hasContentLoc.length) {
                   opartInVol = hasContentLoc.map(v => v.contentLocationVolume)
-                  //console.log("opiv:",opartInVol,hasContentLoc)
+                  //loggergen.log("opiv:",opartInVol,hasContentLoc)
                }
             } else if(osearch) {
                matches = nodes.filter(g => g["tmp:titleMatch"] || g["tmp:labelMatch"]|| g["tmp:colophonMatch"])
@@ -8056,7 +8064,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
                   opartInVol = hasContentLoc.map(v => v.contentLocationVolume)
                }
                osearchIds = nodes.filter(o => matches.some(m => m["@id"] === o["@id"])).map(o => o["@id"])
-               //console.log("opiv:",opartInVol,matches,hasContentLoc,osearchIds)
+               //loggergen.log("opiv:",opartInVol,matches,hasContentLoc,osearchIds)
             }  
                
                /*
@@ -8077,7 +8085,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
                   let head = parents.pop()
                   previously[head["@id"]] = true
                   
-                  //console.log("parents:",head,parents) 
+                  //loggergen.log("parents:",head,parents) 
 
                   if(collapse["outline-"+root+"-"+head["@id"]] === undefined) { 
                      update = true
@@ -8099,7 +8107,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
                if(nodes && nodes["@graph"]) nodes = nodes["@graph"]
                if(root !== opart && nodes && nodes.length) {
                   let head = opart, done_opart = false, parent_head = null, child_node
-                  //console.log("opart??",opart,head)
+                  //loggergen.log("opart??",opart,head)
                   const already = []
                   do {
                      let head_node = nodes.filter(n => n.hasPart && (n.hasPart === head || n.hasPart.includes(head)))
@@ -8125,7 +8133,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
                         }
                         if(collapse["outline-"+root+"-"+head] === undefined) { //} && (opart !== root || head !== root)) {
                            collapse["outline-"+root+"-"+head] = true ;                           
-                           //console.log("parent_head:",root,head,already) //,JSON.stringify(head_node,null,3),done_opart)
+                           //loggergen.log("parent_head:",root,head,already) //,JSON.stringify(head_node,null,3),done_opart)
                            if((!done_opart 
                                  || head_node["tmp:hasNonVolumeParts"] // #729 need to open virtual volume when page node is a sub sub node of it                                    
                               ) && (head_node.partType === "bdr:PartTypeSection" || head === root)) {
@@ -8134,12 +8142,12 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
                               else parent_head = nodes.filter(n => n.hasPart && (n.hasPart === head || n.hasPart.includes(head)))
                               if(parent_head.length) {
                                  let opart_node = nodes.filter(n => n["@id"] === opart)
-                                 //console.log("opart_n:",opart_node,nodes)
+                                 //loggergen.log("opart_n:",opart_node,nodes)
                                  if(opart_node.length) {
                                     let vol = nodes.filter(n => n["@id"] === opart_node[0].contentLocation)
                                     if(vol.length) { 
                                        vol = vol[0].contentLocationVolume
-                                       //console.log("ready for vol."+vol+" in "+head,head_node)
+                                       //loggergen.log("ready for vol."+vol+" in "+head,head_node)
                                        if(!already.includes(head) && vol != undefined) { // fix side-effect of #729 (prevent opening same text from multiple volumes like bdr:MW3CN27014_K0022-40)
                                           update = true                              
                                           this.props.onGetOutline("tmp:uri", { partType: "bdr:PartTypeVolume", "tmp:hasNonVolumeParts": true, volumeNumber: vol }, head);
@@ -8180,7 +8188,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
 
             } else {
                let parent_nodes = nodes.filter(n => n.hasPart && (n.hasPart === opart || n.hasPart.includes(opart)))
-               //console.log("parent:",parent_nodes,opart_node)
+               //loggergen.log("parent:",parent_nodes,opart_node)
                if(parent_nodes.length) { 
                   let update = false
                   for(let n of parent_nodes) {
@@ -8189,7 +8197,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
                            //break ;
                         } else if(collapse["outline-"+root+"-"+opart+";"+n["@id"]+"-details"] === undefined) {
                            collapse["outline-"+root+"-"+opart+";"+n["@id"]+"-details"] = true
-                           //console.log("hello:","outline-"+root+"-"+opart+";"+n["@id"]+"-details")
+                           //loggergen.log("hello:","outline-"+root+"-"+opart+";"+n["@id"]+"-details")
                            update = true
                            //break ;
                         }
@@ -8198,7 +8206,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
                         update = true
                      } else { // #729 need to open node if page node is a sub node of it
                         const p = nodes.filter(m => m.hasPart && (m.hasPart === n["@id"] || m.hasPart.includes(n["@id"])))
-                        //console.log("n.p:",n["@id"],n.parent, Object.keys(n),p)
+                        //loggergen.log("n.p:",n["@id"],n.parent, Object.keys(n),p)
                         for(const q of p) {
                            if(collapse["outline-"+root+"-"+n["@id"]+";"+q["@id"]] === undefined) {
                               collapse["outline-"+root+"-"+n["@id"]+";"+q["@id"]] = true
@@ -8214,7 +8222,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
                               if(vol) {
                                  volElem = nodes.filter(v => v.volumeNumber === vol)                                                            
                                  if(volElem.length && collapse["outline-"+root+"-"+volElem[0]["@id"]] === undefined) {                                    
-                                    //console.log("no location:", parent, cLoc, vol, volElem)
+                                    //loggergen.log("no location:", parent, cLoc, vol, volElem)
                                     collapse["outline-"+root+"-"+volElem[0]["@id"]] = true
                                     update = true                              
                                     this.props.onGetOutline(volElem[0]["@id"], volElem[0], p[0]["@id"]);                              
@@ -8261,7 +8269,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
                      else if(osearchElem["@graph"] && !osearch_map) {
                         osearch_map = {}
                         osearchElem["@graph"].map( e => osearch_map[e["@id"]] = [e] )
-                        console.log("init:osm:",osearch_map,osearchElem)
+                        loggergen.log("init:osm:",osearch_map,osearchElem)
                      }
                      */
                   }
@@ -8331,9 +8339,9 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
                      const parentIsVol = nodes.filter(m => m.hasPart && (m.hasPart === opart || m.hasPart.includes(opart))).map(m => m["@id"]).some(o => o && o.startsWith("bdr:I"))
                      let isParent = sorted.filter(n => n.id === opart || !osearch && parentIsVol && opartInVol.includes(n.partIndex) || osearchIds.includes(n.id) ), start = 0, end = start + ShowNbChildren
                      if(isParent.length) {                                             
-                        //console.log("opIv:",opartInVol,opart_node,parentIsVol)
+                        //loggergen.log("opIv:",opartInVol,opart_node,parentIsVol)
                         let mustBe = sorted.map( (n,i) => {
-                           //console.log("isP?",n,i)
+                           //loggergen.log("isP?",n,i)
                            if(isParent.some(m => m.id === n.id)) {
                               return i
                            }
@@ -8343,7 +8351,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
                            start = Math.max(0, mustBe[0] - Math.floor(ShowNbChildren / 2))
                            end = Math.max(start + ShowNbChildren + 1, mustBe[mustBe.length - 1] + Math.floor(ShowNbChildren / 2))
                         }                        
-                        //console.log("mB:",isParent,mustBe,start,end)
+                        //loggergen.log("mB:",isParent,mustBe,start,end)
                      }
 
                      let min = 0 //sorted.findIndex(s => s.partIndex !== 999999)
@@ -8374,7 +8382,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
 
                      subparts = sorted.slice(start,end).map(n => n.id)
 
-                     //console.log("next/prev:",start,end,min,max,subparts,sorted,isParent)
+                     //loggergen.log("next/prev:",start,end,min,max,subparts,sorted,isParent)
                      
 
                      for(let e of subparts) {
@@ -8424,19 +8432,19 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
                               showDetails = showDetails || (osearch && g.hasMatch && this.state.collapse[tag+"-details"] !== false) 
                               if(showDetails && !g.hidden) g.hidden = []
 
-                              //console.log("showD:",g["@id"], g.hasMatch, g)
+                              //loggergen.log("showD:",g["@id"], g.hasMatch, g)
 
 
                               subtime(1)
 
                               if(this.props.useDLD) { 
                                  g.checkDLD = (ev) => {
-                                    //console.log("CDLD:",this.props.useDLD,g)
+                                    //loggergen.log("CDLD:",this.props.useDLD,g)
 
                                     let loca = mapElem(g.contentLocation), go
                                     if(loca?.length) loca = loca[0]
                                     if(loca && loca.contentLocationInstance) {
-                                       //console.log("root:",loca)
+                                       //loggergen.log("root:",loca)
 
                                        let nbVol =  this.getResourceElem(bdo+"numberOfVolumes")
                                        if(nbVol) nbVol = nbVol.map(v => v.value)
@@ -8513,14 +8521,14 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
                                  if(loca?.length) loca = loca[0]
                                  if(loca && loca.contentLocationVolume && !loca.contentLocationPage) {
                                     let ptype = g.partType
-                                    //console.log("root:",loca,ptype,g)
+                                    //loggergen.log("root:",loca,ptype,g)
                                     if(ptype && !["bdr:PartTypeVolume","bdr:PartTypeSection"].includes(ptype)) {
                                        nav.push(<div class="outline-warn"><Tooltip placement="top-end" title={
                                           <div style={{margin:"10px"}}><Trans i18nKey="location.tooltip" components={{ newL: <br /> }} /></div>
                                        }><WarnIcon/></Tooltip></div>)
                                     } 
                                  } else if(loca && Array.isArray(loca) && !loca.length){
-                                    //console.log("warn:",loca,g)                                    
+                                    //loggergen.log("warn:",loca,g)                                    
                                     nav.push(<div class="outline-warn"><Tooltip placement="top-end" title={
                                        <div style={{margin:"10px"}}><Trans i18nKey="location.tooltip" components={{ newL: <br /> }} /></div>
                                     }><WarnIcon/></Tooltip></div>)                                 
@@ -8569,7 +8577,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
                                        //let id = elem.filter(f => f["@id"] === node["@id"]) 
                                        let id = mapElem(node["@id"])
 
-                                       //console.log("idBy:",g["bf:identifiedBy"],g,id,elem,node)
+                                       //loggergen.log("idBy:",g["bf:identifiedBy"],g,id,elem,node)
                                        // TODO add prefix letter (either in value or from ontology property)
                                        if(id.length) g.id.push(<span class="id" title={this.fullname(id[0].type,false,false,true,false)}>{id[0]["rdf:value"]}</span>)
                                     }
@@ -8634,7 +8642,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
                                           //(title.length && title[0].value && title[0].value == .includes("↦"))) 
                                           title.length && title[0].value && g["tmp:titleMatch"] && useT.length) {
 
-                                          //console.log("useT:",useT,title,g["tmp:titleMatch"], titleT)
+                                          //loggergen.log("useT:",useT,title,g["tmp:titleMatch"], titleT)
 
                                           titleTxt.push(getLangLabel(this,"",title))
 
@@ -8674,7 +8682,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
 
                               if(inst.length && g.details) {
                                  if(titleTxt.length && wLab.length) {
-                                    //console.log("tTxt:",titleTxt,wLab)
+                                    //loggergen.log("tTxt:",titleTxt,wLab)
                                     if(!wLab.some(l => titleTxt.some(t => t.value === l.value))){
                                        g.details.push(inst)   
                                     }
@@ -8705,7 +8713,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
                                  for(const n of g.note) {
                                     if(!g.details) g.details = []
                                     let note = mapElem(g.note)
-                                    //console.log("note:",note)
+                                    //loggergen.log("note:",note)
                                     if(note?.length && note[0].noteText) notes.push(note[0].noteText["@value"]?note[0].noteText:{"@value":note[0].noteText, "@language":"en" })
                                  }
                                  if(notes.length) g.details.push(<div class="sub"><h4 class="first type">{this.proplink(bdo+"note",undefined,notes.length,true)}{I18n.t("punc.colon")} </h4><div>{notes.map(n => this.format("h4","","",false, "sub",[{ value:n["@value"], lang:n["@language"], type:"literal"}]))}</div></div>)
@@ -8726,7 +8734,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
 
 
                               if(showDetails && g["tmp:author"]) {
-                                 //console.log("g:",g["tmp:author"],g["@id"]);
+                                 //loggergen.log("g:",g["tmp:author"],g["@id"]);
                                  if(!Array.isArray(g["tmp:author"])) g["tmp:author"] = [ g["tmp:author"] ]
                                  g.hidden.push(<div class="sub"><h4 class="first type">{this.proplink(tmp+"author", undefined, g["tmp:author"].length)}{I18n.t("punc.colon")} </h4>{this.format("h4","instacO","",false, "sub", 
                                     g["tmp:author"].map(aut => ({type:"uri",value:fullUri(aut["@id"])}))
@@ -8741,7 +8749,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
                                  if(!Array.isArray(node)) node = [node]
                                  if(p === "colophon" && osearch && g["tmp:colophonMatch"]) {
                                     node = node.filter(n => !g["tmp:colophonMatch"].some(t => n["@value"] && t["@value"] && t["@value"].replace(/[↦↤]/g,"") === n["@value"].replace(/[↦↤]/g,"")))
-                                    //console.log("coloph:",node,g["tmp:colophonMatch"])
+                                    //loggergen.log("coloph:",node,g["tmp:colophonMatch"])
                                  }                                 
                                  if(!p.includes(":")) p = bdo+p
                                  if(node.length) { 
@@ -8836,7 +8844,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
 
                         const citeRef = React.createRef(), printRef = React.createRef()
 
-                        //console.log("reload?",e,e.hasPart,this.props.outlines[e['@id']])
+                        //loggergen.log("reload?",e,e.hasPart,this.props.outlines[e['@id']])
 
                         let isRoot = this.state.outlinePart === e['@id'] && !already || (!this.state.outlinePart && this.props.IRI===e['@id'] && !already)
                         if(isRoot) already = true
@@ -8883,7 +8891,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
                                           if(!s.initCitation) s.initCitation = []
                                           s.initCitation.push(e["@id"])
                                        } else if(this.props.citationData && this.props.citationData.data && this.props.citationData.data[e["@id"]]){
-                                          //console.log("added:",this.props.citationData.data[e["@id"]])
+                                          //loggergen.log("added:",this.props.citationData.data[e["@id"]])
                                        }
                                     } 
                                     this.setState(s)
@@ -8922,7 +8930,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
                                        </span>
                                  </span>] }</div>
                            )
-                        //console.log("will loop:",e["@id"], top, this.props.outlines[e["@id"]],tag,this.state.collapse[tag])
+                        //loggergen.log("will loop:",e["@id"], top, this.props.outlines[e["@id"]],tag,this.state.collapse[tag])
                         if((osearch && this.state.collapse[tag] !== false) || (this.props.outlines[e["@id"]] && this.props.outlines[e["@id"]] !== true && this.state.collapse[tag]) ) 
                            ret.push(<div style={{paddingLeft:"33px"}}>{makeNodes(e["@id"],top)}</div>)                        
                         return ( ret )
@@ -9033,7 +9041,9 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
          }
          let _T = getEntiType(shortUri(baseW[0].value))
          let { title,titlElem,otherLabels } = this.setTitle(baseData,_T,baseW[0].value,rootC,titleRaw) ;
-         //console.log("tEl:",titlElem)
+         
+         //loggergen.log("tEl:",titlElem)
+
          if(titleRaw && titlElem) titleRaw.label = titlElem
          return title
       }
@@ -9178,7 +9188,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
          }
       }
       
-      //console.log("_T!!",_T)
+      //loggergen.log("_T!!",_T)
       if(this.props.resources && this.props.resources[this.props.IRI] && _T !== "Etext") this.setManifest(kZprop,iiifpres)    
 
 
@@ -9280,7 +9290,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
          }).filter(k => k)
          createdBy = _.orderBy(createdBy, ["n","m"], ["desc","asc"])
 
-         //console.log("rel:",related,createdBy)
+         //loggergen.log("rel:",related,createdBy)
 
          related = related.map( ({s,k,n,m,label},i) => {            
             this._refs["rel-"+i] = React.createRef();
@@ -9408,7 +9418,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
                for(let k in keys) if((m = Number(this.props.assocTypes[sRid+"@"].metadata[keys[k]])) > max) {
                   max = m
                   i = k
-                  //console.log("max=",max,i)
+                  //loggergen.log("max=",max,i)
                }
                relW += "&t=" + keys[i].replace(/.*\/([^/]+)$/,"$1")
             }
@@ -9449,7 +9459,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
          let backTo = this.state.fromSearch, oldUrl = backTo
          if(oldUrl.startsWith("/show/")) {
             let get = qs.parse(oldUrl.replace(/^[^?]+[?]/,""))
-            console.log("old get:",get)
+            loggergen.log("old get:",get)
             if(get.s) { 
                oldUrl = get.s 
                backTo = oldUrl
@@ -9486,7 +9496,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
                searchTerm = I18n.t("topbar.instances")+" "+searchUrl.replace(/.*i=([^&]+).*/,"$1")
             }
          } else {
-            console.log("backto:",oldUrl)
+            loggergen.log("backto:",oldUrl)
          }
       }
 
@@ -9526,7 +9536,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
                else kw = this.props.monlamKeyword?.value                  
                kw = kw.replace(/(^[ ་།/]+)|([ ་།/]+$)/g, "")
 
-               //console.log("kw:",kw,word?.value)
+               //loggergen.log("kw:",kw,word?.value)
 
                let hasCollapsible = false
                return <div class="def">
@@ -9542,7 +9552,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
                      let val = addMonlamStyle(d)
                      val = getLangLabel(this,bdo+"eTextHasPage",[{value: val, lang: "bo"}]) 
                      if(val?.value) {
-                        //console.log("?", val?.value,val?.value?.replace(/((>) *\] *)|( *\[ *(<))/g,"$2 $4"))
+                        //loggergen.log("?", val?.value,val?.value?.replace(/((>) *\] *)|( *\[ *(<))/g,"$2 $4"))
                         //return <span>{HTMLparse(val?.value?.replace(/((>) *\] *)|( *\[ *(<))/g,"$2 $4"))}</span>
                         let res = ""+val?.value?.replace(/((>) *\] *)|( *\[ *(<))/g,"$2 $4")
                         if(hasCollapsible) res += "</div></div>"
@@ -9581,7 +9591,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
             monlamResults = <div></div>
          }
 
-         console.log("monlamR:",monlamResults,this.props.monlamResults)
+         loggergen.log("monlamR:",monlamResults,this.props.monlamResults)
 
          // TODO fix loader not hiding when closing then opening again
 
@@ -9656,7 +9666,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
             let sRid = shortUri(rid)
             for(let p of extProps) { 
                let ret = this.getResourceElem(p, sRid, this.props.resources, rid) 
-               //console.log("rid:",sRid,p,ret)
+               //loggergen.log("rid:",sRid,p,ret)
                if(ret && ret.length) return true
             }
             return false
@@ -9671,7 +9681,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
             }
             else if(this.props.config && this.state.outlinePart) {
                let hasPartB = this.getResourceElem(tmp+"hasNonVolumeParts")
-               console.log("hasPartB:",hasPartB,sRid)
+               loggergen.log("hasPartB:",hasPartB,sRid)
                if(hasPartB?.length && hasPartB[0].value == "true") this.props.onGetOutline(sRid, { "tmp:hasNonVolumeParts": true})
                else this.props.onGetOutline(sRid)
             }
@@ -9728,7 +9738,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
             let rel = $(".resource .data.related > div:first-child > div:last-child") 
             let div = rel.find(".rel-or-crea > div:first-child")
             let nb = Math.floor(rel.width()/(div.width()+Number((""+div.css("margin-right")).replace(/[^0-9]+/g,"")))) // 4 = default in desktop
-            //console.log("rel:",nb,rel,div,next,ev)
+            //loggergen.log("rel:",nb,rel,div,next,ev)
             let idx = !this.state.relatedTab&&related.length?"rel":"crea"
             let max = !this.state.relatedTab&&related.length?related.length:createdBy.length
             let i = (this.state["i"+idx]!==undefined?this.state["i"+idx]:0)
@@ -9737,7 +9747,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
             if(i > max) i = max
             else if(i < 0) i = 0
             if(this._refs[ idx + "-" + i ]?.current) {
-               //console.log("i:",next,i,max,idx,this._refs[idx + "-" + i].current,this._refs)
+               //loggergen.log("i:",next,i,max,idx,this._refs[idx + "-" + i].current,this._refs)
                this._refs[ idx + "-" + i ].current.scrollIntoView({behavior:"smooth",block:"nearest",inline:"start"})
                this.setState({["i"+idx]:i})
             }
@@ -9760,7 +9770,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
                if(birth.length) birth = birth[0]
                let death = elem.filter(e => e.k && e.k.endsWith("PersonDeath")).map(e => this.getResourceBNode(e.value));
                if(death.length) death = death[0]
-               //console.log("dates:",birth,death,elem)
+               //loggergen.log("dates:",birth,death,elem)
                //elem = elem.filter(e => )
                
                let vals = []
@@ -9826,7 +9836,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
                   let pEv = this.getResourceElem(bdo+"personEvent")
                   if(pEv) for(let p of pEv) {
                      let elem = this.getResourceBNode(p.value)                     
-                     //console.log("elem:",p.value,elem)
+                     //loggergen.log("elem:",p.value,elem)
                      if(elem) {
                         let prop = elem[rdf+"type"]
                         if(prop && prop.length) prop = shortUri(prop[0].value, true)
@@ -9836,7 +9846,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
                            [bdo+"onYear", bdo+"notBefore", bdo+"notAfter", bdo+"eventWhere" /*, bdo+"eventWhen"*/].map(e => { // DONE: fix editor crash
                               if(!data) data = {}
                               if(elem[e] && elem[e].length) data[shortUri(e,true)] = shortUri(elem[e][0].value)
-                              //console.log("data?",JSON.stringify(data))
+                              //loggergen.log("data?",JSON.stringify(data))
                            })
                            if(data) { 
                               if(!otherData[prop]) otherData[prop] = []
@@ -9863,7 +9873,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
                   +',"tmp:propid":"'+this.props.propid+'"'
                   +(otherData?',"tmp:otherData":'+JSON.stringify(otherData):'')
                   +'}'
-               //console.log("(MSG)",this.props.propid,JSON.stringify(otherData,null,3),msg)
+               //loggergen.log("(MSG)",this.props.propid,JSON.stringify(otherData,null,3),msg)
                window.top.postMessage(msg, "*") // TODO set target url for message
                if(ev && prevent) {
                   ev.preventDefault()
@@ -9882,7 +9892,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
             if(this.props.simple /*&& !this.props.onlyView*/ && !this.state.onlyView) { 
                
                window.addEventListener("message",(mesg) => {
-                  console.log("MSG:",mesg)
+                  loggergen.log("MSG:",mesg)
                   if(mesg?.data === "click") sendMsg()
                })
                this.setState({ onlyView: true})

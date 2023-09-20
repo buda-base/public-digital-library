@@ -2,6 +2,10 @@
 import React, { Component } from 'react';
 import {shortUri,fullUri} from '../components/App'
 
+import logdown from 'logdown'
+
+const loggergen = new logdown('gen', { markdown: false });
+
 const uuid = require('uuid/v1')
 
 const bdgu  = "http://purl.bdrc.io/graph-nc/user/" ;
@@ -18,14 +22,14 @@ export const basePublicProps = [ skos+"prefLabel", bdou+"image" ]
 
 function getPatchValue(tag:string, value:any, dict:{}, locale:string, oldT?:string) {
     
-    console.log("prop:",tag,value,dict,locale)
+    loggergen.log("prop:",tag,value,dict,locale)
 
     let prop, T, start='', end=''
     prop = dict[tag]
     if(prop) {
         T = prop[rdfs+"range"]
 
-        console.log("range:",T)        
+        loggergen.log("range:",T)        
 
         if(T && T.length) {
             if(T[0].value === rdf+"langString") { start = '"' ; end = '"' ; if(locale && T[0].lang) end+="@"+locale; }     
@@ -47,7 +51,7 @@ function getPatchValue(tag:string, value:any, dict:{}, locale:string, oldT?:stri
 
 function getPatch(iri, updates, resource, tag:string, id:string, dict:{}, locale:string) {
 
-    //console.log("getP",iri,updates,resource,tag,graph,dict)
+    //loggergen.log("getP",iri,updates,resource,tag,graph,dict)
 
     let graph = bdgu+id
     let graphP = bdgup+id
@@ -55,7 +59,7 @@ function getPatch(iri, updates, resource, tag:string, id:string, dict:{}, locale
     let str = '' 
     for(let u in updates[tag]) {
 
-        console.log("u:",u,updates[tag][u])
+        loggergen.log("u:",u,updates[tag][u])
 
         let pub = basePublicProps.indexOf(tag) !== -1
         let uv = updates[tag][u].value
@@ -67,7 +71,7 @@ function getPatch(iri, updates, resource, tag:string, id:string, dict:{}, locale
             toDelT = resource[tag].filter(v => !uv.includes(v.value)).map(v => v.type)
             toAdd = toAdd.filter(v => v && !rv.includes(v)) 
         }
-        console.log("add/del:",toAdd,toDel,toDelT)
+        loggergen.log("add/del:",toAdd,toDel,toDelT)
         let diff = ( rv.length != uv.length || toDel.length || toAdd.length)
 
         //if(str !== '') str += "\n"            
@@ -107,7 +111,7 @@ function renderPatch(that, mods, id) {
         let graph = bdgu+id
         let graphP = bdgup+id
 
-        console.log("patch",mods,res,upd,iri,dict,locale)
+        loggergen.log("patch",mods,res,upd,iri,dict,locale)
 
         let patch = mods.map(k => getPatch(iri, upd, res, k, id, dict, locale)).join("")
 

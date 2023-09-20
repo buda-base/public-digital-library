@@ -7,6 +7,10 @@ import * as actions from './actions';
 import {auth} from '../../routes';
 import {isGroup} from '../../components/App';
 
+import logdown from 'logdown'
+
+const loggergen = new logdown('gen', { markdown: false });
+
 let reducers = {};
 
 export type UIState = {
@@ -229,7 +233,7 @@ export const browse = (state: UIState, action: actions.Action) => {
     browse.time = Date.now()
 
 
-    console.log("redu:",browse.path,state.browse?.path)
+    loggergen.log("redu:",browse.path,state.browse?.path)
 
     return {
         ...state,
@@ -268,7 +272,7 @@ export const updateFacets = (state: UIState, action: actions.LoadingAction) => {
     // #548
     const _tmp = "http://purl.bdrc.io/ontology/tmp/"
     const removeUnreleased = !isGroup(auth, "editors")  // || !action.payload[_tmp+"nonReleasedItems"]
-    console.log("removeU:",removeUnreleased)
+    loggergen.log("removeU:",removeUnreleased)
 
     let facets = Object.keys(action.meta.facets)
     facets.map(k => {
@@ -279,7 +283,7 @@ export const updateFacets = (state: UIState, action: actions.LoadingAction) => {
             let meta = action.meta.facets[k]
             let props = Object.keys(meta)
             
-            //console.log("k:",k,prop,meta,props)
+            //loggergen.log("k:",k,prop,meta,props)
 
             if(k === "tree" && meta["@graph"]) { 
                 topicParents = meta["parents"]
@@ -301,13 +305,13 @@ export const updateFacets = (state: UIState, action: actions.LoadingAction) => {
                 if(q !== "Any") {
                     update[k][q] = { i:0 } 
 
-                    //console.log("q",q,meta[q].dict)
+                    //loggergen.log("q",q,meta[q].dict)
 
                     if(meta && meta[q] && meta[q].dict) for(let _e of Object.keys(meta[q].dict)) {
                         let e = meta[q].dict[_e]
                         let flat = {}
                         
-                        //console.log("_e:",_e, e);
+                        //loggergen.log("_e:",_e, e);
 
                         for(let f of e)  {
                             
@@ -318,7 +322,7 @@ export const updateFacets = (state: UIState, action: actions.LoadingAction) => {
                             val.push(f.value)
                             flat[f.type] = val 
                         }
-                        //console.log("f",flat)
+                        //loggergen.log("f",flat)
 
                         // #548
                         let hasAllProp = true 
@@ -326,7 +330,7 @@ export const updateFacets = (state: UIState, action: actions.LoadingAction) => {
 
                         if(hasAllProp) for(let p of Object.keys(action.payload)) {
 
-                            //console.log("p",p)
+                            //loggergen.log("p",p)
 
                             let val = action.payload[p]
                             if(val.val) val = val.val 
@@ -336,7 +340,7 @@ export const updateFacets = (state: UIState, action: actions.LoadingAction) => {
                                 let exclude
                                 if(action.meta.exclude) exclude = action.meta.exclude[p]
 
-                                //console.log("excl",p,exclude)
+                                //loggergen.log("excl",p,exclude)
 
                                 if(exclude && exclude.length)
                                 {
@@ -401,13 +405,13 @@ export const updateFacets = (state: UIState, action: actions.LoadingAction) => {
                             }
                         }                        
                         if(hasAllProp) { 
-                            //console.log("hasAll")
+                            //loggergen.log("hasAll")
                             update[k][q].i ++ ;
                             total_i[_e] = e
                         }
                         else {
 
-                            //console.log("hasNot")
+                            //loggergen.log("hasNot")
                         }
                     }    
                 }
@@ -416,7 +420,7 @@ export const updateFacets = (state: UIState, action: actions.LoadingAction) => {
             //update[k]["Any"] = { i:0 } //Object.keys(update[k]).reduce((acc,v)=>acc+Number(update[k][v].i),0)  }            
             update[k]["Any"] = { i:Object.keys(total_i).length  }
 
-            //console.log("uF",update[k])
+            //loggergen.log("uF",update[k])
         }
     })
 
