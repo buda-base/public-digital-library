@@ -122,8 +122,6 @@ export class StaticRouteNoExt extends Component<State, Props>
                 const hash = history.location.hash.replace(/^#/,"")
                 _that.setState({scroll:hash, hash})
             }
-            $(".index .on").removeClass("on")
-            $(".index [href='"+history.location.hash+"']").addClass("on")
         }
     };
 
@@ -163,6 +161,46 @@ export class StaticRouteNoExt extends Component<State, Props>
             }
             if(!content.includes("You need to enable JavaScript to run this app.")) this.setState({content,locale:this.props.locale})
             else this.setState({error:true,locale:this.props.locale})
+
+
+            // see https://codepen.io/thatfemicode/pen/JjWRNoZ
+            if(this.props.observer) 
+            {
+                const options = { threshold: 0, rootMargin:"0px 0px -50% 0px" }
+
+                const changeNav = (entries, observer) => {                    
+                    entries.forEach((entry) => {
+                        if(entry.isIntersecting && entry.intersectionRatio >= options.threshold) {
+                            var id = entry.target.getAttribute('id');
+                            var newLink = document.querySelector(`.index [href="#${id}"]`)
+
+                            if(newLink && newLink?.offsetParent == null) {
+                                do {
+                                    newLink = newLink.closest("p")?.previousElementSibling?.querySelector("[href]") 
+                                } while(newLink && newLink.offsetParent == null) 
+                            }
+
+                            if(newLink && newLink.offsetParent) {                                 
+                                const elem = document.querySelector('.index .on')
+                                if(elem) elem.classList.remove('on');
+                                newLink.classList.add('on');
+                                console.log("nl:",newLink)
+                            }
+                        }
+                    });
+                }
+                
+                const observer = new IntersectionObserver(changeNav, options);
+                
+                const sections = document.querySelectorAll('.index + div [id]');
+                sections.forEach((section) => {
+                    observer.observe(section);
+                    if(this.state.observer) this.state.observer.unobserve(section)
+                });
+
+                this.setState({observer})
+
+            }
         })
     }
 

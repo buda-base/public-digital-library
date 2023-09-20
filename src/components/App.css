@@ -339,6 +339,8 @@ body { overflow:auto !important;padding-right:0 !important; /*font-family:"Robot
 
 .static .doc-content .index sup { display:none; }
 
+.static .doc-content .index .on { text-decoration: underline; }
+
 [lang='bo'] .static-container[data-dir^="user-guide"] #samples { padding-bottom:0; margin:0 !important; }
 .static-container[data-dir^="user-guide"] #samples .doc-content.bo { padding-bottom:0px; padding-right:0;}
 .static .doc-content.bo iframe { width:100%; height:calc(100vh - 90px); border:none; top:-50px; position: relative; margin-bottom:-50px;}
