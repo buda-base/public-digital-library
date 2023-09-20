@@ -23,9 +23,12 @@ import 'simplebar/dist/simplebar.min.css';
 import ResizeObserver from 'resize-observer-polyfill';
 window.ResizeObserver = ResizeObserver;
 
+
 type State = { content:any, error:integer, collapse:{}, route:"" }
 
 type Props = { history:{}, locale:string, config:{} }
+
+let _that ;
 
 export class StaticRouteNoExt extends Component<State, Props>
 {
@@ -34,7 +37,7 @@ export class StaticRouteNoExt extends Component<State, Props>
     constructor(props) {
         super(props);
         this._urlParams = qs.parse(history.location.search) 
-        this.state = { content: "", collapse:{} } //"loading..."+props.dir+"/"+props.page }
+        this.state = { content: "", collapse:{}, hash:"" } //"loading..."+props.dir+"/"+props.page }
         if(!this.props.config) store.dispatch(initiateApp(this._urlParams,null,null,"static"))
 
         let i18nLoaded = setInterval(() => {
@@ -56,6 +59,8 @@ export class StaticRouteNoExt extends Component<State, Props>
         */
 
         this._scrollRef = React.createRef()
+
+        this.handleHashChange.bind(this)
     }
 
     componentDidUpdate() { 
@@ -92,6 +97,39 @@ export class StaticRouteNoExt extends Component<State, Props>
         } else {
             this._scrollRef.current.recalculate()
         }
+
+        if(this.state.scroll) {
+            const elem = document.querySelector("[id='"+this.state.scroll+"']")
+            if(elem) { 
+                setTimeout(() => {
+                    elem.scrollIntoView()
+                    this.setState({scroll:""})
+                }, 100)
+            }
+        }
+    }
+
+    handleHashChange(ev) {
+        // Perform actions based on the changed hash
+        console.log("hash:",ev, _that)
+        if(history.location.hash != _that.state.hash) {
+            if(!ev) {
+                const hash = history.location.hash.replace(/^#/,"")
+                _that.setState({scroll:hash, hash})
+            }
+            $(".index .on").removeClass("on")
+            $(".index [href='"+history.location.hash+"']").addClass("on")
+        }
+    };
+
+    componentDidMount() {
+        _that = this
+        window.addEventListener('hashchange', this.handleHashChange);
+        if(history.location.hash) this.handleHashChange()
+    }
+
+    compounentDidUnmount() {
+        window.removeEventListener('hashchange', this.handleHashChange);
     }
 
     async updateContent() {
