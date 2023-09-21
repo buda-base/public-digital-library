@@ -33,7 +33,7 @@ type State = { content:any, error:integer, collapse:{}, route:"" }
 
 type Props = { history:{}, locale:string, config:{} }
 
-let _that ;
+let _that, lastYposition = window.scrollY;;
 
 export class StaticRouteNoExt extends Component<State, Props>
 {
@@ -166,27 +166,30 @@ export class StaticRouteNoExt extends Component<State, Props>
             // see https://codepen.io/thatfemicode/pen/JjWRNoZ
             if(this.props.observer) 
             {
-                const options = { threshold: 0, rootMargin:"0px 0px -50% 0px" }
+                const options = { threshold: 0, rootMargin:"0px 0px -80% 0px" }
 
-                const changeNav = (entries, observer) => {                    
-                    entries.forEach((entry) => {
-                        if(entry.isIntersecting && entry.intersectionRatio >= options.threshold) {
-                            var id = entry.target.getAttribute('id');
+                const changeNav = (entries, observer) => {       
+                    let scroll             
+                    entries.forEach((entry) => {                    
+                        const currentYposition = window.scrollY; 
+                        if (currentYposition > lastYposition) scroll = "down"
+                        else scroll = "up"
+                        lastYposition = currentYposition;
+                        var id = entry.target.getAttribute('id');
+                        console.log("hello?",scroll,entry.target.textContent,entry.isIntersecting)
+                        if(entry.isIntersecting || scroll == "up") {                    
                             var newLink = document.querySelector(`.index [href="#${id}"]`)
-
-                            if(newLink && newLink?.offsetParent == null) {
+                            if(newLink && newLink?.offsetParent == null || !entry.isIntersecting && scroll == "up") {
                                 do {
                                     newLink = newLink.closest("p")?.previousElementSibling?.querySelector("[href]") 
                                 } while(newLink && newLink.offsetParent == null) 
                             }
-
                             if(newLink && newLink.offsetParent) {                                 
                                 const elem = document.querySelector('.index .on')
                                 if(elem) elem.classList.remove('on');
                                 newLink.classList.add('on');
-                                console.log("nl:",newLink)
                             }
-                        }
+                        } 
                     });
                 }
                 
@@ -194,6 +197,7 @@ export class StaticRouteNoExt extends Component<State, Props>
                 
                 const sections = document.querySelectorAll('.index + div [id]');
                 sections.forEach((section) => {
+                    if(!document.querySelector(".index [href='#"+section.getAttribute("id")+"']")) return
                     observer.observe(section);
                     if(this.state.observer) this.state.observer.unobserve(section)
                 });
