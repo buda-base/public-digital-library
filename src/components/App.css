@@ -339,7 +339,7 @@ body { overflow:auto !important;padding-right:0 !important; /*font-family:"Robot
 
 .static .doc-content .index sup { display:none; }
 
-.static .doc-content .index .on { font-weight:800 !important; }
+.static .doc-content .index .on { font-weight:800 !important; /*text-decoration:underline; text-decoration-thickness: 2px; text-decoration-style: dotted ;*/}
 
 /*
 .static .doc-content .index .on::before { content:">"; position:absolute;right:100%;top:0;margin-right:5px;margin-top:4px;}

@@ -107,9 +107,9 @@ export class StaticRouteNoExt extends Component<State, Props>
             const elem = document.querySelector("[id='"+this.state.scroll+"']")
             if(elem) { 
                 setTimeout(() => {
-                    elem.scrollIntoView()
+                    elem.scrollIntoView({behavior:"smooth"})
                     this.setState({scroll:""})
-                }, 100)
+                }, 500)
             }
         }
     }
@@ -166,6 +166,16 @@ export class StaticRouteNoExt extends Component<State, Props>
             // see https://codepen.io/thatfemicode/pen/JjWRNoZ
             if(this.props.observer) 
             {
+
+                document.querySelectorAll('.index [href^="#"]').forEach(anchor => {
+                    anchor.addEventListener('click', function (e) {
+                        e.preventDefault();                
+                        document.querySelector("[id='"+this.getAttribute('href').replace(/^#/,"")+"']").scrollIntoView({
+                            behavior: 'smooth'
+                        });
+                    });
+                });
+
                 const options = { threshold: 0, rootMargin:"0px 0px -80% 0px" }
 
                 const changeNav = (entries, observer) => {       
@@ -176,7 +186,6 @@ export class StaticRouteNoExt extends Component<State, Props>
                         else scroll = "up"
                         lastYposition = currentYposition;
                         var id = entry.target.getAttribute('id');
-                        console.log("hello?",scroll,entry.target.textContent,entry.isIntersecting)
                         if(entry.isIntersecting || scroll == "up") {                    
                             var newLink = document.querySelector(`.index [href="#${id}"]`)
                             if(newLink && newLink?.offsetParent == null || !entry.isIntersecting && scroll == "up") {
