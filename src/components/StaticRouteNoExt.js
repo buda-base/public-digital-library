@@ -193,11 +193,12 @@ export class StaticRouteNoExt extends Component<State, Props>
                                     newLink = newLink.closest("p")?.previousElementSibling?.querySelector("[href]") 
                                 } while(newLink && newLink.offsetParent == null) 
                             }
-                            if(newLink && newLink.offsetParent) {                                 
+                            //console.log("nL:", scroll, entry.isIntersecting, newLink)
+                            if(newLink && newLink.offsetParent || scroll == "up" && !newLink) {                                 
                                 const elem = document.querySelector('.index .on')
                                 if(elem) elem.classList.remove('on');
-                                newLink.classList.add('on');
-                            }
+                                if(newLink) newLink.classList.add('on');
+                            } 
                         } 
                     });
                 }
