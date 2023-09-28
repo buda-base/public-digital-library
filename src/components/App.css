@@ -3007,7 +3007,11 @@ span[lang^='sa-']:not([lang$='-ewts']) { text-transform: capitalize;}
 
 .resource .data h2 { font-size:32px; letter-spacing: 0px; position:relative;}
 
-.resource .title h2 .T { position:relative; letter-spacing:0px;}
+.resource .title h2 .T { position:relative; letter-spacing:0px; display:flex; align-items: center;}
+
+.resource .title h2 .T .space-fix { display: flex; flex-direction: column; }
+
+html[lang='bo'] .resource .title h2 .T .space-fix span:not(.RID) { line-height: 220%; }
 
 .resource .title h2 .T::before { width:50px;height:50px; content:'' ; display:inline-block; vertical-align:-22px; margin-right:35px; 
    background-size:contain;background-repeat:no-repeat;background-position:center right;
@@ -3046,7 +3050,7 @@ span[lang^='sa-']:not([lang$='-ewts']) { text-transform: capitalize;}
 .resource .title h2:not(.on) > a > :not(.T),
 .resource .title h2.on > :not(.T) { display:none; }
 
-.resource .title h2 .RID { display:block !important;position:absolute;top:32px;left:85px;color:rgba(0,0,0,0.5);font-size:11px;font-weight:400; letter-spacing:0; 
+.resource .title h2 .RID { display:block !important;/*position:absolute;*/top:32px;left:85px;color:rgba(0,0,0,0.5);font-size:11px;font-weight:400; letter-spacing:0; 
    white-space: nowrap;   max-width: 125px;   overflow: hidden;   text-overflow: ellipsis;
 }
 
