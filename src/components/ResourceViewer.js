@@ -2985,6 +2985,10 @@ class ResourceViewer extends Component<Props,State>
             if(infoBase &&  infoBase[skos+"prefLabel"]) infoBase = infoBase[skos+"prefLabel"]
             else if(infoBase &&  infoBase[rdfs+"label"]) infoBase = infoBase[rdfs+"label"]
 
+
+            // handle case of associatedTradition/broader
+            else if(infoBase &&  infoBase[skos+"broader"]) infoBase = infoBase[skos+"broader"]
+
          }
 
          //loggergen.log("base:", noLink, JSON.stringify(infoBase,null,3))
