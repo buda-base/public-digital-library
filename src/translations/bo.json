@@ -840,7 +840,7 @@
       "mirrorTooltip": "Mirror image",
       "monlam":"སྨོན་ལམ་ཚིག་མཛོད།",
       "monlamTitle":"སྨོན་ལམ་ཚིག་མཛོད་ནང་གི་ཚིག་འགྲེལ།",
-      "monlamExact":"Exact matches of the context ({{count}})",
+      "monlamExact":"སྐབས་ ({{count}}) འདི་དང་ཡོངས་སུ་མཐུན་པ།",
       "monlamContain":"Entries containing the highlighted text ({{count}})",
       "monlamDef":"མཚན་ཉིད་ནང་ནན་རྟགས་བཀོད་པའི་ཚིག་ ({{count}}) འདུག",
       "more": "འདི་ལས་མང་བ་",
