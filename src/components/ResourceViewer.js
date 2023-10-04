@@ -118,6 +118,8 @@ import 'simplebar/dist/simplebar.min.css';
 //import edtf, { parse } from "edtf/dist/../index.js" // finally got it to work!! not in prod...
 import edtf, { parse } from "edtf" // see https://github.com/inukshuk/edtf.js/issues/36#issuecomment-1073778277
 
+import { Helmet } from "react-helmet"
+
 // error when using after build: "Uncaught ReferenceError: s is not defined"
 // => fixed by upgrading react-scripts
 import Cite from 'citation-js'
@@ -9939,6 +9941,9 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
 
          return (
          [getGDPRconsent(this),   
+         <Helmet>
+            <link rel="canonical" href={"https://library.bdrc.io"+this.props.history.location.pathname} />
+         </Helmet>,
          <div class={isMirador?"H100vh OF0":""}>
             { ["Images","Instance"].includes(_T) && <abbr class="unapi-id" title={this.props.IRI}></abbr> }
             { infoPanelR }
