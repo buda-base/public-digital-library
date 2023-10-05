@@ -110,6 +110,8 @@ import 'simplebar/dist/simplebar.min.css';
 
 import edtf, { parse } from "edtf"
 
+import jsEWTS from "jsewts"
+
 // for full debug, type this in the console:
 // window.localStorage.debug = 'gen'
 
@@ -1665,6 +1667,11 @@ class App extends Component<Props,State> {
             elem.focus()
             $("#search-bar input[type=text][placeholder]").attr("placeholder",I18n.t("home.start"));
          }
+      }
+
+      if(this._refs?.barRef?.current?.inputRef?.current && this._refs?.barRef?.current?.inputRef?.current?.getAttribute("spellcheck") == undefined) {
+         this._refs.barRef.current.inputRef.current.setAttribute("spellcheck", false)
+         console.log("bref:",this._refs.barRef.current.inputRef.current)
       }
 
       // TODO check how this behave with smaller screen width/height
@@ -7239,11 +7246,27 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                kw = kw[0].toLowerCase()+":"+kw[1].toUpperCase()
                if(tab[1].endsWith("identifier")) isRID = "IDorDate"
             }
-         } 
+         } else if(!this.state.spellingError?.length) {
+            const sp = this.props.spellcheckerBo
+            if(sp && tab[1] === "bo-x-ewts" ) {
+               let check = kw.replace(/(^")|("$)/g, "")
+               //if(tab[1] === "bo-x-ewts") { 
+                  check = jsEWTS.fromWylie(check)
+                  check = check.split(/[་ ]+/).map(i => ([jsEWTS.toWylie(i), sp.check(i) /* || sp.suggest(i).map(s => jsEWTS.toWylie(s))*/ ]))               
+               //} else {
+               //   check = check.split(/[་ ]+/).map(i => ([i, sp.check(i) /* || sp.suggest(i)*/ ]))
+               //}
+               if(check.some(c => c[1] != true)) {
+                  console.log("check:", kw, check,)
+                  this.setState({spellingError: check})
+                  return 
+               }
+            }
+         }
 
          loggergen.log("rs??2")
          if(this.state.keyword) this.requestSearch(kw,null,tab[1], isRID && i === 1, (isRID == "IDorDate"?tab[1].replace(/^.*(date|identifier).*$/,"$1"):null), i)
-         this.setState({...this.state,langIndex:i,dataSource:[]});
+         this.setState({...this.state,spellingError:[], langIndex:i,dataSource:[]});
          
       }
 
@@ -7263,6 +7286,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          </List>
       }
 
+      if(!this._refs["barRef"]) this._refs["barRef"] = React.createRef()
 
       const ret = (
 <div className={(this.props.simple?"simpleSearch":"")}>
@@ -7341,7 +7365,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   <FontAwesomeIcon style={{fontSize:"21px"}} icon={faSlidersH} title="Refine Your Search"/>
                </IconButton> */}
                <div ref={this._refs["searchBar"]} style={{display:"inline-block",position:"relative"}}>
-                  <SearchBar                  
+                  <SearchBar       
+                     innerRef={this._refs.barRef}           
                      placeholder={I18n.t("home.search")}                        
                      closeIcon={<Close className="searchClose" style={ {color:"rgba(0,0,0,1.0)",opacity:1} } onClick={() => { this.props.history.push({pathname:"/",search:""}); this.props.onResetSearch();} }/>}
                      disabled={this.props.hostFailure}
@@ -7395,10 +7420,14 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                                     this.setState({langIndex:i})
                                  }
 
+                                 const hasError = this.state.spellingError?.length && tab[1] === "bo-x-ewts" /*.startsWith("bo")*/
+                                    ? <span class="spell-warn"><WarnIcon className="warn"/><span>{tab[1]==="bo-x-ewts"?"Wylie ":""}spelling error{this.state.spellingError.filter(s => s[1]!=true).length > 1 ? "s":""} detected<br/>please double check{tab[1]==="bo-x-ewts"?" or consider searching in English":""}</span></span>
+                                    : null
+
                                  return (
                                     <MenuItem key={v} style={{lineHeight:"1em"}} onMouseDown={(e) => e.preventDefault()} 
                                     className={(!this.state.langIndex && i===0 || this.state.langIndex === i || this.state.langIndex >= this.state.dataSource.length && i === 0?"active":"")} 
-                                    onClick={(e)=> requestSearchOnClick(tab,i) } ><span class="maxW">{ tab.length == 1 ?"":tab[0].replace(/["]/g,"")}</span> <SearchIcon style={{padding:"0 10px"}}/><span class="lang">{tab.length == 1 ? I18n.t("home."+tab[0]):(I18n.t(""+(searchLangSelec[tab[1]]?searchLangSelec[tab[1]]:(languages[tab[1]]?languages[tab[1]]:tab[1])))) }</span></MenuItem> ) 
+                                    onClick={(e)=> requestSearchOnClick(tab,i) } ><span class="maxW">{ tab.length == 1 ?"":tab[0].replace(/["]/g,"")}</span> <SearchIcon style={{padding:"0 10px"}}/><span class="lang">{tab.length == 1 ? I18n.t("home."+tab[0]):(I18n.t(""+(searchLangSelec[tab[1]]?searchLangSelec[tab[1]]:(languages[tab[1]]?languages[tab[1]]:tab[1])))) }</span>{hasError}</MenuItem> ) 
                                     })
                               }
                         </Paper>

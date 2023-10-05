@@ -26,6 +26,13 @@ import edtf, { parse } from "edtf"
 //import { I18n } from 'react-redux-i18n';
 import { i18nextChangeLanguage } from 'i18next-redux-saga';
 
+//import Spellchecker from 'hunspell-spellchecker';
+import Typo from "typo-js"
+import boAff from 'hunspell-bo/bo.aff'
+import boDic from 'hunspell-bo/bo.dic'
+
+import jsEWTS from "jsewts"
+
 // to enable tests
 const api = new bdrcApi({...process.env.NODE_ENV === 'test' ? {server:"http://localhost:5555/test"}:{}});
 
@@ -62,6 +69,20 @@ const handleAuthentication = (nextState, isAuthCallback) => {
 
 let sameAsR = {}
 
+const initHunspellBo = async () => {
+   const dic = await (await fetch(boDic)).text()
+   const aff = await (await fetch(boAff)).text()
+   
+   //const sp = new Spellchecker()
+   //const dictionary =  sp.parse({ aff, dic });
+   //sp.use(dictionary);
+
+	const sp = new Typo("bo", aff, dic);
+   
+  // console.log("sp:", sp, sp.check("བླ"), sp.check("དལཻ"), sp.suggest("དལཻ").map(s => jsEWTS.toWylie(s))); // pass/fail+suggest!
+   store.dispatch(dataActions.initSpellcheckerBo(sp))
+}
+
 async function initiateApp(params,iri,myprops,route,isAuthCallback) {
    try {
       loggergen.log("params=",params)
@@ -89,8 +110,11 @@ async function initiateApp(params,iri,myprops,route,isAuthCallback) {
          }).observe(document.querySelector('title'),{ childList: true });
       }
 
+      if(!state.data.hunspellBo) initHunspellBo()
+
       if(!state.data.config)
       {
+
          if(params && params.feedbucketRecording == "true") {
             loggergen.log("recording")
             jQuery("#root").addClass("recording")

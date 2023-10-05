@@ -559,6 +559,10 @@ html[lang="bo"] .msg-popup .front p { font-size:18px;}
 #suggestions li .maxW { /*background:yellow; */ max-width:calc(100% - 250px); overflow: hidden; text-overflow: ellipsis; padding:10px 0; } 
 #outline #suggestions li .maxW { max-width:calc(100% - 165px);  } 
 
+
+#suggestions .spell-warn { display: flex ; align-items: center; margin-left:15px; opacity:0.65; font-weight:400; font-size:13px;}
+#suggestions .spell-warn span { display: flex; align-items: center; margin-left:5px; flex-wrap:wrap; max-width:100%;}
+
 /*
 #suggestions { z-index:10000; } 
 */

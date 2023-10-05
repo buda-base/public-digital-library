@@ -362,6 +362,14 @@ export const gotLatestSyncs = (res,nb): Action => {
     }
 }
 
+TYPES.initSpellcheckerBo = 'INIT_SPELLCHECKER_BO';
+export const initSpellcheckerBo = (sp): Action => {
+    return {
+        type: TYPES.initSpellcheckerBo,
+        payload:sp
+    }
+}
+
 TYPES.getOutline = 'GET_OUTLINE';
 export const getOutline = (iri: string,node?:{},volFromUri?:string): Action => {
     return {

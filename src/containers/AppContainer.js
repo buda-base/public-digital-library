@@ -63,7 +63,6 @@ const mapStateToProps = (state) => {
    let latestSyncs = state.data.latestSyncs
    let latestSyncsNb = state.data.latestSyncsNb
 
-
    let profileName
    if(auth && auth.userProfile) {
       if(auth.userProfile.name) profileName = auth.userProfile.name
@@ -83,6 +82,9 @@ const mapStateToProps = (state) => {
    let subscribedCollections = state.data.subscribedCollections
 
 
+   let spellcheckerBo = state.data.spellcheckerBo
+
+
    let newState = { logged,config, hostFailure, searches, keyword, language,loading,datatypes,ontology,facets,
       locale,prefLang,resources,ontoSearch,rightPanel,langPreset, langIndex, langExt, failures,dictionary,metadata, assoRes, 
       sortBy, topicParents, genresParents, instances, isInstance,
@@ -92,7 +94,8 @@ const mapStateToProps = (state) => {
       useDLD,
       isNewUser,
       subscribedCollections,
-      feedbucket
+      feedbucket,
+      spellcheckerBo
    }
 
    if(config && !config.auth) newState.auth = false

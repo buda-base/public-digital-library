@@ -602,6 +602,13 @@ export const noResource = (state: DataState, action: Action) => {
 }
 reducers[actions.TYPES.noResource] = noResource;
 
+export const initSpellcheckerBo = (state: DataState, action: Action) => {
+   return {
+       ...state,
+       spellcheckerBo: action.payload
+   }
+}
+reducers[actions.TYPES.initSpellcheckerBo] = initSpellcheckerBo
 
 export const gotAssocResources = (state: DataState, action: Action) => {
 
