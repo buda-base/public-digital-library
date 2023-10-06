@@ -7249,7 +7249,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          } else if(!this.state.spellingError?.length) {
             const sp = this.props.spellcheckerBo
             if(sp && tab[1] === "bo-x-ewts" ) {
-               let check = kw.replace(/(^")|("$)/g, "")
+               let check = kw.replace(/(^")|("$)/g, "").replace(/ +AND +/g, " ")
                //if(tab[1] === "bo-x-ewts") { 
                   check = jsEWTS.fromWylie(check)
                   check = check.split(/[་ ]+/).map(j => ([jsEWTS.toWylie(j), sp.check(j) /* || sp.suggest(j)).map(s => jsEWTS.toWylie(s))*/ ]))               
