@@ -5809,9 +5809,9 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                         <SearchIcon />                        
                      </Link>
                   </>}</span>}
-                  { this.state.filters.datatype[0] === "Person" && <Trans i18nKey="search.filters.persons" components={{ newline: <br />, parag: <span class="noR"/>, list:<li/>, ita:<i/> }} />}
-                  { this.state.filters.datatype[0] === "Instance" && <Trans i18nKey="search.filters.instances" components={{ newline: <br />, parag: <span class="noR"/>, list:<li/>, ita:<i/> }} />}
-                  { this.state.filters.datatype[0] === "Work" && <Trans i18nKey="search.filters.instances" components={{ newline: <br />, parag: <span class="noR"/>, list:<li/>, ita:<i/> }} />}
+                  { this.state.filters.datatype[0] === "Person" && <Trans i18nKey="search.filters.persons" components={{ newline: <br />, parag: <span class={"noR"+" "+this.props.language}/>, list:<li/>, ita:<i/>, lnk:<a className="uri-link" onClick={() => this.requestSearch(this.props.keyword, null, "en")}/> }} />}
+                  { this.state.filters.datatype[0] === "Instance" && <Trans i18nKey="search.filters.instances" components={{ newline: <br />, parag: <span class={"noR"+" "+this.props.language}/>, list:<li/>, ita:<i/>, lnk:<a className="uri-link" onClick={() => this.requestSearch(this.props.keyword, null, "en")}/> }} />}
+                  { this.state.filters.datatype[0] === "Work" && <Trans i18nKey="search.filters.instances" components={{ newline: <br />, parag: <span class={"noR"+" "+this.props.language}/>, list:<li/>, ita:<i/>, lnk:<a className="uri-link" onClick={() => this.requestSearch(this.props.keyword, null, "en")}/> }} />}
                </Typography>);
 
                if(!this.state.filters.facets && other && other.length && !this.props.simple)   
@@ -6988,7 +6988,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          if(value.match(/(^[0-9]{3,4}$)/) && Number(value) < 2100)  dataSource.unshift(value+"@find as a date")         
          if(value && this.state.searchTypes.some(d => ["Instance","Work"].includes(d))) dataSource.push(value.replace(/^d([0-9]+)/,"D$1")+"@find as an identifier")
 
-         this.setState({...this.state,keyword:value, language, dataSource,blurSearch:false   } ) 
+         this.setState({...this.state,keyword:value, language, dataSource, blurSearch:false, spellingError:[]  } ) 
          
          /*
          if(changeKWtimer) clearTimeout(changeKWtimer)
@@ -7252,12 +7252,12 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                let check = kw.replace(/(^")|("$)/g, "")
                //if(tab[1] === "bo-x-ewts") { 
                   check = jsEWTS.fromWylie(check)
-                  check = check.split(/[་ ]+/).map(i => ([jsEWTS.toWylie(i), sp.check(i) /* || sp.suggest(i).map(s => jsEWTS.toWylie(s))*/ ]))               
+                  check = check.split(/[་ ]+/).map(j => ([jsEWTS.toWylie(j), sp.check(j) /* || sp.suggest(j)).map(s => jsEWTS.toWylie(s))*/ ]))               
                //} else {
-               //   check = check.split(/[་ ]+/).map(i => ([i, sp.check(i) /* || sp.suggest(i)*/ ]))
+               //   check = check.split(/[་ ]+/).map(j => ([i, sp.check(j) /* || sp.suggest(j)*/ ]))
                //}
+               console.log("check:", kw, check,)
                if(check.some(c => c[1] != true)) {
-                  console.log("check:", kw, check,)
                   this.setState({spellingError: check})
                   return 
                }
@@ -7421,7 +7421,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                                  }
 
                                  const hasError = this.state.spellingError?.length && tab[1] === "bo-x-ewts" /*.startsWith("bo")*/
-                                    ? <span class="spell-warn"><WarnIcon className="warn"/><span>{tab[1]==="bo-x-ewts"?"Wylie ":""}spelling error{this.state.spellingError.filter(s => s[1]!=true).length > 1 ? "s":""} detected<br/>please double check{tab[1]==="bo-x-ewts"?" or consider searching in English":""}</span></span>
+                                    ? <span class="spell-warn"><WarnIcon className="warn"/><span>Wylie spelling error{this.state.spellingError.filter(s => s[1]!=true).length > 1 ? "s":""} detected<br/>Please double check then submit again</span></span>
                                     : null
 
                                  return (

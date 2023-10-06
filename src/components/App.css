@@ -1470,6 +1470,10 @@ p.no-result {
 .no-result .reset-khmer { display:flex; align-items: baseline;}
 .no-result .reset-khmer #clear-filters { display: inline-flex; }
 
+.no-result .noR:not(.bo-x-ewts) li:last-child { display:none; }
+#res-container .no-result .noR.bo-x-ewts li:last-child { pointer-events:auto; }
+#res-container .no-result .noR.bo-x-ewts li:last-child .uri-link { margin-left:0;}
+.noR.bo-x-ewts li .uri-link:not(:hover) { border-bottom:1px solid transparent; }
 
 .no-result .uri-link { display:inline-block; margin-left:10px;  }
 
