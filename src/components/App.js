@@ -1707,8 +1707,8 @@ class App extends Component<Props,State> {
          }).scroll()
       } 
 
-      if(this._refs["filters-UI"].current) this._refs["filters-UI"].current.recalculate()
-      if(this._refs["filters-UI-scrollable"].current) this._refs["filters-UI-scrollable"].current.scrollTop = 500
+      if(this._refs["filters-UI"]?.current) this._refs["filters-UI"].current.recalculate()
+      if(this._refs["filters-UI-scrollable"]?.current) this._refs["filters-UI-scrollable"].current.scrollTop = 500
 
       loggergen.log("didU:",this.state,this.state.uriPage,this._refs["maps"],this._refs["cluster"]) //,this._refs)
 
