@@ -112,6 +112,9 @@ import edtf, { parse } from "edtf"
 
 import jsEWTS from "jsewts"
 
+import { Helmet } from "react-helmet"
+
+
 // for full debug, type this in the console:
 // window.localStorage.debug = 'gen'
 
@@ -7650,7 +7653,10 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                }
                { (this.props.simple && !this.props.keyword || (this.props.keyword && (this.props.loading || (this.props.datatypes && !this.props.datatypes.hash)))) && <Loader className="mainloader" /> }
                { message.length == 0 && !this.props.loading && !this.props.keyword && (!this.props.datatypes || this.props.keyword === null) &&
-                  !this.props.config.khmerServer && 
+                  !this.props.config.khmerServer && <>               
+                     <Helmet>
+                        <link rel="canonical" href={"https://library.bdrc.io"} />
+                     </Helmet>
                      <List id="samples">
                         {/* { messageD } */}
                         <h3>{ I18n.t("home.message") }</h3>
@@ -7667,7 +7673,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                         { this.props.subscribedCollections?.length >= 1 && 
                             <Trans i18nKey="home.collec" components={{h:<h4 class="subsubtitleFront"/>, nl:<br/>, bold:<b/>, lk:<a class='uri-link' target='_blank' />}}/>
                         }
-                     </List> }
+                     </List> 
+                  </>}
                { /* (this.props.datatypes && this.props.datatypes.hash && this.props.datatypes.metadata[bdo+this.state.filters.datatype[0]] && message.length === 0 && !this.props.loading) && 
                   <List id="results">
                      <h3 style={{marginLeft:"21px"}}>No result found.</h3>             
