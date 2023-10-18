@@ -845,6 +845,7 @@
       "monlamDef":"Definitions containing the highlighted word ({{count}})",
       "more": "more",
       "mustLogin":"You must be logged in to download PDFs or image files.",
+      "mustLoginFeedback":"You must be logged in to use the feedback tool.",
       "myManifests": "My Manifests",
       "newObject": "Replace Object",
       "new":"new!",
