@@ -3412,6 +3412,7 @@ body > [id^="menu-"] > div:last-child,
 
 .poPdf > div:last-child { max-height:30vh; box-shadow:0 1px 4px #cecece; }
 .poPdf > div b,
+#feedback .mustLogin.tooltip a,
 .poPdf > div div.mustLogin,
 .poPdf > div a { font-size:12px; font-family: "Noto Sans", "Noto Serif Tibetan", "Noto Serif Khmer", "Noto Sans Mongolian", "Roboto", "Helvetica", "Arial", sans-serif; color:#4d4d4d; white-space: nowrap;}
 .poPdf > div li { padding:6px 17px; }
@@ -3448,6 +3449,13 @@ a.mustLogin:hover { text-decoration: underline;}
 
 div.mustLogin a { display:inline; padding:0; color:#d73449; line-height:24px;}
 div.mustLogin a:hover { border:none; text-decoration: underline;}
+
+#feedback .tooltip .bg { background:none; position: fixed; left:0; right:0; top:0; bottom:0; z-index: -1; }
+#feedback .tooltip { background:white; padding:10px 15px; position: absolute; right:calc(100% + 10px); cursor: auto; 
+   box-shadow: 0 1px 4px rgba(107, 107, 107, 0.5);
+}
+#feedback .tooltip a { cursor: pointer; }
+#feedback .tooltip:not(.on) { display: none; }
 
 /* ------------------------------------------------------------------------------------------------------------------------ hover panel */
 
@@ -5407,7 +5415,7 @@ a.result .contenu ul > div:last-child h3[lang=bo] span { font-size:18px;}
 
 
 /* feedbucket */
-.nav + #feedback:not(.on),
+.nav + #feedback:not(.on,.off),
 feedbucket-app:not(.on)  { display:none !important; }
 
 #root.recording ~ feedbucket-app  { display:block !important; }
@@ -5415,9 +5423,9 @@ feedbucket-app:not(.on)  { display:none !important; }
 .nav + #feedback { position:fixed; color:#d73449; background:white; display: flex; border-radius: 20px 20px; width:40px; height: 40px; box-sizing: border-box; 
    box-shadow: 0 2px 4px rgba(187, 187, 187, 0.5); bottom:calc(50% - 20px); right:10px ; cursor: pointer; justify-content: center; align-items: center; z-index:1000000;
 }
-.nav + #feedback svg { width:24px; height:24px; display:none; }
-.nav + #feedback:not(.X) svg:first-child { display: block;}
-.nav + #feedback.X svg:last-child { display: block;}
+.nav + #feedback svg { width:24px; height:24px; display:none; position: absolute;}
+.nav + #feedback:not(.X) svg:first-of-type { display: block;}
+.nav + #feedback.X svg:last-of-type { display: block;}
 
 .nav + #feedback.X { top:calc(50% + 117px); right:10px; bottom:auto; }
 

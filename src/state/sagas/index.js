@@ -129,6 +129,7 @@ async function initiateApp(params,iri,myprops,route,isAuthCallback) {
                if(timer) clearInterval(timer)
                timer = setInterval(function(){
                   if(window.feedbucketConfig) {
+                     jQuery("#feedbucket.off").removeClass("off")
                      clearInterval(timer)
                      timer = 0
                      if(document.querySelector('[data-feedbucket="'+config.feedbucketID+'"]')) return ;
@@ -142,6 +143,7 @@ async function initiateApp(params,iri,myprops,route,isAuthCallback) {
                      window.useFeedbucket = true
                      if(window.initFeedbucketInMirador) window.initFeedbucketInMirador();
                   } else {
+                     jQuery("#feedback:not(.off)").addClass("off")
                      loggergen.log("trying...")
                      if(window.useFeedbucket) delete window.useFeedbucket;
                      if(window.initFeedbucketInMirador) delete window.initFeedbucketInMirador;

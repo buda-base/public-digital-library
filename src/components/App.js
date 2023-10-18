@@ -1027,10 +1027,23 @@ export function top_right_menu(that,etextTitle,backUrl,etextres)
    let onZhMirror = (that.props.config && that.props.config.chineseMirror)
    let onKhmerServer = (that.props.config && that.props.config.khmerServer)
 
-   let feedbucket = <a id="feedback" title={I18n.t("topbar.feedback")} className={that.props.feedbucket + (that.props.keyword&&!that.props.IRI?" top":"")} onClick={(ev) => {
-      $("feedbucket-app").toggleClass("on")
-      that.props.onFeedbucketClick("on "+(that.props.feedbucket?.endsWith("X")?"":"X"))
-   }}><Feedback /><Close /></a>
+   let feedbucket = <div id="feedback" title={I18n.t("topbar.feedback")} className={that.props.feedbucket + (that.props.keyword&&!that.props.IRI?" top":"")} onClick={(ev) => {
+      if(!document.querySelector('feedbucket-app')) {
+         $("#feedback .tooltip").toggleClass("on")
+      } else {
+         $("feedbucket-app").toggleClass("on")
+         that.props.onFeedbucketClick("on "+(that.props.feedbucket?.endsWith("X")?"":"X"))
+      }
+   }}><Feedback /><Close /><div class="tooltip mustLogin">      
+         <div class="bg" onClick={(e) => {
+            $("#feedback .tooltip").removeClass("on")
+            e.stopPropagation()
+         }}></div>
+         <a onClick={(e) => { 
+            that.props.auth.login(that.props.history.location)            
+            e.stopPropagation()
+         }}>{I18n.t("viewer.mustLoginFeedback")}</a>
+      </div></div>
 
    let logo = [
             <div id="logo">
@@ -7249,7 +7262,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                kw = kw[0].toLowerCase()+":"+kw[1].toUpperCase()
                if(tab[1].endsWith("identifier")) isRID = "IDorDate"
             }
-         } else if(!this.state.spellingError?.length) {
+         } else if(false && !this.state.spellingError?.length) { // still WIP, not deploying yet
             const sp = this.props.spellcheckerBo
             if(sp && tab[1] === "bo-x-ewts" ) {
                let check = kw.replace(/(^")|("$)/g, "").replace(/ +AND +/g, " ")

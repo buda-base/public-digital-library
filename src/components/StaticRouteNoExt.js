@@ -66,6 +66,7 @@ export class StaticRouteNoExt extends Component<State, Props>
         this._scrollRef = React.createRef()
 
         this.handleHashChange.bind(this)
+        
     }
 
     componentDidUpdate() { 
@@ -112,6 +113,8 @@ export class StaticRouteNoExt extends Component<State, Props>
                 }, 500)
             }
         }
+
+        if(window.initFeedbucket) window.initFeedbucket()
     }
 
     handleHashChange(ev) {
