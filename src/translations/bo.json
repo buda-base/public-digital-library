@@ -845,6 +845,7 @@
       "monlamDef":"མཚན་ཉིད་ནང་ནན་རྟགས་བཀོད་པའི་ཚིག་ ({{count}}) འདུག",
       "more": "འདི་ལས་མང་བ་",
       "mustLogin":"ཁྱེད་ཀྱིས་PDFs དང་ཡང་ན་བཤེར་པར་གང་ཞིག་ཕབ་ལེན་བྱེད་རུང་ཐོག་མར་ངེས་པར་དུ་ནང་འཛུལ་བྱ་དགོས། ",
+      "mustLoginFeedback":"You must be logged in to use the feedback tool.",
       "myManifests": "My Manifests",
       "newObject": "དཔེ་ཆ་བསྐྱར་བརྗེ་བྱེད།",
       "new":"གསར་པ།",
