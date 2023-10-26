@@ -435,7 +435,7 @@
       "link": "དྲ་ཐག:",
       "link_plural": "དྲ་ཐག་ཁག:",
       "preview3": "སྔོན་ལྟ་ 3",
-      "browseA": "Browse all {{count}}",
+      "browseA": "ཡོངས་ལ་བཤེར་ལྟ་བྱོས། {{count}}",
       "seeI": "དཔེ་རྒྱུན་ {{count}} ལ་གཟིགས།",
       "seeI_plural": "དཔེ་རྒྱུན་ {{count}} ལ་གཟིགས།",
       "seeM": "དཔེ་རྒྱུན་གང་ཡོད་པ་ {{count}} ཁག",
