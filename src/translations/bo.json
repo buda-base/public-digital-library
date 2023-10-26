@@ -551,7 +551,7 @@
       "result_plural": "བཙལ་འབྲས། {{count,counttobo}}",
       "filters": {
          "noresult-": "བཙལ་འབྲས་མི་འདུག",
-         "noresults": "འདེམས་སྒྲུག་བྱས་པའི་བཙལ་འབྲས་མི་འདུག",
+         "noresults": "འདེམས་སྒྲུག་བྱས་པའི་བཙལ་འབྲས་མི་འདུག {{keyword}} [{{language}}] {{type}}",
          "noresultsAsso": "འདི་དང་འབྲེལ་བའི་བཙལ་འབྲས་མི་འདུག {{keyword}} {{type}}",
          "facets":" with the filters you set",
          "persons":"<parag>BDRC contains thousands of person records, you may want to try modifying your search to get the best results.<newline/><list>Search on a shorter string of syllables by eliminating titles, geographical names, and so on<newline/>Ex: <ita>'jam dbyangs nor bu</ita> instead of <ita>co ne sa skyong 'jam dbyangs nor bu</ita></list><list>Double check your search for typos</list><list>Try searching <lnk>in English</lnk> instead of pure Extended Wylie</list></parag>",
