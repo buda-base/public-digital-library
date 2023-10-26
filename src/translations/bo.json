@@ -444,7 +444,7 @@
       "inter": "{{min,counttobo}}~{{max,counttobo}}",
       "ordInter": "དུས་རབས་{{min,counttobo}} ནས་{{max,counttobo}} བར།",
       "see10More": "༡༠ ལས་མང་བར་གཟིགས།",
-      "showR": "བསྐྱར་དཔར་གྱི་ {{count}} གྲངས་ལ་གཟིགས།",
+      "showR": "འདྲ་བཤུས་ཀྱི་ {{count}} གྲངས་ལྟོན།",
       "hideR": "བསྐྱར་དཔར་སྐུང་།",
       "previewN": "སྡོན་བལྟའི་ {{count}}",
       "tilt1":"ཁྱེད་ཀྱི་འཕྲུལ་ཆས་དེ་སྐོར་བ་རྒྱོབས།",
