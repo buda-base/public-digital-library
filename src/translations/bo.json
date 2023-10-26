@@ -553,7 +553,7 @@
          "noresult-": "བཙལ་འབྲས་མི་འདུག",
          "noresults": "འདེམས་སྒྲུག་བྱས་པའི་བཙལ་འབྲས་མི་འདུག {{keyword}} [{{language}}] {{type}}",
          "noresultsAsso": "འདི་དང་འབྲེལ་བའི་བཙལ་འབྲས་མི་འདུག {{keyword}} {{type}}",
-         "facets":" with the filters you set",
+         "facets":"ཁྱེད་ཀྱིས་བསྒྲིགས་པའི་ཚགས་སྒྲིག",
          "persons":"<parag>BDRC contains thousands of person records, you may want to try modifying your search to get the best results.<newline/><list>Search on a shorter string of syllables by eliminating titles, geographical names, and so on<newline/>Ex: <ita>'jam dbyangs nor bu</ita> instead of <ita>co ne sa skyong 'jam dbyangs nor bu</ita></list><list>Double check your search for typos</list><list>Try searching <lnk>in English</lnk> instead of pure Extended Wylie</list></parag>",
          "instances":"<parag>BDRC contains thousands of texts, you may want to try modifying your search to get the best results.<newline/><list>Search on a shorter string of syllables, preferably the core part of the title<newline/>Ex: <ita>lam rim chung ngu'i zin bris</ita> instead of <ita>lam rim chung ngu'i zin bris blo gsal rgya mtsho'i 'jug ngogs</ita></list><list>Double check your search for typos</list><list>Try searching <lnk>in English</lnk> instead of pure Extended Wylie</list></parag>",
          "error": "ཁྱེད་ཀྱི་བཙལ་བྱ་འཚོལ་སྐབས་གནད་དོན་ཞིག་བྱུང་སོང་ {{keyword}} [{{language}}] {{type}}<newline/>ཁྱེད་ཀྱི་བཙལ་བྱ་བསྐྱར་ཞིབ་དང་ཡང་ན་བཙལ་བྱ་གཞན་ཞིག་ཚོད་ལྟ་བྱ་རོགས།"
