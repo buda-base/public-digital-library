@@ -116,7 +116,7 @@
    },
    "Lsidebar": {
       "sortBy": {
-         "title": "ཚགས་སྒྲིག"
+         "title": "ཚགས་སྒྲིག {{by}} {{reverse}}"
       },
       "title": "ནང་གསེས་འདེམས་སྒྲུག",
       "collection": {
