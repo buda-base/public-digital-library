@@ -348,7 +348,7 @@
       "userP": "སྤྱོད་མཁན་གྱི་གནས་ཚུལ།",
       "personalI": "སྒེར་གྱི་གནས་ཚུལ།",
       "relatedM": "ཕྱོགས་བསྒྲིགས་ཨང་། {{resLabel.value}}",
-      "relatedS": "ཐོན་རིམ་གྱི་ཨང་།"
+      "relatedS": "ཐོན་རིམ་གྱི་ཨང་། {{resLabel.value}}"
    },
    "user": {
       "photo": {
