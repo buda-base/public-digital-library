@@ -724,7 +724,7 @@
       "fairUseIA2": "བརྩམས་ཆོས་འདི་ལ་ Internet Archive ནང་ནས་གཟིགས།",
       "not": "བཤེར་པར་མི་འདུག",
       "imageN":"(བཤེར་པར་འདི་ནི་པར་དབང་ཅན་ཡིན་པས་བལྟ་མི་ཐུབ།)",
-      "fairuseEtext": "BDRC <bold>restricts access<\/bold> to this work because the work is under <bold>copyright<\/bold>."
+      "fairuseEtext": "BDRC ཡིས་དཔེ་ཆ་འདི་<bold>བཀག་རྒྱ་ཅན་</bold> བྱས་ཡོད། རྒྱུ་མཚན་ནི་བརྩམས་ཆོས་འདི་ <bold>པར་དབང་</bold> ཅན་ཡིན།"
    },
    "location": {
       "beginV": "པོད་ {{num,counttobo}} ནས་",
