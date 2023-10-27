@@ -752,7 +752,7 @@
    "viewer":{
       "_dash":" — ",
       "addItem": "འདི་ནས་སྣོན།",
-      "addNewObject": "URL བརྒྱུད་ནས་དངོས་རིགས་གསར་པ་སྣོན་འཇུག་བྱོས།",
+      "addNewObject": "URL བརྒྱུད་ནས་དངོས་རིགས་གསར་པ་སྣོན།",
       "addSlotAbove": "Slot སྒང་ལ་སྣོན།",
       "addSlotBelow": "Slot འོག་ལ་སྣོན།",
       "addSlotLeft": "Slotགཡོན་ལ་སྣོན།",
