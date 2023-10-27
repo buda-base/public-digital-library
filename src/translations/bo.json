@@ -733,7 +733,7 @@
       "endV": "པོད་ {{num,counttobo}} བར།",
       "endP": "ཤོག་ངོས་ {{num,counttobo}} ནས་",
       "endL": "ཐིག་ཕྲེང་ {{num,counttobo}} བར།",
-      "tooltip": "No image indication found.<newL/>You might have to find the right page by yourself.",
+      "tooltip": "བཤེར་པར་མཚོན་བྱེད་གང་ཡང་རྙེད་མ་སོང་།<newL/>ཁྱེད་རང་རང་གིས་ཤོག་ངོས་འགྲིག་པ་ཞིག་འཚོལ་དགོས།",
       "line": "{{num}}"
    },
    "footer": {
