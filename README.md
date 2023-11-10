@@ -39,3 +39,23 @@ Use our [transifex project](https://www.transifex.com/bdrc/buda-library/dashboar
 
 Note: strings that don't need to appear in a language are translated as a single [zero-width space](https://en.wikipedia.org/wiki/Zero-width_space) "​". If the target string is left empty, Transifex will automatically fill it in with the source text.
 
+# Stanza for EZProxy
+
+```
+AnonymousURL +https://ldspdi.bdrc.io/*
+AnonymousUrl +https://editserv.brdc.io/*
+AnonymousURL +https://iiifpres.bdrc.io*
+AnonymousURL +https://iiif.bdrc.io*
+Title BUDA - Buddhist Digital Resource Center
+URL https://library.bdrc.io
+Host library.bdrc.io
+HJ https://library.bdrc.io
+HJ https://ldspdi.bdrc.io
+HJ https://iiif.bdrc.io
+HJ https://iiifpres.bdrc.io
+HJ bdrc.io
+DJ bdrc.io
+NeverProxy http://purl.bdrc.io
+NeverProxy https://purl.bdrc.io
+AnonymousURL -*
+```
