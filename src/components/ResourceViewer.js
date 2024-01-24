@@ -460,6 +460,7 @@ let propOrder = {
       "rdfs:seeAlso",
       "bdo:incipit",
       "bdo:authorshipStatement",
+      "tmp:outlineAuthorshipStatement",
       "bdo:explicit",
       "bdo:colophon",
       "bdo:instanceEvent",
@@ -4773,7 +4774,7 @@ class ResourceViewer extends Component<Props,State>
                {
                   loggergen.log("here:",this.props.collecManif)
 
-                  if(this.props.imageAsset.match(/[/]collection[/]/) && (!this.props.collecManif || this.props.monovolume === false))
+                  if(this.props.imageAsset.match(/[/]collection[/]/) && (!this.props.collecManif || true || this.props.monovolume === false))
                   {
                      data.push({"collectionUri": this.props.imageAsset +"?continuous=true", location:"Test Collection Location" })
                      //if(this.props.manifests) data = data.concat(this.props.manifests.map(m => ({manifestUri:m["@id"],label:m["label"]})))
@@ -6857,8 +6858,8 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
       let data = kZprop.map((k) => {
 
             let elem = this.getResourceElem(k);
-            // #783
-            if(k === bdo+"authorshipStatement" && this.props.outlines && !elem?.length) {
+            // #783 + #851
+            if(k === tmp+"outlineAuthorshipStatement" && this.props.outlines /*&& !elem?.length*/) {
                let nodes = this.props.outlines[this.props.IRI]
                if(nodes && nodes["@graph"]) nodes = nodes["@graph"] 
                if(nodes?.filter) {
@@ -9643,9 +9644,10 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
       }
       else {
 
-         let listWithAS = [ ], tmpElem = this.getResourceElem(bdo+"authorshipStatement")
+         // #851
+         let listWithAS = [ ], tmpElem = this.getResourceElem(tmp+"outlineAuthorshipStatement")
          if(!tmpElem?.length && this.props.outlines && this.props.outlines[this.props.IRI]) {
-            listWithAS = [ bdo+"authorshipStatement" ]
+            listWithAS = [ tmp+"outlineAuthorshipStatement" ]
          }
          
          let theDataTop = this.renderData(topProps,iiifpres,title,otherLabels,"top-props","main-info")      

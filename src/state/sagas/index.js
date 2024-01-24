@@ -1388,6 +1388,7 @@ async function getManifest(url,iri,thumb) {
             else manifests = manif.manifests
             if(!collecManif) { 
                collecManif = manif.manifests[0]["@id"]
+               console.log("collec?",collecManif,manif,isSingle)
                store.dispatch(dataActions.gotManifest(manif,iri,collecManif,manif.manifests.length === 1))
             }
             if(!isSingle) collecManif = null  //manif.manifests[0]["@id"]
