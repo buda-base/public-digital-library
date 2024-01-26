@@ -5167,7 +5167,7 @@ class ResourceViewer extends Component<Props,State>
 
          //loggergen.log("iiif:",this.props.firstImage,this.props.imageAsset,iiif,this.props.config)
 
-         let id = this.props.IRI.replace(/^[^:]+:./,"")
+         let id = this.props.IRI.replace(/^[^:]+:[MW]+/,"")
          if(this.props.imageAsset.match(/[/]i:/) || (this.props.imageAsset.match(/[/]wio:/) && this.props.manifests)) {
             pdfLink = iiif+"/download/pdf/wi:bdr:W"+id+"::bdr:I"+id ;
          }
