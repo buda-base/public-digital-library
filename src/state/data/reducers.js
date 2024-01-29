@@ -7,6 +7,7 @@ import _ from 'lodash';
 import {fullUri} from '../../components/App'
 import qs from 'query-string'
 import history from '../../history';
+import { narrowWithString } from "../../lib/langdetect"
 
 import logdown from 'logdown'
 
@@ -1136,6 +1137,12 @@ export const gotOutline = (state: DataState, action: Action) => {
       let uri = fullUri(e["@id"])
       if(e["skos:prefLabel"]) {
          if(!assoR[e["@id"]]) assoR[e["@id"]] = { [uri]:[] }
+         // #852
+         if(typeof e["skos:prefLabel"] == "string") { 
+            const val = e["skos:prefLabel"]
+            let lang = narrowWithString(val)
+            e["skos:prefLabel"]= { "@value": val, "@language": lang[0] === "tibt" ? "bo": "?" }
+         }
          if(!Array.isArray(e["skos:prefLabel"])) e["skos:prefLabel"] = [ e["skos:prefLabel"] ]
          assoR[e["@id"]][uri] = assoR[e["@id"]][uri].concat( e["skos:prefLabel"].map(p => ({ value:p["@value"], lang:p["@language"], type:skos+"prefLabel" })))
       }

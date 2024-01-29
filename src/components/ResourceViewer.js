@@ -8639,6 +8639,11 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
                                        let hideT = (lasTy === title.type)
                                        lasTy = title.type
                                        if(title && title["rdfs:label"]) title = title["rdfs:label"]
+                                       // #852
+                                       if(typeof title == "string") { 
+                                          let lang = narrowWithString(title)
+                                          title = { "@value": title, "@language":lang[0] === "tibt" ? "bo": "?" }
+                                       }
                                        if(!Array.isArray(title)) title = [ title ]                                      
                                        title = title.map(f => ({value:f["@value"],lang:f["@language"], type:"literal"}))                                       
                                        //loggergen.log("title?",JSON.stringify(title,null,3),g)
