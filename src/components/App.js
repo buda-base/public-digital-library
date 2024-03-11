@@ -1095,16 +1095,40 @@ export function top_right_menu(that,etextTitle,backUrl,etextres)
    let msgPopupOn = !that.props.history.location.pathname.includes("/static/") 
       && !that.props.history.location.pathname.includes("/buda-user-guide") 
       && that.props.config?.msg?.some((m,i) => m.popup && (!m.condition || eval(m.condition)) && !that.state.collapse["msgPopup"+(m.id?"-"+m.id:"")])
-   
+
+   const motto = "", 
+      overNav = (
+         <div class="over-nav">
+            <div>
+               <div><i>Preserving buddhist literature for the world</i></div>
+               <div>
+                  <a href="https://www.bdrc.io/about-us" target="_blank" rel="nofollow">About Us</a>
+                  <Link to="/buda-user-guide">User Guide</Link>
+                  <a href="https://bdrc.io/donation" target="_blank" rel="nofollow">Donate</a>
+               </div>
+            </div>
+         </div>
+      ),
+      innerNav = (
+         <div class="inner-nav">
+            <div>Tibetan Tradition</div>
+            <div>Pali / SEA Tradition</div>
+            <div>Sanskrit Tradition</div>
+            <div>Chinese Tradition</div>
+         </div>
+      )
 
    if(etextTitle)
       return (<>
       {!that.props.portraitPopupClosed && portrait}
-      <div class={"mobile-button top"+(!that.state.collapse.navMenu?" off":" on")} onClick={()=>that.setState({collapse:{...that.state.collapse,navMenu:!that.state.collapse.navMenu}})}><img src="/icons/burger.svg" /></div>
+      <div class={"mobile-button top"+(!that.state.collapse.navMenu?" off":" on")} onClick={()=>that.setState({collapse:{...that.state.collapse,navMenu:!that.state.collapse.navMenu}})}><img src="/icons/burger.svg" /></div>      
+      {overNav}
       <div class={"nav etext-nav"+(onZhMirror?" zhMirror":"")+(that.state.collapse.navMenu?" on":"") +(msgPopupOn?" msgPopupOn":"") }>
          {uiLangPopup}
          <div>
             {logo}
+
+            { innerNav}
 
             <span id="back">{ backUrl && <><span>&lt;</span> <a //{...etextres?{href:"/show/"+etextres}:{}}
                onClick={(ev   ) => {
@@ -1251,12 +1275,15 @@ export function top_right_menu(that,etextTitle,backUrl,etextres)
       return ([
       !that.props.portraitPopupClosed? portrait:null,
       <div class={"mobile-button top"+(!that.state.collapse.navMenu?" off":" on")} onClick={() => that.setState({collapse:{...that.state.collapse,navMenu:!that.state.collapse.navMenu}})}><img src="/icons/burger.svg" /></div>,
+      overNav,
       <div class={"nav"+(onZhMirror?" zhMirror":"")+ (that.state.collapse.navMenu?" on":"")+(onKhmerServer||onKhmerUrl?" khmerServer":"")
                +(msgPopupOn?" msgPopupOn":"")
          }>
          {uiLangPopup}
           <div>
          {logo}
+
+         { innerNav}
 
          { !onKhmerServer && [
             !onZhMirror &&  <a id="about" href={"https://bdrc.io"} target="_blank">{I18n.t("topbar.about")}</a> 

@@ -602,9 +602,29 @@ html[lang="bo"] .msg-popup .front p { font-size:18px;}
 
 .nav #back span + a { padding-top:4px;}
 
+.over-nav { display: flex; align-items: center; justify-content: center; height:50px; background:#172832; position: fixed; width:100% ; top:0; z-index:100000}
+
+.over-nav > div a,
+.over-nav > div { color:white; text-decoration: none; }
+
+.over-nav > div a { 
+   /* text-transform: uppercase; font-size:14px; font-weight:600;  */
+   display: inline-block; margin-left:50px;
+}
+
+.over-nav > div, 
+#etext-nav > div,
 #etext-nav > div,
 .nav > div { width:1222px; display:flex;justify-content: space-between;align-items:center; max-width:100%;}
 /* .nav > div > a > img { height:50px; } */
+
+.over-nav + .nav { top: 50px; }
+.over-nav + .nav > div > :not(#logo, #lang, .inner-nav) { display:none; }
+
+.over-nav + .nav .inner-nav { display: flex; }
+.over-nav + .nav .inner-nav > div { margin:25px; }
+
+.over-nav + .nav ~ .App { margin-top: 50px; }
 
 .nav > div > div > a > img { vertical-align: middle;}
 
