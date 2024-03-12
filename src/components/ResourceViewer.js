@@ -9955,6 +9955,18 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
             { ["Images","Instance"].includes(_T) && <abbr class="unapi-id" title={this.props.IRI}></abbr> }
             { infoPanelR }
             <div {...searchUrl?{"data-searchUrl":searchUrl}:{}} className={"resource "+hasTabs+getEntiType(this.props.IRI).toLowerCase() + (this.props.simple?" simple":"") + (this.props.preview?" preview":"") /*+(!this.props.portraitPopupClosed?" portrait-warn-on":"")*/} {...this.props.simple?{onClick:sendMsg}:{}}>                              
+               <div class='inner-search-bar'>
+                  <div>
+                     <span>Search</span>
+                     <span>
+                        <input type="text"/>
+                        <IconButton>
+                           <SearchIcon />
+                        </IconButton>
+                        <Link to="/">Advanced search</Link>
+                     </span>
+                  </div>
+               </div>
                {searchUrl && <div class="ariane">
                   <Link to={fromStaticRoute?searchUrl:"/search?"+searchUrl} onClick={(ev) => {
                      this.props.onLoading("search",true)                     

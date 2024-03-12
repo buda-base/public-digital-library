@@ -602,7 +602,13 @@ html[lang="bo"] .msg-popup .front p { font-size:18px;}
 
 .nav #back span + a { padding-top:4px;}
 
-.over-nav { display: flex; align-items: center; justify-content: center; height:50px; background:#172832; position: fixed; width:100% ; top:0; z-index:100000}
+
+
+
+
+.over-nav { display: flex; align-items: center; justify-content: center; height:50px; background:#172832; position: fixed; width:100% ; top:0; 
+   z-index:10000000; left:0;
+}
 
 .over-nav > div a,
 .over-nav > div { color:white; text-decoration: none; }
@@ -618,13 +624,110 @@ html[lang="bo"] .msg-popup .front p { font-size:18px;}
 .nav > div { width:1222px; display:flex;justify-content: space-between;align-items:center; max-width:100%;}
 /* .nav > div > a > img { height:50px; } */
 
-.over-nav + .nav { top: 50px; }
+.over-nav + .nav { top: 50px; z-index:10000000; }
 .over-nav + .nav > div > :not(#logo, #lang, .inner-nav) { display:none; }
 
 .over-nav + .nav .inner-nav { display: flex; }
 .over-nav + .nav .inner-nav > div { margin:25px; }
 
 .over-nav + .nav ~ .App { margin-top: 50px; }
+
+.resource .over-nav ~ .title,
+.resource .over-nav ~ #head {
+   display:none;
+}
+
+#root > div > .infoPanel + .resource {
+   width:1440px;
+   box-sizing: border-box;
+   padding: 50px 110px;
+}
+
+#root > div > .infoPanel + .resource > .index {
+   padding-top:110px;
+}
+
+#root > div > .infoPanel + .resource > .index + div > #head + .data {
+   padding-top:160px;
+}
+
+.infoPanel + .resource > .ariane { 
+   top:160px; 
+   left:50px; 
+}
+
+.infoPanel + .resource > .inner-search-bar:not(#a) {
+   position:fixed;
+   height:80px;
+   background:#fce08d;
+   top:130px;
+   left:calc((100% - 1440px)/2);
+   width:1440px;
+   box-sizing: border-box;
+   margin-left:0;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   z-index:10000000;
+}
+
+.infoPanel + .resource > .inner-search-bar:not(#a) > div {
+   width:1222px;
+   margin:auto;
+   display: flex;
+   align-items: baseline;
+}
+
+.infoPanel + .resource > .inner-search-bar:not(#a) > div > span:first-child {
+   width:15%;
+   display: block;
+   font-size:14px;
+   font-weight:700;
+   color:#343434;
+}
+
+
+.infoPanel + .resource > .inner-search-bar:not(#a) > div > span:last-child {
+   width:85%;
+   display: block;
+   position: relative;
+}
+
+.infoPanel + .resource > .inner-search-bar:not(#a) > div > span:last-child input {
+   padding:5px;
+   display: block;
+   width:100%;
+   box-sizing: border-box;
+}
+
+.infoPanel + .resource > .inner-search-bar:not(#a) > div > span:last-child input ~ button {
+   position:absolute;
+   right:0;
+   top:0;
+   width:32px;
+   height: 32px;
+}
+
+
+.infoPanel + .resource > .inner-search-bar:not(#a) > div > span:last-child input ~ a {
+   position:absolute;
+   right:0;
+   top:100%;
+   text-decoration: none;
+   font-size:12px;
+   line-height: 24px;
+   font-weight: 700;
+   color:#343434;
+}
+
+
+
+.H100vh .infoPanel + .resource > .inner-search-bar:not(#a),
+.H100vh .over-nav,
+.H100vh .over-nav + .nav { z-index:1000; }
+
+
+
 
 .nav > div > div > a > img { vertical-align: middle;}
 
