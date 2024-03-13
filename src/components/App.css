@@ -602,46 +602,55 @@ html[lang="bo"] .msg-popup .front p { font-size:18px;}
 
 .nav #back span + a { padding-top:4px;}
 
+.over-nav > div,
+#etext-nav > div,
+.nav > div { width:1222px; display:flex;justify-content: space-between;align-items:center; max-width:100%;}
 
+/* ------------------------ new UX ------------------------- */
 
+.infoPanel.inRes { margin-top:0 !important; }
 
+.over-nav ~ div .resource > .index,
+.over-nav ~ div .resource > div:last-child > .title,
+.over-nav ~ div .resource > div:last-child > #head
+{ display:none; }
 
-.over-nav { display: flex; align-items: center; justify-content: center; height:50px; background:#172832; position: fixed; width:100% ; top:0; 
-   z-index:10000000; left:0;
+.over-nav ~ div .resource > .index + div:not(#a) { 
+   width:100%; margin-left:0;  
+}
+
+.over-nav + .nav > div > :not(#logo, #lang, .inner-nav) { display:none; }
+.over-nav + .nav .inner-nav { display: flex; }
+
+.over-nav + .nav .inner-nav > div { margin:0 25px; line-height:44px;height:44px; }
+
+.over-nav { display: flex; align-items: center; justify-content: center; height:50px; background:#172832; 
+   position: relative; width:100% ;
 }
 
 .over-nav > div a,
 .over-nav > div { color:white; text-decoration: none; }
 
 .over-nav > div a { 
-   /* text-transform: uppercase; font-size:14px; font-weight:600;  */
-   display: inline-block; margin-left:50px;
+   display: inline-block; margin-left:50px; line-height:44px;height:44px;
 }
 
-.over-nav > div, 
-#etext-nav > div,
-#etext-nav > div,
-.nav > div { width:1222px; display:flex;justify-content: space-between;align-items:center; max-width:100%;}
-/* .nav > div > a > img { height:50px; } */
-
-.over-nav + .nav { top: 50px; z-index:10000000; }
-.over-nav + .nav > div > :not(#logo, #lang, .inner-nav) { display:none; }
-
-.over-nav + .nav .inner-nav { display: flex; }
-.over-nav + .nav .inner-nav > div { margin:25px; }
-
-.over-nav + .nav ~ .App { margin-top: 50px; }
-
-.resource .over-nav ~ .title,
-.resource .over-nav ~ #head {
-   display:none;
-}
+.over-nav + .nav { position: relative; }
 
 #root > div > .infoPanel + .resource {
    width:1440px;
    box-sizing: border-box;
-   padding: 50px 110px;
+   padding-left: 110px;
+   padding-right: 110px;
 }
+
+.resource #head + .data {
+   padding-top:30px;
+   padding-bottom:30px;
+}
+
+/*
+.over-nav + .nav ~ .App { margin-top: 50px; }
 
 #root > div > .infoPanel + .resource > .index {
    padding-top:110px;
@@ -651,35 +660,40 @@ html[lang="bo"] .msg-popup .front p { font-size:18px;}
    padding-top:160px;
 }
 
-.infoPanel + .resource > .ariane { 
-   top:160px; 
-   left:50px; 
+*/
+
+.nav #logo > a:first-child img:not(#a) {
+   height:60px;
 }
 
-.infoPanel + .resource > .inner-search-bar:not(#a) {
-   position:fixed;
-   height:80px;
+.infoPanel + .resource > .ariane { 
+   padding-left:70px; 
+   margin-left:110px;
+}
+
+.inner-search-bar:not(#a) {
+   height:110px;
    background:#fce08d;
-   top:130px;
-   left:calc((100% - 1440px)/2);
    width:1440px;
+   max-width:100%;
    box-sizing: border-box;
-   margin-left:0;
+   margin:auto;
    display: flex;
    align-items: center;
    justify-content: center;
-   z-index:10000000;
 }
 
-.infoPanel + .resource > .inner-search-bar:not(#a) > div {
-   width:1222px;
+.inner-search-bar:not(#a) > div {
+   width:calc(100% - 110px * 2);
    margin:auto;
    display: flex;
    align-items: baseline;
+   padding-left:70px;
+   box-sizing: border-box;
 }
 
-.infoPanel + .resource > .inner-search-bar:not(#a) > div > span:first-child {
-   width:15%;
+.inner-search-bar:not(#a) > div > span:first-child {
+   width:calc(110px + 70px + 10px);
    display: block;
    font-size:14px;
    font-weight:700;
@@ -687,29 +701,30 @@ html[lang="bo"] .msg-popup .front p { font-size:18px;}
 }
 
 
-.infoPanel + .resource > .inner-search-bar:not(#a) > div > span:last-child {
-   width:85%;
+.inner-search-bar:not(#a) > div > span:last-child {
+   width:calc(100% - (110px + 70px + 10px));
    display: block;
    position: relative;
 }
 
-.infoPanel + .resource > .inner-search-bar:not(#a) > div > span:last-child input {
-   padding:5px;
+.inner-search-bar:not(#a) > div > span:last-child input {
+   padding:8px;
    display: block;
    width:100%;
    box-sizing: border-box;
 }
 
-.infoPanel + .resource > .inner-search-bar:not(#a) > div > span:last-child input ~ button {
+.inner-search-bar:not(#a) > div > span:last-child input ~ button {
    position:absolute;
    right:0;
    top:0;
-   width:32px;
-   height: 32px;
+   width:44px;
+   height: 44px;
+   margin-top:-4px;margin-right:-4px;
 }
 
 
-.infoPanel + .resource > .inner-search-bar:not(#a) > div > span:last-child input ~ a {
+.inner-search-bar:not(#a) > div > span:last-child input ~ a {
    position:absolute;
    right:0;
    top:100%;
@@ -718,14 +733,27 @@ html[lang="bo"] .msg-popup .front p { font-size:18px;}
    line-height: 24px;
    font-weight: 700;
    color:#343434;
+   height:44px;
+   line-height:44px;
+   margin-top:-4px;
+}
+
+.resource > .ariane { margin-top:-10px; }
+
+.resource > .ariane a span span {
+   line-height:44px;
+   height:44px;
 }
 
 
+
+/*
 
 .H100vh .infoPanel + .resource > .inner-search-bar:not(#a),
 .H100vh .over-nav,
 .H100vh .over-nav + .nav { z-index:1000; }
 
+*/
 
 
 

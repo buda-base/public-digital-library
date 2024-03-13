@@ -1096,8 +1096,7 @@ export function top_right_menu(that,etextTitle,backUrl,etextres)
       && !that.props.history.location.pathname.includes("/buda-user-guide") 
       && that.props.config?.msg?.some((m,i) => m.popup && (!m.condition || eval(m.condition)) && !that.state.collapse["msgPopup"+(m.id?"-"+m.id:"")])
 
-   const motto = "", 
-      overNav = (
+   const overNav = (
          <div class="over-nav">
             <div>
                <div><i>Preserving buddhist literature for the world</i></div>
@@ -1115,6 +1114,20 @@ export function top_right_menu(that,etextTitle,backUrl,etextres)
             <div>Pali / SEA Tradition</div>
             <div>Sanskrit Tradition</div>
             <div>Chinese Tradition</div>
+         </div>
+      ),
+      innerSearch = (
+         <div class='inner-search-bar'>
+            <div>
+               <span>Search</span>
+               <span>
+                  <input type="text"/>
+                  <IconButton>
+                     <SearchIcon />
+                  </IconButton>
+                  <Link to="/">Advanced search</Link>
+               </span>
+            </div>
          </div>
       )
 
@@ -1208,8 +1221,8 @@ export function top_right_menu(that,etextTitle,backUrl,etextres)
                   
                   
                }}>+</div> 
-         </div>
-      </div>{feedbucket}</>)
+         </div>      
+      </div>{feedbucket}{innerSearch}</>)
    else {
 
       const toggleHoverLogin = (hoverLogin,e) => {
@@ -1335,7 +1348,9 @@ export function top_right_menu(that,etextTitle,backUrl,etextres)
          { <div class="close" onClick={()=>that.setState({collapse:{...that.state.collapse,navMenu:false}})}>+</div> }
        </div>
      </div>,
-     feedbucket]
+     feedbucket,
+     innerSearch,
+      ]
    )}
 }
 
@@ -7331,7 +7346,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
       if(!this._refs["barRef"]) this._refs["barRef"] = React.createRef()
 
-      const ret = (
+      const ret = (<>
+{ top_right_menu(this) }
 <div className={(this.props.simple?"simpleSearch":"")}>
    {getGDPRconsent(this)}
    {/* <Link to="/about">About</Link> */}
@@ -7350,7 +7366,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             data-rotation="0"
             style={{width:"100%",height:"calc(100vh)",backgroundColor: "#000"}}/> */}
 
-          { top_right_menu(this) }
+          
 
          <div className={"App "+(message.length == 0 && !this.props.loading && !this.props.keyword ? "home":"") + (this.props.config.khmerServer?" khmerServer":"")} style={{display:"flex"}}>
             <div className={"SearchPane"+(this.props.keyword ?" resultPage":"") }  ref={this._refs["logo"]}>            
@@ -7793,6 +7809,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          </div>
          { message.length == 0 && !this.props.loading && !this.props.keyword && (!this.props.config || !this.props.config.chineseMirror) && <Footer locale={this.props.locale} hasSyncs={this.props.config.khmerServer || this.props.latestSyncsNb > 0}/> }
       </div>
+      </>
       );
 
       subtime("render")

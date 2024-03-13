@@ -9611,9 +9611,9 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
 
          return ([
             getGDPRconsent(this),
+            top_right_menu(this,title,searchUrl,etextRes),
             <div class={monlamResults ? "withMonlam" : ""}>               
-               { monlamResults && <link rel="stylesheet" href="https://monlamdic.com/dictionarys/files/css/basic.css" /> }
-               { top_right_menu(this,title,searchUrl,etextRes) }               
+               { monlamResults && <link rel="stylesheet" href="https://monlamdic.com/dictionarys/files/css/basic.css" /> }               
                { this.renderMirador(isMirador) }           
                <div class="resource etext-view" >
                   <Loader loaded={!this.props.loading}  options={{position:"fixed",left:"50%",top:"50%"}} />      
@@ -9951,22 +9951,11 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
          <Helmet>
             <link rel="canonical" href={"https://library.bdrc.io"+this.props.history.location.pathname} />
          </Helmet>,
+         top_right_menu(this),
          <div class={isMirador?"H100vh OF0":""}>
             { ["Images","Instance"].includes(_T) && <abbr class="unapi-id" title={this.props.IRI}></abbr> }
             { infoPanelR }
-            <div {...searchUrl?{"data-searchUrl":searchUrl}:{}} className={"resource "+hasTabs+getEntiType(this.props.IRI).toLowerCase() + (this.props.simple?" simple":"") + (this.props.preview?" preview":"") /*+(!this.props.portraitPopupClosed?" portrait-warn-on":"")*/} {...this.props.simple?{onClick:sendMsg}:{}}>                              
-               <div class='inner-search-bar'>
-                  <div>
-                     <span>Search</span>
-                     <span>
-                        <input type="text"/>
-                        <IconButton>
-                           <SearchIcon />
-                        </IconButton>
-                        <Link to="/">Advanced search</Link>
-                     </span>
-                  </div>
-               </div>
+            <div {...searchUrl?{"data-searchUrl":searchUrl}:{}} className={"resource "+hasTabs+getEntiType(this.props.IRI).toLowerCase() + (this.props.simple?" simple":"") + (this.props.preview?" preview":"") /*+(!this.props.portraitPopupClosed?" portrait-warn-on":"")*/} {...this.props.simple?{onClick:sendMsg}:{}}>                                             
                {searchUrl && <div class="ariane">
                   <Link to={fromStaticRoute?searchUrl:"/search?"+searchUrl} onClick={(ev) => {
                      this.props.onLoading("search",true)                     
@@ -10000,8 +9989,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
                   { rTitle && this.state.title.images && sideMenu(this.state.title.images[0].value,"Images", false, rDataExt, false, rView && !orig, etextUT) }
                   </div>
                </div>
-               <div>
-                  { top_right_menu(this) }               
+               <div>                               
                   {/* { this.renderAnnoPanel() } */}
                   { this.renderWithdrawn() }             
                   <div class="title">{ wTitle }{ iTitle }{ rTitle }</div>

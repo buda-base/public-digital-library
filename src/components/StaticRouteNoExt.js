@@ -224,20 +224,22 @@ export class StaticRouteNoExt extends Component<State, Props>
     render(props) {         
         if(I18n.language && this.props.locale && this.state.error) return <Redirect404  history={history}  auth={auth}/>
         else return (
-            <div>
-                { (!I18n.language || !this.props.locale || !this.state.content) && <Loader loaded={false} /> }
-                <div class={"App home static"+(this.props.config && this.props.config.khmerServer ? " khmer":"")}>
-                    <div class="SearchPane">
-                        <div className="static-container" data-dir={this.props.dir} data-page={this.props.page}>
-                            <div {...!this.props.config || !this.props.config.khmerServer?{id:"samples"}:{}} >
-                                {HTMLparse(this.props.dir.includes("budax/")?"<div>"+this.state.content+"</div>":this.state.content)}
-                            </div>
-                        </div> 
-                    </div>
-                </div>
+            <>
                 { top_right_menu(this) }
-                { this.props.config && this.props.config.khmerServer && <Footer locale={this.props.locale} hasSyncs={true}/> }
-            </div>
+                <div>
+                    { (!I18n.language || !this.props.locale || !this.state.content) && <Loader loaded={false} /> }
+                    <div class={"App home static"+(this.props.config && this.props.config.khmerServer ? " khmer":"")}>
+                        <div class="SearchPane">
+                            <div className="static-container" data-dir={this.props.dir} data-page={this.props.page}>
+                                <div {...!this.props.config || !this.props.config.khmerServer?{id:"samples"}:{}} >
+                                    {HTMLparse(this.props.dir.includes("budax/")?"<div>"+this.state.content+"</div>":this.state.content)}
+                                </div>
+                            </div> 
+                        </div>
+                    </div>
+                    { this.props.config && this.props.config.khmerServer && <Footer locale={this.props.locale} hasSyncs={true}/> }
+                </div>
+            </>
         );
     }
 }
