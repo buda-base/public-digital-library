@@ -50,7 +50,7 @@ class Footer extends Component<Props,State> {
                 <div class="foot">
                     <div class="p60" id="t1">
                         <div class="p50" id="p1"><img src="/icons/Print-BDRC-icon.svg"/><div lang={this.props.locale}>{I18n.t("footer.print")}<a href={"https://bdrc.io/?p=1355"+locale.replace(/[?]/,"&")} target="_blank" lang={this.props.locale}>{I18n.t("footer.order")}</a></div></div>
-                        <div class="p50" id="p2"><img src="/icons/Newsletter-BDRC-icon.svg"/><div lang={this.props.locale}>{I18n.t("footer.join")}<a href="https://tbrc.us5.list-manage.com/subscribe?u=a0b3cdd708836773fd5c50233&id=45722d0d96" target="_blank" lang={this.props.locale}>{I18n.t("footer.subscribe")}</a></div></div>
+                        <div class="p50" id="p2"><img src="/icons/Newsletter-BDRC-icon.svg"/><div lang={this.props.locale}>{I18n.t("footer.join")}<a href="https://bdrc.app.neoncrm.com/np/clients/bdrc/subscribe.jsp?subscription=3" target="_blank" lang={this.props.locale}>{I18n.t("footer.subscribe")}</a></div></div>
                     </div>
                     <div class="p40" id="t2">
                         <div class="p65" id="p1"><img src="/icons/donation.svg"/><span lang={this.props.locale}>{I18n.t("footer.support")}</span></div>
