@@ -58,7 +58,7 @@ export default function AutocompleteKeywordInput(props) {
 
    return <>
     <input type="text" value={keyword ?? ""} onChange={changeKeyword}/>
-      { suggest?.length && <>
+      { suggest?.length > 0 && <>
         <div class="suggestions">
           { suggest.map(s => <span><Link to={"/search?q="+s.res.replace(/<[^>]+>/g,"")+"&t="+s.category}>{HTMLparse(s.res)}</Link></span> ) }
         </div> 
