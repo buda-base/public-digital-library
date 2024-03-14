@@ -622,7 +622,7 @@ html[lang="bo"] .msg-popup .front p { font-size:18px;}
 .over-nav + .nav > div > :not(#logo, #lang, .inner-nav) { display:none; }
 .over-nav + .nav .inner-nav { display: flex; }
 
-.over-nav + .nav .inner-nav > div { margin:0 25px; line-height:44px;height:44px; }
+.over-nav + .nav .inner-nav > div { margin:0 25px; line-height:44px;height:44px; font-size:16px;}
 
 .over-nav { display: flex; align-items: center; justify-content: center; height:50px; background:#172832; 
    position: relative; width:100% ;
@@ -672,10 +672,10 @@ html[lang="bo"] .msg-popup .front p { font-size:18px;}
 }
 
 .inner-search-bar:not(#a) {
+   width:1440px;
+   max-width:97%;
    height:110px;
    background:#fce08d;
-   width:1440px;
-   max-width:100%;
    box-sizing: border-box;
    margin:auto;
    display: flex;
@@ -754,8 +754,33 @@ html[lang="bo"] .msg-popup .front p { font-size:18px;}
 .H100vh .over-nav + .nav { z-index:1000; }
 
 */
+@media (max-width: 1320px) {
+   .nav:not(#a), .over-nav {
+      padding-left: 1.5%;
+      padding-right: 1.5%;
+      max-width: 100%;
+      box-sizing: border-box;
+   }
 
+   .nav #logo { width:210px; position: relative;}
 
+   .nav #logo:not(#a),
+   .nav #logo > a:first-child { display:block; }
+
+   .nav #logo > a:first-child span:not(#a) { padding-top:3px; font-weight: 500;}
+   
+   .nav #logo > a:first-child img { float:left; vertical-align: baseline;}
+
+   .nav #logo > a:last-child img { position:absolute; right:0; top:10px; }
+
+   .nav #logo #by { margin-right:5px; }
+
+   .nav #logo #by + a span:not(#a) { font-weight:500; font-size:18px; }
+
+   .over-nav + .nav .inner-nav > div { line-height:normal; height:auto; max-width:80px; text-align: center; }
+}
+
+/* ----------------------------- end new-UX ---------------------------- */
 
 .nav > div > div > a > img { vertical-align: middle;}
 
