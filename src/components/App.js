@@ -101,6 +101,8 @@ import Footer from "./Footer"
 import store from "../index"
 import {closePortraitPopup} from "../state/ui/actions"
 
+import AutocompleteKeywordInput from "./AutocompleteKeywordInput"
+
 import {svgEtextS,svgImageS} from "./icons"
 
 import logdown from 'logdown'
@@ -1121,7 +1123,7 @@ export function top_right_menu(that,etextTitle,backUrl,etextres)
             <div>
                <span>Search</span>
                <span>
-                  <input type="text"/>
+                  <AutocompleteKeywordInput { ...{ that } }/>
                   <IconButton>
                      <SearchIcon />
                   </IconButton>

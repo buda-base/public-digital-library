@@ -674,13 +674,15 @@ html[lang="bo"] .msg-popup .front p { font-size:18px;}
 .inner-search-bar:not(#a) {
    width:1440px;
    max-width:97%;
-   height:110px;
+   height:120px;
    background:#fce08d;
    box-sizing: border-box;
    margin:auto;
    display: flex;
    align-items: center;
    justify-content: center;
+   z-index:10;
+   position: relative;
 }
 
 .inner-search-bar:not(#a) > div {
@@ -708,10 +710,11 @@ html[lang="bo"] .msg-popup .front p { font-size:18px;}
 }
 
 .inner-search-bar:not(#a) > div > span:last-child input {
-   padding:8px;
+   padding:12px;
    display: block;
    width:100%;
    box-sizing: border-box;
+   font-size:16px;
 }
 
 .inner-search-bar:not(#a) > div > span:last-child input ~ button {
@@ -720,7 +723,7 @@ html[lang="bo"] .msg-popup .front p { font-size:18px;}
    top:0;
    width:44px;
    height: 44px;
-   margin-top:-4px;margin-right:-4px;
+   margin-top:0px;margin-right:0px;
 }
 
 
@@ -745,7 +748,36 @@ html[lang="bo"] .msg-popup .front p { font-size:18px;}
    height:44px;
 }
 
+.inner-search-bar .suggestions {
+   background:white;
+   box-shadow:0 0 5px 3px rgba(0,0,0,0.25);
+   position:absolute;
+   z-index:100;
+   max-width:100%;
+   overflow: hidden;
+   box-sizing: border-box;   
+}
 
+.inner-search-bar .suggestions span {
+   line-height:44px;
+   height:44px;
+   display:block;
+   padding:0 10px;
+}
+
+.inner-search-bar .suggestions span a {
+   text-decoration: none;
+   color:#343434;
+   display: block;
+}
+
+.inner-search-bar .suggestions span suggested {
+   font-weight:700;
+}
+
+.inner-search-bar .suggestions span:hover {
+   background-color:rgba(0,0,0,0.05);
+}
 
 /*
 
