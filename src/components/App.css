@@ -627,7 +627,7 @@ html[lang="bo"] .msg-popup .front p { font-size:18px;}
 .over-nav + .nav .inner-nav > div { margin:0 25px; line-height:44px;height:44px; font-size:16px;}
 
 .over-nav { display: flex; align-items: center; justify-content: center; height:50px; background:#172832; 
-   position: relative; width:100% ;
+   position: relative; width:100% ; z-index:100;
 }
 
 .over-nav > div a,
@@ -676,8 +676,7 @@ html[lang="bo"] .msg-popup .front p { font-size:18px;}
 .inner-search-bar:not(#a) {
    width:1440px;
    max-width:97%;
-   height:120px;
-   background:#fce08d;
+   height:120px;   
    box-sizing: border-box;
    margin:auto;
    display: flex;
@@ -685,6 +684,16 @@ html[lang="bo"] .msg-popup .front p { font-size:18px;}
    justify-content: center;
    z-index:10;
    position: relative;
+}
+
+.inner-search-bar:not(#a)::after {
+   content:'';
+   position: absolute;
+   width:100%;
+   height:100%;
+   background:#fce08d;
+   left:0;
+   top:0;   
 }
 
 .inner-search-bar:not(#a) > div {
@@ -702,6 +711,7 @@ html[lang="bo"] .msg-popup .front p { font-size:18px;}
    font-size:14px;
    font-weight:700;
    color:#343434;
+   z-index:1;
 }
 
 
@@ -717,6 +727,8 @@ html[lang="bo"] .msg-popup .front p { font-size:18px;}
    width:100%;
    box-sizing: border-box;
    font-size:16px;
+   position: relative;
+   z-index:101;
 }
 
 .inner-search-bar:not(#a) > div > span:last-child input ~ button {
@@ -741,6 +753,7 @@ html[lang="bo"] .msg-popup .front p { font-size:18px;}
    height:44px;
    line-height:44px;
    margin-top:-4px;
+   z-index:1;
 }
 
 .resource > .ariane { margin-top:-10px; }
@@ -752,7 +765,7 @@ html[lang="bo"] .msg-popup .front p { font-size:18px;}
 
 .inner-search-bar .suggestions {
    background:white;
-   box-shadow:0 0 5px 3px rgba(0,0,0,0.25);
+   box-shadow:0 2px 3px 1px rgba(0,0,0,0.25);
    position:absolute;
    z-index:100;
    max-width:100%;
@@ -760,25 +773,61 @@ html[lang="bo"] .msg-popup .front p { font-size:18px;}
    box-sizing: border-box;   
 }
 
-.inner-search-bar .suggestions span {
+.inner-search-bar .suggestions > span {
    line-height:44px;
    height:44px;
    display:block;
-   padding:0 10px;
+   padding:0 10px;   
 }
 
-.inner-search-bar .suggestions span a {
+.inner-search-bar .suggestions > span a {
    text-decoration: none;
    color:#343434;
-   display: block;
+   display: flex;
+   white-space: nowrap;
 }
 
-.inner-search-bar .suggestions span suggested {
+.inner-search-bar .suggestions > span suggested {
    font-weight:700;
+   display: inline;
 }
 
-.inner-search-bar .suggestions span:hover {
+.inner-search-bar .suggestions > span:hover {
    background-color:rgba(0,0,0,0.05);
+}
+
+.inner-search-bar .suggest-bg {
+   width:100%;
+   height:100%;
+   position:fixed;
+   top:0;
+   left:0;
+   background:rgba(0,0,0,0.35)
+}
+
+
+.inner-search-bar .suggestions .suggest-str {
+   white-space:nowrap;
+
+   max-width:calc(100% - 0px); 
+   text-overflow: ellipsis;
+   overflow:hidden;
+} 
+
+.inner-search-bar .suggestions .suggest-in {
+   font-style:italic;
+   color:#888;
+   margin: 0 5px;
+}
+
+
+.inner-search-bar .suggestions .suggest-types {
+   color:#888;
+   font-weight:600;
+}
+
+.inner-search-bar .suggestions .suggest-types img { 
+   height:23px; vertical-align: middle; opacity:0.65; margin-left:5px;
 }
 
 /*

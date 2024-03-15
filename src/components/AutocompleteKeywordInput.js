@@ -2,6 +2,7 @@
 import React, { useState } from "react"
 import HTMLparse from "html-react-parser";
 import { Link } from "react-router-dom"
+import I18n from 'i18next';
 
 import { keywordtolucenequery } from "./App"
 
@@ -58,11 +59,23 @@ export default function AutocompleteKeywordInput(props) {
       debounce(getAutocomplete)(ev)
    }
 
+   const removeSuggestions = () => { 
+    setTimeout(() => setSuggest([]), 150)
+   }
+
    return <>
-    <input type="text" value={keyword ?? ""} onChange={changeKeyword}/>
+    <input type="text" value={keyword ?? ""} onChange={changeKeyword} onFocus={changeKeyword} onBlur={removeSuggestions}
+      />
       { suggest?.length > 0 && <>
+        <div class="suggest-bg" onClick={removeSuggestions}></div>
         <div class="suggestions">
-          { suggest.map(s => <span><Link to={"/search?q="+keywordtolucenequery(s.res.replace(/<[^>]+>/g,""), s.lang)+"&lg="+s.lang+"&t="+s.category}>{HTMLparse(s.res)}</Link></span> ) }
+          { suggest.map(s => <span>
+              <Link to={"/search?q="+keywordtolucenequery(s.res.replace(/<[^>]+>/g,""), s.lang)+"&lg="+s.lang+"&t="+s.category}>
+                <span class="suggest-str">{HTMLparse(s.res)}</span>
+                <span class="suggest-in">in</span>
+                <span class="suggest-types">{I18n.t("types."+s.category.toLowerCase(), { count:2 })}<img src={"/icons/search/"+s.category.toLowerCase()+".svg"}/></span>
+              </Link>
+            </span> ) }
         </div> 
       </>}  
    </>
