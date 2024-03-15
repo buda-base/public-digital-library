@@ -1119,7 +1119,7 @@ export function top_right_menu(that,etextTitle,backUrl,etextres)
          </div>
       ),
       innerSearch = (
-         <div class='inner-search-bar'>
+         that?.state.filters ? null : <div class='inner-search-bar'>
             <div>
                <span>Search</span>
                <span>

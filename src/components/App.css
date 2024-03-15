@@ -608,6 +608,8 @@ html[lang="bo"] .msg-popup .front p { font-size:18px;}
 
 /* ------------------------ new UX ------------------------- */
 
+#root .App .SearchPane { margin-top:0; }
+
 .infoPanel.inRes { margin-top:0 !important; }
 
 .over-nav ~ div .resource > .index,

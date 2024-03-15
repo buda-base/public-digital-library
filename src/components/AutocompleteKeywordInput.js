@@ -3,6 +3,8 @@ import React, { useState } from "react"
 import HTMLparse from "html-react-parser";
 import { Link } from "react-router-dom"
 
+import { keywordtolucenequery } from "./App"
+
 let timer;
 const debounce = (func, timeout = 300) => {
    return (...args) => {
@@ -60,7 +62,7 @@ export default function AutocompleteKeywordInput(props) {
     <input type="text" value={keyword ?? ""} onChange={changeKeyword}/>
       { suggest?.length > 0 && <>
         <div class="suggestions">
-          { suggest.map(s => <span><Link to={"/search?q="+s.res.replace(/<[^>]+>/g,"")+"&t="+s.category}>{HTMLparse(s.res)}</Link></span> ) }
+          { suggest.map(s => <span><Link to={"/search?q="+keywordtolucenequery(s.res.replace(/<[^>]+>/g,""), s.lang)+"&lg="+s.lang+"&t="+s.category}>{HTMLparse(s.res)}</Link></span> ) }
         </div> 
       </>}  
    </>
