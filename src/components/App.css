@@ -619,7 +619,7 @@ html[lang="bo"] .msg-popup .front p { font-size:18px;}
    width:100%; margin-left:0;  
 }
 
-.over-nav + .nav > div > :not(#logo, #lang, .inner-nav) { display:none; }
+.over-nav + .nav > div:not(#uiLangPopup) > :not(#logo, #lang, .inner-nav) { display:none; }
 .over-nav + .nav .inner-nav { display: flex; }
 
 .over-nav + .nav .inner-nav > div { margin:0 25px; line-height:44px;height:44px; font-size:16px;}
