@@ -78,5 +78,6 @@ export default function AutocompleteKeywordInput(props) {
             </span> ) }
         </div> 
       </>}  
+    <a style={{cursor: "pointer"}} onClick={() => that.props.onAdvancedSearch(!that.props.advancedSearch)}>Advanced search</a>
    </>
 }

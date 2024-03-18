@@ -84,6 +84,8 @@ const mapStateToProps = (state) => {
 
    let spellcheckerBo = state.data.spellcheckerBo
 
+   let advancedSearch = state.ui.advancedSearch
+
 
    let newState = { logged,config, hostFailure, searches, keyword, language,loading,datatypes,ontology,facets,
       locale,prefLang,resources,ontoSearch,rightPanel,langPreset, langIndex, langExt, failures,dictionary,metadata, assoRes, 
@@ -95,7 +97,8 @@ const mapStateToProps = (state) => {
       isNewUser,
       subscribedCollections,
       feedbucket,
-      spellcheckerBo
+      spellcheckerBo,
+      advancedSearch
    }
 
    if(config && !config.auth) newState.auth = false
@@ -173,6 +176,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       },
       onFeedbucketClick(cls:string) {
          dispatch(ui.feedbucket(cls))
+      },
+      onAdvancedSearch(s:boolean) {
+         dispatch(ui.advancedSearch(s))
       }
    }
 }

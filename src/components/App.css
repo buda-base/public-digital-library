@@ -686,6 +686,10 @@ html[lang="bo"] .msg-popup .front p { font-size:18px;}
    position: relative;
 }
 
+.SearchPane .inner-search-bar:not(#a) {
+   max-width:100%;
+}
+
 .inner-search-bar:not(#a)::after {
    content:'';
    position: absolute;
@@ -721,6 +725,10 @@ html[lang="bo"] .msg-popup .front p { font-size:18px;}
    position: relative;
 }
 
+.SearchPane .inner-search-bar:not(#a) > div > span:last-child { 
+   width:calc(100% - (110px + 70px + 10px) - 190px - 70px);
+}
+
 .inner-search-bar:not(#a) > div > span:last-child input {
    padding:12px;
    display: block;
@@ -738,6 +746,7 @@ html[lang="bo"] .msg-popup .front p { font-size:18px;}
    width:44px;
    height: 44px;
    margin-top:0px;margin-right:0px;
+   z-index: 1000;
 }
 
 

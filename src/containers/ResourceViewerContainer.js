@@ -168,6 +168,8 @@ const mapStateToProps = (state,ownProps) => {
 
    let isNewUser = state.ui.isNewUser
 
+   let advancedSearch = state.ui.advancedSearch
+
    let monlamResults = state.data.monlamResults
    let monlamKeyword = state.data.monlamKeyword
 
@@ -186,7 +188,8 @@ const mapStateToProps = (state,ownProps) => {
       useDLD,
       feedbucket,
       monlamResults, monlamKeyword,
-      isNewUser
+      isNewUser, 
+      advancedSearch
    }
 
    if(config && !config.auth) props.auth = false
@@ -292,6 +295,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       onFeedbucketClick(cls:string) {
          dispatch(ui.feedbucket(cls))
       },
+      onAdvancedSearch(s:boolean) {
+         dispatch(ui.advancedSearch(s))
+      }
    }
 }
 

@@ -1119,7 +1119,7 @@ export function top_right_menu(that,etextTitle,backUrl,etextres)
          </div>
       ),
       innerSearch = (
-         that?.state.filters ? null : <div class='inner-search-bar'>
+         that?.state.filters && !that?.props.keyword || that.props.advancedSearch ? null : <div class='inner-search-bar'>
             <div>
                <span>Search</span>
                <span>
@@ -1127,7 +1127,6 @@ export function top_right_menu(that,etextTitle,backUrl,etextres)
                   <IconButton>
                      <SearchIcon />
                   </IconButton>
-                  <Link to="/">Advanced search</Link>
                </span>
             </div>
          </div>
@@ -7414,8 +7413,19 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                { infoPanelH }
                {/* <h2>BUDA Platform</h2> */}
                {/* <h3>Buddhist Digital Resource Center</h3> */}
-               { (this.props.language && this.props.language != "-" || !this.props.keyword && !this.props.loading) && 
-               <div id="search-bar">
+               { (this.props.language && this.props.language != "-" || !this.props.keyword && !this.props.loading) && <>               
+               { !this.props.keyword && !this.props.advancedSearch && <div class='inner-search-bar'>
+                  <div>
+                     <span>Search</span>
+                     <span>
+                        <AutocompleteKeywordInput { ...{ that: this } }/>
+                        <IconButton>
+                           <SearchIcon />
+                        </IconButton>
+                     </span>
+                  </div>
+               </div> }
+               { this.props.advancedSearch && <div id="search-bar">
                { this.props.config.khmerServer && !this.props.keyword &&  !this.props.loading && 
                   <span class="links">
                      <span><Link to="/guidedsearch">{I18n.t("topbar.guided")}</Link></span>
@@ -7570,7 +7580,9 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   inputRef={(str) => { this._customLang = str }}
                   onKeyPress={(e) => this.handleCustomLanguage(e)}
                /> */ }
-               </div> }
+               </div>
+               }
+            </> }
               { ( this.state.filters.facets || this.state.filters.datatype.indexOf("Any") === -1 )&& 
                         [ /*<Typography style={{fontSize:"23px",marginBottom:"20px",textAlign:"center"}}>
                            <Translate value="Lsidebar.activeF.title" />

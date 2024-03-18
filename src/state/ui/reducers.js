@@ -134,6 +134,16 @@ export const setType = (state: UIState, action: Action) => {
 reducers[actions.TYPES.setType] = setType;
 
 
+export const advancedSearch = (state: UIState, action: Action) => {
+
+    return {
+    ...state,
+    advancedSearch:action.payload
+ }
+}
+reducers[actions.TYPES.advancedSearch] = advancedSearch;
+
+
 
 export const useDLD = (state: UIState, action: Action) => {
 
