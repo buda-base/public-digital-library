@@ -802,7 +802,8 @@ html[lang="bo"] .msg-popup .front p { font-size:18px;}
    position:fixed;
    top:0;
    left:0;
-   background:rgba(0,0,0,0.35)
+   background:rgba(0,0,0,0.35);
+   pointer-events:none;
 }
 
 
