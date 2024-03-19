@@ -1119,7 +1119,9 @@ export function top_right_menu(that,etextTitle,backUrl,etextres)
          </div>
       ),
       innerSearch = (
-         that?.state.filters && !that?.props.keyword || that.props.advancedSearch ? null : <div class='inner-search-bar'>
+         that?.state.filters && !that?.props.keyword || that?.state.filters && that.props.advancedSearch 
+         ? null 
+         : <div class={'inner-search-bar in-search-'+(that.state.filters?"true":"false")}>
             <div>
                <span>Search</span>
                <span>
@@ -1749,12 +1751,12 @@ class App extends Component<Props,State> {
             const toph = $("#filters-UI").height() 
             const navh = window.innerWidth <= 1024 ? -10 : $(".nav").height()
             const headh = $("#res-header").height()
-            if(this._refs["header"].current) $(this._refs["header"].current).css("top",(toph+navh+15)+"px") //
+            if(this._refs["header"].current) $(this._refs["header"].current).css("top",0) //(toph+navh+15)+"px") //
             
             if(window.innerWidth > 1024)
                $(ref)
                .height(window.innerHeight - rect.y + (window.innerWidth <= 1024 ? 0 : 0))
-               .css("top",(toph+navh+(window.innerWidth > 1024 ? headh+15 : 5)+"px"))
+               .css("top",70) //(toph+navh+(window.innerWidth > 1024 ? headh+15 : 5)+"px"))
             else 
                $(ref)
                .height(window.innerHeight)
@@ -7414,7 +7416,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                {/* <h2>BUDA Platform</h2> */}
                {/* <h3>Buddhist Digital Resource Center</h3> */}
                { (this.props.language && this.props.language != "-" || !this.props.keyword && !this.props.loading) && <>               
-               { !this.props.keyword && !this.props.advancedSearch && <div class='inner-search-bar'>
+               { !this.props.keyword && !this.props.advancedSearch && <div class='inner-search-bar in-search-true'>
                   <div>
                      <span>Search</span>
                      <span>
@@ -7436,6 +7438,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   <FontAwesomeIcon style={{fontSize:"21px"}} icon={faSlidersH} title="Refine Your Search"/>
                </IconButton> */}
                <div ref={this._refs["searchBar"]} style={{display:"inline-block",position:"relative"}}>
+                  <span id="simple-search" onClick={() => this.props.onAdvancedSearch(false)}>Simple search</span>
                   <SearchBar       
                      innerRef={this._refs.barRef}           
                      placeholder={I18n.t("home.search")}                        

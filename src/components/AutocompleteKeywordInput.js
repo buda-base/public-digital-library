@@ -1,10 +1,11 @@
 
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import HTMLparse from "html-react-parser";
 import { Link } from "react-router-dom"
 import I18n from 'i18next';
+import $ from "jquery"
 
-import { keywordtolucenequery } from "./App"
+import { keywordtolucenequery, lucenequerytokeyword } from "./App"
 
 let timer;
 const debounce = (func, timeout = 300) => {
@@ -20,6 +21,10 @@ export default function AutocompleteKeywordInput(props) {
    const [keyword,setKeyword] = useState("")
    const [suggest,setSuggest] = useState([])
 
+   useEffect(() => {
+    const kw = that?.state.keyword ?? that?.props.keyword ? lucenequerytokeyword(that?.state.keyword ?? that?.props.keyword) : ""
+    if(keyword != kw) setKeyword(kw)
+   }, [ that?.props.keyword, that?.state.keyword ])
 
    const getAutocomplete = async (e)  => {
 
@@ -28,6 +33,7 @@ export default function AutocompleteKeywordInput(props) {
     //console.log("auto:", searchString, server)
     
     if (searchString.length > 0) {
+            
       try {
 
         const response = await fetch(server.endpoints[server.index]+'/autosuggest', { // ADJUST PORT IF NECESSARY
@@ -40,11 +46,15 @@ export default function AutocompleteKeywordInput(props) {
         //console.log("suggest:", data)
 
         setSuggest(data)
+        
 
       }
       catch(error) { 
         console.error('Error fetching suggestions:', error);
       }
+      
+      that.setState({keyword:searchString})
+
     } else {
 
         //document.getElementById('suggestions').style.display = 'none'; // Hide if input is cleared
@@ -55,7 +65,7 @@ export default function AutocompleteKeywordInput(props) {
    const changeKeyword = (ev) => {
       ev.persist()
       //console.log("change:", ev)
-      setKeyword(ev.target.value)
+      setKeyword(ev.target.value)      
       debounce(getAutocomplete)(ev)
    }
 
@@ -64,7 +74,7 @@ export default function AutocompleteKeywordInput(props) {
    }
 
    return <>
-    <input type="text" value={keyword ?? ""} onChange={changeKeyword} onFocus={changeKeyword} onBlur={removeSuggestions}
+    <input placeholder="Search" type="text" value={keyword ?? ""} onChange={changeKeyword} onFocus={changeKeyword} onBlur={removeSuggestions}
       />
       { suggest?.length > 0 && <>
         <div class="suggest-bg" onClick={removeSuggestions}></div>
@@ -78,6 +88,18 @@ export default function AutocompleteKeywordInput(props) {
             </span> ) }
         </div> 
       </>}  
-    <a style={{cursor: "pointer"}} onClick={() => that.props.onAdvancedSearch(!that.props.advancedSearch)}>Advanced search</a>
+      { that.state.filters 
+        ? <a style={{cursor: "pointer"}} onClick={() => that.props.onAdvancedSearch(true)}>Advanced search</a>
+        : <Link to="/" onClick={(ev) => { 
+          that.props.onAdvancedSearch(true)
+          that.props.history.push({pathname:"/",search:""}); 
+          if(that.props.keyword) { that.props.onResetSearch();}
+          if(window.innerWidth > 800 && !that.state.filters)  setTimeout(() => {
+             $("#search-bar input").click()
+             document.querySelector("#search-bar input").focus()
+             document.querySelector("#search-bar").scrollIntoView({block: "start", inline: "nearest", behavior:"smooth"})
+          },500)
+          ev.preventDefault()
+       }}>Advanced search</Link>}
    </>
 }

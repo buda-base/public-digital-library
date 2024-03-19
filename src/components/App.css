@@ -627,7 +627,7 @@ html[lang="bo"] .msg-popup .front p { font-size:18px;}
 .over-nav + .nav .inner-nav > div { margin:0 25px; line-height:44px;height:44px; font-size:16px;}
 
 .over-nav { display: flex; align-items: center; justify-content: center; height:50px; background:#172832; 
-   position: relative; width:100% ; z-index:100;
+   position: relative; width:100% ; z-index:100001;
 }
 
 .over-nav > div a,
@@ -682,12 +682,26 @@ html[lang="bo"] .msg-popup .front p { font-size:18px;}
    display: flex;
    align-items: center;
    justify-content: center;
-   z-index:10;
+   z-index:100000;
    position: relative;
 }
 
 .SearchPane .inner-search-bar:not(#a) {
    max-width:100%;
+}
+
+#search-bar #simple-search {
+   position: absolute;
+   right: 0;
+   top: 100%;
+   font-size: 12px;
+   margin-top: -6px;
+   line-height: 44px;
+   height: 44px;
+   cursor: pointer;
+   font-weight:700;
+   z-index:10000;
+   color:#343434;
 }
 
 .inner-search-bar:not(#a)::after {
@@ -718,6 +732,10 @@ html[lang="bo"] .msg-popup .front p { font-size:18px;}
    z-index:1;
 }
 
+.home .inner-search-bar:not(#a) > div > span:first-child {
+   visibility: hidden;
+}
+
 
 .inner-search-bar:not(#a) > div > span:last-child {
    width:calc(100% - (110px + 70px + 10px));
@@ -725,18 +743,31 @@ html[lang="bo"] .msg-popup .front p { font-size:18px;}
    position: relative;
 }
 
-.SearchPane .inner-search-bar:not(#a) > div > span:last-child { 
+.inner-search-bar:not(#a) > div > span:first-child { 
+   visibility:hidden;
+}
+
+.inner-search-bar:not(#a) > div > span:last-child { 
    width:calc(100% - (110px + 70px + 10px) - 190px - 70px);
 }
 
 .inner-search-bar:not(#a) > div > span:last-child input {
-   padding:12px;
+   padding:18px 16px;
    display: block;
    width:100%;
    box-sizing: border-box;
    font-size:16px;
    position: relative;
    z-index:101;
+   box-shadow: rgba(187, 187, 187, 0.5) 0px 2px 4px;
+   border:none;
+   border-radius: 4px;
+   outline:none;
+}
+
+.inner-search-bar:not(#a) > div > span:last-child input::placeholder {
+   color:#aaa;
+   font-weight:600;
 }
 
 .inner-search-bar:not(#a) > div > span:last-child input ~ button {
@@ -745,8 +776,10 @@ html[lang="bo"] .msg-popup .front p { font-size:18px;}
    top:0;
    width:44px;
    height: 44px;
-   margin-top:0px;margin-right:0px;
+   margin-top:7px;
+   margin-right:2px;
    z-index: 1000;
+   color:#ccc;
 }
 
 
@@ -761,8 +794,17 @@ html[lang="bo"] .msg-popup .front p { font-size:18px;}
    color:#343434;
    height:44px;
    line-height:44px;
-   margin-top:-4px;
+   margin-top:-5px;
    z-index:1;
+}
+
+:not(#search-bar) + #filters-UI { 
+   display:none;
+}
+
+
+:not(#search-bar) + #filters-UI ~ #res-header > div > :not(#pagine) { 
+   visibility: hidden;
 }
 
 .resource > .ariane { margin-top:-10px; }
