@@ -13,6 +13,7 @@ import { i18nextChangeLanguage } from 'i18next-redux-saga';
 
 import ResourceViewer from '../components/ResourceViewer';
 import UserViewer from '../components/UserViewer';
+import { shortUri, fullUri } from "../components/App"
 
 import {auth} from '../routes';
 
@@ -136,7 +137,17 @@ const mapStateToProps = (state,ownProps) => {
    else outline = false
 
    let eTextRefs = state.data.eTextRefs
-   if(eTextRefs) eTextRefs = eTextRefs[ownProps.IRI]
+   if(eTextRefs) { 
+      eTextRefs = eTextRefs[ownProps.IRI]
+      if(!eTextRefs) {
+         let inst = resources[ownProps.IRI]
+         if(inst) inst = resources[ownProps.IRI][fullUri(ownProps.IRI)]
+         const bdo   = "http://purl.bdrc.io/ontology/core/"
+         if(inst) inst = inst[bdo+"eTextInInstance"]
+         if(inst?.length) inst = shortUri(inst[0].value)
+         if(inst) eTextRefs = eTextRefs = state.data.eTextRefs[inst]
+      }
+   }
 
    let loading = state.ui.loading  ;
 
@@ -194,7 +205,7 @@ const mapStateToProps = (state,ownProps) => {
 
    if(config && !config.auth) props.auth = false
 
-   loggergen.log("mS2p",state,props)
+   loggergen.log("mS2p:",state,props,ownProps)
 
    return props
 

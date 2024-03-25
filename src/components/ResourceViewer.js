@@ -7568,7 +7568,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
    }
 
 
-   renderEtextRefs(access = true) {
+   renderEtextRefs(access = true, useRoot = "") {
 
       let toggle = (e,r,i,x = "",force) => {         
          let tag = "etextrefs-"+r+"-"+i+(x?"-"+x:"")
@@ -7589,7 +7589,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
       if(title?.value) title = <h2><a><span>{title.value}</span></a></h2>
 
       // TODO fix for UTxyz
-      let root = this.props.IRI 
+      let root = useRoot ?? this.props.IRI 
 
 
       const parts = {
@@ -7632,7 +7632,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
                   }
 
                   if(!g.details) {
-                     g.rid = this.props.IRI
+                     g.rid = useRoot //this.props.IRI
                      g.lang = this.props.locale
                   }
 
@@ -7668,11 +7668,11 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
                            const ETres = txt[0]?.eTextResource || txt[0]?.etextResource["@id"]
                            if(ETres) {
 
-                              if(txt.length) g.link = ETres + "?backToEtext="+this.props.IRI + "#open-viewer"
+                              if(txt.length) g.link = ETres + "?backToEtext="+useRoot /*this.props.IRI*/ + "#open-viewer"
                               
                               //nav.push(<Link to={"/show/"+txt[0].eTextResource} class="ulink">{I18n.t("resource.openR")}</Link>)
                               //nav.push(<span>|</span>)
-                              nav.push(<Link  {...!access?{disabled:true}:{}} to={"/show/"+ETres+"?backToEtext="+this.props.IRI+"#open-viewer"} class="ulink">{I18n.t("result.openE")}</Link>)
+                              nav.push(<Link  {...!access?{disabled:true}:{}} to={"/show/"+ETres+"?backToEtext="+useRoot /*this.props.IRI*/+"#open-viewer"} class="ulink">{I18n.t("result.openE")}</Link>)
                               nav.push(<span>|</span>)
                               //nav.push(<a href={fullUri(txt[0].eTextResource).replace(/^http:/,"https:")+".txt"} class="ulink"  download type="text" target="_blank">{I18n.t("mirador.downloadE")}</a>)
                               nav.push(etextDL(ETres))
@@ -7691,7 +7691,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
 
                      //nav.push(<Link to={"/show/"+g.eTextResource} class="ulink">{I18n.t("resource.openR")}</Link>)
                      //nav.push(<span>|</span>)
-                     nav.push(<Link {...!access?{disabled:true}:{}} to={"/show/"+ETres+"?backToEtext="+this.props.IRI+"#open-viewer"} class="ulink">{I18n.t("result.openE")}</Link>)
+                     nav.push(<Link {...!access?{disabled:true}:{}} to={"/show/"+ETres+"?backToEtext="+useRoot /*this.props.IRI*/+"#open-viewer"} class="ulink">{I18n.t("result.openE")}</Link>)
                      nav.push(<span>|</span>)
                      //nav.push(<a href={fullUri(g.eTextResource).replace(/^http:/,"https:")+".txt"} class="ulink" download type="text" target="_blank">{I18n.t("mirador.downloadE")}</a>)                     
                      nav.push(etextDL(ETres))
@@ -7851,7 +7851,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
                               <MenuItem key={v} style={{lineHeight:"1em"}} onClick={(e)=>{ 
                                  this.setState({dataSource:[]});
                                  let param = this.state.dataSource[i].split("@")
-                                 let loca = { pathname:"/search", search:"?q="+keywordtolucenequery(param[0])+"&lg="+param[1]+"&r="+this.props.IRI+"&t=Etext" }
+                                 let loca = { pathname:"/search", search:"?q="+keywordtolucenequery(param[0])+"&lg="+param[1]+"&r="+useRoot /*this.props.IRI*/+"&t=Etext" }
                                  this.props.history.push(loca)
                               }}>{ tab[0].replace(/["]/g,"")} <SearchIcon style={{padding:"0 10px"}}/><span class="lang">{(I18n.t(""+(searchLangSelec[tab[1]]?searchLangSelec[tab[1]]:languages[tab[1]]))) }</span></MenuItem> ) 
                            } ) }
@@ -9535,6 +9535,17 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
          else etextRes = null
 
 
+         let etRefs 
+         if(!this.props.eTextRefs) {
+            this.props.onGetETextRefs(etextRes);
+         } else if(this.props.eTextRefs && this.props.eTextRefs !== true) { 
+            //extProps = extProps.filter(p => p !== bdo+"instanceHasVolume")
+            etRefs = this.renderEtextRefs(accessET, etextRes)      
+         }
+
+         loggergen.log("eR:", etextRes, this.props.eTextRefs, etRefs, this.props, this.state)
+
+
          let monlamResults 
          if(!this.state.enableDicoSearch) { 
 
@@ -9604,9 +9615,9 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
          } else if(this.state.monlam && this.state.collapse.monlamPopup) {
             monlamResults = <div></div>
          }
-
          loggergen.log("monlamR:",monlamResults,this.props.monlamResults)
 
+      
          // TODO fix loader not hiding when closing then opening again
 
          return ([
@@ -9616,6 +9627,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
                { monlamResults && <link rel="stylesheet" href="https://monlamdic.com/dictionarys/files/css/basic.css" /> }               
                { this.renderMirador(isMirador) }           
                <div class="resource etext-view" >
+                  { etRefs }
                   <Loader loaded={!this.props.loading}  options={{position:"fixed",left:"50%",top:"50%"}} />      
                   <div class="">
                      { this.unpaginated() && <h4 style={{fontSize:"16px",fontWeight:600,textAlign:"center", marginBottom:"50px",top:"-15px"}}>{I18n.t("resource.unpag")}</h4>}
