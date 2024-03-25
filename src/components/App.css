@@ -5556,7 +5556,11 @@ feedbucket-app:not(.on)  { display:none !important; }
    */
 
    .nav { padding-left:24px;padding-right:24px; max-width:100%; box-sizing: border-box;} 
-   #about, #about + a:not(#collections) { display:none;}
+
+   #about, 
+   #guide
+   /* #about + a:not(#collections)  */
+   { display:none;}
 
    .nav .history { margin-left:auto;}
 
@@ -6305,14 +6309,16 @@ a.result + #matches.mobile,
 
 }
 
+#about + a:not(#collections) svg,
 #guide svg,
 .not-logged svg,
 .logged svg { display:none; }
 
 @media (max-width:665px)
 {
-   #guide svg { display:block; }
-   #guide > span { font-size:0; }
+
+   #about + a:not(#collections) svg { display:block; }
+   #about + a:not(#collections) > span { font-size:0; }
 
    .not-logged svg { display:block; }
    .not-logged > span { font-size:0; }
@@ -6834,7 +6840,7 @@ a.result + #matches.mobile,
    .nav > div > #login > div > span, 
    .nav > div > :is(a,div,span) { margin:0 0 0 17px !important; }
    
-   .nav > div > #login { margin-left:8px !important;}
+   .nav > div > #login { margin-left:0px !important;}
 
 }
 
