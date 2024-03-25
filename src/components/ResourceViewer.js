@@ -7568,7 +7568,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
    }
 
 
-   renderEtextRefs(access = true, useRoot = "") {
+   renderEtextRefs(access = true, useRoot = this.props.IRI) {
 
       let toggle = (e,r,i,x = "",force) => {         
          let tag = "etextrefs-"+r+"-"+i+(x?"-"+x:"")
@@ -7589,7 +7589,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
       if(title?.value) title = <h2><a><span>{title.value}</span></a></h2>
 
       // TODO fix for UTxyz
-      let root = useRoot ?? this.props.IRI 
+      let root = useRoot 
 
 
       const parts = {
@@ -7672,7 +7672,12 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
                               
                               //nav.push(<Link to={"/show/"+txt[0].eTextResource} class="ulink">{I18n.t("resource.openR")}</Link>)
                               //nav.push(<span>|</span>)
-                              nav.push(<Link  {...!access?{disabled:true}:{}} to={"/show/"+ETres+"?backToEtext="+useRoot /*this.props.IRI*/+"#open-viewer"} class="ulink">{I18n.t("result.openE")}</Link>)
+                              nav.push(<Link  {...!access?{disabled:true}:{}} to={"/show/"+ETres+"?backToEtext="+useRoot /*this.props.IRI*/+"#open-viewer"} class="ulink" onClick={(ev) => {                                 
+                                 this.props.onReinit(ETres)
+                                 ev.preventDefault()
+                                 ev.stopPropagation()
+                                 return false
+                              }}>{I18n.t("result.openE")}</Link>)
                               nav.push(<span>|</span>)
                               //nav.push(<a href={fullUri(txt[0].eTextResource).replace(/^http:/,"https:")+".txt"} class="ulink"  download type="text" target="_blank">{I18n.t("mirador.downloadE")}</a>)
                               nav.push(etextDL(ETres))
@@ -7691,7 +7696,15 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
 
                      //nav.push(<Link to={"/show/"+g.eTextResource} class="ulink">{I18n.t("resource.openR")}</Link>)
                      //nav.push(<span>|</span>)
-                     nav.push(<Link {...!access?{disabled:true}:{}} to={"/show/"+ETres+"?backToEtext="+useRoot /*this.props.IRI*/+"#open-viewer"} class="ulink">{I18n.t("result.openE")}</Link>)
+                     nav.push(<Link {...!access?{disabled:true}:{}} to={"/show/"+ETres+"?backToEtext="+useRoot /*this.props.IRI*/+"#open-viewer"} class="ulink" onClick={(ev) => {                                 
+                        this.props.onReinit(ETres)
+                        ev.preventDefault()
+                        ev.stopPropagation()
+                        setTimeout( () => {
+                           this.props.history.push("/show/"+ETres+"?backToEtext="+useRoot /*this.props.IRI*/+"#open-viewer")
+                        }, 650)
+                        return false
+                     }}>{I18n.t("result.openE")}</Link>)
                      nav.push(<span>|</span>)
                      //nav.push(<a href={fullUri(g.eTextResource).replace(/^http:/,"https:")+".txt"} class="ulink" download type="text" target="_blank">{I18n.t("mirador.downloadE")}</a>)                     
                      nav.push(etextDL(ETres))

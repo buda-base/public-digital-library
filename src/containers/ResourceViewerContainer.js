@@ -1,6 +1,7 @@
 // @flow
 import React from 'react';
 import { connect } from 'react-redux';
+import { initiateApp } from '../state/actions';
 import * as data from '../state/data/actions';
 import * as ui from '../state/ui/actions';
 import store from '../index';
@@ -8,6 +9,8 @@ import keywordtolucenequery from '../components/App';
 
 //import { setLocale } from 'react-redux-i18n';
 import { i18nextChangeLanguage } from 'i18next-redux-saga';
+
+import qs from 'query-string'
 
 // import selectors from 'state/selectors';
 
@@ -139,6 +142,7 @@ const mapStateToProps = (state,ownProps) => {
    let eTextRefs = state.data.eTextRefs
    if(eTextRefs) { 
       eTextRefs = eTextRefs[ownProps.IRI]
+      /*
       if(!eTextRefs) {
          let inst = resources[ownProps.IRI]
          if(inst) inst = resources[ownProps.IRI][fullUri(ownProps.IRI)]
@@ -147,6 +151,7 @@ const mapStateToProps = (state,ownProps) => {
          if(inst?.length) inst = shortUri(inst[0].value)
          if(inst) eTextRefs = eTextRefs = state.data.eTextRefs[inst]
       }
+      */
    }
 
    let loading = state.ui.loading  ;
@@ -308,6 +313,14 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       },
       onAdvancedSearch(s:boolean) {
          dispatch(ui.advancedSearch(s))
+      },
+      onReinit(id:string) {
+         let get = qs.parse(ownProps.history.location.search)
+         if(get.part && get.part !== id) {
+            get.root = id
+
+         }
+         store.dispatch(initiateApp(get,id));
       }
    }
 }
