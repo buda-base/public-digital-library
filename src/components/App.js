@@ -1310,13 +1310,13 @@ export function top_right_menu(that,etextTitle,backUrl,etextres)
          { !onKhmerServer && <Link to="/"  onClick={(ev) => { 
                that.props.history.push({pathname:"/",search:""}); 
                if(that.props.keyword) { that.props.onResetSearch();}
-               if(window.innerWidth > 800)  setTimeout(() => {
+               if(window.innerWidth > 0)  setTimeout(() => {
                   $("#search-bar input").click()
                   document.querySelector("#search-bar input").focus()
                   document.querySelector("#search-bar").scrollIntoView({block: "start", inline: "nearest", behavior:"smooth"})
                },350)
                ev.preventDefault()
-            } }><span>{I18n.t("topbar.search")}</span></Link> }         
+            } }><span>{I18n.t("topbar.search")}</span><SearchIcon  style={{ fill:"#d73449", width:"32px", height:"32px" }} /></Link> }         
 
          { !onZhMirror  && <Link id="guide" to={"/buda-user-guide"} >
                <span>
