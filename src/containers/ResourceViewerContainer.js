@@ -141,17 +141,17 @@ const mapStateToProps = (state,ownProps) => {
 
    let eTextRefs = state.data.eTextRefs
    if(eTextRefs) { 
-      eTextRefs = eTextRefs[ownProps.IRI]
-      /*
-      if(!eTextRefs) {
+      eTextRefs = eTextRefs[ownProps.IRI]     
+      /* // to fetch outline from a UT record as well
+      if(!eTextRefs && resources && resources[ownProps.IRI]) {
          let inst = resources[ownProps.IRI]
          if(inst) inst = resources[ownProps.IRI][fullUri(ownProps.IRI)]
          const bdo   = "http://purl.bdrc.io/ontology/core/"
          if(inst) inst = inst[bdo+"eTextInInstance"]
          if(inst?.length) inst = shortUri(inst[0].value)
          if(inst) eTextRefs = eTextRefs = state.data.eTextRefs[inst]
-      }
-      */
+      } 
+      */     
    }
 
    let loading = state.ui.loading  ;

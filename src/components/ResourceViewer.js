@@ -105,6 +105,7 @@ import { Swipeable, useSwipeable } from 'react-swipeable'
 import {svgEtextS,svgInstanceS,svgImageS} from "./icons"
 
 import {keywordtolucenequery,lucenequerytokeyword,lucenequerytokeywordmulti, isGroup} from './App';
+import ResourceViewerContainer from '../containers/ResourceViewerContainer'
 
 import HTMLparse from 'html-react-parser';
 
@@ -6227,7 +6228,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
       if(!prev) prev = -1
 
 
-      //loggergen.log("etext",prev,next,elem,this.props.nextChunk,tags,this.hasSub(k))
+      loggergen.log("etext",prev,next,elem,this.props.nextChunk,tags,this.hasSub(k))
 
       // + sort etext by sliceStartchar not seqNum
       // DONE 
@@ -6264,6 +6265,8 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
    }
 
    renderEtextHasPage = (elem, kZprop, iiifpres) => {
+
+      loggergen.log("epage:", elem, kZprop, iiifpres)
 
       let next, prev;
       if(elem && elem.length) { 
@@ -6388,6 +6391,8 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
          lastPageUrl = "?startChar="+last[0].value+(loca.search?"&"+loca.search:"") + "#open-viewer"
       }
 
+
+
       return (
          
          [<InfiniteScroll
@@ -6483,7 +6488,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
                let parent = selection.anchorNode?.parentElement
                if(!parent?.getAttribute("lang")) parent = parent?.parentElement
 
-               //loggergen.log("parent:",langElem,ev.currentTarget,parent,selection.toString(),selection,parent.children,selection.anchorNode)
+               loggergen.log("parent:",langElem,ev.currentTarget,parent,selection.toString(),selection,parent.children,selection.anchorNode)
                
                const getAbsOffset = (node, nodeOffset) => {
 
@@ -6624,10 +6629,11 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
                      return <div {...ref?{ref}:{}} style={{...c.px, scrollMargin:"50vh 50px 50vh 50px", pointerEvents:"none", position:"absolute", background: "rgba(252,224,141,0.65)", display:"block", zIndex: 1, mixBlendMode: "darken" }}></div>
                   })
 
+                  loggergen.log("coords:",coords,ev.currentTarget,start,end,startOff,endOff,pageVal.substring(startOff, endOff))
+                  
                   return { hilight:coords, ref, popupCoords:Array.from(_range.getClientRects()) }
                }
            
-               //loggergen.log("coords:",coords,ev.currentTarget,start,end,startOff,endOff,pageVal.substring(startOff, endOff))
                
                if (selection.rangeCount > 0) {
                   range = range.cloneRange();
@@ -6853,7 +6859,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
 
       let { doMap, doRegion, regBox } = this.getMapInfo(kZprop);
 
-      //loggergen.log("data!",kZprop)
+      loggergen.log("data!",kZprop)
 
       let data = kZprop.map((k) => {
 
@@ -6874,7 +6880,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
             }
             let hasMaxDisplay ;
 
-            //loggergen.log("prop:",k,elem,this.hasSuper(k))
+            loggergen.log("prop:",k,elem,this.hasSuper(k))
             //for(let e of elem) loggergen.log(e.value,e.label1);
 
             //if(!k.match(new RegExp("Revision|Entry|prefLabel|"+rdf+"|toberemoved"))) {
@@ -6950,10 +6956,10 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
                   if((!this.props.config || !this.props.config.chineseMirror) && (k == bdo+"placeRegionPoly" || (k == bdo+"placeLong" && !doRegion))) {
                      return this.renderMap(elem, k, tags, kZprop, doMap, doRegion, regBox, title)
                   }
-                  else if(this.state.openEtext && k == bdo+"eTextHasPage") {
+                  else if(/*this.state.openEtext &&*/ k == bdo+"eTextHasPage") {
                      return this.renderEtextHasPage(elem, kZprop, iiifpres /*+"/2.1.1"*/)
                   }
-                  else if(this.state.openEtext && k == bdo+"eTextHasChunk" && kZprop.indexOf(bdo+"eTextHasPage") === -1) {
+                  else if(/*this.state.openEtext &&*/ k == bdo+"eTextHasChunk" && kZprop.indexOf(bdo+"eTextHasPage") === -1) {
                      return this.renderEtextHasChunk(elem, k, tags)                     
                   }
                   else if(k !== bdo+"eTextHasChunk" && k !== bdo+"eTextHasPage" && (k !== bdo+"instanceHasVolume" || this.props.logged === "admin")) {
@@ -6967,7 +6973,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
 
       data = data.filter(e => e)
 
-      //loggergen.log("data?",kZprop,data)
+      loggergen.log("data?",kZprop,data)
 
       let groups 
       if(div == "ext-props" && this.props.auth && this.props.auth.userProfile && (groups = this.props.auth.userProfile["https://auth.bdrc.io/groups"])) {         
@@ -7674,6 +7680,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
                               //nav.push(<span>|</span>)
                               nav.push(<Link  {...!access?{disabled:true}:{}} to={"/show/"+ETres+"?backToEtext="+useRoot /*this.props.IRI*/+"#open-viewer"} class="ulink" onClick={(ev) => {                                 
                                  this.props.onReinit(ETres)
+                                 this.setState({currentText: ETres})
                                  ev.preventDefault()
                                  ev.stopPropagation()
                                  return false
@@ -7698,11 +7705,9 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
                      //nav.push(<span>|</span>)
                      nav.push(<Link {...!access?{disabled:true}:{}} to={"/show/"+ETres+"?backToEtext="+useRoot /*this.props.IRI*/+"#open-viewer"} class="ulink" onClick={(ev) => {                                 
                         this.props.onReinit(ETres)
+                        this.setState({currentText: ETres})
                         ev.preventDefault()
                         ev.stopPropagation()
-                        setTimeout( () => {
-                           this.props.history.push("/show/"+ETres+"?backToEtext="+useRoot /*this.props.IRI*/+"#open-viewer")
-                        }, 650)
                         return false
                      }}>{I18n.t("result.openE")}</Link>)
                      nav.push(<span>|</span>)
@@ -7829,55 +7834,57 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
       if(!this.props.eTextRefs.mono) colT = <span class={"parTy"} title={I18n.t("Lsidebar.collection.title")}><div>COL</div></span>
       let open = this.state.collapse["etextrefs-"+root+"-"+root] === undefined || this.state.collapse["etextrefs-"+root+"-"+root];
 
+            
+            // <h2>{I18n.t("home.search")}</h2>
+            // <div class="search on">
+            //    <div>
+            //       <input type="text" placeholder={I18n.t("resource.searchE")} value={this.state.outlineKW} onChange={this.changeOutlineKW.bind(this)} onKeyPress={ (e) => { 
+            //          if(e.key === 'Enter' && this.state.outlineKW) { 
+            //             if(this.state.dataSource&&this.state.dataSource.length) { 
+            //                let param = this.state.dataSource[0].split("@")
+            //                let loca = { pathname:"/search", search:"?q="+keywordtolucenequery(param[0])+"&lg="+param[1]+"&r="+this.props.IRI+"&t=Etext" }
+            //                this.props.history.push(loca)
+            //             }
+            //             else this.changeOutlineKW(null,this.state.outlineKW)
+            //          }
+            //       }} />
+            //       <span class="button" /*onClick={outlineSearch}*/  title={I18n.t("resource.start")}></span>
+            //       { (this.state.outlineKW || this.props.outlineKW) && <span class="button" title={I18n.t("resource.reset")} onClick={(e) => { 
+            //          this.setState({outlineKW:"",dataSource:[]})
+            //          if(this.props.outlineKW) {
+            //             this.props.onResetOutlineKW()
+            //             let loca = { ...this.props.history.location }
+            //             if(!loca.search) loca.search = ""
+            //             loca.search = loca.search.replace(/(&osearch|osearch)=[^&]+/, "").replace(/[?]&/,"?")
+            //             this.props.history.push(loca)
+            //          }
+            //       }}><Close/></span> }                  
+            //       { (this.state.outlineKW && this.state.dataSource && this.state.dataSource.length > 0) &&   
+            //          <div><Paper id="suggestions">
+            //          { this.state.dataSource.map( (v,i) =>  {
+            //                let tab = v.split("@")
+            //                return (
+            //                   <MenuItem key={v} style={{lineHeight:"1em"}} onClick={(e)=>{ 
+            //                      this.setState({dataSource:[]});
+            //                      let param = this.state.dataSource[i].split("@")
+            //                      let loca = { pathname:"/search", search:"?q="+keywordtolucenequery(param[0])+"&lg="+param[1]+"&r="+useRoot /*this.props.IRI*/+"&t=Etext" }
+            //                      this.props.history.push(loca)
+            //                   }}>{ tab[0].replace(/["]/g,"")} <SearchIcon style={{padding:"0 10px"}}/><span class="lang">{(I18n.t(""+(searchLangSelec[tab[1]]?searchLangSelec[tab[1]]:languages[tab[1]]))) }</span></MenuItem> ) 
+            //                } ) }
+            //          </Paper></div> }
+            //    </div>
+            // </div>
+            // <h2>{I18n.t("resource.browsE")}</h2>
+            // <div class="search">
+            //    <div>
+            //       <input type="text" class="disabled" placeholder={I18n.t("resource.searchO")}  />
+            //       <span class="button" title={I18n.t("resource.start")}></span> 
+            //    </div>
+            // </div>
+
       return (
          <div class="data etextrefs" id="outline">
             {this.props.loading && <Loader  options={{position:"fixed",left:"calc(50% + 100px)",top:"calc(50% - 20px)"}} loaded={!this.props.loading}/>}
-            <h2>{I18n.t("home.search")}</h2>
-            <div class="search on">
-               <div>
-                  <input type="text" placeholder={I18n.t("resource.searchE")} value={this.state.outlineKW} onChange={this.changeOutlineKW.bind(this)} onKeyPress={ (e) => { 
-                     if(e.key === 'Enter' && this.state.outlineKW) { 
-                        if(this.state.dataSource&&this.state.dataSource.length) { 
-                           let param = this.state.dataSource[0].split("@")
-                           let loca = { pathname:"/search", search:"?q="+keywordtolucenequery(param[0])+"&lg="+param[1]+"&r="+this.props.IRI+"&t=Etext" }
-                           this.props.history.push(loca)
-                        }
-                        else this.changeOutlineKW(null,this.state.outlineKW)
-                     }
-                  }} />
-                  <span class="button" /*onClick={outlineSearch}*/  title={I18n.t("resource.start")}></span>
-                  { (this.state.outlineKW || this.props.outlineKW) && <span class="button" title={I18n.t("resource.reset")} onClick={(e) => { 
-                     this.setState({outlineKW:"",dataSource:[]})
-                     if(this.props.outlineKW) {
-                        this.props.onResetOutlineKW()
-                        let loca = { ...this.props.history.location }
-                        if(!loca.search) loca.search = ""
-                        loca.search = loca.search.replace(/(&osearch|osearch)=[^&]+/, "").replace(/[?]&/,"?")
-                        this.props.history.push(loca)
-                     }
-                  }}><Close/></span> }                  
-                  { (this.state.outlineKW && this.state.dataSource && this.state.dataSource.length > 0) &&   
-                     <div><Paper id="suggestions">
-                     { this.state.dataSource.map( (v,i) =>  {
-                           let tab = v.split("@")
-                           return (
-                              <MenuItem key={v} style={{lineHeight:"1em"}} onClick={(e)=>{ 
-                                 this.setState({dataSource:[]});
-                                 let param = this.state.dataSource[i].split("@")
-                                 let loca = { pathname:"/search", search:"?q="+keywordtolucenequery(param[0])+"&lg="+param[1]+"&r="+useRoot /*this.props.IRI*/+"&t=Etext" }
-                                 this.props.history.push(loca)
-                              }}>{ tab[0].replace(/["]/g,"")} <SearchIcon style={{padding:"0 10px"}}/><span class="lang">{(I18n.t(""+(searchLangSelec[tab[1]]?searchLangSelec[tab[1]]:languages[tab[1]]))) }</span></MenuItem> ) 
-                           } ) }
-                     </Paper></div> }
-               </div>
-            </div>
-            <h2>{I18n.t("resource.browsE")}</h2>
-            <div class="search">
-               <div>
-                  <input type="text" class="disabled" placeholder={I18n.t("resource.searchO")}  />
-                  <span class="button" title={I18n.t("resource.start")}></span> 
-               </div>
-            </div>
             <div>
                <div class={"root is-root"} onClick={(e) => toggle(e,root,root)} >                     
                   { !open && [<img src="/icons/triangle.png" className="xpd right" />,colT,<span >{title}</span>]}
@@ -9539,7 +9546,12 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
 
       let etextAccessError = !accessET || this.props.etextErrors && this.props.etextErrors[this.props.IRI] && [401, 403].includes(this.props.etextErrors[this.props.IRI])
 
-      if(hasChunks && hasChunks.length && this.state.openEtext) {
+      let resType = this.getResourceElem(rdf+"type"), topLevel = false
+      if(resType && resType.some(e=> e.value?.endsWith("EtextInstance"))) {
+         topLevel = true
+      }
+
+      if(topLevel || this.props.openEtext || hasChunks && hasChunks.length && this.state.openEtext) {
          
          let hasPages = this.getResourceElem(bdo+"eTextHasPage")
          let etext_data = this.renderData([!hasPages?bdo+"eTextHasChunk":bdo+"eTextHasPage"],iiifpres,title,otherLabels,"etext-data")
@@ -9547,17 +9559,17 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
          if(etextRes && etextRes.length) etextRes = shortUri(etextRes[0].value)
          else etextRes = null
 
+         if(topLevel) etextRes = this.props.IRI
 
          let etRefs 
-         if(!this.props.eTextRefs) {
+         if(!this.props.eTextRefs && etextRes && topLevel) {
             this.props.onGetETextRefs(etextRes);
          } else if(this.props.eTextRefs && this.props.eTextRefs !== true) { 
             //extProps = extProps.filter(p => p !== bdo+"instanceHasVolume")
             etRefs = this.renderEtextRefs(accessET, etextRes)      
          }
 
-         loggergen.log("eR:", etextRes, this.props.eTextRefs, etRefs, this.props, this.state)
-
+         loggergen.log("eR:", topLevel, etextRes, hasPages, etext_data, this.props.eTextRefs, etRefs, this.props, this.state)
 
          let monlamResults 
          if(!this.state.enableDicoSearch) { 
@@ -9633,24 +9645,33 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
       
          // TODO fix loader not hiding when closing then opening again
 
-         return ([
-            getGDPRconsent(this),
-            top_right_menu(this,title,searchUrl,etextRes),
+
+         if(topLevel) return (<>
+            {getGDPRconsent(this)}
+            {top_right_menu(this,title,searchUrl,etextRes)}     
+               <SimpleBar class="resource etext-outline">
+               { etRefs }          
+               </SimpleBar>
+               { this.state.currentText 
+                  ? <ResourceViewerContainer  auth={this.props.auth} history={this.props.history} IRI={this.state.currentText} openEtext={true} /> 
+                  : <div></div>
+               }
+            </>) 
+         else return ([
             <div class={monlamResults ? "withMonlam" : ""}>               
                { monlamResults && <link rel="stylesheet" href="https://monlamdic.com/dictionarys/files/css/basic.css" /> }               
                { this.renderMirador(isMirador) }           
-               <div class="resource etext-view" >
-                  { etRefs }
+               <div class="resource etext-view" >                  
                   <Loader loaded={!this.props.loading}  options={{position:"fixed",left:"50%",top:"50%"}} />      
                   <div class="">
-                     { this.unpaginated() && <h4 style={{fontSize:"16px",fontWeight:600,textAlign:"center", marginBottom:"50px",top:"-15px"}}>{I18n.t("resource.unpag")}</h4>}
+                     { this.unpaginated() && <h4 style={{fontSize:"16px",fontWeight:600,textAlign:"center", marginBottom:"50px",top:"20px"}}>{I18n.t("resource.unpag")}</h4>}
                      { etextAccessError && <h4 style={{fontSize:"16px",fontWeight:600,textAlign:"center",marginTop:"80px"}}>
                         <><img style={{height:"50px", verticalAlign:"middle", marginRight:"10px"}} src="/icons/unknown.svg"/><Trans i18nKey="access.fairuseEtext" components={{ bold: <u /> }} /></>
                      </h4> }
                      { !etextAccessError && etext_data }
-                  </div>                  
+                  </div>                     
                </div>
-               { this.renderEtextNav(etextAccessError) }
+               { this.renderEtextNav(etextAccessError) } 
                <GenericSwipeable classN={"monlamResults "+(this.state.enableDicoSearch && (this.state.monlam && this.state.collapse.monlamPopup || monlamResults) ? "visible" : "")} onSwipedRight={() => { 
                      this.setState({noHilight:false, monlam:null, collapse:{ ...this.state.collapse, monlamPopup: true }})
                      this.props.onCloseMonlam()

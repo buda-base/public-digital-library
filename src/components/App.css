@@ -621,7 +621,10 @@ html[lang="bo"] .msg-popup .front p { font-size:18px;}
    width:100%; margin-left:0;  
 }
 
-.over-nav + .nav > div:not(#uiLangPopup) > :not(#logo, #lang, .inner-nav) { display:none; }
+.over-nav + .nav.etext-nav { position:sticky; top:0; }
+
+.over-nav + .nav.etext-nav .inner-nav,
+.over-nav + .nav:not(.etext-nav) > div:not(#uiLangPopup) > :not(#logo, #lang, .inner-nav) { display:none; }
 .over-nav + .nav .inner-nav { display: flex; }
 
 .over-nav + .nav .inner-nav > div { margin:0 25px; line-height:44px;height:44px; font-size:16px;}
@@ -915,7 +918,72 @@ html[lang="bo"] .msg-popup .front p { font-size:18px;}
    .over-nav + .nav .inner-nav > div { line-height:normal; height:auto; max-width:80px; text-align: center; }
 }
 
-/* ----------------------------- end new-UX ---------------------------- */
+
+
+/* ----------------------------- end new-UX/header ---------------------------- */
+
+
+
+.resource.etext-outline {
+   position:sticky;
+   left:0;
+   top:80px;
+   width:400px;
+   height:100vh;
+   margin-left:0;
+   overflow: auto;
+   z-index:1000;
+   box-shadow: 2px 0 3px rgba(0,0,0,0.15);
+   background:white;
+}
+
+.resource.etext-outline+* {
+   margin-top:-100vh;
+   display: flex;
+   justify-content: flex-end;
+}
+
+.resource.etext-outline  .etextrefs:not(#a) {
+   margin-left:0;
+   box-sizing: border-box;
+   width:100%;
+}
+
+.resource.etext-outline  .etextrefs:not(#a)  {
+   height:100%;
+}
+
+.resource ~ .monlamResults > div:not(#a) {
+   height: 100vh;
+   position: sticky;
+   top: 80px;
+}
+
+#root > div > .resource.etext-view:not(#a) {
+   width: calc(100% - 400px);
+   box-sizing: border-box;
+   margin: 0;
+   padding:10px;
+}
+
+.resource .data#outline > div:not(#a),
+.resource .data#outline:not(#a) {
+   padding:10px;
+}
+
+#root > .withMonlam > .resource.etext-view:not(#a) {
+
+   width: calc(100% - 400px - 400px);
+
+}
+
+.resource.etext-outline .simplebar-content {
+   height:100%;
+}
+
+
+
+/* ----------------------------- end new-UX/etext ---------------------------- */
 
 .nav > div > div > a > img { vertical-align: middle;}
 
@@ -2605,7 +2673,7 @@ div:has(.resource.preview) .infoPanel.inRes { margin:0 !important; }
 
 
 .resource > .index { width:15%; padding-top:10px; position:fixed; }
-.resource:not(.etext-view):not(.static) > :not(.index):not(.ariane) { width:85%; margin-left:15%; /*position:relative;*/ }
+.resource:not(.etext-view):not(.static) > :not(.index):not(.ariane):not(.simplebar-track) { width:85%; margin-left:15%; /*position:relative;*/ }
 
 .resource > .ariane { position:absolute; top:105px; color: #343434; left:0; margin-left:140px;padding-left:12.125%; }
 .resource > .ariane img { display:inline-block; margin-right:5px; vertical-align: -1px;}
