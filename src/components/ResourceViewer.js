@@ -1733,9 +1733,11 @@ class ResourceViewer extends Component<Props,State>
             )
          }
       }
+      /*
       else if(this.state.openEtext) {         
          this.setState({openEtext:false })
       }
+      */
    }
 
 
@@ -7679,6 +7681,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
                               //nav.push(<Link to={"/show/"+txt[0].eTextResource} class="ulink">{I18n.t("resource.openR")}</Link>)
                               //nav.push(<span>|</span>)
                               nav.push(<Link  {...!access?{disabled:true}:{}} to={"/show/"+ETres+"?backToEtext="+useRoot /*this.props.IRI*/+"#open-viewer"} class="ulink" onClick={(ev) => {                                 
+                                 this.props.onLoading("etext", true)
                                  this.props.onReinit(ETres)
                                  this.setState({currentText: ETres})
                                  ev.preventDefault()
@@ -7703,7 +7706,8 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
 
                      //nav.push(<Link to={"/show/"+g.eTextResource} class="ulink">{I18n.t("resource.openR")}</Link>)
                      //nav.push(<span>|</span>)
-                     nav.push(<Link {...!access?{disabled:true}:{}} to={"/show/"+ETres+"?backToEtext="+useRoot /*this.props.IRI*/+"#open-viewer"} class="ulink" onClick={(ev) => {                                 
+                     nav.push(<Link {...!access?{disabled:true}:{}} to={"/show/"+ETres+"?backToEtext="+useRoot /*this.props.IRI*/+"#open-viewer"} class="ulink" onClick={(ev) => {                                                         
+                        this.props.onLoading("etext", true)
                         this.props.onReinit(ETres)
                         this.setState({currentText: ETres})
                         ev.preventDefault()
@@ -7884,7 +7888,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
 
       return (
          <div class="data etextrefs" id="outline">
-            {this.props.loading && <Loader  options={{position:"fixed",left:"calc(50% + 100px)",top:"calc(50% - 20px)"}} loaded={!this.props.loading}/>}
+            {/* <Loader  options={{position:"fixed",left:"calc(50% + 100px)",top:"calc(50% - 20px)"}} loaded={!this.props.loading === "etext"}/> */}
             <div>
                <div class={"root is-root"} onClick={(e) => toggle(e,root,root)} >                     
                   { !open && [<img src="/icons/triangle.png" className="xpd right" />,colT,<span >{title}</span>]}
@@ -9549,6 +9553,10 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
       let resType = this.getResourceElem(rdf+"type"), topLevel = false
       if(resType && resType.some(e=> e.value?.endsWith("EtextInstance"))) {
          topLevel = true
+         if(!this.state.openEtext) {
+            this.setState({openEtext:true})
+            return null
+         }
       }
 
       if(topLevel || this.props.openEtext || hasChunks && hasChunks.length && this.state.openEtext) {
@@ -9646,7 +9654,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
          // TODO fix loader not hiding when closing then opening again
 
 
-         if(topLevel) return (<>
+         if(topLevel) return (<>            
             {getGDPRconsent(this)}
             {top_right_menu(this,title,searchUrl,etextRes)}     
                <SimpleBar class="resource etext-outline">
@@ -9654,16 +9662,16 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
                </SimpleBar>
                { this.state.currentText 
                   ? <ResourceViewerContainer  auth={this.props.auth} history={this.props.history} IRI={this.state.currentText} openEtext={true} /> 
-                  : <div></div>
+                  : <Loader className="etext-viewer-loader" loaded={!this.props.loading}  options={{position:"fixed",left:"calc(200px)",top:"50%"}} />      
                }
             </>) 
          else return ([
             <div class={monlamResults ? "withMonlam" : ""}>               
                { monlamResults && <link rel="stylesheet" href="https://monlamdic.com/dictionarys/files/css/basic.css" /> }               
                { this.renderMirador(isMirador) }           
-               <div class="resource etext-view" >                  
-                  <Loader loaded={!this.props.loading}  options={{position:"fixed",left:"50%",top:"50%"}} />      
+               <div class="resource etext-view" >                                    
                   <div class="">
+                     <Loader className="etext-viewer-loader" loaded={!this.props.loading}  options={{position:"fixed",left:"calc(50% + 200px)",top:"50%"}} />      
                      { this.unpaginated() && <h4 style={{fontSize:"16px",fontWeight:600,textAlign:"center", marginBottom:"50px",top:"20px"}}>{I18n.t("resource.unpag")}</h4>}
                      { etextAccessError && <h4 style={{fontSize:"16px",fontWeight:600,textAlign:"center",marginTop:"80px"}}>
                         <><img style={{height:"50px", verticalAlign:"middle", marginRight:"10px"}} src="/icons/unknown.svg"/><Trans i18nKey="access.fairuseEtext" components={{ bold: <u /> }} /></>
@@ -9998,6 +10006,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
             <link rel="canonical" href={"https://library.bdrc.io"+this.props.history.location.pathname} />
          </Helmet>,
          top_right_menu(this),
+         // <Loader className="resource-viewer-loader" loaded={false}  options={{position:"fixed",left:"50%",top:"50%"}} />,
          <div class={isMirador?"H100vh OF0":""}>
             { ["Images","Instance"].includes(_T) && <abbr class="unapi-id" title={this.props.IRI}></abbr> }
             { infoPanelR }

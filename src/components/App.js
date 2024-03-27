@@ -1212,8 +1212,15 @@ export function top_right_menu(that,etextTitle,backUrl,etextres)
                      
 
                      if(that.state.openEtext) { 
-                        that.setState({ enableDicoSearch: false, openEtext: false, ...that.state.monlam?{monlam:null}:{}, noHilight: false  });
-                        that.props.onCloseMonlam()
+                        // that.setState({ enableDicoSearch: false, openEtext: false, ...that.state.monlam?{monlam:null}:{}, noHilight: false  });
+                        // that.props.onCloseMonlam()
+
+
+                        let reprOf = that.getResourceElem(bdo+"instanceReproductionOf")
+                        console.log("reprof:",reprOf)
+                        if(reprOf?.length) {
+                           that.props.history.push("/show/"+shortUri(reprOf[0].value)) ; 
+                        }
                      }
                   
 

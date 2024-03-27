@@ -1071,6 +1071,9 @@ async function getChunks(iri,next,nb = 10000,useContext = false) {
 }
 
 async function getPages(iri,next) {
+   
+   store.dispatch(uiActions.loading("etext", true))
+
    try {
       let data, chunk, pages ;
       /*
@@ -1178,6 +1181,7 @@ async function getPages(iri,next) {
       }
    }
 
+   store.dispatch(uiActions.loading("etext", false))
 }
 
 

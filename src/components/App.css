@@ -982,6 +982,9 @@ html[lang="bo"] .msg-popup .front p { font-size:18px;}
 }
 
 
+.etext-viewer-loader {
+   z-index:1000000;
+}
 
 /* ----------------------------- end new-UX/etext ---------------------------- */
 
