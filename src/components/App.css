@@ -6913,6 +6913,10 @@ a.result + #matches.mobile,
 
 @media (max-width:480px) {
 
+ 
+   .infoPanel+.resource>.ariane {
+      top: 80px;
+   }
    
    /*
    html:not(.auto_rela) {
