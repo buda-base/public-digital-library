@@ -6339,11 +6339,14 @@ a.result + #matches.mobile,
    .logged > span { font-size:0; }
 
    .nav #logo a#BDRC span, 
-   .nav #logo a:last-child span, 
-   .nav #logo a:first-child span { font-size: 0px; }
+   .nav #logo a:last-child span
+   { font-size: 0px; }
+
+   .nav #logo a:first-child span { display:none; }
 
    .nav #logo.khmer + .links a { margin-left:0; margin-right:0px;}
 
+   #more-pages { margin-left:0; width:70px; }
    
    
    .nav.khmerServer > div > #lang,
@@ -6856,7 +6859,13 @@ a.result + #matches.mobile,
 
 }
 
+
 @media (max-width:375px)
+{
+   .nav > div > #logo { display:none; }
+}
+
+@media (max-width:400px)
 {
    .nav > div > #lang,
    .nav > div > #login,
