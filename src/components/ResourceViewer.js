@@ -9554,7 +9554,13 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
       if(resType && resType.some(e=> e.value?.endsWith("EtextInstance"))) {
          topLevel = true
          if(!this.state.openEtext) {
-            this.setState({openEtext:true})
+            let get = qs.parse(this.props.history.location.search), currentText
+            if(get.openEtext && get.openEtext != this.props.IRI) currentText = get.openEtext
+            this.setState({openEtext:true,currentText})
+            if(currentText) {
+               this.props.onLoading("etext", true)
+               this.props.onReinit(currentText)
+            }
             return null
          }
       }
@@ -9577,7 +9583,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
             etRefs = this.renderEtextRefs(accessET, etextRes)      
          }
 
-         loggergen.log("eR:", topLevel, etextRes, hasPages, etext_data, this.props.eTextRefs, etRefs, this.props, this.state)
+         loggergen.log("eR:", topLevel, etextRes, this.state.currentText, hasPages, etext_data, this.props.eTextRefs, etRefs, this.props, this.state)
 
          let monlamResults 
          if(!this.state.enableDicoSearch) { 

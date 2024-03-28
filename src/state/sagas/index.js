@@ -355,6 +355,16 @@ async function initiateApp(params,iri,myprops,route,isAuthCallback) {
 
          }
          else {
+
+            let get = qs.parse(history.location.search), currentText
+            if(params.backToEtext && !get.openEtext) {
+               const loc = history.location;
+               history.push({ ...loc,
+                  pathname:"/show/"+params.backToEtext, 
+                  search: (loc.search?"&":"?")+"openEtext="+loc.pathname.replace(/\/show\//,"")
+               })
+            }
+
             /*
             let res0 = { [ bdr+iri] : {...res["@graph"].reduce(
             (acc,e) => {
