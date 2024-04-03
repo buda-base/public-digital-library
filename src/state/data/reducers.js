@@ -285,9 +285,38 @@ reducers[actions.TYPES.getChunks] = getChunks;
 
 
 export const getPages = (state: DataState, action: Action) => {
+
+   let res ;
+
+   //loggergen.log("getP:",action, state)
+
+   if(action.meta.reset){
+
+      if(state && state.resources && state.resources[action.payload]
+         && state.resources[action.payload]["http://purl.bdrc.io/resource/"+action.payload.replace(/bdr:/,"")])
+      {
+         res = state.resources[action.payload]["http://purl.bdrc.io/resource/"+action.payload.replace(/bdr:/,"")]
+         res["http://purl.bdrc.io/ontology/core/eTextHasPage"] = []                  
+      }
+
+      
+      res = {
+        "resources": {
+           ...state.resources,
+           [action.payload]:{
+               ["http://purl.bdrc.io/resource/"+action.payload.replace(/bdr:/,"")]: res
+            }
+         }
+      }
+      
+      //loggergen.log("resetP",state,action,res)
+   }
+
+
    return {
        ...state,
-       "nextPage": action.meta
+       ...(res??{}),
+       "nextPage": action.meta.next
    }
 }
 reducers[actions.TYPES.getPages] = getPages;
@@ -632,7 +661,7 @@ export const gotAssocResources = (state: DataState, action: Action) => {
            "assocResources": {
               ...state.assocResources,
               [action.payload]:{ ...assoR, ...action.meta.data, ...(res?Object.keys(res).reduce((acc,k) => {
-                     return { ...acc,[k]:Object.keys(res[k]).reduce( (accR,kR) => {
+                     return { ...acc,[k]:Object.keys(res[k]??{}).reduce( (accR,kR) => {
                         if(!kR.match(/(description|comment)$/)) return [ ...accR, ...res[k][kR].map(e => ({ 
                            ...e, 
                            "fromKey":kR, 

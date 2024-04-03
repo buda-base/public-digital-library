@@ -562,14 +562,14 @@ export const getChunks = (iri: string,next:number=0): Action => {
 }
 
 TYPES.getPages = 'GET_PAGES';
-export const getPages = (iri: string,next:number=0): Action => {
+export const getPages = (iri: string,next:number=0,reset?:boolean): Action => {
 
-   loggergen.log("getP",iri,next)
+   loggergen.log("getP",iri,next,reset)
 
     return {
         type: TYPES.getPages,
         payload: iri,
-        meta: next
+        meta: { next, reset }
     }
 }
 

@@ -281,6 +281,8 @@ async function initiateApp(params,iri,myprops,route,isAuthCallback) {
          }
       }
 
+      //loggergen.log("mid:init", params, iri)
+
       // [TODO] load only missing info when needed (see click on "got to annotation" for WCBC2237)
       if(iri) // || (params && params.r)) // && (!state.data.resources || !state.data.resources[iri]))
       {
@@ -288,6 +290,19 @@ async function initiateApp(params,iri,myprops,route,isAuthCallback) {
          if(!iri) iri = params.r
 
          Etext = iri.match(/^([^:]+:)?UT/)
+
+         if(Etext) {
+            let get = qs.parse(history.location.search), currentText
+            if(params.backToEtext && !get.openEtext) {
+               const loc = history.location;
+               loc.search = loc.search?.replace(/(openEtext|backToEtext)=[^&]+/g,"") ?? ""
+               console.log("loc:",loc)
+               history.replace({ ...loc,
+                  pathname:"/show/"+params.backToEtext, 
+                  search: (loc.search!="?"?loc.search+"&":"?")+"openEtext="+loc.pathname.replace(/\/show\//,"")
+               })
+            }
+         }
 
          try {
 
@@ -356,14 +371,6 @@ async function initiateApp(params,iri,myprops,route,isAuthCallback) {
          }
          else {
 
-            let get = qs.parse(history.location.search), currentText
-            if(params.backToEtext && !get.openEtext) {
-               const loc = history.location;
-               history.push({ ...loc,
-                  pathname:"/show/"+params.backToEtext, 
-                  search: (loc.search?"&":"?")+"openEtext="+loc.pathname.replace(/\/show\//,"")
-               })
-            }
 
             /*
             let res0 = { [ bdr+iri] : {...res["@graph"].reduce(
@@ -423,7 +430,7 @@ async function initiateApp(params,iri,myprops,route,isAuthCallback) {
          },{})})*/
       },{}) }
 
-
+      //loggergen.log("res:etext",res,bdrIRI,iri,params)
 
       if(res[bdrIRI]) {
          
@@ -439,11 +446,15 @@ async function initiateApp(params,iri,myprops,route,isAuthCallback) {
             }
          }
 
-         if(!res[bdrIRI][bdo+"eTextHasPage"]) store.dispatch(dataActions.getChunks(iri,next));
+         let useIri = iri
+         if(iri.startsWith("bdr:IE") && params.openEtext?.startsWith("bdr:UT")) useIri = params.openEtext
+         
+         if(!res[bdrIRI][bdo+"eTextHasPage"]) store.dispatch(dataActions.getChunks(useIri,next));
          else {
             res[bdrIRI][bdo+"eTextHasPage"] = []
-            store.dispatch(dataActions.getPages(iri,next)); 
+            store.dispatch(dataActions.getPages(useIri,next)); 
          }
+         
 
       }         
 
@@ -3764,7 +3775,7 @@ export function* watchGetPages() {
 
    yield takeLatest(
       dataActions.TYPES.getPages,
-      (action) => getPages(action.payload,action.meta)
+      (action) => getPages(action.payload,action.meta.next)
    );
 }
 

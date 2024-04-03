@@ -1070,7 +1070,7 @@ function MySwipeable(props) {
 }
 
 function GenericSwipeable(props) {
-   loggergen.log("sw:",props)
+   //loggergen.log("sw:",props)
    const { classN } = props
    let newProps = { ...props }
    if(classN) delete newProps.classN 
@@ -1674,7 +1674,7 @@ class ResourceViewer extends Component<Props,State>
       if(etext && etext.filter(e=> e.value.startsWith(bdo+"Etext")).length) etext = true
       else etext = false
 
-      loggergen.log("isEt?",etext)
+      //loggergen.log("isEt?",etext)
 
       return etext
    }
@@ -1776,7 +1776,7 @@ class ResourceViewer extends Component<Props,State>
          s.outlinePart = false
          clear = true
       }
-      loggergen.log("outlinePart: ", s?s.outlinePart:"no s")
+      //loggergen.log("outlinePart: ", s?s.outlinePart:"no s")
       if(clear) {
          let collapse = { ...s.collapse }
          Object.keys(collapse).filter(k => k.startsWith("outline-")).map(k => { delete collapse[k]; })
@@ -1797,7 +1797,7 @@ class ResourceViewer extends Component<Props,State>
       // TODO
       // - expand '...' node already open by search
 
-      loggergen.log("update!!",s)
+      //loggergen.log("update!!",s)
 
 
       let loca = { ...this.props.history.location }
@@ -1806,7 +1806,7 @@ class ResourceViewer extends Component<Props,State>
       if (hash && hash.length && hash === "open-viewer") {
 
          let etext = this.isEtext()
-         loggergen.log("etxt?",etext, this.props.imageAsset,this.props.firstImage)
+         //loggergen.log("etxt?",etext, this.props.imageAsset,this.props.firstImage)
 
          if(!etext && this.props.imageAsset /*&& this.props.firstImage*/ && !this.state.openMirador) {
             this.showMirador()   
@@ -6268,7 +6268,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
 
    renderEtextHasPage = (elem, kZprop, iiifpres) => {
 
-      loggergen.log("epage:", elem, kZprop, iiifpres)
+      //loggergen.log("epage:", elem, kZprop, iiifpres)
 
       let next, prev;
       if(elem && elem.length) { 
@@ -6413,9 +6413,9 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
          //loader={<Loader loaded={false} />}
          >
          <div style={{display:"flex", justifyContent:"space-between", width:"100%" }}>
-            <h3 style={{marginBottom:"20px",textAlign:"right"}}>{ firstPageUrl && <Link to={firstPageUrl}>{I18n.t("resource.firstP")}</Link>}</h3>
+            <h3 style={{marginBottom:"20px",textAlign:"right"}}>{ firstPageUrl && <Link onClick={(e) => this.props.onGetPages(this.props.IRI,0,true)} to={firstPageUrl}>{I18n.t("resource.firstP")}</Link>}</h3>
             <h3 style={{marginBottom:"20px",textAlign:"right"}}>{ prev!==-1 && <a onClick={(e) => this.props.onGetPages(this.props.IRI,prev)} class="download" style={{fontWeight:700,border:"none",textAlign:"right"}}>{I18n.t("resource.loadP")}</a>}</h3>
-            <h3 style={{marginBottom:"20px",textAlign:"right"}}>{ lastPageUrl && <Link to={lastPageUrl}>{I18n.t("resource.lastP")}</Link>}</h3>
+            <h3 style={{marginBottom:"20px",textAlign:"right"}}>{ lastPageUrl && <Link to={lastPageUrl} onClick={(e) => this.props.onGetPages(this.props.IRI,(this.getResourceElem(tmp+"lastChunk")??[])[0]?.value,true)} >{I18n.t("resource.lastP")}</Link>}</h3>
          </div>
          {/* {this.hasSub(k)?this.subProps(k):tags.map((e)=> [e," "] )} */}
          { elem.map( e => { 
@@ -6861,7 +6861,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
 
       let { doMap, doRegion, regBox } = this.getMapInfo(kZprop);
 
-      loggergen.log("data!",kZprop)
+      //loggergen.log("data!",kZprop)
 
       let data = kZprop.map((k) => {
 
@@ -6882,7 +6882,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
             }
             let hasMaxDisplay ;
 
-            loggergen.log("prop:",k,elem,this.hasSuper(k))
+            //loggergen.log("prop:",k,elem,this.hasSuper(k))
             //for(let e of elem) loggergen.log(e.value,e.label1);
 
             //if(!k.match(new RegExp("Revision|Entry|prefLabel|"+rdf+"|toberemoved"))) {
@@ -6975,7 +6975,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
 
       data = data.filter(e => e)
 
-      loggergen.log("data?",kZprop,data)
+      //loggergen.log("data?",kZprop,data)
 
       let groups 
       if(div == "ext-props" && this.props.auth && this.props.auth.userProfile && (groups = this.props.auth.userProfile["https://auth.bdrc.io/groups"])) {         
@@ -9134,7 +9134,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
       let redir, withdrawn
       if(this.props.resources && (redir = this.props.resources[this.props.IRI]) && (redir = redir[fullUri(this.props.IRI)]))
       {
-         loggergen.log("WithD?",redir);
+         //loggergen.log("WithD?",redir);
          if(redir[adm+"replaceWith"]) {
             redir = shortUri(redir[adm+"replaceWith"][0].value)                        
             
@@ -9546,7 +9546,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
       if(accessET && accessET.filter(e => e.value.match(/(AccessFairUse)|(Restricted.*)$/)).length) accessET = false
       else accessET = true
 
-      loggergen.log("chunks?",hasChunks,accessET)
+      //loggergen.log("chunks?",hasChunks,accessET)
 
       let etextAccessError = !accessET || this.props.etextErrors && this.props.etextErrors[this.props.IRI] && [401, 403].includes(this.props.etextErrors[this.props.IRI])
 
@@ -9654,7 +9654,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
          } else if(this.state.monlam && this.state.collapse.monlamPopup) {
             monlamResults = <div></div>
          }
-         loggergen.log("monlamR:",monlamResults,this.props.monlamResults)
+         //loggergen.log("monlamR:",monlamResults,this.props.monlamResults)
 
       
          // TODO fix loader not hiding when closing then opening again
@@ -9677,7 +9677,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
                { this.renderMirador(isMirador) }           
                <div class="resource etext-view" >                                    
                   <div class="">
-                     <Loader className="etext-viewer-loader" loaded={!this.props.loading}  options={{position:"fixed",left:"calc(50% + 200px)",top:"50%"}} />      
+                     { this.props.loading && <Loader className="etext-viewer-loader" loaded={!this.props.loading}  options={{position:"fixed",left:"calc(50% + 200px)",top:"50%"}} />  }
                      { this.unpaginated() && <h4 style={{fontSize:"16px",fontWeight:600,textAlign:"center", marginBottom:"50px",top:"20px"}}>{I18n.t("resource.unpag")}</h4>}
                      { etextAccessError && <h4 style={{fontSize:"16px",fontWeight:600,textAlign:"center",marginTop:"80px"}}>
                         <><img style={{height:"50px", verticalAlign:"middle", marginRight:"10px"}} src="/icons/unknown.svg"/><Trans i18nKey="access.fairuseEtext" components={{ bold: <u /> }} /></>

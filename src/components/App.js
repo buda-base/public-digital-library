@@ -516,7 +516,7 @@ export function report_GA(config,location) {
       return ({...acc,[k[0]]:k[1]})
    },{})
    
-   loggergen.log("ck?",ck,config,location,_GA)
+   // loggergen.log("ck?",ck,config,location,_GA)
 
    if(!config || !location) return
 
@@ -1383,7 +1383,7 @@ function getVal(label)
 
 export function isGroup(auth, group) {
    let groups, result = group && auth && auth.isAuthenticated() && auth.userProfile && (groups = auth.userProfile["https://auth.bdrc.io/groups"]) && groups.includes(group)
-   loggergen.log("isGrp:", group, result)
+   //loggergen.log("isGrp:", group, result)
    return result
 }
 
@@ -3829,7 +3829,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                
                ret.push(<div>{this.makeResult(iri /*i[0]["@id"]*/,n+"_"+cpt,null,"@"+startChar+"~"+endChar,"?",null,null,null,
                   [{lang,value:val,type:tmp+"textMatch",expand,context,startChar,endChar,inPart} ], //...i.filter(e => [bdo+"sliceStartChar",tmp+"matchScore"].includes(e.type) )],
-                  null,[...allProps.filter(a => [tmp+"hasReproAccess", adm+"access", tmp+"access"].includes(a.type))],null,true)}</div>)
+                  null,[...allProps.filter(a => [tmp+"hasReproAccess", adm+"access", tmp+"access", tmp+"inRootInstance"].includes(a.type))],null,true)}</div>)
 
                cpt++
             }
@@ -4180,7 +4180,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             }), " ]" ]}<br/><br/></div>	
          }	
 
-         loggergen.log("acc:",prettId,access)
+         //loggergen.log("acc:",prettId,access)
 
          let urlBase, staticRegExp = new RegExp(".*?[/](latest|"+Object.keys(staticQueries).join("|")+")[/]?")  ;
          if(window.location.href.match(staticRegExp)) urlBase = window.location.href.replace(staticRegExp,"$1?");
@@ -4376,22 +4376,30 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
     
 
 
-         let bestM = allProps.filter(e => e.type === tmp+"bestMatch")
-         if(!bestM.length) bestM = rmatch.filter(e => e.type === tmp+"textMatch")
+         let bestM = allProps.filter(e => e.type === tmp+"bestMatch"), realBestM = true
+         if(!bestM.length) { 
+            bestM = rmatch.filter(e => e.type === tmp+"textMatch")
+            realBestM = false
+         }
          let startC, endC 
-
-         //loggergen.log("bestM",bestM)
-
-
+         
          let inRoot = allProps.filter(e => e.type?.endsWith("inRootInstance"))
          if (inRoot.length > 0) inRoot = inRoot[0].value
          else inRoot = false
+         
+         //loggergen.log("bestM:", bestM, inRoot, allProps)
 
          if(bestM.length) { 
             endC = bestM[0].endChar
             bestM = "?"+(inRoot?"backToEtext="+shortUri(inRoot)+"&":"") +"startChar="+((startC = bestM[0].startChar) - 1000) /*+"-"+bestM[0].endChar*/ +"&keyword="+this.props.keyword+"@"+this.props.language+"#open-viewer"
          }
          else bestM = ""
+
+         // need the root instance to fix link, not to be displayed (in etext other matches)
+         if(!realBestM) { 
+            inRoot = false
+            allProps = allProps.filter(p => p.type != tmp+"inRootInstance")
+         }
 
          let prefix = prettId.replace(/:.*$/,""), resUrl
          

@@ -252,8 +252,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       onGetChunks:(IRI:string,next:number=0) => {
          dispatch(data.getChunks(IRI,next));
       },
-      onGetPages:(IRI:string,next:number=0) => {
-         dispatch(data.getPages(IRI,next));
+      onGetPages:(IRI:string,next:number=0,reset?:boolean) => {
+         dispatch(data.getPages(IRI,next,reset));
       },
       onGetContext:(iri:string,start:integer,end:integer,nb:integer) => {
          dispatch(data.getContext(iri,start,end,nb));
