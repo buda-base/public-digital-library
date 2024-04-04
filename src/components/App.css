@@ -938,11 +938,13 @@ html[lang="bo"] .msg-popup .front p { font-size:18px;}
 }
 
 .resource.etext-outline+* {
-   margin-top:-100vh;
    display: flex;
    justify-content: flex-end;
 }
 
+.resource.etext-outline.withOutline-true+* {
+   margin-top:-100vh;
+}
 .resource.etext-outline  .etextrefs:not(#a) {
    margin-left:0;
    box-sizing: border-box;
@@ -971,22 +973,59 @@ html[lang="bo"] .msg-popup .front p { font-size:18px;}
 }
 
 .resource .data.etextrefs#outline > div:not(#a) {
-   padding:10px 10px 10px 10px;
+   padding:15px 15px 10px 10px;
 }
 
-#root > .withMonlam > .resource.etext-view:not(#a) {
+#root > .withMonlam.withOutline > .resource.etext-view:not(#a) {
 
    width: calc(100% - 400px - 400px);
 
+}
+
+#root > .withOutline:not(.withMonlam) > .resource.etext-view:not(#a),
+#root > .withMonlam:not(.withOutline) > .resource.etext-view:not(#a) {
+
+   width: calc(100% - 400px);
+
+}
+
+#root > :not(.withMonlam):not(.withOutline) > .resource.etext-view:not(#a) {
+   width: 1440px;
+   max-width: 97%;
+   margin: auto;
 }
 
 .resource.etext-outline .simplebar-content {
    height:100%;
 }
 
+.resource.etext-outline.withOutline-false {
+   display:none;
+   position: relative; 
+}
 
 .etext-viewer-loader {
    z-index:1000000;
+}
+
+.close-etext-outline {
+   z-index:1;
+   position:absolute;
+   top:8px;
+   right:8px;
+   cursor: pointer;
+}
+
+.show-outline-etext:not(#a) {
+   position:sticky;
+   background:white;
+   width:40px;
+   height:40px;
+   box-shadow: 0 2px 4px rgba(187, 187, 187, 0.5);
+   top:95px;
+   left:15px;
+   margin-bottom:-40px;
+   z-index:1;
 }
 
 /* ----------------------------- end new-UX/etext ---------------------------- */

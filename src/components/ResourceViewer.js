@@ -7888,6 +7888,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
 
       return (
          <div class="data etextrefs" id="outline">
+            <Close width="24" className="close-etext-outline" onClick={() => this.setState({collapse:{...this.state.collapse, etextRefs:true}})}/>
             {/* <Loader  options={{position:"fixed",left:"calc(50% + 100px)",top:"calc(50% - 20px)"}} loaded={!this.props.loading === "etext"}/> */}
             <div>
                <div class={"root is-root"} onClick={(e) => toggle(e,root,root)} >                     
@@ -9663,16 +9664,17 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
          if(topLevel) return (<>            
             {getGDPRconsent(this)}
             {top_right_menu(this,title,searchUrl,etextRes)}     
-               <SimpleBar class="resource etext-outline">
+               <SimpleBar class={"resource etext-outline "+(this.state.collapse.etextRefs ? "withOutline-false":"withOutline-true")}>
                { etRefs }          
                </SimpleBar>
+               {this.state.collapse.etextRefs && <IconButton width="32" className="show-outline-etext" onClick={() => this.setState({collapse:{...this.state.collapse,etextRefs:false}})}><img src="/icons/collecN.svg" /></IconButton>}
                { this.state.currentText 
-                  ? <ResourceViewerContainer  auth={this.props.auth} history={this.props.history} IRI={this.state.currentText} openEtext={true} /> 
+                  ? <ResourceViewerContainer  auth={this.props.auth} history={this.props.history} IRI={this.state.currentText} openEtext={true} openEtextRefs={!this.state.collapse.etextRefs} youpi={"?"}/> 
                   : <Loader className="etext-viewer-loader" loaded={!this.props.loading}  options={{position:"fixed",left:"calc(200px)",top:"50%"}} />      
                }
             </>) 
          else return ([
-            <div class={monlamResults ? "withMonlam" : ""}>               
+            <div class={(monlamResults ? "withMonlam " : "")+(this.props.openEtextRefs ? "withOutline ":"")}>               
                { monlamResults && <link rel="stylesheet" href="https://monlamdic.com/dictionarys/files/css/basic.css" /> }               
                { this.renderMirador(isMirador) }           
                <div class="resource etext-view" >                                    
