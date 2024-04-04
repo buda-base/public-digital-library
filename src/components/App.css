@@ -966,9 +966,12 @@ html[lang="bo"] .msg-popup .front p { font-size:18px;}
    padding:10px;
 }
 
-.resource .data#outline > div:not(#a),
-.resource .data#outline:not(#a) {
+.resource .data.etextrefs#outline:not(#a) {
    padding:10px;
+}
+
+.resource .data.etextrefs#outline > div:not(#a) {
+   padding:10px 10px 10px 10px;
 }
 
 #root > .withMonlam > .resource.etext-view:not(#a) {
