@@ -7674,19 +7674,16 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
                         if(!Array.isArray(g.volumeHasEtext)) {
                            let txt = elem.filter(e => e["@id"] === g.volumeHasEtext)                           
                            const ETres = txt[0]?.eTextResource || txt[0]?.etextResource["@id"]
-                           if(ETres) {
+                           if(ETres) {                                                            
 
                               if(txt.length) g.link = ETres + "?backToEtext="+useRoot /*this.props.IRI*/ + "#open-viewer"
                               
                               //nav.push(<Link to={"/show/"+txt[0].eTextResource} class="ulink">{I18n.t("resource.openR")}</Link>)
                               //nav.push(<span>|</span>)
-                              nav.push(<Link  {...!access?{disabled:true}:{}} to={"/show/"+ETres+"?backToEtext="+useRoot /*this.props.IRI*/+"#open-viewer"} class="ulink" onClick={(ev) => {                                 
+                              nav.push(<Link  {...!access?{disabled:true}:{}} to={"/show/"+useRoot+"?openEtext="+ETres /*this.props.IRI*/+"#open-viewer"} class="ulink" onClick={(ev) => {                                 
                                  this.props.onLoading("etext", true)
-                                 this.props.onReinit(ETres)
+                                 this.props.onReinitEtext(ETres)
                                  this.setState({currentText: ETres})
-                                 ev.preventDefault()
-                                 ev.stopPropagation()
-                                 return false
                               }}>{I18n.t("result.openE")}</Link>)
                               nav.push(<span>|</span>)
                               //nav.push(<a href={fullUri(txt[0].eTextResource).replace(/^http:/,"https:")+".txt"} class="ulink"  download type="text" target="_blank">{I18n.t("mirador.downloadE")}</a>)
@@ -7708,11 +7705,8 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
                      //nav.push(<span>|</span>)
                      nav.push(<Link {...!access?{disabled:true}:{}} to={"/show/"+ETres+"?backToEtext="+useRoot /*this.props.IRI*/+"#open-viewer"} class="ulink" onClick={(ev) => {                                                         
                         this.props.onLoading("etext", true)
-                        this.props.onReinit(ETres)
+                        this.props.onReinitEtext(ETres)                        
                         this.setState({currentText: ETres})
-                        ev.preventDefault()
-                        ev.stopPropagation()
-                        return false
                      }}>{I18n.t("result.openE")}</Link>)
                      nav.push(<span>|</span>)
                      //nav.push(<a href={fullUri(g.eTextResource).replace(/^http:/,"https:")+".txt"} class="ulink" download type="text" target="_blank">{I18n.t("mirador.downloadE")}</a>)                     
@@ -7739,8 +7733,33 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
          
          let get = qs.parse(this.props.history.location.search)
 
-         etextrefs = _.orderBy(etextrefs,["index"],["asc"]).map(e => {
-            
+         etextrefs = _.orderBy(etextrefs,["index"],["asc"])
+
+         if(!this.state.currentText && etextrefs.length) {
+            let ETres, g = etextrefs[0], tag = "etextrefs-"+root+"-"+g['@id']
+            if(g.volumeNumber) { 
+               if(g.volumeHasEtext) {
+                  if(!Array.isArray(g.volumeHasEtext)) {
+                     let txt = elem.filter(e => e["@id"] === g.volumeHasEtext)                           
+                     ETres = txt[0]?.eTextResource || txt[0]?.etextResource["@id"]
+                  } else if(!this.state.collapse[tag]){
+                     this.setState({collapse: { ...this.state.collapse, [tag]:true }})
+                     return      
+                  }
+               }
+            } else if(g.seqNum && (g.eTextResource || g.etextResource && g.etextResource["@id"])) {
+               ETres = g.eTextResource || g.etextResource["@id"]
+            }
+            if(ETres) {
+               this.props.onLoading("etext", true)            
+               this.props.onReinitEtext(ETres)
+               this.setState({currentText: ETres})
+               return
+            }
+         }
+         
+         etextrefs = etextrefs.map(e => {            
+
             let tag = "etextrefs-"+root+"-"+e['@id']
             let ret = []
             let pType = e["type"], fUri = fullUri(e["@id"])
@@ -7774,7 +7793,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
                   else ut = null
                } else if(e.eTextResource == get.fromText || e.etextResource && e.etextResource["@id"] == get.fromText ) {
                   ut = true
-               }
+               } 
 
                if(ut) {
                   this._refs["fromText"] = React.createRef()
@@ -7783,15 +7802,13 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
 
             } else {
                if(this._refs["fromText"] && this._refs["fromText"].current) this._refs["fromText"].current = null
-            }
-            
-
+            }          
             
             let open = this.state.collapse[tag] || this.state.collapse[tag]  === undefined && ut // #821
+                        || e.link.startsWith(this.state.currentText + "?") //&& this.state.collapse[tag] != false
             let mono = etextrefs.length === 1
-            let openD = this.state.collapse[tag+"-details"] || this.state.collapse[tag+"-details"]  === undefined && (mono || ut) // #821
-
-
+            let openD = this.state.collapse[tag+"-details"] || this.state.collapse[tag+"-details"]  === undefined && (mono || ut) // #821                           
+                        || e.link.startsWith(this.state.currentText + "?") //&& this.state.collapse[tag+"-details"] != false
             ret.push(<span {...ref} class={'top'+ (this.state.collapse[tag]?" on":"") }>
                   {(e.hasPart && !open) && <img src="/icons/triangle.png" onClick={(ev) => toggle(null,root,e["@id"],!e.hasPart?"details":"",!e.hasPart && mono)} className="xpd right"/>}
                   {(e.hasPart && open) && <img src="/icons/triangle_.png" onClick={(ev) => toggle(null,root,e["@id"],!e.hasPart?"details":"",!e.hasPart && mono)} className="xpd"/>}
@@ -7802,7 +7819,12 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
                   <div class="abs">                  
                      { !e.hasPart && (
                            access 
-                           ?  <Link className="hasImg hasTxt" title={I18n.t("result.openE")}  to={"/show/"+e.link}>
+                           ?  <Link className="hasImg hasTxt" title={I18n.t("result.openE")}  to={"/show/"+e.link} onClick={(ev) => {                                                         
+                              const ETres = e.link?.split("?")[0]
+                              this.props.onLoading("etext", true)
+                              this.props.onReinitEtext(ETres)
+                              this.setState({currentText: ETres})
+                           }}>
                                  <img src="/icons/search/etext.svg"/><img src="/icons/search/etext_r.svg"/>
                               </Link> 
                            :  <a disabled="true" className="hasImg hasTxt" title={I18n.t("access.fairuseEtext").replace(/<[^>]+>/g,"")}>
@@ -9560,7 +9582,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
             this.setState({openEtext:true,currentText})
             if(currentText) {
                this.props.onLoading("etext", true)
-               this.props.onReinit(currentText)
+               this.props.onReinitEtext(currentText)
             }
             return null
          }

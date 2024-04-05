@@ -301,6 +301,7 @@ async function initiateApp(params,iri,myprops,route,isAuthCallback) {
                   pathname:"/show/"+params.backToEtext, 
                   search: (loc.search!="?"?loc.search+"&":"?")+"openEtext="+loc.pathname.replace(/\/show\//,"")
                })
+               return
             }
          }
 

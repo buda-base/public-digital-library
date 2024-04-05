@@ -314,13 +314,14 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       onAdvancedSearch(s:boolean) {
          dispatch(ui.advancedSearch(s))
       },
-      onReinit(id:string) {
+      onReinitEtext(id:string) {
          let get = qs.parse(ownProps.history.location.search)
          if(get.part && get.part !== id) {
             get.root = id
 
          }
-         store.dispatch(initiateApp(get,id));
+         document.querySelector(".over-nav").scrollIntoView()
+         setTimeout(() => store.dispatch(initiateApp(get,id)), 150);
       }
    }
 }
