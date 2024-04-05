@@ -63,6 +63,8 @@ const mapStateToProps = (state) => {
    let latestSyncs = state.data.latestSyncs
    let latestSyncsNb = state.data.latestSyncsNb
 
+   let etextLang = state.ui.etextLang
+
    let profileName
    if(auth && auth.userProfile) {
       if(auth.userProfile.name) profileName = auth.userProfile.name
@@ -98,7 +100,8 @@ const mapStateToProps = (state) => {
       subscribedCollections,
       feedbucket,
       spellcheckerBo,
-      advancedSearch
+      advancedSearch,
+      etextLang,
    }
 
    if(config && !config.auth) newState.auth = false

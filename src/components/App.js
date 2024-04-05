@@ -656,7 +656,7 @@ export function getLangLabel(that:{},prop:string="",labels:[],proplang:boolean=f
       }            
 
       
-      if(that.props.etextLang && (prop == bdo+"eTextHasPage" || prop == bdo+"eTextHasChunk")) { 
+      if(that.props.etextLang && [bdo+"eTextHasPage", bdo+"eTextHasChunk", _tmp+"bestMatch", _tmp+"textMatch"].includes(prop)) { 
          langs = that.props.etextLang 
          if(!Array.isArray(langs)) langs = [ langs ]
          //loggergen.log("prop:",langs,prop,labels)
@@ -4117,7 +4117,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          if(!lang) lang = m["xml:lang"]	
          if(!Array.isArray(m.value)) {
 
-            let mLit = getLangLabel(this,"",[m])	
+            let mLit = getLangLabel(this,_tmp+"bestMatch",[m])	
 
             expand = m.expand	
             if(expand && expand.value) {	
@@ -4142,12 +4142,12 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                
                if(!facet && this.props.keyword && !this.props.keyword.includes(" AND ")) {
                   facet = lucenequerytokeyword(this.props.keyword) 
-                  facet = getLangLabel(this,"",[{value:facet, lang:this.props.language}]) 
+                  facet = getLangLabel(this,_tmp+"bestMatch",[{value:facet, lang:this.props.language}]) 
                   facet = facet.value
                   //loggergen.log("facet2:",facet)
                } else if(!facet && this.props.keyword || facet && facet.indexOf(" AND ") !== -1) {
                   facet = []
-                  for(let k of lucenequerytokeywordmulti(this.props.keyword)) facet.push(getLangLabel(this,"",[{value:k, lang:this.props.language}]))
+                  for(let k of lucenequerytokeywordmulti(this.props.keyword)) facet.push(getLangLabel(this,_tmp+"bestMatch",[{value:k, lang:this.props.language}]))
                   if(facet.length) facet = facet.map(k => k.value)                  
                   //loggergen.log("facet1:",facet)
                }

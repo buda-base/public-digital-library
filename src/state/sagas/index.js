@@ -452,7 +452,7 @@ async function initiateApp(params,iri,myprops,route,isAuthCallback) {
          if(!res[bdrIRI][bdo+"eTextHasPage"]) store.dispatch(dataActions.getChunks(useIri,next));
          else {
             res[bdrIRI][bdo+"eTextHasPage"] = []
-            store.dispatch(dataActions.getPages(useIri,next)); 
+            store.dispatch(dataActions.getPages(useIri,next,true)); 
          }
          
 
