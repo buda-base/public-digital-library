@@ -644,7 +644,7 @@ export function getLangLabel(that:{},prop:string="",labels:[],proplang:boolean=f
 {
    if(labels && labels.length)
    {
-      //loggergen.log("getL",prop,labels,proplang,uilang,dontUseUI);
+      //loggergen.log("getL:",prop,labels,proplang,uilang,dontUseUI);
 
       let langs = []
       if(that.state.langPreset) langs = that.state.langPreset
@@ -656,7 +656,7 @@ export function getLangLabel(that:{},prop:string="",labels:[],proplang:boolean=f
       }            
 
       
-      if(that.props.etextLang && [bdo+"eTextHasPage", bdo+"eTextHasChunk", _tmp+"bestMatch", _tmp+"textMatch"].includes(prop)) { 
+      if(that.props.etextLang && [bdo+"eTextHasPage", bdo+"eTextHasChunk", _tmp+"bestMatch", _tmp+"textMatch", _tmp+"withEtextPrefLang"].includes(prop)) { 
          langs = that.props.etextLang 
          if(!Array.isArray(langs)) langs = [ langs ]
          //loggergen.log("prop:",langs,prop,labels)

@@ -7593,7 +7593,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
          if(title?.length) title = title[0].value
       }
       if(title?.length) title = this.getResourceElem(skos+"prefLabel", title, this.props.assocResources)
-      if(title?.length) title = getLangLabel(this,"",title)
+      if(title?.length) title = getLangLabel(this,_tmp+"withEtextPrefLang",title)
       if(title?.value) title = <h2><a><span>{title.value}</span></a></h2>
 
       // TODO fix for UTxyz
@@ -7676,7 +7676,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
                            const ETres = txt[0]?.eTextResource || txt[0]?.etextResource["@id"]
                            if(ETres) {                                                            
 
-                              if(txt.length) g.link = ETres + "?backToEtext="+useRoot /*this.props.IRI*/ + "#open-viewer"
+                              g.link = useRoot+"?openEtext="+ETres /*this.props.IRI*/ + "#open-viewer"
                               
                               //nav.push(<Link to={"/show/"+txt[0].eTextResource} class="ulink">{I18n.t("resource.openR")}</Link>)
                               //nav.push(<span>|</span>)
@@ -7699,11 +7699,12 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
                   } else if(g.seqNum && (g.eTextResource || g.etextResource && g.etextResource["@id"])) {
                      g.index = g.seqNum
                      const ETres = g.eTextResource || g.etextResource["@id"]
-                     g.link = ETres + "?backToEtext="+this.props.IRI + "#open-viewer"
-
+                     g.link = useRoot+"?openEtext="+ETres /*this.props.IRI*/ + "#open-viewer"
+                              
+         
                      //nav.push(<Link to={"/show/"+g.eTextResource} class="ulink">{I18n.t("resource.openR")}</Link>)
                      //nav.push(<span>|</span>)
-                     nav.push(<Link {...!access?{disabled:true}:{}} to={"/show/"+ETres+"?backToEtext="+useRoot /*this.props.IRI*/+"#open-viewer"} class="ulink" onClick={(ev) => {                                                         
+                     nav.push(<Link {...!access?{disabled:true}:{}} to={"/show/"+useRoot+"?openEtext="+ETres /*this.props.IRI*/+"#open-viewer"} class="ulink" onClick={(ev) => {                                                         
                         this.props.onLoading("etext", true)
                         this.props.onReinitEtext(ETres)                        
                         this.setState({currentText: ETres})
@@ -7764,7 +7765,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
             let ret = []
             let pType = e["type"], fUri = fullUri(e["@id"])
             let gUri = fUri ;
-            if(e.link) gUri = fullUri(e.link).replace(/#.*/,"")
+            if(e.link) gUri = fullUri(e.link).replace(/^.*openEtext=([^#]+)#.*$/,"$1")
             if(pType && pType["@id"]) pType = pType["@id"]
             else pType = "bdo:"+pType
             let tLabel 
@@ -7805,22 +7806,22 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
             }          
             
             let open = this.state.collapse[tag] || this.state.collapse[tag]  === undefined && ut // #821
-                        || e.link.startsWith(this.state.currentText + "?") //&& this.state.collapse[tag] != false
+                        || e.link.includes("openEtext="+this.state.currentText + "#") //&& this.state.collapse[tag] != false
             let mono = etextrefs.length === 1
             let openD = this.state.collapse[tag+"-details"] || this.state.collapse[tag+"-details"]  === undefined && (mono || ut) // #821                           
-                        || e.link.startsWith(this.state.currentText + "?") //&& this.state.collapse[tag+"-details"] != false
+                        || e.link.includes("openEtext="+this.state.currentText + "#") //&& this.state.collapse[tag+"-details"] != false
             ret.push(<span {...ref} class={'top'+ (this.state.collapse[tag]?" on":"") }>
                   {(e.hasPart && !open) && <img src="/icons/triangle.png" onClick={(ev) => toggle(null,root,e["@id"],!e.hasPart?"details":"",!e.hasPart && mono)} className="xpd right"/>}
                   {(e.hasPart && open) && <img src="/icons/triangle_.png" onClick={(ev) => toggle(null,root,e["@id"],!e.hasPart?"details":"",!e.hasPart && mono)} className="xpd"/>}
                   <span class={"parTy "+(e.details?"on":"")} {...e.details?{title: I18n.t("resource."+(openD?"hideD":"showD")), onClick:(ev) => toggle(ev,root,e["@id"],"details",!e.hasPart && mono)}:{title:tLabel}} >
                      {pType && parts[pType] ? <div>{parts[pType]}</div> : <div>{parts["?"]}</div> }
                   </span>
-                  <span>{this.uriformat(null,{type:'uri', value:gUri, volume:fUri, inOutline: (!e.hasPart?tag+"-details":tag), url:"/show/"+e.link, debug:false, toggle:() => toggle(null,root,e["@id"],!e.hasPart?"details":"",!e.hasPart && (mono || ut)) })}</span>
+                  <span>{this.uriformat(_tmp+"withEtextPrefLang",{type:'uri', value:gUri, volume:fUri, inOutline: (!e.hasPart?tag+"-details":tag), url:"/show/"+e.link, debug:false, toggle:() => toggle(null,root,e["@id"],!e.hasPart?"details":"",!e.hasPart && (mono || ut)) })}</span>
                   <div class="abs">                  
                      { !e.hasPart && (
                            access 
                            ?  <Link className="hasImg hasTxt" title={I18n.t("result.openE")}  to={"/show/"+e.link} onClick={(ev) => {                                                         
-                              const ETres = e.link?.split("?")[0]
+                              const ETres = e.link.replace(/^.*openEtext=([^#]+)#.*$/, "$1")
                               this.props.onLoading("etext", true)
                               this.props.onReinitEtext(ETres)
                               this.setState({currentText: ETres})
