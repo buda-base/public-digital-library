@@ -315,13 +315,15 @@ const mapDispatchToProps = (dispatch, ownProps) => {
          dispatch(ui.advancedSearch(s))
       },
       onReinitEtext(id:string) {
-         let get = qs.parse(ownProps.history.location.search)
-         if(get.part && get.part !== id) {
-            get.root = id
-
-         }
          document.querySelector(".over-nav").scrollIntoView()
-         setTimeout(() => store.dispatch(initiateApp(get,id)), 150);
+         setTimeout(() => { 
+            let get = qs.parse(ownProps.history.location.search)
+            if(get.part && get.part !== id) {
+               get.root = id
+   
+            }
+            store.dispatch(initiateApp(get,id)) 
+         }, 150);
       }
    }
 }

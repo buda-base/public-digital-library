@@ -415,7 +415,8 @@ async function initiateApp(params,iri,myprops,route,isAuthCallback) {
 
       //loggergen.log("gotAR",JSON.stringify(assoRes,null,3));
 
-      store.dispatch(dataActions.gotAssocResources(iri,assoRes));
+      // no need anymore with "standalone" etext viewer (#859)
+      // store.dispatch(dataActions.gotAssocResources(iri,assoRes));
 
       res = { [bdrIRI] : _.sortBy(Object.keys(res)).reduce((acc,e) => {
 
