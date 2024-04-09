@@ -100,6 +100,7 @@ import './App.css';
 import Footer from "./Footer"
 import store from "../index"
 import {closePortraitPopup} from "../state/ui/actions"
+import analytics from "./Analytics"
 
 import AutocompleteKeywordInput from "./AutocompleteKeywordInput"
 

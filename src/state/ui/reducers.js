@@ -6,6 +6,7 @@ import createReducer from '../../lib/createReducer';
 import * as actions from './actions';
 import {auth} from '../../routes';
 import {isGroup} from '../../components/App';
+import analytics from '../../components/Analytics';
 
 import logdown from 'logdown'
 
@@ -206,6 +207,9 @@ reducers[actions.TYPES.gotHighlight] = gotHighlight ;
 
 
 export const loading = (state: UIState, action: actions.LoadingAction) => {
+
+   if(!action.payload.isLoading) analytics.track('page loaded')
+
     if(state.metadata) delete state.metadata 
     return {
         ...state,
