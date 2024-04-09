@@ -40,6 +40,8 @@ import {UAContext, UserAgentProvider} from '@quentin-sommer/react-useragent'
 
 import logdown from 'logdown'
 
+import analytics from './components/Analytics'
+
 const loggergen = new logdown('gen', { markdown: false });
 
 export const auth = new Auth();
@@ -51,7 +53,7 @@ let previousLocation, newLocation;
 const routerSetState = Router.prototype.setState;
 Router.prototype.setState = function(...args) {
 
-   loggergen.log("args:",args)
+   loggergen.log("router args:",args)
 
     const loc = this.props.history.location;
 
@@ -70,7 +72,9 @@ Router.prototype.setState = function(...args) {
    previousLocation = newLocation
    newLocation = loc.pathname + loc.search + loc.hash
 
-    return routerSetState.apply(this, args);
+   analytics.track('new location', {previousLocation, newLocation})
+
+   return routerSetState.apply(this, args);
 };
 const routerDidMount = Router.prototype.componentDidMount;
 Router.prototype.componentDidMount = function(...args) {
