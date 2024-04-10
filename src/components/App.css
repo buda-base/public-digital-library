@@ -151,7 +151,8 @@ footer#site-footer.no-syncs > div.head::before { background-color:#efefef; }
 .App:not(.home) { min-height:100vh;} 
 .App:not(.home) .SearchPane { min-height:calc(100vh - 80px - 50px * 0);  }
 
-[role='tooltip'] *, .App *,.nav *,.App *::before,.App *::after, .react-tabs *, .resource *:not(.fa):not(.material-icons), .resource + * *,
+
+#more-pages-menu a,[role='tooltip'] *, .App *,.nav *,.App *::before,.App *::after, .react-tabs *, .resource *:not(.fa):not(.material-icons), .resource + * *,
 .inRes *, #popDL.cite *, #menu-citationLang * { 
    font-family:"Noto Sans", "Noto Serif Tibetan", "Noto Serif Khmer", "Noto Sans Mongolian", "Roboto", "Helvetica", "Arial", sans-serif !important;
 }
@@ -1048,6 +1049,7 @@ html[lang="bo"] .msg-popup .front p { font-size:18px;}
 
 .nav a { text-decoration: none; font-size:0; display:inline-block; }
 
+#more-pages-menu a,
 .nav #logo.khmer + .links a,
 footer #donate,
 .nav a#about,
@@ -1079,6 +1081,7 @@ footer #donate,
 
 .nav #logo #by span { padding-top:7px; text-transform:none; letter-spacing: 1px; font-weight:600;}
 
+#more-pages-menu a,
 .nav a#collections,
 .nav a#about { color: #192229;} 
 
@@ -5968,6 +5971,10 @@ feedbucket-app:not(.on)  { display:none !important; }
 
 }
 
+#more-pages { display:none; margin-left:20px; cursor:pointer;}
+#more-pages-menu li:not(#a) { height:auto; padding:0; }
+#more-pages-menu li:not(#a) a { display:block; padding:12px 16px;}
+
 @media (max-width:1320px)
 {
    #latest .seeAll { margin-right:60px;}
@@ -5981,8 +5988,13 @@ feedbucket-app:not(.on)  { display:none !important; }
 
    .nav { padding-left:24px;padding-right:24px; max-width:100%; box-sizing: border-box;} 
 
+   #more-pages > span,
+   #more-pages { display:flex; align-items: center; }
+
+
    #about, 
-   #guide
+   #guide,
+   #new-search
    /* #about + a:not(#collections)  */
    { display:none;}
 
@@ -6751,11 +6763,14 @@ a.result + #matches.mobile,
    .logged > span { font-size:0; }
 
    .nav #logo a#BDRC span, 
-   .nav #logo a:last-child span, 
-   .nav #logo a:first-child span { font-size: 0px; }
+   .nav #logo a:last-child span
+   { font-size: 0px; }
+
+   .nav #logo a:first-child span { display:none; }
 
    .nav #logo.khmer + .links a { margin-left:0; margin-right:0px;}
 
+   #more-pages { margin-left:0; width:70px; }
    
    
    .nav.khmerServer > div > #lang,
@@ -7268,7 +7283,13 @@ a.result + #matches.mobile,
 
 }
 
+
 @media (max-width:375px)
+{
+   .nav > div > #logo { display:none; }
+}
+
+@media (max-width:400px)
 {
    .nav > div > #lang,
    .nav > div > #login,
@@ -7316,6 +7337,10 @@ a.result + #matches.mobile,
 
 @media (max-width:480px) {
 
+ 
+   .infoPanel+.resource>.ariane {
+      top: 80px;
+   }
    
    /*
    html:not(.auto_rela) {

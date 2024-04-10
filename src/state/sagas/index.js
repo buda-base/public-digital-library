@@ -1095,7 +1095,7 @@ async function getChunks(iri,next,nb = 10000,useContext = false) {
 
 async function getPages(iri,next) {
    
-   store.dispatch(uiActions.loading("etext", true))
+   store.dispatch(uiActions.loading("etext pages", true));
 
    try {
       let data, chunk, pages ;
@@ -1192,6 +1192,7 @@ async function getPages(iri,next) {
       loggergen.log("dataP",iri,next,data)
 
       store.dispatch(dataActions.gotNextPages(iri,data,next < 0))
+
    }
    catch(e){
 
@@ -1204,7 +1205,7 @@ async function getPages(iri,next) {
       }
    }
 
-   store.dispatch(uiActions.loading("etext", false))
+   store.dispatch(uiActions.loading("etext pages", false));
 }
 
 
