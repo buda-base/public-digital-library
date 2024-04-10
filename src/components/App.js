@@ -947,7 +947,7 @@ export function etext_lang_selec(that,black:boolean = false, elem, DL)
                                    ...token?{headers: {Authorization: `Bearer ${token}`}}:{},
                                  })
                                  .then(function (response) {
-                                   loggergen.log("loaded:", response.data)
+                                   //loggergen.log("loaded:", response.data)
                          
                                    // download file
                                    const temp = window.URL.createObjectURL(new Blob([response.data]))
@@ -957,14 +957,14 @@ export function etext_lang_selec(that,black:boolean = false, elem, DL)
                                    link.setAttribute("download", filename)
                                    link.click()
                                    
-                                   loggergen.log("filename:",filename,link,link.click)
+                                   //loggergen.log("filename:",filename,link,link.click)
 
                                    window.URL.revokeObjectURL(link)
                          
                                  })
                                  .catch(function (error) {
                                     logError(error)
-                                    console.error("error:", error.message)
+                                    //console.error("error:", error.message)
                                  })
 
                                  that.props.onLoading("etext DL",false)
