@@ -1085,6 +1085,9 @@ html[lang="bo"] .msg-popup .front p { font-size:18px;}
    border-radius:4px;
 }
 
+.stndz-popup-notification {
+   z-index:1000000 !important;
+}
 
 /* ----------------------------- end new-UX/etext ---------------------------- */
 
