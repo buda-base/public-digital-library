@@ -987,7 +987,7 @@ export function etext_lang_selec(that,black:boolean = false, elem, DL)
                                        linkContainer.append(linkFG)
                                        document.querySelector("body").append(linkContainer)
 
-                                       link.click()                    
+                                       //link.click()                    
                            
                                     })
                                     .catch(function (error) {
