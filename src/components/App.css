@@ -1029,6 +1029,63 @@ html[lang="bo"] .msg-popup .front p { font-size:18px;}
    z-index:1;
 }
 
+.download-etext-confirmation {
+   position:fixed;
+   left:0;
+   right:0;
+   top:0;
+   bottom:0;
+   z-index:1000000;
+}
+
+.download-etext-confirmation > div {
+   width:100%;
+   height:100%;
+   position: absolute;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+}
+
+.download-etext-confirmation > div:first-child {
+   background:rgba(0,0,0,0.25)
+}
+
+.download-etext-confirmation > div:last-child > div {
+   background:white;
+   padding:30px;
+   font-size:15px;
+   position: relative;
+   box-shadow: 0 0 3px 3px rgba(0,0,0,0.175);
+}
+
+.download-etext-confirmation > div:last-child > div .close::before {
+   content:"+";
+   font-size:30px;
+   font-weight:500;
+   transform: rotate(45deg);
+   position: relative;
+   display: block;
+   margin-top:-5px;
+}
+
+.download-etext-confirmation > div:last-child > div .close {
+   position: absolute;
+   right:0;
+   top:0;
+   cursor:pointer;
+}
+
+.download-etext-confirmation > div:last-child > div a {
+   background:#d73449;
+   color:white;
+   text-decoration: none;
+   padding:10px;
+   font-weight: 600;
+   border-radius:4px;
+}
+
+
 /* ----------------------------- end new-UX/etext ---------------------------- */
 
 .nav > div > div > a > img { vertical-align: middle;}

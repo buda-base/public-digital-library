@@ -706,7 +706,8 @@
       "manip": "image manipulation",
       "increaseFont": "Increase Etext font size",
       "decreaseFont": "Decrease Etext font size",
-      "downloadE": "Download Etext"
+      "downloadE": "Download Etext",
+      "saveF": "Save downloaded file"
    },
    "access": {
       "fairuse1": "BDRC <bold>restricts access<\/bold> to this work (only the first and last 20 images are available online) because the work is under <bold>copyright<\/bold>.",

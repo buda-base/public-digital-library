@@ -938,34 +938,62 @@ export function etext_lang_selec(that,black:boolean = false, elem, DL)
                                  that.props.onLoading("etext DL",true)
 
                                  await axios
-                                 .request({
-                                   method: "get",
-                                   responseType: "blob",
-                                   timeout: 4000,
-                                   baseURL: DL.replace(/^(https:..[^/]+).*$/,"$1"),
-                                   url: DL.replace(/^https:..[^/]+(.*)$/,"$1")+"?prefLangs="+i,
-                                   ...token?{headers: {Authorization: `Bearer ${token}`}}:{},
-                                 })
-                                 .then(function (response) {
-                                   //loggergen.log("loaded:", response.data)
-                         
-                                   // download file
-                                   const temp = window.URL.createObjectURL(new Blob([response.data]))
-                                   const link = document.createElement("a")
-                                   link.href = temp
-                                   let filename = DL.split(/[/]/).pop().split(/[.]/)[0]+"_"+i+".txt"
-                                   link.setAttribute("download", filename)
-                                   link.click()
-                                   
-                                   //loggergen.log("filename:",filename,link,link.click)
+                                    .request({
+                                       method: "get",
+                                       responseType: "blob",
+                                       timeout: 4000,
+                                       baseURL: DL.replace(/^(https:..[^/]+).*$/,"$1"),
+                                       url: DL.replace(/^https:..[^/]+(.*)$/,"$1")+"?prefLangs="+i,
+                                       ...token?{headers: {Authorization: `Bearer ${token}`}}:{},
+                                    })
+                                    .then(function (response) {
+                                    //loggergen.log("loaded:", response.data)
+                           
+                                       // download file
+                                       const temp = window.URL.createObjectURL(new Blob([response.data]))
+                                       const link = document.createElement("a")
+                                       link.href = temp
+                                       let filename = DL.split(/[/]/).pop().split(/[.]/)[0]+"_"+i+".txt"
+                                       
+                                       //loggergen.log("filename:",filename,link,link.click)
 
-                                   window.URL.revokeObjectURL(link)
-                         
-                                 })
-                                 .catch(function (error) {
-                                    logError(error)
-                                    //console.error("error:", error.message)
-                                 })
+                                       link.setAttribute("download", filename)
+                                       link.textContent = I18n.t("mirador.saveF")
+                                       
+                                       // #864 handle case when ad blocker prevents programmatically clicking the link
+                                       
+                                       const linkContainer = document.createElement("div")
+                                       linkContainer.setAttribute("class", "download-etext-confirmation")
+                                       const linkBG = document.createElement("div")
+                                       const linkFG = document.createElement("div")
+                                       const pop = document.createElement("div")
+                                       const close = document.createElement("div")
+                                       close.setAttribute("class","close")
+                                                                          
+                                       link.addEventListener("click", (event) => {
+                                          window.URL.revokeObjectURL(link)
+                                          linkContainer.remove()
+                                       })
+                                       
+                                       close.addEventListener("click", (event) => {
+                                          window.URL.revokeObjectURL(link)
+                                          linkContainer.remove()
+                                       })
+
+                                       pop.append(link)
+                                       pop.append(close)
+                                       linkFG.append(pop)
+                                       linkContainer.append(linkBG)
+                                       linkContainer.append(linkFG)
+                                       document.querySelector("body").append(linkContainer)
+
+                                       link.click()                    
+                           
+                                    })
+                                    .catch(function (error) {
+                                       logError(error)
+                                       //console.error("error:", error.message)
+                                    })
 
                                  that.props.onLoading("etext DL",false)
                               }}>
