@@ -16,13 +16,19 @@ const handleEtextObserver = () => {
       const id = key.split("?")[0]?.split(":")[1]
       if(!id) return
       if(!etextPages[id]) etextPages[id] = { }
-      if(!etextPages[id][key]) etextPages[id][key] = { }
+      if(!etextPages[id][key]) etextPages[id][key] = { total: 0 }
       if(entry.isIntersecting) { 
         console.log("in scroll:", entry, id, key)
-        if(!etextPages[id][key].start) etextPages[id][key].start = Date.now() 
+        if(!etextPages[id][key].start) etextPages[id][key].start = Date.now()             
       } else { 
         console.log("out scroll:", entry, id, key)
-        if(!etextPages[id][key].start) etextPages[id][key].start = Date.now()
+        if(etextPages[id][key].start) { 
+          etextPages[id][key].total += (Date.now() - etextPages[id][key].start) / 1000
+          delete etextPages[id][key].start
+          if(etextPages[id][key].total > 5) {
+            analytics.track("read page", {id, key})
+          }
+        }
       }
     })
   }
