@@ -2665,7 +2665,7 @@ div:has(.resource.preview) .infoPanel.inRes { margin:0 !important; }
 
 /* ------------------------------------------------------------------------------------------------------------------------ monlam*/
 
-/* @import "https://monlamdic.com/dictionarys/files/css/basic.css"; */
+/* @import "https://monlamdictionary.com/files/css/basic.css"; */
 
 .resource ~ .monlamResults { width:0px; position:relative; flex-shrink: 0; } 
 .resource ~ .monlamResults > div { width:0px; height:calc(100% - 2 * 80px); position:fixed; right:0; top:80px; background:white; overflow:auto; 

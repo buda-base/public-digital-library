@@ -9612,7 +9612,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
          return ([
             getGDPRconsent(this),
             <div class={monlamResults ? "withMonlam" : ""}>               
-               { monlamResults && <link rel="stylesheet" href="https://monlamdic.com/dictionarys/files/css/basic.css" /> }
+               { monlamResults && <link rel="stylesheet" href="https://monlamdictionary.com/files/css/basic.css" /> }
                { top_right_menu(this,title,searchUrl,etextRes) }               
                { this.renderMirador(isMirador) }           
                <div class="resource etext-view" >
