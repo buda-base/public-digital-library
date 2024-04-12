@@ -3,39 +3,39 @@ import Analytics from 'analytics'
 import { logError } from '../lib/api'
 
 const MIN_TIME_VIEWER = 30, MIN_TIME_PAGE = 5
-let observer, etextPages = {}
+let observer, pages = {}
 
-const handleEtextObserver = () => {
+const handleObserver = (selec, getKey, getId) => {
   let options = {
     rootMargin: "0px",
-    threshold: 0.65,
+    threshold: 0.25,
   };
   let callback = (entries, observer) => {    
     entries.forEach((entry) => {
-      const key = entry.target?.querySelector(".hover-menu #anchor a")?.getAttribute("href")
+      const key = getKey(entry.target)
       if(!key) return
-      const id = key.split("?")[0]?.split(":")[1]
+      const id = getId(key)
       if(!id) return
-      if(!etextPages[id]) etextPages[id] = { more5sec: {}, total: 0 }
-      if(!etextPages[id][key]) etextPages[id][key] = { total: 0 }
+      if(!pages[id]) pages[id] = { more5sec: {}, total: 0 }
+      if(!pages[id][key]) pages[id][key] = { total: 0 }
       if(entry.isIntersecting) { 
         console.log("in scroll:", entry, id, key)
-        if(!etextPages[id][key].start) etextPages[id][key].start = Date.now()             
+        if(!pages[id][key].start) pages[id][key].start = Date.now()             
       } else { 
-        console.log("out scroll:", entry, id, key, etextPages)
-        if(etextPages[id][key].start) { 
-          const time = (Date.now() - etextPages[id][key].start) / 1000
-          etextPages[id].total += time
-          etextPages[id][key].total += time
-          delete etextPages[id][key].start
-          if(etextPages[id].total > MIN_TIME_VIEWER && !etextPages[id].tracked) {
-            etextPages[id].tracked = true
-            analytics.track("viewer total time", {id, time: etextPages[id].total})
+        console.log("out scroll:", entry, id, key, pages)
+        if(pages[id][key].start) { 
+          const time = (Date.now() - pages[id][key].start) / 1000
+          pages[id].total += time
+          pages[id][key].total += time
+          delete pages[id][key].start
+          if(pages[id].total > MIN_TIME_VIEWER && !pages[id].tracked) {
+            pages[id].tracked = true
+            analytics.track("viewer total time", {id, time: pages[id].total})
           }
-          if(etextPages[id][key].total > MIN_TIME_PAGE && !etextPages[id][key].tracked) {
-            etextPages[id][key].tracked = true
-            etextPages[id].more5sec[key] = true
-            analytics.track("viewer total pages", {id, pages: Object.keys(etextPages[id].more5sec).length})
+          if(pages[id][key].total > MIN_TIME_PAGE && !pages[id][key].tracked) {
+            pages[id][key].tracked = true
+            pages[id].more5sec[key] = true
+            analytics.track("viewer total pages", {id, pages: Object.keys(pages[id].more5sec).length})
           }
         }
       }
@@ -43,11 +43,10 @@ const handleEtextObserver = () => {
   }
   if(observer) observer.disconnect()
   observer = new IntersectionObserver(callback, options);
-  document.querySelectorAll(".etextPage").forEach((target) => {
+  document.querySelectorAll(selec).forEach((target) => {
     observer.observe(target);
   })  
 }
-
 
 function myProviderPlugin(userConfig) {
   // return object for analytics to use
@@ -72,12 +71,23 @@ function myProviderPlugin(userConfig) {
       console.log("track:", payload, Date.now())
       logError({message:"analytics"},{payload})
 
+      let selec = ""
       if(payload.event === "page loaded") { 
-        if(document.querySelector(".etextPage")) {
-          setTimeout(handleEtextObserver, 150)
+        if(document.querySelector(selec = ".mirador-viewer ul.scroll-listing-thumbs li")) {
+          setTimeout(() => handleObserver(
+            selec,
+            (t) => t?.querySelector("[data-image-id]")?.getAttribute("data-image-id"),
+            (k) => k?.split("/")[3]?.split(":")[2]
+          ), 150)
+        } else if(document.querySelector(selec = ".etextPage")) {
+          setTimeout(() => handleObserver(
+            selec,
+            (t) => t?.querySelector(".hover-menu #anchor a")?.getAttribute("href"),
+            (k) => k?.split("?")[0]?.split(":")[1]
+          ), 150)
         } else {
           if(observer) observer.disconnect() 
-          etextPages = {}
+          pages = {}
         }
       }
     },
