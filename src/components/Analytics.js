@@ -19,10 +19,10 @@ const handleObserver = (selec, getKey, getId) => {
       if(!pages[id]) pages[id] = { more5sec: {}, total: 0 }
       if(!pages[id][key]) pages[id][key] = { total: 0 }
       if(entry.isIntersecting) { 
-        console.log("in scroll:", entry, id, key)
+        //console.log("in scroll:", entry, id, key)
         if(!pages[id][key].start) pages[id][key].start = Date.now()             
       } else { 
-        console.log("out scroll:", entry, id, key, pages)
+        //console.log("out scroll:", entry, id, key, pages)
         if(pages[id][key].start) { 
           const time = (Date.now() - pages[id][key].start) / 1000
           pages[id].total += time
@@ -60,7 +60,7 @@ function myProviderPlugin(userConfig) {
     },
     initialize: ({ config }) => {
       // load provider script to page
-      console.log("analytics:", config)
+      //console.log("analytics:", config)
       window.myPluginLoaded = true
     },
     page: ({ payload }) => {
@@ -68,7 +68,7 @@ function myProviderPlugin(userConfig) {
     },
     track: ({ payload }) => {
       // call provider specific event tracking
-      console.log("track:", payload, Date.now())
+      //console.log("track:", payload, Date.now())
       logError({message:"analytics"},{payload})
 
       let selec = ""
@@ -95,7 +95,7 @@ function myProviderPlugin(userConfig) {
       // call provider specific user identify method
     },
     loaded: () => {
-      console.log("analytics loaded:")
+      //console.log("analytics loaded:")
       // return boolean so analytics knows when it can send data to third party      
       return !!window.myPluginLoaded
     }
