@@ -2,6 +2,7 @@
 import Analytics from 'analytics'
 import { logError } from '../lib/api'
 
+const MIN_TIME_VIEWER = 30, MIN_TIME_PAGE = 5
 let observer, etextPages = {}
 
 const handleEtextObserver = () => {
@@ -15,18 +16,26 @@ const handleEtextObserver = () => {
       if(!key) return
       const id = key.split("?")[0]?.split(":")[1]
       if(!id) return
-      if(!etextPages[id]) etextPages[id] = { }
+      if(!etextPages[id]) etextPages[id] = { more5sec: {}, total: 0 }
       if(!etextPages[id][key]) etextPages[id][key] = { total: 0 }
       if(entry.isIntersecting) { 
         console.log("in scroll:", entry, id, key)
         if(!etextPages[id][key].start) etextPages[id][key].start = Date.now()             
       } else { 
-        console.log("out scroll:", entry, id, key)
+        console.log("out scroll:", entry, id, key, etextPages)
         if(etextPages[id][key].start) { 
-          etextPages[id][key].total += (Date.now() - etextPages[id][key].start) / 1000
+          const time = (Date.now() - etextPages[id][key].start) / 1000
+          etextPages[id].total += time
+          etextPages[id][key].total += time
           delete etextPages[id][key].start
-          if(etextPages[id][key].total > 5) {
-            analytics.track("read page", {id, key})
+          if(etextPages[id].total > MIN_TIME_VIEWER && !etextPages[id].tracked) {
+            etextPages[id].tracked = true
+            analytics.track("viewer total time", {id, time: etextPages[id].total})
+          }
+          if(etextPages[id][key].total > MIN_TIME_PAGE && !etextPages[id][key].tracked) {
+            etextPages[id][key].tracked = true
+            etextPages[id].more5sec[key] = true
+            analytics.track("viewer total pages", {id, pages: Object.keys(etextPages[id].more5sec).length})
           }
         }
       }
@@ -63,8 +72,13 @@ function myProviderPlugin(userConfig) {
       console.log("track:", payload, Date.now())
       logError({message:"analytics"},{payload})
 
-      if(payload.event === "page loaded" && document.querySelector(".etextPage")) {
-        setTimeout(handleEtextObserver, 150)
+      if(payload.event === "page loaded") { 
+        if(document.querySelector(".etextPage")) {
+          setTimeout(handleEtextObserver, 150)
+        } else {
+          if(observer) observer.disconnect() 
+          etextPages = {}
+        }
       }
     },
     identify: ({ payload }) => {
