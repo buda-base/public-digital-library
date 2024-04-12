@@ -9698,7 +9698,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
             </>) 
          else return ([
             <div class={(monlamResults ? "withMonlam " : "")+(this.props.openEtextRefs ? "withOutline ":"")}>               
-               { monlamResults && <link rel="stylesheet" href="https://monlamdic.com/dictionarys/files/css/basic.css" /> }               
+               { monlamResults && <link rel="stylesheet" href="https://monlamdictionary.com/files/css/basic.css" /> }               
                { this.renderMirador(isMirador) }           
                <div class="resource etext-view" >                                    
                   <div class="">
