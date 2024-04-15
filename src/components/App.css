@@ -3851,20 +3851,28 @@ body > [id^="menu-"] > div:last-child,
 
 #perma #same > span:first-child { font-weight:600;font-size:13px;padding-right:5px;}
 
-#perma #same .provider { display:inline-block; vertical-align: middle; line-height:0; pointer-events:none; }
+#perma .provider { display:inline-block; vertical-align: middle; line-height:0; pointer-events:none; }
 #perma #same .provider { margin-left:0; height:40px; background:white;display:inline-flex;align-items: center;justify-content: center; padding:0 5px;}
 
+#otherR .provider img,
 #perma #same .provider img { height:22px; display:inline-block;} 
+
+#otherR .provider .img,
 #perma #same .provider .img { height:22px; display:inline-flex;align-items: center; padding:5px 5px;background-color:rgba(255,255,255,0.75); border-radius:4px;
    border:2px solid #4d4d4d; font-size:12px; font-weight:700; color:#4a4a4a;
 }
 
 #perma #same.PE0 { display:none; }
 
+#otherR .provider.loc img,
 #perma #same .provider.loc img { height:16px;}
 
 /* #perma #same .provider.tol { background:white;border-radius:50%;} */
+
+#otherR .provider.tol img,
 #perma #same .provider.tol img { width:28px;height:28px;}
+
+
 
 
 /* #perma #same .provider.tol:first-child:last-child img { width:42px;height:42px;} */

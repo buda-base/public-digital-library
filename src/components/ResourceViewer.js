@@ -5640,6 +5640,100 @@ class ResourceViewer extends Component<Props,State>
       }
    }
 
+   otherResources(same,id,noS) {
+
+      let list = [], useRid = []
+
+      if(same && same.length) { 
+         
+         let viaf = same.filter(s => s.value.includes("viaf.org/"))
+         if(viaf.length) {
+            viaf = viaf[0].value
+            if(viaf && !same.filter(s => s.value.includes("worldcat.org/")).length) same.push({value:viaf.replace(/^.*\/([^/]+)$/,"https://www.worldcat.org/identities/containsVIAFID/$1"),type:"uri"})
+         } 
+         
+         let mapSame = same.map(s => {
+            //loggergen.log("s.val:",s.value)
+
+            let prefix = shortUri(s.value).split(":")[0]            
+            if(prefix === "sats") prefix = "sat" // #570
+            if(prefix.startsWith("http") && s.fromSeeOther) prefix = s.fromSeeOther
+            // TODO fix Sakya Research Center
+            if(!list.includes(prefix)) {
+               list.push(prefix)
+               let link = s.value, prov = shortUri(s.value).split(":")[0], name = I18n.t("result.resource")
+               if(prov === "sats") prov = "sat" // #570
+               if(prov.startsWith("http") && s.fromSeeOther) prov = s.fromSeeOther
+               let data,tab ;
+               if(this.props.assocResources) data = this.props.assocResources[s.value]                  
+               if(data && (tab=data.filter(t => t.fromKey === adm+"canonicalHtml")).length) link = tab[0].value                       
+               
+               // DONE case when more than on resource from a given provider (cf RKTS)
+               let useR = !useRid.includes(prov)
+               
+               if(this.props.config && this.props.config.chineseMirror) link = link.replace(new RegExp(cbeta), "http://cbetaonline.cn/")
+               
+               return <h4>
+                     <a target="_blank" href={link}>                     
+                        <span class={"provider "+prefix}>{provImg[prefix]?<img src={provImg[prefix]}/>:<span class="img">{prefix.replace(/^cbc.$/,"cbc@").toUpperCase()}</span>}</span>{I18n.t("result.open")} {useR && name} {!useR && <emph> {shortUri(s.value)} </emph>}{I18n.t("misc.in")} &nbsp;<b>{providers[prov]}</b><img src="/icons/link-out.svg"/>
+                     </a> 
+                  </h4>               
+
+               //loggergen.log("permaSame",s,data,tab,link,name,prov) 
+
+
+            } else {
+               useRid.push(prefix)
+            }
+         })
+
+         
+         return (<div class="data" id="otherR">
+            <div data-prop="tmp:otherResources">
+               <h3>{I18n.t("misc.link",{count:mapSame.length})}</h3> 
+               <div class="group">{ mapSame }</div>
+            </div>
+         </div>)
+      
+
+         /*
+         return ([
+   
+
+            <Popover
+               id="popSame"
+               open={this.state.collapse["permaSame-"+id]?true:false}
+               transformOrigin={{vertical:'bottom',horizontal:'right'}}
+               anchorOrigin={{vertical:'top',horizontal:'right'}}
+               anchorEl={this.state.anchorPermaSame}
+               onClose={e => { this.setState({...this.state,anchorPermaSame:null,collapse: {...this.state.collapse, ["permaSame-"+id]:false } } ) }}
+               >
+               { same.map(s => { 
+                     let link = s.value, prov = shortUri(s.value).split(":")[0], name = I18n.t("result.resource")
+                     if(prov === "sats") prov = "sat" // #570
+                     if(prov.startsWith("http") && s.fromSeeOther) prov = s.fromSeeOther
+                     let data,tab ;
+                     if(this.props.assocResources) data = this.props.assocResources[s.value]                  
+                     if(data && (tab=data.filter(t => t.fromKey === adm+"canonicalHtml")).length) link = tab[0].value                       
+                     
+                     // DONE case when more than on resource from a given provider (cf RKTS)
+                     let useR = !useRid.includes(prov)
+                     
+                     let open = <MenuItem>{I18n.t("result.open")} {useR && name} {!useR && <emph> {shortUri(s.value)} </emph>}{I18n.t("misc.in")} &nbsp;<b>{providers[prov]}</b><img src="/icons/link-out.svg"/></MenuItem>
+                     if(s.isOrig) open = <MenuItem style={{display:"block",height:"32px",lineHeight:"12px"}}>{I18n.t("popover.imported")} <b>{providers[prov]}</b><br/>{I18n.t("popover.seeO")}<img style={{verticalAlign:"middle"}} src="/icons/link-out.svg"/></MenuItem>
+
+                     //loggergen.log("permaSame",s,data,tab,link,name,prov) 
+
+                     if(this.props.config && this.props.config.chineseMirror) link = link.replace(new RegExp(cbeta), "http://cbetaonline.cn/")
+
+                     if(prov != "bdr") return (<a target="_blank" href={link}>{open}</a>) // keep original http/s prefix (#381)
+               } ) }
+            </Popover>
+         ])
+         */
+      }
+   }
+
 renderPopupCitation(IRI) {
 
    //loggergen.log("rPc:",IRI)
@@ -5844,37 +5938,8 @@ renderPopupPrint(IRI,place = "bottom-start") {
    )
 }
 
-perma_menu(pdfLink,monoVol,fairUse,other,accessET)
+prepareSame(other, sameLegalD) 
 {
-   let that = this
-
-
-   let legal = this.getResourceElem(adm+"metadataLegal"), legalD, sameLegalD
-   if(legal && legal.length) legal = legal.filter(p => !p.fromSameAs)
-   if(legal && legal.length && legal[0].value && this.props.dictionary) { 
-      legalD = this.props.dictionary[legal[0].value]
-      sameLegalD = legalD
-      if(legalD) legalD = legalD[adm+"license"]
-      if(legalD && legalD.length && legalD[0].value) legalD = legalD[0].value
-   }
-
-   let cLegal = this.getResourceElem(adm+"contentLegal"), cLegalD
-   if(cLegal && cLegal.length) cLegal = cLegal.filter(p => !p.fromSameAs)
-   if(cLegal && cLegal.length && cLegal[0].value && this.props.dictionary) { 
-      cLegalD = this.props.dictionary[cLegal[0].value]
-      if(cLegalD) cLegalD = cLegalD[adm+"license"]
-      if(cLegalD && cLegalD.length && cLegalD[0].value) cLegalD = cLegalD[0].value
-   }
-
-   let copyR = ""  //"open_unknown" ;
-   if((cLegalD && cLegalD.endsWith("CC0"))||(!cLegalD && legalD && legalD.endsWith("CC0"))) copyR = "open" ;
-   else if((cLegalD && cLegalD.endsWith("PublicDomain"))||(!cLegalD && legalD && legalD.endsWith("PublicDomain"))) copyR = "open" ;
-   else if((cLegalD && cLegalD.endsWith("AllRightsReserved"))||(!cLegalD && legalD && legalD.endsWith("AllRightsReserved"))) copyR = "not_open" ;
-   else if((cLegalD && cLegalD.endsWith("Undetermined"))||(!cLegalD && legalD && legalD.endsWith("Undetermined"))) copyR = "open_unknown" ;
-   // TODO other kind of licenses ?
-
-   //loggergen.log("legal",cLegal,cLegalD,legal,legalD)
-
    let same = this.getResourceElem(owl+"sameAs")
    if(!same || !same.length) same = [] 
    for(let o of other) { 
@@ -5910,6 +5975,42 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
    } else {
       if(!same.some(s => s.value && !s.value.startsWith(bdr))) noS = true
    }
+
+   return {same, noS}
+}
+
+perma_menu(pdfLink,monoVol,fairUse,other,accessET)
+{
+   let that = this
+
+
+   let legal = this.getResourceElem(adm+"metadataLegal"), legalD, sameLegalD
+   if(legal && legal.length) legal = legal.filter(p => !p.fromSameAs)
+   if(legal && legal.length && legal[0].value && this.props.dictionary) { 
+      legalD = this.props.dictionary[legal[0].value]
+      sameLegalD = legalD
+      if(legalD) legalD = legalD[adm+"license"]
+      if(legalD && legalD.length && legalD[0].value) legalD = legalD[0].value
+   }
+
+   let cLegal = this.getResourceElem(adm+"contentLegal"), cLegalD
+   if(cLegal && cLegal.length) cLegal = cLegal.filter(p => !p.fromSameAs)
+   if(cLegal && cLegal.length && cLegal[0].value && this.props.dictionary) { 
+      cLegalD = this.props.dictionary[cLegal[0].value]
+      if(cLegalD) cLegalD = cLegalD[adm+"license"]
+      if(cLegalD && cLegalD.length && cLegalD[0].value) cLegalD = cLegalD[0].value
+   }
+
+   let copyR = ""  //"open_unknown" ;
+   if((cLegalD && cLegalD.endsWith("CC0"))||(!cLegalD && legalD && legalD.endsWith("CC0"))) copyR = "open" ;
+   else if((cLegalD && cLegalD.endsWith("PublicDomain"))||(!cLegalD && legalD && legalD.endsWith("PublicDomain"))) copyR = "open" ;
+   else if((cLegalD && cLegalD.endsWith("AllRightsReserved"))||(!cLegalD && legalD && legalD.endsWith("AllRightsReserved"))) copyR = "not_open" ;
+   else if((cLegalD && cLegalD.endsWith("Undetermined"))||(!cLegalD && legalD && legalD.endsWith("Undetermined"))) copyR = "open_unknown" ;
+   // TODO other kind of licenses ?
+
+   //loggergen.log("legal",cLegal,cLegalD,legal,legalD)
+
+   let { same, noS } = this.prepareSame(other, sameLegalD) 
 
    let isEtextVol = false
    if(this.props.IRI && getEntiType(this.props.IRI) === "Etext") {
@@ -10030,6 +10131,16 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
             tablist = tablist.filter(t => t).reverse()
             tabpanels = tabpanels.filter(t => t).reverse()            
          } 
+         
+
+         let legal = this.getResourceElem(adm+"metadataLegal"), legalD, sameLegalD
+         if(legal && legal.length) legal = legal.filter(p => !p.fromSameAs)
+         if(legal && legal.length && legal[0].value && this.props.dictionary) { 
+            legalD = this.props.dictionary[legal[0].value]
+            sameLegalD = legalD
+         }
+         let { same, noS } = this.prepareSame(kZprop.filter(k => k.startsWith(adm+"seeOther")), sameLegalD)
+         let otherResourcesData = this.otherResources(same,"permalink",noS)
 
          return (
          [getGDPRconsent(this),   
@@ -10100,6 +10211,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
                   { this.renderMirador(isMirador) }           
                   { theDataTop }
                   <div class="data" id="perma">{ this.perma_menu(pdfLink,monoVol,fairUse,kZprop.filter(k => k.startsWith(adm+"seeOther")), accessET && !etextAccessError)  }</div>
+                  { otherResourcesData }
                   { theDataBot }
                   { ( /*hasRel &&*/ !this.props.preview && this.props.assocResources && !["Instance","Images","Etext"].includes(_T)) &&
                      <div class="data related" id="resources" data-all={all}>
