@@ -3869,11 +3869,39 @@ body > [id^="menu-"] > div:last-child,
 
 /* #perma #same .provider.tol { background:white;border-radius:50%;} */
 
+.otherRlink img,
 #otherR .provider.tol img,
 #perma #same .provider.tol img { width:28px;height:28px;}
 
 
 
+.otherRlink .provider.wd img,
+#otherR .provider.wd img { transform: scale(1.25); }
+
+.otherRlink .provider img:not(#a),
+#otherR .provider img:not(#a) { width:24px; height:24px; object-fit: contain;}
+
+.otherRlink .provider,
+#otherR .provider { margin-right:10px; display: inline-flex; }
+
+.otherRlink .group h4,
+#otherR .group h4 { margin-bottom:5px;}
+
+#otherR .group { margin-top:-3px; }
+
+.otherRlink:not(#a):hover {border: 1px solid transparent; text-decoration:underline; }
+
+.group h4 a.otherRlink ,
+#otherR .group h4 a { display: inline-flex; align-items: center; border: 1px solid transparent; }
+
+.otherRlink:not(#a) .provider::before {
+   content:none; 
+}
+
+
+.otherRlink:not(#a) + .hover-menu {
+   margin-top:3px;
+}
 
 /* #perma #same .provider.tol:first-child:last-child img { width:42px;height:42px;} */
 

@@ -5655,6 +5655,8 @@ class ResourceViewer extends Component<Props,State>
          let mapSame = same.map(s => {
             //loggergen.log("s.val:",s.value)
 
+            if(s.value.startsWith(bdr)) return
+
             let prefix = shortUri(s.value).split(":")[0]            
             if(prefix === "sats") prefix = "sat" // #570
             if(prefix.startsWith("http") && s.fromSeeOther) prefix = s.fromSeeOther
@@ -5673,11 +5675,23 @@ class ResourceViewer extends Component<Props,State>
                
                if(this.props.config && this.props.config.chineseMirror) link = link.replace(new RegExp(cbeta), "http://cbetaonline.cn/")
                
-               return <h4>
-                     <a target="_blank" href={link}>                     
-                        <span class={"provider "+prefix}>{provImg[prefix]?<img src={provImg[prefix]}/>:<span class="img">{prefix.replace(/^cbc.$/,"cbc@").toUpperCase()}</span>}</span>{I18n.t("result.open")} {useR && name} {!useR && <emph> {shortUri(s.value)} </emph>}{I18n.t("misc.in")} &nbsp;<b>{providers[prov]}</b><img src="/icons/link-out.svg"/>
-                     </a> 
-                  </h4>               
+               let ID = "ID-tmp:otherResources-"+link      
+   
+
+               let ret = <a target="_blank" href={link} className="otherRlink">                     
+                  <span class={"provider "+prefix}>{provImg[prefix]?<img src={provImg[prefix]}/>:<span class="img">{prefix.replace(/^cbc.$/,"cbc@").toUpperCase()}</span>}</span>
+                  {/* {I18n.t("result.open")} {useR && name} {!useR && <emph> {shortUri(s.value)} </emph>}{I18n.t("misc.in")} &nbsp; */}
+                  {providers[prov]}
+                  <img src="/icons/link-out.svg"/>
+               </a>
+            
+               const sav = [ ret ]
+               sav.push(this.hoverMenu("tmp:otherResources",{value:link}, [ ret ]))
+
+               return (<h4 class="multiple hasTogHovM" onClick={this.toggleHoverM(ID,true)} onMouseEnter={this.toggleHoverMtooltip(ID,true)} onMouseLeave={this.toggleHoverMtooltip(ID,false)}>
+                     { sav }
+                  </h4>
+                  )
 
                //loggergen.log("permaSame",s,data,tab,link,name,prov) 
 
@@ -5685,15 +5699,21 @@ class ResourceViewer extends Component<Props,State>
             } else {
                useRid.push(prefix)
             }
-         })
-
+         }).filter(s => s)
          
-         return (<div class="data" id="otherR">
-            <div data-prop="tmp:otherResources">
-               <h3>{I18n.t("misc.link",{count:mapSame.length})}</h3> 
+         if(mapSame.length) return (
+            <div id="otherR" data-prop="tmp:otherResources">
+               <h3>
+                  <span>
+                      <Tooltip placement="bottom-start" classes={{tooltip:"commentT",popper:"commentP"}} style={{marginLeft:"50px"}} title={<div>{I18n.t("resource.sameL",{count:mapSame.length})}</div>}>
+                        <a class="propref">{I18n.t("misc.otherR",{count:mapSame.length})}</a>
+                     </Tooltip>
+                     {I18n.t("punc.colon")}
+                  </span>
+               </h3> 
                <div class="group">{ mapSame }</div>
             </div>
-         </div>)
+         )
       
 
          /*
@@ -6958,7 +6978,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
          )
    }
 
-   renderData = (kZprop, iiifpres, title, otherLabels, div = "", hash = "") => {
+   renderData = (kZprop, iiifpres, title, otherLabels, div = "", hash = "", prepend = []) => {
 
       let { doMap, doRegion, regBox } = this.getMapInfo(kZprop);
 
@@ -7134,6 +7154,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
       //loggergen.log("data:",data)      
 
       if(data && data.length) return <div className={div!=="header"?"data "+div:div} {...hash?{id:hash}:{}}>
+         {prepend}
          {data}
          {/* // TODO not working anymore
          { this.renderRoles() } 
@@ -9835,6 +9856,15 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
       }
       else {
 
+         let legal = this.getResourceElem(adm+"metadataLegal"), legalD, sameLegalD
+         if(legal && legal.length) legal = legal.filter(p => !p.fromSameAs)
+         if(legal && legal.length && legal[0].value && this.props.dictionary) { 
+            legalD = this.props.dictionary[legal[0].value]
+            sameLegalD = legalD
+         }
+         let { same, noS } = this.prepareSame(kZprop.filter(k => k.startsWith(adm+"seeOther")), sameLegalD)
+         let otherResourcesData = this.otherResources(same,"permalink",noS)
+
          // #851
          let listWithAS = [ ], tmpElem = this.getResourceElem(tmp+"outlineAuthorshipStatement")
          if(!tmpElem?.length && this.props.outlines && this.props.outlines[this.props.IRI]) {
@@ -9842,7 +9872,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
          }
          
          let theDataTop = this.renderData(topProps,iiifpres,title,otherLabels,"top-props","main-info")      
-         let theDataBot = this.renderData(kZprop.filter(k => !topProps.includes(k) && !extProps.includes(k)).concat(listWithAS),iiifpres,title,otherLabels,"bot-props")      
+         let theDataBot = this.renderData(kZprop.filter(k => !topProps.includes(k) && !extProps.includes(k)).concat(listWithAS),iiifpres,title,otherLabels,"bot-props", undefined, otherResourcesData)      
 
          let theEtext
          if(this.props.eTextRefs && this.props.eTextRefs !== true && this.props.IRI && this.props.IRI.startsWith("bdr:IE")) { 
@@ -10132,16 +10162,6 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
             tabpanels = tabpanels.filter(t => t).reverse()            
          } 
          
-
-         let legal = this.getResourceElem(adm+"metadataLegal"), legalD, sameLegalD
-         if(legal && legal.length) legal = legal.filter(p => !p.fromSameAs)
-         if(legal && legal.length && legal[0].value && this.props.dictionary) { 
-            legalD = this.props.dictionary[legal[0].value]
-            sameLegalD = legalD
-         }
-         let { same, noS } = this.prepareSame(kZprop.filter(k => k.startsWith(adm+"seeOther")), sameLegalD)
-         let otherResourcesData = this.otherResources(same,"permalink",noS)
-
          return (
          [getGDPRconsent(this),   
          <Helmet>
@@ -10211,7 +10231,6 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
                   { this.renderMirador(isMirador) }           
                   { theDataTop }
                   <div class="data" id="perma">{ this.perma_menu(pdfLink,monoVol,fairUse,kZprop.filter(k => k.startsWith(adm+"seeOther")), accessET && !etextAccessError)  }</div>
-                  { otherResourcesData }
                   { theDataBot }
                   { ( /*hasRel &&*/ !this.props.preview && this.props.assocResources && !["Instance","Images","Etext"].includes(_T)) &&
                      <div class="data related" id="resources" data-all={all}>
