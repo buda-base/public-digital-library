@@ -3050,7 +3050,7 @@ class ResourceViewer extends Component<Props,State>
                ret = [  <Link {...this.props.preview?{ target:"_blank" }:{}} to={"/show/"+sUri} class={"images-thumb no-thumb"} style={{"background-image":"url(/icons/etext.png)"}}></Link> ,
                      <div class="images-thumb-links">
                         <Link {...this.props.preview?{ target:"_blank" }:{}} className={"urilink "+ prefix} to={vlink}>{I18n.t("resource.openViewer")}</Link>
-                        <Link {...this.props.preview?{ target:"_blank" }:{}} className={"urilink "+ prefix} to={"/"+show+"/"+prefix+":"+pretty}>{I18n.t("resource.openR")}</Link>
+                        {/* <Link {...this.props.preview?{ target:"_blank" }:{}} className={"urilink "+ prefix} to={"/"+show+"/"+prefix+":"+pretty}>{I18n.t("resource.openR")}</Link> */}
                      </div> ]
                if(prov) ret.push(prov)
             
@@ -3067,7 +3067,7 @@ class ResourceViewer extends Component<Props,State>
                   let thumbUrl = thumbV[0].value
                   if(!thumbUrl.match(/[/]default[.][^.]+$/)) thumbUrl += "/full/"+(thumbV[0].value.includes(".bdrc.io/")?"!2000,145":",145")+"/0/default.jpg"
                   else thumbUrl = thumbUrl.replace(/[/]max[/]/,"/"+(thumbUrl.includes(".bdrc.io/")?"!2000,145":",145")+"/")
-                  ret = [  <Link {...this.props.preview?{ target:"_blank" }:{}} to={"/show/"+sUri} class={"images-thumb"} style={{"background-image":"url("+thumbUrl+")"}}></Link> ]
+                  ret = [  <Link {...this.props.preview?{ target:"_blank" }:{}} to={"/show/"+sUri} class={"images-thumb"} style={{"background-image":"url("+thumbUrl+")"}}><img src={thumbUrl}/></Link> ]
                }
             
                let inRoot =  this.getResourceElem(bdo+"inRootInstance", sUri, this.props.assocResources)
@@ -3359,7 +3359,7 @@ class ResourceViewer extends Component<Props,State>
                if(!thumbUrl.match(/[/]default[.][^.]+$/)) thumbUrl += "/full/"+(thumb[0].value.includes(".bdrc.io/")?"!2000,145":",145")+"/0/default.jpg"
                else thumbUrl = thumbUrl.replace(/[/]max[/]/,"/"+(thumbUrl.includes(".bdrc.io/")?"!2000,145":",145")+"/")
                let vlink = "/"+show+"/"+prefix+":"+pretty+"?s="+encodeURIComponent(this.props.history.location.pathname+this.props.history.location.search)+"#open-viewer"                
-               thumb = <div class="images-thumb" style={{"background-image":"url("+thumbUrl+")"}}/>;               
+               thumb = <div class="images-thumb" style={{"background-image":"url("+thumbUrl+")"}}><img src={thumbUrl}/></div>;               
 
                const checkDLD = (ev) => {
                   loggergen.log("CDLD:",this.props.useDLD)
@@ -3386,7 +3386,8 @@ class ResourceViewer extends Component<Props,State>
                ret = [<Link {...this.props.preview?{ target:"_blank" }:{}} className={"urilink "+ prefix} onClick={checkDLD.bind(this)} to={vlink}>{thumb}</Link>,
                      <div class="images-thumb-links">
                         <Link {...this.props.preview?{ target:"_blank" }:{}} className={"urilink "+ prefix} to={vlink} onClick={checkDLD.bind(this)}>{I18n.t("index.openViewer")}</Link>
-                        <Link {...this.props.preview?{ target:"_blank" }:{}} className={"urilink "+ prefix} to={"/"+show+"/"+prefix+":"+pretty}>{I18n.t("resource.openR")}</Link>
+                        {/* <Link {...this.props.preview?{ target:"_blank" }:{}} className={"urilink "+ prefix} to={"/"+show+"/"+prefix+":"+pretty}>{I18n.t("resource.openR")}</Link> */}
+                        <ResourceViewerContainer auth={this.props.auth} history={this.props.history} IRI={prefix+":"+pretty} pdfDownloadOnly={true} />
                      </div>]
             } else if(thumbV && thumbV.length) {
                let repro = this.getResourceElem(bdo+"instanceHasReproduction", shortUri(elem.value), this.props.assocResources)
@@ -5999,7 +6000,7 @@ prepareSame(other, sameLegalD)
    return {same, noS}
 }
 
-perma_menu(pdfLink,monoVol,fairUse,other,accessET)
+perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
 {
    let that = this
 
@@ -6077,7 +6078,159 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
    // + fix bdr:G3176 (sameAs Shakya Research Center)
    // + use <Tooltip/> instead of title="""
 
-   return (
+   const popupPdf = (that.props.pdfVolumes && that.props.pdfVolumes.length > 0) &&
+      <Popover
+         className="poPdf"
+         open={that.state.pdfOpen == true || that.props.pdfReady == true}
+         anchorEl={that.state.anchorPermaDL}
+         //anchorOrigin={{ vertical: 'bottom' }}
+         //transformOrigin={{ vertical: 'top' }}
+         onClose={that.handleRequestClosePdf.bind(this)}
+      >
+         <List>
+            {/*
+            that.props.pdfUrl &&
+            [<MenuItem onClick={e => that.setState({...that.state,pdfOpen:false})}><a href={that.props.pdfUrl} target="_blank">Download</a></MenuItem>
+            ,<hr/>]
+            */}
+            { !this.props.useDLD && authError && (
+            isProxied(that)
+               ? <ListItem><div className="mustLogin"><Trans i18nKey="resource.notInList" components={{lk:<a class='uri-link' target='_blank' href={"https://library"+"."+"bdrc"+"."+"io/show/"+that.props.IRI} />, nl:<br/>}}/></div></ListItem>
+               : <ListItem><a className="mustLogin" onClick={() => that.props.auth.login(that.props.history.location)}>{I18n.t("resource.mustLogin")}</a></ListItem>
+            )}
+            {
+            (!authError || this.props.useDLD) && that.props.pdfVolumes.map(e => {
+
+               let Ploading = e.pdfFile && e.pdfFile == true
+               let Ploaded = e.pdfFile && e.pdfFile != true
+               let Perror = e.pdfFile && e.pdfError || e.pdfError === 501
+               let Prange = this.state.collapse["pdf_"+e.link]
+
+               let Zloading = e.zipFile && e.zipFile == true
+               let Zloaded = e.zipFile && e.zipFile != true
+               let Zerror = e.zipFile && e.zipError || e.zipError === 501
+               let Zrange = this.state.collapse["zip_"+e.link]
+
+
+               let pdfMsg = I18n.t("resource.gener1pdf")
+               let zipMsg = I18n.t("resource.gener0zip")
+
+               if(Prange) {
+                  pdfMsg = <PdfZipSelector type="pdf" that={that} elem={e}/>                                 
+               }
+
+               if(Ploading) {
+                  pdfMsg = I18n.t("resource.gener2pdf")
+                  zipMsg =  I18n.t("resource.gener1zip")
+               }
+
+               if(Ploaded) {
+                  pdfMsg = <>{I18n.t("resource.gener3pdf")}<Close onClick={(ev) => {
+                     this.props.onResetPdf(e,"pdf")
+                     ev.preventDefault()
+                     ev.stopPropagation()
+                  }}/></>
+                  zipMsg =  I18n.t("resource.gener1zip")
+               }
+
+               if(Perror) {
+                  Ploading = false
+                  pdfMsg = pdfZipError(e,e.pdfError,"pdf")
+                  
+               }
+
+               if(Zrange) {
+                  zipMsg = <PdfZipSelector type="zip" that={that} elem={e}/>
+               }
+
+               if(Zloading) {
+                  zipMsg = I18n.t("resource.gener2zip")
+               }
+
+               if(Zloaded) {                                 
+                  zipMsg =  <>{(Ploaded?I18n.t("resource.gener0zip"):I18n.t("resource.gener3zip"))}<Close  onClick={(ev) => { 
+                     this.props.onResetPdf(e,"zip")
+                     ev.preventDefault()
+                     ev.stopPropagation()
+                  }}/></>
+               }
+
+               if(Zerror) {
+                  Zloading = false
+                  zipMsg = pdfZipError(e,e.zipError,"zip")
+                  
+               }
+
+               //loggergen.log("pdfMenu:",e)
+
+               const nbVol = (e.volume !== undefined?e.volume:monoVol.replace(/[^0-9]+/,""))
+               if(this.props.useDLD)  return (<ListItem className="pdfMenu">
+                     <b>{(e.volume !== undefined?(!e.volume.match || e.volume.match(/^[0-9]+$/)?"Volume ":"")+(e.volume):monoVol)}{I18n.t("punc.colon")}</b>
+                     <a href="#" onClick={(ev) => {
+                        window.top.postMessage(JSON.stringify({"download":{nbVol:""+nbVol,"rid":this.props.IRI.replace(/^bdr:/,"")}}),"*")        
+                        ev.preventDefault()
+                        ev.stopPropagation()
+                     }}><span class="on">{I18n.t("resource.gener3pdf")}</span></a>                                     
+                  </ListItem>)                              
+               else  return (<ListItem className="pdfMenu">
+                        <b>{(e.volume !== undefined?(!e.volume.match || e.volume.match(/^[0-9]+$/)?"Volume ":"")+(e.volume):monoVol)}{I18n.t("punc.colon")}</b>
+                        <a onClick={ev => that.handlePdfClick(ev,e.link,e.pdfFile)}
+                           {...(Ploaded ?{href:e.pdfFile}:{})}
+                        >
+                           { Ploading && <Loader className="pdfSpinner" loaded={Ploaded} scale={0.35}/> }
+                           <span {... (Ploading?{className:"pdfLoading"}:{className: this.state.collapse["pdf_"+e.link]?"on":""})} >{pdfMsg}</span>
+                           { Ploading && e.pdfPercent !== undefined && <span>&nbsp;{e.pdfPercent}%</span>}
+                        </a>
+                        <a onClick={ev => that.handlePdfClick(ev,e.link,e.zipFile,"zip")}
+                           {...(Zloaded ?{href:e.zipFile}:{})}
+                        >
+                           { Zloading && <Loader className="zipSpinner" loaded={Zloaded} scale={0.35}/> }
+                           <span {... (Zloading?{className:"zipLoading"}:{className:this.state.collapse["zip_"+e.link]?"on":""})}>{zipMsg}</span>
+                           { Zloading && e.zipPercent !== undefined && <span>&nbsp;{e.zipPercent}%</span>}
+                        </a>
+                        { that.props.IRI && getEntiType(that.props.IRI) === "Etext" && // TODO fix download etext
+                           <div> 
+
+                              &nbsp;&nbsp;|&nbsp;&nbsp;
+
+                              <a target="_blank" download={that.props.IRI?that.props.IRI.replace(/bdr:/,"")+".txt":""} 
+                                    href={that.props.IRI?that.props.IRI.replace(/bdr:/,bdr)+".txt":""} >
+                                 <span>TXT</span>
+                              </a>
+                           </div>
+                        }
+                     </ListItem>)
+               })
+            }
+         </List>
+      </Popover>
+
+
+   if(onlyDownload) return (<>
+       { popupPdf }
+       { pdfLink && 
+            ( (!(that.props.manifestError && that.props.manifestError.error.message.match(/Restricted access/)) /*&& !fairUse*/) || (that.props.auth && that.props.auth.isAuthenticated()))
+            && <a href="#" class="urilink" onClick={ev =>
+                  {
+                     //if(that.props.createPdf) return ;
+                     if((monoVol && monoVol.match && monoVol.match(/[^0-9]/)) || monoVol > 0){
+                        that.props.onInitPdf({iri:that.props.IRI,vol:monoVol},pdfLink)
+                     }
+                     else if(!that.props.pdfVolumes) {
+                        that.props.onRequestPdf(that.props.IRI,pdfLink)
+                     }
+                     that.setState({...that.state, collapse:{...this.state.collapse,permaDL:false}, pdfOpen:true,anchorPermaDL:ev.currentTarget,anchorElPdf:ev.currentTarget})
+
+                     ev.stopPropagation()
+                     ev.preventDefault()
+                     return false
+                  }
+               }>
+               {I18n.t("resource.download")}
+            </a>
+         }
+      </>)
+   else return (
 
     <div>
 
@@ -6204,133 +6357,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
             
             { popupCitation }
    
-           { (that.props.pdfVolumes && that.props.pdfVolumes.length > 0) &&
-                   <Popover
-                      className="poPdf"
-                      open={that.state.pdfOpen == true || that.props.pdfReady == true}
-                      anchorEl={that.state.anchorPermaDL}
-                      //anchorOrigin={{ vertical: 'bottom' }}
-                      //transformOrigin={{ vertical: 'top' }}
-                      onClose={that.handleRequestClosePdf.bind(this)}
-                   >
-                      <List>
-                         {/*
-                           that.props.pdfUrl &&
-                          [<MenuItem onClick={e => that.setState({...that.state,pdfOpen:false})}><a href={that.props.pdfUrl} target="_blank">Download</a></MenuItem>
-                          ,<hr/>]
-                         */}
-                         { !this.props.useDLD && authError && (
-                           isProxied(that)
-                              ? <ListItem><div className="mustLogin"><Trans i18nKey="resource.notInList" components={{lk:<a class='uri-link' target='_blank' href={"https://library"+"."+"bdrc"+"."+"io/show/"+that.props.IRI} />, nl:<br/>}}/></div></ListItem>
-                              : <ListItem><a className="mustLogin" onClick={() => that.props.auth.login(that.props.history.location)}>{I18n.t("resource.mustLogin")}</a></ListItem>
-                         )}
-                         {
-                           (!authError || this.props.useDLD) && that.props.pdfVolumes.map(e => {
-
-                              let Ploading = e.pdfFile && e.pdfFile == true
-                              let Ploaded = e.pdfFile && e.pdfFile != true
-                              let Perror = e.pdfFile && e.pdfError || e.pdfError === 501
-                              let Prange = this.state.collapse["pdf_"+e.link]
-
-                              let Zloading = e.zipFile && e.zipFile == true
-                              let Zloaded = e.zipFile && e.zipFile != true
-                              let Zerror = e.zipFile && e.zipError || e.zipError === 501
-                              let Zrange = this.state.collapse["zip_"+e.link]
-
-
-                              let pdfMsg = I18n.t("resource.gener1pdf")
-                              let zipMsg = I18n.t("resource.gener0zip")
-
-                              if(Prange) {
-                                 pdfMsg = <PdfZipSelector type="pdf" that={that} elem={e}/>                                 
-                              }
-
-                              if(Ploading) {
-                                 pdfMsg = I18n.t("resource.gener2pdf")
-                                 zipMsg =  I18n.t("resource.gener1zip")
-                              }
-
-                              if(Ploaded) {
-                                 pdfMsg = <>{I18n.t("resource.gener3pdf")}<Close onClick={(ev) => {
-                                    this.props.onResetPdf(e,"pdf")
-                                    ev.preventDefault()
-                                    ev.stopPropagation()
-                                 }}/></>
-                                 zipMsg =  I18n.t("resource.gener1zip")
-                              }
-
-                              if(Perror) {
-                                 Ploading = false
-                                 pdfMsg = pdfZipError(e,e.pdfError,"pdf")
-                                 
-                              }
-
-                              if(Zrange) {
-                                 zipMsg = <PdfZipSelector type="zip" that={that} elem={e}/>
-                              }
-
-                              if(Zloading) {
-                                 zipMsg = I18n.t("resource.gener2zip")
-                              }
-
-                              if(Zloaded) {                                 
-                                 zipMsg =  <>{(Ploaded?I18n.t("resource.gener0zip"):I18n.t("resource.gener3zip"))}<Close  onClick={(ev) => { 
-                                    this.props.onResetPdf(e,"zip")
-                                    ev.preventDefault()
-                                    ev.stopPropagation()
-                                 }}/></>
-                              }
-
-                              if(Zerror) {
-                                 Zloading = false
-                                 zipMsg = pdfZipError(e,e.zipError,"zip")
-                                 
-                              }
-
-                              //loggergen.log("pdfMenu:",e)
-
-                              const nbVol = (e.volume !== undefined?e.volume:monoVol.replace(/[^0-9]+/,""))
-                              if(this.props.useDLD)  return (<ListItem className="pdfMenu">
-                                    <b>{(e.volume !== undefined?(!e.volume.match || e.volume.match(/^[0-9]+$/)?"Volume ":"")+(e.volume):monoVol)}{I18n.t("punc.colon")}</b>
-                                    <a href="#" onClick={(ev) => {
-                                       window.top.postMessage(JSON.stringify({"download":{nbVol:""+nbVol,"rid":this.props.IRI.replace(/^bdr:/,"")}}),"*")        
-                                       ev.preventDefault()
-                                       ev.stopPropagation()
-                                    }}><span class="on">{I18n.t("resource.gener3pdf")}</span></a>                                     
-                                 </ListItem>)                              
-                              else  return (<ListItem className="pdfMenu">
-                                     <b>{(e.volume !== undefined?(!e.volume.match || e.volume.match(/^[0-9]+$/)?"Volume ":"")+(e.volume):monoVol)}{I18n.t("punc.colon")}</b>
-                                     <a onClick={ev => that.handlePdfClick(ev,e.link,e.pdfFile)}
-                                        {...(Ploaded ?{href:e.pdfFile}:{})}
-                                     >
-                                        { Ploading && <Loader className="pdfSpinner" loaded={Ploaded} scale={0.35}/> }
-                                        <span {... (Ploading?{className:"pdfLoading"}:{className: this.state.collapse["pdf_"+e.link]?"on":""})} >{pdfMsg}</span>
-                                        { Ploading && e.pdfPercent !== undefined && <span>&nbsp;{e.pdfPercent}%</span>}
-                                     </a>
-                                     <a onClick={ev => that.handlePdfClick(ev,e.link,e.zipFile,"zip")}
-                                        {...(Zloaded ?{href:e.zipFile}:{})}
-                                     >
-                                        { Zloading && <Loader className="zipSpinner" loaded={Zloaded} scale={0.35}/> }
-                                        <span {... (Zloading?{className:"zipLoading"}:{className:this.state.collapse["zip_"+e.link]?"on":""})}>{zipMsg}</span>
-                                        { Zloading && e.zipPercent !== undefined && <span>&nbsp;{e.zipPercent}%</span>}
-                                       </a>
-                                       { that.props.IRI && getEntiType(that.props.IRI) === "Etext" && // TODO fix download etext
-                                          <div> 
-
-                                             &nbsp;&nbsp;|&nbsp;&nbsp;
-
-                                             <a target="_blank" download={that.props.IRI?that.props.IRI.replace(/bdr:/,"")+".txt":""} 
-                                                   href={that.props.IRI?that.props.IRI.replace(/bdr:/,bdr)+".txt":""} >
-                                                <span>TXT</span>
-                                             </a>
-                                          </div>
-                                       }
-                                  </ListItem>)
-                            })
-                         }
-                      </List>
-                   </Popover>
-                }
+           { popupPdf }
          
    </div>
   )
@@ -9319,6 +9346,10 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
       let iiifpres = "//iiifpres.bdrc.io" ;
       if(this.props.config && this.props.config.iiifpres) iiifpres = this.props.config.iiifpres.endpoints[this.props.config.iiifpres.index]      
       //iiifpres += "/2.1.1"
+
+
+      if(this.props.pdfDownloadOnly) 
+         return this.perma_menu(pdfLink,monoVol,fairUse,kZprop.filter(k => k.startsWith(adm+"seeOther")), accessET && !etextAccessError, true)
 
 
       let getWtitle = this.getWtitle.bind(this)

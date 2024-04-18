@@ -1091,6 +1091,34 @@ html[lang="bo"] .msg-popup .front p { font-size:18px;}
 
 /* ----------------------------- end new-UX/etext ---------------------------- */
 
+
+[data-prop="tmp:propHasScans"] h4:not(#a) {
+   display:flex;
+   flex-direction: column;
+}
+
+[data-prop="tmp:propHasScans"] h4:not(#a) + h4 {
+   margin-top:20px;
+}
+
+[data-prop="tmp:propHasScans"] h4:not(#a) > a {
+   order:1;
+   display: inline-block;
+}
+[data-prop="tmp:propHasScans"] h4:not(#a) > div {
+   order:0;
+   margin-left:0;
+   margin-bottom:5px;
+}
+
+[data-prop="tmp:propHasScans"] h4:not(#a) .images-thumb {
+   width:auto; 
+   background:none;   
+   display: inline-block;
+}
+
+/* ----------------------------- end new-UX/instance ---------------------------- */
+
 .nav > div > div > a > img { vertical-align: middle;}
 
 .nav #logo { display:flex; align-items:center;}
@@ -4063,10 +4091,20 @@ div.mustLogin a:hover { border:none; text-decoration: underline;}
 
 .resource .data .images-thumb:hover { border-color:#ccc;}
 
-.resource .data .images-thumb-links { display:inline-block; display:inline-flex;justify-content: flex-start; flex-direction: column;
-   margin-left:28px;vertical-align:top;
+.resource .data .images-thumb-links { display:inline-block; display:inline-flex;justify-content: flex-start; flex-direction: row;
+   margin-left:28px;vertical-align:top; align-items: baseline;
 }
-.resource .data .images-thumb-links a + a { margin-top:5px;display:inline-block;}
+.resource .data .images-thumb-links a + a { margin-top:5px;display:inline-block;margin-left:30px; position: relative;}
+.resource .data .images-thumb-links a + a::before { 
+   content:"";
+   border-left:1px solid black;
+   pointer-events: none;
+   position: absolute;
+   display: block;
+   left:-15px; 
+   top:5px;
+   height:15px; width:1px;
+}
 
 .resource .data .images-thumb-links a.disable { opacity:0.5; pointer-events:none; }
 
