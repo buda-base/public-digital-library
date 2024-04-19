@@ -9348,10 +9348,6 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
       //iiifpres += "/2.1.1"
 
 
-      if(this.props.pdfDownloadOnly) 
-         return this.perma_menu(pdfLink,monoVol,fairUse,kZprop.filter(k => k.startsWith(adm+"seeOther")), accessET && !etextAccessError, true)
-
-
       let getWtitle = this.getWtitle.bind(this)
       let wTitle,iTitle,rTitle ;
       let _T = getEntiType(this.props.IRI)
@@ -9406,6 +9402,10 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
       //loggergen.log("_T!!",_T)
       if(this.props.resources && this.props.resources[this.props.IRI] && _T !== "Etext") this.setManifest(kZprop,iiifpres)    
 
+      if(this.props.pdfDownloadOnly) {
+         if(this.props.resources && !this.props.resources[this.props.IRI]) this.props.onGetResource(this.props.IRI);
+         return this.perma_menu(pdfLink,monoVol,fairUse,kZprop.filter(k => k.startsWith(adm+"seeOther")), accessET && !etextAccessError, true)
+      }
 
       let resLabel = getLangLabel(this,"",titlElem)
 

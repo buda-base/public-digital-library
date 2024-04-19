@@ -1104,6 +1104,7 @@ html[lang="bo"] .msg-popup .front p { font-size:18px;}
 [data-prop="tmp:propHasScans"] h4:not(#a) > a {
    order:1;
    display: inline-block;
+   overflow:hidden;
 }
 [data-prop="tmp:propHasScans"] h4:not(#a) > div {
    order:0;
@@ -4094,7 +4095,7 @@ div.mustLogin a:hover { border:none; text-decoration: underline;}
 .resource .data .images-thumb-links { display:inline-block; display:inline-flex;justify-content: flex-start; flex-direction: row;
    margin-left:28px;vertical-align:top; align-items: baseline;
 }
-.resource .data .images-thumb-links a + a { margin-top:5px;display:inline-block;margin-left:30px; position: relative;}
+.resource .data .images-thumb-links a + a { margin-top:0px;display:inline-block;margin-left:30px; position: relative;}
 .resource .data .images-thumb-links a + a::before { 
    content:"";
    border-left:1px solid black;
