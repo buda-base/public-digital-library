@@ -3050,7 +3050,7 @@ class ResourceViewer extends Component<Props,State>
                ret = [  <Link {...this.props.preview?{ target:"_blank" }:{}} to={"/show/"+sUri} class={"images-thumb no-thumb"} style={{"background-image":"url(/icons/etext.png)"}}></Link> ,
                      <div class="images-thumb-links">
                         <Link {...this.props.preview?{ target:"_blank" }:{}} className={"urilink "+ prefix} to={vlink}>{I18n.t("resource.openViewer")}</Link>
-                        {/* <Link {...this.props.preview?{ target:"_blank" }:{}} className={"urilink "+ prefix} to={"/"+show+"/"+prefix+":"+pretty}>{I18n.t("resource.openR")}</Link> */}
+                        {/* <Link {...this.props.preview?{ target:"_blank" }:{}} className={"urilink "+ prefix} to={"/"+show+"/"+prefix+":"+pretty}>{I18n.t("resource.openR")}</Link> */}                        
                      </div> ]
                if(prov) ret.push(prov)
             
@@ -5551,7 +5551,28 @@ class ResourceViewer extends Component<Props,State>
             </div>
          )
       }
-      else {
+      else if(k === _tmp+"propHasEtext") {
+         return ( elem.map((e,i) => (
+            <div  data-prop={shortUri(k)} >               
+               <h3><span>{this.proplink(k,null,n)}{ret.length > 1 ? " "+I18n.t("punc.num",{num:i+1}) : ""}{I18n.t("punc.colon")}</span> </h3>
+               {this.preprop(k,0,n)}
+               <div class="group">
+                  <Link to={"/show/"+shortUri(e.value)}>{shortUri(e.value)}</Link>
+                  <ResourceViewerContainer  auth={this.props.auth} history={this.props.history} IRI={shortUri(e.value)} previewEtext={true} /> 
+               </div>
+            </div>
+         )))
+      } else if(k === _tmp+"propHasScans") {
+         return ( ret.map((r,i) => (
+            <div  data-prop={shortUri(k)} >               
+               <h3><span>{this.proplink(k,null,n)}{ret.length > 1 ? " "+I18n.t("punc.num",{num:i+1}) : ""}{I18n.t("punc.colon")}</span> </h3>
+               {this.preprop(k,0,n)}
+               <div class="group">
+                  {r}                  
+               </div>
+            </div>
+         )))
+      } else {
          let classN = k===bdo+"note"
             ? "has-collapse custom"
             :  linkToPlaces
@@ -6396,7 +6417,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
             
                //loggergen.log("next?",this.props.nextChunk,next,JSON.stringify(elem,null,3))
 
-               if(next && this.props.nextChunk !== next) {                               
+               if(!this.props.disbleScroll && next && this.props.nextChunk !== next) {                               
                   this.props.onGetChunks(this.props.IRI,next); 
                } 
             }
@@ -6553,20 +6574,20 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
             
                //loggergen.log("next?",this.props.nextChunk,next,JSON.stringify(elem,null,3))
 
-               if(next && this.props.nextPage !== next) {                               
+               if(!this.props.disableScroll && next && this.props.nextPage !== next) {                               
                   this.props.onGetPages(this.props.IRI,next); 
                } 
             }
          }
          //loader={<Loader loaded={false} />}
          >
-         <div style={{display:"flex", justifyContent:"space-between", width:"100%" }}>
+         { !this.props.disableScroll && <div style={{display:"flex", justifyContent:"space-between", width:"100%" }}>
             <h3 style={{marginBottom:"20px",textAlign:"right"}}>{ firstPageUrl && <Link onClick={(e) => this.props.onGetPages(this.props.IRI,0,true)} to={firstPageUrl}>{I18n.t("resource.firstP")}</Link>}</h3>
             <h3 style={{marginBottom:"20px",textAlign:"right"}}>{ prev!==-1 && <a onClick={(e) => this.props.onGetPages(this.props.IRI,prev)} class="download" style={{fontWeight:700,border:"none",textAlign:"right"}}>{I18n.t("resource.loadP")}</a>}</h3>
             <h3 style={{marginBottom:"20px",textAlign:"right"}}>{ lastPageUrl && <Link to={lastPageUrl} onClick={(e) => this.props.onGetPages(this.props.IRI,(this.getResourceElem(tmp+"lastChunk")??[])[0]?.value,true)} >{I18n.t("resource.lastP")}</Link>}</h3>
-         </div>
+         </div> }
          {/* {this.hasSub(k)?this.subProps(k):tags.map((e)=> [e," "] )} */}
-         { elem.map( e => { 
+         { elem.filter((e,i) => !this.props.disableScroll || i < 3).map( e => { 
 
             let pageVal ="", pageLang = "", current = []
 
@@ -6627,7 +6648,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                
                //loggergen.log("closest:",ev.target.closest(".popper"),ev.currentTarget,ev.target)
 
-               if(!this.props.config.useMonlam || !this.state.enableDicoSearch || ev.target.closest(".popper")) return
+               if(!this.props.config.useMonlam || !this.state.enableDicoSearch || this.props.disableScroll || ev.target.closest(".popper")) return
                
                let langElem = selection.anchorNode?.parentElement?.getAttribute("lang")
                if(!langElem) langElem = selection.anchorNode?.parentElement?.parentElement?.getAttribute("lang")
@@ -6909,8 +6930,8 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                </div> }
                <div class="overpage">
                   <h4 class="page"  
-                        onMouseEnter={ev => { if(!this.state.monlam && this.state.enableDicoSearch  && this.state.noHilight != e.seq) this.setState({ noHilight: e.seq})}} 
-                        onMouseDown={ev => { if((!this.state.monlam || this.state.monlam.seq != e.seq) && this.state.enableDicoSearch && this.state.noHilight != e.seq) this.setState({ noHilight: e.seq})}} 
+                        onMouseEnter={ev => { if(!this.state.monlam && this.state.enableDicoSearch && !this.props.disableScroll && this.state.noHilight != e.seq) this.setState({ noHilight: e.seq})}} 
+                        onMouseDown={ev => { if((!this.state.monlam || this.state.monlam.seq != e.seq) && this.state.enableDicoSearch && !this.props.disableScroll && this.state.noHilight != e.seq) this.setState({ noHilight: e.seq})}} 
                         onMouseUp={(ev) => monlamPopup(ev, e.seq)} 
                         onCopy={(ev) => monlamPopup(ev, e.seq)} >
                      {e.seq == this.state.monlam?.seq && this.state.enableDicoSearch ? this.state.monlam?.hilight : null}
@@ -7699,10 +7720,10 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
             </Popover>
       }
 
-      return (<>
+      return (!this.props.disableScroll && <>
          { monlamPop }
          <div id="settings" onClick={() => this.setState({collapse:{...this.state.collapse, etextNav:!this.state.collapse.etextNav}})}><img src="/icons/settings.svg"/></div>
-         <GenericSwipeable onSwipedRight={() => this.setState({ collapse:{ ...this.state.collapse, etextNav:!this.state.collapse.etextNav }})}>
+          <GenericSwipeable onSwipedRight={() => this.setState({ collapse:{ ...this.state.collapse, etextNav:!this.state.collapse.etextNav }})}>
             <div id="etext-nav" class={this.state.collapse.etextNav?"on":""}>
                <div>
                   <a id="DL" class={!accessError?"on":""} onClick={(e) => this.setState({...this.state,anchorLangDL:e.currentTarget, collapse: {...this.state.collapse, langDL:!this.state.collapse.langDL } } ) }>{etext_lang_selec(this,true,<>{I18n.t("mirador.downloadE")}<img src="/icons/DLw.png"/></>,this.props.IRI?fullUri(this.props.IRI).replace(/^http:/,"https:")+".txt":"")}</a>
@@ -7720,7 +7741,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                   <span class="X" onClick={() => this.setState({ collapse:{ ...this.state.collapse, etextNav:!this.state.collapse.etextNav }})}></span>
                </div>
             </div>
-         </GenericSwipeable>
+         </GenericSwipeable> 
       </>)
    }
 
@@ -9402,6 +9423,10 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
       //loggergen.log("_T!!",_T)
       if(this.props.resources && this.props.resources[this.props.IRI] && _T !== "Etext") this.setManifest(kZprop,iiifpres)    
 
+      if(this.props.previewEtext) {
+         if(this.props.resources && !this.props.resources[this.props.IRI]) this.props.onGetResource(this.props.IRI);
+      }
+
       if(this.props.pdfDownloadOnly) {
          if(this.props.resources && !this.props.resources[this.props.IRI]) this.props.onGetResource(this.props.IRI);
          return this.perma_menu(pdfLink,monoVol,fairUse,kZprop.filter(k => k.startsWith(adm+"seeOther")), accessET && !etextAccessError, true)
@@ -9750,7 +9775,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
          if(etextRes && etextRes.length) etextRes = shortUri(etextRes[0].value)
          else etextRes = null
 
-         if(topLevel) etextRes = this.props.IRI
+         if(topLevel || this.props.previewEtext) etextRes = this.props.IRI
 
          let etRefs 
          if(!this.props.eTextRefs && etextRes && topLevel) {
@@ -9763,7 +9788,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
          loggergen.log("eR:", topLevel, etextRes, this.state.currentText, hasPages, etext_data, this.props.eTextRefs, etRefs, this.props, this.state)
 
          let monlamResults 
-         if(!this.state.enableDicoSearch) { 
+         if(!this.state.enableDicoSearch || this.props.disableScroll) { 
 
          } else if(Array.isArray(this.props.monlamResults) && this.props.monlamResults.length > 0) { 
             let renderMonlamResults = (j, res) => res.map( (w,i) => { 
@@ -9837,7 +9862,13 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
          // TODO fix loader not hiding when closing then opening again
 
 
-         if(topLevel) return (<>            
+         if(this.props.previewEtext) return (<>            
+               { this.state.currentText 
+                  ? <ResourceViewerContainer  auth={this.props.auth} history={this.props.history} IRI={this.state.currentText} openEtext={true} openEtextRefs={!this.state.collapse.etextRefs} youpi={"?"} disableScroll={this.props.previewEtext}/> 
+                  : <Loader className="etext-viewer-loader" loaded={!this.props.loading}  options={{position:"fixed",left:"calc(200px)",top:"50%"}} />      
+               }
+            </>) 
+         else if(topLevel) return (<>            
             {getGDPRconsent(this)}
             {top_right_menu(this,title,searchUrl,etextRes)}     
                <SimpleBar class={"resource etext-outline "+(this.state.collapse.etextRefs ? "withOutline-false":"withOutline-true")}>

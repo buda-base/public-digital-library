@@ -315,7 +315,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
          dispatch(ui.advancedSearch(s))
       },
       onReinitEtext(id:string) {
-         document.querySelector(".over-nav").scrollIntoView()
+         const nav = document.querySelector(".over-nav")
+         if(nav) nav.scrollIntoView()
          setTimeout(() => { 
             let get = qs.parse(ownProps.history.location.search)
             if(get.part && get.part !== id) {
