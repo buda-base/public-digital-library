@@ -1114,9 +1114,14 @@ html[lang="bo"] .msg-popup .front p { font-size:18px;}
 
 [data-prop="tmp:propHasScans"] h4:not(#a) .images-thumb {
    width:auto; 
+   background-image:none !important;
    background:none;   
    display: inline-block;
+   height:auto;
+   border:none;
+   line-height: 0;   
 }
+
 
 /* ----------------------------- end new-UX/instance ---------------------------- */
 
@@ -4095,7 +4100,15 @@ div.mustLogin a:hover { border:none; text-decoration: underline;}
 .resource .data .images-thumb-links { display:inline-block; display:inline-flex;justify-content: flex-start; flex-direction: row;
    margin-left:28px;vertical-align:top; align-items: baseline;
 }
+
+.etext-top-links a {cursor: pointer;}
+
+.etext-top-links a:hover { text-decoration: underline !important; }
+
+.etext-top-links a + a,
 .resource .data .images-thumb-links a + a { margin-top:0px;display:inline-block;margin-left:30px; position: relative;}
+
+.etext-top-links a + a::before,
 .resource .data .images-thumb-links a + a::before { 
    content:"";
    border-left:1px solid black;
@@ -4106,6 +4119,9 @@ div.mustLogin a:hover { border:none; text-decoration: underline;}
    top:5px;
    height:15px; width:1px;
 }
+
+.etext-top-links { line-height: 23px; }
+.etext-top-links a { padding:0; border:0 !important; }
 
 .resource .data .images-thumb-links a.disable { opacity:0.5; pointer-events:none; }
 
@@ -4913,18 +4929,48 @@ html[lang="en"] .resource .data > [data-prop="bdo:creator"] h4[data-prop="bdo:ro
 
 
 #root > div > .resource.etext-view { padding:155px 30px; width:90%; margin:0 auto; position:relative; }
+
+.preview-etext .resource.etext-view .data,
 #root > div > .resource.etext-view .data { width:100%; padding:30px; box-sizing: border-box; position:relative; }
+
+.preview-etext .resource.etext-view .data { padding:10px; background:#f5f5f5;}
+
 .resource.etext-view > :not(.index) { width:100%; padding:0; }
 
 #root > div > .resource.etext-view > .loadedContent { display:none; }
 
+.preview-etext .resource.etext-view .data .etextPage,
 #root > div > .resource.etext-view .data .etextPage { display:block; width:100%; }
+
+.preview-etext .resource.etext-view .data  .etextPage:first-child,
 #root > div > .resource.etext-view .data .etextPage:first-child { border:none; margin-top:0; padding-top:0;}
 
+.scans-viewer-loader,
+.preview-etext .etext-viewer-loader { transform:scale(0.5); transform-origin: 20px 20px; }
+
+.images-thumb-links .loader .scans-viewer-loader { left:15px !important; top:-15px !important;}
+
+.images-thumb-links .loader,
+.scans-viewer-loader { position: relative;}
+
+.etext-top-links:not(#a) { font-size:14px;  padding-bottom:10px; }
+
+.preview-etext .resource.etext-view .data .etext-continue::after,
+.preview-etext .resource.etext-view .data #etext-scroll::after,
+.preview-etext .resource.etext-view .data .etextPage:not(#a) h4::before { content:none !important; }
+
+.preview-etext .resource.etext-view .data .etext-continue { justify-content: flex-end; width:100%; margin-top:10px; }
+
+.preview-etext .resource.etext-view .data .etext-continue a:not(:hover) { border-bottom:1px solid transparent; }
+
+.preview-etext .resource.etext-view .data .etext-continue a { font-size:14px; font-weight: 500;}
 
 .withMonlam .resource.etext-view .etextPage .overpage .page .hover-menu { display:none !important; }
 
 .resource.etext-view .etextPage .overpage{ padding-top:5px;}
+
+.preview-etext .resource.etext-view .etextPage .overpage{ padding:0px; }
+.preview-etext .resource.etext-view .etextPage{ border:none;}
 
 .resource.etext-view .etextPage h4 [lang=bo],
 .resource.etext-view .etextPage h4 [lang=bo] > span,
@@ -4939,6 +4985,14 @@ html[lang="en"] .resource .data > [data-prop="bdo:creator"] h4[data-prop="bdo:ro
 .resource.etext:not(#a) .data.bot-props #etext-scroll { display:none !important; }
 
 #etext-scroll > .etextPage:first-child { margin-top:20px; }
+
+.preview-etext .resource.etext-view .data #etext-scroll > .etextPage { margin-top:0px; padding-top:30px; }
+
+.preview-etext .resource.etext-view .data #etext-scroll > .etextPage:first-child { padding-top:0; }
+
+.preview-etext .resource.etext-view .data #etext-scroll > .etextPage.unformated { padding:0;padding-top:30px; }
+.preview-etext .resource.etext-view .data #etext-scroll > .etextPage.unformated:first-child { padding-top:0; }
+
 
 .resource .data #etext-scroll,
 .resource .data .chunk, .etextPage { display:block; position: relative;}
