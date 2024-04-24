@@ -1122,6 +1122,9 @@ html[lang="bo"] .msg-popup .front p { font-size:18px;}
    line-height: 0;   
 }
 
+[data-prop="bdo:workHasInstance"] h4:not(#a) .images-thumb img { 
+   display:none;
+}
 
 /* ----------------------------- end new-UX/instance ---------------------------- */
 

@@ -516,9 +516,11 @@ const topProperties = {
       bdo+"workHasInstance",
    ],
    "Instance": [ 
+      tmp+"workCreator",
       bdo+"instanceHasReproduction",
       tmp+"propHasScans",
       tmp+"propHasEtext",
+      bdo+"workHasInstance",
       //bdo+"instanceOf",
       bdo+"catalogInfo",
       bdo+"creator",
@@ -2016,6 +2018,21 @@ class ResourceViewer extends Component<Props,State>
 
          if(etexts.length) prop[tmp+"propHasEtext"] = etexts
          if(images.length) prop[tmp+"propHasScans"] = images
+
+         let work = prop[bdo+"instanceOf"]
+         if(work?.length) {
+            work = work[0].value
+            if(work && this.props.assocResources) {
+               let res = this.props.assocResources[work], uri = fullUri(this.props.IRI)
+               if(res) {
+                  let inst = res.filter(r => r.fromKey === bdo + "workHasInstance" && r.value != uri)
+                  if(inst.length) prop[bdo+"workHasInstance"] = [ ...inst ]
+                  // WIP
+                  let crea = res.filter(r => r.fromKey === bdo + "creator")
+                  if(crea.length) prop[_tmp+"workCreator"] = [ ...crea ]
+               }
+            }
+         }
 
          //delete prop[bdo+"instanceHasReproduction"]
       }
@@ -4893,10 +4910,12 @@ class ResourceViewer extends Component<Props,State>
          });
    };
 
-   proplink = (k,txt,count?:integer=1,checkPlural = false) => {
-
+   proplink = (k,txt,count?:integer=1,checkPlural = false) => {      
 
       if(txt) console.warn("use of txt in proplink",k,txt)
+
+      const t = getEntiType(this.props.IRI)
+      if(t === "Instance" && k === bdo+"workHasInstance") k = _tmp + "otherInstance"
 
       let tooltip
       if(this.props.dictionary && this.props.dictionary[k]) {
@@ -6249,7 +6268,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                }>
                {I18n.t("resource.download")}
             </a>
-            : <Loader  className="scans-viewer-loader" loaded={!( (!(that.props.manifestError && that.props.manifestError.error.message.match(/Restricted access/)) /*&& !fairUse*/) || (that.props.auth && that.props.auth.isAuthenticated())) } />
+            : <Loader  className="scans-viewer-loader" loaded={that.props.firstImage && !that.props.firstImage.includes("bdrc.io") || !( (!(that.props.manifestError && that.props.manifestError.error.message.match(/Restricted access/)) /*&& !fairUse*/) || (that.props.auth && that.props.auth.isAuthenticated())) } />
          }
       </>)
    else return (

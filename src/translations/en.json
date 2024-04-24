@@ -280,7 +280,9 @@
       "tmp:RawOCR": "average",
       "tmp:CleanedOCR": "high",
       "tmp:ComputerInputOCR": "very high",
-      "tmp:subscribed":"Subscribed Collections"
+      "tmp:subscribed":"Subscribed Collections",
+      "tmp:otherInstance":"Other version of this work",
+      "tmp:otherInstance_plural":"Other versions of this work"
    },
    "guided":{
       "keyword":"keyword",
