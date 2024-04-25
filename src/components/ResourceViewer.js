@@ -516,14 +516,14 @@ const topProperties = {
       bdo+"workHasInstance",
    ],
    "Instance": [ 
-      tmp+"workCreator",
+      bdo+"creator",
+      bdo+"extentStatement",
       bdo+"instanceHasReproduction",
       tmp+"propHasScans",
       tmp+"propHasEtext",
       bdo+"workHasInstance",
       //bdo+"instanceOf",
       bdo+"catalogInfo",
-      bdo+"creator",
       bdo+"hasTitle", 
       skos+"prefLabel", 
       skos+"altLabel", 
@@ -2018,21 +2018,6 @@ class ResourceViewer extends Component<Props,State>
 
          if(etexts.length) prop[tmp+"propHasEtext"] = etexts
          if(images.length) prop[tmp+"propHasScans"] = images
-
-         let work = prop[bdo+"instanceOf"]
-         if(work?.length) {
-            work = work[0].value
-            if(work && this.props.assocResources) {
-               let res = this.props.assocResources[work], uri = fullUri(this.props.IRI)
-               if(res) {
-                  let inst = res.filter(r => r.fromKey === bdo + "workHasInstance" && r.value != uri)
-                  if(inst.length) prop[bdo+"workHasInstance"] = [ ...inst ]
-                  // WIP
-                  let crea = res.filter(r => r.fromKey === bdo + "creator")
-                  if(crea.length) prop[_tmp+"workCreator"] = [ ...crea ]
-               }
-            }
-         }
 
          //delete prop[bdo+"instanceHasReproduction"]
       }
@@ -9399,11 +9384,19 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
       let _T = getEntiType(this.props.IRI)
       let titleRaw = { label:[] }
       let { title,titlElem,otherLabels } = this.setTitle(kZprop,_T,null,null,true) ;
+      let versionTitle 
       if(_T === "Instance") { 
          iTitle = title ; 
 
-         let baseW = this.state.title.work 
-         wTitle = getWtitle(baseW);
+         let baseW = this.state.title.work
+         wTitle = getWtitle(baseW, undefined, titleRaw)
+         
+         if(titleRaw.label?.length) { 
+            title = getLangLabel(this,"",titleRaw.label)
+            const ilabel = getLangLabel(this,"",titlElem)
+            if(ilabel?.value != title.value) versionTitle = ilabel
+            title = <h2 class="on" title={title.value} lang={title.lang} ><span>{title.value}</span></h2> 
+         }
 
          if(this.state.catalogOnly  && this.state.catalogOnly[this.props.IRI]) {
             rTitle = <h2 class="catalogOnly" title={I18n.t("resource.noImages")}><span class="T catalog">{I18n.t("types.images")}<span class="RID">{I18n.t("prop.tmp:catalogOnly")}</span></span></h2>
@@ -9970,7 +9963,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
             listWithAS = [ tmp+"outlineAuthorshipStatement" ]
          }
          
-         let theDataTop = this.renderData(topProps,iiifpres,title,otherLabels,"top-props","main-info")      
+         let theDataTop = this.renderData(topProps,iiifpres,title,otherLabels,"top-props","main-info",versionTitle?[this.renderGenericProp(versionTitle, _tmp+"versionTitle", this.format("h4",_tmp+"versionTitle","",false,"sub",[{...versionTitle, type:"literal"}]))]:[])      
          let theDataBot = this.renderData(kZprop.filter(k => !topProps.includes(k) && !extProps.includes(k)).concat(listWithAS),iiifpres,title,otherLabels,"bot-props", undefined, otherResourcesData)      
 
          let theEtext

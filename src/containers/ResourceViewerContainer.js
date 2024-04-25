@@ -59,6 +59,29 @@ const mapStateToProps = (state,ownProps) => {
       assocResources = flatAssocResources
    }
 
+   // add data from work in instance
+   const uri = fullUri(ownProps.IRI)
+   const bdo = "http://purl.bdrc.io/ontology/core/" 
+   const bdr   = "http://purl.bdrc.io/resource/"
+   if(resources && resources[ownProps.IRI] && resources[ownProps.IRI][uri] && resources[ownProps.IRI][uri][bdo+"instanceOf"]?.length) {      
+      const workUri = resources[ownProps.IRI][uri][bdo+"instanceOf"][0].value
+      const workRid = shortUri(workUri)
+      const work = resources[workRid] ?? {}
+      resources[ownProps.IRI] = { ...work, ...resources[ownProps.IRI] }
+
+      if(work && work[workUri] && work[workUri][bdo+"creator"]) { 
+         const merge = {}
+         for(const k of work[workUri][bdo+"creator"]) merge[k.value] = k
+         for(const k of resources[ownProps.IRI][uri][bdo+"creator"] ?? []) merge[k.value] = k
+         resources[ownProps.IRI][uri][bdo+"creator"] = Object.values(merge)
+      }
+
+      if(work && work[workUri] && work[workUri][bdo+"workHasInstance"]) { 
+         const inst = work[workUri][bdo+"workHasInstance"].filter(t => t.value != uri && t.value.startsWith(bdr+"MW"))
+         if(inst.length) resources[ownProps.IRI][uri][bdo+"workHasInstance"] = inst
+      }
+   }
+
    /* not the pb...
    let same
    if(resources && resources[ownProps.IRI] && (same = Object.keys(resources[ownProps.IRI]).filter(k => k.match(/[#/]sameAs[^/]*$/))).length) for(let s of same)
