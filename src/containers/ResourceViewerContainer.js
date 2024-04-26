@@ -63,7 +63,9 @@ const mapStateToProps = (state,ownProps) => {
    const uri = fullUri(ownProps.IRI)
    const bdo = "http://purl.bdrc.io/ontology/core/" 
    const bdr   = "http://purl.bdrc.io/resource/"
-   if(resources && resources[ownProps.IRI] && resources[ownProps.IRI][uri] && resources[ownProps.IRI][uri][bdo+"instanceOf"]?.length) {      
+   const rdf   = "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   if(resources && resources[ownProps.IRI] && resources[ownProps.IRI][uri] && resources[ownProps.IRI][uri][bdo+"instanceOf"]?.length 
+         && ! resources[ownProps.IRI][uri][rdf+"type"].some(t => t.value === bdo+"ImageInstance")) {      
       const workUri = resources[ownProps.IRI][uri][bdo+"instanceOf"][0].value
       const workRid = shortUri(workUri)
       const work = resources[workRid] ?? {}

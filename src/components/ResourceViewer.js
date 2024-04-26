@@ -1177,9 +1177,14 @@ class ResourceViewer extends Component<Props,State>
 
          let loca = { ...this.props.history.location }
          if(loca.hash == "#open-viewer") { 
+            /*
             loca.hash = ""
+            this.props.history.push(loca);  
+            */
             window.closeMirador = true;
-            this.props.history.push(loca);            
+            let get = qs.parse(this.props.history.location.search)          
+            let s = get.s ? decodeURIComponent(get.s) : ""
+            if(s) this.props.history.push(s);  
          }
 
          if(this.props.feedbucket && window.innerWidth <= 800) {
@@ -2012,7 +2017,7 @@ class ResourceViewer extends Component<Props,State>
          if(!prop[rdfs+"seeAlso"].length) delete prop[rdfs+"seeAlso"];
       }
 
-      if(prop[bdo+"instanceHasReproduction"]) {
+      if(prop[bdo+"instanceHasReproduction"] && !prop[rdf+"type"].some(t => t.value === bdo+"ImageInstance")) {
          let etexts = [ ...prop[bdo+"instanceHasReproduction"].filter(p => p.value && p.value.startsWith(bdr+"IE")) ] ;
          let images = [ ...prop[bdo+"instanceHasReproduction"].filter(p => p.value && p.value.startsWith(bdr+"W")) ] ;
 
