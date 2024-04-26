@@ -1428,9 +1428,17 @@ async function getManifest(url,iri,thumb) {
 
             let canvasID = manif.sequences[0].canvases[imageIndex]["@id"]
 
-            let image = getiiifthumbnailurl(imageres)
+            
+            let image = getiiifthumbnailurl(imageres), test
+            
+            // #869 catch error when fetching thumbnail
+            try {
+               //throw new ResourceNotFound('Problem fetching the resource (code:'+500+')',500); 
+               test = await api.getURLContents(image+"?t="+Date.now(),null,null,null,true)
+            } catch(e) {
+               console.error("server error fetching thumbnail", e, image)
+            }
 
-            let test = await api.getURLContents(image,null,null,null,true)
             
             //loggergen.log("img",test)
             
