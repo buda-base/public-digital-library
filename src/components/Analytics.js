@@ -5,6 +5,35 @@ import { logError } from '../lib/api'
 const MIN_TIME_VIEWER = 30, MIN_TIME_PAGE = 5
 let observer, pages = {}
 
+const updatePageData = (key,id,intersec) => {
+  if(!pages[id]) pages[id] = { more5sec: {}, total: 0, unloaded: {} }
+  if(!pages[id][key]) pages[id][key] = { total: 0 }
+  if(intersec) { 
+    //console.log("in scroll:", entry, id, key)
+    if(!pages[id][key].start) pages[id][key].start = Date.now()             
+  } else { 
+    //console.log("out scroll:", entry, id, key, pages)
+    if(pages[id][key].start) { 
+      const time = (Date.now() - pages[id][key].start) / 1000      
+      if(intersec != undefined || !pages[id].unloaded["_"+pages[id][key].start]) {
+        pages[id].total += time
+        pages[id].unloaded["_"+pages[id][key].start] = true
+      }
+      pages[id][key].total += time
+      delete pages[id][key].start
+      if(pages[id].total > MIN_TIME_VIEWER && !pages[id].tracked) {
+        pages[id].tracked = true
+        //analytics.track("viewer total time", {id, time: pages[id].total})
+      }
+      if(pages[id][key].total > MIN_TIME_PAGE && !pages[id][key].tracked) {
+        pages[id][key].tracked = true
+        pages[id].more5sec[key] = true
+        //analytics.track("viewer total pages", {id, pages: Object.keys(pages[id].more5sec).length})
+      }
+    }
+  }
+}
+
 const handleObserver = (selec, getKey, getId) => {
   let options = {
     rootMargin: "0px",
@@ -16,29 +45,7 @@ const handleObserver = (selec, getKey, getId) => {
       if(!key) return
       const id = getId(key)
       if(!id) return
-      if(!pages[id]) pages[id] = { more5sec: {}, total: 0 }
-      if(!pages[id][key]) pages[id][key] = { total: 0 }
-      if(entry.isIntersecting) { 
-        //console.log("in scroll:", entry, id, key)
-        if(!pages[id][key].start) pages[id][key].start = Date.now()             
-      } else { 
-        //console.log("out scroll:", entry, id, key, pages)
-        if(pages[id][key].start) { 
-          const time = (Date.now() - pages[id][key].start) / 1000
-          pages[id].total += time
-          pages[id][key].total += time
-          delete pages[id][key].start
-          if(pages[id].total > MIN_TIME_VIEWER && !pages[id].tracked) {
-            pages[id].tracked = true
-            analytics.track("viewer total time", {id, time: pages[id].total})
-          }
-          if(pages[id][key].total > MIN_TIME_PAGE && !pages[id][key].tracked) {
-            pages[id][key].tracked = true
-            pages[id].more5sec[key] = true
-            analytics.track("viewer total pages", {id, pages: Object.keys(pages[id].more5sec).length})
-          }
-        }
-      }
+      updatePageData(key, id, entry.isIntersecting)
     })
   }
   if(observer) observer.disconnect()
@@ -46,6 +53,29 @@ const handleObserver = (selec, getKey, getId) => {
   document.querySelectorAll(selec).forEach((target) => {
     observer.observe(target);
   })  
+}
+
+const unloadMirador = () => {
+  let volId
+  document.querySelectorAll(".scroll-listing-thumbs [data-image-id]").forEach((elem) => {
+    const key = elem?.getAttribute("data-image-id")
+    const id = key?.replace(/^.*?bdr:([^:/?]+)[:/?].*$/,"$1")
+    if(!volId) volId = id
+    if(key && id) {
+      updatePageData(key, id)
+    }
+  })
+  console.log(volId, pages[volId], pages)
+  if(volId) { 
+    const len5 = Object.keys(pages[volId].more5sec).length
+    if(len5) {
+      analytics.track("viewer total pages", {id:volId, pages: len5})
+    }
+    if(pages[volId].total > MIN_TIME_VIEWER) {
+      analytics.track("viewer total time", {id:volId, time: pages[volId].total})
+    }
+    if(pages[volId]) delete pages[volId]
+  }
 }
 
 function myProviderPlugin(userConfig) {
@@ -65,7 +95,7 @@ function myProviderPlugin(userConfig) {
     },
     page: ({ payload }) => {
       // call provider specific page tracking
-    },
+    },  
     track: ({ payload }) => {
       // call provider specific event tracking
       //console.log("track:", payload, Date.now())
@@ -76,9 +106,17 @@ function myProviderPlugin(userConfig) {
         if(document.querySelector(selec = ".mirador-viewer ul.scroll-listing-thumbs li")) {
           setTimeout(() => handleObserver(
             selec,
-            (t) => t?.querySelector("[data-image-id]")?.getAttribute("data-image-id"),
-            (k) => k?.split("/")[3]?.split(":")[2]
+            (t) => t?.querySelector(".scroll-listing-thumbs [data-image-id]")?.getAttribute("data-image-id"),
+            (k) => k?.replace(/^.*?bdr:([^:/?]+)[:/?].*$/,"$1")
           ), 150)
+          let menu = document.querySelector(".mirador-main-menu-bar #collec.active:not(.analytics)")
+          if(menu) { 
+            menu.classList.add("analytics")
+            menu.addEventListener("click", unloadMirador)
+            window.addEventListener("beforeunload", unloadMirador)
+            const x = document.querySelector(".mirador-main-menu-bar .X")
+            if(x) x.addEventListener("click", unloadMirador)
+          }
         } else if(document.querySelector(selec = ".etextPage")) {
           setTimeout(() => handleObserver(
             selec,
