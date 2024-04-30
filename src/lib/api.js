@@ -149,7 +149,8 @@ export async function logError(error, json) {
             "Content-Type": "application/json",
             //...( isAuthenticated() && {"Authorization":"Bearer "+id_token } )
          }),
-         body: JSON.stringify(json)
+         body: JSON.stringify(json),
+         keepalive:true // #864 executed even after closing the tab (see navigator.sendBeacon)
       })
    } else {
       loggergen.log("(localhost/not sending)")
