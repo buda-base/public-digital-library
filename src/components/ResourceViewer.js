@@ -1111,6 +1111,8 @@ class ResourceViewer extends Component<Props,State>
       window.closeViewer = (ev, gotoResults = false) => {
          //delete window.mirador
 
+         if(window.myAnalytics.unloadMirador) window.myAnalytics.unloadMirador()
+
          document.getElementsByName("viewport")[0].content = "width=device-width, initial-scale=1, shrink-to-fit=no" ;
 
          //loggergen.log("closeV",this.state.fromSearch,this.state,this.props)

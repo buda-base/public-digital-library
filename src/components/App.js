@@ -1218,6 +1218,8 @@ export function top_right_menu(that,etextTitle,backUrl,etextres)
                   // #743 TODO: use burger-like icon instead
                   //that.setState({collapse:{...that.state.collapse,navMenu:false}})
 
+                  if(window.myAnalytics.unloadEtextViewer) window.myAnalytics.unloadEtextViewer()
+
                   that.props.onLoading("search",true,etextres)
 
                   //if(!etextres) 

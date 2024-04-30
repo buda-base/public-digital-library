@@ -12,7 +12,7 @@ const updatePageData = (key,id,intersec) => {
     //console.log("in scroll:", entry, id, key)
     if(!pages[id][key].start) pages[id][key].start = Date.now()             
   } else { 
-    //console.log("out scroll:", entry, id, key, pages)
+    //console.log("out scroll:", id, key, pages)
     if(pages[id][key].start) { 
       const time = (Date.now() - pages[id][key].start) / 1000      
       if(intersec != undefined || !pages[id].unloaded["_"+pages[id][key].start]) {
@@ -55,16 +55,7 @@ const handleObserver = (selec, getKey, getId) => {
   })  
 }
 
-const unloadMirador = () => {
-  let volId
-  document.querySelectorAll(".scroll-listing-thumbs [data-image-id]").forEach((elem) => {
-    const key = elem?.getAttribute("data-image-id")
-    const id = key?.replace(/^.*?bdr:([^:/?]+)[:/?].*$/,"$1")
-    if(!volId) volId = id
-    if(key && id) {
-      updatePageData(key, id)
-    }
-  })
+const sendData = (volId) => {
   console.log(volId, pages[volId], pages)
   if(volId) { 
     const len5 = Object.keys(pages[volId].more5sec).length
@@ -75,7 +66,39 @@ const unloadMirador = () => {
       analytics.track("viewer total time", {id:volId, time: pages[volId].total})
     }
     if(pages[volId]) delete pages[volId]
+    window.removeEventListener("beforeunload", unloadMirador)
+    window.removeEventListener("beforeunload", unloadEtextViewer) 
   }
+}
+
+const unloadMirador = (ev) => {
+  let volId
+  document.querySelectorAll(".scroll-listing-thumbs [data-image-id]").forEach((elem) => {
+    const key = elem?.getAttribute("data-image-id")
+    const id = key?.replace(/^.*?bdr:([^:/?]+)[:/?].*$/,"$1")
+    if(!volId) volId = id
+    if(key && id) {
+      updatePageData(key, id)
+    }
+  })
+  sendData(volId)
+
+  //if(ev) ev.preventDefault()
+}
+
+const unloadEtextViewer = (ev) => {
+  let volId  
+  document.querySelectorAll("#etext-scroll .etextPage").forEach((elem) => {
+    const key = elem?.querySelector(".hover-menu #anchor a")?.getAttribute("href")
+    const id = key?.split("?")[0]?.split(":")[1]
+    if(!volId) volId = id
+    if(key && id) {
+      updatePageData(key, id)
+    }
+  })  
+  sendData(volId)
+
+  //if(ev) ev.preventDefault()
 }
 
 function myProviderPlugin(userConfig) {
@@ -104,25 +127,22 @@ function myProviderPlugin(userConfig) {
       let selec = ""
       if(payload.event === "page loaded") { 
         if(document.querySelector(selec = ".mirador-viewer ul.scroll-listing-thumbs li")) {
-          setTimeout(() => handleObserver(
-            selec,
-            (t) => t?.querySelector(".scroll-listing-thumbs [data-image-id]")?.getAttribute("data-image-id"),
-            (k) => k?.replace(/^.*?bdr:([^:/?]+)[:/?].*$/,"$1")
-          ), 150)
-          let menu = document.querySelector(".mirador-main-menu-bar #collec.active:not(.analytics)")
+          const getKey = (t) => t?.querySelector(".scroll-listing-thumbs [data-image-id]")?.getAttribute("data-image-id")
+          const getId = (k) => k?.replace(/^.*?bdr:([^:/?]+)[:/?].*$/,"$1")
+          setTimeout(() => handleObserver(selec, getKey, getId), 150)
+          window.removeEventListener("beforeunload", unloadMirador) 
+          window.addEventListener("beforeunload", unloadMirador)
+          let menu = document.querySelector(".mirador-main-menu-bar #collec.active")
           if(menu) { 
-            menu.classList.add("analytics")
+            menu.removeEventListener("click", unloadMirador)
             menu.addEventListener("click", unloadMirador)
-            window.addEventListener("beforeunload", unloadMirador)
-            const x = document.querySelector(".mirador-main-menu-bar .X")
-            if(x) x.addEventListener("click", unloadMirador)
           }
-        } else if(document.querySelector(selec = ".etextPage")) {
-          setTimeout(() => handleObserver(
-            selec,
-            (t) => t?.querySelector(".hover-menu #anchor a")?.getAttribute("href"),
-            (k) => k?.split("?")[0]?.split(":")[1]
-          ), 150)
+        } else if(document.querySelector(selec = "#etext-scroll .etextPage")) {
+          const getKey = (t) => t?.querySelector(".hover-menu #anchor a")?.getAttribute("href")
+          const getId = (k) => k?.split("?")[0]?.split(":")[1]
+          setTimeout(() => handleObserver(selec, getKey, getId), 150)
+          window.removeEventListener("beforeunload", unloadEtextViewer) 
+          window.addEventListener("beforeunload", unloadEtextViewer)
         } else {
           if(observer) observer.disconnect() 
           pages = {}
@@ -153,6 +173,8 @@ const analytics = Analytics({
 
 // should be enough to be used from mirador as well
 window.myAnalytics = analytics
+window.myAnalytics.unloadMirador = unloadMirador
+window.myAnalytics.unloadEtextViewer = unloadEtextViewer
 
 /* export the instance for usage in your app */
 export default analytics
