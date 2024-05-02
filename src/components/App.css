@@ -5491,7 +5491,7 @@ h3 .expand svg { position:absolute; margin-top:-18px; }*/
 .resource .data :is(.withLinkTo,[data-prop="bdo:workHasInstance"]) .expand + .expand a { color:white; background-color: #d73449; font-weight: 500; padding:10px 15px; border-radius: 5px; border:none;}
 
 .resource .data .withLinkTo .propCollapse + .expand + .expand { bottom:60px; }
-.resource .data [data-prop="bdo:workHasInstance"] .propCollapse + .expand + .expand { bottom:22px; }
+.resource.work .data [data-prop="bdo:workHasInstance"] .propCollapse + .expand + .expand { bottom:22px; }
 
 .resource .data :is(.withLinkTo,[data-prop="bdo:workHasInstance"]) .group + .expand.linkToPlaces:last-child,
 .resource .data :is(.withLinkTo,[data-prop="bdo:workHasInstance"]) .group + .expand.linkToVersions:last-child { position: relative; margin-bottom: 30px; width:100%; margin-top:-22px;}

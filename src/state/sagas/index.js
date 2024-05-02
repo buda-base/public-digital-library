@@ -2391,7 +2391,7 @@ function rewriteAuxMain(result,keyword,datatype,sortBy,language)
             //const dataVar = keys.reduce( (acc,k) => ({...acc, [k]: result[e][k].filter(e => e.type === skos+"altLabel" || e.type === skos+"prefLabel") }),{})  // > 4sec!
             let dataVar = {} 
             for(let k of keys) { 
-              dataVar[k] = result[e][k].filter(e => e.type === skos+"altLabel" || e.type === skos+"prefLabel")  // < 0.05sec!
+              dataVar[k] = result[e][k].filter(e => [tmp+"provider",tmp+"thumbnailIIIFService",skos+"altLabel",skos+"prefLabel"].includes(e.type))  // < 0.05sec!
             }
             store.dispatch(dataActions.gotAssocResources(keyword,{ data: dataVar  }))
          }

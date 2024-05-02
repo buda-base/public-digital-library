@@ -1124,7 +1124,7 @@ class ResourceViewer extends Component<Props,State>
          if(get.s && !get.part) {
             get = qs.parse(get.s.replace(/^[^?]+[?]/,""))
             //loggergen.log("hQinS:",get) 
-            if((get.q || get.r || get.w)) { hasQinS = true
+            if((get.q || get.r || get.w || get.i)) { hasQinS = true
                //fromSearch = this.state.fromSearch               
             }                
          }
@@ -1179,14 +1179,14 @@ class ResourceViewer extends Component<Props,State>
 
          let loca = { ...this.props.history.location }
          if(loca.hash == "#open-viewer") { 
-            /*
-            loca.hash = ""
-            this.props.history.push(loca);  
-            */
+            
+            loca.hash = ""            
             window.closeMirador = true;
+            
             let get = qs.parse(this.props.history.location.search)          
             let s = get.s ? decodeURIComponent(get.s) : ""
-            if(s) this.props.history.push(s);  
+            if(s?.includes("/show/")) this.props.history.push(s)
+            else this.props.history.push(loca)
          }
 
          if(this.props.feedbucket && window.innerWidth <= 800) {
@@ -1815,9 +1815,11 @@ class ResourceViewer extends Component<Props,State>
       if (hash && hash.length && hash === "open-viewer") {
 
          let etext = this.isEtext()
-         //loggergen.log("etxt?",etext, this.props.imageAsset,this.props.firstImage)
+
+         loggergen.log("etxt?",etext, this.props.imageAsset,this.props.firstImage,this.state.openMirador)
 
          if(!etext && this.props.imageAsset /*&& this.props.firstImage*/ && !this.state.openMirador) {
+
             this.showMirador()   
             //delete loca.hash      
             //history.replace(loca)
@@ -3056,7 +3058,7 @@ class ResourceViewer extends Component<Props,State>
                
                //let vlink = "/"+show+"/"+prefix+":"+pretty+"?s="+encodeURIComponent(this.props.history.location.pathname+this.props.history.location.search)+"#open-viewer"    
                let vlink = "/"+show+"/"+prefix+":"+pretty+"?backToEtext="+this.props.IRI+"#open-reader"    
-               ret = [  <Link {...this.props.preview?{ target:"_blank" }:{}} to={"/show/"+sUri} class={"images-thumb no-thumb"} style={{"background-image":"url(/icons/etext.png)"}}></Link> ,
+               ret = [  <Link {...this.props.preview?{ target:"_blank" }:{}} to={"/show/"+sUri} class={"images-thumb no-thumb 1"} style={{"background-image":"url(/icons/etext.png)"}}></Link> ,
                      <div class="images-thumb-links">
                         <Link {...this.props.preview?{ target:"_blank" }:{}} className={"urilink "+ prefix} to={vlink}>{I18n.t("resource.openViewer")}</Link>
                         {/* <Link {...this.props.preview?{ target:"_blank" }:{}} className={"urilink "+ prefix} to={"/"+show+"/"+prefix+":"+pretty}>{I18n.t("resource.openR")}</Link> */}                        
@@ -3070,8 +3072,10 @@ class ResourceViewer extends Component<Props,State>
                
                thumbV =  this.getResourceElem(tmp+"thumbnailIIIFService", sUri, this.props.assocResources)
                if(!thumbV || !thumbV.length) thumbV = this.getResourceElem(tmp+"thumbnailIIIFSelected", sUri, this.props.assocResources)
-               
-               if(!thumbV || !thumbV.length)  ret = [  <Link {...this.props.preview?{ target:"_blank" }:{}} to={"/show/"+sUri} class={"images-thumb no-thumb"} style={{"background-image":"url(/icons/header/instance.svg)"}}></Link> ]
+                              
+               //console.log("noT?", !thumbV?.length, sUri, this.props.assocResources)               
+
+               if(!thumbV || !thumbV.length)  ret = [  <Link {...this.props.preview?{ target:"_blank" }:{}} to={"/show/"+sUri} class={"images-thumb no-thumb 2"} style={{"background-image":"url(/icons/header/instance.svg)"}}></Link> ]
                else {
                   let thumbUrl = thumbV[0].value
                   if(!thumbUrl.match(/[/]default[.][^.]+$/)) thumbUrl += "/full/"+(thumbV[0].value.includes(".bdrc.io/")?"!2000,145":",145")+"/0/default.jpg"
@@ -3408,7 +3412,7 @@ class ResourceViewer extends Component<Props,State>
                }
                else hasT = false
                let vlink = "/"+show+"/"+repro+"?s="+encodeURIComponent(this.props.history.location.pathname+this.props.history.location.search)+"#open-viewer"                
-               thumbV = <div class={"images-thumb"+(!hasT?" no-thumb":"")} style={{"background-image":"url("+img+")"}}/>;               
+               thumbV = <div class={"images-thumb"+(!hasT?" no-thumb 3":"")} style={{"background-image":"url("+img+")"}}/>;               
 
                ret = [<Link {...this.props.preview?{ target:"_blank" }:{}} className={"urilink "+ prefix} to={hasT?vlink:"/"+show+"/"+prefix+":"+pretty}>{thumbV}</Link>,
                      <div class="images-thumb-links">
@@ -4734,7 +4738,6 @@ class ResourceViewer extends Component<Props,State>
 
    showMirador(num?:number,useManifest?:{},click) {
 
-
       let state = { ...this.state, openMirador:true, openDiva:false, openUV:false }
 
       if(!this.state.openMirador) // || !$("#viewer").hasClass("hidden"))
@@ -5494,7 +5497,13 @@ class ResourceViewer extends Component<Props,State>
 
       let linkToVersions, maxVersions = 20
       if(k === bdo+"workHasInstance" && ret.length > 2) {
-         linkToVersions = <span class="expand linkToVersions"><Link {...this.props.preview?{ target:"_blank" }:{}} to={"/search?i="+this.props.IRI+"&t=Work"}>{I18n.t("misc.browseA",{count: ret.length})}</Link></span>
+         let wrid =  this.props.IRI 
+         const t = getEntiType(this.props.IRI)
+         if(t != "Work") {
+            let work = this.getResourceElem(bdo+"instanceOf")
+            if(work?.length) wrid = shortUri(work[0].value)
+         }
+         linkToVersions = <span class="expand linkToVersions"><Link {...this.props.preview?{ target:"_blank" }:{}} to={"/search?i="+wrid+"&t=Work"}>{I18n.t("misc.browseA",{count: ret.length})}</Link></span>
       }
       
       let linkToPlaces, maxPlaces = 20
