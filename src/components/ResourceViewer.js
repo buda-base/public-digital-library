@@ -1757,7 +1757,8 @@ class ResourceViewer extends Component<Props,State>
 
       if(this.state.openMirador) { 
          let t = getEntiType(this.props.IRI);  
-         if(t && t != "Images") {
+         let inRoot =  this.getResourceElem(bdo+"inRootInstance")
+         if(t && t != "Images" && !inRoot?.length) {
             this.setState({openMirador:false})
             return
          }
@@ -1832,7 +1833,8 @@ class ResourceViewer extends Component<Props,State>
          if(!etext && this.props.imageAsset /*&& this.props.firstImage*/) {
             if(!this.state.openMirador) { 
                let t = getEntiType(this.props.IRI);  
-               if(t && t == "Images") {
+               let inRoot =  this.getResourceElem(bdo+"inRootInstance")
+               if(t && (t == "Images" || t == "Instance" && inRoot?.length)) {
                   console.log("call showM", this.props.IRI)
                   this.showMirador()   
                }
@@ -1862,7 +1864,7 @@ class ResourceViewer extends Component<Props,State>
    }
 
    componentWillUnmount() {
-      //console.log("cwu:openMirador",this.props.IRI,this.state.openMirador)
+      console.log("cwu:openMirador",this.props.IRI,this.state.openMirador)
       window.removeEventListener('popstate', this.onBackButtonEvent);
    }
    
