@@ -2617,6 +2617,8 @@ h4:not(:hover) > .lang
 .PE0 { pointer-events:none; cursor:auto; }
 
 
+.over-nav ~ .H100vh { z-index:1000000; position: relative; }
+
 
 #root > div > .resource.simple { cursor:pointer; padding-top:5px; }
 #root > div > .resource.simple > *    { pointer-events:none; }

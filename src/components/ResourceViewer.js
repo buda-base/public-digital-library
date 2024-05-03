@@ -1753,6 +1753,17 @@ class ResourceViewer extends Component<Props,State>
 
    componentDidUpdate()  {
 
+      //console.log("cdu:openMirador",this.props.IRI,this.state.openMirador)
+
+      if(this.state.openMirador) { 
+         let t = getEntiType(this.props.IRI);  
+         if(t && t != "Images") {
+            this.setState({openMirador:false})
+            return
+         }
+      }
+
+
       report_GA(this.props.config,this.props.history.location);
       
       if(window.closeMirador) { 
@@ -1807,20 +1818,26 @@ class ResourceViewer extends Component<Props,State>
       // - expand '...' node already open by search
 
       //loggergen.log("update!!",s)
-
+      
 
       let loca = { ...this.props.history.location }
       const hash = loca.hash.substring(1)
       
-      if (hash && hash.length && hash === "open-viewer") {
+      if (hash && hash.length && hash === "open-viewer" && !this.props.pdfDownloadOnly) {
 
          let etext = this.isEtext()
 
          loggergen.log("etxt?",etext, this.props.imageAsset,this.props.firstImage,this.state.openMirador)
 
-         if(!etext && this.props.imageAsset /*&& this.props.firstImage*/ && !this.state.openMirador) {
+         if(!etext && this.props.imageAsset /*&& this.props.firstImage*/) {
+            if(!this.state.openMirador) { 
+               let t = getEntiType(this.props.IRI);  
+               if(t && t == "Images") {
+                  console.log("call showM", this.props.IRI)
+                  this.showMirador()   
+               }
+            } 
 
-            this.showMirador()   
             //delete loca.hash      
             //history.replace(loca)
          }
@@ -1845,12 +1862,13 @@ class ResourceViewer extends Component<Props,State>
    }
 
    componentWillUnmount() {
+      //console.log("cwu:openMirador",this.props.IRI,this.state.openMirador)
       window.removeEventListener('popstate', this.onBackButtonEvent);
    }
    
    componentDidMount()
    {
-      loggergen.log("mount!!")
+      //console.log("cdm:openMirador",this.props.IRI,this.state.openMirador)
       
       window.addEventListener('popstate', this.onBackButtonEvent);  
 
@@ -4739,7 +4757,7 @@ class ResourceViewer extends Component<Props,State>
    showMirador(num?:number,useManifest?:{},click) {
 
       let state = { ...this.state, openMirador:true, openDiva:false, openUV:false }
-
+      
       if(!this.state.openMirador) // || !$("#viewer").hasClass("hidden"))
       {
 
@@ -9335,7 +9353,9 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
 
    render()
    {
-      loggergen.log("render",this.props,this.state,this._refs)
+      let isMirador = (!this.props.manifestError || (this.props.imageVolumeManifests && Object.keys(this.props.imageVolumeManifests).length)) && (this.props.imageAsset || this.props.imageVolumeManifests) && this.state.openMirador
+
+      loggergen.log("render",this.props.IRI,isMirador,this.state.openMirador,this.props,this.state,this._refs)
    
       this._annoPane = []
 
@@ -9724,8 +9744,6 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
             //<h3 class="outline-link"><Link class="urilink" to={"/show/"+shortUri(root[0].value)+"?part="+this.props.IRI+"#outline"}>{"View in the outline"}</Link></h3>
          ]
       }
-
-      let isMirador = (!this.props.manifestError || (this.props.imageVolumeManifests && Object.keys(this.props.imageVolumeManifests).length)) && (this.props.imageAsset || this.props.imageVolumeManifests) && this.state.openMirador
 
       let searchUrl, searchTerm
       
