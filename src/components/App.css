@@ -5463,7 +5463,7 @@ h3 .expand svg { position:absolute; margin-top:-18px; }*/
 .has-collapse.custom[data-prop="bdo:creator"] .propCollapseHeader .subgroup { width:100%; }
 
 .resource .data :is(.withLinkTo,[data-prop="bdo:workHasInstance"]) .ellip { text-overflow: ellipsis; white-space: nowrap; overflow: hidden;
-   width:12px; display:inline-block;vertical-align: bottom; margin-left:0px;
+   width:36px; display:inline-block;vertical-align: bottom; margin-left:0px;
 }
 
 .resource .data :is(.withLinkTo,[data-prop="bdo:workHasInstance"]) .group { column-count:2; }

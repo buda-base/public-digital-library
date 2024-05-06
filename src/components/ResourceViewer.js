@@ -1753,7 +1753,7 @@ class ResourceViewer extends Component<Props,State>
 
    componentDidUpdate()  {
 
-      //console.log("cdu:openMirador",this.props.IRI,this.state.openMirador)
+      console.log("cdu:openMirador", this.props.IRI, this.props.pdfDownloadOnly, this.state.openMirador)
 
       if(this.state.openMirador) { 
          let t = getEntiType(this.props.IRI);  
@@ -2049,6 +2049,11 @@ class ResourceViewer extends Component<Props,State>
          if(images.length) prop[tmp+"propHasScans"] = images
 
          //delete prop[bdo+"instanceHasReproduction"]
+      }
+
+      if(prop[bdo+"contentLocation"] && prop[bdo+"inRootInstance"] && prop[rdf+"type"].some(t => t.value === bdo+"Instance")) {
+
+         prop[tmp+"propHasScans"] = [{ type: "uri", value: this.props.IRI }]
       }
          
 
@@ -3057,11 +3062,13 @@ class ResourceViewer extends Component<Props,State>
          else if(elem && elem.value && elem.value === bda+"LD_NGMPP_Metadata") { prefix = "ngmpp"; sameAsPrefix = "ngmpp hasIcon provider" ; }
 
          //loggergen.log("s?",prop,prefix,sameAsPrefix,pretty,elem,info,infoBase)         
+         
+         let sUri = shortUri(elem.value)
+         let inRoot =  this.getResourceElem(bdo+"inRootInstance", sUri, this.props.assocResources)
 
          let thumb, thumbV, hasThumbV, enti = getEntiType(elem.value)
          if(prop === bdo+"workHasInstance"  || prop === tmp+"propHasScans" || prop === tmp+"propHasEtext" ) {
             if(!info) info = [] 
-            let sUri = shortUri(elem.value)
 
             let prov = this.getResourceElem(tmp+"provider", sUri, this.props.assocResources)
             prov = this.getProviderID(prov);
@@ -3086,7 +3093,29 @@ class ResourceViewer extends Component<Props,State>
                if(prov) ret.push(prov)
             
             }
-            else if(enti === "Instance") { 
+            else if(enti === "Instance" && this.props.IRI === sUri )   { 
+               //ret = [<span class="svg">{svgInstanceS}</span>]
+               
+               
+               thumb =  this.getResourceElem(tmp+"thumbnailIIIFService", sUri, this.props.assocResources)
+               if(!thumb || !thumb.length) thumb = this.getResourceElem(tmp+"thumbnailIIIFSelected", sUri, this.props.assocResources)
+                              
+               //console.log("noT?", !thumb?.length, sUri, this.props.assocResources)               
+
+               if(!thumb || !thumb.length)  ret = [  <Link {...this.props.preview?{ target:"_blank" }:{}} to={"/show/"+sUri+"#open-viewer"} class={"images-thumb no-thumb 2"} style={{"background-image":"url(/icons/header/instance.svg)"}}></Link> ]
+               else {
+                  let thumbUrl = thumb[0].value
+                  if(!thumbUrl.match(/[/]default[.][^.]+$/)) thumbUrl += "/full/"+(thumb[0].value.includes(".bdrc.io/")?"!2000,145":",145")+"/0/default.jpg"
+                  else thumbUrl = thumbUrl.replace(/[/]max[/]/,"/"+(thumbUrl.includes(".bdrc.io/")?"!2000,145":",145")+"/")
+                  ret = [  <Link {...this.props.preview?{ target:"_blank" }:{}} to={"/show/"+sUri+"#open-viewer"} class={"images-thumb"} style={{"background-image":"url("+thumbUrl+")"}}><img src={thumbUrl}/></Link> ]
+               }
+                           
+               if(prov) ret.push(prov)
+
+               //loggergen.log("thumbV:",thumbV,elem.value)
+
+            }
+            else if(enti === "Instance")  { 
                //ret = [<span class="svg">{svgInstanceS}</span>]
                
                
@@ -3102,9 +3131,8 @@ class ResourceViewer extends Component<Props,State>
                   else thumbUrl = thumbUrl.replace(/[/]max[/]/,"/"+(thumbUrl.includes(".bdrc.io/")?"!2000,145":",145")+"/")
                   ret = [  <Link {...this.props.preview?{ target:"_blank" }:{}} to={"/show/"+sUri} class={"images-thumb"} style={{"background-image":"url("+thumbUrl+")"}}><img src={thumbUrl}/></Link> ]
                }
-            
-               let inRoot =  this.getResourceElem(bdo+"inRootInstance", sUri, this.props.assocResources)
-               if(inRoot && inRoot.length && info && lang && lang === "bo-x-ewts" && info.match(/^([^ ]+ ){11}/)) info = [ info.replace(/^(([^ ]+ ){10}).*?$/,"$1"), <span class="ellip">{info.replace(/^([^ ]+ ){10}[^ ]+(.*?)$/,"$2")}</span> ]
+                           
+               if(inRoot && inRoot.length && info && lang && lang === "bo-x-ewts" && info.match(/^([^ ]+ ){11}/)) info = [ info.replace(/^(([^ ]+ ){10}).*?$/,"$1"), <span class="ellip">{info.replace(/^([^ ]+ ){10}([^ ]+.*?)$/,"$2")}</span> ]
 
                if(prov) ret.push(prov)
 
@@ -3133,7 +3161,7 @@ class ResourceViewer extends Component<Props,State>
          
          let noSpace
 
-         if(elem.inOutline || ((!thumbV || !thumbV.length) && enti != "Images" && ((info && infoBase && infoBase.filter(e=>e["xml:lang"]||e["lang"]).length >= 0) || (prop && prop.match && prop.match(/[/#]sameAs/))))) {
+         if(elem.inOutline || ((!thumbV || !thumbV.length) && enti != "Images" && (enti != "Instance" || sUri != this.props.IRI) && ((info && infoBase && infoBase.filter(e=>e["xml:lang"]||e["lang"]).length >= 0) || (prop && prop.match && prop.match(/[/#]sameAs/))))) {
 
             //loggergen.log("svg?",svgImageS)
 
@@ -7498,7 +7526,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                { rootWarn }
             </div>
          )
-      else if(!this.props.manifestError && this.props.imageAsset && !etext)
+      else if(!this.props.manifestError && this.props.imageAsset && !etext && T === "Images")
          return  ( 
          <div class="data" id="first-image">
             { /*(prov && prov !== "BDRC" && orig) &&*/  src }
@@ -9357,7 +9385,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
    {
       let isMirador = (!this.props.manifestError || (this.props.imageVolumeManifests && Object.keys(this.props.imageVolumeManifests).length)) && (this.props.imageAsset || this.props.imageVolumeManifests) && this.state.openMirador
 
-      loggergen.log("render",this.props.IRI,isMirador,this.state.openMirador,this.props,this.state,this._refs)
+      loggergen.log("render",this.props.IRI,this.props.pdfDownloadOnly,isMirador,this.state.openMirador,this.props,this.state,this._refs)
    
       this._annoPane = []
 
