@@ -282,7 +282,8 @@
       "tmp:ComputerInputOCR": "very high",
       "tmp:subscribed":"Subscribed Collections",
       "tmp:otherInstance":"Other version of this work",
-      "tmp:otherInstance_plural":"Other versions of this work"
+      "tmp:otherInstance_plural":"Other versions of this work",
+      "tmp:containingOutline": "Containing outline"
    },
    "guided":{
       "keyword":"keyword",
@@ -696,7 +697,9 @@
       "openW":"Open Work",
       "fullR":"Full record",
       "notInList":"This PDF is not part of a collection subscribed to by your institution.<nl/>Please <lk>visit the BDRC platform</lk> and log in for access.",
-      "continue":"Continue reading"
+      "continue":"Continue reading",
+      "seeIn":"See this text in {{- txt}}",
+      "closeO":"Close outline"
    },
    "mirador": {
       "return": "return to BUDA",

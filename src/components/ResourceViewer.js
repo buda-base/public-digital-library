@@ -518,6 +518,7 @@ const topProperties = {
    "Instance": [ 
       bdo+"creator",
       bdo+"extentStatement",
+      tmp+"containingOutline",
       bdo+"instanceHasReproduction",
       tmp+"propHasScans",
       tmp+"propHasEtext",
@@ -5640,6 +5641,33 @@ class ResourceViewer extends Component<Props,State>
                </div>
             </div>
          )))
+      } else if(k === _tmp+"containingOutline") {
+         let data
+         if(this.props.assocResources && elem?.length) { 
+            data = this.props.assocResources[elem[0].value]
+            if(data && data.length) data = getLangLabel(this,k,data.filter(d => [skos+"prefLabel",skos+"altLabel",rdfs+"label"].includes(d.type) || [skos+"prefLabel",skos+"altLabel",rdfs+"label"].includes(d.fromKey)))
+            console.log('ctnO:', data, elem)
+         }
+         return ( 
+            <div  data-prop={shortUri(k)} >               
+               <h3><span>{this.proplink(k,null,n)}{I18n.t("punc.colon")}</span> </h3>
+               {this.preprop(k,0,n)}
+               <div class="group">
+                  { !this.state.collapse.containingOutline
+                  ?  <a class="ulink prefLabel" href="#" style={{fontSize:"14px"}}
+                        onClick={(ev) => { 
+                           this.setState({collapse:{...this.state.collapse, containingOutline:!this.state.collapse.containingOutline}})
+                           ev.preventDefault()
+                           ev.stopPropagation()
+                        }}  
+                     >
+                        {I18n.t("resource.seeIn",{txt:data?.value})}
+                     </a>
+                  : <ResourceViewerContainer auth={this.props.auth} history={this.props.history} IRI={elem[0].value} pdfDownloadOnly={true}/> }
+               </div>
+            </div>
+         )
+         
       } else {
          let classN = k===bdo+"note"
             ? "has-collapse custom"

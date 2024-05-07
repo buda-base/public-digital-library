@@ -64,6 +64,7 @@ const mapStateToProps = (state,ownProps) => {
    const bdo = "http://purl.bdrc.io/ontology/core/" 
    const bdr   = "http://purl.bdrc.io/resource/"
    const rdf   = "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   const tmp   = "http://purl.bdrc.io/ontology/tmp/" ;
    if(resources && resources[ownProps.IRI] && resources[ownProps.IRI][uri] && resources[ownProps.IRI][uri][bdo+"instanceOf"]?.length 
          && ! resources[ownProps.IRI][uri][rdf+"type"].some(t => t.value === bdo+"ImageInstance")) {      
       const workUri = resources[ownProps.IRI][uri][bdo+"instanceOf"][0].value
@@ -81,6 +82,10 @@ const mapStateToProps = (state,ownProps) => {
       if(work && work[workUri] && work[workUri][bdo+"workHasInstance"]) { 
          const inst = work[workUri][bdo+"workHasInstance"].filter(t => t.value != uri && t.value.startsWith(bdr+"MW"))
          if(inst.length) resources[ownProps.IRI][uri][bdo+"workHasInstance"] = inst
+      }
+
+      if(resources[ownProps.IRI][uri][bdo+"inRootInstance"]) {
+         resources[ownProps.IRI][uri][tmp+"containingOutline"] = [...resources[ownProps.IRI][uri][bdo+"inRootInstance"]]
       }
    }
 
