@@ -9628,7 +9628,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
          })
 
          if(related.length && related.length > 4) { 
-            let searchUrl = "/search?r="+this.props.IRI+"&t=Work&f=relation,inc,bdo:workIsAbout"
+            let searchUrl = "/search?r="+this.props.IRI+"&t=Work&f=relation,inc,bdo:workIsAbout&f=relation,inc,bdo:workGenre"
             related.push(<Link class="search" to={searchUrl}>{I18n.t("misc.seeMore")}</Link>)
          }
 
