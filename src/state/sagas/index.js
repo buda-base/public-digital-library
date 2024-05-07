@@ -3342,8 +3342,18 @@ async function getOutline(iri,node?,volFromUri?) {
    let res = await api.loadOutline(iri,node,volFromUri) 
 
    //loggergen.log("gotO:",iri,JSON.stringify(res,null,3),node,volFromUri)
+   
+   if(res && res["@graph"] && Array.isArray(res["@graph"])) res["@graph"] = res["@graph"].map(r => { 
+      if(r.hasPart) {
+         if(!Array.isArray(r.hasPart)) r.hasPart = [ r.hasPart ]
+         r.hasPart = r.hasPart.filter(h => !res["@graph"].some(n => n.id === h && n.partType == "bdr:PartTypeCodicologicalVolume" ))
+         if(!r.hasPart?.length) delete r.hasPart
+      }
+      return r
+   }).filter(n => n && !(n.partType === "bdr:PartTypeCodicologicalVolume"))
 
    if(res && res["@graph"] && volFromUri) res["@graph"].map(r => { 
+
       // patch main node
       if(r.id == volFromUri
          && r.hasPart && r.hasPart !== iri && !r.hasPart.includes(iri) // quickfix for loop/crash in bdr:MW12827
