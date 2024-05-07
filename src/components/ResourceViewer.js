@@ -1108,7 +1108,7 @@ class ResourceViewer extends Component<Props,State>
       //loggergen.log("tmp",tmp)
       propOrder = tmp
 
-      window.closeViewer = (ev, gotoResults = false) => {
+      if(!props.pdfDownloadOnly) window.closeViewer = (ev, gotoResults = false) => {
          //delete window.mirador
 
          if(window.myAnalytics.unloadMirador) window.myAnalytics.unloadMirador()
@@ -1753,7 +1753,7 @@ class ResourceViewer extends Component<Props,State>
 
    componentDidUpdate()  {
 
-      console.log("cdu:openMirador", this.props.IRI, this.props.pdfDownloadOnly, this.state.openMirador)
+      //console.log("cdp:openMirador", this.props.IRI, this.props.pdfDownloadOnly, this.state.openMirador)
 
       if(this.state.openMirador) { 
          let t = getEntiType(this.props.IRI);  
@@ -1864,13 +1864,13 @@ class ResourceViewer extends Component<Props,State>
    }
 
    componentWillUnmount() {
-      console.log("cwu:openMirador",this.props.IRI,this.state.openMirador)
+      //console.log("cwu:openMirador",this.props.IRI, this.props.pdfDownloadOnly, this.state.openMirador)
       window.removeEventListener('popstate', this.onBackButtonEvent);
    }
    
    componentDidMount()
    {
-      //console.log("cdm:openMirador",this.props.IRI,this.state.openMirador)
+      //console.log("cdm:openMirador",this.props.IRI,this.props.pdfDownloadOnly,this.state.openMirador)
       
       window.addEventListener('popstate', this.onBackButtonEvent);  
 
