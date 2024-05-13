@@ -609,6 +609,17 @@ html[lang="bo"] .msg-popup .front p { font-size:18px;}
 
 /* ------------------------ new UX ------------------------- */
 
+
+.resource [data-prop="tmp:containingOutline"] #outline:not(#a) {
+   padding:0;
+   margin-top:10px;
+}
+
+.resource [data-prop="tmp:containingOutline"] #outline:not(#a) h2 {
+   display:none;
+}
+
+
 #root .App .SearchPane { margin-top:0; }
 
 .infoPanel.inRes { margin-top:0 !important; }
@@ -918,6 +929,8 @@ html[lang="bo"] .msg-popup .front p { font-size:18px;}
 
    .over-nav + .nav .inner-nav > div { line-height:normal; height:auto; max-width:80px; text-align: center; }
 }
+
+
 
 
 
@@ -5255,6 +5268,24 @@ a.login { text-decoration:underline; cursor:pointer; }
 h2 .before { height:16px; }
 .before a {font-size:0; position:absolute;width:100%;height:100%;}
 .before:hover a { border:none !important; }
+
+h4:hover .urilink.nolink svg path:not([fill="none"]),
+.urilink.nolink:not(#a) { 
+   color:black;
+   stroke:black;
+}
+.urilink.nolink:not(#a) {
+   font-weight: 600;
+}
+
+h4 .urilink.nolink svg path[fill="none"] {
+   color:transparent;
+   stroke:transparent;
+}
+
+.urilink.nolink:not(#a):hover {
+   text-decoration: none;
+}
 
 
 /* ------------------------------------------------------------------------------------------------------------------------ sameAs etc. */

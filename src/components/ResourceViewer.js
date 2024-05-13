@@ -28,6 +28,7 @@ import ErrorOutlineIcon from '@material-ui/icons/Error';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import SpeakerNotes from '@material-ui/icons/SpeakerNotes';
 import SpeakerNotesOff from '@material-ui/icons/SpeakerNotesOff';
+import BlockIcon from '@material-ui/icons/Block';
 import Feedback from '@material-ui/icons/QuestionAnswer';
 //import NewWindow from 'react-new-window'
 import InfoIcon from '@material-ui/icons/InfoOutlined';
@@ -1784,16 +1785,16 @@ class ResourceViewer extends Component<Props,State>
          clear = true
       }
 
-      let s, clear
+      let s, clear, part = this.props.part ?? get.part
       
-      if(get.part && this.state.outlinePart !== get.part) { 
+      if(part && this.state.outlinePart !== part) { 
          if(!s) s = { ...this.state } 
          if(!s.title) s.title = {}
-         s.outlinePart = get.part
+         s.outlinePart = part
          clear = true
       }
       
-      if(!get.part && (!s && this.state.outlinePart || s && s.outlinePart) ) {
+      if(!part && (!s && this.state.outlinePart || s && s.outlinePart) ) {
          if(!s) s = { ...this.state } 
          s.outlinePart = false
          clear = true
@@ -3447,9 +3448,13 @@ class ResourceViewer extends Component<Props,State>
 
                ret = [<Link {...this.props.preview?{ target:"_blank" }:{}} className={"urilink "+ prefix} onClick={checkDLD.bind(this)} to={vlink}>{thumb}</Link>,
                      <div class="images-thumb-links">
-                        <Link {...this.props.preview?{ target:"_blank" }:{}} className={"urilink "+ prefix} to={vlink} onClick={checkDLD.bind(this)}>{I18n.t("index.openViewer")}</Link>
+                        {  !this.props.IIIFerrors||!this.props.IIIFerrors[prefix+":"+pretty]
+                           ?  <>
+                                 <Link {...this.props.preview?{ target:"_blank" }:{}} className={"urilink "+ prefix} to={vlink} onClick={checkDLD.bind(this)}>{I18n.t("index.openViewer")}</Link>
+                                 <ResourceViewerContainer auth={this.props.auth} history={this.props.history} IRI={prefix+":"+pretty} pdfDownloadOnly={true} />
+                              </>
+                           :  <a class="urilink nolink"><BlockIcon style={{width:"18px",verticalAlign:"top"}}/>&nbsp;{I18n.t("access.error")}</a>                              }
                         {/* <Link {...this.props.preview?{ target:"_blank" }:{}} className={"urilink "+ prefix} to={"/"+show+"/"+prefix+":"+pretty}>{I18n.t("resource.openR")}</Link> */}
-                        <ResourceViewerContainer auth={this.props.auth} history={this.props.history} IRI={prefix+":"+pretty} pdfDownloadOnly={true} />
                      </div>]
             } else if(thumbV && thumbV.length) {
                let repro = this.getResourceElem(bdo+"instanceHasReproduction", shortUri(elem.value), this.props.assocResources)
@@ -5653,17 +5658,7 @@ class ResourceViewer extends Component<Props,State>
                <h3><span>{this.proplink(k,null,n)}{I18n.t("punc.colon")}</span> </h3>
                {this.preprop(k,0,n)}
                <div class="group">
-                  { !this.state.collapse.containingOutline
-                  ?  <a class="ulink prefLabel" href="#" style={{fontSize:"14px"}}
-                        onClick={(ev) => { 
-                           this.setState({collapse:{...this.state.collapse, containingOutline:!this.state.collapse.containingOutline}})
-                           ev.preventDefault()
-                           ev.stopPropagation()
-                        }}  
-                     >
-                        {I18n.t("resource.seeIn",{txt:data?.value})}
-                     </a>
-                  : <ResourceViewerContainer auth={this.props.auth} history={this.props.history} IRI={elem[0].value} pdfDownloadOnly={true}/> }
+                  <ResourceViewerContainer auth={this.props.auth} history={this.props.history} IRI={shortUri(elem[0]?.value)} outlineOnly={true} part={this.props.IRI}/> 
                </div>
             </div>
          )
@@ -6326,7 +6321,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
    if(onlyDownload) return (<>
        { popupPdf }
        { pdfLink && 
-            ( (!(that.props.manifestError && that.props.manifestError.error.message.match(/Restricted access/)) /*&& !fairUse*/) || (that.props.auth && that.props.auth.isAuthenticated()))
+            ( (!(that.props.manifestError && that.props.manifestError.error.message.match(/Restricted access/)) /*&& !fairUse*/) )
             ? <a href="#" class="urilink" onClick={ev =>
                   {
                      //if(that.props.createPdf) return ;
@@ -6345,7 +6340,9 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                }>
                {I18n.t("resource.download")}
             </a>
-            : <Loader  className="scans-viewer-loader" loaded={that.props.firstImage && !that.props.firstImage.includes("bdrc.io") || !( (!(that.props.manifestError && that.props.manifestError.error.message.match(/Restricted access/)) /*&& !fairUse*/) || (that.props.auth && that.props.auth.isAuthenticated())) } />
+            : that.props.manifestError && !that.props.manifestError.error.message.match(/Restricted access/) 
+               ? <a class="urilink nolink">{I18n.t("viewer.pdferror2")} ({I18n.t("user.errors.server2")})</a>
+               : <Loader  className="scans-viewer-loader" loaded={that.props.firstImage && !that.props.firstImage.includes("bdrc.io") || !( (!(that.props.manifestError && that.props.manifestError.error.message.match(/Restricted access/)) /*&& !fairUse*/) || (that.props.auth && that.props.auth.isAuthenticated())) } />
          }
       </>)
    else return (
@@ -8500,7 +8497,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                loggergen.log("collapse?",JSON.stringify(collapse,null,3))
 
                
-               if(opart && this.state.outlinePart && !osearch) {
+               if(opart && this.state.outlinePart && !osearch && !this.props.outlineOnly) {
                   const el = document.querySelector("#outline")
                   if(el) el.scrollIntoView()      
                }
@@ -9539,6 +9536,10 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
          if(this.props.resources && !this.props.resources[this.props.IRI]) this.props.onGetResource(this.props.IRI);
       }
 
+      if(this.props.outlineOnly) {
+         if(this.props.resources && !this.props.resources[this.props.IRI] /*&& this.state.collapse.containingOutline*/) this.props.onGetResource(this.props.IRI);
+      }
+
       if(this.props.pdfDownloadOnly) {
          if(this.props.resources && !this.props.resources[this.props.IRI]) this.props.onGetResource(this.props.IRI);
          return this.perma_menu(pdfLink,monoVol,fairUse,kZprop.filter(k => k.startsWith(adm+"seeOther")), accessET && !etextAccessError, true)
@@ -9792,6 +9793,8 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
 
       let inTitle 
       //loggergen.log("root?",root)
+
+      /* // new UX
       if(root && root.length) {
          inTitle  = [ 
             <h3 class="inT">
@@ -9802,6 +9805,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
             //<h3 class="outline-link"><Link class="urilink" to={"/show/"+shortUri(root[0].value)+"?part="+this.props.IRI+"#outline"}>{"View in the outline"}</Link></h3>
          ]
       }
+      */
 
       let searchUrl, searchTerm
       
@@ -10068,7 +10072,30 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
          let theDataLegal = this.renderData([adm+"metadataLegal"],iiifpres,title,otherLabels,"legal-props")      
          
          let theOutline ;
-         if(!root || !root.length) theOutline = this.renderOutline()      
+         if((!root || !root.length) && (!this.props.outlineOnly || this.state.collapse.containingOutline)) theOutline = this.renderOutline()      
+
+         if(this.props.outlineOnly) {
+            let t = I18n.t("index.outline")
+            if(titleRaw.label?.length) { 
+               let rootTitle = getLangLabel(this,"",titleRaw.label)
+               if(rootTitle.value) t = rootTitle.value
+            }
+            return (
+               <>
+                  <a class="ulink prefLabel" href="#" style={{fontSize:"14px"}}
+                     onClick={(ev) => { 
+                        this.setState({collapse:{...this.state.collapse, containingOutline:!this.state.collapse.containingOutline}})
+                        ev.preventDefault()
+                        ev.stopPropagation()
+                     }}  
+                  >
+                     { !this.state.collapse.containingOutline ? I18n.t("resource.seeIn",{txt:t}) : I18n.t("resource.closeO") }
+                  </a>                  
+                  { this.state.collapse.containingOutline && theOutline }
+               </>
+            ) 
+         }
+
 
          let etext = this.isEtext(), etextRes = etext ? this.getResourceElem(bdo+"eTextInInstance") : false, backToET = etextRes?.length ? shortUri(etextRes[0].value) : this.props.IRI
          if(etext && !this.props.eTextRefs) { 
@@ -10345,6 +10372,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
             tablist = tablist.filter(t => t).reverse()
             tabpanels = tabpanels.filter(t => t).reverse()            
          } 
+
          
          return (
          [getGDPRconsent(this),   
@@ -10408,10 +10436,12 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                      { this.props.preview && <a href={"/show/"+this.props.IRI} target="_blank">{I18n.t("resource.fullR")}<img src="/icons/link-out.svg"/></a>}
                   </div>
                   { this.props.preview && _T === "Place" && <div class="data" id="map">{this.renderData(kZprop.filter(k => mapProps.includes(k)),null,null,null,"header")}</div> }
+                  {/* 
                   { _T !== "Etext" && this.renderQuality() }
                   { _T === "Etext" && this.renderEtextAccess(etextAccessError) }
                   { _T === "Etext" && this.renderOCR() }
-                  { _T !== "Etext" && this.renderNoAccess(fairUse) }                  
+                  { _T !== "Etext" && this.renderNoAccess(fairUse) }                   
+                  */}
                   { this.renderMirador(isMirador) }           
                   { theDataTop }
                   <div class="data" id="perma">{ this.perma_menu(pdfLink,monoVol,fairUse,kZprop.filter(k => k.startsWith(adm+"seeOther")), accessET && !etextAccessError)  }</div>
