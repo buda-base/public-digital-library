@@ -9270,7 +9270,9 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
          if(!serial) serial = this.getResourceElem(bdo+"collectionMember");
          if(!serial) serial = this.getResourceElem(bdo+"corporationHasMember");
          
-         const isEtextCollection = serial && !serial.some(k => k.value?.includes("/resource/W")) ;
+         // #871 
+         const isEtextCollection = serial && serial.some(k => k.value?.includes("/resource/IE")) ;
+         const isInstanceCollection = serial && serial.some(k => k.value?.includes("/resource/MW")) ;
 
          //loggergen.log("serial:",serial)
 
@@ -9345,7 +9347,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
             } else if(_T === "Place" || serial && _T === "Work") {
                searchUrl += "&t=Instance"+(this.props.useDLD?"&f=inDLD,inc,tmp:available":"")
             } else if( _T === "Product") {
-               searchUrl += "&t="+(isEtextCollection?"Etext":"Scan")+(this.props.useDLD?"&f=inDLD,inc,tmp:available":"")
+               searchUrl += "&t="+(isEtextCollection?"Etext":(isInstanceCollection?"Instance":"Scan"):"Scan")+(this.props.useDLD?"&f=inDLD,inc,tmp:available":"")
             } else if(_T === "Corporation") {
                searchUrl += "&t=Person"
             } else {
