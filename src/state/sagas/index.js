@@ -1462,7 +1462,7 @@ async function getManifest(url,iri,thumb) {
             // #869 catch error when fetching thumbnail
             try {
                //throw new ResourceNotFound('Problem fetching the resource (code:'+500+')',500); 
-               test = await api.getURLContents(image+"?t="+Date.now(),null,null,null,true)
+               test = await api.getURLContents(image+(image.includes("bdrc.io")?"?t="+Date.now():""),null,null,null,true)
             } catch(e) {
                console.error("server error fetching thumbnail", e, image)
             }

@@ -615,7 +615,7 @@ html[lang="bo"] .msg-popup .front p { font-size:18px;}
    margin-top:10px;
 }
 
-.resource [data-prop="tmp:containingOutline"] #outline:not(#a) h2 {
+.resource [data-prop="tmp:containingOutline"] #outline:not(#a) > h2 {
    display:none;
 }
 

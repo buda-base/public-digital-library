@@ -1110,7 +1110,7 @@ class ResourceViewer extends Component<Props,State>
       //loggergen.log("tmp",tmp)
       propOrder = tmp
 
-      if(!props.pdfDownloadOnly) window.closeViewer = (ev, gotoResults = false) => {
+      if(!props.pdfDownloadOnly && !props.outlineOnly) window.closeViewer = (ev, gotoResults = false) => {
          //delete window.mirador
 
          if(window.myAnalytics.unloadMirador) window.myAnalytics.unloadMirador()
@@ -1826,7 +1826,7 @@ class ResourceViewer extends Component<Props,State>
       let loca = { ...this.props.history.location }
       const hash = loca.hash.substring(1)
       
-      if (hash && hash.length && hash === "open-viewer" && !this.props.pdfDownloadOnly) {
+      if (hash && hash.length && hash === "open-viewer" && !this.props.pdfDownloadOnly && !this.props.outlineOnly) {
 
          let etext = this.isEtext()
 
@@ -9344,7 +9344,11 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
             <h2>{I18n.t("index.outline")}</h2>
                <OutlineSearchBar that={this} outlineSearch={outlineSearch}/>
                <div>
-                  <Loader  options={{position:"fixed",left:"calc(50% + 100px)",top:"calc(50% - 20px)"}} loaded={this.props.loading !== "outline"}/>
+                  <Loader  options={{
+                        position:this.props.outlineOnly?"absolute":"fixed",
+                        left:"calc(50% "+(this.props.outlineOnly?")":"+ 100px)"),
+                        top:"calc(50% - 20px)"}
+                     } loaded={this.props.loading !== "outline"}/>
                   <div class={"root " +(this.state.outlinePart === root || (!this.state.outlinePart && this.props.IRI===root)?"is-root":"")} >
                      { (osearch && open && (this.props.outlines[root] && !this.props.outlines[osearch].reloaded)) && <span onClick={(ev) => toggle(ev,root,root,"",true)} className="xpd" title={I18n.t("resource.otherN")}><RefreshIcon /></span>}
                      { !open && [<img src="/icons/triangle.png" className="xpd right" onClick={(e) => toggle(e,root,root)} />,colT,<span onClick={rootClick}>{title}</span>]}
@@ -10075,11 +10079,6 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
          if((!root || !root.length) && (!this.props.outlineOnly || this.state.collapse.containingOutline)) theOutline = this.renderOutline()      
 
          if(this.props.outlineOnly) {
-            let t = I18n.t("index.outline")
-            if(titleRaw.label?.length) { 
-               let rootTitle = getLangLabel(this,"",titleRaw.label)
-               if(rootTitle.value) t = rootTitle.value
-            }
             return (
                <>
                   <a class="ulink prefLabel" href="#" style={{fontSize:"14px"}}
@@ -10089,7 +10088,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                         ev.stopPropagation()
                      }}  
                   >
-                     { !this.state.collapse.containingOutline ? I18n.t("resource.seeIn",{txt:t}) : I18n.t("resource.closeO") }
+                     { !this.state.collapse.containingOutline ? I18n.t("resource.seeIn",{txt: versionTitle?.value ?? I18n.t("index.outline")}) : I18n.t("resource.closeO") }
                   </a>                  
                   { this.state.collapse.containingOutline && theOutline }
                </>
