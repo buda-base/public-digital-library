@@ -725,7 +725,7 @@
       "limited20": "Access limited to first & last 20 pages.",
       "credentials": "if you have sufficient credentials to get access to all scans from this work.",
       "notyet": "Images not yet available.",
-      "error": "An error occurred while trying to access the images.",
+      "error": "An error occurred while trying to access the images",
       "generic": "BDRC has restricted access to this work in accordance with our access policies. You can read those policies here: <policies href='https://bdrc.io/access-policies/' target='_blank'>https://bdrc.io/access-policies/<\/policies>",
       "OCR": "These etexts were created through OCR (optical character recognition), not manually input, and have not been edited. OCR for Tibetan script is not 100% perfect but it is accurate enough to create text that will enhance the BDRC database. We hope that etexts like these improve the discoverability and usefulness of the BDRC archive for you.",
       "quality0": "We apologize for the poor quality of these scans, which might be in the wrong order or have other issues which may make them difficult to read. Because these may still be useful for scholarship, research or practice, we have chosen to make these available, while we continue to search for higher quality images.",

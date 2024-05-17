@@ -83,10 +83,10 @@ const mapStateToProps = (state,ownProps) => {
          const inst = work[workUri][bdo+"workHasInstance"].filter(t => t.value != uri && t.value.startsWith(bdr+"MW"))
          if(inst.length) resources[ownProps.IRI][uri][bdo+"workHasInstance"] = inst
       }
+   }
 
-      if(resources[ownProps.IRI][uri][bdo+"inRootInstance"]) {
-         resources[ownProps.IRI][uri][tmp+"containingOutline"] = [...resources[ownProps.IRI][uri][bdo+"inRootInstance"]]
-      }
+   if(resources && resources[ownProps.IRI] && resources[ownProps.IRI][uri] && resources[ownProps.IRI][uri][bdo+"inRootInstance"]) {
+      resources[ownProps.IRI][uri][tmp+"containingOutline"] = [...resources[ownProps.IRI][uri][bdo+"inRootInstance"]]
    }
 
    /* not the pb...

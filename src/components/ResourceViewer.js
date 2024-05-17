@@ -3100,11 +3100,12 @@ class ResourceViewer extends Component<Props,State>
                
                
                thumb =  this.getResourceElem(tmp+"thumbnailIIIFService", sUri, this.props.assocResources)
-               if(!thumb || !thumb.length) thumb = this.getResourceElem(tmp+"thumbnailIIIFSelected", sUri, this.props.assocResources)
+               if(!thumb?.length) thumb = this.getResourceElem(tmp+"thumbnailIIIFSelected", sUri, this.props.assocResources)
+               if(!thumb?.length && this.props.firstImage) thumb = [{ value: this.props.firstImage }]
                               
-               //console.log("noT?", !thumb?.length, sUri, this.props.assocResources)               
+               //console.log("noT?", !thumb?.length, sUri, this.props.assocResources, this.props.firstImage)               
 
-               if(!thumb || !thumb.length)  ret = [  <Link {...this.props.preview?{ target:"_blank" }:{}} to={"/show/"+sUri+"#open-viewer"} class={"images-thumb no-thumb 2"} style={{"background-image":"url(/icons/header/instance.svg)"}}></Link> ]
+               if(!thumb || !thumb.length)  ret = [  <Link {...this.props.preview?{ target:"_blank" }:{}} to={"/show/"+sUri+"#open-viewer"} class={"images-thumb no-thumb 2a"} style={{"background-image":"url(/icons/header/instance.svg)"}}></Link> ]
                else {
                   let thumbUrl = thumb[0].value
                   if(!thumbUrl.match(/[/]default[.][^.]+$/)) thumbUrl += "/full/"+(thumb[0].value.includes(".bdrc.io/")?"!2000,145":",145")+"/0/default.jpg"
@@ -3126,7 +3127,7 @@ class ResourceViewer extends Component<Props,State>
                               
                //console.log("noT?", !thumbV?.length, sUri, this.props.assocResources)               
 
-               if(!thumbV || !thumbV.length)  ret = [  <Link {...this.props.preview?{ target:"_blank" }:{}} to={"/show/"+sUri} class={"images-thumb no-thumb 2"} style={{"background-image":"url(/icons/header/instance.svg)"}}></Link> ]
+               if(!thumbV || !thumbV.length)  ret = [  <Link {...this.props.preview?{ target:"_blank" }:{}} to={"/show/"+sUri} class={"images-thumb no-thumb 2b"} style={{"background-image":"url(/icons/header/instance.svg)"}}></Link> ]
                else {
                   let thumbUrl = thumbV[0].value
                   if(!thumbUrl.match(/[/]default[.][^.]+$/)) thumbUrl += "/full/"+(thumbV[0].value.includes(".bdrc.io/")?"!2000,145":",145")+"/0/default.jpg"
@@ -3420,7 +3421,7 @@ class ResourceViewer extends Component<Props,State>
             else if(thumb && thumb.length) {
                let thumbUrl = thumb[0].value
                if(!thumbUrl.match(/[/]default[.][^.]+$/)) thumbUrl += "/full/"+(thumb[0].value.includes(".bdrc.io/")?"!2000,145":",145")+"/0/default.jpg"
-               else thumbUrl = thumbUrl.replace(/[/]max[/]/,"/"+(thumbUrl.includes(".bdrc.io/")?"!2000,145":",145")+"/")
+               else thumbUrl = thumbUrl.replace(/[/](max|(,600))[/]/,"/"+(thumbUrl.includes(".bdrc.io/")?"!2000,145":",145")+"/")
                let vlink = "/"+show+"/"+prefix+":"+pretty+"?s="+encodeURIComponent(this.props.history.location.pathname+this.props.history.location.search)+"#open-viewer"                
                thumb = <div class="images-thumb" style={{"background-image":"url("+thumbUrl+")"}}><img src={thumbUrl}/></div>;               
 
@@ -3448,12 +3449,16 @@ class ResourceViewer extends Component<Props,State>
 
                ret = [<Link {...this.props.preview?{ target:"_blank" }:{}} className={"urilink "+ prefix} onClick={checkDLD.bind(this)} to={vlink}>{thumb}</Link>,
                      <div class="images-thumb-links">
-                        {  !this.props.IIIFerrors||!this.props.IIIFerrors[prefix+":"+pretty]
+                        {  !this.props.IIIFerrors||!this.props.IIIFerrors[prefix+":"+pretty]                            
                            ?  <>
                                  <Link {...this.props.preview?{ target:"_blank" }:{}} className={"urilink "+ prefix} to={vlink} onClick={checkDLD.bind(this)}>{I18n.t("index.openViewer")}</Link>
                                  <ResourceViewerContainer auth={this.props.auth} history={this.props.history} IRI={prefix+":"+pretty} pdfDownloadOnly={true} />
                               </>
-                           :  <a class="urilink nolink"><BlockIcon style={{width:"18px",verticalAlign:"top"}}/>&nbsp;{I18n.t("access.error")}</a>                              }
+                           :  this.props.IIIFerrors[prefix+":"+pretty].error.code === 401 && (!this.props.auth || !this.props.auth.isAuthenticated())
+                              ? <a class="urilink nolink"><BlockIcon style={{width:"18px",verticalAlign:"top"}}/>&nbsp;{I18n.t("viewer.dlError401")}</a>                              
+                              : <a class="urilink nolink"><BlockIcon style={{width:"18px",verticalAlign:"top"}}/>&nbsp;{I18n.t("access.error")}</a>                              
+                              // TODO: handle more access cases (fair use etc., see figma)
+                        }
                         {/* <Link {...this.props.preview?{ target:"_blank" }:{}} className={"urilink "+ prefix} to={"/"+show+"/"+prefix+":"+pretty}>{I18n.t("resource.openR")}</Link> */}
                      </div>]
             } else if(thumbV && thumbV.length) {
@@ -9479,7 +9484,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
       let _T = getEntiType(this.props.IRI)
       let titleRaw = { label:[] }
       let { title,titlElem,otherLabels } = this.setTitle(kZprop,_T,null,null,true) ;
-      let versionTitle 
+      let versionTitle, ilabel 
       if(_T === "Instance") { 
          iTitle = title ; 
 
@@ -9488,7 +9493,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
          
          if(titleRaw.label?.length) { 
             title = getLangLabel(this,"",titleRaw.label)
-            const ilabel = getLangLabel(this,"",titlElem)
+            ilabel = getLangLabel(this,"",titlElem)
             if(ilabel?.value != title.value) versionTitle = ilabel
             title = <h2 class="on" title={title.value} lang={title.lang} ><span>{title.value}</span></h2> 
          }
@@ -10088,7 +10093,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                         ev.stopPropagation()
                      }}  
                   >
-                     { !this.state.collapse.containingOutline ? I18n.t("resource.seeIn",{txt: versionTitle?.value ?? I18n.t("index.outline")}) : I18n.t("resource.closeO") }
+                     { !this.state.collapse.containingOutline ? I18n.t("resource.seeIn",{txt: ilabel?.value ?? I18n.t("index.outline")}) : I18n.t("resource.closeO") }
                   </a>                  
                   { this.state.collapse.containingOutline && theOutline }
                </>
