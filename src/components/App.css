@@ -297,7 +297,7 @@ body { overflow:auto !important;padding-right:0 !important; /*font-family:"Robot
 .msg-popup { position: fixed; top:0 ;left:0;right:0;bottom:0; display:flex; align-items: center; justify-content: center; z-index:100100;}
 .msg-popup .back { width: 100%; height:100%; background:rgba(0,0,0,0.5); position: absolute;}
 .msg-popup .front { background:white; padding:20px 40px;box-shadow: 0 0 10px 3px rgba(0,0,0,0.5); border-radius: 0px; z-index:1; max-width:80%; width:540px; position: relative;
-   box-sizing: border-box  ;
+   box-sizing: border-box  ; max-height:80%; overflow: auto;
 }
 .msg-popup .front p { color:#555; text-align: center; font-weight: 500; font-size: 15px;}
 .msg-popup .front p a { color:#d73449; font-weight:600; text-decoration: none; }
