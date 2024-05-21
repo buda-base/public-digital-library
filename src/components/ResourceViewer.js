@@ -522,18 +522,7 @@ const topProperties = {
       tmp+"containingOutline",
       bdo+"instanceHasReproduction",
       tmp+"propHasScans",
-      tmp+"propHasEtext",
-      bdo+"workHasInstance",
-      //bdo+"instanceOf",
-      bdo+"catalogInfo",
-      bdo+"hasTitle", 
-      skos+"prefLabel", 
-      skos+"altLabel", 
-      //bdo+"contentLocation",
-      bdo+"instanceEvent",
-      bdo+"publisherName",
-      bdo+"publisherLocation",
-      bdo+"editionStatement",
+      tmp+"propHasEtext"
    ],
    "Images": [ 
       bdo+"hasTitle", 
@@ -569,7 +558,23 @@ const topProperties = {
       
    ]
 }
-                       
+              
+let midProperties = {
+   "Instance": [ 
+      bdo+"workHasInstance",
+      //bdo+"instanceOf",
+      bdo+"catalogInfo",
+      bdo+"hasTitle", 
+      skos+"prefLabel", 
+      skos+"altLabel", 
+      //bdo+"contentLocation",
+      bdo+"instanceEvent",
+      bdo+"publisherName",
+      bdo+"publisherLocation",
+      bdo+"editionStatement"
+   ]
+}
+
 let extProperties = {
    "Work": [
       bf+"identifiedBy",
@@ -3456,7 +3461,9 @@ class ResourceViewer extends Component<Props,State>
                               </>
                            :  this.props.IIIFerrors[prefix+":"+pretty].error.code === 401 && (!this.props.auth || !this.props.auth.isAuthenticated())
                               ? <a class="urilink nolink"><BlockIcon style={{width:"18px",verticalAlign:"top"}}/>&nbsp;{I18n.t("viewer.dlError401")}</a>                              
-                              : <a class="urilink nolink"><BlockIcon style={{width:"18px",verticalAlign:"top"}}/>&nbsp;{I18n.t("access.error")}</a>                              
+                              : [404,444].includes(this.props.IIIFerrors[prefix+":"+pretty].error.code) 
+                                 ? <a class="urilink nolink"><BlockIcon style={{width:"18px",verticalAlign:"top"}}/>&nbsp;{I18n.t("access.notyet")}</a>                              
+                                 : <a class="urilink nolink"><BlockIcon style={{width:"18px",verticalAlign:"top"}}/>&nbsp;{I18n.t("access.error")}</a>                              
                               // TODO: handle more access cases (fair use etc., see figma)
                         }
                         {/* <Link {...this.props.preview?{ target:"_blank" }:{}} className={"urilink "+ prefix} to={"/"+show+"/"+prefix+":"+pretty}>{I18n.t("resource.openR")}</Link> */}
@@ -6370,7 +6377,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
       <span class="NL nl-dl"></span>
 
       <span id="DL" ref={this._refs["perma_DL"]} onClick={(e) => this.setState({...this.state,anchorPermaDL:e.currentTarget, collapse: {...this.state.collapse, permaDL:!this.state.collapse.permaDL } } ) }>
-         <img src="/icons/DL_.svg"/>{I18n.t("resource.download")} { this.state.collapse.permaDL ? <ExpandLess/>:<ExpandMore/>}
+         <img src="/icons/DL_.svg"/>{I18n.t("resource.exportData",{data: "metadata" })} { this.state.collapse.permaDL ? <ExpandLess/>:<ExpandMore/>}
       </span>
 
       { that.props.IRI && that.props.IRI.match(/bdr:((MW)|(W[0-9])|(IE))/) && 
@@ -7125,7 +7132,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
          )
    }
 
-   renderData = (kZprop, iiifpres, title, otherLabels, div = "", hash = "", prepend = [], append = []) => {
+   renderData = (returnLen, kZprop, iiifpres, title, otherLabels, div = "", hash = "", prepend = [], append = []) => {
 
       let { doMap, doRegion, regBox } = this.getMapInfo(kZprop);
 
@@ -7300,7 +7307,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
 
       //loggergen.log("data:",data)      
 
-      if(data && data.length) return <div className={div!=="header"?"data "+div:div} {...hash?{id:hash}:{}}>
+      const html = <div className={div!=="header"?"data "+div:div} {...hash?{id:hash}:{}}>
          {prepend}
          {data}
          {/* // TODO not working anymore
@@ -7309,6 +7316,11 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
          { this.renderPostData() }       
          {append}    
       </div>
+
+      if(data && data.length || append?.length || prepend?.length) { 
+         if(returnLen) return ({ html, nbChildren: data?.length + prepend?.length + append?.length })
+         else return html
+      }
       
    }
    
@@ -7601,7 +7613,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
          </div>
          )
       else if(!this.props.preview && kZprop.length && (!this.props.config || !this.props.config.chineseMirror))
-         return <div class="data" id="map">{this.renderData(kZprop,null,null,null,"header")}</div>
+         return <div class="data" id="map">{this.renderData(false, kZprop,null,null,null,"header")}</div>
       else if(etext && !(prov !== "BDRC" && prov && orig)) {
          let loca = this.props.history.location
          let view = loca.pathname+loca.search+"#open-viewer"
@@ -9563,6 +9575,9 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
       let topProps = topProperties[_T]
       if(!topProps) topProps = []
 
+      let midProps = midProperties[_T]
+      if(!midProps) midProps = []
+
       let extProps = extProperties[_T]
       if(!extProps) extProps = []
 
@@ -9803,7 +9818,9 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
       let inTitle 
       //loggergen.log("root?",root)
 
-      /* // new UX
+      
+      /*
+      // new UX
       if(root && root.length) {
          inTitle  = [ 
             <h3 class="inT">
@@ -9896,7 +9913,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
          let etextRes = this.getResourceElem(bdo+"eTextInInstance")
          if(etextRes && etextRes.length) etextRes = shortUri(etextRes[0].value)
          else etextRes = null
-         let etext_data = this.renderData([!hasPages?bdo+"eTextHasChunk":bdo+"eTextHasPage"],iiifpres,title,otherLabels,"etext-data",undefined,undefined,
+         let etext_data = this.renderData(false, [!hasPages?bdo+"eTextHasChunk":bdo+"eTextHasPage"],iiifpres,title,otherLabels,"etext-data",undefined,undefined,
             this.props.disableInfiniteScroll&&etextRes?[<div class="etext-continue"><Link to={"/show/"+etextRes}>{I18n.t("resource.continue")}</Link></div>]:[])
 
          if(topLevel || this.props.previewEtext) etextRes = this.props.IRI
@@ -10068,8 +10085,9 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
             listWithAS = [ tmp+"outlineAuthorshipStatement" ]
          }
          
-         let theDataTop = this.renderData(topProps,iiifpres,title,otherLabels,"top-props","main-info",versionTitle?[this.renderGenericProp(versionTitle, _tmp+"versionTitle", this.format("h4",_tmp+"versionTitle","",false,"sub",[{...versionTitle, type:"literal"}]))]:[])      
-         let theDataBot = this.renderData(kZprop.filter(k => !topProps.includes(k) && !extProps.includes(k)).concat(listWithAS),iiifpres,title,otherLabels,"bot-props", undefined, otherResourcesData)      
+         let theDataTop = this.renderData(false, topProps,iiifpres,title,otherLabels,"top-props","main-info",versionTitle?[this.renderGenericProp(versionTitle, _tmp+"versionTitle", this.format("h4",_tmp+"versionTitle","",false,"sub",[{...versionTitle, type:"literal"}]))]:[])      
+         let { html: theDataMid, nbChildren: midPropsLen }= this.renderData(true, midProps,iiifpres,title,otherLabels,"mid-props", undefined, otherResourcesData) ?? {}
+         let theDataBot = this.renderData(false, kZprop.filter(k => !topProps.includes(k) && !midProps.includes(k) && !extProps.includes(k)).concat(listWithAS),iiifpres,title,otherLabels,"bot-props", undefined)      
 
          let theEtext
          if(this.props.eTextRefs && this.props.eTextRefs !== true && this.props.IRI && this.props.IRI.startsWith("bdr:IE")) { 
@@ -10077,8 +10095,8 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
             theEtext = this.renderEtextRefs(accessET)      
          }
 
-         let theDataExt = this.renderData(extProps,iiifpres,title,otherLabels,"ext-props")      
-         let theDataLegal = this.renderData([adm+"metadataLegal"],iiifpres,title,otherLabels,"legal-props")      
+         let theDataExt = this.renderData(false,extProps,iiifpres,title,otherLabels,"ext-props")      
+         let theDataLegal = this.renderData(false,[adm+"metadataLegal"],iiifpres,title,otherLabels,"legal-props")      
          
          let theOutline ;
          if((!root || !root.length) && (!this.props.outlineOnly || this.state.collapse.containingOutline)) theOutline = this.renderOutline()      
@@ -10086,7 +10104,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
          if(this.props.outlineOnly) {
             return (
                <>
-                  <a class="ulink prefLabel" href="#" style={{fontSize:"14px"}}
+                  <a class="ulink prefLabel containing-outline" href="#" 
                      onClick={(ev) => { 
                         this.setState({collapse:{...this.state.collapse, containingOutline:!this.state.collapse.containingOutline}})
                         ev.preventDefault()
@@ -10094,7 +10112,8 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                      }}  
                   >
                      { !this.state.collapse.containingOutline ? I18n.t("resource.seeIn",{txt: ilabel?.value ?? I18n.t("index.outline")}) : I18n.t("resource.closeO") }
-                  </a>                  
+                  </a>     
+                  { this.props.part && <Link {...this.props.preview?{ target:"_blank" }:{}} to={"/show/"+this.props.IRI} class="ulink prefLabel containing-outline" >{I18n.t("resource.openR")}</Link> }         
                   { this.state.collapse.containingOutline && theOutline }
                </>
             ) 
@@ -10439,16 +10458,17 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                      { ( _T === "Person" && createdBy && createdBy.length > 0 ) && <div class="browse-by"><Link to={"/search?r="+this.props.IRI+"&t=Work"}><img src="/icons/sidebar/work_white.svg"/>{I18n.t("resource.assoc")}</Link></div> }
                      { this.props.preview && <a href={"/show/"+this.props.IRI} target="_blank">{I18n.t("resource.fullR")}<img src="/icons/link-out.svg"/></a>}
                   </div>
-                  { this.props.preview && _T === "Place" && <div class="data" id="map">{this.renderData(kZprop.filter(k => mapProps.includes(k)),null,null,null,"header")}</div> }
-                  {/* 
+                  { this.props.preview && _T === "Place" && <div class="data" id="map">{this.renderData(false, kZprop.filter(k => mapProps.includes(k)),null,null,null,"header")}</div> }
+                  
                   { _T !== "Etext" && this.renderQuality() }
                   { _T === "Etext" && this.renderEtextAccess(etextAccessError) }
                   { _T === "Etext" && this.renderOCR() }
                   { _T !== "Etext" && this.renderNoAccess(fairUse) }                   
-                  */}
+                  
                   { this.renderMirador(isMirador) }           
                   { theDataTop }
                   <div class="data" id="perma">{ this.perma_menu(pdfLink,monoVol,fairUse,kZprop.filter(k => k.startsWith(adm+"seeOther")), accessET && !etextAccessError)  }</div>
+                  { theDataMid }
                   { theDataBot }
                   { ( /*hasRel &&*/ !this.props.preview && this.props.assocResources && !["Instance","Images","Etext"].includes(_T)) &&
                      <div class="data related" id="resources" data-all={all}>

@@ -619,6 +619,8 @@ html[lang="bo"] .msg-popup .front p { font-size:18px;}
    display:none;
 }
 
+tmp:containingOutline
+
 
 #root .App .SearchPane { margin-top:0; }
 
@@ -636,10 +638,12 @@ html[lang="bo"] .msg-popup .front p { font-size:18px;}
 .over-nav + .nav.etext-nav { position:sticky; top:0; }
 
 .over-nav + .nav.etext-nav .inner-nav,
-.over-nav + .nav:not(.etext-nav) > div:not(#uiLangPopup) > :not(#logo, #lang, .inner-nav) { display:none; }
+.over-nav + .nav:not(.etext-nav) > div:not(#uiLangPopup) > :not(#logo, #lang, #lang-login, .inner-nav) { display:none; }
 .over-nav + .nav .inner-nav { display: flex; }
 
 .over-nav + .nav .inner-nav > div { margin:0 25px; line-height:44px;height:44px; font-size:16px;}
+
+body > #pop-login { z-index:1000000 ;}
 
 .over-nav { display: flex; align-items: center; justify-content: center; height:50px; background:#172832; 
    position: relative; width:100% ; z-index:100001;
@@ -4126,6 +4130,16 @@ div.mustLogin a:hover { border:none; text-decoration: underline;}
 .etext-top-links a + a,
 .resource .data .images-thumb-links a + a { margin-top:0px;display:inline-block;margin-left:30px; position: relative;}
 
+[data-prop="tmp:containingOutline"] a.containing-outline {
+   font-size:14px;
+}
+
+[data-prop="tmp:containingOutline"] a.containing-outline + a.containing-outline {
+   margin-left:30px;
+}
+
+
+[data-prop="tmp:containingOutline"] a.containing-outline + a.containing-outline::before,
 .etext-top-links a + a::before,
 .resource .data .images-thumb-links a + a::before { 
    content:"";
@@ -4136,6 +4150,11 @@ div.mustLogin a:hover { border:none; text-decoration: underline;}
    left:-15px; 
    top:5px;
    height:15px; width:1px;
+}
+
+
+[data-prop="tmp:containingOutline"] a.containing-outline + a.containing-outline::before {   
+   top:3px;
 }
 
 .etext-top-links { line-height: 23px; }
@@ -4367,6 +4386,7 @@ h4:hover a.no-bdrc img { opacity:1; }
 /* .resource .data > div:not(.firstImage) { display:flex;align-items:baseline;flex-wrap:nowrap;box-sizing: border-box;width:100%;position:relative;} */
 .resource .data > div:not(.firstImage):not(.browse):not(.header) { display:block; position:relative; }
 .resource .data:not(#perma) > div:not(.firstImage):not(.browse):not(.header)::after { content:''; width:calc(100% - 190px);; height:1px;margin:25px 0 25px 190px;display:block;}
+.resource .data.mid-props > div:not(.firstImage):not(.browse):not(.header)::after,
 .resource .data > div:not(.firstImage):not(.browse):not(.header):not(:last-child)::after { background:rgba(0,0,0,0.25);}
 .resource .data.top-props > div:last-child::after { margin-bottom:20px !important; margin-top:0 !important; }
 
@@ -4512,7 +4532,9 @@ span.in { font-weight:500;padding-left:0px; padding-right:10px; margin-left:36px
 .data:not(.legal-props) > [data-prop='bdo:creator'] .subsub:not(:first-child) + .subsub { width:calc(100% - 5px); }
 
 
-.resource .data:not(.top-props) > [data-prop]:last-child::after { content:none !important;display:none; } 
+.resource .data:not(.top-props,.mid-props) > [data-prop]:last-child::after { content:none !important;display:none; } 
+
+.resource .data.mid-props { padding-bottom:0; }
 
 .resource .data > [data-prop="bdo:instanceReproductionOf"] > h3 { margin-right:20px; box-sizing: border-box; width:170px;}
 

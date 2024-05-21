@@ -1280,7 +1280,16 @@ export function top_right_menu(that,etextTitle,backUrl,etextres)
 
       let login       
       if(that.props.auth) login = <div id="login" {...(proxied?{class:"proxied"}:{})}>
-         {
+         <AccountCircleIcon style={{color:"black", width:28, height:28, marginLeft:10}} onClick={(ev) => that.setState({
+               anchor:{...that.state.anchor??{}, account:ev.currentTarget},
+               collapse:{...that.state.collapse, account:!that.state.account}
+            })}/>
+         <Popover open={that.state.collapse.account}
+            transformOrigin={{ vertical: 'top', horizontal: 'left'}} 
+            anchorOrigin={{vertical: 'top', horizontal: 'left'}} 
+            anchorEl={that.state.anchor?.account}
+            id="pop-login"
+            > {
             !that.props.auth.isAuthenticated() && // TODO check redirection
                <div class="not-logged">
                   <span onClick={() => that.props.auth.login(that.props.history.location,true)} >
@@ -1306,6 +1315,7 @@ export function top_right_menu(that,etextTitle,backUrl,etextres)
                   </span>
                </div>
          }
+         </Popover>
       </div>
 
       if(proxied) {
@@ -1413,9 +1423,10 @@ export function top_right_menu(that,etextTitle,backUrl,etextres)
             <span title={I18n.t("topbar.bookmarks")}><img src="/icons/fav.svg"/></span>
          </div>
 
-         { that.props.auth && login }
-
+         <div id="lang-login">
          { lang_selec(that) }
+         { that.props.auth && login }
+         </div>
 
          { (!that.props.config || !that.props.config.chineseMirror) && <a target="_blank" href="https://bdrc.io/donation/" id="donate"><img src="/donate.svg"/>{I18n.t("topbar.donate")}</a> }
 
