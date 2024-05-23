@@ -942,7 +942,7 @@ body > #pop-login { z-index:1000000 ;}
 
 /* ----------------------------- end new-UX/header ---------------------------- */
 
-.resource [data-prop] .data.access {
+.resource [data-prop] .data.access:not(#a) {
    padding:0;
    background:none;
 }
