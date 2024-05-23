@@ -240,7 +240,7 @@ const mapStateToProps = (state,ownProps) => {
 
    if(config && !config.auth) props.auth = false
 
-   loggergen.log("mS2p:",state,props,ownProps)
+   loggergen.log("mS2p:",ownProps.IRI,ownProps.pdfDownloadOnly,state,props,ownProps)
 
    return props
 

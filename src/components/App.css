@@ -153,7 +153,7 @@ footer#site-footer.no-syncs > div.head::before { background-color:#efefef; }
 
 
 #more-pages-menu a,[role='tooltip'] *, .App *,.nav *,.App *::before,.App *::after, .react-tabs *, .resource *:not(.fa):not(.material-icons), .resource + * *,
-.inRes *, #popDL.cite *, #menu-citationLang * { 
+.inRes *, #popDL.cite *, #menu-citationLang *, #pop-login li { 
    font-family:"Noto Sans", "Noto Serif Tibetan", "Noto Serif Khmer", "Noto Sans Mongolian", "Roboto", "Helvetica", "Arial", sans-serif !important;
 }
 
@@ -619,9 +619,6 @@ html[lang="bo"] .msg-popup .front p { font-size:18px;}
    display:none;
 }
 
-tmp:containingOutline
-
-
 #root .App .SearchPane { margin-top:0; }
 
 .infoPanel.inRes { margin-top:0 !important; }
@@ -641,9 +638,14 @@ tmp:containingOutline
 .over-nav + .nav:not(.etext-nav) > div:not(#uiLangPopup) > :not(#logo, #lang, #lang-login, .inner-nav) { display:none; }
 .over-nav + .nav .inner-nav { display: flex; }
 
+#pop-login,
+#lang-login { cursor:pointer; }
+
 .over-nav + .nav .inner-nav > div { margin:0 25px; line-height:44px;height:44px; font-size:16px;}
 
 body > #pop-login { z-index:1000000 ;}
+
+#pop-login li { display: block; min-width:80px; text-transform: uppercase; color:#d73449; font-size:14px; font-weight:600; line-height:170%;}
 
 .over-nav { display: flex; align-items: center; justify-content: center; height:50px; background:#172832; 
    position: relative; width:100% ; z-index:100001;
@@ -940,7 +942,48 @@ body > #pop-login { z-index:1000000 ;}
 
 /* ----------------------------- end new-UX/header ---------------------------- */
 
+.resource [data-prop] .data.access {
+   padding:0;
+   background:none;
+}
 
+.resource [data-prop] .data.access h3 {
+   font-size: 14px;
+   text-align: left;
+   padding: 0;
+   margin-bottom:10px;
+}
+
+.resource [data-prop] .data.access h3::before {
+   width:20px;
+   height:30px;
+   background-position: center;
+   margin-right:10px;
+}
+
+.resource [data-prop] .data.access h3::before {
+   content:none;
+}
+
+.resource [data-prop] .data.access h3 {
+   max-width:none;
+}
+
+.resource [data-prop] .data.access h3 span {
+   padding:0; 
+   font-weight:400;
+}
+
+.resource [data-prop] .data.access h3 span u {
+   text-decoration: none;
+}
+
+.resource [data-prop] .data.access .fairuse-IA-link + .fairuse-IA-link {
+   vertical-align: top;
+   cursor:pointer;
+   position: relative;
+   margin-left:28px;
+}
 
 .resource.etext-outline {
    position:sticky;
@@ -1118,8 +1161,11 @@ body > #pop-login { z-index:1000000 ;}
    margin-top:20px;
 }
 
-[data-prop="tmp:propHasScans"] h4:not(#a) > a {
+[data-prop="tmp:propHasScans"] h4:not(#a) > a:not(.noIA) {
    order:1;
+}
+
+[data-prop="tmp:propHasScans"] h4:not(#a) > a {
    display: inline-block;
    overflow:hidden;
 }
@@ -4120,7 +4166,7 @@ div.mustLogin a:hover { border:none; text-decoration: underline;}
 .resource .data .images-thumb:hover { border-color:#ccc;}
 
 .resource .data .images-thumb-links { display:inline-block; display:inline-flex;justify-content: flex-start; flex-direction: row;
-   margin-left:28px;vertical-align:top; align-items: baseline;
+   margin-left:28px;vertical-align:top; align-items: baseline; flex-wrap: wrap;
 }
 
 .etext-top-links a {cursor: pointer;}
@@ -4129,6 +4175,43 @@ div.mustLogin a:hover { border:none; text-decoration: underline;}
 
 .etext-top-links a + a,
 .resource .data .images-thumb-links a + a { margin-top:0px;display:inline-block;margin-left:30px; position: relative;}
+
+.resource .data .images-thumb-links > div { width:100%; } 
+
+.resource .data .images-thumb-links > div > div > div a {
+   cursor: pointer;
+   text-decoration:none;
+   border:none;
+}
+
+.resource .data .images-thumb-links > div > div > div a:hover {
+   text-decoration: underline;
+}
+
+.resource .data .images-thumb-links > div > div > div.ellipsis {
+   white-space: nowrap;
+   overflow: hidden;
+   text-overflow: ellipsis;
+   padding-right:50px;
+   position: relative;
+}
+.resource .data .images-thumb-links > div > div > div.ellipsis a {
+   position:absolute;
+   right:0;
+   width:40px;
+}
+
+.resource .data .images-thumb-links > div > div > div.expanded {
+   white-space: normal;
+   padding-right:0;
+   position: relative;
+}
+
+.resource .data .images-thumb-links > div > div > div.expanded a {
+   position:relative;
+   margin-left:10px;
+   display: inline-block;
+}
 
 [data-prop="tmp:containingOutline"] a.containing-outline {
    font-size:14px;
@@ -4139,6 +4222,7 @@ div.mustLogin a:hover { border:none; text-decoration: underline;}
 }
 
 
+.resource [data-prop] .data.access .fairuse-IA-link + .fairuse-IA-link::before,
 [data-prop="tmp:containingOutline"] a.containing-outline + a.containing-outline::before,
 .etext-top-links a + a::before,
 .resource .data .images-thumb-links a + a::before { 
@@ -4988,7 +5072,7 @@ html[lang="en"] .resource .data > [data-prop="bdo:creator"] h4[data-prop="bdo:ro
 .scans-viewer-loader,
 .preview-etext .etext-viewer-loader { transform:scale(0.5); transform-origin: 20px 20px; }
 
-.images-thumb-links .loader .scans-viewer-loader { left:15px !important; top:-15px !important;}
+.images-thumb-links .loader .scans-viewer-loader { left:-30px !important; top:-20px !important;}
 
 .images-thumb-links .loader,
 .scans-viewer-loader { position: relative;}
@@ -5299,6 +5383,10 @@ h4:hover .urilink.nolink svg path:not([fill="none"]),
 .urilink.nolink:not(#a) {
    font-weight: 600;
 }
+
+.urilink.nolink > svg { margin-right:8px;}
+
+.urilink.nolink { margin-bottom:5px;}
 
 h4 .urilink.nolink svg path[fill="none"] {
    color:transparent;

@@ -76,6 +76,8 @@ import {miradorConfig, miradorSetUI} from '../lib/miradorSetup';
 import { Redirect404 } from "../routes.js"
 import Footer from "./Footer"
 
+import TextToggle from "./TextToggle"
+
 import Loader from "react-loader"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faLanguage } from '@fortawesome/free-solid-svg-icons'
@@ -3452,22 +3454,126 @@ class ResourceViewer extends Component<Props,State>
                   } 
                }
 
-               ret = [<Link {...this.props.preview?{ target:"_blank" }:{}} className={"urilink "+ prefix} onClick={checkDLD.bind(this)} to={vlink}>{thumb}</Link>,
-                     <div class="images-thumb-links">
-                        {  !this.props.IIIFerrors||!this.props.IIIFerrors[prefix+":"+pretty]                            
-                           ?  <>
-                                 <Link {...this.props.preview?{ target:"_blank" }:{}} className={"urilink "+ prefix} to={vlink} onClick={checkDLD.bind(this)}>{I18n.t("index.openViewer")}</Link>
-                                 <ResourceViewerContainer auth={this.props.auth} history={this.props.history} IRI={prefix+":"+pretty} pdfDownloadOnly={true} />
-                              </>
-                           :  this.props.IIIFerrors[prefix+":"+pretty].error.code === 401 && (!this.props.auth || !this.props.auth.isAuthenticated())
-                              ? <a class="urilink nolink"><BlockIcon style={{width:"18px",verticalAlign:"top"}}/>&nbsp;{I18n.t("viewer.dlError401")}</a>                              
-                              : [404,444].includes(this.props.IIIFerrors[prefix+":"+pretty].error.code) 
-                                 ? <a class="urilink nolink"><BlockIcon style={{width:"18px",verticalAlign:"top"}}/>&nbsp;{I18n.t("access.notyet")}</a>                              
-                                 : <a class="urilink nolink"><BlockIcon style={{width:"18px",verticalAlign:"top"}}/>&nbsp;{I18n.t("access.error")}</a>                              
-                              // TODO: handle more access cases (fair use etc., see figma)
-                        }
-                        {/* <Link {...this.props.preview?{ target:"_blank" }:{}} className={"urilink "+ prefix} to={"/"+show+"/"+prefix+":"+pretty}>{I18n.t("resource.openR")}</Link> */}
-                     </div>]
+               let scanInfo = this.getResourceElem(bdo+"scanInfo")
+               if(!scanInfo?.length) scanInfo = this.getResourceElem(bdo+"scanInfo", prefix+":"+pretty)
+               if(!scanInfo?.length) {   
+                  let loca = this.getResourceElem(bdo+"contentLocation")
+                  if(loca?.length) loca = this.getResourceBNode(loca[0].value)
+                  console.log("loca:",loca,this.props.resources)
+                  if(loca && loca[bdo+"contentLocationInstance"]?.length) {
+                     scanInfo = this.getResourceElem(bdo+"scanInfo", shortUri(loca[bdo+"contentLocationInstance"][0].value))
+                     console.log("scan:",scanInfo,shortUri(loca[bdo+"contentLocationInstance"][0].value),this.props.resources)            
+                  }
+               }       
+
+               let quality
+               elem = this.getResourceElem(bdo+"qualityGrade");
+               if(!elem?.length) elem = this.getResourceElem(bdo+"qualityGrade", prefix+":"+pretty)
+               if(elem && elem.length) elem = elem[0].value ;
+               if(elem === "0") {
+                  quality = <div class="data access"><h3><span style={{textTransform:"none"}}>{I18n.t("access.quality0")}</span></h3></div>
+               }
+
+               let fairUse = false
+               let elem = this.getResourceElem(adm+"access")
+               if(!elem?.length) elem = this.getResourceElem(adm+"access", prefix+":"+pretty)
+               if(elem && elem.filter(e => e.value.match(/(AccessFairUse)$/)).length >= 1) fairUse = true
+               let accessLabel
+               if(elem?.length) accessLabel = getOntoLabel(this.props.dictionary,this.props.locale,elem[0].value)
+
+               if(fairUse) { // && (!this.props.auth || this.props.auth && !this.props.auth.isAuthenticated()) ) { 
+
+                  let fairTxt, hasIA, elem = this.getResourceElem(bdo+"digitalLendingPossible");
+                  if(!elem?.length) elem = this.getResourceElem(bdo+"digitalLendingPossible", prefix+":"+pretty)
+                  if(this.props.config && !this.props.config.chineseMirror) {
+                     if(!elem || elem.length && elem[0].value == "true" ) { 
+                        hasIA = true
+                     }
+                  }
+
+                  const toggleSnippet = () => this.setState({collapse:{...this.state.collapse, snippet:!this.state.collapse?.snippet}})
+
+                  if(!hasIA) {
+                     fairTxt = <>
+                        <a class="fairuse-IA-link no-IA" onClick={toggleSnippet}>{I18n.t("access.snippet"+(this.state.collapse.snippet?"H":"V"))}</a>
+                        <br/>
+                        <Trans i18nKey="access.fairuse1" components={{ bold: <u /> }} /> { I18n.t("access.fairuse2")} <a href="mailto:help@bdrc.io">help@bdrc.io</a> { I18n.t("access.fairuse3")}
+                     </>
+                  } else {         
+                     let loca = this.getResourceElem(bdo+"contentLocation")
+                     if(loca?.length) loca = this.getResourceBNode(loca[0].value)
+                     let IAlink = this.getIAlink(loca, bdo)
+
+                     fairTxt = <>
+                        <a class="fairuse-IA-link" target="_blank" href={IAlink}>
+                           <img class="ia" src="/IA.svg"/>
+                           {I18n.t("access.fairUseIA2")}
+                           <img class="link-out" src="/icons/link-out_fit.svg"/>
+                        </a>
+                        <a class="fairuse-IA-link" onClick={toggleSnippet}>{I18n.t("access.snippet"+(this.state.collapse.snippet?"H":"V"))}</a>
+                        <br/>
+                        <Trans i18nKey="access.fairUseIA1" components={{ bold: <u /> }} />
+                     </>
+                  }
+
+                  fairUse = <div class= {"data access "+(hasIA?" hasIA":" fairuse")}>
+                        <h3>
+                           <span style={{textTransform:"none"}}>
+                           {/* {I18n.t("access.limited20")}<br/> */}
+                           {fairTxt}
+                           { /*this.props.locale !== "bo" && [ I18n.t("misc.please"), " ", <a class="login" onClick={this.props.auth.login.bind(this,this.props.history.location)}>{I18n.t("topbar.login")}</a>, " ", I18n.t("access.credentials") ] }
+                           { this.props.locale === "bo" && [ I18n.t("access.credentials"), " ", <a class="login" onClick={this.props.auth.login.bind(this,this.props.history.location)}>{I18n.t("topbar.login")}</a> ] */ }
+                        </span>
+                        </h3>
+                     </div>
+               } else {
+                  if ( this.props.IIIFerrors && this.props.IIIFerrors[prefix+":"+pretty] && [404, 444].includes(this.props.IIIFerrors[prefix+":"+pretty]?.error.code))
+                     return  <>
+                           <div class="data access notyet"><h3><span style={{textTransform:"none"}}>{I18n.t(this.props.outline?"access.not":"access.notyet")}</span></h3></div>
+                        </>
+                  else if ( this.props.IIIFerrors && this.props.IIIFerrors[prefix+":"+pretty] && (!this.props.auth || this.props.auth && (this.props.IIIFerrors[prefix+":"+pretty]?.error.code === 401 || this.props.IIIFerrors[prefix+":"+pretty]?.error.code === 403) )) 
+                     if(elem && elem.includes("RestrictedSealed")) 
+                        return  <>
+                           <a class="urilink nolink noIA"><BlockIcon style={{width:"18px",verticalAlign:"top"}}/>{accessLabel}</a>
+                           <div class="data access sealed"><h3><span style={{textTransform:"none"}}><Trans i18nKey="access.sealed" components={{ bold: <u /> }} /> <a href="mailto:help@bdrc.io">help@bdrc.io</a>{I18n.t("punc.point")}</span></h3></div>
+                        </>
+                     else 
+                        //return  <div class="data access"><h3><span style={{textTransform:"none"}}>{I18n.t("misc.please")} <a class="login" {...(this.props.auth?{onClick:this.props.auth.login.bind(this,this.props.history.location)}:{})}>{I18n.t("topbar.login")}</a> {I18n.t("access.credentials")}</span></h3></div>
+                        return  <>
+                           <a class="urilink nolink noIA"><BlockIcon style={{width:"18px",verticalAlign:"top"}}/>{accessLabel}</a>
+                           <div class="data access generic"><h3><span style={{textTransform:"none"}}><Trans i18nKey="access.generic" components={{ policies: <a /> }} /></span></h3></div>
+                        </>
+                        
+                  else if ( this.props.IIIFerrors && this.props.IIIFerrors[prefix+":"+pretty] && this.props.IIIFerrors[prefix+":"+pretty]?.error.code === 500 && this.props.IRI && !this.props.IRI.match(/^bdr:(IE|UT)/))
+                     return  <>
+                        <div class="data access error"><h3><span style={{textTransform:"none"}}>{I18n.t("access.error")}</span></h3></div>
+                     </>
+                  
+               }
+
+               ret = [ 
+                        quality,
+                        fairUse,
+                        (!fairUse || this.state.collapse.snippet) &&(!this.props.IIIFerrors||!this.props.IIIFerrors[prefix+":"+pretty]|| this.props.IIIFerrors[prefix+":"+pretty].error?.code != 403)
+                        ? <Link {...this.props.preview?{ target:"_blank" }:{}} className={"urilink "+ prefix} onClick={checkDLD.bind(this)} to={vlink}>{thumb}</Link>
+                        : null,
+                        (!fairUse || this.state.collapse.snippet) && <div class="images-thumb-links">
+                           {  !this.props.IIIFerrors||!this.props.IIIFerrors[prefix+":"+pretty]                            
+                              ?  <>
+                                    <Link {...this.props.preview?{ target:"_blank" }:{}} className={"urilink "+ prefix} to={vlink} onClick={checkDLD.bind(this)}>{I18n.t("index.openViewer")}</Link>
+                                    <ResourceViewerContainer auth={this.props.auth} history={this.props.history} IRI={prefix+":"+pretty} pdfDownloadOnly={true} />
+                                 </>
+                              :  this.props.IIIFerrors[prefix+":"+pretty].error.code === 401 && (!this.props.auth || !this.props.auth.isAuthenticated())
+                                 ? <a class="urilink nolink"><BlockIcon style={{width:"18px",verticalAlign:"top"}}/>&nbsp;{I18n.t("viewer.dlError401")}</a>                              
+                                 : [404,444].includes(this.props.IIIFerrors[prefix+":"+pretty].error.code) 
+                                    ? <a class="urilink nolink"><BlockIcon style={{width:"18px",verticalAlign:"top"}}/>&nbsp;{I18n.t("access.notyet")}</a>                              
+                                    : <a class="urilink nolink"><BlockIcon style={{width:"18px",verticalAlign:"top"}}/>&nbsp;{I18n.t("access.error")}</a>                              
+                                 // TODO: handle more access cases (fair use etc., see figma)
+                           }                        
+                           { scanInfo && (!this.props.IIIFerrors||!this.props.IIIFerrors[prefix+":"+pretty]|| this.props.IIIFerrors[prefix+":"+pretty].error?.code != 403) && 
+                              <div>{scanInfo.map(s => <TextToggle text={getLangLabel(this,bdo+"scanInfo",[s])?.value}/>)}</div>}
+                           {/* <Link {...this.props.preview?{ target:"_blank" }:{}} className={"urilink "+ prefix} to={"/"+show+"/"+prefix+":"+pretty}>{I18n.t("resource.openR")}</Link> */}
+                        </div>]
             } else if(thumbV && thumbV.length) {
                let repro = this.getResourceElem(bdo+"instanceHasReproduction", shortUri(elem.value), this.props.assocResources)
                if(repro && repro.length) repro = shortUri(repro[0].value)
@@ -3509,8 +3615,9 @@ class ResourceViewer extends Component<Props,State>
    {
       let elem ;
 
-      if(!IRI) { 
-         IRI = this.props.IRI
+      if(!IRI || IRI && !useAssoc) { 
+
+         if(!IRI) IRI = this.props.IRI
              
          let longIRI = fullUri(IRI)
 
@@ -6330,7 +6437,8 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
       </Popover>
 
 
-   if(onlyDownload) return (<>
+   if(onlyDownload) { 
+      return (<>
        { popupPdf }
        { pdfLink && 
             ( (!(that.props.manifestError && that.props.manifestError.error.message.match(/Restricted access/)) /*&& !fairUse*/) )
@@ -6355,8 +6463,9 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
             : that.props.manifestError && !that.props.manifestError.error.message.match(/Restricted access/) 
                ? <a class="urilink nolink">{I18n.t("viewer.pdferror2")} ({I18n.t("user.errors.server2")})</a>
                : <Loader  className="scans-viewer-loader" loaded={that.props.firstImage && !that.props.firstImage.includes("bdrc.io") || !( (!(that.props.manifestError && that.props.manifestError.error.message.match(/Restricted access/)) /*&& !fairUse*/) || (that.props.auth && that.props.auth.isAuthenticated())) } />
-         }
+         }      
       </>)
+   }
    else return (
 
     <div>
@@ -9562,6 +9671,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
       }
 
       if(this.props.pdfDownloadOnly) {
+         console.log("render perma", this.props.feedbucket)
          if(this.props.resources && !this.props.resources[this.props.IRI]) this.props.onGetResource(this.props.IRI);
          return this.perma_menu(pdfLink,monoVol,fairUse,kZprop.filter(k => k.startsWith(adm+"seeOther")), accessET && !etextAccessError, true)
       }
@@ -10460,10 +10570,12 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                   </div>
                   { this.props.preview && _T === "Place" && <div class="data" id="map">{this.renderData(false, kZprop.filter(k => mapProps.includes(k)),null,null,null,"header")}</div> }
                   
+                  {/*                   
                   { _T !== "Etext" && this.renderQuality() }
                   { _T === "Etext" && this.renderEtextAccess(etextAccessError) }
                   { _T === "Etext" && this.renderOCR() }
-                  { _T !== "Etext" && this.renderNoAccess(fairUse) }                   
+                  { _T !== "Etext" && this.renderNoAccess(fairUse) }
+                  */}
                   
                   { this.renderMirador(isMirador) }           
                   { theDataTop }
