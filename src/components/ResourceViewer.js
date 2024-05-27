@@ -3456,13 +3456,14 @@ class ResourceViewer extends Component<Props,State>
 
                let scanInfo = this.getResourceElem(bdo+"scanInfo")
                if(!scanInfo?.length) scanInfo = this.getResourceElem(bdo+"scanInfo", prefix+":"+pretty)
+               //console.log("scinfo:",this.props.IRI,scanInfo,this.props.resources,prefix+":"+pretty)
                if(!scanInfo?.length) {   
                   let loca = this.getResourceElem(bdo+"contentLocation")
                   if(loca?.length) loca = this.getResourceBNode(loca[0].value)
-                  console.log("loca:",loca,this.props.resources)
+                  //console.log("loca:",this.props.IRI,loca,this.props.resources,prefix+":"+pretty)
                   if(loca && loca[bdo+"contentLocationInstance"]?.length) {
                      scanInfo = this.getResourceElem(bdo+"scanInfo", shortUri(loca[bdo+"contentLocationInstance"][0].value))
-                     console.log("scan:",scanInfo,shortUri(loca[bdo+"contentLocationInstance"][0].value),this.props.resources)            
+                     //console.log("scan:",scanInfo,shortUri(loca[bdo+"contentLocationInstance"][0].value),this.props.resources)            
                   }
                }       
 
@@ -3474,7 +3475,7 @@ class ResourceViewer extends Component<Props,State>
                   quality = <div class="data access"><h3><span style={{textTransform:"none"}}>{I18n.t("access.quality0")}</span></h3></div>
                }
 
-               let fairUse = false
+               let fairUse = false, restrict = false
                let elem = this.getResourceElem(adm+"access")
                if(!elem?.length) elem = this.getResourceElem(adm+"access", prefix+":"+pretty)
                if(elem && elem.filter(e => e.value.match(/(AccessFairUse)$/)).length >= 1) fairUse = true
@@ -3528,24 +3529,24 @@ class ResourceViewer extends Component<Props,State>
                      </div>
                } else {
                   if ( this.props.IIIFerrors && this.props.IIIFerrors[prefix+":"+pretty] && [404, 444].includes(this.props.IIIFerrors[prefix+":"+pretty]?.error.code))
-                     return  <>
+                        restrict =  <>
                            <div class="data access notyet"><h3><span style={{textTransform:"none"}}>{I18n.t(this.props.outline?"access.not":"access.notyet")}</span></h3></div>
                         </>
                   else if ( this.props.IIIFerrors && this.props.IIIFerrors[prefix+":"+pretty] && (!this.props.auth || this.props.auth && (this.props.IIIFerrors[prefix+":"+pretty]?.error.code === 401 || this.props.IIIFerrors[prefix+":"+pretty]?.error.code === 403) )) 
                      if(elem && elem.includes("RestrictedSealed")) 
-                        return  <>
+                        restrict =  <>
                            <a class="urilink nolink noIA"><BlockIcon style={{width:"18px",verticalAlign:"top"}}/>{accessLabel}</a>
                            <div class="data access sealed"><h3><span style={{textTransform:"none"}}><Trans i18nKey="access.sealed" components={{ bold: <u /> }} /> <a href="mailto:help@bdrc.io">help@bdrc.io</a>{I18n.t("punc.point")}</span></h3></div>
                         </>
                      else 
                         //return  <div class="data access"><h3><span style={{textTransform:"none"}}>{I18n.t("misc.please")} <a class="login" {...(this.props.auth?{onClick:this.props.auth.login.bind(this,this.props.history.location)}:{})}>{I18n.t("topbar.login")}</a> {I18n.t("access.credentials")}</span></h3></div>
-                        return  <>
+                        restrict =  <>
                            <a class="urilink nolink noIA"><BlockIcon style={{width:"18px",verticalAlign:"top"}}/>{accessLabel}</a>
                            <div class="data access generic"><h3><span style={{textTransform:"none"}}><Trans i18nKey="access.generic" components={{ policies: <a /> }} /></span></h3></div>
                         </>
                         
                   else if ( this.props.IIIFerrors && this.props.IIIFerrors[prefix+":"+pretty] && this.props.IIIFerrors[prefix+":"+pretty]?.error.code === 500 && this.props.IRI && !this.props.IRI.match(/^bdr:(IE|UT)/))
-                     return  <>
+                     restrict =  <>
                         <div class="data access error"><h3><span style={{textTransform:"none"}}>{I18n.t("access.error")}</span></h3></div>
                      </>
                   
@@ -3557,20 +3558,22 @@ class ResourceViewer extends Component<Props,State>
                         (!fairUse || this.state.collapse.snippet) &&(!this.props.IIIFerrors||!this.props.IIIFerrors[prefix+":"+pretty]|| this.props.IIIFerrors[prefix+":"+pretty].error?.code != 403)
                         ? <Link {...this.props.preview?{ target:"_blank" }:{}} className={"urilink "+ prefix} onClick={checkDLD.bind(this)} to={vlink}>{thumb}</Link>
                         : null,
-                        (!fairUse || this.state.collapse.snippet) && <div class="images-thumb-links">
-                           {  !this.props.IIIFerrors||!this.props.IIIFerrors[prefix+":"+pretty]                            
-                              ?  <>
-                                    <Link {...this.props.preview?{ target:"_blank" }:{}} className={"urilink "+ prefix} to={vlink} onClick={checkDLD.bind(this)}>{I18n.t("index.openViewer")}</Link>
-                                    <ResourceViewerContainer auth={this.props.auth} history={this.props.history} IRI={prefix+":"+pretty} pdfDownloadOnly={true} />
-                                 </>
-                              :  this.props.IIIFerrors[prefix+":"+pretty].error.code === 401 && (!this.props.auth || !this.props.auth.isAuthenticated())
-                                 ? <a class="urilink nolink"><BlockIcon style={{width:"18px",verticalAlign:"top"}}/>&nbsp;{I18n.t("viewer.dlError401")}</a>                              
-                                 : [404,444].includes(this.props.IIIFerrors[prefix+":"+pretty].error.code) 
-                                    ? <a class="urilink nolink"><BlockIcon style={{width:"18px",verticalAlign:"top"}}/>&nbsp;{I18n.t("access.notyet")}</a>                              
-                                    : <a class="urilink nolink"><BlockIcon style={{width:"18px",verticalAlign:"top"}}/>&nbsp;{I18n.t("access.error")}</a>                              
-                                 // TODO: handle more access cases (fair use etc., see figma)
+                        (!fairUse || this.state.collapse.snippet || restrict) && <div class="images-thumb-links">
+                           { restrict 
+                              ? restrict 
+                              :  !this.props.IIIFerrors||!this.props.IIIFerrors[prefix+":"+pretty]                            
+                                 ?  <>
+                                       <Link {...this.props.preview?{ target:"_blank" }:{}} className={"urilink "+ prefix} to={vlink} onClick={checkDLD.bind(this)}>{I18n.t("index.openViewer")}</Link>
+                                       <ResourceViewerContainer auth={this.props.auth} history={this.props.history} IRI={prefix+":"+pretty} pdfDownloadOnly={true} />
+                                    </>
+                                 :  this.props.IIIFerrors[prefix+":"+pretty].error.code === 401 && (!this.props.auth || !this.props.auth.isAuthenticated())
+                                    ? <a class="urilink nolink"><BlockIcon style={{width:"18px",verticalAlign:"top"}}/>&nbsp;{I18n.t("viewer.dlError401")}</a>                              
+                                    : [404,444].includes(this.props.IIIFerrors[prefix+":"+pretty].error.code) 
+                                       ? <a class="urilink nolink"><BlockIcon style={{width:"18px",verticalAlign:"top"}}/>&nbsp;{I18n.t("access.notyet")}</a>                              
+                                       : <a class="urilink nolink"><BlockIcon style={{width:"18px",verticalAlign:"top"}}/>&nbsp;{I18n.t("access.error")}</a>                              
+                                    // TODO: handle more access cases (fair use etc., see figma)
                            }                        
-                           { scanInfo && (!this.props.IIIFerrors||!this.props.IIIFerrors[prefix+":"+pretty]|| this.props.IIIFerrors[prefix+":"+pretty].error?.code != 403) && 
+                           { scanInfo && //(!this.props.IIIFerrors||!this.props.IIIFerrors[prefix+":"+pretty]|| this.props.IIIFerrors[prefix+":"+pretty].error?.code != 403) && 
                               <div>{scanInfo.map(s => <TextToggle text={getLangLabel(this,bdo+"scanInfo",[s])?.value}/>)}</div>}
                            {/* <Link {...this.props.preview?{ target:"_blank" }:{}} className={"urilink "+ prefix} to={"/"+show+"/"+prefix+":"+pretty}>{I18n.t("resource.openR")}</Link> */}
                         </div>]
@@ -5756,6 +5759,7 @@ class ResourceViewer extends Component<Props,State>
             </div>
          )))
       } else if(k === _tmp+"propHasScans") {
+         console.log("pHs")
          return ( ret.map((r,i) => (
             <div  data-prop={shortUri(k)} >               
                <h3><span>{this.proplink(k,null,n)}{ret.length > 1 ? " "+I18n.t("punc.num",{num:i+1}) : ""}{I18n.t("punc.colon")}</span> </h3>
