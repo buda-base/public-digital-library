@@ -3556,7 +3556,7 @@ class ResourceViewer extends Component<Props,State>
                         quality,
                         fairUse,
                         (!fairUse || this.state.collapse.snippet) &&(!this.props.IIIFerrors||!this.props.IIIFerrors[prefix+":"+pretty]|| this.props.IIIFerrors[prefix+":"+pretty].error?.code != 403)
-                        ? <Link {...this.props.preview?{ target:"_blank" }:{}} className={"urilink "+ prefix} onClick={checkDLD.bind(this)} to={vlink}>{thumb}</Link>
+                        ? <Link {...this.props.preview?{ target:"_blank" }:{}} className={"urilink " + prefix + (this.props.IIIFerrors&&this.props.IIIFerrors[prefix+":"+pretty]?.error.code ? " error-"+this.props.IIIFerrors[prefix+":"+pretty]?.error?.code : "")} onClick={checkDLD.bind(this)} to={vlink}>{thumb}</Link>
                         : null,
                         (!fairUse || this.state.collapse.snippet || restrict) && <div class="images-thumb-links">
                            { restrict 
