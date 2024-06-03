@@ -100,6 +100,7 @@ export default function AutocompleteKeywordInput(props) {
              document.querySelector("#search-bar").scrollIntoView({block: "start", inline: "nearest", behavior:"smooth"})
           },500)
           ev.preventDefault()
+          ev.stopPropagation()          
        }}>Advanced search</Link>}
    </>
 }

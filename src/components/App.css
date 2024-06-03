@@ -643,6 +643,11 @@ html[lang="bo"] .msg-popup .front p { font-size:18px;}
 
 .over-nav + .nav .inner-nav > div { margin:0 25px; line-height:44px;height:44px; font-size:16px;}
 
+.over-nav + .nav .inner-nav > div a { font-size:16px; color:black;}
+.over-nav + .nav .inner-nav > div a:hover { text-decoration: underline;}
+
+.over-nav + .nav .inner-nav > div a.active { font-weight:600; color:#d73449; }
+
 body > #pop-login { z-index:1000000 ;}
 
 #pop-login li { display: block; min-width:80px; text-transform: uppercase; color:#d73449; font-size:14px; font-weight:600; line-height:170%;}
@@ -937,8 +942,88 @@ body > #pop-login { z-index:1000000 ;}
 }
 
 
+.App.tradition #samples > div {
+   font-size:0;
+}
+
+.App.tradition .tradi-content {
+   margin-right:35px;
+}
+
+.App.tradition h1{ 
+   font-size:32px;
+}
 
 
+.App.tradition .tradi-content#tradi-links,
+.App.tradition .tradi-content#tradi-all {
+   width:calc(50% - 35px);
+}
+
+.App.tradition .tradi-content#tradi-selected,
+.App.tradition .tradi-content#tradi-recent {
+   width:100%;
+}
+
+.App.tradition .tradi-content a {
+   font-size:16px;
+}
+
+.App.tradition .tradi-content {
+   display:flex;
+   flex-wrap: wrap;
+   margin-bottom:35px;
+}
+
+.App.tradition .tradi-content#tradi-links {
+   display:block;
+}
+.App.tradition .tradi-content#tradi-links a {
+   display: block;
+   line-height:36px;
+}
+
+
+.App.tradition .tradi-content h2{ 
+   font-size:22px;
+   width:100%;
+}
+
+.App.tradition .tradi-content a.has-img {
+   margin-right:25px;
+}
+
+.App.tradition .tradi-content a.has-img img {
+   display: block;
+}
+
+
+.App.tradition .tradi-content#tradi-all a.has-img img {
+   width:140px;   
+}
+
+.App.tradition .tradi-content:not(#tradi-all) a.has-img img {
+   width:80px;   
+}
+
+
+.App.tradition .tradi-content#tradi-all a.has-img span {
+   font-size:18px;
+   color:#333;
+   font-weight:600;
+   display: inline-block;
+   width:100%;
+   background-color:#fce08d;
+   text-align: center;
+   line-height:44px;
+}
+
+.App.tradition .tradi-content:not(#tradi-all) a.has-img span {
+   width:100%;
+   line-height: 36px;
+   text-align: center;
+   display: block;
+}
 
 /* ----------------------------- end new-UX/header ---------------------------- */
 

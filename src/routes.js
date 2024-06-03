@@ -27,6 +27,7 @@ import ProfileContainer from './containers/ProfileContainer';
 import StaticRouteContainer from './containers/StaticRouteContainer';
 import GuidedSearchContainer from './containers/GuidedSearchContainer'
 import BrowseContainer from './containers/BrowseContainer'
+import TraditionViewerContainer from './containers/TraditionViewerContainer'
 import { top_right_menu, RIDregexp } from './components/App'
 
 import Profile from './components/ProfileStatic';
@@ -396,6 +397,10 @@ const makeMainRoutes = () => {
                               return (<AppContainer history={history} auth={auth} static={path}/> )
                            }}/>
                         )) }
+                        <Route path="/tradition/:TRAD" render={(props) => {                           
+                           store.dispatch(initiateApp(qs.parse(history.location.search), null, null, "tradition"))
+                           return (<TraditionViewerContainer history={history} auth={auth} tradition={props.match.params.TRAD}/> )
+                        } } />
                         <Route path="/view/:IRI" render={(props) =>
                            {
                               store.dispatch(initiateApp())

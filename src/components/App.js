@@ -1142,11 +1142,8 @@ export function top_right_menu(that,etextTitle,backUrl,etextres)
          </div>
       ),
       innerNav = (
-         <div class="inner-nav">
-            <div>Tibetan Tradition</div>
-            <div>Pali / SEA Tradition</div>
-            <div>Sanskrit Tradition</div>
-            <div>Chinese Tradition</div>
+         <div class={"inner-nav"}>
+            { ["bo","pi","sa","zh"].map(t => <div><Link className={that.props.tradition === t ? "active": ""} to={"/tradition/"+t+"/"}>{I18n.t("tradition."+t+"T")}</Link></div>) }
          </div>
       ),
       innerSearch = (

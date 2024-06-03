@@ -701,6 +701,28 @@
       "seeIn":"See this text in {{- txt}}",
       "closeO":"Close outline"
    },
+   "tradition":{
+      "boT":"Tibetan Tradition",
+      "piT":"Pali / SEA Tradition",
+      "saT":"Sanskrit Tradition",
+      "zhT":"Chinese Tradition",
+      "all":"All texts",
+      "links":"Quick Links",
+      "persons":"Persons",
+      "places":"Places",
+      "selected":"Selected Works by School",
+      "recent":"Recent Acquisitions",
+      "byTopic":"By Topic",
+      "byAuthor":"By Author",
+      "byCollection":"By Collection",
+      "allK":"All Kangyurs",
+      "allT":"All Tengyurs",
+      "school":"By School",
+      "type":"By Type",
+      "bodong":"Bodong",
+      "bon":"Bon"
+
+   },
    "mirador": {
       "return": "return to BUDA",
       "browse": "browse collection",
