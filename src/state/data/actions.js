@@ -347,18 +347,19 @@ export const getStaticQueryAsResults = (route:string, datatype:string): Action =
 
 
 TYPES.getLatestSyncs = 'GET_LATEST_SYNCS';
-export const getLatestSyncs = (): Action => {
+export const getLatestSyncs = (meta): Action => {
     return {
-        type: TYPES.getLatestSyncs
+        type: TYPES.getLatestSyncs,
+        meta
     }
 }
 
 TYPES.gotLatestSyncs = 'GOT_LATEST_SYNCS';
-export const gotLatestSyncs = (res,nb): Action => {
+export const gotLatestSyncs = (res,meta): Action => {
     return {
         type: TYPES.gotLatestSyncs,
         payload:res,
-        meta:nb
+        meta
     }
 }
 

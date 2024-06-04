@@ -104,6 +104,8 @@ import analytics from "./Analytics"
 
 import AutocompleteKeywordInput from "./AutocompleteKeywordInput"
 
+import LatestSyncs from "./LatestSyncs"
+
 import {svgEtextS,svgImageS} from "./icons"
 
 import logdown from 'logdown'
@@ -7193,10 +7195,6 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          )
       }
 
-
-      let syncSlide = (e) => {
-         this.setState({syncsSlided:!this.state.syncsSlided})
-      }
       
        //           let nbResu = this.state.paginate && this.state.paginate.nMax ? this.state.paginate.nMax:(this.state.results&&this.state.results[this.state.id]?this.state.results[this.state.id].resLength:"--")
       
@@ -7866,48 +7864,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                }
                </div>
                { !this.props.config.khmerServer && message.length == 0 && !this.props.loading && !this.props.keyword && (!this.props.config || !this.props.config.chineseMirror) && this.props.latestSyncsNb > 0 &&
-                  <div id="latest">
-                     <h3>{I18n.t("home.new")}</h3>
-                     <Link class="seeAll" to="/latest" onClick={()=>this.setState({filters:{...this.state.filters,datatype:["Scan"]}})}>{I18n.t("misc.seeAnum",{count:this.props.latestSyncsNb})}</Link>
-                     <div 
-                        onTouchStart={ev => {this.tx0 = ev.targetTouches[0].clientX; this.ty0 = ev.targetTouches[0].clientY; }} 
-                        onTouchMove={ev => {this.tx1 = ev.targetTouches[0].clientX; this.ty1 = ev.targetTouches[0].clientY; }} 
-                        onTouchEnd={ev => {if(Math.abs(this.ty0 - this.ty1) < Math.abs(this.tx0 - this.tx1) && Math.abs(this.tx0 - this.tx1) > 75) { syncSlide(); } }}
-                     >
-                        { this.props.latestSyncs === true && <Loader loaded={false}/> }
-                        { (this.props.latestSyncs && this.props.latestSyncs !== true) &&
-                           <div class={"slide-bg "+(this.state.syncsSlided?"slided":"")} >
-                              { Object.keys(this.props.latestSyncs).map(s => {
-                                 //loggergen.log("s:",s);
-                                 let label = getLangLabel(this,"",this.props.latestSyncs[s][skos+"prefLabel"])
-                                 let uri = "/show/"+shortUri(s), value = I18n.t("resource.noT"), lang = this.props.locale
-                                 if(label && label.value != "") {
-                                    lang = label.lang;
-                                    value = label.value;
-                                 }
-                                 // DONE use thumbnail when available
-                                 let thumb = this.props.latestSyncs[s][tmp+"thumbnailIIIFService"]
-                                 if(!thumb || !thumb.length) thumb = this.props.latestSyncs[s][tmp+"thumbnailIIIFSelected"]
-                                 if(thumb && thumb.length) thumb = thumb[0].value 
-                                 //loggergen.log("thumb",thumb)
-                                 return (
-                                    <div>
-                                       <Link to={uri}><div class={"header "+(thumb?"thumb":"")} {...thumb?{style:{"backgroundImage":"url("+ thumb+"/full/"+(thumb.includes(".bdrc.io/")?"!2000,195":",195")+"/0/default.jpg)"}}:{}}></div></Link>
-                                       <p lang={lang}>{value}</p>
-                                       <Link to={uri}>{I18n.t("misc.readM")}</Link>
-                                    </div>
-                                 )
-                              })}
-                           </div>
-                        }
-                     </div>
-                     { (this.props.latestSyncs && this.props.latestSyncs !== true && this.props.latestSyncsNb > 5) && 
-                        <div id="syncs-nav" >
-                           <span class={this.state.syncsSlided?"on":""} onClick={syncSlide}><img src="/icons/g.svg"/></span>
-                           <span class={this.state.syncsSlided||this.props.latestSyncsNb<=5?"":"on"} onClick={syncSlide}><img src="/icons/d.svg"/></span>
-                        </div>
-                     }
-                  </div>
+                  <LatestSyncs that={this} />
                }
             </div>
             {/* <LanguageSidePaneContainer /> */}

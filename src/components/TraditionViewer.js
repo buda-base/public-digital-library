@@ -10,6 +10,7 @@ import store from '../index';
 import { top_right_menu } from './App'
 import { auth, Redirect404 } from '../routes'
 import { initiateApp } from '../state/actions';
+import LatestSyncs from "./LatestSyncs"
 
 import $ from 'jquery' ;
 
@@ -52,10 +53,18 @@ export class TraditionViewer extends Component<State, Props>
   render(props) {         
 
     
+    
     if(this.props.config?.tradition && this.props.tradition && !this.props.config?.tradition[this.props.tradition]) 
     return <Redirect404  history={history}  auth={auth}/>
     else  {
       
+      // TODO: control tradition/dates as well
+      if(this.props.config) {
+        if(!this.props.latestSyncs || this.props.latestSyncs != true && this.props.latestSyncsMeta?.tradition != this.props.tradition) {
+          this.props.onGetLatestSyncs({ tradition: this.props.tradition })
+        }
+      }
+
       const tradi = this.props.config?.tradition && this.props.config?.tradition[this.props.tradition]
     
       return (
@@ -81,6 +90,7 @@ export class TraditionViewer extends Component<State, Props>
                         })}
                         <div id="tradi-recent" className="tradi-content">
                           <h2>{I18n.t("tradition.recent")}</h2>
+                          <LatestSyncs that={this} />
                         </div>
                       </div>
                     </div>

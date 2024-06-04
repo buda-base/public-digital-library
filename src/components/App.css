@@ -973,6 +973,7 @@ body > #pop-login { z-index:1000000 ;}
    display:flex;
    flex-wrap: wrap;
    margin-bottom:35px;
+   width:25%;
 }
 
 .App.tradition .tradi-content#tradi-links {
@@ -1024,6 +1025,78 @@ body > #pop-login { z-index:1000000 ;}
    text-align: center;
    display: block;
 }
+
+
+.App.tradition .tradi-content #latest {
+   padding:0; 
+   margin-top:0px;
+}
+
+.App.tradition .tradi-content #latest h3 {
+   display:none;
+}
+
+.App.tradition .tradi-content #latest .seeAll {
+   margin-top:-115px;
+   /* border-color:#d73449; */
+   margin-right: 0;
+   text-decoration: none;
+   color:#343434;
+}
+
+.App.tradition .tradi-content #latest .seeAll:hover {
+   color:#d73449;
+}
+
+.App.tradition .tradi-content #latest > div {
+   margin-top:0;
+}
+
+.App.tradition .tradi-content #latest > div:first-of-type {
+   background-color:#fce08d;
+   padding:45px 30px;
+}
+
+.App.tradition .tradi-content #latest #syncs-nav {
+   margin-top:20px;
+   text-align: center;
+}
+
+.App.tradition .tradi-content #latest .slide-bg > div p + a {
+   text-decoration: none;
+}
+
+.App.tradition .tradi-content #latest #syncs-nav span {
+   margin:0 90px;
+}
+
+#latest .recent-selector {
+   display:none; 
+}
+
+.App.tradition .tradi-content #latest .recent-selector {
+   display:block; 
+   position:absolute;
+   bottom:10px;
+   left:calc(50% - 80px);
+   width:160px;
+   text-align: center;
+}
+
+@media(min-width:1320px) {
+
+   .App.tradition .tradi-content #latest .slide-bg > div {
+      width:165px;
+   }
+
+   .App.tradition .tradi-content #latest .slide-bg > div .header {
+      height:165px;
+   }
+}
+
+
+
+
 
 /* ----------------------------- end new-UX/header ---------------------------- */
 
@@ -5697,7 +5770,7 @@ h3 .expand svg { position:absolute; margin-top:-18px; }*/
 }
 
 .resource .data :is(.withLinkTo,[data-prop="bdo:workHasInstance"]) .group { column-count:2; }
-#popHoverM .resource .data :is(.withLinkTo,[data-prop="bdo:workHasInstance"]) .group { column-count:1; width:}
+#popHoverM .resource .data :is(.withLinkTo,[data-prop="bdo:workHasInstance"]) .group { column-count:1; /*width:*/}
 #popHoverM .resource .data :is(.withLinkTo,[data-prop="bdo:workHasInstance"]) .group h4 { width:100% !important;}
 
 

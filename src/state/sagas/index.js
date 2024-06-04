@@ -3336,9 +3336,9 @@ export function* watchGetLatestSyncsAsResults() {
 
 
 
-async function getLatestSyncs() {
+async function getLatestSyncs(start,end) {
 
-   let res = await api.loadLatestSyncs() 
+   let res = await api.loadLatestSyncs(start,end) 
    
    let nb = res[tmp+"totalRes"]
    if(nb) nb = nb[tmp+"totalSyncs"]
@@ -3349,9 +3349,9 @@ async function getLatestSyncs() {
    let sorted = {}
    keys.map(k => { sorted[k.id] = res[k.id]; })
       
-   loggergen.log("syncs",res,sorted,nb)
+   loggergen.log("syncs",res,sorted,nb,start,end)
 
-   store.dispatch(dataActions.gotLatestSyncs(sorted,nb))
+   store.dispatch(dataActions.gotLatestSyncs(sorted,{nb,start,end}))
 
 }
 

@@ -27,7 +27,13 @@ const mapStateToProps = (state,ownProps) => {
 
    let feedbucket = state.ui.feedbucket
 
-   let props = { config, locale, profileName, portraitPopupClosed, isNewUser, feedbucket }
+   let latestSyncs = state.data.latestSyncs
+   let latestSyncsNb = state.data.latestSyncsNb
+   let latestSyncsMeta = state.data.latestSyncsMeta      
+
+   let props = { config, locale, profileName, portraitPopupClosed, isNewUser, feedbucket,
+      latestSyncs,latestSyncsNb,latestSyncsMeta,
+   }
 
    return props
 
@@ -50,7 +56,12 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       },
       onFeedbucketClick(cls:string) {
          dispatch(ui.feedbucket(cls))
+      },
+      onGetLatestSyncs(meta) {
+         dispatch(data.getLatestSyncs(meta))
       }
+
+
    }
 }
 

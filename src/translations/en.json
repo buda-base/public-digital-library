@@ -720,8 +720,11 @@
       "school":"By School",
       "type":"By Type",
       "bodong":"Bodong",
-      "bon":"Bon"
-
+      "bon":"Bon",
+      "past7d":"Past 7 Days",
+      "past30d":"Past 30 Days",
+      "past6m":"Past 6 Months",
+      "past12m":"Past 12 Months"
    },
    "mirador": {
       "return": "return to BUDA",

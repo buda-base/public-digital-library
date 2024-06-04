@@ -62,6 +62,8 @@ const mapStateToProps = (state) => {
     
    let latestSyncs = state.data.latestSyncs
    let latestSyncsNb = state.data.latestSyncsNb
+   let latestSyncsMeta = state.data.latestSyncsMeta
+
 
    let etextLang = state.ui.etextLang
 
@@ -92,7 +94,8 @@ const mapStateToProps = (state) => {
    let newState = { logged,config, hostFailure, searches, keyword, language,loading,datatypes,ontology,facets,
       locale,prefLang,resources,ontoSearch,rightPanel,langPreset, langIndex, langExt, failures,dictionary,metadata, assoRes, 
       sortBy, topicParents, genresParents, instances, isInstance,
-      latestSyncs,latestSyncsNb, profileName,
+      latestSyncs,latestSyncsNb,latestSyncsMeta,
+      profileName,
       checkResults,
       portraitPopupClosed,
       useDLD,
