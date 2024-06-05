@@ -5468,9 +5468,10 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                                  this.props.history.push({
                                     ...this.props.history.location, 
                                     search:
-                                       this.props.history.location.search
-                                       .replace(/\?tf=[^&]+/,"?tf="+ev.target.value.replace(/past/,""))
-                                       .replace(/&(n|pg)=[^&]+/g,"")
+                                       "?tf="+ev.target.value.replace(/past/,"")
+                                       + this.props.history.location.search
+                                          .replace(/\?tf=[^&]+/,"")
+                                          .replace(/&(n|pg)=[^&]+/g,"")
                                  })
                               }}
                            >
