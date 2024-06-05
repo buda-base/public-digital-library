@@ -330,9 +330,10 @@ export const getResultsById = (date:string,t:string): Action => {
 }
 
 TYPES.getLatestSyncsAsResults = 'GET_LATEST_SYNCS_AS_RESULTS';
-export const getLatestSyncsAsResults = (): Action => {
+export const getLatestSyncsAsResults = (meta): Action => {
     return {
-        type: TYPES.getLatestSyncsAsResults
+        type: TYPES.getLatestSyncsAsResults,
+        meta
     }
 }
 

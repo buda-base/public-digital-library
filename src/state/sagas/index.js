@@ -620,7 +620,7 @@ else if(route === "latest") {
    let sortBy = "release date"
    if(params && params.s) sortBy = params.s
    store.dispatch(uiActions.updateSortBy(sortBy,"Scan"))
-   store.dispatch(dataActions.getLatestSyncsAsResults());
+   store.dispatch(dataActions.getLatestSyncsAsResults(params?.tf ? { timeframe: params?.tf } : undefined));
 }
 else if(staticQueries[route]?.length === 2) {   
    
@@ -3298,7 +3298,7 @@ export function* watchGetStaticQueryAsResults() {
 
 
 
-async function getLatestSyncsAsResults() {
+async function getLatestSyncsAsResults(meta) {
 
    let state = store.getState()
    let sortBy = state.ui.sortBy
@@ -3306,7 +3306,7 @@ async function getLatestSyncsAsResults() {
 
    store.dispatch(uiActions.loading(null, true));
 
-   let res = await api.loadLatestSyncsAsResults()
+   let res = await api.loadLatestSyncsAsResults(meta)
       
    res = rewriteAuxMain(res,"(latest)",["Scan"],sortBy)
 
@@ -3330,15 +3330,15 @@ export function* watchGetLatestSyncsAsResults() {
 
    yield takeLatest(
       dataActions.TYPES.getLatestSyncsAsResults,
-      (action) => getLatestSyncsAsResults()
+      (action) => getLatestSyncsAsResults(action.meta)
    );
 }
 
 
 
-async function getLatestSyncs(start,end) {
+async function getLatestSyncs(meta) {
 
-   let res = await api.loadLatestSyncs(start,end) 
+   let res = await api.loadLatestSyncs(meta) 
    
    let nb = res[tmp+"totalRes"]
    if(nb) nb = nb[tmp+"totalSyncs"]
@@ -3349,9 +3349,9 @@ async function getLatestSyncs(start,end) {
    let sorted = {}
    keys.map(k => { sorted[k.id] = res[k.id]; })
       
-   loggergen.log("syncs",res,sorted,nb,start,end)
+   loggergen.log("syncs",res,sorted,nb,meta)
 
-   store.dispatch(dataActions.gotLatestSyncs(sorted,{nb,start,end}))
+   store.dispatch(dataActions.gotLatestSyncs(sorted,{nb,...meta??{}}))
 
 }
 
@@ -3360,7 +3360,7 @@ export function* watchGetLatestSyncs() {
 
    yield takeLatest(
       dataActions.TYPES.getLatestSyncs,
-      (action) => getLatestSyncs()
+      (action) => getLatestSyncs(action.meta)
    );
 }
 

@@ -5458,7 +5458,28 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      txt = <Trans i18nKey="result.inEtext" components={{ res: <Link />, key: <span /> }} values={{keyword:this.props.keyword, language:"$t("+languages[this.props.language]+")", name:label.value,rid:inEtext}} /> 
                   }
                   //(false && displayTypes.length>=1&&counts["datatype"][t]?" ("+counts["datatype"][t]+")":""))}
-                  message.push(<MenuItem><h4>{txt}</h4></MenuItem>);
+                  message.push(<div style={{display:"flex"}}><MenuItem><h4>{txt}</h4></MenuItem>{
+                     this.props.latest && 
+                        <FormControl className={"recent-selector"} color={"secondary"} style={{marginTop:"7px"}}>
+                           <Select
+                              value={this.props.latestSyncsMeta?.timeframe ?? "past7d"}
+                              onChange={(ev) => { 
+                                 this.setState({ repage:true, paginate: undefined, results: { message:[] }})
+                                 this.props.history.push({
+                                    ...this.props.history.location, 
+                                    search:
+                                       this.props.history.location.search
+                                       .replace(/\?tf=[^&]+/,"?tf="+ev.target.value.replace(/past/,""))
+                                       .replace(/&(n|pg)=[^&]+/g,"")
+                                 })
+                              }}
+                           >
+                              {["past7d","past30d","past6m","past12m"].map(w => (
+                                 <MenuItem key={w} value={w}>{I18n.t("tradition."+w)}</MenuItem>
+                                 ))}
+                           </Select>
+                        </FormControl>
+                  }</div>);
                }
                
                if(t === "Place") {

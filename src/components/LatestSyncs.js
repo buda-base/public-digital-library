@@ -1,5 +1,5 @@
 
-import React from "react"
+import React, { useState } from "react"
 import { Link } from "react-router-dom"
 import I18n from "i18next"
 import Loader from 'react-loader';
@@ -20,13 +20,13 @@ function LatestSyncs({ that }) {
 
   return (<div id="latest">
     <h3>{I18n.t("home.new")}</h3>
-    <Link class="seeAll" to="/latest" onClick={()=>that.setState({filters:{...that.state.filters,datatype:["Scan"]}})}>{I18n.t("misc.seeAnum",{count:that.props.latestSyncsNb})}</Link>
+    <Link class="seeAll" to={"/latest"+(that.props.latestSyncsMeta?.timeframe ? "?tf="+that.props.latestSyncsMeta?.timeframe.replace(/^past/,"") : "")} onClick={()=>that.setState({filters:{...that.state.filters,datatype:["Scan"]}})}>{I18n.t(that.props.latestSyncs == true?"misc.seeA":"misc.seeAnum",{count:that.props.latestSyncsNb})}</Link>
     <div 
       onTouchStart={ev => {that.tx0 = ev.targetTouches[0].clientX; that.ty0 = ev.targetTouches[0].clientY; }} 
       onTouchMove={ev => {that.tx1 = ev.targetTouches[0].clientX; that.ty1 = ev.targetTouches[0].clientY; }} 
       onTouchEnd={ev => {if(Math.abs(that.ty0 - that.ty1) < Math.abs(that.tx0 - that.tx1) && Math.abs(that.tx0 - that.tx1) > 75) { syncSlide(); } }}
     >
-      { that.props.latestSyncs === true && <Loader loaded={false}/> }
+      { that.props.latestSyncs == true && <Loader loaded={false}/> }
       { (that.props.latestSyncs && that.props.latestSyncs !== true) &&
           <div class={"slide-bg "+(that.state.syncsSlided?"slided":"")} >
             { Object.keys(that.props.latestSyncs).map(s => {
@@ -53,26 +53,14 @@ function LatestSyncs({ that }) {
           </div>
       }
     </div>
-    { (that.props.latestSyncs && that.props.latestSyncs !== true && that.props.latestSyncsNb > 5) && 
-      <div id="syncs-nav" >
-          <span class={that.state.syncsSlided?"on":""} onClick={syncSlide}><img src="/icons/g.svg"/></span>
-          <span class={that.state.syncsSlided||that.props.latestSyncsNb<=5?"":"on"} onClick={syncSlide}><img src="/icons/d.svg"/></span>
-      </div>
-    }
-    <FormControl className={"recent-selector"}>
+    <div id="syncs-nav" className={(that.props.latestSyncs && that.props.latestSyncs !== true && that.props.latestSyncsNb > 5) ? "" : "disabled"}>
+        <span class={that.state.syncsSlided?"on":""} onClick={syncSlide}><img src="/icons/g.svg"/></span>
+        <span class={that.state.syncsSlided||that.props.latestSyncsNb<=5?"":"on"} onClick={syncSlide}><img src="/icons/d.svg"/></span>
+    </div>
+    <FormControl className={"recent-selector"} color={"secondary"}>
       <Select
-        value={"past7d"}
-        /*
-        value={this.state.searchTypes[0]==="Scan"?"Instance":this.state.searchTypes[0]}
-        onChange={this.handleSearchTypes}
-        open={this.state.langOpen}
-        onOpen={(e) => { loggergen.log("open"); this.setState({...this.state,langOpen:true}) } }
-        onClose={(e) => this.setState({...this.state,langOpen:false})}
-        inputProps={{
-          name: 'datatype',
-          id: 'datatype',
-        }}
-        */
+        value={that.props.latestSyncsMeta?.timeframe ?? "past7d"}
+        onChange={(ev) => that.props.onGetLatestSyncs({timeframe:ev.target.value})}
       >
         {["past7d","past30d","past6m","past12m"].map(w => (
             <MenuItem key={w} value={w}>{I18n.t("tradition."+w)}</MenuItem>

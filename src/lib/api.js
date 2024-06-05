@@ -435,11 +435,13 @@ export default class API {
 
    }
 
-    async loadLatestSyncsAsResults(): Promise<string>
+    async loadLatestSyncsAsResults(meta): Promise<string>
     {
          try {
             
-            const dateA = new Date(Date.now() - 1000 * 3600 * 24 * 7)
+            let days = 7
+            if(meta?.timeframe) days = Number(meta?.timeframe.replace(/[^0-9]/g,"")) * (meta?.timeframe.endsWith("m") ? 30 : 1)
+            const dateA = new Date(Date.now() - 1000 * 3600 * 24 * days)
             const dateB = new Date(Date.now() + 1000 * 3600 * 24 * 2)
 
             let config = store.getState().data.config.ldspdi
@@ -472,11 +474,13 @@ export default class API {
    
   }
 
-    async loadLatestSyncs(): Promise<string>
+    async loadLatestSyncs(meta): Promise<string>
     {
          try {
             
-            const date = new Date(Date.now() - 1000 * 3600 * 24 * 7)
+            let days = 7
+            if(meta?.timeframe) days = Number(meta?.timeframe.replace(/[^0-9]/g,"")) * (meta?.timeframe.endsWith("m") ? 30 : 1)
+            const date = new Date(Date.now() - 1000 * 3600 * 24 * days)
 
             let config = store.getState().data.config.ldspdi
             // DONE remove ldspdi-dev --> ldspdi 
@@ -490,7 +494,7 @@ export default class API {
          {
             logError(e)         
             //throw(e)
-            console.error("ERROR outline",e)
+            console.error("ERROR latest syncs",e)
             return true
          }
 

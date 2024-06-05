@@ -387,7 +387,7 @@ const makeMainRoutes = () => {
                               //if(!store.getState().ui.loading)
                               store.dispatch(initiateApp(qs.parse(history.location.search), null, null, "latest"))
                            }
-                           return (<AppContainer history={history} auth={auth} latest={true}/> )
+                           return (<AppContainer history={history} auth={auth} latest={true} {...get.tf ? {latestSyncsMeta:{timeframe:"past"+get.tf}}:{}}/> )
                         }}/>  
                         { Object.keys(staticQueries).map(q => (
                            <Route path={"/"+q} render={(props) => {

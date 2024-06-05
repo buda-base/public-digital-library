@@ -1055,6 +1055,7 @@ body > #pop-login { z-index:1000000 ;}
 .App.tradition .tradi-content #latest > div:first-of-type {
    background-color:#fce08d;
    padding:45px 30px;
+   min-height:300px;
 }
 
 .App.tradition .tradi-content #latest #syncs-nav {
@@ -1074,13 +1075,30 @@ body > #pop-login { z-index:1000000 ;}
    display:none; 
 }
 
+#latest #syncs-nav.disabled {
+   pointer-events: none;
+}
+
+#latest #syncs-nav.disabled .on {
+   opacity:0.35;
+}
+
 .App.tradition .tradi-content #latest .recent-selector {
    display:block; 
    position:absolute;
-   bottom:10px;
+   bottom:6px;
    left:calc(50% - 80px);
    width:160px;
    text-align: center;
+}
+
+.App.tradition .tradi-content #latest :not(#syncs-nav) + .recent-selector {
+   bottom:-50px;
+}
+
+#res-container .recent-selector > div::after,
+.App.tradition .tradi-content #latest .recent-selector > div::after{
+   border-bottom-color:#343434;
 }
 
 @media(min-width:1320px) {

@@ -19,7 +19,7 @@ import logdown from 'logdown'
 
 const loggergen = new logdown('gen', { markdown: false });
 
-const mapStateToProps = (state) => {
+const mapStateToProps = (state,ownProps) => {
 
    let logged = state.ui.logged ;
    let hostFailure = state.data.failures.host ;
@@ -62,7 +62,7 @@ const mapStateToProps = (state) => {
     
    let latestSyncs = state.data.latestSyncs
    let latestSyncsNb = state.data.latestSyncsNb
-   let latestSyncsMeta = state.data.latestSyncsMeta
+   let latestSyncsMeta = ownProps.latestSyncsMeta ?? state.data.latestSyncsMeta
 
 
    let etextLang = state.ui.etextLang
@@ -104,7 +104,7 @@ const mapStateToProps = (state) => {
       feedbucket,
       spellcheckerBo,
       advancedSearch,
-      etextLang,
+      etextLang
    }
 
    if(config && !config.auth) newState.auth = false
