@@ -61,7 +61,7 @@ export class TraditionViewer extends Component<State, Props>
       // TODO: control tradition/dates as well
       if(this.props.config) {
         if(!this.props.latestSyncs || this.props.latestSyncs != true && this.props.latestSyncsMeta?.tradition != this.props.tradition) {
-          this.props.onGetLatestSyncs({ tradition: this.props.tradition })
+          this.props.onGetLatestSyncs({ ...this.props.latestSyncsMeta??{}, tradition: this.props.tradition })
         }
       }
 
