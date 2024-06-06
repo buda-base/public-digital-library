@@ -7,7 +7,7 @@ import I18n from 'i18next';
 
 import history from "../history"
 import store from '../index';
-import { top_right_menu } from './App'
+import { top_right_menu, getLangLabel, getPropLabel, fullUri } from './App'
 import { auth, Redirect404 } from '../routes'
 import { initiateApp } from '../state/actions';
 import LatestSyncs from "./LatestSyncs"
@@ -20,6 +20,7 @@ const loggergen = new logdown('gen', { markdown: false });
 
 window.ResizeObserver = ResizeObserver;
 
+const skos  = "http://www.w3.org/2004/02/skos/core#";
 
 type State = { content:any, error:integer, collapse:{}, route:"" }
 
@@ -78,12 +79,19 @@ export class TraditionViewer extends Component<State, Props>
                       <div style={{display:"flex",flexWrap:"wrap"}}>
                         <h1 style={{width:"100%"}}>{I18n.t("tradition."+this.props.tradition+"T")}</h1>
                         { tradi && tradi.map(t => {
-                          return <div id={"tradi-"+t.id} className="tradi-content">
+                          return <div id={"tradi-"+t.id} className={"tradi-content "+(t.classes ?? "")}>
                             <h2>{I18n.t("tradition."+t.id)}</h2>
                             {t.content?.map(c => {
+                              let label = ""
+                              if(c.id) {
+                                if(c.id.startsWith("bdr:")) label = getPropLabel(this, fullUri(c.id), false)
+                                else label = I18n.t("tradition."+c.id) 
+                              }
+                              else if(c.label) label = getLangLabel(this,skos+"prefLabel",c.label ?? [])?.value
+
                               return <Link to={c.to} className={c.img ? "has-img":""}>
                                   { c.img && <img src={c.img}/> }
-                                  <span>{I18n.t("tradition."+c.id)}</span>
+                                  <span>{label}</span>
                                 </Link>
                             })}
                           </div>

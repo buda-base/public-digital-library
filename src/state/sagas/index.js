@@ -219,7 +219,7 @@ async function initiateApp(params,iri,myprops,route,isAuthCallback) {
             if(!auth.isAuthenticated()) auth.login(decodeURIComponent(params.backToViewer))
          }
 
-         if(route === "guidedsearch") {
+         if(["guidedsearch","tradition"].includes(route)) {
             if(!state.data.dictionary) {
                const dico = await api.loadDictionary()
                store.dispatch(dataActions.loadedDictionary(dico));                       

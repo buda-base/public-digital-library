@@ -719,12 +719,16 @@
       "allT":"All Tengyurs",
       "school":"By School",
       "type":"By Type",
-      "bodong":"Bodong",
-      "bon":"Bon",
+      "canon":"Canon",
+      "misc":"Miscellaneous",
       "past7d":"Past 7 Days",
       "past30d":"Past 30 Days",
       "past6m":"Past 6 Months",
-      "past12m":"Past 12 Months"
+      "past12m":"Past 12 Months",
+      "contemporary":"Contemporary Places",
+      "monasteries":"Monasteries by School",
+      "printeries":"Printeries",
+      "century":"By Century"
    },
    "mirador": {
       "return": "return to BUDA",

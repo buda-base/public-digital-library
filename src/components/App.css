@@ -967,6 +967,7 @@ body > #pop-login { z-index:1000000 ;}
 
 .App.tradition .tradi-content a {
    font-size:16px;
+   margin-left:20px;
 }
 
 .App.tradition .tradi-content {
@@ -976,14 +977,17 @@ body > #pop-login { z-index:1000000 ;}
    width:25%;
 }
 
-.App.tradition .tradi-content#tradi-links {
+.App.tradition .tradi-content.display-block {
    display:block;
 }
-.App.tradition .tradi-content#tradi-links a {
+.App.tradition .tradi-content.display-block a {
    display: block;
    line-height:36px;
 }
 
+.App.tradition .tradi-content.display-block h2 {
+   margin-bottom:5px;
+}
 
 .App.tradition .tradi-content h2{ 
    font-size:22px;
@@ -991,7 +995,7 @@ body > #pop-login { z-index:1000000 ;}
 }
 
 .App.tradition .tradi-content a.has-img {
-   margin-right:25px;
+   margin-right:5px;
 }
 
 .App.tradition .tradi-content a.has-img img {
@@ -1020,10 +1024,14 @@ body > #pop-login { z-index:1000000 ;}
 }
 
 .App.tradition .tradi-content:not(#tradi-all) a.has-img span {
-   width:100%;
-   line-height: 36px;
+   width:80px;
+   max-width:100%;
+   line-height: 22px;
    text-align: center;
-   display: block;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   margin-bottom:22px;
 }
 
 

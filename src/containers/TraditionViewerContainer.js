@@ -31,8 +31,16 @@ const mapStateToProps = (state,ownProps) => {
    let latestSyncsNb = state.data.latestSyncsNb
    let latestSyncsMeta = state.data.latestSyncsMeta      
 
+   let langPreset = state.ui.langPreset
+   let langIndex = state.ui.langIndex
+   let langExt = state.ui.langExt
+
+   let dictionary = state.data.dictionary ;
+
    let props = { config, locale, profileName, portraitPopupClosed, isNewUser, feedbucket,
       latestSyncs,latestSyncsNb,latestSyncsMeta,
+      langPreset,langIndex,langExt,
+      dictionary
    }
 
    return props
