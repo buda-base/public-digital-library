@@ -1054,6 +1054,7 @@ body > #pop-login { z-index:1000000 ;}
    margin-right: 0;
    text-decoration: none;
    color:#343434;
+   font-size:16px;
 }
 
 .App.tradition .tradi-content #latest .seeAll:hover {
