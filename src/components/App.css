@@ -965,7 +965,7 @@ body > #pop-login { z-index:1000000 ;}
    width:100%;
 }
 
-.App.tradition .tradi-content a {
+.App.tradition .tradi-content > a {
    font-size:16px;
    margin-left:20px;
 }
