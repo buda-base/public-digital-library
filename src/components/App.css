@@ -1034,6 +1034,10 @@ body > #pop-login { z-index:1000000 ;}
    margin-bottom:22px;
 }
 
+.App.tradition .tradi-content:not(#tradi-all) a.has-img span[lang="bo"] {
+   line-height:28px;
+}
+
 
 .App.tradition .tradi-content #latest {
    padding:0; 

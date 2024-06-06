@@ -82,16 +82,16 @@ export class TraditionViewer extends Component<State, Props>
                           return <div id={"tradi-"+t.id} className={"tradi-content "+(t.classes ?? "")}>
                             <h2>{I18n.t("tradition."+t.id)}</h2>
                             {t.content?.map(c => {
-                              let label = ""
+                              let label = { value: "", lang: this.props.locale }
                               if(c.id) {
-                                if(c.id.startsWith("bdr:")) label = getPropLabel(this, fullUri(c.id), false)
-                                else label = I18n.t("tradition."+c.id) 
+                                if(c.id.startsWith("bdr:")) label = getPropLabel(this, fullUri(c.id), false, true)
+                                else label.value = I18n.t("tradition."+c.id) 
                               }
-                              else if(c.label) label = getLangLabel(this,skos+"prefLabel",c.label ?? [])?.value
+                              else if(c.label) label = getLangLabel(this,skos+"prefLabel",c.label ?? [])
 
                               return <Link to={c.to} className={c.img ? "has-img":""}>
                                   { c.img && <img src={c.img}/> }
-                                  <span>{label}</span>
+                                  <span lang={label?.lang}>{label?.value}</span>
                                 </Link>
                             })}
                           </div>
