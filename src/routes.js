@@ -43,6 +43,10 @@ import logdown from 'logdown'
 
 import analytics from './components/Analytics'
 
+// pages
+import "./lib/searchkit/App.css";
+import SearchPage from "./lib/searchkit/pages/Search";
+
 const loggergen = new logdown('gen', { markdown: false });
 
 export const auth = new Auth();
@@ -301,6 +305,7 @@ const makeMainRoutes = () => {
                            return (<ScriptLoader url={props.match.params.URL}/>)
                         } } />
                         */}
+                        <Route exact path="/searchkit" render={(props) => <SearchPage /> }/>
                         <Route exact path="/iiifcookielogin" render={(props) => {
                            return (<IIIFCookieLogin auth={auth} history={history} get={qs.parse(history.location.search)}/>)
                         } } />
