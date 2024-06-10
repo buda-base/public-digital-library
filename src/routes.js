@@ -43,9 +43,9 @@ import logdown from 'logdown'
 
 import analytics from './components/Analytics'
 
-// pages
-import "./lib/searchkit/App.css";
-import SearchPage from "./lib/searchkit/pages/Search";
+// TODO: new search 
+//import "./lib/searchkit/App.css";
+//import SearchPage from "./lib/searchkit/pages/Search";
 
 const loggergen = new logdown('gen', { markdown: false });
 
@@ -305,7 +305,9 @@ const makeMainRoutes = () => {
                            return (<ScriptLoader url={props.match.params.URL}/>)
                         } } />
                         */}
-                        <Route exact path="/searchkit" render={(props) => <SearchPage /> }/>
+                        {/* // TODO:
+                        <Route exact path="/searchkit" render={(props) => <SearchPage /> }/> 
+                        */}
                         <Route exact path="/iiifcookielogin" render={(props) => {
                            return (<IIIFCookieLogin auth={auth} history={history} get={qs.parse(history.location.search)}/>)
                         } } />
@@ -402,9 +404,15 @@ const makeMainRoutes = () => {
                               return (<AppContainer history={history} auth={auth} static={path}/> )
                            }}/>
                         )) }
-                        <Route path="/tradition/:TRAD" render={(props) => {                           
+                        <Route exact path="/tradition/:TRAD" render={(props) => {                           
+                           console.log("trad:",props)
                            store.dispatch(initiateApp(qs.parse(history.location.search), null, null, "tradition"))
                            return (<TraditionViewerContainer history={history} auth={auth} tradition={props.match.params.TRAD}/> )
+                        } } />
+                        <Route exact path="/tradition/:TRAD/:TYPE/:ID" render={(props) => {                           
+                           console.log("trad/param:",props)
+                           store.dispatch(initiateApp(qs.parse(history.location.search), null, null, "tradition"))
+                           return (<TraditionViewerContainer history={history} auth={auth} tradition={props.match.params.TRAD} type={props.match.params.TYPE} id={props.match.params.ID}/> )
                         } } />
                         <Route path="/view/:IRI" render={(props) =>
                            {

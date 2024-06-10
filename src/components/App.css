@@ -1039,6 +1039,50 @@ body > #pop-login { z-index:1000000 ;}
 }
 
 
+.App.tradition .tradi-content.main {
+   width:100%;
+}
+
+.App.tradition .tradi-content.main:not(#a) a.has-img span {
+   width:120px;
+}
+
+.App.tradition .tradi-content.main:not(#a) a.has-img img {
+   width:120px;
+   height:120px;
+   object-fit: cover;
+}
+
+.App.tradition .tradi-content.main:not(#a) a.has-img img {
+   margin-bottom:5px;
+}
+
+
+
+.App.tradition #tradition-breadcrumbs {
+   font-size:14px;
+   margin-bottom:25px;
+}
+
+.App.tradition #tradition-breadcrumbs a {
+   color:#343434;
+   text-decoration: underline;
+   text-transform: capitalize;   
+}
+
+.App.tradition #tradition-breadcrumbs span {
+   color:#343434;
+}
+
+.App.tradition #tradition-breadcrumbs a:not(:last-child)::after,
+.App.tradition #tradition-breadcrumbs span:not(:last-child)::after {
+   content:">";
+   display: inline-block;
+   margin:0 10px;
+   pointer-events: none;
+}
+
+
 .App.tradition .tradi-content #latest {
    padding:0; 
    margin-top:0px;
