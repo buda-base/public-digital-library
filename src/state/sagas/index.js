@@ -584,7 +584,7 @@ else if(params && params.q) {
    */
 }
 else if(params && params.r) {
-   let t = getEntiType(params.r)
+   let t = params.u ?? getEntiType(params.r)
    if(["Instance", "Images", "Volume", "Scan"].includes(t) || ["bdo:SerialWork"].includes(params.r) ) t = "Work"
    if(params.r === "tmp:subscriptions") t = "Product"
 

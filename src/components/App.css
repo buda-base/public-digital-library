@@ -1043,13 +1043,17 @@ body > #pop-login { z-index:1000000 ;}
    width:100%;
 }
 
+.App.tradition .tradi-content.main:not(#a) a.has-img {
+   margin-right:10px;
+}
+
 .App.tradition .tradi-content.main:not(#a) a.has-img span {
-   width:120px;
+   width:130px;
 }
 
 .App.tradition .tradi-content.main:not(#a) a.has-img img {
-   width:120px;
-   height:120px;
+   width:130px;
+   height:130px;
    object-fit: cover;
 }
 

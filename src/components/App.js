@@ -106,6 +106,8 @@ import AutocompleteKeywordInput from "./AutocompleteKeywordInput"
 
 import LatestSyncs from "./LatestSyncs"
 
+import { topics } from "../lib/topics"
+
 import {svgEtextS,svgImageS} from "./icons"
 
 import logdown from 'logdown'
@@ -731,7 +733,7 @@ export function getPropLabel(that, i, withSpan = true, withLang = false) {
 
    if(!that.props.dictionary) return 
 
-   let sTmp = shortUri(i), trad = I18n.t("prop."+sTmp)
+   let sTmp = shortUri(i), trad = I18n.t("prop."+sTmp), rid = sTmp.split(":")[1]
    if("prop."+sTmp !== trad) return trad
 
    let label = that.props.dictionary[i], labels
@@ -739,6 +741,7 @@ export function getPropLabel(that, i, withSpan = true, withLang = false) {
       labels = label[skos+"prefLabel"]
       if(!labels) labels = label["http://www.w3.org/2000/01/rdf-schema#label"]
    }
+   else if(rid && topics && topics[rid]) labels = topics[rid].label
    else if(that.props.assoRes && that.props.assoRes[i]) labels = that.props.assoRes[i]
    else if(that.props.resources && that.props.resources[i]) { 
       labels = that.props.resources[i]
