@@ -731,6 +731,7 @@ function pretty(str:string) {
 
 export function getPropLabel(that, i, withSpan = true, withLang = false) {
 
+   
    if(!that.props.dictionary) return 
 
    let sTmp = shortUri(i), trad = I18n.t("prop."+sTmp), rid = sTmp.split(":")[1]
@@ -748,9 +749,14 @@ export function getPropLabel(that, i, withSpan = true, withLang = false) {
       if(labels) labels = labels[fullUri(i)]
       if(labels) labels = labels[skos+"prefLabel"]
    }
+   
+   //console.log("labels:", labels, i)
 
    let lang
    if(labels) {
+
+      if(!Array.isArray(labels)) labels = [ labels ]
+
       // fix for "Author: False" in facets on /search?r=bdr:P1KG13161&t=Work
       let filteredLabels = labels.filter(l => l.lang != undefined || l.fromKey == skos+"prefLabel")
       if(!filteredLabels.length) filteredLabels = labels

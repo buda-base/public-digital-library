@@ -955,11 +955,19 @@ body > #pop-login { z-index:1000000 ;}
 }
 
 
+.App.tradition .tradi-content#tradi-links {
+   padding-left:30px;
+   box-sizing: border-box;
+}
+
 .App.tradition .tradi-content#tradi-links,
 .App.tradition .tradi-content#tradi-all {
    width:calc(50% - 35px);
 }
 
+
+.App.tradition .tradi-content.listing,
+.App.tradition .tradi-content.main,
 .App.tradition .tradi-content#tradi-selected,
 .App.tradition .tradi-content#tradi-recent {
    width:100%;
@@ -968,6 +976,22 @@ body > #pop-login { z-index:1000000 ;}
 .App.tradition .tradi-content > a {
    font-size:16px;
    margin-left:20px;
+}
+
+.App.tradition .tradi-content.listing > a {
+   margin-left:0;
+}
+
+
+.App.tradition .tradi-content.listing > h5 ~ a {
+   margin-left:20px;
+}
+
+
+.App.tradition .tradi-content h5 {
+   margin:0;
+   line-height:36px;
+   font-weight:600;
 }
 
 .App.tradition .tradi-content {
@@ -1038,11 +1062,6 @@ body > #pop-login { z-index:1000000 ;}
    line-height:28px;
 }
 
-
-.App.tradition .tradi-content.main {
-   width:100%;
-}
-
 .App.tradition .tradi-content.main:not(#a) a.has-img {
    margin-right:10px;
 }
@@ -1071,7 +1090,7 @@ body > #pop-login { z-index:1000000 ;}
 .App.tradition #tradition-breadcrumbs a {
    color:#343434;
    text-decoration: underline;
-   text-transform: capitalize;   
+   /* text-transform: capitalize;    */
 }
 
 .App.tradition #tradition-breadcrumbs span {

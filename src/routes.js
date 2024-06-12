@@ -404,15 +404,20 @@ const makeMainRoutes = () => {
                               return (<AppContainer history={history} auth={auth} static={path}/> )
                            }}/>
                         )) }
-                        <Route exact path="/tradition/:TRAD" render={(props) => {                           
-                           console.log("trad:",props)
+                        <Route exact path="/tradition/:TRAD/:TYPE/:ID/:ROOT/" render={(props) => {                           
+                           console.log("trad/param/root:",props)
                            store.dispatch(initiateApp(qs.parse(history.location.search), null, null, "tradition"))
-                           return (<TraditionViewerContainer history={history} auth={auth} tradition={props.match.params.TRAD}/> )
+                           return (<TraditionViewerContainer history={history} auth={auth} tradition={props.match.params.TRAD} type={props.match.params.TYPE} id={props.match.params.ID} root={props.match.params.ROOT}/> )
                         } } />
                         <Route exact path="/tradition/:TRAD/:TYPE/:ID" render={(props) => {                           
                            console.log("trad/param:",props)
                            store.dispatch(initiateApp(qs.parse(history.location.search), null, null, "tradition"))
                            return (<TraditionViewerContainer history={history} auth={auth} tradition={props.match.params.TRAD} type={props.match.params.TYPE} id={props.match.params.ID}/> )
+                        } } />
+                        <Route exact path="/tradition/:TRAD" render={(props) => {                           
+                           console.log("trad:",props)
+                           store.dispatch(initiateApp(qs.parse(history.location.search), null, null, "tradition"))
+                           return (<TraditionViewerContainer history={history} auth={auth} tradition={props.match.params.TRAD}/> )
                         } } />
                         <Route path="/view/:IRI" render={(props) =>
                            {

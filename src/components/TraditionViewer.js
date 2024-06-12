@@ -12,6 +12,8 @@ import { auth, Redirect404 } from '../routes'
 import { initiateApp } from '../state/actions';
 import LatestSyncs from "./LatestSyncs"
 
+import { topics } from "../lib/topics"
+
 import $ from 'jquery' ;
 
 import logdown from 'logdown'
@@ -73,32 +75,182 @@ let topics = {}, genres = {}
 buildTree("O9TAXTBRC201605", topics).then(() => { console.log("topics:",topics) })
 */
 
+const len = (k, topics) => {
+  if(topics[k]) {
+    if(topics[k].parent) return [k].concat(len(topics[k].parent, topics))
+    else return [k]
+}
+  return []
+}
+
+/* // debugging
+window.allT = Object.keys(topics).map(k => len(k,topics))
+*/
+
 export class TraditionViewer extends Component<State, Props>
 {
-    _urlParams = {}
+  _urlParams = {}
 
-    constructor(props) {
-        super(props);
-        
-        this._urlParams = qs.parse(history.location.search) 
-        
-        this.state = { content: "", collapse:{}, hash:"" } //"loading..."+props.dir+"/"+props.page }
+  constructor(props) {
+      super(props);
+      
+      this._urlParams = qs.parse(history.location.search) 
+      
+      this.state = { content: "", collapse:{}, hash:"" } 
 
-        if(!this.props.config) store.dispatch(initiateApp(this._urlParams,null,null,"tradition"))
-        
+      if(!this.props.config) store.dispatch(initiateApp(this._urlParams,null,null,"tradition"))
+      
+  }
+
+  componentDidUpdate() { 
+
+      if(window.initFeedbucket) window.initFeedbucket()
+
+  }
+
+
+  renderContent(t, route){ 
+    return t.content?.map(c => {
+      let label = { value: "", lang: this.props.locale }
+      if(c.id) {
+        if(c.id.startsWith("bdr:")) label = getPropLabel(this, fullUri(c.id), false, true)
+        else label.value = I18n.t("tradition."+c.id) 
+      }
+      else if(c.label) label = getLangLabel(this,skos+"prefLabel",c.label ?? [])
+
+      let link = route ?? c.to ?? t.to
+      if(!link?.startsWith("/")) link = "/tradition/"+this.props.tradition+"/"+ link
+      link = link.replace(/:id/g, c.id)        
+
+      return <Link to={link} className={c.img ? "has-img":""}>
+          { c.img && <img src={c.img}/> }
+          <span lang={label?.lang}>{label?.value}</span>
+        </Link>
+    })     
+  }
+
+  getIdAsText(id) {
+    let res = I18n.t("tradition.id_"+id)
+    if(res.startsWith("tradition.")) res = I18n.t("tradition."+id)        
+    if(res.startsWith("tradition.")) res = getPropLabel(this, fullUri(id), false)
+    return res
+  }
+
+  renderSubTopic(t, listing, depth = 0){
+    
+    const topic = topics[t]
+    console.log("topic:", t, topic)
+
+    if(topic?.sub?.length) {
+      if(depth < 2) {
+        const sublist = []
+        topic.sub.map(s => this.renderSubTopic(s, sublist, depth+1))
+        if(depth > 0) listing.push(<h5>{ getPropLabel(this, fullUri("bdr:"+t)) }</h5>)
+        listing.push(sublist)
+      } else {
+        listing.push(<Link to={"../bdr:"+t+"/"}>{ getPropLabel(this, fullUri("bdr:"+t)) } [{topic?.sub?.length}]</Link>)  
+      }
+    } else {
+      listing.push(<Link to={"/search?r=bdr:"+t+"&t=Work"}>{ getPropLabel(this, fullUri("bdr:"+t)) }</Link>)
     }
 
-    componentDidUpdate() { 
+  }
 
-        if(window.initFeedbucket) window.initFeedbucket()
+  renderTopic({tradi, id}, {content, breadcrumbs}){
 
+    breadcrumbs.pop()
+    breadcrumbs.push(<Link to={".."}>{I18n.t("tradition.t_"+this.props.type)} ({id})</Link>)                    
+    
+    let t = this.props.root.split(":")
+    t = t.pop()
+
+    let path = len(t, topics)
+    path.pop()
+    path = path.reverse()
+    path.pop()
+    for(const p of path) {
+      const pathid = this.getIdAsText("bdr:"+p)     
+      breadcrumbs.push(<Link to={"../bdr:"+p+"/"}>{pathid}</Link>)                    
     }
 
+    let rootid = this.getIdAsText(this.props.root)     
+    breadcrumbs.push(<span>{rootid}</span>)                
+        
+    const listing = []
+    this.renderSubTopic(t, listing)
 
+    content.push(<>
+        {/* <h1 style={{width:"100%"}}>{I18n.t("tradition."+this.props.tradition+"T")} &ndash; {I18n.t("tradition.t_"+this.props.type)} &ndash; {rootid}</h1> */}
+        <h1 style={{width:"100%"}}>{rootid}</h1> 
+        <div className={"tradi-content listing display-block"}>
+          {listing}
+        </div>
+      </>)
+
+  }
+
+  renderSubLevel(tradi, {content, breadcrumbs}) {
+
+    let subContent, id, classes
+         
+    id = this.getIdAsText(this.props.id) 
+
+    breadcrumbs.push(<Link to={"/tradition/"+this.props.tradition+"/"}>{I18n.t("tradition."+this.props.tradition+"T")}</Link>)
+    
+    if(tradi.subContent && tradi.subContent[this.props.type] && tradi.subContent[this.props.type][this.props.id]) {
+
+      if(typeof tradi.subContent[this.props.type][this.props.id].content === "string") subContent = this.renderContent(tradi.content?.find(t => t.id === tradi.subContent[this.props.type][this.props.id].content), tradi.subContent[this.props.type][this.props.id].to) 
+      else subContent = this.renderContent(tradi.subContent[this.props.type][this.props.id]) 
+      classes = tradi.subContent[this.props.type][this.props.id].classes
+
+      if(tradi.subContent[this.props.type][this.props.id].parent) {
+        
+        let subid = this.getIdAsText(tradi.subContent[this.props.type][this.props.id].parent)
+
+        breadcrumbs.push(<Link to={"../"+tradi.subContent[this.props.type][this.props.id].parent}>{I18n.t("tradition.t_"+this.props.type)} ({subid})</Link>)            
+        breadcrumbs.push(<span>{id}</span>)                    
+        
+      } else {
+        breadcrumbs.push(<span>{I18n.t("tradition.t_"+this.props.type)} ({id})</span>)                    
+      }
+    } else {
+      breadcrumbs.push(<span>{I18n.t("tradition.t_"+this.props.type)} ({id})</span>)                    
+    }
+
+    if(this.props.root) {
+      
+      this.renderTopic({tradi, id}, {content, breadcrumbs})
+
+    } else {          
+      content.push(<>
+          <h1 style={{width:"100%"}}>{I18n.t("tradition."+this.props.tradition+"T")} &ndash; {I18n.t("tradition.t_"+this.props.type)} &ndash; {id}</h1>
+          <div className={"tradi-content main "+(classes ?? "")}>
+            {subContent}
+          </div>
+        </>)
+    }      
+  }
+
+  renderTopLevel(tradi, {content, breadcrumbs}) {
+
+    breadcrumbs.push(<span>{I18n.t("tradition."+this.props.tradition+"T")}</span>)
+
+    content.push(<>
+      <h1 style={{width:"100%"}}>{I18n.t("tradition."+this.props.tradition+"T")}</h1>
+      { tradi && tradi.content?.map(t => {
+        return <div id={"tradi-"+t.id} className={"tradi-content "+(t.classes ?? "")}>
+          <h2>{I18n.t("tradition."+t.id)}</h2>
+          {this.renderContent(t)}
+        </div>
+      })}
+      <div id="tradi-recent" className="tradi-content">
+        <h2>{I18n.t("tradition.recent")}</h2>
+        <LatestSyncs that={this} />
+      </div>
+    </>)
+  }
 
   render(props) {         
-
-    
     
     if(this.props.config?.tradition && this.props.tradition && !this.props.config?.tradition[this.props.tradition]) 
     return <Redirect404  history={history}  auth={auth}/>
@@ -111,97 +263,29 @@ export class TraditionViewer extends Component<State, Props>
         }
       }
 
-      const tradi = this.props.config?.tradition && this.props.config?.tradition[this.props.tradition]
-    
-      const renderContent = (t, route) => t.content?.map(c => {
-        let label = { value: "", lang: this.props.locale }
-        if(c.id) {
-          if(c.id.startsWith("bdr:")) label = getPropLabel(this, fullUri(c.id), false, true)
-          else label.value = I18n.t("tradition."+c.id) 
-        }
-        else if(c.label) label = getLangLabel(this,skos+"prefLabel",c.label ?? [])
-
-        let link = route ?? c.to ?? t.to
-        if(!link?.startsWith("/")) link = "/tradition/"+this.props.tradition+"/"+ link
-        link = link.replace(/:id/g, c.id)        
-
-        return <Link to={link} className={c.img ? "has-img":""}>
-            { c.img && <img src={c.img}/> }
-            <span lang={label?.lang}>{label?.value}</span>
-          </Link>
-      })      
-
-      const getIdAsText = (id) => {
-        let res = I18n.t("tradition.id_"+id)
-        if(res.startsWith("tradition.")) res = I18n.t("tradition."+id)        
-        if(res.startsWith("tradition.")) res = getPropLabel(this, fullUri(id), false)
-        return res
-      }
-
-      let content, subContent, id, classes, breadcrumbs = [<Link to="/">{I18n.t("topbar.home")}</Link>]          
+      const tradi = this.props.config?.tradition && this.props.config?.tradition[this.props.tradition]    
+      let content = [], breadcrumbs = [<Link to="/">{I18n.t("topbar.home")}</Link>]                
 
       if(!tradi) return <></>
-      else if(this.props.type && this.props.id) {
-
-        id = getIdAsText(this.props.id) 
-
-        breadcrumbs.push(<Link to={"/tradition/"+this.props.tradition+"/"}>{I18n.t("tradition."+this.props.tradition+"T")}</Link>)
-        
-        if(tradi.subContent && tradi.subContent[this.props.type] && tradi.subContent[this.props.type][this.props.id]) {
-          if(typeof tradi.subContent[this.props.type][this.props.id].content === "string") subContent = renderContent(tradi.content?.find(t => t.id === tradi.subContent[this.props.type][this.props.id].content), tradi.subContent[this.props.type][this.props.id].to) 
-          else subContent = renderContent(tradi.subContent[this.props.type][this.props.id]) 
-          classes = tradi.subContent[this.props.type][this.props.id].classes
-
-          if(tradi.subContent[this.props.type][this.props.id].parent) {
-            let subid = getIdAsText(tradi.subContent[this.props.type][this.props.id].parent)
-            breadcrumbs.push(<Link to={"../"+tradi.subContent[this.props.type][this.props.id].parent}>{I18n.t("tradition.t_"+this.props.type)} ({subid})</Link>)            
-            breadcrumbs.push(<span>{id}</span>)                    
-          } else {
-            breadcrumbs.push(<span>{I18n.t("tradition.t_"+this.props.type)} ({id})</span>)                    
-          }
-        } else {
-          breadcrumbs.push(<span>{I18n.t("tradition.t_"+this.props.type)} ({id})</span>)                    
-        }
-        
-        content = <>
-            <h1 style={{width:"100%"}}>{I18n.t("tradition."+this.props.tradition+"T")} &ndash; {I18n.t("tradition.t_"+this.props.type)} &ndash; {id}</h1>
-            <div className={"tradi-content main "+(classes ?? "")}>
-              {subContent}
-            </div>
-          </>
-      } else {        
-        breadcrumbs.push(<span>{I18n.t("tradition."+this.props.tradition+"T")}</span>)
-        content = <>
-          <h1 style={{width:"100%"}}>{I18n.t("tradition."+this.props.tradition+"T")}</h1>
-          { tradi && tradi.content?.map(t => {
-            return <div id={"tradi-"+t.id} className={"tradi-content "+(t.classes ?? "")}>
-              <h2>{I18n.t("tradition."+t.id)}</h2>
-              {renderContent(t)}
-            </div>
-          })}
-          <div id="tradi-recent" className="tradi-content">
-            <h2>{I18n.t("tradition.recent")}</h2>
-            <LatestSyncs that={this} />
-          </div>
-        </>
-      }
+      else if(this.props.type && this.props.id) this.renderSubLevel(tradi, {content, breadcrumbs})
+      else this.renderTopLevel(tradi, {content, breadcrumbs})
 
       return (
         <>
-            { top_right_menu(this) }
-            <div>
-              <div class={"App tradition tradition-"+(this.props.tradition)}>
-                <div class="SearchPane">
-                  <div className="static-container">
-                    <div id="samples">
-                      <div style={{display:"flex",flexWrap:"wrap"}}>
-                        <div id="tradition-breadcrumbs">                          
-                          { breadcrumbs }
-                        </div>
-                        {content}
+          { top_right_menu(this) }
+          <div>
+            <div class={"App tradition tradition-"+(this.props.tradition)}>
+              <div class="SearchPane">
+                <div className="static-container">
+                  <div id="samples">
+                    <div style={{display:"flex",flexWrap:"wrap"}}>
+                      <div id="tradition-breadcrumbs">                          
+                        { breadcrumbs }
                       </div>
+                      {content}
                     </div>
-                  </div> 
+                  </div>
+                </div> 
               </div>
             </div>
           </div>
