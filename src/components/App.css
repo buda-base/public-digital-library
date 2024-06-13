@@ -1018,6 +1018,16 @@ body > #pop-login { z-index:1000000 ;}
    width:100%;
 }
 
+
+.App.tradition .tradi-content .hidden {
+   display:none;
+}
+
+.App.tradition .tradi-content .disabled {
+   opacity:0.5;
+   pointer-events: none;
+}
+
 .App.tradition .tradi-content a.has-img {
    margin-right:5px;
 }

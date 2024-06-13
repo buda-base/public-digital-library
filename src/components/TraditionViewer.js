@@ -112,17 +112,18 @@ export class TraditionViewer extends Component<State, Props>
   renderContent(t, route){ 
     return t.content?.map(c => {
       let label = { value: "", lang: this.props.locale }
-      if(c.id) {
+      
+      if(c.label) label = getLangLabel(this,skos+"prefLabel",c.label ?? [])
+      else if(c.id) {
         if(c.id.startsWith("bdr:")) label = getPropLabel(this, fullUri(c.id), false, true)
         else label.value = I18n.t("tradition."+c.id) 
       }
-      else if(c.label) label = getLangLabel(this,skos+"prefLabel",c.label ?? [])
 
       let link = route ?? c.to ?? t.to
       if(!link?.startsWith("/")) link = "/tradition/"+this.props.tradition+"/"+ link
       link = link.replace(/:id/g, c.id)        
 
-      return <Link to={link} className={c.img ? "has-img":""}>
+      return <Link to={link} className={(c.img ? "has-img ":"")+(c.classes??"")}>
           { c.img && <img src={c.img}/> }
           <span lang={label?.lang}>{label?.value}</span>
         </Link>
