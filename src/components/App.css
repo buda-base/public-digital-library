@@ -987,6 +987,10 @@ body > #pop-login { z-index:1000000 ;}
    margin-left:20px;
 }
 
+.App.tradition .tradi-content.listing [lang='en'] {
+   text-transform: capitalize;
+}
+
 
 .App.tradition .tradi-content h5 {
    margin:0;
@@ -1058,7 +1062,7 @@ body > #pop-login { z-index:1000000 ;}
 }
 
 .App.tradition .tradi-content:not(#tradi-all) a.has-img span {
-   width:80px;
+   width:75px;
    max-width:100%;
    line-height: 22px;
    text-align: center;
@@ -1074,6 +1078,7 @@ body > #pop-login { z-index:1000000 ;}
 
 .App.tradition .tradi-content.main:not(#a) a.has-img {
    margin-right:10px;
+   text-align: center;
 }
 
 .App.tradition .tradi-content.main:not(#a) a.has-img span {
@@ -1081,9 +1086,10 @@ body > #pop-login { z-index:1000000 ;}
 }
 
 .App.tradition .tradi-content.main:not(#a) a.has-img img {
-   width:130px;
-   height:130px;
+   width:75px;
+   height:75px;
    object-fit: cover;
+   display:inline-block;
 }
 
 .App.tradition .tradi-content.main:not(#a) a.has-img img {
@@ -1148,6 +1154,16 @@ body > #pop-login { z-index:1000000 ;}
    min-height:300px;
 }
 
+.App.tradition .tradi-content #latest > div:first-of-type.no-result {
+   min-height:0;
+}
+
+.App.tradition .tradi-content #latest > div:first-of-type.no-result .slide-bg > div {
+   font-size:16px; 
+   width:100%;
+   opacity:0.65;
+}
+
 .App.tradition .tradi-content #latest #syncs-nav {
    margin-top:20px;
    text-align: center;
@@ -1159,6 +1175,12 @@ body > #pop-login { z-index:1000000 ;}
 
 .App.tradition .tradi-content #latest #syncs-nav span {
    margin:0 90px;
+}
+
+.App.tradition .tradi-content #latest .date {
+   font-size:13px;
+   opacity:0.65;
+   float:right;
 }
 
 #latest .recent-selector {

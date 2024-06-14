@@ -1,22 +1,20 @@
 
 import React, { Component } from 'react';
 import { Link } from "react-router-dom"
-
 import qs from 'query-string'
 import I18n from 'i18next';
+import _ from "lodash";
+import $ from 'jquery' ;
+import logdown from 'logdown'
 
 import history from "../history"
 import store from '../index';
 import { top_right_menu, getLangLabel, getPropLabel, fullUri } from './App'
 import { auth, Redirect404 } from '../routes'
 import { initiateApp } from '../state/actions';
-import LatestSyncs from "./LatestSyncs"
+import LatestSyncs, { latestSyncsScopes } from "./LatestSyncs"
 
 import { topics } from "../lib/topics"
-
-import $ from 'jquery' ;
-
-import logdown from 'logdown'
 
 const loggergen = new logdown('gen', { markdown: false });
 
@@ -139,23 +137,46 @@ export class TraditionViewer extends Component<State, Props>
 
   renderSubTopic(t, listing, depth = 0){
     
-    const topic = topics[t]
-    console.log("topic:", t, topic)
+    const topic = topics[t], label = getPropLabel(this, fullUri("bdr:"+t), false, true)
 
+    console.log("topic:", depth, t, topic, label)
+    
     if(topic?.sub?.length) {
       if(depth < 2) {
         const sublist = []
         topic.sub.map(s => this.renderSubTopic(s, sublist, depth+1))
-        if(depth > 0) listing.push(<h5>{ getPropLabel(this, fullUri("bdr:"+t)) }</h5>)
-        listing.push(sublist)
+        //if(depth > 0) listing.push(<h5>{ getPropLabel(this, fullUri("bdr:"+t)) }</h5>)
+        //listing.push(sublist)
+        listing.push({...label, rank:label?.value?.toLowerCase(), sublist, depth, hasSub:1}) 
       } else {
-        listing.push(<Link to={"../bdr:"+t+"/"}>{ getPropLabel(this, fullUri("bdr:"+t)) } [{topic?.sub?.length}]</Link>)  
+        //listing.push(<Link to={"../bdr:"+t+"/"}>{ getPropLabel(this, fullUri("bdr:"+t)) } [{topic?.sub?.length}]</Link>)  
+        listing.push({...label, rank:label?.value?.toLowerCase(), to:"../bdr:"+t+"/", depth, hasSub:1, length:topic?.sub?.length }) 
       }
     } else {
-      listing.push(<Link to={"/search?r=bdr:"+t+"&t=Work"}>{ getPropLabel(this, fullUri("bdr:"+t)) }</Link>)
-    }
-
+      //listing.push(<Link to={"/search?r=bdr:"+t+"&t=Work"}>{ getPropLabel(this, fullUri("bdr:"+t)) }</Link>)
+      listing.push({...label, rank:label?.value?.toLowerCase(), to:"/search?r=bdr:"+t+"&t=Work", depth, hasSub:depth>1?1:0})
+    }    
   }
+  
+  
+  renderList(listing) {
+
+    const sort = _.orderBy(listing, ["depth", "hasSub", "lang", "rank"], ["asc", "asc", "desc", "asc"])
+
+    console.log("rl:",listing, sort)
+
+    const res = []
+    for(const e of sort) {
+      if(e.sublist) {
+        if(e.depth > 0) res.push(<h5 lang={e.lang}>{e.value}</h5>)
+        res.push(this.renderList(e.sublist))
+      }
+      else if(e.to) res.push(<Link lang={e.lang} to={e.to}>{e.value}{e.length?" ["+e.length+"]":""}</Link>)
+      else res.push(<i>{e.value} {e.lang}</i>)
+    }
+    return res
+  }
+
 
   renderTopic({tradi, id}, {content, breadcrumbs}){
 
@@ -184,7 +205,7 @@ export class TraditionViewer extends Component<State, Props>
         {/* <h1 style={{width:"100%"}}>{I18n.t("tradition."+this.props.tradition+"T")} &ndash; {I18n.t("tradition.t_"+this.props.type)} &ndash; {rootid}</h1> */}
         <h1 style={{width:"100%"}}>{rootid}</h1> 
         <div className={"tradi-content listing display-block"}>
-          {listing}
+          {this.renderList(listing)}
         </div>
       </>)
 
@@ -254,13 +275,21 @@ export class TraditionViewer extends Component<State, Props>
   render(props) {         
     
     if(this.props.config?.tradition && this.props.tradition && !this.props.config?.tradition[this.props.tradition]) 
-    return <Redirect404  history={history}  auth={auth}/>
+      return <Redirect404  history={history}  auth={auth}/>
     else  {
       
+      console.log("lsn:",this.props.latestSyncs,this.props.latestSyncsMeta,this.props.latestSyncsNb)
+
       // TODO: control tradition/dates as well
       if(this.props.config) {
         if(!this.props.latestSyncs || this.props.latestSyncs != true && this.props.latestSyncsMeta?.tradition != this.props.tradition) {
           this.props.onGetLatestSyncs({ ...this.props.latestSyncsMeta??{}, tradition: this.props.tradition })
+        } else if(this.props.latestSyncsNb === 0 && !this.props.latestSyncsMeta?.timeframe) { 
+          let i = latestSyncsScopes.indexOf(this.props.latestSyncsMeta?.timeframe ?? latestSyncsScopes[0])
+          if(i < latestSyncsScopes.length - 1) { 
+            i++
+            this.props.onGetLatestSyncs({ ...this.props.latestSyncsMeta??{}, tradition: this.props.tradition, timeframe:latestSyncsScopes[i] })
+          } 
         }
       }
 

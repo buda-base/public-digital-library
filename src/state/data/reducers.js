@@ -1083,6 +1083,8 @@ reducers[actions.TYPES.searchingKeyword] = searchingKeyword;
 
 export const getLatestSyncs = (state: DataState, action: Action) => {
 
+   if(state.latestSyncsNb != undefined) delete state.latestSyncsNb
+
    return {
       ...state,
       latestSyncs:true,
@@ -1097,7 +1099,8 @@ export const gotLatestSyncs = (state: DataState, action: Action) => {
    return {
       ...state,
       latestSyncs:action.payload,
-      latestSyncsNb:action.meta.nb
+      latestSyncsNb:Number(action.meta.nb),
+      latestSyncsMeta:{ ...state.latestSyncsMeta??{}, ...action.meta.timeframe ? {timeframe:action.meta.timeframe}:{} }
    }
 }
 reducers[actions.TYPES.gotLatestSyncs] = gotLatestSyncs;

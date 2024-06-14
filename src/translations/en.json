@@ -108,7 +108,7 @@
       "resources":"resources",
       "guided":"Guided search",
       "browse":"browse",
-      "home":"home",
+      "home":"Home",
       "collections":"Browse collections subscribed to by your institution",
       "update":"Update to latest version of BUDA",
       "guide":"user guide",
@@ -752,7 +752,8 @@
       "18th":"18th Century",
       "19th":"19th Century",
       "20th":"20th Century",
-      "21st":"21st Century"
+      "21st":"21st Century",
+      "nothing":"Nothing added in the {{time}}."
    },
    "mirador": {
       "return": "return to BUDA",
