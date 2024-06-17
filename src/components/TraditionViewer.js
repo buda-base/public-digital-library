@@ -28,8 +28,29 @@ type Props = { history:{}, locale:string, config:{} }
 
 let _that
 
+let xml, tbrc
 const purl = "https://purl.bdrc.io/resource/"
 async function buildTree(id, glob, parent) {
+
+  const nsResolver = (prefix) => {
+    const namespaces = {
+      'o': 'http://www.tbrc.org/models/outline#'  
+    };
+    return namespaces[prefix] || null;
+  };
+
+  if(!xml) { 
+
+      
+    xml = await fetch("/scripts/src/lib/topicsNL.xml") 
+    const parser = new DOMParser();
+    tbrc = parser.parseFromString(await xml.text(), "text/xml")
+    const xpathExpression = `.//o:node[not(starts-with(@value, 'T'))]`;
+    xml = tbrc.evaluate(xpathExpression, tbrc, nsResolver, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
+
+    console.log("xml:", xml, xml.snapshotLength)
+  }
+
   let data = await fetch(purl+id+".jsonld")    
   let json = await data.json()
 
@@ -57,6 +78,7 @@ async function buildTree(id, glob, parent) {
       if(obj.length > 1 && obj[1]) obj = obj[1]
       if(obj) { 
         sub.push(obj)
+        //if(id === "O9TAXTBRC201605" || parent === "O9TAXTBRC201605") // || glob[parent].parent === "O9TAXTBRC201605" ) 
         await buildTree(obj, glob, id)        
       }
     }
@@ -65,13 +87,50 @@ async function buildTree(id, glob, parent) {
   if(!glob[id]) glob[id] = {}
   glob[id]["label"] = prefLabel 
   if(parent) glob[id].parent = parent
+
+  console.log("id:", id, prefLabel)
+
+  if(prefLabel) {
+    if(!Array.isArray(prefLabel)) prefLabel = [ prefLabel ]
+    prefLabel = _.orderBy(prefLabel, [ (obj)=> obj["@language"] === "en" ? 0 : 1, "@language"], ["asc","asc"])
+    const xpathExpression2 = `.//o:node[@value="${id}"]`;
+    const result2 = tbrc.evaluate(xpathExpression2, tbrc, nsResolver, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);    
+    if (result2.snapshotLength > 0) {
+      console.log("value:", result2)
+    } else {
+      let found = false
+      for (let i = 0; i < xml.snapshotLength; i++) {
+        if(found) break ;
+        const element = xml.snapshotItem(i);
+        for(const label of prefLabel) {
+          if(found) break;
+          const xpathExpression3 = `.//o:name[.="${label["@value"]?.toLowerCase()}"]`;
+          const result3 = tbrc.evaluate(xpathExpression3, element, nsResolver, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);              
+          if (result3.snapshotLength > 0) {
+            found = true            
+            const filtered = Array.from({ length: result3.snapshotLength }, (r,i) => { 
+              const elem = result3.snapshotItem(i)
+              return [elem.parentNode.getAttribute("value"),elem.parentNode.getAttribute("nl")]
+            }).filter(n => !n[0].startsWith("T"))
+            if(filtered.length > 1) console.warn("MULTIPLE TOPIC FOUND", result3, prefLabel, filtered)
+            else console.log("label:", label["@value"], result3, filtered)
+            //glob[id].rank = 
+            break;
+          }
+        }
+
+      }
+      if(!found) console.error("TOPIC NOT FOUND", id, prefLabel)
+    }
+  }
 }
 
-/* // uncomment to rebuild tree then copy/paste object from console to ../lib/topics.js once finished (takes a few minutes)
-let topics = {}, genres = {}
-//buildTree("O3JW5309", genres).then(() => { console.log("genres:",genres) })
-buildTree("O9TAXTBRC201605", topics).then(() => { console.log("topics:",topics) })
-*/
+
+// uncomment to rebuild tree then copy/paste object from console to ../lib/topics.js once finished (takes a few minutes)
+const newTopics = {}, newGenres = {}
+//buildTree("O3JW5309", newGenres).then(() => { console.log("genres:",newGenres) })
+buildTree("O9TAXTBRC201605", newTopics).then(() => { console.log("topics:",newTopics) })
+
 
 const len = (k, topics) => {
   if(topics[k]) {
