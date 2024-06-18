@@ -214,7 +214,7 @@ export class TraditionViewer extends Component<State, Props>
 
   renderSubTopic(t, listing, depth = 0){
     
-    const topic = topics[t], label = getPropLabel(this, fullUri("bdr:"+t), false, true)
+    const topic = topics[t], label = getPropLabel(this, fullUri("bdr:"+t), false, true), MAXNL=100000
 
     console.log("topic:", depth, t, topic, label)
     
@@ -224,14 +224,14 @@ export class TraditionViewer extends Component<State, Props>
         topic.sub.map(s => this.renderSubTopic(s, sublist, depth+1))
         //if(depth > 0) listing.push(<h5>{ getPropLabel(this, fullUri("bdr:"+t)) }</h5>)
         //listing.push(sublist)
-        listing.push({...label, rank:topic.rank ?? 9999, sublist, depth, hasSub:1}) 
+        listing.push({...label, rank:topic.rank ?? MAXNL, sublist, depth, hasSub:1}) 
       } else {
         //listing.push(<Link to={"../bdr:"+t+"/"}>{ getPropLabel(this, fullUri("bdr:"+t)) } [{topic?.sub?.length}]</Link>)  
-        listing.push({...label, rank:topic.rank ?? 9999, to:"../bdr:"+t+"/", depth, hasSub:1, length:topic?.sub?.length }) 
+        listing.push({...label, rank:topic.rank ?? MAXNL, to:"../bdr:"+t+"/", depth, hasSub:1, length:topic?.sub?.length }) 
       }
     } else {
       //listing.push(<Link to={"/search?r=bdr:"+t+"&t=Work"}>{ getPropLabel(this, fullUri("bdr:"+t)) }</Link>)
-      listing.push({...label, rank:topic.rank ?? 9999, to:"/search?r=bdr:"+t+"&t=Work", depth, hasSub:depth>1?1:0})
+      listing.push({...label, rank:topic.rank ?? MAXNL, to:"/search?r=bdr:"+t+"&t=Work", depth, hasSub:depth>1?1:0})
     }    
   }
   
