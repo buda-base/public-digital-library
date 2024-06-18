@@ -1,4 +1,4250 @@
 export const topics = {
+    "notFound": [
+        {
+            "id": "O9TAXTBRC2016052KG226533",
+            "prefLabel": [
+                {
+                    "@language": "en",
+                    "@value": "Representations of body, speech and mind"
+                },
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "sku gsung thugs rten/"
+                },
+                {
+                    "@language": "zh-hans",
+                    "@value": "身语意三种所依"
+                }
+            ]
+        },
+        {
+            "id": "O9TAXTBRC2016052KG226560",
+            "prefLabel": [
+                {
+                    "@language": "en",
+                    "@value": "Architecture"
+                },
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "ar las bzo skrun/"
+                },
+                {
+                    "@language": "zh-hans",
+                    "@value": "世俗建筑"
+                }
+            ]
+        },
+        {
+            "id": "O9TAXTBRC2016052KG226564",
+            "prefLabel": [
+                {
+                    "@language": "en",
+                    "@value": "Skills and games"
+                },
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "sgyu rtsal dang rtsed mo/"
+                },
+                {
+                    "@language": "zh-hans",
+                    "@value": "技艺及玩具"
+                }
+            ]
+        },
+        {
+            "id": "T1PD94645",
+            "prefLabel": [
+                {
+                    "@language": "en",
+                    "@value": "six symbols of longevity"
+                },
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "tshe ring rnam drug"
+                }
+            ]
+        },
+        {
+            "id": "T1KG24452",
+            "prefLabel": [
+                {
+                    "@language": "en",
+                    "@value": "tibetan paper"
+                },
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "bod shog"
+                }
+            ]
+        },
+        {
+            "id": "O9TAXTBRC2016052KG226573",
+            "prefLabel": [
+                {
+                    "@language": "en",
+                    "@value": "Small scale handicrafts industry"
+                },
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "lag shes bzo las/"
+                },
+                {
+                    "@language": "zh-hans",
+                    "@value": "手工业"
+                }
+            ]
+        },
+        {
+            "id": "T2045",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "bdud rtsi yon tan sgrub pa/"
+                }
+            ]
+        },
+        {
+            "id": "T2KG207415",
+            "prefLabel": [
+                {
+                    "@language": "en",
+                    "@value": "a South Asian medicinal system"
+                },
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "tshe'i rig byed/"
+                },
+                {
+                    "@language": "sa-x-ndia",
+                    "@value": "Āyurveda"
+                }
+            ]
+        },
+        {
+            "id": "T1KG80789",
+            "prefLabel": [
+                {
+                    "@language": "en",
+                    "@value": "obstetrics"
+                },
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "bu btsa' rig pa/"
+                }
+            ]
+        },
+        {
+            "id": "T2557",
+            "prefLabel": [
+                {
+                    "@language": "en",
+                    "@value": "blockages (in medicine)"
+                },
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "gag pa/"
+                }
+            ]
+        },
+        {
+            "id": "T11MS61",
+            "prefLabel": [
+                {
+                    "@language": "en",
+                    "@value": "body training"
+                },
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "lus sbyong /"
+                }
+            ]
+        },
+        {
+            "id": "T2KG207970",
+            "prefLabel": [
+                {
+                    "@language": "en",
+                    "@value": "the department of information and international relations (DIIR)"
+                },
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "phyi dril las khungs/"
+                }
+            ]
+        },
+        {
+            "id": "T1KG24262",
+            "prefLabel": [
+                {
+                    "@language": "en",
+                    "@value": "department of education"
+                },
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "shes rig las khungs/"
+                }
+            ]
+        },
+        {
+            "id": "T1GS44553",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "mchod rten dkar chag"
+                }
+            ]
+        },
+        {
+            "id": "T1598",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "do ha skor gsum/"
+                }
+            ]
+        },
+        {
+            "id": "T1KG26395",
+            "prefLabel": [
+                {
+                    "@language": "en",
+                    "@value": "comic book"
+                },
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "ri mo'i sgrung deb/"
+                }
+            ]
+        },
+        {
+            "id": "T2KG207410",
+            "prefLabel": [
+                {
+                    "@language": "en",
+                    "@value": "mythologized stories"
+                },
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "sngon gyi rabs/"
+                },
+                {
+                    "@language": "sa-deva",
+                    "@value": "पूराण"
+                }
+            ]
+        },
+        {
+            "id": "O9TAXTBRC2016052KG226701",
+            "prefLabel": [
+                {
+                    "@language": "en",
+                    "@value": "Stories and letter writings"
+                },
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "sgrung dang yig bskur sogs/"
+                },
+                {
+                    "@language": "zh-hans",
+                    "@value": "故事及信函"
+                }
+            ]
+        },
+        {
+            "id": "T1838",
+            "prefLabel": [
+                {
+                    "@language": "en",
+                    "@value": "preface for an almanac"
+                },
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "li tho 'go brjod/"
+                }
+            ]
+        },
+        {
+            "id": "T2MS6123",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "dal dag"
+                }
+            ]
+        },
+        {
+            "id": "O9TAXTBRC2016052KG226746",
+            "prefLabel": [
+                {
+                    "@language": "en",
+                    "@value": "Chinese astrology"
+                },
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "nag rtsis/"
+                },
+                {
+                    "@language": "zh-hans",
+                    "@value": "五行运算"
+                }
+            ]
+        },
+        {
+            "id": "O9TAXTBRC2016052KG226758",
+            "prefLabel": [
+                {
+                    "@language": "en",
+                    "@value": "Svarodaya"
+                },
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "dbyangs 'char/"
+                },
+                {
+                    "@language": "zh-hans",
+                    "@value": "占音术"
+                }
+            ]
+        },
+        {
+            "id": "O9TAXTBRC2016052KG226761",
+            "prefLabel": [
+                {
+                    "@language": "en",
+                    "@value": "Performance"
+                },
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "'khrab ston/"
+                },
+                {
+                    "@language": "zh-hans",
+                    "@value": "表演"
+                }
+            ]
+        },
+        {
+            "id": "O9TAXTBRC2016052KG226769",
+            "prefLabel": [
+                {
+                    "@language": "en",
+                    "@value": "Music and musical notation"
+                },
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "rol dbyangs/"
+                },
+                {
+                    "@language": "zh-hans",
+                    "@value": "音乐"
+                }
+            ]
+        },
+        {
+            "id": "O9TAXTBRC2016052KG226774",
+            "prefLabel": [
+                {
+                    "@language": "en",
+                    "@value": "songs and humors"
+                },
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "glu dang bzhad gad/"
+                },
+                {
+                    "@language": "zh-hans",
+                    "@value": "歌舞相声"
+                }
+            ]
+        },
+        {
+            "id": "T2MS11383",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "rin chen 'byung ldan/"
+                },
+                {
+                    "@language": "zh-hans",
+                    "@value": "宝生佛"
+                }
+            ]
+        },
+        {
+            "id": "T824",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "rigs gsum mgon po/"
+                },
+                {
+                    "@language": "sa-alalc97",
+                    "@value": "trikulanatha"
+                }
+            ]
+        },
+        {
+            "id": "T719",
+            "prefLabel": [
+                {
+                    "@language": "en",
+                    "@value": "the seven hero buddhas"
+                },
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "sangs rgyas dpa' bo bdun/"
+                }
+            ]
+        },
+        {
+            "id": "T1AT489",
+            "prefLabel": [
+                {
+                    "@language": "en",
+                    "@value": "Gautama Buddha"
+                },
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "shAkya thub pa/"
+                },
+                {
+                    "@language": "sa-x-ndia",
+                    "@value": "shakyamuni"
+                },
+                {
+                    "@language": "zh-hans",
+                    "@value": "释迦牟尼佛"
+                }
+            ]
+        },
+        {
+            "id": "T1154",
+            "prefLabel": [
+                {
+                    "@language": "en",
+                    "@value": "sixteen sthavira"
+                },
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "gnas brtan bcu drug"
+                }
+            ]
+        },
+        {
+            "id": "T564",
+            "prefLabel": [
+                {
+                    "@language": "en",
+                    "@value": "the sage of vajrasana and his two attendants"
+                },
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "shAkya thub pa rdo rje gdan pa gtso 'khor gsum/"
+                },
+                {
+                    "@language": "sa-alalc97",
+                    "@value": "sakyamuni (vajrasana)"
+                }
+            ]
+        },
+        {
+            "id": "T681",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "byams pa/"
+                },
+                {
+                    "@language": "sa-alalc97",
+                    "@value": "maitreya"
+                },
+                {
+                    "@language": "zh-hans",
+                    "@value": "慈尊"
+                }
+            ]
+        },
+        {
+            "id": "T8LS14948",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "indra b+hu ti/"
+                }
+            ]
+        },
+        {
+            "id": "T2GS1131",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "sa'i snying po/"
+                },
+                {
+                    "@language": "sa-alalc97",
+                    "@value": "ksitigarbha"
+                },
+                {
+                    "@language": "zh-hans",
+                    "@value": "地藏王"
+                }
+            ]
+        },
+        {
+            "id": "T1602",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "thub pa lnga ldan/"
+                }
+            ]
+        },
+        {
+            "id": "T1705",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "gu ru zhi ba bka' 'dus (rdo rje gling pa)"
+                }
+            ]
+        },
+        {
+            "id": "T01AG03332",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "sa yi 'jigs skyob sgrol ma/ (bar chad kun sel)"
+                }
+            ]
+        },
+        {
+            "id": "T2CN4390",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "pad+ma mkha' 'gro/"
+                }
+            ]
+        },
+        {
+            "id": "T906",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "khyung nag dus 'khor lugs/"
+                }
+            ]
+        },
+        {
+            "id": "T995",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "tshe dpag med 'chi med rnga sgra lha 17 jo nang lugs/"
+                },
+                {
+                    "@language": "sa-alalc97",
+                    "@value": "amitayus dundubhisvara 17 devatmaka"
+                }
+            ]
+        },
+        {
+            "id": "T2111",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "khrus lha lnga /"
+                }
+            ]
+        },
+        {
+            "id": "T1347",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "tshe dpag med/"
+                },
+                {
+                    "@language": "sa-x-ndia",
+                    "@value": "amitāyus"
+                },
+                {
+                    "@language": "zh-hant",
+                    "@value": "無量壽"
+                }
+            ]
+        },
+        {
+            "id": "T1687",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "tshe yum tsaNDa lI/"
+                }
+            ]
+        },
+        {
+            "id": "T1083",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "sangs rgyas mkha' 'gro lha 9"
+                }
+            ]
+        },
+        {
+            "id": "T2292",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "gu ru drag po me rlung 'khyil ba ( rat+na gling pa)"
+                }
+            ]
+        },
+        {
+            "id": "T2300",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "'jam dbyangs blo 'phel shes rab ral gri/ (sangs rgyas gling pa)"
+                }
+            ]
+        },
+        {
+            "id": "T569",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "klu dbang rgyal po/"
+                },
+                {
+                    "@language": "sa-alalc97",
+                    "@value": "nagesvararaja"
+                }
+            ]
+        },
+        {
+            "id": "T2314",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "phyag rdor gtum po seng sgrogs/ (chos rje gling pa)"
+                }
+            ]
+        },
+        {
+            "id": "T2CZ5183",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "rdor dbyings lha lnga bcu nga gsum/"
+                }
+            ]
+        },
+        {
+            "id": "T994",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "tshe dpag med 'chi med rnga sgra lha 9 dze tA ri lugs/"
+                },
+                {
+                    "@language": "sa-alalc97",
+                    "@value": "amitayus dundubhisvara 9 devatmaka jetari krama"
+                }
+            ]
+        },
+        {
+            "id": "T2291",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "gu ru drag po (rdo rje gling pa)"
+                }
+            ]
+        },
+        {
+            "id": "T00JR803",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "sgyu 'phrul drwa ba (khams lugs)"
+                }
+            ]
+        },
+        {
+            "id": "T1401",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "gu ru drag po bde gshegs 'dus pa (nyang ral nyi ma 'od zer)"
+                }
+            ]
+        },
+        {
+            "id": "T551",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "bla ma sku gsum bde 'dus zab tig (mkhyen brtse'i yang gter)"
+                }
+            ]
+        },
+        {
+            "id": "T724",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "sa'i snying po gang ba'i rdo rje'i lugs/"
+                },
+                {
+                    "@language": "sa-alalc97",
+                    "@value": "ksitigarba"
+                }
+            ]
+        },
+        {
+            "id": "T353",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "yang dag he ru ka"
+                }
+            ]
+        },
+        {
+            "id": "T39",
+            "prefLabel": [
+                {
+                    "@language": "en",
+                    "@value": "white manjusri"
+                },
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "'jam dpal dkar po/"
+                }
+            ]
+        },
+        {
+            "id": "T1024",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "'jam dpal mtshan brjod rigs bsdus bla med lugs lha 53"
+                },
+                {
+                    "@language": "sa-alalc97",
+                    "@value": "manjusrinamasangiti sanksiptakula guhyaka 53 devatmaka"
+                }
+            ]
+        },
+        {
+            "id": "T619",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "sgrol ma/"
+                },
+                {
+                    "@language": "sa-x-ndia",
+                    "@value": "tāra"
+                },
+                {
+                    "@language": "zh-hans",
+                    "@value": "度母"
+                }
+            ]
+        },
+        {
+            "id": "T00AG01366",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "'chi med 'phags ma'i snying thig (mkhyen brtse'i dbang po/)"
+                }
+            ]
+        },
+        {
+            "id": "T2GS1160",
+            "prefLabel": [
+                {
+                    "@language": "en",
+                    "@value": "yellow prajnaparamita"
+                },
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "sher phyin ma ser mo/"
+                },
+                {
+                    "@language": "sa-x-ndia",
+                    "@value": "prajnaparamita pita"
+                }
+            ]
+        },
+        {
+            "id": "T702",
+            "prefLabel": [
+                {
+                    "@language": "en",
+                    "@value": "pratisara from the vajrapanjara tantra"
+                },
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "so sor 'brang ma rdo rje gur las 'byung ba/"
+                }
+            ]
+        },
+        {
+            "id": "T891",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "sme ba brtsegs ma/ (mkha' 'gro ma)"
+                }
+            ]
+        },
+        {
+            "id": "T563",
+            "prefLabel": [
+                {
+                    "@language": "en",
+                    "@value": "yellow vajrasattva"
+                },
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "rdo rje sems dpa' ser po/"
+                },
+                {
+                    "@language": "sa-alalc97",
+                    "@value": "pita vajrasattva"
+                }
+            ]
+        },
+        {
+            "id": "T2GS1192",
+            "prefLabel": [
+                {
+                    "@language": "en",
+                    "@value": "lion-mounted, green vaisravana in the tradition of jnana"
+                },
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "rnam sras ljang gu seng zhon ma dz+nyA na'i lugs/"
+                }
+            ]
+        },
+        {
+            "id": "T00JR3557",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "phur pa (rong lugs)"
+                }
+            ]
+        },
+        {
+            "id": "T2174",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "thugs chen yid bzhin nor bu phyag bzhi pa lha mang srong btsan sgam po lugs/"
+                },
+                {
+                    "@language": "sa-x-ndia",
+                    "@value": "avalokitesvara cintamani jagaddamara"
+                }
+            ]
+        },
+        {
+            "id": "T836",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "tshe dpag med dkar po phyag bzhi pa/ (ras chung lugs)"
+                }
+            ]
+        },
+        {
+            "id": "T962",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "thugs chen 'khor ba dong sprugs/ (gu ru chos dbang lugs)"
+                }
+            ]
+        },
+        {
+            "id": "T1394",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "rta phag yid bzhin nor bu ('ja' tshon snying po)"
+                }
+            ]
+        },
+        {
+            "id": "T671",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "tshe dpag med sprul sku ras chung lugs/"
+                },
+                {
+                    "@language": "sa-alalc97",
+                    "@value": "amitayus nirmanakaya"
+                }
+            ]
+        },
+        {
+            "id": "T628",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "bde mchog nag po lugs/"
+                }
+            ]
+        },
+        {
+            "id": "T907",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "khyung khra nag po ras chung lugs/"
+                }
+            ]
+        },
+        {
+            "id": "T677",
+            "prefLabel": [
+                {
+                    "@language": "en",
+                    "@value": "white manjughosa in the tradition of the great pandita of kashmir"
+                },
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "'jam dbyangs dkar po kha che paN chen lugs/"
+                },
+                {
+                    "@language": "sa-alalc97",
+                    "@value": "sita manjughosa"
+                }
+            ]
+        },
+        {
+            "id": "T00AG0326",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "ku ru kul+le dkar mo/"
+                }
+            ]
+        },
+        {
+            "id": "T1316",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "zhi khro/"
+                }
+            ]
+        },
+        {
+            "id": "T2293",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "gu ru drag po kI la ya ( pad+ma dkar po)"
+                }
+            ]
+        },
+        {
+            "id": "T2040",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "phur pa (rgyud lugs)"
+                }
+            ]
+        },
+        {
+            "id": "T1087",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "ma hA mA ya 'bring po lha 5"
+                }
+            ]
+        },
+        {
+            "id": "T2296",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "gsang bdag nyi ma mdung gang ma g.ya' bzang lugs/"
+                }
+            ]
+        },
+        {
+            "id": "T823",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "phyag rdor drag po sum sgril (lho brag grub chen lugs)"
+                }
+            ]
+        },
+        {
+            "id": "T2164",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "bde mchog lha 13 zhi byed lugs/"
+                }
+            ]
+        },
+        {
+            "id": "T679",
+            "prefLabel": [
+                {
+                    "@language": "en",
+                    "@value": "orange arapacana manjughosa in the sakya tradition"
+                },
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "'jam dbyangs a ra pa tsa na dmar ser sa lugs/"
+                },
+                {
+                    "@language": "sa-alalc97",
+                    "@value": "manjughosa raktapita arapacana"
+                }
+            ]
+        },
+        {
+            "id": "T989",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "phyag rdor gtum po khyung 5 ras chung lugs/"
+                },
+                {
+                    "@language": "sa-alalc97",
+                    "@value": "canda vajrapani 5 devatmaka (ras chung lugs)"
+                }
+            ]
+        },
+        {
+            "id": "T2295",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "karma gu ru (byang bdag bkra shis stobs rgyal)"
+                }
+            ]
+        },
+        {
+            "id": "T684",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "dbyangs can ma phyag bzhi zla ba gzhon nu lugs/"
+                },
+                {
+                    "@language": "sa-alalc97",
+                    "@value": "sarasvati caturbhuja sita"
+                }
+            ]
+        },
+        {
+            "id": "T1074",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "sgyu 'phrul chen mo lha 5 rngog lugs/"
+                },
+                {
+                    "@language": "sa-alalc97",
+                    "@value": "mahamaya 5 devatmaka rngog krama"
+                }
+            ]
+        },
+        {
+            "id": "T902",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "phyag rdor nyi ma mdung gang ma bram ze lugs/"
+                }
+            ]
+        },
+        {
+            "id": "T00AG0338",
+            "prefLabel": [
+                {
+                    "@language": "en",
+                    "@value": "white tara"
+                },
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "sgrol ma dkar mo/"
+                }
+            ]
+        },
+        {
+            "id": "T825",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "sgrol dkar nye brgyud thun mong ma yin pa/"
+                }
+            ]
+        },
+        {
+            "id": "T3CN15347",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "u pa rA tsa/"
+                }
+            ]
+        },
+        {
+            "id": "T00AG01368",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "rdor sems snying thig"
+                }
+            ]
+        },
+        {
+            "id": "T1026",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "sangs rgyas mnyam sbyor rdor sems gtso bor gyur pa rigs bsdus lha 218"
+                },
+                {
+                    "@language": "sa-alalc97",
+                    "@value": "buddhasamayoga vajrasattva sanksiptakula"
+                }
+            ]
+        },
+        {
+            "id": "T1393",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "bka' brgyad dngos grub snying po ('ja' tshon snying po)"
+                }
+            ]
+        },
+        {
+            "id": "T1KG86198",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "rdo rje ma bdun ma/"
+                }
+            ]
+        },
+        {
+            "id": "T00AG01277",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "tshe lha rigs lnga /"
+                }
+            ]
+        },
+        {
+            "id": "T835",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "tshe dpag med sprul sku dang longs sku stag lung lugs/"
+                }
+            ]
+        },
+        {
+            "id": "T1767",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "rdo rje sems dpa' yab rkyang /"
+                }
+            ]
+        },
+        {
+            "id": "T2156",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "mkha' 'gro lnga rigs bsdus lha 49 rngog lugs/"
+                }
+            ]
+        },
+        {
+            "id": "T1041",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "thugs chen gtso 'khor gsum pa/"
+                }
+            ]
+        },
+        {
+            "id": "T1007",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "gdugs dkar po can ma lha 17"
+                },
+                {
+                    "@language": "sa-alalc97",
+                    "@value": "sitatapatra 17 devatmaka"
+                }
+            ]
+        },
+        {
+            "id": "T649",
+            "prefLabel": [
+                {
+                    "@language": "en",
+                    "@value": "five-deity tara"
+                },
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "sgrol ma lha lnga /"
+                }
+            ]
+        },
+        {
+            "id": "T654",
+            "prefLabel": [
+                {
+                    "@language": "en",
+                    "@value": "blue-clad vajrapani from the dharani"
+                },
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "phyag rdor gos sngon can gyi gzungs las byung ba/"
+                },
+                {
+                    "@language": "sa-alalc97",
+                    "@value": "vajrapani nilambaradhara"
+                }
+            ]
+        },
+        {
+            "id": "T1061",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "bde mchog sbyangs pa'i yon tan lha 13 lwa ba'i lugs/"
+                }
+            ]
+        },
+        {
+            "id": "T2GS1087",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "ma hA mA ya/"
+                },
+                {
+                    "@language": "sa-alalc97",
+                    "@value": "mahamaya"
+                }
+            ]
+        },
+        {
+            "id": "T00JR3352",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "rgya dkar ral gcig ma/"
+                }
+            ]
+        },
+        {
+            "id": "T2163",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "thugs dam bde gshegs bcu gnyis zhi byed lugs/"
+                }
+            ]
+        },
+        {
+            "id": "T1351",
+            "prefLabel": [
+                {
+                    "@language": "en",
+                    "@value": "the five classes of dakinis"
+                },
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "mkha' 'gro sde lnga /"
+                }
+            ]
+        },
+        {
+            "id": "T1038",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "dbyangs can dkar mo bo dong lugs/"
+                }
+            ]
+        },
+        {
+            "id": "T656",
+            "prefLabel": [
+                {
+                    "@language": "en",
+                    "@value": "exceeding fierce (canda-maharosana) defensive-fort vajrapani in the tradition of rechungpa"
+                },
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "phyag rdor gtum chen bsrung ba'i mkhar ras chung lugs/"
+                },
+                {
+                    "@language": "sa-alalc97",
+                    "@value": "vajrapani candamaharosana"
+                }
+            ]
+        },
+        {
+            "id": "T2246",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "'jam dpal khro chu sman gdong /"
+                }
+            ]
+        },
+        {
+            "id": "T432",
+            "prefLabel": [
+                {
+                    "@language": "en",
+                    "@value": "many+dzu shrI peaceful and wrathful"
+                },
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "'jam dpal zhi khro/"
+                }
+            ]
+        },
+        {
+            "id": "T2593",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "thugs chen 'khor ba dbyings grol/ (legs ldan rje)"
+                }
+            ]
+        },
+        {
+            "id": "T1118",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "gu ru drag po mthing nag gnam lcags thog gi ral gri (chos rgyal rdo rje)"
+                }
+            ]
+        },
+        {
+            "id": "T1069",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "rdo rje phag mo lha 17 'jigs med grags pa'i lugs/"
+                }
+            ]
+        },
+        {
+            "id": "T660",
+            "prefLabel": [
+                {
+                    "@language": "en",
+                    "@value": "vajrapani spirit-subduer"
+                },
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "phyag rdor 'byung po 'dul byed/"
+                },
+                {
+                    "@language": "sa-alalc97",
+                    "@value": "vajrapani bhutadamara"
+                }
+            ]
+        },
+        {
+            "id": "T646",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "sgrol ma nor sbyin kha che paN chen lugs/"
+                },
+                {
+                    "@language": "sa-x-ewts",
+                    "@value": "tara d+hanada/"
+                }
+            ]
+        },
+        {
+            "id": "T1CZ6",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "rdo rje 'od ldan dkar po/"
+                }
+            ]
+        },
+        {
+            "id": "T1GS122411",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "'jam dpal zhi ba (gter bdag gling pa 'gyur med rdo rje)"
+                }
+            ]
+        },
+        {
+            "id": "T2101",
+            "prefLabel": [
+                {
+                    "@language": "en",
+                    "@value": "eight manifestations of padmasambhava"
+                },
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "gu ru mtshan brgyad/"
+                }
+            ]
+        },
+        {
+            "id": "T1638",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "lha mo bu rdzi ma (rdo rje gling pa)"
+                }
+            ]
+        },
+        {
+            "id": "T1664",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "gnyen po lha lnga (rta mgrin)"
+                }
+            ]
+        },
+        {
+            "id": "T956",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "bde mchog dkar po kha che paN chen lugs/"
+                }
+            ]
+        },
+        {
+            "id": "T692",
+            "prefLabel": [
+                {
+                    "@language": "en",
+                    "@value": "secret sadhana of kurukulla"
+                },
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "ku ru kulle gsang sgrub/"
+                },
+                {
+                    "@language": "sa-alalc97",
+                    "@value": "kurukulla guhyasadhana"
+                }
+            ]
+        },
+        {
+            "id": "T2044",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "rta mgrin/"
+                },
+                {
+                    "@language": "sa-x-ndia",
+                    "@value": "hayagrīva"
+                }
+            ]
+        },
+        {
+            "id": "T2153",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "kye rdor lha dgu jo nang zhi sbas lugs/"
+                }
+            ]
+        },
+        {
+            "id": "T00JR2666",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "gu ru zhi ba/"
+                }
+            ]
+        },
+        {
+            "id": "T1749",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "thugs rje chen po bde gshegs kun 'dus/"
+                }
+            ]
+        },
+        {
+            "id": "T920",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "dzambha la yab yum dgu/"
+                }
+            ]
+        },
+        {
+            "id": "T00AG0327",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "'jam pa'i rdo rje/"
+                },
+                {
+                    "@language": "sa-alalc97",
+                    "@value": "manjusrivajra"
+                }
+            ]
+        },
+        {
+            "id": "T3JT12423",
+            "prefLabel": [
+                {
+                    "@language": "en",
+                    "@value": "web of illusion"
+                },
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "sgyu 'phrul drwa ba/"
+                },
+                {
+                    "@language": "sa-x-ndia",
+                    "@value": "mahayoga tantra"
+                }
+            ]
+        },
+        {
+            "id": "T1040",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "dbyangs can dmar mo gsang sgrub kha che biksa pa ra ma'i lugs/"
+                }
+            ]
+        },
+        {
+            "id": "T2145",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "kye rdo rje lha dgu mtsho skyes lugs/"
+                }
+            ]
+        },
+        {
+            "id": "T2149",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "kye rdo rje lha dgu DombhI lugs/"
+                }
+            ]
+        },
+        {
+            "id": "T572",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "ma hA mA ya gtso rkyang /"
+                },
+                {
+                    "@language": "sa-alalc97",
+                    "@value": "mahamaya ekantanayaka"
+                }
+            ]
+        },
+        {
+            "id": "T1152",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "gu ru drag po/"
+                }
+            ]
+        },
+        {
+            "id": "T2071",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "nags sman ma/"
+                }
+            ]
+        },
+        {
+            "id": "T2165",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "khros ma rigs lnga zhi byed lugs/"
+                }
+            ]
+        },
+        {
+            "id": "T00AG0329",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "rta mchog rol pa/"
+                }
+            ]
+        },
+        {
+            "id": "T986",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "phyag rdor 'khor chen lha 18"
+                },
+                {
+                    "@language": "sa-alalc97",
+                    "@value": "vajrapani mahacakra 18 devatmaka"
+                }
+            ]
+        },
+        {
+            "id": "T1045",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "mgon po gur thang rgyal nye brgyud/"
+                }
+            ]
+        },
+        {
+            "id": "T2306",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "'jam dpal pha rol rgol 'joms (mchog gyur gling pa)"
+                }
+            ]
+        },
+        {
+            "id": "T1037",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "dbyangs can dkar mo dge lugs lugs/"
+                }
+            ]
+        },
+        {
+            "id": "T991",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "gshin rje gshed lha 13 dpal 'dzin lugs/"
+                },
+                {
+                    "@language": "sa-alalc97",
+                    "@value": "rakta yamari 13 devatmaka mahasiddha sridhara krama"
+                }
+            ]
+        },
+        {
+            "id": "T2GS1234",
+            "prefLabel": [
+                {
+                    "@language": "en",
+                    "@value": "lion seated ganapati mahakala"
+                },
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "tshogs bdag mgon po seng+ge'i gdan can/"
+                }
+            ]
+        },
+        {
+            "id": "T01AG03283",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "gtum po thugs sgrub/"
+                }
+            ]
+        },
+        {
+            "id": "T1052",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "bde mchog nang dkyil dril bu zhabs lugs/"
+                }
+            ]
+        },
+        {
+            "id": "T4CZ326967",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "rigs can dra ma lnga /"
+                }
+            ]
+        },
+        {
+            "id": "T1GS124517",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "gtum po nA ga rak+sha (skyid grong chos mdzad)"
+                }
+            ]
+        },
+        {
+            "id": "T45",
+            "prefLabel": [
+                {
+                    "@language": "en",
+                    "@value": "storied mansion (kutagara) vajrapani"
+                },
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "phyag rdor khang bu brtsegs pa/"
+                },
+                {
+                    "@language": "sa-alalc97",
+                    "@value": "vajrapani kutagara"
+                }
+            ]
+        },
+        {
+            "id": "T519",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "gu ru drag po rtsal (byang gter)"
+                }
+            ]
+        },
+        {
+            "id": "T4CZ15215",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "sgrol ma phreng 'dzin ma/"
+                },
+                {
+                    "@language": "sa-x-ndia",
+                    "@value": "tarasragdhara"
+                }
+            ]
+        },
+        {
+            "id": "T1PD181202",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "nor bdag dmar po skor gsum/"
+                }
+            ]
+        },
+        {
+            "id": "T440",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "'jigs byed lhan skyes/"
+                },
+                {
+                    "@language": "sa-alalc97",
+                    "@value": "vajrabhairava sahaja"
+                }
+            ]
+        },
+        {
+            "id": "T1049",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "pu tra ming sring ngor lugs/"
+                }
+            ]
+        },
+        {
+            "id": "T854",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "sgrol dkar kaM tshang lugs/"
+                }
+            ]
+        },
+        {
+            "id": "T2198",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "rta phag (chos rgyal ngag gi dbang po'i dgongs gter)"
+                }
+            ]
+        },
+        {
+            "id": "T722",
+            "prefLabel": [
+                {
+                    "@language": "en",
+                    "@value": "samantabhadra (buddha according to purnavajra transmission)"
+                },
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "kun tu bzang po gang ba'i rdo rje lugs/"
+                }
+            ]
+        },
+        {
+            "id": "T00AG0323",
+            "prefLabel": [
+                {
+                    "@language": "en",
+                    "@value": "red manjusri"
+                },
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "'jam dbyangs dmar po/"
+                }
+            ]
+        },
+        {
+            "id": "T618",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "mi g.yo ba/"
+                },
+                {
+                    "@language": "sa-x-ndia",
+                    "@value": "ācala"
+                },
+                {
+                    "@language": "zh-hant",
+                    "@value": "不動明王"
+                }
+            ]
+        },
+        {
+            "id": "T2180",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "bde mchog dril bu lugs/"
+                }
+            ]
+        },
+        {
+            "id": "T2049",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "'jam dpal zhi ba (rgyud lugs bka' ma)"
+                }
+            ]
+        },
+        {
+            "id": "T003JR4506",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "bdud rtsi lha/"
+                },
+                {
+                    "@language": "sa-x-ndia",
+                    "@value": "anuttara"
+                }
+            ]
+        },
+        {
+            "id": "T1025",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "sangs rgyas mnyam sbyor rigs 6 bsdus pa lha 135 (127)"
+                },
+                {
+                    "@language": "sa-alalc97",
+                    "@value": "sarvabuddhasamayoga 135(127) devatmaka"
+                }
+            ]
+        },
+        {
+            "id": "T873",
+            "prefLabel": [
+                {
+                    "@language": "en",
+                    "@value": "the six vajrasana yidam deities"
+                },
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "rdo rje gdan pa'i lha drug"
+                }
+            ]
+        },
+        {
+            "id": "T1071",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "rdo rje phag mo 'byung ba lha 19 (21) zhi sbas lugs/"
+                },
+                {
+                    "@language": "sa-alalc97",
+                    "@value": "vajravarahi 19 (21) devatmaka santigupta krama"
+                }
+            ]
+        },
+        {
+            "id": "T2310",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "thugs rje chen po pad+ma gar dbang /(mchog gyur gling pa)"
+                }
+            ]
+        },
+        {
+            "id": "T2170",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "bde mchog snyan brgyud he ru ka yab yum 10 dwags po snyan brgyud/"
+                }
+            ]
+        },
+        {
+            "id": "T1239",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "rdo rje phur pa yang gsang bla med (rat+na gling pa)"
+                }
+            ]
+        },
+        {
+            "id": "T1GS148157",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "lo ma gyon ma/"
+                },
+                {
+                    "@language": "sa-alalc97",
+                    "@value": "parnasabari"
+                },
+                {
+                    "@language": "zh-hans",
+                    "@value": "叶衣佛母"
+                }
+            ]
+        },
+        {
+            "id": "T1466",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "gtum po phur gcig ma/"
+                }
+            ]
+        },
+        {
+            "id": "T988",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "mi g.yo gtum chen lha 9 bla med lugs/"
+                },
+                {
+                    "@language": "sa-alalc97",
+                    "@value": "candamaharosana acala 9 devatmaka"
+                }
+            ]
+        },
+        {
+            "id": "T012AG03389",
+            "prefLabel": [
+                {
+                    "@language": "en",
+                    "@value": "sita cakrasamvara according to the jo nang tradition"
+                },
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "bde mchog dkar po/ (jo nang lugs/)"
+                }
+            ]
+        },
+        {
+            "id": "T4CZ2733",
+            "prefLabel": [
+                {
+                    "@language": "en",
+                    "@value": "Agnideva, god of fire, gods in general, fire deity associated with the fire offering rites"
+                },
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "me lha/"
+                }
+            ]
+        },
+        {
+            "id": "T2138",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "dbang gi lha mo/"
+                }
+            ]
+        },
+        {
+            "id": "T415",
+            "prefLabel": [
+                {
+                    "@language": "en",
+                    "@value": "white tara tsinta ma ni stag phu dag snang /"
+                },
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "sgrol dkar tsinta ma Ni dag snang can/"
+                }
+            ]
+        },
+        {
+            "id": "T828",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "sgrol ma 'jigs pa kun sel/ (jo bo lugs)"
+                }
+            ]
+        },
+        {
+            "id": "T2KG207953",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "ge khod gsang ba drag chen/"
+                }
+            ]
+        },
+        {
+            "id": "T4CZ58781",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "stag lha me 'bar/"
+                }
+            ]
+        },
+        {
+            "id": "T1KG583",
+            "prefLabel": [
+                {
+                    "@language": "en",
+                    "@value": "zhi khro (bon tradition)"
+                },
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "zhi khro (bon)"
+                }
+            ]
+        },
+        {
+            "id": "T1KG624",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "dbal gsas/"
+                }
+            ]
+        },
+        {
+            "id": "T1728",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "lha rgod thog pa/"
+                }
+            ]
+        },
+        {
+            "id": "T2KG207954",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "khro rgyal rag sha spyi 'dul/"
+                }
+            ]
+        },
+        {
+            "id": "T1711",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "byams ma (yi dam/ bon)"
+                }
+            ]
+        },
+        {
+            "id": "O9TAXTBRC2016052KG227926",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "bon lha/"
+                },
+                {
+                    "@language": "zh-hans",
+                    "@value": "苯教神明"
+                }
+            ]
+        },
+        {
+            "id": "T1CZ18",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "ser bdag bcu gsum/"
+                }
+            ]
+        },
+        {
+            "id": "T2CN5007",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "ye shes mgon po/ (nyang gter/)"
+                }
+            ]
+        },
+        {
+            "id": "T1620",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "rma rgyal spom ra/"
+                }
+            ]
+        },
+        {
+            "id": "T2CN4717",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "dam can sde bdun/"
+                }
+            ]
+        },
+        {
+            "id": "T2268",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "a myes mdzangs ra can/"
+                }
+            ]
+        },
+        {
+            "id": "T2GS1111",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "wer ma/"
+                }
+            ]
+        },
+        {
+            "id": "T2CN4867",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "lha gcig nyi ma gzhon nu/"
+                }
+            ]
+        },
+        {
+            "id": "T00JR774",
+            "prefLabel": [
+                {
+                    "@language": "en",
+                    "@value": "goddess with iron ritual dagger for vitality-practice, the self-arisen queen"
+                },
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "lha mo srog sgrub lcags phur ma rang byung rgyal mo/"
+                },
+                {
+                    "@language": "sa-alalc97",
+                    "@value": "devi pranasadhana ayahkila svayambhurajni"
+                }
+            ]
+        },
+        {
+            "id": "T2160",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "gur gyi mgon po lha brgyad/"
+                },
+                {
+                    "@language": "sa-alalc97",
+                    "@value": "vajramahakalapanjaranatha 8-devatmaka"
+                }
+            ]
+        },
+        {
+            "id": "T1927",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "rma chen spom ra/"
+                }
+            ]
+        },
+        {
+            "id": "T2CN4865",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "lha gcig nyi ma mun sel/"
+                }
+            ]
+        },
+        {
+            "id": "T2CN4861",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "zhing skyong ma sku mched gnyis/"
+                }
+            ]
+        },
+        {
+            "id": "T1CZ165",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "sngo lha g.yu rtse/"
+                }
+            ]
+        },
+        {
+            "id": "T2CN3469",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "rdo rje 'od ldan dkar po/"
+                }
+            ]
+        },
+        {
+            "id": "T441",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "gza' nyi ma gdung gang ma/"
+                }
+            ]
+        },
+        {
+            "id": "T2587",
+            "prefLabel": [
+                {
+                    "@language": "en",
+                    "@value": "mahakala in the form of an acarya"
+                },
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "las mgon a tsa ra/"
+                }
+            ]
+        },
+        {
+            "id": "T2KG207433",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "dbang thang rgya ma/"
+                }
+            ]
+        },
+        {
+            "id": "T4PD931",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "gnyen sgrig"
+                }
+            ]
+        },
+        {
+            "id": "O9TAXTBRC2016052KG228406",
+            "prefLabel": [
+                {
+                    "@language": "en",
+                    "@value": "marriage"
+                },
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "gnyen sgrig"
+                }
+            ]
+        },
+        {
+            "id": "T4PD930",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "bca' khrims/"
+                }
+            ]
+        },
+        {
+            "id": "T3CN9711",
+            "prefLabel": [
+                {
+                    "@language": "en",
+                    "@value": "Islam"
+                },
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "kha che'i chos lugs/"
+                },
+                {
+                    "@language": "zh-hans",
+                    "@value": "伊斯兰"
+                }
+            ]
+        },
+        {
+            "id": "T1KG22572",
+            "prefLabel": [
+                {
+                    "@language": "en",
+                    "@value": "liberalism"
+                },
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "rang mos ring lugs/"
+                }
+            ]
+        },
+        {
+            "id": "T1KG89007",
+            "prefLabel": [
+                {
+                    "@language": "en",
+                    "@value": "hinduism"
+                },
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "hin+du'i chos/"
+                },
+                {
+                    "@language": "sa-deva",
+                    "@value": "हिन्दू धर्म"
+                },
+                {
+                    "@language": "zh-hans",
+                    "@value": "印度教"
+                }
+            ]
+        },
+        {
+            "id": "T371",
+            "prefLabel": [
+                {
+                    "@language": "en",
+                    "@value": "public relations"
+                },
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "spyi 'brel/"
+                }
+            ]
+        },
+        {
+            "id": "T2229",
+            "prefLabel": [
+                {
+                    "@language": "en",
+                    "@value": "sino-tibetan relations"
+                },
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "bod rgya 'brel lam/"
+                }
+            ]
+        },
+        {
+            "id": "T1151",
+            "prefLabel": [
+                {
+                    "@language": "en",
+                    "@value": "freedom struggle"
+                },
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "rang dbang 'thab rtsod/"
+                }
+            ]
+        },
+        {
+            "id": "T1CZ57",
+            "prefLabel": [
+                {
+                    "@language": "en",
+                    "@value": "text on reasoning by dignaga"
+                },
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "dmigs pa brtag pa/"
+                }
+            ]
+        },
+        {
+            "id": "T2244",
+            "prefLabel": [
+                {
+                    "@language": "en",
+                    "@value": "knot prognostication"
+                },
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "'ju thig"
+                }
+            ]
+        },
+        {
+            "id": "T1775",
+            "prefLabel": [
+                {
+                    "@language": "en",
+                    "@value": "criteria for horses"
+                },
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "gyi gling brtag thabs/"
+                }
+            ]
+        },
+        {
+            "id": "T10MS14648",
+            "prefLabel": [
+                {
+                    "@language": "en",
+                    "@value": "survey"
+                },
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "zhib bsher/"
+                }
+            ]
+        },
+        {
+            "id": "T2208",
+            "prefLabel": [
+                {
+                    "@language": "en",
+                    "@value": "commerce"
+                },
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "tshong las/"
+                }
+            ]
+        },
+        {
+            "id": "T3CN2025",
+            "prefLabel": [
+                {
+                    "@language": "en",
+                    "@value": "indian logic works"
+                },
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "tshad ma'i rgya gzhung /"
+                },
+                {
+                    "@language": "zh-hans",
+                    "@value": "印度因明典籍"
+                }
+            ]
+        },
+        {
+            "id": "T2252",
+            "prefLabel": [
+                {
+                    "@language": "en",
+                    "@value": "places in tantric geography"
+                },
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "gnas yul chen po/"
+                }
+            ]
+        },
+        {
+            "id": "T1168",
+            "prefLabel": [
+                {
+                    "@language": "en",
+                    "@value": "hidden lands"
+                },
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "sbas yul/"
+                }
+            ]
+        },
+        {
+            "id": "T1KG26414",
+            "prefLabel": [
+                {
+                    "@language": "en",
+                    "@value": "world"
+                },
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "'dzam gling /"
+                }
+            ]
+        },
+        {
+            "id": "T1KG24263",
+            "prefLabel": [
+                {
+                    "@language": "en",
+                    "@value": "central school for tibetans"
+                },
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "gzhi rim slob grwa/"
+                }
+            ]
+        },
+        {
+            "id": "T2CZ10052",
+            "prefLabel": [
+                {
+                    "@language": "en",
+                    "@value": "nunnery"
+                },
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "btsun dgon/"
+                },
+                {
+                    "@language": "zh-hans",
+                    "@value": "尼姑寺"
+                }
+            ]
+        },
+        {
+            "id": "T1587",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "su kha chos drug"
+                }
+            ]
+        },
+        {
+            "id": "T1479",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "khyung po mgur brgyad/"
+                }
+            ]
+        },
+        {
+            "id": "T1596",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "rgyal po bka' 'bum/"
+                }
+            ]
+        },
+        {
+            "id": "O9TAXTBRC2016052KG227150",
+            "prefLabel": [
+                {
+                    "@language": "en",
+                    "@value": "Non-sectarian"
+                },
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "ris med/"
+                },
+                {
+                    "@language": "zh-hans",
+                    "@value": "利美"
+                }
+            ]
+        },
+        {
+            "id": "T1PD181203",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "byang gter bka' brgyad/"
+                }
+            ]
+        },
+        {
+            "id": "T1093",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "mdo dgongs 'dus/"
+                }
+            ]
+        },
+        {
+            "id": "T1193",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "bka' brgyad/"
+                }
+            ]
+        },
+        {
+            "id": "T1370",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "bka' brgyad bka' ma lugs/"
+                }
+            ]
+        },
+        {
+            "id": "T00AG01281",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "grol thig dgongs pa rang grol/"
+                }
+            ]
+        },
+        {
+            "id": "O9TAXTBRC2016052KG226937",
+            "prefLabel": [
+                {
+                    "@language": "en",
+                    "@value": "Terma"
+                },
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "zab pa gter ma/"
+                },
+                {
+                    "@language": "zh-hans",
+                    "@value": "伏藏部"
+                }
+            ]
+        },
+        {
+            "id": "T1GS135820",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "gcod yul nyong mongs zhi byed/"
+                }
+            ]
+        },
+        {
+            "id": "T1GS107984",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "nam mkha' sgo 'byed/"
+                },
+                {
+                    "@language": "sa-alalc97",
+                    "@value": "akasadhisthana"
+                }
+            ]
+        },
+        {
+            "id": "O9TAXTBRC2016052KG227070",
+            "prefLabel": [
+                {
+                    "@language": "en",
+                    "@value": "Sakya"
+                },
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "sa skya/"
+                },
+                {
+                    "@language": "zh-hans",
+                    "@value": "萨系"
+                }
+            ]
+        },
+        {
+            "id": "O9TAXTBRC2016052KG227076",
+            "prefLabel": [
+                {
+                    "@language": "en",
+                    "@value": "Ngorpa"
+                },
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "ngor pa/"
+                },
+                {
+                    "@language": "zh-hans",
+                    "@value": "俄系"
+                }
+            ]
+        },
+        {
+            "id": "O9TAXTBRC2016052KG227078",
+            "prefLabel": [
+                {
+                    "@language": "en",
+                    "@value": "Tsarpa"
+                },
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "tshar pa/"
+                },
+                {
+                    "@language": "zh-hans",
+                    "@value": "才系"
+                }
+            ]
+        },
+        {
+            "id": "O9TAXTBRC2016052KG227069",
+            "prefLabel": [
+                {
+                    "@language": "en",
+                    "@value": "Sakya"
+                },
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "sa skya/"
+                },
+                {
+                    "@language": "zh-hans",
+                    "@value": "萨迦"
+                }
+            ]
+        },
+        {
+            "id": "O9TAXTBRC2016052KG227097",
+            "prefLabel": [
+                {
+                    "@language": "en",
+                    "@value": "Drukpa Kagyu"
+                },
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "brug pa bka' brgyud/"
+                },
+                {
+                    "@language": "zh-hans",
+                    "@value": "竹巴噶举"
+                }
+            ]
+        },
+        {
+            "id": "O9TAXTBRC2016052KG227110",
+            "prefLabel": [
+                {
+                    "@language": "en",
+                    "@value": "Shugseb Kagyue"
+                },
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "shug gseb/"
+                },
+                {
+                    "@language": "zh-hans",
+                    "@value": "修赛噶举"
+                }
+            ]
+        },
+        {
+            "id": "O9TAXTBRC2016052KG227095",
+            "prefLabel": [
+                {
+                    "@language": "en",
+                    "@value": "Trophu Kagyu"
+                },
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "khro phu/"
+                },
+                {
+                    "@language": "zh-hans",
+                    "@value": "绰浦噶举"
+                }
+            ]
+        },
+        {
+            "id": "O9TAXTBRC2016052KG227091",
+            "prefLabel": [
+                {
+                    "@language": "en",
+                    "@value": "Drigung Kagyu"
+                },
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "bri gung /"
+                },
+                {
+                    "@language": "zh-hans",
+                    "@value": "直贡噶举"
+                }
+            ]
+        },
+        {
+            "id": "O9TAXTBRC2016052KG227087",
+            "prefLabel": [
+                {
+                    "@language": "en",
+                    "@value": "Barom Kagyu"
+                },
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "ba' rom bka' brgyud/"
+                },
+                {
+                    "@language": "zh-hans",
+                    "@value": "拔绒噶举"
+                }
+            ]
+        },
+        {
+            "id": "O9TAXTBRC2016052KG227112",
+            "prefLabel": [
+                {
+                    "@language": "en",
+                    "@value": "Kamtshang Kagyu"
+                },
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "kaM tshang bka' brgyud/"
+                },
+                {
+                    "@language": "zh-hans",
+                    "@value": "噶玛噶举"
+                }
+            ]
+        },
+        {
+            "id": "O9TAXTBRC2016052KG227116",
+            "prefLabel": [
+                {
+                    "@language": "en",
+                    "@value": "tshalpa kagyu"
+                },
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "tshal pa bka' brgyud/"
+                },
+                {
+                    "@language": "zh-hans",
+                    "@value": "采巴噶举"
+                }
+            ]
+        },
+        {
+            "id": "O9TAXTBRC2016052KG227062",
+            "prefLabel": [
+                {
+                    "@language": "en",
+                    "@value": "Gelug"
+                },
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "dge lugs/"
+                },
+                {
+                    "@language": "zh-hans",
+                    "@value": "格鲁"
+                }
+            ]
+        },
+        {
+            "id": "T1357",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "dga' ldan phyag chen/"
+                }
+            ]
+        },
+        {
+            "id": "T1KG22573",
+            "prefLabel": [
+                {
+                    "@language": "en",
+                    "@value": "life sciences"
+                },
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "tshe srog tshan rig"
+                },
+                {
+                    "@language": "zh-hans",
+                    "@value": "生命科学"
+                }
+            ]
+        },
+        {
+            "id": "O9TAXTBRC2016052KG228441",
+            "prefLabel": [
+                {
+                    "@language": "en",
+                    "@value": "Life sciences"
+                },
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "tshe srog tshan rig"
+                },
+                {
+                    "@language": "zh-hans",
+                    "@value": "生命科学"
+                }
+            ]
+        },
+        {
+            "id": "T1KG26410",
+            "prefLabel": [
+                {
+                    "@language": "en",
+                    "@value": "animals"
+                },
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "ri dwags dang gcan gzan/"
+                }
+            ]
+        },
+        {
+            "id": "T1KG26412",
+            "prefLabel": [
+                {
+                    "@language": "en",
+                    "@value": "birds"
+                },
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "'dab chags/"
+                }
+            ]
+        },
+        {
+            "id": "T1KG26411",
+            "prefLabel": [
+                {
+                    "@language": "en",
+                    "@value": "domestic animal"
+                },
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "sgo phyugs/"
+                }
+            ]
+        },
+        {
+            "id": "T3CN11351",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "phyag mchan/"
+                }
+            ]
+        },
+        {
+            "id": "T61",
+            "prefLabel": [
+                {
+                    "@language": "en",
+                    "@value": "detailed commentary"
+                },
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "rnam bshad/"
+                },
+                {
+                    "@language": "sa-x-ndia",
+                    "@value": "vyākhyā"
+                },
+                {
+                    "@language": "zh-hant",
+                    "@value": "論"
+                }
+            ]
+        },
+        {
+            "id": "T1AT670",
+            "prefLabel": [
+                {
+                    "@language": "en",
+                    "@value": "explanation and elucidation of crucial points and concepts"
+                },
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "gnad 'gag gsal byed/"
+                }
+            ]
+        },
+        {
+            "id": "O9TAXTBRC2016052KG226334",
+            "prefLabel": [
+                {
+                    "@language": "en",
+                    "@value": "Root text and commentarie"
+                },
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "rtsa ba dang 'grel pa/"
+                },
+                {
+                    "@language": "zh-hans",
+                    "@value": "根本论及注疏"
+                }
+            ]
+        },
+        {
+            "id": "T307",
+            "prefLabel": [
+                {
+                    "@language": "en",
+                    "@value": "tantra"
+                },
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "gsang sngags/"
+                }
+            ]
+        },
+        {
+            "id": "T1460",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "bla med rgyud/"
+                },
+                {
+                    "@language": "sa-x-iast",
+                    "@value": "anuttarayoga tantra"
+                }
+            ]
+        },
+        {
+            "id": "T867",
+            "prefLabel": [
+                {
+                    "@language": "en",
+                    "@value": "tantric incantations"
+                },
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "rig sngags/"
+                },
+                {
+                    "@language": "sa-x-ndia",
+                    "@value": "vidyā"
+                },
+                {
+                    "@language": "zh-hans",
+                    "@value": "明咒"
+                }
+            ]
+        },
+        {
+            "id": "T309",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "rig 'dzin sngags kyi sde snod/"
+                }
+            ]
+        },
+        {
+            "id": "T202",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "gsang snying /"
+                },
+                {
+                    "@language": "sa-alalc97",
+                    "@value": "guhyagarbha"
+                }
+            ]
+        },
+        {
+            "id": "T837",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "tshe sgrub zhag bdun ma (rong ston lugs)"
+                }
+            ]
+        },
+        {
+            "id": "T546",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "bla ma gsang 'dus snyan brgyud zhag bdun ma/"
+                }
+            ]
+        },
+        {
+            "id": "T1993",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "rdo rje'i rigs kyi rgyud/"
+                }
+            ]
+        },
+        {
+            "id": "T2315",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "phur pa'i gnad tig"
+                }
+            ]
+        },
+        {
+            "id": "T00UNK53",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "rnal 'byor sgo gsum/"
+                }
+            ]
+        },
+        {
+            "id": "T01AG02845",
+            "prefLabel": [
+                {
+                    "@language": "en",
+                    "@value": "a combination of multiple sadhana"
+                },
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "dril sgrub/"
+                }
+            ]
+        },
+        {
+            "id": "T1099",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "kun bzang thugs gter gyi bla sgrub/ (byang chub gling pa)"
+                }
+            ]
+        },
+        {
+            "id": "T2308",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "tshe sgrub 'chi med srog thig (mchog gyur gling pa)"
+                }
+            ]
+        },
+        {
+            "id": "T01AG03135",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "mkha' 'gro snyan brgyud/"
+                }
+            ]
+        },
+        {
+            "id": "T00JR775",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "bsgral las/"
+                }
+            ]
+        },
+        {
+            "id": "T2188",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "bka' gtad/"
+                }
+            ]
+        },
+        {
+            "id": "T1258",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "rdo'i bcud len/"
+                }
+            ]
+        },
+        {
+            "id": "T872",
+            "prefLabel": [
+                {
+                    "@language": "en",
+                    "@value": "rain making rituals"
+                },
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "char 'bebs cho ga"
+                }
+            ]
+        },
+        {
+            "id": "T4CZ363957",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "arga"
+                }
+            ]
+        },
+        {
+            "id": "T00KG02665",
+            "prefLabel": [
+                {
+                    "@language": "en",
+                    "@value": "arrangement for a sadhana practice"
+                },
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "las khrigs/"
+                }
+            ]
+        },
+        {
+            "id": "T1044",
+            "prefLabel": [
+                {
+                    "@language": "en",
+                    "@value": "blessing"
+                },
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "byin rlabs/"
+                }
+            ]
+        },
+        {
+            "id": "T10MS14317",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "dbang bskur/"
+                },
+                {
+                    "@language": "sa-x-ndia",
+                    "@value": "abhiṣeka"
+                },
+                {
+                    "@language": "zh-hant",
+                    "@value": "灌頂"
+                }
+            ]
+        },
+        {
+            "id": "T1CZ67",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "mig gzungs/"
+                }
+            ]
+        },
+        {
+            "id": "T4CZ359084",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "nang mchod/"
+                },
+                {
+                    "@language": "sa-x-ndia",
+                    "@value": "rakta"
+                }
+            ]
+        },
+        {
+            "id": "T1256",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "chu'i bcud len/"
+                }
+            ]
+        },
+        {
+            "id": "T2625",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "gto/"
+                }
+            ]
+        },
+        {
+            "id": "T2352",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "dngos gzhi/"
+                }
+            ]
+        },
+        {
+            "id": "T1257",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "me tog gi bcud len/"
+                }
+            ]
+        },
+        {
+            "id": "T00KG02746",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "bsad mnan/"
+                }
+            ]
+        },
+        {
+            "id": "T00JR140",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "dbang bzhi pa/"
+                }
+            ]
+        },
+        {
+            "id": "T844",
+            "prefLabel": [
+                {
+                    "@language": "en",
+                    "@value": "hair burning"
+                },
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "skra bsreg pa'i cho ga"
+                }
+            ]
+        },
+        {
+            "id": "T1225",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "tshe 'gugs/"
+                }
+            ]
+        },
+        {
+            "id": "T1CZ27",
+            "prefLabel": [
+                {
+                    "@language": "en",
+                    "@value": "ritual of the south gate"
+                },
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "lho sgo'i cho ga"
+                }
+            ]
+        },
+        {
+            "id": "T1888",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "bla ma yang tig"
+                }
+            ]
+        },
+        {
+            "id": "T1532",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "spyan ras gzigs kyi dmar khrid dpal mo lugs/"
+                }
+            ]
+        },
+        {
+            "id": "T1550",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "phyag rgya chen po yi ge med pa (khrid)"
+                }
+            ]
+        },
+        {
+            "id": "T1577",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "bde mchog dkar po (khrid)"
+                }
+            ]
+        },
+        {
+            "id": "T1267",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "phyag chen zur mang snyan rgyud lugs/"
+                }
+            ]
+        },
+        {
+            "id": "T1698",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "mal gcod/"
+                }
+            ]
+        },
+        {
+            "id": "T1273",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "phyag chen yan lag bdun ldan/"
+                }
+            ]
+        },
+        {
+            "id": "T1272",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "phyag chen tshal lugs/"
+                }
+            ]
+        },
+        {
+            "id": "T1555",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "sems kyi bar chad sel ba (khrid)"
+                }
+            ]
+        },
+        {
+            "id": "T2464",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "dge 'dun/"
+                },
+                {
+                    "@language": "sa-alalc97",
+                    "@value": "sangha"
+                },
+                {
+                    "@language": "zh-hans",
+                    "@value": "僧伽"
+                }
+            ]
+        },
+        {
+            "id": "T58",
+            "prefLabel": [
+                {
+                    "@language": "en",
+                    "@value": "instruction"
+                },
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "zhal gdams/"
+                }
+            ]
+        },
+        {
+            "id": "T59",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "mngon pa/"
+                },
+                {
+                    "@language": "sa-alalc97",
+                    "@value": "abhidharma"
+                },
+                {
+                    "@language": "zh-hans",
+                    "@value": "俱舍"
+                }
+            ]
+        },
+        {
+            "id": "T2212",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "stong nyid snying rje/"
+                }
+            ]
+        },
+        {
+            "id": "T2273",
+            "prefLabel": [
+                {
+                    "@language": "en",
+                    "@value": "11 types of liberation"
+                },
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "grol ba bcu gcig"
+                }
+            ]
+        },
+        {
+            "id": "T2MS14792",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "don dam bden pa/"
+                },
+                {
+                    "@language": "sa-x-ndia",
+                    "@value": "paramaartha satya"
+                }
+            ]
+        },
+        {
+            "id": "T2271",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "mthong grol 'khor lo/"
+                }
+            ]
+        },
+        {
+            "id": "T2261",
+            "prefLabel": [
+                {
+                    "@language": "en",
+                    "@value": "document bestowing name"
+                },
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "mtshan gsol ba/"
+                }
+            ]
+        },
+        {
+            "id": "T2274",
+            "prefLabel": [
+                {
+                    "@language": "en",
+                    "@value": "six liberations, the six types of liberation"
+                },
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "grol ba drug"
+                }
+            ]
+        },
+        {
+            "id": "T1KG9082",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "yang dag mtha'"
+                }
+            ]
+        },
+        {
+            "id": "T1414",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "kun rdzob bden pa/"
+                },
+                {
+                    "@language": "sa-alalc97",
+                    "@value": "samvrtisatya"
+                }
+            ]
+        },
+        {
+            "id": "T2MS14938",
+            "prefLabel": [
+                {
+                    "@language": "en",
+                    "@value": "eightfold noble path"
+                },
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "'phags lam yan lag brgyad/"
+                }
+            ]
+        },
+        {
+            "id": "T2090",
+            "prefLabel": [
+                {
+                    "@language": "en",
+                    "@value": "conventional bodhichitta"
+                },
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "kun rdzob byang sems/"
+                }
+            ]
+        },
+        {
+            "id": "T2027",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "rtag pa dang mi rtag pa/"
+                }
+            ]
+        },
+        {
+            "id": "T2KG2755",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "dge slong ma'i bslab bya/"
+                }
+            ]
+        },
+        {
+            "id": "T1KG4314",
+            "prefLabel": [
+                {
+                    "@language": "en",
+                    "@value": "the 18 renowned scriptures"
+                },
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "grags chen bco brgyad/"
+                }
+            ]
+        },
+        {
+            "id": "T1KG22693",
+            "prefLabel": [
+                {
+                    "@language": "en",
+                    "@value": "nepali"
+                },
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "ne pa li/"
+                },
+                {
+                    "@language": "sa-deva",
+                    "@value": "नेपाली"
+                }
+            ]
+        },
+        {
+            "id": "T2119",
+            "prefLabel": [
+                {
+                    "@language": "en",
+                    "@value": "alphabets and scripts"
+                },
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "ka mad/"
+                }
+            ]
+        },
+        {
+            "id": "T1KG6138",
+            "prefLabel": [
+                {
+                    "@language": "en",
+                    "@value": "chinese script"
+                },
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "rgya yig"
+                }
+            ]
+        },
+        {
+            "id": "T2KG200021",
+            "prefLabel": [
+                {
+                    "@language": "en",
+                    "@value": "burmese"
+                },
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "b+har ma'i skad yig"
+                }
+            ]
+        },
+        {
+            "id": "T2KG200020",
+            "prefLabel": [
+                {
+                    "@language": "en",
+                    "@value": "inscription"
+                },
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "brkos yig"
+                }
+            ]
+        },
+        {
+            "id": "T3CN16182",
+            "prefLabel": [
+                {
+                    "@language": "en",
+                    "@value": "stone inscriptions"
+                },
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "rdo brkos yi ge"
+                },
+                {
+                    "@language": "zh-hans",
+                    "@value": "石刻碑文"
+                }
+            ]
+        },
+        {
+            "id": "T143",
+            "prefLabel": [
+                {
+                    "@language": "en",
+                    "@value": "explanation of terms"
+                },
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "ming don brda bkrol/"
+                }
+            ]
+        },
+        {
+            "id": "O9TAXTBRC2016052KG226460",
+            "prefLabel": [
+                {
+                    "@language": "en",
+                    "@value": "Orthography and Translation"
+                },
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "dag yig dang sgra sgyur/"
+                },
+                {
+                    "@language": "zh-hans",
+                    "@value": "正字学及翻译"
+                }
+            ]
+        },
+        {
+            "id": "T1KG26408",
+            "prefLabel": [
+                {
+                    "@language": "en",
+                    "@value": "sign"
+                },
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "brda rtags/"
+                }
+            ]
+        },
+        {
+            "id": "T3CN21895",
+            "prefLabel": [
+                {
+                    "@language": "en",
+                    "@value": "pandita"
+                },
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "paN+Di ta/"
+                },
+                {
+                    "@language": "zh-hans",
+                    "@value": "班智达"
+                }
+            ]
+        },
+        {
+            "id": "T1KG24275",
+            "prefLabel": [
+                {
+                    "@language": "en",
+                    "@value": "schedule"
+                },
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "mdzad rim/"
+                }
+            ]
+        },
+        {
+            "id": "T1KG26409",
+            "prefLabel": [
+                {
+                    "@language": "en",
+                    "@value": "travel"
+                },
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "'grim 'grul/"
+                }
+            ]
+        },
+        {
+            "id": "T177",
+            "prefLabel": [
+                {
+                    "@language": "en",
+                    "@value": "teacher-student transmission"
+                },
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "bla brgyud/"
+                },
+                {
+                    "@language": "sa-alalc97",
+                    "@value": "guru-sisya-parampara"
+                }
+            ]
+        },
+        {
+            "id": "T2KG209122",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "thal phreng /"
+                }
+            ]
+        },
+        {
+            "id": "T4CZ366107",
+            "prefLabel": [
+                {
+                    "@language": "en",
+                    "@value": "successively"
+                },
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "rim byon/"
+                }
+            ]
+        },
+        {
+            "id": "T1KG89005",
+            "prefLabel": [
+                {
+                    "@language": "en",
+                    "@value": "buddhist texts in pali"
+                },
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "pA li'i chos dpe/"
+                },
+                {
+                    "@language": "zh-hans",
+                    "@value": "巴利文佛书"
+                }
+            ]
+        },
+        {
+            "id": "T3CN21715",
+            "prefLabel": [
+                {
+                    "@language": "en",
+                    "@value": "palm leaves manuscripts"
+                },
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "ta la'i lo ma'i dpe cha/"
+                },
+                {
+                    "@language": "zh-hans",
+                    "@value": "贝叶经"
+                }
+            ]
+        },
+        {
+            "id": "T8LS41949",
+            "prefLabel": [
+                {
+                    "@language": "en",
+                    "@value": "report"
+                },
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "snyan tho/"
+                }
+            ]
+        },
+        {
+            "id": "O9TAXTBRC2016052KG226473",
+            "prefLabel": [
+                {
+                    "@language": "en",
+                    "@value": "General Terminology"
+                },
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "spyir btang tha snyad/"
+                },
+                {
+                    "@language": "zh-hans",
+                    "@value": "一般术语"
+                }
+            ]
+        },
+        {
+            "id": "O9TAXTBRC2016052KG226489",
+            "prefLabel": [
+                {
+                    "@language": "en",
+                    "@value": "Terminology related to the scriptures"
+                },
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "gsung rab 'brel yod tha snyad/"
+                },
+                {
+                    "@language": "zh-hans",
+                    "@value": "经论相关术语"
+                }
+            ]
+        },
+        {
+            "id": "T404",
+            "prefLabel": [
+                {
+                    "@language": "en",
+                    "@value": "masks"
+                },
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "zhal 'bag"
+                }
+            ]
+        },
+        {
+            "id": "T1398",
+            "prefLabel": [
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "sangs rgyas dus chen/"
+                }
+            ]
+        },
+        {
+            "id": "O9TAXTBRC2016052KG226496",
+            "prefLabel": [
+                {
+                    "@language": "en",
+                    "@value": "Races and customs"
+                },
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "mi rigs dang yul srol/"
+                },
+                {
+                    "@language": "zh-hans",
+                    "@value": "民族及民俗"
+                }
+            ]
+        },
+        {
+            "id": "O9TAXTBRC2016052KG226520",
+            "prefLabel": [
+                {
+                    "@language": "en",
+                    "@value": "Offering and Ritual materials"
+                },
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "mchod pa'i yo byad sogs/"
+                },
+                {
+                    "@language": "zh-hans",
+                    "@value": "法器法物"
+                }
+            ]
+        },
+        {
+            "id": "O9TAXTBRC2016052KG226472",
+            "prefLabel": [
+                {
+                    "@language": "en",
+                    "@value": "Various Terminology"
+                },
+                {
+                    "@language": "bo-x-ewts",
+                    "@value": "tha snyad sna tshogs/"
+                },
+                {
+                    "@language": "zh-hans",
+                    "@value": "各种术语"
+                }
+            ]
+        }
+    ],
+    "multiple": [
+        {
+            "id": "O9TAXTBRC2016052KG226587",
+            "filtered": [
+                [
+                    "1",
+                    "261"
+                ],
+                [
+                    "1",
+                    "300"
+                ],
+                [
+                    "1",
+                    "323"
+                ],
+                [
+                    "1",
+                    "503"
+                ],
+                [
+                    "1",
+                    "753"
+                ],
+                [
+                    "1",
+                    "833"
+                ],
+                [
+                    "1",
+                    "1341"
+                ]
+            ]
+        },
+        {
+            "id": "O9TAXTBRC2016052KG228265",
+            "filtered": [
+                [
+                    "na",
+                    "7311"
+                ],
+                [
+                    "1",
+                    "7316"
+                ]
+            ]
+        },
+        {
+            "id": "O9TAXTBRC2016052KG228264",
+            "filtered": [
+                [
+                    "na",
+                    "7311"
+                ],
+                [
+                    "1",
+                    "7316"
+                ]
+            ]
+        },
+        {
+            "id": "O9TAXTBRC2016052KG226385",
+            "filtered": [
+                [
+                    "1",
+                    "261"
+                ],
+                [
+                    "1",
+                    "300"
+                ],
+                [
+                    "1",
+                    "323"
+                ],
+                [
+                    "1",
+                    "503"
+                ],
+                [
+                    "1",
+                    "753"
+                ],
+                [
+                    "1",
+                    "833"
+                ],
+                [
+                    "1",
+                    "1341"
+                ]
+            ]
+        },
+        {
+            "id": "O9TAXTBRC2016052KG225384",
+            "filtered": [
+                [
+                    "1",
+                    "261"
+                ],
+                [
+                    "1",
+                    "300"
+                ],
+                [
+                    "1",
+                    "323"
+                ],
+                [
+                    "1",
+                    "503"
+                ],
+                [
+                    "1",
+                    "753"
+                ],
+                [
+                    "1",
+                    "833"
+                ],
+                [
+                    "1",
+                    "1341"
+                ]
+            ]
+        }
+    ],
+    "noLabel": [
+        {
+            "id": "T611",
+            "json": {
+                "id": "bdr:T611",
+                "type": "Topic",
+                "tmp:entityScore": 20,
+                "@context": "http://purl.bdrc.io/context.jsonld"
+            }
+        },
+        {
+            "id": "O9TAXTBRC2016052KG225829",
+            "json": {
+                "id": "bdr:O9TAXTBRC2016052KG225829",
+                "type": "Taxonomy",
+                "@context": "http://purl.bdrc.io/context.jsonld"
+            }
+        },
+        {
+            "id": "O9TAXTBRC201605",
+            "json": {
+                "id": "bdr:O9TAXTBRC201605",
+                "type": "Taxonomy",
+                "taxHasSubClass": [
+                    {
+                        "id": "bdr:O9TAXTBRC2016052KG226531"
+                    },
+                    {
+                        "id": "bdr:O9TAXTBRC2016052KG225324"
+                    },
+                    {
+                        "id": "bdr:O9TAXTBRC2016052KG226586"
+                    },
+                    {
+                        "id": "bdr:O9TAXTBRC2016052KG226784"
+                    },
+                    {
+                        "id": "bdr:O9TAXTBRC2016052KG228264"
+                    },
+                    {
+                        "id": "bdr:O9TAXTBRC2016052KG225372"
+                    },
+                    {
+                        "id": "bdr:O9TAXTBRC2016052KG226667"
+                    },
+                    {
+                        "id": "bdr:O9TAXTBRC2016052KG227157"
+                    },
+                    {
+                        "id": "bdr:O9TAXTBRC2016052KG228290"
+                    },
+                    {
+                        "id": "bdr:O9TAXTBRC2016052KG226384"
+                    },
+                    {
+                        "id": "bdr:O9TAXTBRC2016052KG228444"
+                    },
+                    {
+                        "id": "bdr:O9TAXTBRC2016052KG226920"
+                    },
+                    {
+                        "id": "bdr:O9TAXTBRC2016052KG228410"
+                    },
+                    {
+                        "id": "bdr:O9TAXTBRC2016052KG225383"
+                    },
+                    {
+                        "id": "bdr:O9TAXTBRC2016052KG226418"
+                    }
+                ],
+                "@context": "http://purl.bdrc.io/context.jsonld"
+            }
+        }
+    ],
     "O9TAXTBRC201605": {
         "sub": [
             "O9TAXTBRC2016052KG226531",
@@ -40,7 +4286,9 @@ export const topics = {
                 "@value": "工巧明"
             }
         ],
-        "parent": "O9TAXTBRC201605"
+        "parent": "O9TAXTBRC201605",
+        "tbrcId": "cha",
+        "rank": 4104
     },
     "T361": {
         "label": [
@@ -57,7 +4305,9 @@ export const topics = {
                 "@value": "fine arts"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226531"
+        "parent": "O9TAXTBRC2016052KG226531",
+        "tbrcId": "T361",
+        "rank": 4109
     },
     "O9TAXTBRC2016052KG226533": {
         "sub": [
@@ -115,7 +4365,9 @@ export const topics = {
                 "@value": "Karma Gadri Thangka"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226533"
+        "parent": "O9TAXTBRC2016052KG226533",
+        "tbrcId": "T2401",
+        "rank": 4203
     },
     "T1771": {
         "label": [
@@ -128,14 +4380,18 @@ export const topics = {
                 "@value": "sculpture canonical proportions"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226533"
+        "parent": "O9TAXTBRC2016052KG226533",
+        "tbrcId": "T1771",
+        "rank": 4179
     },
     "T1014": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "srog shing 'dzugs pa/"
         },
-        "parent": "O9TAXTBRC2016052KG226533"
+        "parent": "O9TAXTBRC2016052KG226533",
+        "tbrcId": "T1014",
+        "rank": 4217
     },
     "T215": {
         "label": [
@@ -148,14 +4404,18 @@ export const topics = {
                 "@value": "drawing proportions"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226533"
+        "parent": "O9TAXTBRC2016052KG226533",
+        "tbrcId": "T215",
+        "rank": 4184
     },
     "T1846": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "ri mo bri yig"
         },
-        "parent": "O9TAXTBRC2016052KG226533"
+        "parent": "O9TAXTBRC2016052KG226533",
+        "tbrcId": "T1846",
+        "rank": 4125
     },
     "T1GS149121": {
         "label": [
@@ -168,7 +4428,9 @@ export const topics = {
                 "@value": "tshos/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226533"
+        "parent": "O9TAXTBRC2016052KG226533",
+        "tbrcId": "T1GS149121",
+        "rank": 4194
     },
     "T2035": {
         "label": [
@@ -181,7 +4443,9 @@ export const topics = {
                 "@value": "ldeb ris/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226533"
+        "parent": "O9TAXTBRC2016052KG226533",
+        "tbrcId": "T2035",
+        "rank": 4174
     },
     "T1125": {
         "label": [
@@ -194,7 +4458,9 @@ export const topics = {
                 "@value": "traditional paintings"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226533"
+        "parent": "O9TAXTBRC2016052KG226533",
+        "tbrcId": "T1125",
+        "rank": 4154
     },
     "T30": {
         "label": [
@@ -207,7 +4473,9 @@ export const topics = {
                 "@value": "iconographic description"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226533"
+        "parent": "O9TAXTBRC2016052KG226533",
+        "tbrcId": "T30",
+        "rank": 4226
     },
     "T1474": {
         "label": [
@@ -220,7 +4488,9 @@ export const topics = {
                 "@value": "sku brnyan/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226533"
+        "parent": "O9TAXTBRC2016052KG226533",
+        "tbrcId": "T1474",
+        "rank": 4298
     },
     "T1428": {
         "label": [
@@ -233,7 +4503,9 @@ export const topics = {
                 "@value": "artistic instruction for drawing deities"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226533"
+        "parent": "O9TAXTBRC2016052KG226533",
+        "tbrcId": "T1428",
+        "rank": 4328
     },
     "T00KG03985": {
         "label": [
@@ -246,14 +4518,18 @@ export const topics = {
                 "@value": "picture, illustration"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226533"
+        "parent": "O9TAXTBRC2016052KG226533",
+        "tbrcId": "T00KG03985",
+        "rank": 4293
     },
     "T943": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "'khor lo bri thabs/"
         },
-        "parent": "O9TAXTBRC2016052KG226533"
+        "parent": "O9TAXTBRC2016052KG226533",
+        "tbrcId": "T943",
+        "rank": 4199
     },
     "T20": {
         "label": [
@@ -266,7 +4542,9 @@ export const topics = {
                 "@value": "thangka labels & inscriptions"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226533"
+        "parent": "O9TAXTBRC2016052KG226533",
+        "tbrcId": "T20",
+        "rank": 4169
     },
     "T195": {
         "label": [
@@ -279,14 +4557,18 @@ export const topics = {
                 "@value": "skor tshad/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226533"
+        "parent": "O9TAXTBRC2016052KG226533",
+        "tbrcId": "T195",
+        "rank": 4054
     },
     "T1845": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "ri mo/"
         },
-        "parent": "O9TAXTBRC2016052KG226533"
+        "parent": "O9TAXTBRC2016052KG226533",
+        "tbrcId": "T1845",
+        "rank": 4120
     },
     "T1311": {
         "label": [
@@ -299,14 +4581,18 @@ export const topics = {
                 "@value": "thig tshon/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226533"
+        "parent": "O9TAXTBRC2016052KG226533",
+        "tbrcId": "T1311",
+        "rank": 4159
     },
     "T2257": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "srid pa'i 'khor lo/"
         },
-        "parent": "O9TAXTBRC2016052KG226533"
+        "parent": "O9TAXTBRC2016052KG226533",
+        "tbrcId": "T2257",
+        "rank": 4303
     },
     "T00AG0337": {
         "label": [
@@ -319,14 +4605,18 @@ export const topics = {
                 "@value": "八塔"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226533"
+        "parent": "O9TAXTBRC2016052KG226533",
+        "tbrcId": "T00AG0337",
+        "rank": 4264
     },
     "T935": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "sAtst+sha"
         },
-        "parent": "O9TAXTBRC2016052KG226533"
+        "parent": "O9TAXTBRC2016052KG226533",
+        "tbrcId": "T935",
+        "rank": 4269
     },
     "T2130": {
         "label": [
@@ -339,7 +4629,9 @@ export const topics = {
                 "@value": "dngul gdung /"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226533"
+        "parent": "O9TAXTBRC2016052KG226533",
+        "tbrcId": "T2130",
+        "rank": 4134
     },
     "T1475": {
         "label": [
@@ -352,14 +4644,18 @@ export const topics = {
                 "@value": "colored sand"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226533"
+        "parent": "O9TAXTBRC2016052KG226533",
+        "tbrcId": "T1475",
+        "rank": 3846
     },
     "T1444": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "cha tshad/"
         },
-        "parent": "O9TAXTBRC2016052KG226533"
+        "parent": "O9TAXTBRC2016052KG226533",
+        "tbrcId": "T1444",
+        "rank": 4164
     },
     "T00JR139": {
         "label": [
@@ -372,14 +4668,18 @@ export const topics = {
                 "@value": "methods of constructing \"supports\" of enlightened body, speech, and mind"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226533"
+        "parent": "O9TAXTBRC2016052KG226533",
+        "tbrcId": "T00JR139",
+        "rank": 4113
     },
     "T1421": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "gdung rten/"
         },
-        "parent": "O9TAXTBRC2016052KG226533"
+        "parent": "O9TAXTBRC2016052KG226533",
+        "tbrcId": "T1421",
+        "rank": 4222
     },
     "T230": {
         "label": [
@@ -392,7 +4692,9 @@ export const topics = {
                 "@value": "tshon ris/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226533"
+        "parent": "O9TAXTBRC2016052KG226533",
+        "tbrcId": "T230",
+        "rank": 4189
     },
     "O9TAXTBRC2016052KG226560": {
         "sub": [
@@ -431,7 +4733,9 @@ export const topics = {
                 "@value": "Vāstuśāstra"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226560"
+        "parent": "O9TAXTBRC2016052KG226560",
+        "tbrcId": "T2516",
+        "rank": 4207
     },
     "T2182": {
         "label": [
@@ -444,7 +4748,9 @@ export const topics = {
                 "@value": "a rg+ha/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226560"
+        "parent": "O9TAXTBRC2016052KG226560",
+        "tbrcId": "T2182",
+        "rank": 4045
     },
     "T2256": {
         "label": [
@@ -457,7 +4763,9 @@ export const topics = {
                 "@value": "road construction"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226560"
+        "parent": "O9TAXTBRC2016052KG226560",
+        "tbrcId": "T2256",
+        "rank": 3974
     },
     "O9TAXTBRC2016052KG226564": {
         "sub": [
@@ -497,7 +4805,9 @@ export const topics = {
                 "@value": "dice"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226564"
+        "parent": "O9TAXTBRC2016052KG226564",
+        "tbrcId": "T2399",
+        "rank": 4018
     },
     "T1KG6084": {
         "label": [
@@ -510,7 +4820,9 @@ export const topics = {
                 "@value": "games and sports equipment"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226564"
+        "parent": "O9TAXTBRC2016052KG226564",
+        "tbrcId": "T1KG6084",
+        "rank": 4254
     },
     "T2414": {
         "label": [
@@ -523,7 +4835,9 @@ export const topics = {
                 "@value": "archery"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226564"
+        "parent": "O9TAXTBRC2016052KG226564",
+        "tbrcId": "T2414",
+        "rank": 4231
     },
     "T1KG6083": {
         "label": [
@@ -536,14 +4850,18 @@ export const topics = {
                 "@value": "rtsed mo/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226564"
+        "parent": "O9TAXTBRC2016052KG226564",
+        "tbrcId": "T1KG6083",
+        "rank": 3876
     },
     "T1KG476": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "mig mangs/"
         },
-        "parent": "O9TAXTBRC2016052KG226564"
+        "parent": "O9TAXTBRC2016052KG226564",
+        "tbrcId": "T1KG476",
+        "rank": 4250
     },
     "T368": {
         "label": [
@@ -556,7 +4874,9 @@ export const topics = {
                 "@value": "sgyu rtsal/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226564"
+        "parent": "O9TAXTBRC2016052KG226564",
+        "tbrcId": "T368",
+        "rank": 4049
     },
     "T387": {
         "label": [
@@ -569,14 +4889,18 @@ export const topics = {
                 "@value": "lus rtsal/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226564"
+        "parent": "O9TAXTBRC2016052KG226564",
+        "tbrcId": "T387",
+        "rank": 4236
     },
     "T1KG477": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rgyal po'i rgyal rtsed/"
         },
-        "parent": "O9TAXTBRC2016052KG226564"
+        "parent": "O9TAXTBRC2016052KG226564",
+        "tbrcId": "T1KG477",
+        "rank": 4246
     },
     "O9TAXTBRC2016052KG226573": {
         "sub": [
@@ -614,7 +4938,9 @@ export const topics = {
             "@language": "bo-x-ewts",
             "@value": "bkra shis rtags brgyad/"
         },
-        "parent": "O9TAXTBRC2016052KG226573"
+        "parent": "O9TAXTBRC2016052KG226573",
+        "tbrcId": "T1684",
+        "rank": 4308
     },
     "T3JT12482": {
         "label": [
@@ -627,7 +4953,9 @@ export const topics = {
                 "@value": "seven royal possessions"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226573"
+        "parent": "O9TAXTBRC2016052KG226573",
+        "tbrcId": "T3JT12482",
+        "rank": 4283
     },
     "T1178": {
         "label": [
@@ -640,7 +4968,9 @@ export const topics = {
                 "@value": "machinery"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226573"
+        "parent": "O9TAXTBRC2016052KG226573",
+        "tbrcId": "T1178",
+        "rank": 4241
     },
     "T548": {
         "label": [
@@ -657,7 +4987,9 @@ export const topics = {
                 "@value": "图案"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226573"
+        "parent": "O9TAXTBRC2016052KG226573",
+        "tbrcId": "T548",
+        "rank": 4288
     },
     "T00KG02661": {
         "label": [
@@ -670,7 +5002,9 @@ export const topics = {
                 "@value": "ru mtshon bca' thabs/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226573"
+        "parent": "O9TAXTBRC2016052KG226573",
+        "tbrcId": "T00KG02661",
+        "rank": 4323
     },
     "T1CZ68": {
         "label": [
@@ -683,7 +5017,9 @@ export const topics = {
                 "@value": "eight auspicious articles or substances"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226573"
+        "parent": "O9TAXTBRC2016052KG226573",
+        "tbrcId": "T1CZ68",
+        "rank": 4313
     },
     "T1946": {
         "label": [
@@ -696,7 +5032,9 @@ export const topics = {
                 "@value": "small scale handicrafts"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226573"
+        "parent": "O9TAXTBRC2016052KG226573",
+        "tbrcId": "T1946",
+        "rank": 4278
     },
     "T2433": {
         "label": [
@@ -709,7 +5047,9 @@ export const topics = {
                 "@value": "stone carvings"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226573"
+        "parent": "O9TAXTBRC2016052KG226573",
+        "tbrcId": "T2433",
+        "rank": 4144
     },
     "T1PD94645": {
         "label": [
@@ -748,7 +5088,9 @@ export const topics = {
                 "@value": "rdza bzo'i lag rtsal/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226573"
+        "parent": "O9TAXTBRC2016052KG226573",
+        "tbrcId": "T2403",
+        "rank": 4139
     },
     "T1839": {
         "label": [
@@ -761,7 +5103,9 @@ export const topics = {
                 "@value": "incense preparation"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226573"
+        "parent": "O9TAXTBRC2016052KG226573",
+        "tbrcId": "T1839",
+        "rank": 4273
     },
     "O9TAXTBRC2016052KG225324": {
         "sub": [
@@ -784,7 +5128,9 @@ export const topics = {
                 "@value": "Catalogs and Bibliographies"
             }
         ],
-        "parent": "O9TAXTBRC201605"
+        "parent": "O9TAXTBRC201605",
+        "tbrcId": "ka",
+        "rank": 5
     },
     "O9TAXTBRC2016052KG225325": {
         "sub": [
@@ -810,7 +5156,9 @@ export const topics = {
                 "@value": "spyir btang dkar chag"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225324"
+        "parent": "O9TAXTBRC2016052KG225324",
+        "tbrcId": "1",
+        "rank": 10
     },
     "T298": {
         "label": [
@@ -827,7 +5175,9 @@ export const topics = {
                 "@value": "书目"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225325"
+        "parent": "O9TAXTBRC2016052KG225325",
+        "tbrcId": "T298",
+        "rank": 19
     },
     "T13": {
         "label": [
@@ -844,7 +5194,9 @@ export const topics = {
                 "@value": "dkar chag"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225325"
+        "parent": "O9TAXTBRC2016052KG225325",
+        "tbrcId": "T13",
+        "rank": 15
     },
     "T1485": {
         "label": [
@@ -861,21 +5213,27 @@ export const topics = {
                 "@value": "标题｜单子"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225325"
+        "parent": "O9TAXTBRC2016052KG225325",
+        "tbrcId": "T1485",
+        "rank": 23
     },
     "T4CZ2366": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "them byang /"
         },
-        "parent": "O9TAXTBRC2016052KG225325"
+        "parent": "O9TAXTBRC2016052KG225325",
+        "tbrcId": "T4CZ2366",
+        "rank": 27
     },
     "T00KG02662": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "chos skor dkar chag"
         },
-        "parent": "O9TAXTBRC2016052KG225325"
+        "parent": "O9TAXTBRC2016052KG225325",
+        "tbrcId": "T00KG02662",
+        "rank": 35
     },
     "T2196": {
         "label": [
@@ -888,7 +5246,9 @@ export const topics = {
                 "@value": "library catalogs"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225325"
+        "parent": "O9TAXTBRC2016052KG225325",
+        "tbrcId": "T2196",
+        "rank": 39
     },
     "T2123": {
         "label": [
@@ -901,7 +5261,9 @@ export const topics = {
                 "@value": "contents of collected writings"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225325"
+        "parent": "O9TAXTBRC2016052KG225325",
+        "tbrcId": "T2123",
+        "rank": 31
     },
     "O9TAXTBRC2016052KG225333": {
         "sub": [
@@ -934,14 +5296,18 @@ export const topics = {
                 "@value": "Version Bibliographies"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225324"
+        "parent": "O9TAXTBRC2016052KG225324",
+        "tbrcId": "2",
+        "rank": 44
     },
     "T1GS108153": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "bka' rgya ma/"
         },
-        "parent": "O9TAXTBRC2016052KG225333"
+        "parent": "O9TAXTBRC2016052KG225333",
+        "tbrcId": "T1GS108153",
+        "rank": 77
     },
     "T4CZ71": {
         "label": [
@@ -958,21 +5324,27 @@ export const topics = {
                 "@value": "珍本、孤本"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225333"
+        "parent": "O9TAXTBRC2016052KG225333",
+        "tbrcId": "T4CZ71",
+        "rank": 73
     },
     "T1PD113671": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "bsdur mchan/"
         },
-        "parent": "O9TAXTBRC2016052KG225333"
+        "parent": "O9TAXTBRC2016052KG225333",
+        "tbrcId": "T1PD113671",
+        "rank": 85
     },
     "T1GS9767": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "deb yig mgo rgyan/"
         },
-        "parent": "O9TAXTBRC2016052KG225333"
+        "parent": "O9TAXTBRC2016052KG225333",
+        "tbrcId": "T1GS9767",
+        "rank": 65
     },
     "T24": {
         "label": [
@@ -985,7 +5357,9 @@ export const topics = {
                 "@value": "benedictory verses (books)"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225333"
+        "parent": "O9TAXTBRC2016052KG225333",
+        "tbrcId": "T24",
+        "rank": 57
     },
     "T3CN2027": {
         "label": [
@@ -1002,7 +5376,9 @@ export const topics = {
                 "@value": "sog yig chos dpe/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225333"
+        "parent": "O9TAXTBRC2016052KG225333",
+        "tbrcId": "T3CN2027",
+        "rank": 101
     },
     "T2411": {
         "label": [
@@ -1019,21 +5395,27 @@ export const topics = {
                 "@value": "buddhist texts in sanskrit"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225333"
+        "parent": "O9TAXTBRC2016052KG225333",
+        "tbrcId": "T2411",
+        "rank": 93
     },
     "T2DB4572": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "dpe bsdur ma/"
         },
-        "parent": "O9TAXTBRC2016052KG225333"
+        "parent": "O9TAXTBRC2016052KG225333",
+        "tbrcId": "T2DB4572",
+        "rank": 81
     },
     "T1PD113672": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "bsdur 'bras re'u mig"
         },
-        "parent": "O9TAXTBRC2016052KG225333"
+        "parent": "O9TAXTBRC2016052KG225333",
+        "tbrcId": "T1PD113672",
+        "rank": 89
     },
     "T3CN1331": {
         "label": [
@@ -1050,7 +5432,9 @@ export const topics = {
                 "@value": "Buddhist texts in Chinese"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225333"
+        "parent": "O9TAXTBRC2016052KG225333",
+        "tbrcId": "T3CN1331",
+        "rank": 97
     },
     "T1731": {
         "label": [
@@ -1063,14 +5447,18 @@ export const topics = {
                 "@value": "block carvers"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225333"
+        "parent": "O9TAXTBRC2016052KG225333",
+        "tbrcId": "T1731",
+        "rank": 53
     },
     "T2091": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "glegs bam/"
         },
-        "parent": "O9TAXTBRC2016052KG225333"
+        "parent": "O9TAXTBRC2016052KG225333",
+        "tbrcId": "T2091",
+        "rank": 61
     },
     "T1PD108902": {
         "label": [
@@ -1087,14 +5475,18 @@ export const topics = {
                 "@value": "printery"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225333"
+        "parent": "O9TAXTBRC2016052KG225333",
+        "tbrcId": "T1PD108902",
+        "rank": 49
     },
     "T1PD108958": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "dbu lha/"
         },
-        "parent": "O9TAXTBRC2016052KG225333"
+        "parent": "O9TAXTBRC2016052KG225333",
+        "tbrcId": "T1PD108958",
+        "rank": 69
     },
     "O9TAXTBRC2016052KG225348": {
         "sub": [
@@ -1124,14 +5516,18 @@ export const topics = {
                 "@value": "Thematic Outlines"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225324"
+        "parent": "O9TAXTBRC2016052KG225324",
+        "tbrcId": "3",
+        "rank": 106
     },
     "T00JR980": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "mdo chings/"
         },
-        "parent": "O9TAXTBRC2016052KG225348"
+        "parent": "O9TAXTBRC2016052KG225348",
+        "tbrcId": "T00JR980",
+        "rank": 123
     },
     "T514": {
         "label": [
@@ -1148,7 +5544,9 @@ export const topics = {
                 "@value": "spyi chings/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225348"
+        "parent": "O9TAXTBRC2016052KG225348",
+        "tbrcId": "T514",
+        "rank": 115
     },
     "T89": {
         "label": [
@@ -1165,7 +5563,9 @@ export const topics = {
                 "@value": "纲目"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225348"
+        "parent": "O9TAXTBRC2016052KG225348",
+        "tbrcId": "T89",
+        "rank": 111
     },
     "T1GS135825": {
         "label": [
@@ -1178,7 +5578,9 @@ export const topics = {
                 "@value": "short verse presentation"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225348"
+        "parent": "O9TAXTBRC2016052KG225348",
+        "tbrcId": "T1GS135825",
+        "rank": 147
     },
     "T1CZ4664": {
         "label": [
@@ -1191,21 +5593,27 @@ export const topics = {
                 "@value": "final benefit"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225348"
+        "parent": "O9TAXTBRC2016052KG225348",
+        "tbrcId": "T1CZ4664",
+        "rank": 135
     },
     "T1AT268": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "sngon chings dang mjug chings/"
         },
-        "parent": "O9TAXTBRC2016052KG225348"
+        "parent": "O9TAXTBRC2016052KG225348",
+        "tbrcId": "T1AT268",
+        "rank": 119
     },
     "T2330": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "mchod brjod/"
         },
-        "parent": "O9TAXTBRC2016052KG225348"
+        "parent": "O9TAXTBRC2016052KG225348",
+        "tbrcId": "T2330",
+        "rank": 143
     },
     "T1KG3171": {
         "label": [
@@ -1218,7 +5626,9 @@ export const topics = {
                 "@value": "gleng brjod/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225348"
+        "parent": "O9TAXTBRC2016052KG225348",
+        "tbrcId": "T1KG3171",
+        "rank": 139
     },
     "T3JT12483": {
         "label": [
@@ -1231,7 +5641,9 @@ export const topics = {
                 "@value": "bar du dge ba/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225348"
+        "parent": "O9TAXTBRC2016052KG225348",
+        "tbrcId": "T3JT12483",
+        "rank": 131
     },
     "T1CZ4662": {
         "label": [
@@ -1244,7 +5656,9 @@ export const topics = {
                 "@value": "propitious in the beginning"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225348"
+        "parent": "O9TAXTBRC2016052KG225348",
+        "tbrcId": "T1CZ4662",
+        "rank": 127
     },
     "T1CZ50": {
         "label": [
@@ -1257,7 +5671,9 @@ export const topics = {
                 "@value": "collects the essence of a text, the essential meaning of an expanded or great text"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225348"
+        "parent": "O9TAXTBRC2016052KG225348",
+        "tbrcId": "T1CZ50",
+        "rank": 3237
     },
     "O9TAXTBRC2016052KG225360": {
         "sub": [
@@ -1287,7 +5703,9 @@ export const topics = {
                 "@value": "相关主题"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225324"
+        "parent": "O9TAXTBRC2016052KG225324",
+        "tbrcId": "4",
+        "rank": 152
     },
     "T1446": {
         "label": [
@@ -1300,14 +5718,18 @@ export const topics = {
                 "@value": "memorandum; notes of points to remember"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225360"
+        "parent": "O9TAXTBRC2016052KG225360",
+        "tbrcId": "T1446",
+        "rank": 185
     },
     "T2176": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "tho yig"
         },
-        "parent": "O9TAXTBRC2016052KG225360"
+        "parent": "O9TAXTBRC2016052KG225360",
+        "tbrcId": "T2176",
+        "rank": 157
     },
     "T2332": {
         "label": [
@@ -1320,7 +5742,9 @@ export const topics = {
                 "@value": "document names"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225360"
+        "parent": "O9TAXTBRC2016052KG225360",
+        "tbrcId": "T2332",
+        "rank": 169
     },
     "T2062": {
         "label": [
@@ -1337,7 +5761,9 @@ export const topics = {
                 "@value": "karika"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225360"
+        "parent": "O9TAXTBRC2016052KG225360",
+        "tbrcId": "T2062",
+        "rank": 193
     },
     "T254": {
         "label": [
@@ -1350,21 +5776,27 @@ export const topics = {
                 "@value": "table"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225360"
+        "parent": "O9TAXTBRC2016052KG225360",
+        "tbrcId": "T254",
+        "rank": 197
     },
     "T451": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "brgyud yig"
         },
-        "parent": "O9TAXTBRC2016052KG225360"
+        "parent": "O9TAXTBRC2016052KG225360",
+        "tbrcId": "T451",
+        "rank": 161
     },
     "T1AT299": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "reg gzig"
         },
-        "parent": "O9TAXTBRC2016052KG225360"
+        "parent": "O9TAXTBRC2016052KG225360",
+        "tbrcId": "T1AT299",
+        "rank": 189
     },
     "T00AG0572": {
         "label": [
@@ -1377,7 +5809,9 @@ export const topics = {
                 "@value": "addendum, supplement"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225360"
+        "parent": "O9TAXTBRC2016052KG225360",
+        "tbrcId": "T00AG0572",
+        "rank": 173
     },
     "T1124": {
         "label": [
@@ -1390,7 +5824,9 @@ export const topics = {
                 "@value": "bkod yig"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225360"
+        "parent": "O9TAXTBRC2016052KG225360",
+        "tbrcId": "T1124",
+        "rank": 165
     },
     "T1453": {
         "label": [
@@ -1403,14 +5839,18 @@ export const topics = {
                 "@value": "supplement"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225360"
+        "parent": "O9TAXTBRC2016052KG225360",
+        "tbrcId": "T1453",
+        "rank": 177
     },
     "T1AT671": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rgyab chos/"
         },
-        "parent": "O9TAXTBRC2016052KG225360"
+        "parent": "O9TAXTBRC2016052KG225360",
+        "tbrcId": "T1AT671",
+        "rank": 181
     },
     "O9TAXTBRC2016052KG226586": {
         "sub": [
@@ -1439,7 +5879,9 @@ export const topics = {
                 "@value": "医方明"
             }
         ],
-        "parent": "O9TAXTBRC201605"
+        "parent": "O9TAXTBRC201605",
+        "tbrcId": "ja",
+        "rank": 4334
     },
     "O9TAXTBRC2016052KG226642": {
         "sub": [
@@ -1466,7 +5908,9 @@ export const topics = {
                 "@value": "Pharmacognosy"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226586"
+        "parent": "O9TAXTBRC2016052KG226586",
+        "tbrcId": "7",
+        "rank": 4560
     },
     "T1102": {
         "label": [
@@ -1479,7 +5923,9 @@ export const topics = {
                 "@value": "medicinal ointments"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226642"
+        "parent": "O9TAXTBRC2016052KG226642",
+        "tbrcId": "T1102",
+        "rank": 4589
     },
     "T2MS13793": {
         "label": [
@@ -1492,7 +5938,9 @@ export const topics = {
                 "@value": "sman/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226642"
+        "parent": "O9TAXTBRC2016052KG226642",
+        "tbrcId": "T2MS13793",
+        "rank": 4573
     },
     "T237": {
         "label": [
@@ -1505,7 +5953,9 @@ export const topics = {
                 "@value": "materia medica"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226642"
+        "parent": "O9TAXTBRC2016052KG226642",
+        "tbrcId": "T237",
+        "rank": 4569
     },
     "T2045": {
         "label": {
@@ -1525,7 +5975,9 @@ export const topics = {
                 "@value": "rinchen medicine"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226642"
+        "parent": "O9TAXTBRC2016052KG226642",
+        "tbrcId": "T2428",
+        "rank": 4581
     },
     "T86": {
         "label": [
@@ -1538,7 +5990,9 @@ export const topics = {
                 "@value": "medicinal preparation"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226642"
+        "parent": "O9TAXTBRC2016052KG226642",
+        "tbrcId": "T86",
+        "rank": 4565
     },
     "T1714": {
         "label": [
@@ -1551,7 +6005,9 @@ export const topics = {
                 "@value": "treatment of the eyes"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226642"
+        "parent": "O9TAXTBRC2016052KG226642",
+        "tbrcId": "T1714",
+        "rank": 4585
     },
     "T88": {
         "label": [
@@ -1564,7 +6020,9 @@ export const topics = {
                 "@value": "dngul chu sbyor ba/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226642"
+        "parent": "O9TAXTBRC2016052KG226642",
+        "tbrcId": "T88",
+        "rank": 4577
     },
     "O9TAXTBRC2016052KG226651": {
         "sub": [
@@ -1585,7 +6043,9 @@ export const topics = {
                 "@value": "医生与器械"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226586"
+        "parent": "O9TAXTBRC2016052KG226586",
+        "tbrcId": "8",
+        "rank": 4594
     },
     "T3JT12433": {
         "label": [
@@ -1598,14 +6058,18 @@ export const topics = {
                 "@value": "doctors"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226651"
+        "parent": "O9TAXTBRC2016052KG226651",
+        "tbrcId": "T3JT12433",
+        "rank": 4599
     },
     "T2DB35092": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "sman thang /"
         },
-        "parent": "O9TAXTBRC2016052KG226651"
+        "parent": "O9TAXTBRC2016052KG226651",
+        "tbrcId": "T2DB35092",
+        "rank": 4603
     },
     "O9TAXTBRC2016052KG226589": {
         "sub": [
@@ -1636,56 +6100,72 @@ export const topics = {
                 "@value": "sman gzhung /"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226586"
+        "parent": "O9TAXTBRC2016052KG226586",
+        "tbrcId": "2",
+        "rank": 4349
     },
     "T10MS14643": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "nyams yig"
         },
-        "parent": "O9TAXTBRC2016052KG226589"
+        "parent": "O9TAXTBRC2016052KG226589",
+        "tbrcId": "T10MS14643",
+        "rank": 4386
     },
     "T241": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rgyud bzhi/"
         },
-        "parent": "O9TAXTBRC2016052KG226589"
+        "parent": "O9TAXTBRC2016052KG226589",
+        "tbrcId": "T241",
+        "rank": 4354
     },
     "T3JT13430": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "man ngag rgyud/"
         },
-        "parent": "O9TAXTBRC2016052KG226589"
+        "parent": "O9TAXTBRC2016052KG226589",
+        "tbrcId": "T3JT13430",
+        "rank": 4362
     },
     "T1PD95": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rtsa rgyud/"
         },
-        "parent": "O9TAXTBRC2016052KG226589"
+        "parent": "O9TAXTBRC2016052KG226589",
+        "tbrcId": "T1PD95",
+        "rank": 4358
     },
     "T1114": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "phyi ma rgyud/"
         },
-        "parent": "O9TAXTBRC2016052KG226589"
+        "parent": "O9TAXTBRC2016052KG226589",
+        "tbrcId": "T1114",
+        "rank": 4370
     },
     "T279": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "bshad rgyud/"
         },
-        "parent": "O9TAXTBRC2016052KG226589"
+        "parent": "O9TAXTBRC2016052KG226589",
+        "tbrcId": "T279",
+        "rank": 4366
     },
     "T1795": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "g.yu thog snying thig"
         },
-        "parent": "O9TAXTBRC2016052KG226589"
+        "parent": "O9TAXTBRC2016052KG226589",
+        "tbrcId": "T1795",
+        "rank": 4374
     },
     "T012AG03520": {
         "label": [
@@ -1698,7 +6178,9 @@ export const topics = {
                 "@value": "explanation of medical practices"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226589"
+        "parent": "O9TAXTBRC2016052KG226589",
+        "tbrcId": "T012AG03520",
+        "rank": 4378
     },
     "T10MS14651": {
         "label": [
@@ -1711,14 +6193,18 @@ export const topics = {
                 "@value": "medical text"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226589"
+        "parent": "O9TAXTBRC2016052KG226589",
+        "tbrcId": "T10MS14651",
+        "rank": 4382
     },
     "T1PD106851": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rdel 'grel/"
         },
-        "parent": "O9TAXTBRC2016052KG226589"
+        "parent": "O9TAXTBRC2016052KG226589",
+        "tbrcId": "T1PD106851",
+        "rank": 4390
     },
     "T2KG207415": {
         "label": [
@@ -1781,7 +6267,9 @@ export const topics = {
                 "@value": "nad rigs/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226586"
+        "parent": "O9TAXTBRC2016052KG226586",
+        "tbrcId": "5",
+        "rank": 4452
     },
     "T2557": {
         "label": [
@@ -1807,14 +6295,18 @@ export const topics = {
                 "@value": "gynecology"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226615"
+        "parent": "O9TAXTBRC2016052KG226615",
+        "tbrcId": "T1KG21678",
+        "rank": 4481
     },
     "T1654": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "gnyan rims bcos thabs/"
         },
-        "parent": "O9TAXTBRC2016052KG226615"
+        "parent": "O9TAXTBRC2016052KG226615",
+        "tbrcId": "T1654",
+        "rank": 4501
     },
     "T2558": {
         "label": [
@@ -1827,7 +6319,9 @@ export const topics = {
                 "@value": "contagious fevers"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226615"
+        "parent": "O9TAXTBRC2016052KG226615",
+        "tbrcId": "T2558",
+        "rank": 4505
     },
     "T2460": {
         "label": [
@@ -1840,14 +6334,18 @@ export const topics = {
                 "@value": "liver ailments"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226615"
+        "parent": "O9TAXTBRC2016052KG226615",
+        "tbrcId": "T2460",
+        "rank": 4473
     },
     "T1PD106855": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "bshal skyugs/"
         },
-        "parent": "O9TAXTBRC2016052KG226615"
+        "parent": "O9TAXTBRC2016052KG226615",
+        "tbrcId": "T1PD106855",
+        "rank": 4461
     },
     "T1PD106856": {
         "label": [
@@ -1860,7 +6358,9 @@ export const topics = {
                 "@value": "dmar bshal/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226615"
+        "parent": "O9TAXTBRC2016052KG226615",
+        "tbrcId": "T1PD106856",
+        "rank": 4465
     },
     "T1141": {
         "label": [
@@ -1873,7 +6373,9 @@ export const topics = {
                 "@value": "grang ba'i nad/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226615"
+        "parent": "O9TAXTBRC2016052KG226615",
+        "tbrcId": "T1141",
+        "rank": 4477
     },
     "T1KG21679": {
         "label": [
@@ -1886,7 +6388,9 @@ export const topics = {
                 "@value": "布鲁氏菌病"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226615"
+        "parent": "O9TAXTBRC2016052KG226615",
+        "tbrcId": "T1KG21679",
+        "rank": 4485
     },
     "T2407": {
         "label": [
@@ -1899,7 +6403,9 @@ export const topics = {
                 "@value": "'ju byed nad rigs/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226615"
+        "parent": "O9TAXTBRC2016052KG226615",
+        "tbrcId": "T2407",
+        "rank": 4457
     },
     "T1469": {
         "label": [
@@ -1916,7 +6422,9 @@ export const topics = {
                 "@value": "mdze nad/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226615"
+        "parent": "O9TAXTBRC2016052KG226615",
+        "tbrcId": "T1469",
+        "rank": 4489
     },
     "T1106": {
         "label": [
@@ -1929,7 +6437,9 @@ export const topics = {
                 "@value": "'bam nad/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226615"
+        "parent": "O9TAXTBRC2016052KG226615",
+        "tbrcId": "T1106",
+        "rank": 4493
     },
     "T1978": {
         "label": [
@@ -1942,7 +6452,9 @@ export const topics = {
                 "@value": "rus tshigs chen po'i nad/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226615"
+        "parent": "O9TAXTBRC2016052KG226615",
+        "tbrcId": "T1978",
+        "rank": 4497
     },
     "T2142": {
         "label": [
@@ -1955,7 +6467,9 @@ export const topics = {
                 "@value": "stomach ailments"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226615"
+        "parent": "O9TAXTBRC2016052KG226615",
+        "tbrcId": "T2142",
+        "rank": 4469
     },
     "O9TAXTBRC2016052KG226610": {
         "sub": [
@@ -1978,7 +6492,9 @@ export const topics = {
                 "@value": "诊断"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226586"
+        "parent": "O9TAXTBRC2016052KG226586",
+        "tbrcId": "4",
+        "rank": 4430
     },
     "T1972": {
         "label": [
@@ -1991,7 +6507,9 @@ export const topics = {
                 "@value": "nad rtags/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226610"
+        "parent": "O9TAXTBRC2016052KG226610",
+        "tbrcId": "T1972",
+        "rank": 4447
     },
     "T1188": {
         "label": [
@@ -2004,7 +6522,9 @@ export const topics = {
                 "@value": "pulse examination"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226610"
+        "parent": "O9TAXTBRC2016052KG226610",
+        "tbrcId": "T1188",
+        "rank": 4435
     },
     "T1189": {
         "label": [
@@ -2017,7 +6537,9 @@ export const topics = {
                 "@value": "urine examination"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226610"
+        "parent": "O9TAXTBRC2016052KG226610",
+        "tbrcId": "T1189",
+        "rank": 4439
     },
     "T2GS1326": {
         "label": [
@@ -2034,7 +6556,9 @@ export const topics = {
                 "@value": "rāsa"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226610"
+        "parent": "O9TAXTBRC2016052KG226610",
+        "tbrcId": "T2GS1326",
+        "rank": 4443
     },
     "O9TAXTBRC2016052KG226602": {
         "sub": [
@@ -2060,14 +6584,18 @@ export const topics = {
                 "@value": "Physical points"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226586"
+        "parent": "O9TAXTBRC2016052KG226586",
+        "tbrcId": "3",
+        "rank": 4395
     },
     "T2124": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rtsa dbu ma/"
         },
-        "parent": "O9TAXTBRC2016052KG226602"
+        "parent": "O9TAXTBRC2016052KG226602",
+        "tbrcId": "T2124",
+        "rank": 4421
     },
     "T1122": {
         "label": [
@@ -2080,7 +6608,9 @@ export const topics = {
                 "@value": "acupuncture points"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226602"
+        "parent": "O9TAXTBRC2016052KG226602",
+        "tbrcId": "T1122",
+        "rank": 4405
     },
     "T1952": {
         "label": [
@@ -2093,7 +6623,9 @@ export const topics = {
                 "@value": "life force"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226602"
+        "parent": "O9TAXTBRC2016052KG226602",
+        "tbrcId": "T1952",
+        "rank": 4409
     },
     "T1140": {
         "label": [
@@ -2106,7 +6638,9 @@ export const topics = {
                 "@value": "anatomy"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226602"
+        "parent": "O9TAXTBRC2016052KG226602",
+        "tbrcId": "T1140",
+        "rank": 4401
     },
     "T1690": {
         "label": [
@@ -2119,7 +6653,9 @@ export const topics = {
                 "@value": "nadi"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226602"
+        "parent": "O9TAXTBRC2016052KG226602",
+        "tbrcId": "T1690",
+        "rank": 4417
     },
     "T831": {
         "label": [
@@ -2132,7 +6668,9 @@ export const topics = {
                 "@value": "life prolongation"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226602"
+        "parent": "O9TAXTBRC2016052KG226602",
+        "tbrcId": "T831",
+        "rank": 4413
     },
     "T1KG21177": {
         "label": [
@@ -2145,7 +6683,9 @@ export const topics = {
                 "@value": "dbang rtsa'i tshan rig"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226602"
+        "parent": "O9TAXTBRC2016052KG226602",
+        "tbrcId": "T1KG21177",
+        "rank": 4425
     },
     "O9TAXTBRC2016052KG226654": {
         "sub": [
@@ -2170,7 +6710,9 @@ export const topics = {
                 "@value": "健康与卫生"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226586"
+        "parent": "O9TAXTBRC2016052KG226586",
+        "tbrcId": "9",
+        "rank": 4608
     },
     "T1142": {
         "label": [
@@ -2183,7 +6725,9 @@ export const topics = {
                 "@value": "health and hygiene"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226654"
+        "parent": "O9TAXTBRC2016052KG226654",
+        "tbrcId": "T1142",
+        "rank": 4613
     },
     "T1KG21162": {
         "label": [
@@ -2196,7 +6740,9 @@ export const topics = {
                 "@value": "pranayama exercises"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226654"
+        "parent": "O9TAXTBRC2016052KG226654",
+        "tbrcId": "T1KG21162",
+        "rank": 4625
     },
     "T11MS61": {
         "label": [
@@ -2222,21 +6768,27 @@ export const topics = {
                 "@value": "myos byed nyes dmigs/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226654"
+        "parent": "O9TAXTBRC2016052KG226654",
+        "tbrcId": "T1730",
+        "rank": 4633
     },
     "T1250": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "bcud/"
         },
-        "parent": "O9TAXTBRC2016052KG226654"
+        "parent": "O9TAXTBRC2016052KG226654",
+        "tbrcId": "T1250",
+        "rank": 4629
     },
     "T1PD106854": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rtsa sbyongs/"
         },
-        "parent": "O9TAXTBRC2016052KG226654"
+        "parent": "O9TAXTBRC2016052KG226654",
+        "tbrcId": "T1PD106854",
+        "rank": 4621
     },
     "O9TAXTBRC2016052KG226587": {
         "sub": [
@@ -2273,7 +6825,9 @@ export const topics = {
                 "@value": "医学"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226587"
+        "parent": "O9TAXTBRC2016052KG226587",
+        "tbrcId": "T85",
+        "rank": 4344
     },
     "O9TAXTBRC2016052KG226630": {
         "sub": [
@@ -2303,21 +6857,27 @@ export const topics = {
                 "@value": "bcos thabs/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226586"
+        "parent": "O9TAXTBRC2016052KG226586",
+        "tbrcId": "6",
+        "rank": 4510
     },
     "T1GS108145": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "srog rlung bcos pa/"
         },
-        "parent": "O9TAXTBRC2016052KG226630"
+        "parent": "O9TAXTBRC2016052KG226630",
+        "tbrcId": "T1GS108145",
+        "rank": 4531
     },
     "T1661": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "lhog bcos/"
         },
-        "parent": "O9TAXTBRC2016052KG226630"
+        "parent": "O9TAXTBRC2016052KG226630",
+        "tbrcId": "T1661",
+        "rank": 4523
     },
     "T1121": {
         "label": [
@@ -2330,35 +6890,45 @@ export const topics = {
                 "@value": "acupuncture channels"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226630"
+        "parent": "O9TAXTBRC2016052KG226630",
+        "tbrcId": "T1121",
+        "rank": 4543
     },
     "T1GS139157": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "'brum nad bzlog sgyur/"
         },
-        "parent": "O9TAXTBRC2016052KG226630"
+        "parent": "O9TAXTBRC2016052KG226630",
+        "tbrcId": "T1GS139157",
+        "rank": 4539
     },
     "T1PD106853": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rma bcos/"
         },
-        "parent": "O9TAXTBRC2016052KG226630"
+        "parent": "O9TAXTBRC2016052KG226630",
+        "tbrcId": "T1PD106853",
+        "rank": 4519
     },
     "T1656": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "dbyug bcos/"
         },
-        "parent": "O9TAXTBRC2016052KG226630"
+        "parent": "O9TAXTBRC2016052KG226630",
+        "tbrcId": "T1656",
+        "rank": 4527
     },
     "T1468": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "sder bshal/"
         },
-        "parent": "O9TAXTBRC2016052KG226630"
+        "parent": "O9TAXTBRC2016052KG226630",
+        "tbrcId": "T1468",
+        "rank": 4535
     },
     "T94": {
         "label": [
@@ -2371,7 +6941,9 @@ export const topics = {
                 "@value": "method of treatment"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226630"
+        "parent": "O9TAXTBRC2016052KG226630",
+        "tbrcId": "T94",
+        "rank": 4515
     },
     "T2626": {
         "label": [
@@ -2384,7 +6956,9 @@ export const topics = {
                 "@value": "bsku mnye/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226630"
+        "parent": "O9TAXTBRC2016052KG226630",
+        "tbrcId": "T2626",
+        "rank": 4555
     },
     "T1139": {
         "label": [
@@ -2397,7 +6971,9 @@ export const topics = {
                 "@value": "skam khab/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226630"
+        "parent": "O9TAXTBRC2016052KG226630",
+        "tbrcId": "T1139",
+        "rank": 4551
     },
     "T1153": {
         "label": [
@@ -2410,7 +6986,9 @@ export const topics = {
                 "@value": "moxibustion"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226630"
+        "parent": "O9TAXTBRC2016052KG226630",
+        "tbrcId": "T1153",
+        "rank": 4547
     },
     "O9TAXTBRC2016052KG226661": {
         "sub": [
@@ -2434,7 +7012,9 @@ export const topics = {
                 "@value": "兽医"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226586"
+        "parent": "O9TAXTBRC2016052KG226586",
+        "tbrcId": "10",
+        "rank": 4638
     },
     "T295": {
         "label": [
@@ -2447,7 +7027,9 @@ export const topics = {
                 "@value": "phyugs nad bcos thabs/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226661"
+        "parent": "O9TAXTBRC2016052KG226661",
+        "tbrcId": "T295",
+        "rank": 4643
     },
     "T301": {
         "label": [
@@ -2460,7 +7042,9 @@ export const topics = {
                 "@value": "animal husbandry"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226661"
+        "parent": "O9TAXTBRC2016052KG226661",
+        "tbrcId": "T301",
+        "rank": 4651
     },
     "T1660": {
         "label": [
@@ -2473,14 +7057,18 @@ export const topics = {
                 "@value": "rabies treatment"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226661"
+        "parent": "O9TAXTBRC2016052KG226661",
+        "tbrcId": "T1660",
+        "rank": 4655
     },
     "T1PD106857": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "glo rtsi/"
         },
-        "parent": "O9TAXTBRC2016052KG226661"
+        "parent": "O9TAXTBRC2016052KG226661",
+        "tbrcId": "T1PD106857",
+        "rank": 4647
     },
     "T00EGS1017630": {
         "label": [
@@ -2493,7 +7081,9 @@ export const topics = {
                 "@value": "animal rights"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226661"
+        "parent": "O9TAXTBRC2016052KG226661",
+        "tbrcId": "T00EGS1017630",
+        "rank": 4659
     },
     "O9TAXTBRC2016052KG226784": {
         "sub": [
@@ -2524,7 +7114,9 @@ export const topics = {
                 "@value": "lo rgyus dang rnam thar sogs/"
             }
         ],
-        "parent": "O9TAXTBRC201605"
+        "parent": "O9TAXTBRC201605",
+        "tbrcId": "ta",
+        "rank": 5191
     },
     "O9TAXTBRC2016052KG226810": {
         "sub": [
@@ -2546,7 +7138,9 @@ export const topics = {
                 "@value": "官府与名衔"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226784"
+        "parent": "O9TAXTBRC2016052KG226784",
+        "tbrcId": "2",
+        "rank": 5323
     },
     "O9TAXTBRC2016052KG226811": {
         "sub": [
@@ -2584,7 +7178,9 @@ export const topics = {
                 "@value": "官府"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226810"
+        "parent": "O9TAXTBRC2016052KG226810",
+        "tbrcId": "1",
+        "rank": 5329
     },
     "T1PD108613": {
         "label": [
@@ -2597,7 +7193,9 @@ export const topics = {
                 "@value": "噶厦"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226811"
+        "parent": "O9TAXTBRC2016052KG226811",
+        "tbrcId": "T1PD108613",
+        "rank": 5355
     },
     "T2KG207970": {
         "label": [
@@ -2617,49 +7215,63 @@ export const topics = {
             "@language": "bo-x-ewts",
             "@value": "gro mo spyi khyab/"
         },
-        "parent": "O9TAXTBRC2016052KG226811"
+        "parent": "O9TAXTBRC2016052KG226811",
+        "tbrcId": "T2233",
+        "rank": 5410
     },
     "T00AG02680": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "dga' ldan pho brang /"
         },
-        "parent": "O9TAXTBRC2016052KG226811"
+        "parent": "O9TAXTBRC2016052KG226811",
+        "tbrcId": "T00AG02680",
+        "rank": 5340
     },
     "T2224": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "zhol pa las khungs/"
         },
-        "parent": "O9TAXTBRC2016052KG226811"
+        "parent": "O9TAXTBRC2016052KG226811",
+        "tbrcId": "T2224",
+        "rank": 5375
     },
     "T1947": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "ga dang dmag sgar/"
         },
-        "parent": "O9TAXTBRC2016052KG226811"
+        "parent": "O9TAXTBRC2016052KG226811",
+        "tbrcId": "T1947",
+        "rank": 5350
     },
     "T2203": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "yig tshang /"
         },
-        "parent": "O9TAXTBRC2016052KG226811"
+        "parent": "O9TAXTBRC2016052KG226811",
+        "tbrcId": "T2203",
+        "rank": 5345
     },
     "T1949": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "hor spyi khyab/"
         },
-        "parent": "O9TAXTBRC2016052KG226811"
+        "parent": "O9TAXTBRC2016052KG226811",
+        "tbrcId": "T1949",
+        "rank": 5395
     },
     "T2205": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "zhol gnyer/"
         },
-        "parent": "O9TAXTBRC2016052KG226811"
+        "parent": "O9TAXTBRC2016052KG226811",
+        "tbrcId": "T2205",
+        "rank": 5380
     },
     "T2234": {
         "label": [
@@ -2672,7 +7284,9 @@ export const topics = {
                 "@value": "srid gzhung /"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226811"
+        "parent": "O9TAXTBRC2016052KG226811",
+        "tbrcId": "T2234",
+        "rank": 5334
     },
     "T2200": {
         "label": [
@@ -2685,28 +7299,36 @@ export const topics = {
                 "@value": "'dod dpal las khungs/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226811"
+        "parent": "O9TAXTBRC2016052KG226811",
+        "tbrcId": "T2200",
+        "rank": 5360
     },
     "T2495": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "snang rtse shag las khungs/"
         },
-        "parent": "O9TAXTBRC2016052KG226811"
+        "parent": "O9TAXTBRC2016052KG226811",
+        "tbrcId": "T2495",
+        "rank": 5365
     },
     "T2497": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "tar khang /"
         },
-        "parent": "O9TAXTBRC2016052KG226811"
+        "parent": "O9TAXTBRC2016052KG226811",
+        "tbrcId": "T2497",
+        "rank": 5385
     },
     "T2494": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "mdo smad spyi khyab/"
         },
-        "parent": "O9TAXTBRC2016052KG226811"
+        "parent": "O9TAXTBRC2016052KG226811",
+        "tbrcId": "T2494",
+        "rank": 5415
     },
     "T1KG24262": {
         "label": [
@@ -2726,7 +7348,9 @@ export const topics = {
             "@language": "bo-x-ewts",
             "@value": "lho kha spyi khyab/"
         },
-        "parent": "O9TAXTBRC2016052KG226811"
+        "parent": "O9TAXTBRC2016052KG226811",
+        "tbrcId": "T1944",
+        "rank": 5390
     },
     "T2222": {
         "label": [
@@ -2739,7 +7363,9 @@ export const topics = {
                 "@value": "dalai lama's bodyguard"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226811"
+        "parent": "O9TAXTBRC2016052KG226811",
+        "tbrcId": "T2222",
+        "rank": 5370
     },
     "T2215": {
         "label": [
@@ -2752,14 +7378,18 @@ export const topics = {
                 "@value": "bod ljongs dmag spyi khang /"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226811"
+        "parent": "O9TAXTBRC2016052KG226811",
+        "tbrcId": "T2215",
+        "rank": 5405
     },
     "T2213": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "sog phogs khang /"
         },
-        "parent": "O9TAXTBRC2016052KG226811"
+        "parent": "O9TAXTBRC2016052KG226811",
+        "tbrcId": "T2213",
+        "rank": 5400
     },
     "O9TAXTBRC2016052KG226831": {
         "sub": [
@@ -2802,7 +7432,9 @@ export const topics = {
                 "@value": "名衔"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226810"
+        "parent": "O9TAXTBRC2016052KG226810",
+        "tbrcId": "2",
+        "rank": 5421
     },
     "T2219": {
         "label": [
@@ -2815,7 +7447,9 @@ export const topics = {
                 "@value": "dancer"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226831"
+        "parent": "O9TAXTBRC2016052KG226831",
+        "tbrcId": "T2219",
+        "rank": 5451
     },
     "T1829": {
         "label": [
@@ -2828,7 +7462,9 @@ export const topics = {
                 "@value": "red hat"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226831"
+        "parent": "O9TAXTBRC2016052KG226831",
+        "tbrcId": "T1829",
+        "rank": 5461
     },
     "T2097": {
         "label": [
@@ -2841,21 +7477,27 @@ export const topics = {
                 "@value": "kings of shambhala"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226831"
+        "parent": "O9TAXTBRC2016052KG226831",
+        "tbrcId": "T2097",
+        "rank": 5446
     },
     "T2MS14684": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "dga' ldan khri pa/"
         },
-        "parent": "O9TAXTBRC2016052KG226831"
+        "parent": "O9TAXTBRC2016052KG226831",
+        "tbrcId": "T2MS14684",
+        "rank": 5491
     },
     "T1204": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "khams sprul (khams pa sgar)"
         },
-        "parent": "O9TAXTBRC2016052KG226831"
+        "parent": "O9TAXTBRC2016052KG226831",
+        "tbrcId": "T1204",
+        "rank": 5511
     },
     "T2383": {
         "label": [
@@ -2868,7 +7510,9 @@ export const topics = {
                 "@value": "gzhung zhabs/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226831"
+        "parent": "O9TAXTBRC2016052KG226831",
+        "tbrcId": "T2383",
+        "rank": 5476
     },
     "T2CZ10402": {
         "label": [
@@ -2881,7 +7525,9 @@ export const topics = {
                 "@value": "six ornaments and the two supreme ones"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226831"
+        "parent": "O9TAXTBRC2016052KG226831",
+        "tbrcId": "T2CZ10402",
+        "rank": 5526
     },
     "T00AG01326": {
         "label": [
@@ -2894,21 +7540,27 @@ export const topics = {
                 "@value": "twelve manifestations of padmasambhava"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226831"
+        "parent": "O9TAXTBRC2016052KG226831",
+        "tbrcId": "T00AG01326",
+        "rank": 5536
     },
     "T2218": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "nag ru dpon tshang /"
         },
-        "parent": "O9TAXTBRC2016052KG226831"
+        "parent": "O9TAXTBRC2016052KG226831",
+        "tbrcId": "T2218",
+        "rank": 5481
     },
     "T2MS15106": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "si tu/"
         },
-        "parent": "O9TAXTBRC2016052KG226831"
+        "parent": "O9TAXTBRC2016052KG226831",
+        "tbrcId": "T2MS15106",
+        "rank": 5466
     },
     "T2380": {
         "label": [
@@ -2925,7 +7577,9 @@ export const topics = {
                 "@value": "panchen lama"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226831"
+        "parent": "O9TAXTBRC2016052KG226831",
+        "tbrcId": "T2380",
+        "rank": 5501
     },
     "T2MS13833": {
         "label": [
@@ -2938,7 +7592,9 @@ export const topics = {
                 "@value": "tA la'i bla ma/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226831"
+        "parent": "O9TAXTBRC2016052KG226831",
+        "tbrcId": "T2MS13833",
+        "rank": 5496
     },
     "T107": {
         "label": [
@@ -2955,21 +7611,27 @@ export const topics = {
                 "@value": "karmapa"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226831"
+        "parent": "O9TAXTBRC2016052KG226831",
+        "tbrcId": "T107",
+        "rank": 5506
     },
     "T01AG03220": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "mkhan slob chos gsum/"
         },
-        "parent": "O9TAXTBRC2016052KG226831"
+        "parent": "O9TAXTBRC2016052KG226831",
+        "tbrcId": "T01AG03220",
+        "rank": 5516
     },
     "T2405": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "phag mo gru pa (sde srid)"
         },
-        "parent": "O9TAXTBRC2016052KG226831"
+        "parent": "O9TAXTBRC2016052KG226831",
+        "tbrcId": "T2405",
+        "rank": 5436
     },
     "T1162": {
         "label": [
@@ -2982,14 +7644,18 @@ export const topics = {
                 "@value": "skya seng bu lnga /"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226831"
+        "parent": "O9TAXTBRC2016052KG226831",
+        "tbrcId": "T1162",
+        "rank": 5531
     },
     "T2MS14680": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "sde srid/"
         },
-        "parent": "O9TAXTBRC2016052KG226831"
+        "parent": "O9TAXTBRC2016052KG226831",
+        "tbrcId": "T2MS14680",
+        "rank": 5426
     },
     "T1KG6182": {
         "label": [
@@ -3002,28 +7668,36 @@ export const topics = {
                 "@value": "army commander"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226831"
+        "parent": "O9TAXTBRC2016052KG226831",
+        "tbrcId": "T1KG6182",
+        "rank": 5471
     },
     "T2223": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "chu bzhi sgang drug"
         },
-        "parent": "O9TAXTBRC2016052KG226831"
+        "parent": "O9TAXTBRC2016052KG226831",
+        "tbrcId": "T2223",
+        "rank": 5486
     },
     "T2MS14681": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "bka' blon/"
         },
-        "parent": "O9TAXTBRC2016052KG226831"
+        "parent": "O9TAXTBRC2016052KG226831",
+        "tbrcId": "T2MS14681",
+        "rank": 5431
     },
     "T1PD108963": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "sa skya gong ma rnam lnga /"
         },
-        "parent": "O9TAXTBRC2016052KG226831"
+        "parent": "O9TAXTBRC2016052KG226831",
+        "tbrcId": "T1PD108963",
+        "rank": 5441
     },
     "T1043": {
         "label": [
@@ -3036,7 +7710,9 @@ export const topics = {
                 "@value": "84 mahasiddhas"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226831"
+        "parent": "O9TAXTBRC2016052KG226831",
+        "tbrcId": "T1043",
+        "rank": 5521
     },
     "T1410": {
         "label": [
@@ -3049,7 +7725,9 @@ export const topics = {
                 "@value": "rje yab sras gsum/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226831"
+        "parent": "O9TAXTBRC2016052KG226831",
+        "tbrcId": "T1410",
+        "rank": 5541
     },
     "T2075": {
         "label": [
@@ -3062,7 +7740,9 @@ export const topics = {
                 "@value": "black hat"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226831"
+        "parent": "O9TAXTBRC2016052KG226831",
+        "tbrcId": "T2075",
+        "rank": 5456
     },
     "O9TAXTBRC2016052KG226856": {
         "sub": [
@@ -3084,7 +7764,9 @@ export const topics = {
                 "@value": "Related Topic"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226810"
+        "parent": "O9TAXTBRC2016052KG226810",
+        "tbrcId": "4",
+        "rank": 152
     },
     "T1672": {
         "label": [
@@ -3101,14 +7783,18 @@ export const topics = {
                 "@value": "seals"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226856"
+        "parent": "O9TAXTBRC2016052KG226856",
+        "tbrcId": "T1672",
+        "rank": 3801
     },
     "T8LS1426": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rgyal dar/"
         },
-        "parent": "O9TAXTBRC2016052KG226856"
+        "parent": "O9TAXTBRC2016052KG226856",
+        "tbrcId": "T8LS1426",
+        "rank": 3866
     },
     "T2583": {
         "label": [
@@ -3121,7 +7807,9 @@ export const topics = {
                 "@value": "national emblems"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226856"
+        "parent": "O9TAXTBRC2016052KG226856",
+        "tbrcId": "T2583",
+        "rank": 3861
     },
     "O9TAXTBRC2016052KG226860": {
         "sub": [
@@ -3152,28 +7840,36 @@ export const topics = {
                 "@value": "姓氏与家族"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226784"
+        "parent": "O9TAXTBRC2016052KG226784",
+        "tbrcId": "3",
+        "rank": 5548
     },
     "T2227": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "bshad sgra (sger)"
         },
-        "parent": "O9TAXTBRC2016052KG226860"
+        "parent": "O9TAXTBRC2016052KG226860",
+        "tbrcId": "T2227",
+        "rank": 5603
     },
     "T1PD95800": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "mi ming /"
         },
-        "parent": "O9TAXTBRC2016052KG226860"
+        "parent": "O9TAXTBRC2016052KG226860",
+        "tbrcId": "T1PD95800",
+        "rank": 5619
     },
     "T2207": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "lha smon (sger pa)"
         },
-        "parent": "O9TAXTBRC2016052KG226860"
+        "parent": "O9TAXTBRC2016052KG226860",
+        "tbrcId": "T2207",
+        "rank": 5598
     },
     "T1959": {
         "label": [
@@ -3186,35 +7882,45 @@ export const topics = {
                 "@value": "aristocracy"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226860"
+        "parent": "O9TAXTBRC2016052KG226860",
+        "tbrcId": "T1959",
+        "rank": 5588
     },
     "T2496": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "se grong g.yul smad pa/"
         },
-        "parent": "O9TAXTBRC2016052KG226860"
+        "parent": "O9TAXTBRC2016052KG226860",
+        "tbrcId": "T2496",
+        "rank": 5608
     },
     "T2510": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rlangs/"
         },
-        "parent": "O9TAXTBRC2016052KG226860"
+        "parent": "O9TAXTBRC2016052KG226860",
+        "tbrcId": "T2510",
+        "rank": 5558
     },
     "T2254": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rdo ring (sger)"
         },
-        "parent": "O9TAXTBRC2016052KG226860"
+        "parent": "O9TAXTBRC2016052KG226860",
+        "tbrcId": "T2254",
+        "rank": 5578
     },
     "T1PD105574": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "ban gya/"
         },
-        "parent": "O9TAXTBRC2016052KG226860"
+        "parent": "O9TAXTBRC2016052KG226860",
+        "tbrcId": "T1PD105574",
+        "rank": 5593
     },
     "T1192": {
         "label": [
@@ -3227,14 +7933,18 @@ export const topics = {
                 "@value": "nyo"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226860"
+        "parent": "O9TAXTBRC2016052KG226860",
+        "tbrcId": "T1192",
+        "rank": 5563
     },
     "T2243": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "'khon (gdung)"
         },
-        "parent": "O9TAXTBRC2016052KG226860"
+        "parent": "O9TAXTBRC2016052KG226860",
+        "tbrcId": "T2243",
+        "rank": 5553
     },
     "T611": {
         "parent": "O9TAXTBRC2016052KG226860"
@@ -3244,7 +7954,9 @@ export const topics = {
             "@language": "bo-x-ewts",
             "@value": "lce (gdung)"
         },
-        "parent": "O9TAXTBRC2016052KG226860"
+        "parent": "O9TAXTBRC2016052KG226860",
+        "tbrcId": "T2607",
+        "rank": 5568
     },
     "O9TAXTBRC2016052KG226911": {
         "sub": [
@@ -3264,7 +7976,9 @@ export const topics = {
                 "@value": "寺志｜朝圣录"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226784"
+        "parent": "O9TAXTBRC2016052KG226784",
+        "tbrcId": "11",
+        "rank": 5803
     },
     "T25": {
         "label": [
@@ -3281,7 +7995,9 @@ export const topics = {
                 "@value": "mahātmya"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226911"
+        "parent": "O9TAXTBRC2016052KG226911",
+        "tbrcId": "T25",
+        "rank": 5808
     },
     "O9TAXTBRC2016052KG226913": {
         "sub": [
@@ -3303,7 +8019,9 @@ export const topics = {
                 "@value": "Guide book"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226784"
+        "parent": "O9TAXTBRC2016052KG226784",
+        "tbrcId": "12",
+        "rank": 5813
     },
     "T2037": {
         "label": [
@@ -3316,14 +8034,18 @@ export const topics = {
                 "@value": "旅游指南，旅途纪实"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226913"
+        "parent": "O9TAXTBRC2016052KG226913",
+        "tbrcId": "T2037",
+        "rank": 5818
     },
     "T276": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "gtam rgyud/"
         },
-        "parent": "O9TAXTBRC2016052KG226913"
+        "parent": "O9TAXTBRC2016052KG226913",
+        "tbrcId": "T276",
+        "rank": 5828
     },
     "T1PD108881": {
         "label": [
@@ -3336,7 +8058,9 @@ export const topics = {
                 "@value": "lag khyer/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226913"
+        "parent": "O9TAXTBRC2016052KG226913",
+        "tbrcId": "T1PD108881",
+        "rank": 5823
     },
     "O9TAXTBRC2016052KG226917": {
         "sub": [
@@ -3357,7 +8081,9 @@ export const topics = {
                 "@value": "Table of contents"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226784"
+        "parent": "O9TAXTBRC2016052KG226784",
+        "tbrcId": "ka",
+        "rank": 5
     },
     "T1218": {
         "label": [
@@ -3370,7 +8096,9 @@ export const topics = {
                 "@value": "sku gdung dkar chag"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226917"
+        "parent": "O9TAXTBRC2016052KG226917",
+        "tbrcId": "T1218",
+        "rank": 5839
     },
     "T1GS44553": {
         "label": {
@@ -3397,7 +8125,9 @@ export const topics = {
                 "@value": "法嗣记"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226784"
+        "parent": "O9TAXTBRC2016052KG226784",
+        "tbrcId": "8",
+        "rank": 5773
     },
     "T16": {
         "label": [
@@ -3410,7 +8140,9 @@ export const topics = {
                 "@value": "monastic chronicles"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226905"
+        "parent": "O9TAXTBRC2016052KG226905",
+        "tbrcId": "T16",
+        "rank": 5778
     },
     "O9TAXTBRC2016052KG226873": {
         "sub": [
@@ -3432,7 +8164,9 @@ export const topics = {
                 "@value": "王统记"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226784"
+        "parent": "O9TAXTBRC2016052KG226784",
+        "tbrcId": "5",
+        "rank": 5635
     },
     "T793": {
         "label": [
@@ -3445,7 +8179,9 @@ export const topics = {
                 "@value": "royal chronicles"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226873"
+        "parent": "O9TAXTBRC2016052KG226873",
+        "tbrcId": "T793",
+        "rank": 5641
     },
     "O9TAXTBRC2016052KG226875": {
         "sub": [
@@ -3468,7 +8204,9 @@ export const topics = {
                 "@value": "藏史时期"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226873"
+        "parent": "O9TAXTBRC2016052KG226873",
+        "tbrcId": "1",
+        "rank": 5646
     },
     "T00JR696": {
         "label": [
@@ -3481,7 +8219,9 @@ export const topics = {
                 "@value": "tibetan imperial period (c. 600-842)"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226875"
+        "parent": "O9TAXTBRC2016052KG226875",
+        "tbrcId": "T00JR696",
+        "rank": 5654
     },
     "T1941": {
         "label": [
@@ -3494,7 +8234,9 @@ export const topics = {
                 "@value": "gna' bo'i lo rgyus/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226875"
+        "parent": "O9TAXTBRC2016052KG226875",
+        "tbrcId": "T1941",
+        "rank": 5649
     },
     "T1KG6174": {
         "label": [
@@ -3507,14 +8249,18 @@ export const topics = {
                 "@value": "medieval period"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226875"
+        "parent": "O9TAXTBRC2016052KG226875",
+        "tbrcId": "T1KG6174",
+        "rank": 5659
     },
     "T1PD110065": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "bod sil bu'i skabs/"
         },
-        "parent": "O9TAXTBRC2016052KG226875"
+        "parent": "O9TAXTBRC2016052KG226875",
+        "tbrcId": "T1PD110065",
+        "rank": 5664
     },
     "O9TAXTBRC2016052KG226880": {
         "sub": [
@@ -3538,7 +8284,9 @@ export const topics = {
                 "@value": "汉史时期"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226873"
+        "parent": "O9TAXTBRC2016052KG226873",
+        "tbrcId": "2",
+        "rank": 5670
     },
     "T2MS14926": {
         "label": [
@@ -3555,7 +8303,9 @@ export const topics = {
                 "@value": "明朝"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226880"
+        "parent": "O9TAXTBRC2016052KG226880",
+        "tbrcId": "T2MS14926",
+        "rank": 5688
     },
     "T2MS14923": {
         "label": [
@@ -3572,7 +8322,9 @@ export const topics = {
                 "@value": "qing dynasty"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226880"
+        "parent": "O9TAXTBRC2016052KG226880",
+        "tbrcId": "T2MS14923",
+        "rank": 5693
     },
     "T2MS14925": {
         "label": [
@@ -3589,7 +8341,9 @@ export const topics = {
                 "@value": "元朝"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226880"
+        "parent": "O9TAXTBRC2016052KG226880",
+        "tbrcId": "T2MS14925",
+        "rank": 5683
     },
     "T2MS13271": {
         "label": [
@@ -3602,7 +8356,9 @@ export const topics = {
                 "@value": "唐朝"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226880"
+        "parent": "O9TAXTBRC2016052KG226880",
+        "tbrcId": "T2MS13271",
+        "rank": 5673
     },
     "T8LS16965": {
         "label": [
@@ -3615,7 +8371,9 @@ export const topics = {
                 "@value": "song dynasty"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226880"
+        "parent": "O9TAXTBRC2016052KG226880",
+        "tbrcId": "T8LS16965",
+        "rank": 5678
     },
     "O9TAXTBRC2016052KG226907": {
         "sub": [
@@ -3635,7 +8393,9 @@ export const topics = {
                 "@value": "血统记"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226784"
+        "parent": "O9TAXTBRC2016052KG226784",
+        "tbrcId": "9",
+        "rank": 5783
     },
     "T1673": {
         "label": [
@@ -3648,7 +8408,9 @@ export const topics = {
                 "@value": "genealogy"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226907"
+        "parent": "O9TAXTBRC2016052KG226907",
+        "tbrcId": "T1673",
+        "rank": 5788
     },
     "O9TAXTBRC2016052KG226886": {
         "sub": [
@@ -3672,7 +8434,9 @@ export const topics = {
                 "@value": "法脉源流"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226784"
+        "parent": "O9TAXTBRC2016052KG226784",
+        "tbrcId": "6",
+        "rank": 5700
     },
     "T12": {
         "label": [
@@ -3685,35 +8449,45 @@ export const topics = {
                 "@value": "religious histories"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226886"
+        "parent": "O9TAXTBRC2016052KG226886",
+        "tbrcId": "T12",
+        "rank": 5705
     },
     "T2MS13232": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "bstan pa phyi dar/"
         },
-        "parent": "O9TAXTBRC2016052KG226886"
+        "parent": "O9TAXTBRC2016052KG226886",
+        "tbrcId": "T2MS13232",
+        "rank": 5719
     },
     "T4CZ16845": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "gtad rabs/"
         },
-        "parent": "O9TAXTBRC2016052KG226886"
+        "parent": "O9TAXTBRC2016052KG226886",
+        "tbrcId": "T4CZ16845",
+        "rank": 5724
     },
     "T1688": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "gsar ma/"
         },
-        "parent": "O9TAXTBRC2016052KG226886"
+        "parent": "O9TAXTBRC2016052KG226886",
+        "tbrcId": "T1688",
+        "rank": 5714
     },
     "T00AG02710": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "bstan pa snga dar/"
         },
-        "parent": "O9TAXTBRC2016052KG226886"
+        "parent": "O9TAXTBRC2016052KG226886",
+        "tbrcId": "T00AG02710",
+        "rank": 5709
     },
     "O9TAXTBRC2016052KG226892": {
         "sub": [
@@ -3744,7 +8518,9 @@ export const topics = {
                 "@value": "传记"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226784"
+        "parent": "O9TAXTBRC2016052KG226784",
+        "tbrcId": "7",
+        "rank": 5730
     },
     "T2331": {
         "label": [
@@ -3757,7 +8533,9 @@ export const topics = {
                 "@value": "reincarnation"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226892"
+        "parent": "O9TAXTBRC2016052KG226892",
+        "tbrcId": "T2331",
+        "rank": 3731
     },
     "T3": {
         "label": [
@@ -3770,7 +8548,9 @@ export const topics = {
                 "@value": "biography"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226892"
+        "parent": "O9TAXTBRC2016052KG226892",
+        "tbrcId": "T3",
+        "rank": 5736
     },
     "T1779": {
         "label": [
@@ -3783,7 +8563,9 @@ export const topics = {
                 "@value": "avadāna"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226892"
+        "parent": "O9TAXTBRC2016052KG226892",
+        "tbrcId": "T1779",
+        "rank": 5744
     },
     "T1342": {
         "label": [
@@ -3804,7 +8586,9 @@ export const topics = {
                 "@value": "本生"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226892"
+        "parent": "O9TAXTBRC2016052KG226892",
+        "tbrcId": "T1342",
+        "rank": 5740
     },
     "T1CZ60": {
         "label": [
@@ -3817,21 +8601,27 @@ export const topics = {
                 "@value": "rang rnam/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226892"
+        "parent": "O9TAXTBRC2016052KG226892",
+        "tbrcId": "T1CZ60",
+        "rank": 5768
     },
     "T1702": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "bla ma brgyud pa'i rnam thar/"
         },
-        "parent": "O9TAXTBRC2016052KG226892"
+        "parent": "O9TAXTBRC2016052KG226892",
+        "tbrcId": "T1702",
+        "rank": 5752
     },
     "T2CZ7865": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "sku phreng /"
         },
-        "parent": "O9TAXTBRC2016052KG226892"
+        "parent": "O9TAXTBRC2016052KG226892",
+        "tbrcId": "T2CZ7865",
+        "rank": 3726
     },
     "T1203": {
         "label": [
@@ -3844,7 +8634,9 @@ export const topics = {
                 "@value": "'das log"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226892"
+        "parent": "O9TAXTBRC2016052KG226892",
+        "tbrcId": "T1203",
+        "rank": 5764
     },
     "T1868": {
         "label": [
@@ -3857,7 +8649,9 @@ export const topics = {
                 "@value": "esoteric experiences"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226892"
+        "parent": "O9TAXTBRC2016052KG226892",
+        "tbrcId": "T1868",
+        "rank": 5756
     },
     "T17": {
         "label": [
@@ -3870,7 +8664,9 @@ export const topics = {
                 "@value": "yang srid myur byon/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226892"
+        "parent": "O9TAXTBRC2016052KG226892",
+        "tbrcId": "T17",
+        "rank": 3736
     },
     "T1751": {
         "label": [
@@ -3887,7 +8683,9 @@ export const topics = {
                 "@value": "thub pa'i mdzad pa bcu gnyis/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226892"
+        "parent": "O9TAXTBRC2016052KG226892",
+        "tbrcId": "T1751",
+        "rank": 5748
     },
     "T2620": {
         "label": [
@@ -3900,7 +8698,9 @@ export const topics = {
                 "@value": "golden rosary (transmission)"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226892"
+        "parent": "O9TAXTBRC2016052KG226892",
+        "tbrcId": "T2620",
+        "rank": 5760
     },
     "O9TAXTBRC2016052KG226785": {
         "sub": [
@@ -3943,7 +8743,9 @@ export const topics = {
                 "@value": "历史"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226784"
+        "parent": "O9TAXTBRC2016052KG226784",
+        "tbrcId": "1",
+        "rank": 5196
     },
     "T1KG5906": {
         "label": [
@@ -3956,7 +8758,9 @@ export const topics = {
                 "@value": "dunhuang manuscripts"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226785"
+        "parent": "O9TAXTBRC2016052KG226785",
+        "tbrcId": "T1KG5906",
+        "rank": 5237
     },
     "T349": {
         "label": [
@@ -3969,35 +8773,45 @@ export const topics = {
                 "@value": "dran tho/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226785"
+        "parent": "O9TAXTBRC2016052KG226785",
+        "tbrcId": "T349",
+        "rank": 5242
     },
     "T8LS1427": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "chings yig"
         },
-        "parent": "O9TAXTBRC2016052KG226785"
+        "parent": "O9TAXTBRC2016052KG226785",
+        "tbrcId": "T8LS1427",
+        "rank": 5262
     },
     "T1968": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "bod sog gi rig gnas 'brel ba/"
         },
-        "parent": "O9TAXTBRC2016052KG226785"
+        "parent": "O9TAXTBRC2016052KG226785",
+        "tbrcId": "T1968",
+        "rank": 5312
     },
     "T11MS16": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rus mdzod/"
         },
-        "parent": "O9TAXTBRC2016052KG226785"
+        "parent": "O9TAXTBRC2016052KG226785",
+        "tbrcId": "T11MS16",
+        "rank": 5232
     },
     "T1PD108974": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "dril bu'i kha byang /"
         },
-        "parent": "O9TAXTBRC2016052KG226785"
+        "parent": "O9TAXTBRC2016052KG226785",
+        "tbrcId": "T1PD108974",
+        "rank": 5282
     },
     "T1970": {
         "label": [
@@ -4010,14 +8824,18 @@ export const topics = {
                 "@value": "bod zhi bas bcings 'grol/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226785"
+        "parent": "O9TAXTBRC2016052KG226785",
+        "tbrcId": "T1970",
+        "rank": 5292
     },
     "T1910": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "dus gzer/"
         },
-        "parent": "O9TAXTBRC2016052KG226785"
+        "parent": "O9TAXTBRC2016052KG226785",
+        "tbrcId": "T1910",
+        "rank": 5307
     },
     "T00JR816": {
         "label": [
@@ -4030,14 +8848,18 @@ export const topics = {
                 "@value": "account of a treasure revelation"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226785"
+        "parent": "O9TAXTBRC2016052KG226785",
+        "tbrcId": "T00JR816",
+        "rank": 5277
     },
     "T1942": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "dbon zhang rdo ring /"
         },
-        "parent": "O9TAXTBRC2016052KG226785"
+        "parent": "O9TAXTBRC2016052KG226785",
+        "tbrcId": "T1942",
+        "rank": 5297
     },
     "T2382": {
         "label": [
@@ -4050,7 +8872,9 @@ export const topics = {
                 "@value": "ngag rgyun lo rgyus/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226785"
+        "parent": "O9TAXTBRC2016052KG226785",
+        "tbrcId": "T2382",
+        "rank": 5221
     },
     "T1127": {
         "label": [
@@ -4063,7 +8887,9 @@ export const topics = {
                 "@value": "clans and lineages"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226785"
+        "parent": "O9TAXTBRC2016052KG226785",
+        "tbrcId": "T1127",
+        "rank": 5247
     },
     "T255": {
         "label": [
@@ -4076,7 +8902,9 @@ export const topics = {
                 "@value": "chronology of the buddha's teaching"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226785"
+        "parent": "O9TAXTBRC2016052KG226785",
+        "tbrcId": "T255",
+        "rank": 5216
     },
     "T1PD108901": {
         "label": [
@@ -4093,7 +8921,9 @@ export const topics = {
                 "@value": "档案"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226785"
+        "parent": "O9TAXTBRC2016052KG226785",
+        "tbrcId": "T1PD108901",
+        "rank": 5211
     },
     "T1134": {
         "label": [
@@ -4106,7 +8936,9 @@ export const topics = {
                 "@value": "history"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226785"
+        "parent": "O9TAXTBRC2016052KG226785",
+        "tbrcId": "T1134",
+        "rank": 5201
     },
     "T00EGS1016987": {
         "label": [
@@ -4119,7 +8951,9 @@ export const topics = {
                 "@value": "tibetan refugees"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226785"
+        "parent": "O9TAXTBRC2016052KG226785",
+        "tbrcId": "T00EGS1016987",
+        "rank": 5302
     },
     "T1969": {
         "label": [
@@ -4132,7 +8966,9 @@ export const topics = {
                 "@value": "gros mthun don tshan bcu bdun/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226785"
+        "parent": "O9TAXTBRC2016052KG226785",
+        "tbrcId": "T1969",
+        "rank": 5287
     },
     "T10MS12314": {
         "label": [
@@ -4145,7 +8981,9 @@ export const topics = {
                 "@value": "chronicle"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226785"
+        "parent": "O9TAXTBRC2016052KG226785",
+        "tbrcId": "T10MS12314",
+        "rank": 5206
     },
     "T1948": {
         "label": [
@@ -4158,7 +8996,9 @@ export const topics = {
                 "@value": "mi ser gyi gyen log"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226785"
+        "parent": "O9TAXTBRC2016052KG226785",
+        "tbrcId": "T1948",
+        "rank": 5317
     },
     "T1449": {
         "label": [
@@ -4175,14 +9015,18 @@ export const topics = {
                 "@value": "lo rgyus rig gnas/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226785"
+        "parent": "O9TAXTBRC2016052KG226785",
+        "tbrcId": "T1449",
+        "rank": 5226
     },
     "T1354": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "khri 'don legs 'bul/"
         },
-        "parent": "O9TAXTBRC2016052KG226785"
+        "parent": "O9TAXTBRC2016052KG226785",
+        "tbrcId": "T1354",
+        "rank": 3856
     },
     "T2032": {
         "label": [
@@ -4195,14 +9039,18 @@ export const topics = {
                 "@value": "bod mi'i 'byung khungs/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226785"
+        "parent": "O9TAXTBRC2016052KG226785",
+        "tbrcId": "T2032",
+        "rank": 5257
     },
     "T1943": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "skar chung rdo ring /"
         },
-        "parent": "O9TAXTBRC2016052KG226785"
+        "parent": "O9TAXTBRC2016052KG226785",
+        "tbrcId": "T1943",
+        "rank": 5252
     },
     "T342": {
         "label": [
@@ -4215,7 +9063,9 @@ export const topics = {
                 "@value": "diaries"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226785"
+        "parent": "O9TAXTBRC2016052KG226785",
+        "tbrcId": "T342",
+        "rank": 5267
     },
     "O9TAXTBRC2016052KG226909": {
         "sub": [
@@ -4235,7 +9085,9 @@ export const topics = {
                 "@value": "受法记"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226784"
+        "parent": "O9TAXTBRC2016052KG226784",
+        "tbrcId": "10",
+        "rank": 5793
     },
     "T192": {
         "label": [
@@ -4248,7 +9100,9 @@ export const topics = {
                 "@value": "record of teachings received"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226909"
+        "parent": "O9TAXTBRC2016052KG226909",
+        "tbrcId": "T192",
+        "rank": 5798
     },
     "O9TAXTBRC2016052KG228264": {
         "sub": [
@@ -4291,14 +9145,18 @@ export const topics = {
                 "@value": "吉恩绿皮书"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228264"
+        "parent": "O9TAXTBRC2016052KG228264",
+        "tbrcId": "8",
+        "rank": 7438
     },
     "T1KG10014": {
         "label": {
             "@language": "en",
             "@value": "e. gene smith's green books"
         },
-        "parent": "O9TAXTBRC2016052KG228288"
+        "parent": "O9TAXTBRC2016052KG228288",
+        "tbrcId": "T1KG10014",
+        "rank": 7443
     },
     "O9TAXTBRC2016052KG228271": {
         "sub": [
@@ -4318,14 +9176,18 @@ export const topics = {
                 "@value": "密续总集"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228264"
+        "parent": "O9TAXTBRC2016052KG228264",
+        "tbrcId": "4",
+        "rank": 7349
     },
     "T003JR48": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rgyud 'bum/"
         },
-        "parent": "O9TAXTBRC2016052KG228271"
+        "parent": "O9TAXTBRC2016052KG228271",
+        "tbrcId": "T003JR48",
+        "rank": 7354
     },
     "O9TAXTBRC2016052KG228273": {
         "sub": [
@@ -4345,7 +9207,9 @@ export const topics = {
                 "@value": "道歌集"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228264"
+        "parent": "O9TAXTBRC2016052KG228264",
+        "tbrcId": "5",
+        "rank": 7360
     },
     "T184": {
         "label": [
@@ -4358,7 +9222,9 @@ export const topics = {
                 "@value": "collection spiritual songs"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228273"
+        "parent": "O9TAXTBRC2016052KG228273",
+        "tbrcId": "T184",
+        "rank": 7365
     },
     "O9TAXTBRC2016052KG228275": {
         "sub": [
@@ -4387,42 +9253,54 @@ export const topics = {
                 "@value": "专题法集"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228264"
+        "parent": "O9TAXTBRC2016052KG228264",
+        "tbrcId": "6",
+        "rank": 7371
     },
     "T1605": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "lus med mkha' 'gro'i chos skor dgu/"
         },
-        "parent": "O9TAXTBRC2016052KG228275"
+        "parent": "O9TAXTBRC2016052KG228275",
+        "tbrcId": "T1605",
+        "rank": 7386
     },
     "T1484": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "'jam dbyangs chos skor/"
         },
-        "parent": "O9TAXTBRC2016052KG228275"
+        "parent": "O9TAXTBRC2016052KG228275",
+        "tbrcId": "T1484",
+        "rank": 7381
     },
     "T951": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "ba ri brgya rtsa/"
         },
-        "parent": "O9TAXTBRC2016052KG228275"
+        "parent": "O9TAXTBRC2016052KG228275",
+        "tbrcId": "T951",
+        "rank": 7401
     },
     "T1774": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "mi tra brgya rtsa/"
         },
-        "parent": "O9TAXTBRC2016052KG228275"
+        "parent": "O9TAXTBRC2016052KG228275",
+        "tbrcId": "T1774",
+        "rank": 7406
     },
     "T10MS11187": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "chos skor/"
         },
-        "parent": "O9TAXTBRC2016052KG228275"
+        "parent": "O9TAXTBRC2016052KG228275",
+        "tbrcId": "T10MS11187",
+        "rank": 7376
     },
     "T00KG02671": {
         "label": [
@@ -4435,35 +9313,45 @@ export const topics = {
                 "@value": "zab pa'i gnad drug"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228275"
+        "parent": "O9TAXTBRC2016052KG228275",
+        "tbrcId": "T00KG02671",
+        "rank": 7421
     },
     "T1890": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "yang ti nag po gser gyi 'bru gcig"
         },
-        "parent": "O9TAXTBRC2016052KG228275"
+        "parent": "O9TAXTBRC2016052KG228275",
+        "tbrcId": "T1890",
+        "rank": 7411
     },
     "T483": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rtsa gsum (dgongs pa yang zab)"
         },
-        "parent": "O9TAXTBRC2016052KG228275"
+        "parent": "O9TAXTBRC2016052KG228275",
+        "tbrcId": "T483",
+        "rank": 7416
     },
     "T947": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "khro phu brgya rtsa/"
         },
-        "parent": "O9TAXTBRC2016052KG228275"
+        "parent": "O9TAXTBRC2016052KG228275",
+        "tbrcId": "T947",
+        "rank": 7391
     },
     "T1033": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "snar thang brgya rtsa/"
         },
-        "parent": "O9TAXTBRC2016052KG228275"
+        "parent": "O9TAXTBRC2016052KG228275",
+        "tbrcId": "T1033",
+        "rank": 7396
     },
     "O9TAXTBRC2016052KG228265": {
         "sub": [
@@ -4496,7 +9384,9 @@ export const topics = {
                 "@value": "phyogs bsgrigs/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228265"
+        "parent": "O9TAXTBRC2016052KG228265",
+        "tbrcId": "T1081",
+        "rank": 7321
     },
     "O9TAXTBRC2016052KG228286": {
         "sub": [
@@ -4516,7 +9406,9 @@ export const topics = {
                 "@value": "咒语集"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228264"
+        "parent": "O9TAXTBRC2016052KG228264",
+        "tbrcId": "7",
+        "rank": 7427
     },
     "T1KG3927": {
         "label": [
@@ -4529,7 +9421,9 @@ export const topics = {
                 "@value": "gzungs 'bum/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228286"
+        "parent": "O9TAXTBRC2016052KG228286",
+        "tbrcId": "T1KG3927",
+        "rank": 7432
     },
     "O9TAXTBRC2016052KG228269": {
         "sub": [
@@ -4549,14 +9443,18 @@ export const topics = {
                 "@value": "秘笈"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228264"
+        "parent": "O9TAXTBRC2016052KG228264",
+        "tbrcId": "3",
+        "rank": 7338
     },
     "T1202": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "be'u bum/"
         },
-        "parent": "O9TAXTBRC2016052KG228269"
+        "parent": "O9TAXTBRC2016052KG228269",
+        "tbrcId": "T1202",
+        "rank": 7343
     },
     "O9TAXTBRC2016052KG228267": {
         "sub": [
@@ -4576,7 +9474,9 @@ export const topics = {
                 "@value": "选编"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228264"
+        "parent": "O9TAXTBRC2016052KG228264",
+        "tbrcId": "2",
+        "rank": 7327
     },
     "T1PD128746": {
         "label": [
@@ -4589,7 +9489,9 @@ export const topics = {
                 "@value": "'dems sgrig"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228267"
+        "parent": "O9TAXTBRC2016052KG228267",
+        "tbrcId": "T1PD128746",
+        "rank": 7332
     },
     "O9TAXTBRC2016052KG225372": {
         "sub": [
@@ -4611,7 +9513,9 @@ export const topics = {
                 "@value": "Buddhist Canonical Texts"
             }
         ],
-        "parent": "O9TAXTBRC201605"
+        "parent": "O9TAXTBRC201605",
+        "tbrcId": "kha",
+        "rank": 203
     },
     "O9TAXTBRC2016052KG225373": {
         "sub": [
@@ -4631,7 +9535,9 @@ export const topics = {
                 "@value": "Kajur"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225372"
+        "parent": "O9TAXTBRC2016052KG225372",
+        "tbrcId": "1",
+        "rank": 209
     },
     "T2423": {
         "label": [
@@ -4644,7 +9550,9 @@ export const topics = {
                 "@value": "甘珠尔"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225373"
+        "parent": "O9TAXTBRC2016052KG225373",
+        "tbrcId": "T2423",
+        "rank": 214
     },
     "O9TAXTBRC2016052KG225375": {
         "sub": [
@@ -4664,7 +9572,9 @@ export const topics = {
                 "@value": "Tenjur"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225372"
+        "parent": "O9TAXTBRC2016052KG225372",
+        "tbrcId": "2",
+        "rank": 219
     },
     "T3CN2023": {
         "label": [
@@ -4677,7 +9587,9 @@ export const topics = {
                 "@value": "丹珠尔"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225375"
+        "parent": "O9TAXTBRC2016052KG225375",
+        "tbrcId": "T3CN2023",
+        "rank": 224
     },
     "O9TAXTBRC2016052KG225377": {
         "sub": [
@@ -4701,7 +9613,9 @@ export const topics = {
                 "@value": "相关主题"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225372"
+        "parent": "O9TAXTBRC2016052KG225372",
+        "tbrcId": "4",
+        "rank": 152
     },
     "T1129": {
         "label": [
@@ -4718,7 +9632,9 @@ export const topics = {
                 "@value": "bka' bstan skor/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225377"
+        "parent": "O9TAXTBRC2016052KG225377",
+        "tbrcId": "T1129",
+        "rank": 234
     },
     "T1777": {
         "label": [
@@ -4739,7 +9655,9 @@ export const topics = {
                 "@value": "śāstra"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225377"
+        "parent": "O9TAXTBRC2016052KG225377",
+        "tbrcId": "T1777",
+        "rank": 242
     },
     "T1GS147796": {
         "label": [
@@ -4752,7 +9670,9 @@ export const topics = {
                 "@value": "corrections to the translation"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225377"
+        "parent": "O9TAXTBRC2016052KG225377",
+        "tbrcId": "T1GS147796",
+        "rank": 246
     },
     "T1905": {
         "label": [
@@ -4765,14 +9685,18 @@ export const topics = {
                 "@value": "bka' dang bstan bcos/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225377"
+        "parent": "O9TAXTBRC2016052KG225377",
+        "tbrcId": "T1905",
+        "rank": 238
     },
     "T2566": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "phun tshogs lnga /"
         },
-        "parent": "O9TAXTBRC2016052KG225377"
+        "parent": "O9TAXTBRC2016052KG225377",
+        "tbrcId": "T2566",
+        "rank": 250
     },
     "O9TAXTBRC2016052KG226667": {
         "sub": [
@@ -4796,7 +9720,9 @@ export const topics = {
                 "@value": "小五明"
             }
         ],
-        "parent": "O9TAXTBRC201605"
+        "parent": "O9TAXTBRC201605",
+        "tbrcId": "nya ",
+        "rank": 4665
     },
     "O9TAXTBRC2016052KG226668": {
         "sub": [
@@ -4817,7 +9743,9 @@ export const topics = {
                 "@value": "诗学及写作"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226667"
+        "parent": "O9TAXTBRC2016052KG226667",
+        "tbrcId": "1",
+        "rank": 4670
     },
     "O9TAXTBRC2016052KG226669": {
         "sub": [
@@ -4867,14 +9795,18 @@ export const topics = {
                 "@value": "诗学及写作"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226668"
+        "parent": "O9TAXTBRC2016052KG226668",
+        "tbrcId": "1",
+        "rank": 4670
     },
     "T1KG6098": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "bar dus rtsom rig"
         },
-        "parent": "O9TAXTBRC2016052KG226669"
+        "parent": "O9TAXTBRC2016052KG226669",
+        "tbrcId": "T1KG6098",
+        "rank": 4869
     },
     "T2575": {
         "label": [
@@ -4887,7 +9819,9 @@ export const topics = {
                 "@value": "love poetry"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226669"
+        "parent": "O9TAXTBRC2016052KG226669",
+        "tbrcId": "T2575",
+        "rank": 4879
     },
     "T2559": {
         "label": [
@@ -4900,14 +9834,18 @@ export const topics = {
                 "@value": "prahelika"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226669"
+        "parent": "O9TAXTBRC2016052KG226669",
+        "tbrcId": "T2559",
+        "rank": 4739
     },
     "T1445": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "don rgyan so lnga /"
         },
-        "parent": "O9TAXTBRC2016052KG226669"
+        "parent": "O9TAXTBRC2016052KG226669",
+        "tbrcId": "T1445",
+        "rank": 4733
     },
     "T1979": {
         "label": [
@@ -4920,7 +9858,9 @@ export const topics = {
                 "@value": "rtsom rig"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226669"
+        "parent": "O9TAXTBRC2016052KG226669",
+        "tbrcId": "T1979",
+        "rank": 4680
     },
     "T1343": {
         "label": [
@@ -4933,7 +9873,9 @@ export const topics = {
                 "@value": "tshigs bcad/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226669"
+        "parent": "O9TAXTBRC2016052KG226669",
+        "tbrcId": "T1343",
+        "rank": 4700
     },
     "T1GS147799": {
         "label": [
@@ -4946,7 +9888,9 @@ export const topics = {
                 "@value": "dbyangs chung /"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226669"
+        "parent": "O9TAXTBRC2016052KG226669",
+        "tbrcId": "T1GS147799",
+        "rank": 4899
     },
     "T003JR155": {
         "label": [
@@ -4959,14 +9903,18 @@ export const topics = {
                 "@value": "essay"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226669"
+        "parent": "O9TAXTBRC2016052KG226669",
+        "tbrcId": "T003JR155",
+        "rank": 4718
     },
     "T436": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "nyams dbyangs/"
         },
-        "parent": "O9TAXTBRC2016052KG226669"
+        "parent": "O9TAXTBRC2016052KG226669",
+        "tbrcId": "T436",
+        "rank": 4777
     },
     "T100": {
         "label": [
@@ -4979,14 +9927,18 @@ export const topics = {
                 "@value": "'bel gtam/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226669"
+        "parent": "O9TAXTBRC2016052KG226669",
+        "tbrcId": "T100",
+        "rank": 4759
     },
     "T1156": {
         "label": {
             "@language": "en",
             "@value": "chinese literature"
         },
-        "parent": "O9TAXTBRC2016052KG226669"
+        "parent": "O9TAXTBRC2016052KG226669",
+        "tbrcId": "T1156",
+        "rank": 4904
     },
     "T205": {
         "label": [
@@ -4999,14 +9951,18 @@ export const topics = {
                 "@value": "poetic examples"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226669"
+        "parent": "O9TAXTBRC2016052KG226669",
+        "tbrcId": "T205",
+        "rank": 4749
     },
     "T2379": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "zlos sgra/"
         },
-        "parent": "O9TAXTBRC2016052KG226669"
+        "parent": "O9TAXTBRC2016052KG226669",
+        "tbrcId": "T2379",
+        "rank": 4714
     },
     "T204": {
         "label": [
@@ -5023,28 +9979,36 @@ export const topics = {
                 "@value": "kāvya"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226669"
+        "parent": "O9TAXTBRC2016052KG226669",
+        "tbrcId": "T204",
+        "rank": 4675
     },
     "T445": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "gtam tshogs/"
         },
-        "parent": "O9TAXTBRC2016052KG226669"
+        "parent": "O9TAXTBRC2016052KG226669",
+        "tbrcId": "T445",
+        "rank": 4884
     },
     "T281": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "snyan rtsom/"
         },
-        "parent": "O9TAXTBRC2016052KG226669"
+        "parent": "O9TAXTBRC2016052KG226669",
+        "tbrcId": "T281",
+        "rank": 4695
     },
     "T1418": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "kun bzang 'khor lo/"
         },
-        "parent": "O9TAXTBRC2016052KG226669"
+        "parent": "O9TAXTBRC2016052KG226669",
+        "tbrcId": "T1418",
+        "rank": 4710
     },
     "T190": {
         "label": [
@@ -5057,7 +10021,9 @@ export const topics = {
                 "@value": "proverbs"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226669"
+        "parent": "O9TAXTBRC2016052KG226669",
+        "tbrcId": "T190",
+        "rank": 3670
     },
     "T1964": {
         "label": [
@@ -5070,7 +10036,9 @@ export const topics = {
                 "@value": "mdzes nyams/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226669"
+        "parent": "O9TAXTBRC2016052KG226669",
+        "tbrcId": "T1964",
+        "rank": 4894
     },
     "T219": {
         "label": [
@@ -5083,14 +10051,18 @@ export const topics = {
                 "@value": "ka bshad/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226669"
+        "parent": "O9TAXTBRC2016052KG226669",
+        "tbrcId": "T219",
+        "rank": 4754
     },
     "T3CZ1478": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "do ha mdzod/"
         },
-        "parent": "O9TAXTBRC2016052KG226669"
+        "parent": "O9TAXTBRC2016052KG226669",
+        "tbrcId": "T3CZ1478",
+        "rank": 4783
     },
     "T1KG6100": {
         "label": [
@@ -5103,7 +10075,9 @@ export const topics = {
                 "@value": "contemporary tibetan writings"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226669"
+        "parent": "O9TAXTBRC2016052KG226669",
+        "tbrcId": "T1KG6100",
+        "rank": 4874
     },
     "T4CZ2184": {
         "label": [
@@ -5116,7 +10090,9 @@ export const topics = {
                 "@value": "song of the vajra"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226669"
+        "parent": "O9TAXTBRC2016052KG226669",
+        "tbrcId": "T4CZ2184",
+        "rank": 4764
     },
     "T258": {
         "label": [
@@ -5129,14 +10105,18 @@ export const topics = {
                 "@value": "rtsom yig"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226669"
+        "parent": "O9TAXTBRC2016052KG226669",
+        "tbrcId": "T258",
+        "rank": 4690
     },
     "T1KG6097": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "gna' rtsom/"
         },
-        "parent": "O9TAXTBRC2016052KG226669"
+        "parent": "O9TAXTBRC2016052KG226669",
+        "tbrcId": "T1KG6097",
+        "rank": 4864
     },
     "T1884": {
         "label": [
@@ -5149,7 +10129,9 @@ export const topics = {
                 "@value": "prose"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226669"
+        "parent": "O9TAXTBRC2016052KG226669",
+        "tbrcId": "T1884",
+        "rank": 4705
     },
     "T217": {
         "label": [
@@ -5162,7 +10144,9 @@ export const topics = {
                 "@value": "bod kyi rtsom rig"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226669"
+        "parent": "O9TAXTBRC2016052KG226669",
+        "tbrcId": "T217",
+        "rank": 4685
     },
     "T6": {
         "label": [
@@ -5175,21 +10159,27 @@ export const topics = {
                 "@value": "songs of realization"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226669"
+        "parent": "O9TAXTBRC2016052KG226669",
+        "tbrcId": "T6",
+        "rank": 4771
     },
     "T2417": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "blo ze/"
         },
-        "parent": "O9TAXTBRC2016052KG226669"
+        "parent": "O9TAXTBRC2016052KG226669",
+        "tbrcId": "T2417",
+        "rank": 4889
     },
     "T1PD96324": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "dmangs khrod rtsom rig"
         },
-        "parent": "O9TAXTBRC2016052KG226669"
+        "parent": "O9TAXTBRC2016052KG226669",
+        "tbrcId": "T1PD96324",
+        "rank": 4728
     },
     "T1598": {
         "label": {
@@ -5249,7 +10239,9 @@ export const topics = {
                 "@value": "prahelika"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226701"
+        "parent": "O9TAXTBRC2016052KG226701",
+        "tbrcId": "T1159",
+        "rank": 4744
     },
     "T1KG26395": {
         "label": [
@@ -5269,14 +10261,18 @@ export const topics = {
             "@language": "bo-x-ewts",
             "@value": "gter sgrung /"
         },
-        "parent": "O9TAXTBRC2016052KG226701"
+        "parent": "O9TAXTBRC2016052KG226701",
+        "tbrcId": "T1PD96322",
+        "rank": 4825
     },
     "T2404": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "lha sgrung /"
         },
-        "parent": "O9TAXTBRC2016052KG226701"
+        "parent": "O9TAXTBRC2016052KG226701",
+        "tbrcId": "T2404",
+        "rank": 4820
     },
     "T207": {
         "label": [
@@ -5289,7 +10285,9 @@ export const topics = {
                 "@value": "yig bskur/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226701"
+        "parent": "O9TAXTBRC2016052KG226701",
+        "tbrcId": "T207",
+        "rank": 4844
     },
     "T1PD108883": {
         "label": [
@@ -5302,7 +10300,9 @@ export const topics = {
                 "@value": "snyan zhu/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226701"
+        "parent": "O9TAXTBRC2016052KG226701",
+        "tbrcId": "T1PD108883",
+        "rank": 4854
     },
     "T2KG207410": {
         "label": [
@@ -5332,7 +10332,9 @@ export const topics = {
                 "@value": "'phrin yig"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226701"
+        "parent": "O9TAXTBRC2016052KG226701",
+        "tbrcId": "T14",
+        "rank": 4839
     },
     "T286": {
         "label": [
@@ -5345,14 +10347,18 @@ export const topics = {
                 "@value": "bcos sgrung /"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226701"
+        "parent": "O9TAXTBRC2016052KG226701",
+        "tbrcId": "T286",
+        "rank": 4794
     },
     "T1679": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "ro sgrung /"
         },
-        "parent": "O9TAXTBRC2016052KG226701"
+        "parent": "O9TAXTBRC2016052KG226701",
+        "tbrcId": "T1679",
+        "rank": 4814
     },
     "T221": {
         "label": [
@@ -5369,7 +10375,9 @@ export const topics = {
                 "@value": "公文｜公涵"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226701"
+        "parent": "O9TAXTBRC2016052KG226701",
+        "tbrcId": "T221",
+        "rank": 4849
     },
     "T260": {
         "label": [
@@ -5382,7 +10390,9 @@ export const topics = {
                 "@value": "novel"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226701"
+        "parent": "O9TAXTBRC2016052KG226701",
+        "tbrcId": "T260",
+        "rank": 4789
     },
     "T1869": {
         "label": [
@@ -5395,14 +10405,18 @@ export const topics = {
                 "@value": "list of offerings"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226701"
+        "parent": "O9TAXTBRC2016052KG226701",
+        "tbrcId": "T1869",
+        "rank": 4094
     },
     "T248": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "ge sar sgrung /"
         },
-        "parent": "O9TAXTBRC2016052KG226701"
+        "parent": "O9TAXTBRC2016052KG226701",
+        "tbrcId": "T248",
+        "rank": 4829
     },
     "T262": {
         "label": [
@@ -5415,7 +10429,9 @@ export const topics = {
                 "@value": "dmangs sgrung /"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226701"
+        "parent": "O9TAXTBRC2016052KG226701",
+        "tbrcId": "T262",
+        "rank": 4799
     },
     "T257": {
         "label": [
@@ -5428,7 +10444,9 @@ export const topics = {
                 "@value": "short stories"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226701"
+        "parent": "O9TAXTBRC2016052KG226701",
+        "tbrcId": "T257",
+        "rank": 4809
     },
     "T216": {
         "label": [
@@ -5445,7 +10463,9 @@ export const topics = {
                 "@value": "sgrung gtam/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226701"
+        "parent": "O9TAXTBRC2016052KG226701",
+        "tbrcId": "T216",
+        "rank": 4804
     },
     "O9TAXTBRC2016052KG226719": {
         "sub": [
@@ -5467,7 +10487,9 @@ export const topics = {
                 "@value": "词藻学"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226667"
+        "parent": "O9TAXTBRC2016052KG226667",
+        "tbrcId": "2",
+        "rank": 4909
     },
     "T372": {
         "label": [
@@ -5484,7 +10506,9 @@ export const topics = {
                 "@value": "abhidhana"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226719"
+        "parent": "O9TAXTBRC2016052KG226719",
+        "tbrcId": "T372",
+        "rank": 4914
     },
     "T1867": {
         "label": [
@@ -5497,14 +10521,18 @@ export const topics = {
                 "@value": "mtshan gyi mngon brjod/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226719"
+        "parent": "O9TAXTBRC2016052KG226719",
+        "tbrcId": "T1867",
+        "rank": 4919
     },
     "T2554": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "grangs kyi mngon brjod/"
         },
-        "parent": "O9TAXTBRC2016052KG226719"
+        "parent": "O9TAXTBRC2016052KG226719",
+        "tbrcId": "T2554",
+        "rank": 4923
     },
     "O9TAXTBRC2016052KG226723": {
         "sub": [
@@ -5524,7 +10552,9 @@ export const topics = {
                 "@value": "韵律学"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226667"
+        "parent": "O9TAXTBRC2016052KG226667",
+        "tbrcId": "3",
+        "rank": 4928
     },
     "T206": {
         "label": [
@@ -5541,7 +10571,9 @@ export const topics = {
                 "@value": "poetic metrics"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226723"
+        "parent": "O9TAXTBRC2016052KG226723",
+        "tbrcId": "T206",
+        "rank": 4933
     },
     "O9TAXTBRC2016052KG226725": {
         "sub": [
@@ -5563,7 +10595,9 @@ export const topics = {
                 "@value": "天文历算学"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226667"
+        "parent": "O9TAXTBRC2016052KG226667",
+        "tbrcId": "4",
+        "rank": 4939
     },
     "O9TAXTBRC2016052KG226726": {
         "sub": [
@@ -5600,7 +10634,9 @@ export const topics = {
                 "@value": "天文历算学"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226725"
+        "parent": "O9TAXTBRC2016052KG226725",
+        "tbrcId": "4",
+        "rank": 4939
     },
     "T1837": {
         "label": [
@@ -5613,7 +10649,9 @@ export const topics = {
                 "@value": "solar eclipse"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226726"
+        "parent": "O9TAXTBRC2016052KG226726",
+        "tbrcId": "T1837",
+        "rank": 4993
     },
     "T2630": {
         "label": [
@@ -5626,7 +10664,9 @@ export const topics = {
                 "@value": "constellation"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226726"
+        "parent": "O9TAXTBRC2016052KG226726",
+        "tbrcId": "T2630",
+        "rank": 5017
     },
     "T1909": {
         "label": [
@@ -5639,7 +10679,9 @@ export const topics = {
                 "@value": "calculation of the parinirvana"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226726"
+        "parent": "O9TAXTBRC2016052KG226726",
+        "tbrcId": "T1909",
+        "rank": 5054
     },
     "T1838": {
         "label": [
@@ -5666,7 +10708,9 @@ export const topics = {
             "@language": "bo-x-ewts",
             "@value": "dus bzang dus ngan/"
         },
-        "parent": "O9TAXTBRC2016052KG226726"
+        "parent": "O9TAXTBRC2016052KG226726",
+        "tbrcId": "T2477",
+        "rank": 5077
     },
     "T1GS148160": {
         "label": [
@@ -5679,7 +10723,9 @@ export const topics = {
                 "@value": "method for the prediction of the identity of thieves"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226726"
+        "parent": "O9TAXTBRC2016052KG226726",
+        "tbrcId": "T1GS148160",
+        "rank": 5069
     },
     "T1834": {
         "label": [
@@ -5696,14 +10742,18 @@ export const topics = {
                 "@value": "dkar rtsis/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226726"
+        "parent": "O9TAXTBRC2016052KG226726",
+        "tbrcId": "T1834",
+        "rank": 4949
     },
     "T2052": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "lo ming re'u mig"
         },
-        "parent": "O9TAXTBRC2016052KG226726"
+        "parent": "O9TAXTBRC2016052KG226726",
+        "tbrcId": "T2052",
+        "rank": 5013
     },
     "T1793": {
         "label": [
@@ -5716,7 +10766,9 @@ export const topics = {
                 "@value": "pancanga"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226726"
+        "parent": "O9TAXTBRC2016052KG226726",
+        "tbrcId": "T1793",
+        "rank": 5049
     },
     "T222": {
         "label": [
@@ -5729,7 +10781,9 @@ export const topics = {
                 "@value": "calendar"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226726"
+        "parent": "O9TAXTBRC2016052KG226726",
+        "tbrcId": "T222",
+        "rank": 5008
     },
     "T203": {
         "label": [
@@ -5746,14 +10800,18 @@ export const topics = {
                 "@value": "calculation"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226726"
+        "parent": "O9TAXTBRC2016052KG226726",
+        "tbrcId": "T203",
+        "rank": 4944
     },
     "T2574": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "nyin khyim bcu gnyis/"
         },
-        "parent": "O9TAXTBRC2016052KG226726"
+        "parent": "O9TAXTBRC2016052KG226726",
+        "tbrcId": "T2574",
+        "rank": 5064
     },
     "T2341": {
         "label": [
@@ -5766,7 +10824,9 @@ export const topics = {
                 "@value": "dus tshigs/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226726"
+        "parent": "O9TAXTBRC2016052KG226726",
+        "tbrcId": "T2341",
+        "rank": 5044
     },
     "T1836": {
         "label": [
@@ -5779,21 +10839,27 @@ export const topics = {
                 "@value": "lunar eclipse"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226726"
+        "parent": "O9TAXTBRC2016052KG226726",
+        "tbrcId": "T1836",
+        "rank": 4998
     },
     "T1GS147803": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rtsis kyi 'khor lo/"
         },
-        "parent": "O9TAXTBRC2016052KG226726"
+        "parent": "O9TAXTBRC2016052KG226726",
+        "tbrcId": "T1GS147803",
+        "rank": 5031
     },
     "T2570": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "gza' skar/"
         },
-        "parent": "O9TAXTBRC2016052KG226726"
+        "parent": "O9TAXTBRC2016052KG226726",
+        "tbrcId": "T2570",
+        "rank": 5022
     },
     "T1GS147802": {
         "label": [
@@ -5806,7 +10872,9 @@ export const topics = {
                 "@value": "nyi zlar sgra gcan 'jug tshul/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226726"
+        "parent": "O9TAXTBRC2016052KG226726",
+        "tbrcId": "T1GS147802",
+        "rank": 5003
     },
     "O9TAXTBRC2016052KG226746": {
         "sub": [
@@ -5843,21 +10911,27 @@ export const topics = {
             "@language": "bo-x-ewts",
             "@value": "tshes rtsis/"
         },
-        "parent": "O9TAXTBRC2016052KG226746"
+        "parent": "O9TAXTBRC2016052KG226746",
+        "tbrcId": "T1PD106858",
+        "rank": 4974
     },
     "T2CN4966": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "lo 'khor bcu gnyis/"
         },
-        "parent": "O9TAXTBRC2016052KG226746"
+        "parent": "O9TAXTBRC2016052KG226746",
+        "tbrcId": "T2CN4966",
+        "rank": 5059
     },
     "T1PD106859": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "gshin rtsis/"
         },
-        "parent": "O9TAXTBRC2016052KG226746"
+        "parent": "O9TAXTBRC2016052KG226746",
+        "tbrcId": "T1PD106859",
+        "rank": 4978
     },
     "T1443": {
         "label": [
@@ -5870,21 +10944,27 @@ export const topics = {
                 "@value": "element divination"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226746"
+        "parent": "O9TAXTBRC2016052KG226746",
+        "tbrcId": "T1443",
+        "rank": 4959
     },
     "T2463": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "sme ba (rtsis)"
         },
-        "parent": "O9TAXTBRC2016052KG226746"
+        "parent": "O9TAXTBRC2016052KG226746",
+        "tbrcId": "T2463",
+        "rank": 5036
     },
     "T1794": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "gza' lnga (rtsis)"
         },
-        "parent": "O9TAXTBRC2016052KG226746"
+        "parent": "O9TAXTBRC2016052KG226746",
+        "tbrcId": "T1794",
+        "rank": 5027
     },
     "T2509": {
         "label": [
@@ -5897,21 +10977,27 @@ export const topics = {
                 "@value": "calculation of obstacles"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226746"
+        "parent": "O9TAXTBRC2016052KG226746",
+        "tbrcId": "T2509",
+        "rank": 4988
     },
     "T1835": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "nag rtsis/"
         },
-        "parent": "O9TAXTBRC2016052KG226746"
+        "parent": "O9TAXTBRC2016052KG226746",
+        "tbrcId": "T1835",
+        "rank": 4954
     },
     "T1911": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "'bras rtsis/"
         },
-        "parent": "O9TAXTBRC2016052KG226746"
+        "parent": "O9TAXTBRC2016052KG226746",
+        "tbrcId": "T1911",
+        "rank": 4983
     },
     "T188": {
         "label": [
@@ -5924,14 +11010,18 @@ export const topics = {
                 "@value": "rgya rtsis/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226746"
+        "parent": "O9TAXTBRC2016052KG226746",
+        "tbrcId": "T188",
+        "rank": 4969
     },
     "T2462": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "spar kha (rtsis)"
         },
-        "parent": "O9TAXTBRC2016052KG226746"
+        "parent": "O9TAXTBRC2016052KG226746",
+        "tbrcId": "T2462",
+        "rank": 5040
     },
     "O9TAXTBRC2016052KG226758": {
         "sub": [
@@ -5958,7 +11048,9 @@ export const topics = {
             "@language": "bo-x-ewts",
             "@value": "dbyangs 'char/"
         },
-        "parent": "O9TAXTBRC2016052KG226758"
+        "parent": "O9TAXTBRC2016052KG226758",
+        "tbrcId": "T1KG3981",
+        "rank": 4964
     },
     "O9TAXTBRC2016052KG226760": {
         "sub": [
@@ -5980,7 +11072,9 @@ export const topics = {
                 "@value": "戏剧学"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226667"
+        "parent": "O9TAXTBRC2016052KG226667",
+        "tbrcId": "5",
+        "rank": 5082
     },
     "O9TAXTBRC2016052KG226761": {
         "sub": [
@@ -6023,21 +11117,27 @@ export const topics = {
                 "@value": "drama"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226761"
+        "parent": "O9TAXTBRC2016052KG226761",
+        "tbrcId": "T256",
+        "rank": 5087
     },
     "T1GS135819": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "bro/"
         },
-        "parent": "O9TAXTBRC2016052KG226761"
+        "parent": "O9TAXTBRC2016052KG226761",
+        "tbrcId": "T1GS135819",
+        "rank": 5106
     },
     "T1AT303": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "chos bro/"
         },
-        "parent": "O9TAXTBRC2016052KG226761"
+        "parent": "O9TAXTBRC2016052KG226761",
+        "tbrcId": "T1AT303",
+        "rank": 5114
     },
     "T2034": {
         "label": [
@@ -6050,14 +11150,18 @@ export const topics = {
                 "@value": "a lce lha mo/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226761"
+        "parent": "O9TAXTBRC2016052KG226761",
+        "tbrcId": "T2034",
+        "rank": 5096
     },
     "T1954": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "bro chog"
         },
-        "parent": "O9TAXTBRC2016052KG226761"
+        "parent": "O9TAXTBRC2016052KG226761",
+        "tbrcId": "T1954",
+        "rank": 5110
     },
     "T1089": {
         "label": [
@@ -6070,7 +11174,9 @@ export const topics = {
                 "@value": "sacred dance (indic)"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226761"
+        "parent": "O9TAXTBRC2016052KG226761",
+        "tbrcId": "T1089",
+        "rank": 5101
     },
     "T1166": {
         "label": [
@@ -6083,7 +11189,9 @@ export const topics = {
                 "@value": "sacred dances"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226761"
+        "parent": "O9TAXTBRC2016052KG226761",
+        "tbrcId": "T1166",
+        "rank": 5091
     },
     "O9TAXTBRC2016052KG226769": {
         "sub": [
@@ -6113,7 +11221,9 @@ export const topics = {
             "@language": "bo-x-ewts",
             "@value": "dbyangs rol/"
         },
-        "parent": "O9TAXTBRC2016052KG226769"
+        "parent": "O9TAXTBRC2016052KG226769",
+        "tbrcId": "T1AT301",
+        "rank": 5128
     },
     "T1746": {
         "label": [
@@ -6126,7 +11236,9 @@ export const topics = {
                 "@value": "musical notation"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226769"
+        "parent": "O9TAXTBRC2016052KG226769",
+        "tbrcId": "T1746",
+        "rank": 5118
     },
     "T1232": {
         "label": [
@@ -6139,14 +11251,18 @@ export const topics = {
                 "@value": "musical instruments"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226769"
+        "parent": "O9TAXTBRC2016052KG226769",
+        "tbrcId": "T1232",
+        "rank": 5123
     },
     "T1143": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "sgra snyan/"
         },
-        "parent": "O9TAXTBRC2016052KG226769"
+        "parent": "O9TAXTBRC2016052KG226769",
+        "tbrcId": "T1143",
+        "rank": 5133
     },
     "O9TAXTBRC2016052KG226774": {
         "sub": [
@@ -6181,7 +11297,9 @@ export const topics = {
             "@language": "bo-x-ewts",
             "@value": "glu rol/"
         },
-        "parent": "O9TAXTBRC2016052KG226774"
+        "parent": "O9TAXTBRC2016052KG226774",
+        "tbrcId": "T2030",
+        "rank": 5148
     },
     "T2581": {
         "label": [
@@ -6194,14 +11312,18 @@ export const topics = {
                 "@value": "drinking songs"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226774"
+        "parent": "O9TAXTBRC2016052KG226774",
+        "tbrcId": "T2581",
+        "rank": 5152
     },
     "T2576": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "ngal rtsol glu gzhas/"
         },
-        "parent": "O9TAXTBRC2016052KG226774"
+        "parent": "O9TAXTBRC2016052KG226774",
+        "tbrcId": "T2576",
+        "rank": 5161
     },
     "T261": {
         "label": [
@@ -6214,14 +11336,18 @@ export const topics = {
                 "@value": "dgod gtam/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226774"
+        "parent": "O9TAXTBRC2016052KG226774",
+        "tbrcId": "T261",
+        "rank": 5175
     },
     "T251": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "la gzhas/"
         },
-        "parent": "O9TAXTBRC2016052KG226774"
+        "parent": "O9TAXTBRC2016052KG226774",
+        "tbrcId": "T251",
+        "rank": 5170
     },
     "T246": {
         "label": [
@@ -6238,14 +11364,18 @@ export const topics = {
                 "@value": "glu/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226774"
+        "parent": "O9TAXTBRC2016052KG226774",
+        "tbrcId": "T246",
+        "rank": 5143
     },
     "T1KG15415": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "stod gzhas/"
         },
-        "parent": "O9TAXTBRC2016052KG226774"
+        "parent": "O9TAXTBRC2016052KG226774",
+        "tbrcId": "T1KG15415",
+        "rank": 5157
     },
     "T1180": {
         "label": [
@@ -6258,7 +11388,9 @@ export const topics = {
                 "@value": "bzhad gad/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226774"
+        "parent": "O9TAXTBRC2016052KG226774",
+        "tbrcId": "T1180",
+        "rank": 5180
     },
     "T1674": {
         "label": [
@@ -6271,7 +11403,9 @@ export const topics = {
                 "@value": "folk songs"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226774"
+        "parent": "O9TAXTBRC2016052KG226774",
+        "tbrcId": "T1674",
+        "rank": 5165
     },
     "O9TAXTBRC2016052KG227157": {
         "sub": [
@@ -6294,7 +11428,9 @@ export const topics = {
                 "@value": "诸佛神"
             }
         ],
-        "parent": "O9TAXTBRC201605"
+        "parent": "O9TAXTBRC201605",
+        "tbrcId": "6",
+        "rank": 1842
     },
     "O9TAXTBRC2016052KG227158": {
         "sub": [
@@ -6354,14 +11490,18 @@ export const topics = {
                 "@value": "佛菩萨"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227157"
+        "parent": "O9TAXTBRC2016052KG227157",
+        "tbrcId": "1",
+        "rank": 1847
     },
     "T952": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "thub dbang nye sras brgyad/"
         },
-        "parent": "O9TAXTBRC2016052KG227158"
+        "parent": "O9TAXTBRC2016052KG227158",
+        "tbrcId": "T952",
+        "rank": 1871
     },
     "T390": {
         "label": [
@@ -6378,14 +11518,18 @@ export const topics = {
                 "@value": "vajrapāṇi"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227158"
+        "parent": "O9TAXTBRC2016052KG227158",
+        "tbrcId": "T390",
+        "rank": 1878
     },
     "T1761": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "de bzhin gshegs pa lnga /"
         },
-        "parent": "O9TAXTBRC2016052KG227158"
+        "parent": "O9TAXTBRC2016052KG227158",
+        "tbrcId": "T1761",
+        "rank": 1859
     },
     "T871": {
         "label": [
@@ -6402,7 +11546,9 @@ export const topics = {
                 "@value": "不动佛"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227158"
+        "parent": "O9TAXTBRC2016052KG227158",
+        "tbrcId": "T871",
+        "rank": 1861
     },
     "T63": {
         "label": [
@@ -6419,7 +11565,9 @@ export const topics = {
                 "@value": "lord of boundless light with retinue"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227158"
+        "parent": "O9TAXTBRC2016052KG227158",
+        "tbrcId": "T63",
+        "rank": 1886
     },
     "T566": {
         "label": [
@@ -6432,21 +11580,27 @@ export const topics = {
                 "@value": "thub pa gnas brtan bcu drug dang bcas pa/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227158"
+        "parent": "O9TAXTBRC2016052KG227158",
+        "tbrcId": "T566",
+        "rank": 1887
     },
     "T931": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "don yod grub pa/"
         },
-        "parent": "O9TAXTBRC2016052KG227158"
+        "parent": "O9TAXTBRC2016052KG227158",
+        "tbrcId": "T931",
+        "rank": 1863
     },
     "T963": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rigs lnga /"
         },
-        "parent": "O9TAXTBRC2016052KG227158"
+        "parent": "O9TAXTBRC2016052KG227158",
+        "tbrcId": "T963",
+        "rank": 1856
     },
     "T863": {
         "label": [
@@ -6463,7 +11617,9 @@ export const topics = {
                 "@value": "bhaisajyaguru"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227158"
+        "parent": "O9TAXTBRC2016052KG227158",
+        "tbrcId": "T863",
+        "rank": 1865
     },
     "T725": {
         "label": [
@@ -6476,7 +11632,9 @@ export const topics = {
                 "@value": "nivaranaviskambhin"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227158"
+        "parent": "O9TAXTBRC2016052KG227158",
+        "tbrcId": "T725",
+        "rank": 1880
     },
     "T1078": {
         "label": [
@@ -6489,7 +11647,9 @@ export const topics = {
                 "@value": "bodhisattva"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227158"
+        "parent": "O9TAXTBRC2016052KG227158",
+        "tbrcId": "T1078",
+        "rank": 1873
     },
     "T2MS11383": {
         "label": [
@@ -6519,7 +11679,9 @@ export const topics = {
                 "@value": "avalokiteśvara"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227158"
+        "parent": "O9TAXTBRC2016052KG227158",
+        "tbrcId": "T106",
+        "rank": 1874
     },
     "T2GS1130": {
         "label": [
@@ -6532,7 +11694,9 @@ export const topics = {
                 "@value": "khagarba"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227158"
+        "parent": "O9TAXTBRC2016052KG227158",
+        "tbrcId": "T2GS1130",
+        "rank": 1876
     },
     "T824": {
         "label": [
@@ -6575,7 +11739,9 @@ export const topics = {
                 "@value": "无量光佛｜阿弥陀佛"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227158"
+        "parent": "O9TAXTBRC2016052KG227158",
+        "tbrcId": "T720",
+        "rank": 1862
     },
     "T365": {
         "label": [
@@ -6588,7 +11754,9 @@ export const topics = {
                 "@value": "rtag tu ngu/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227158"
+        "parent": "O9TAXTBRC2016052KG227158",
+        "tbrcId": "T365",
+        "rank": 1883
     },
     "T1AT489": {
         "label": [
@@ -6629,14 +11797,18 @@ export const topics = {
             "@language": "bo-x-ewts",
             "@value": "sangs rgyas 35"
         },
-        "parent": "O9TAXTBRC2016052KG227158"
+        "parent": "O9TAXTBRC2016052KG227158",
+        "tbrcId": "T1211",
+        "rank": 1857
     },
     "T00JR3337": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "ston pa bcu gnyis/"
         },
-        "parent": "O9TAXTBRC2016052KG227158"
+        "parent": "O9TAXTBRC2016052KG227158",
+        "tbrcId": "T00JR3337",
+        "rank": 1868
     },
     "T564": {
         "label": [
@@ -6666,21 +11838,27 @@ export const topics = {
                 "@value": "Jowo Shakyamuni"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227158"
+        "parent": "O9TAXTBRC2016052KG227158",
+        "tbrcId": "T635",
+        "rank": 1889
     },
     "T414": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "bka' gdams lha bzhi/"
         },
-        "parent": "O9TAXTBRC2016052KG227158"
+        "parent": "O9TAXTBRC2016052KG227158",
+        "tbrcId": "T414",
+        "rank": 1885
     },
     "T2474": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "jo bo (skyid grong)"
         },
-        "parent": "O9TAXTBRC2016052KG227158"
+        "parent": "O9TAXTBRC2016052KG227158",
+        "tbrcId": "T2474",
+        "rank": 1891
     },
     "T012AG03552": {
         "label": [
@@ -6693,7 +11871,9 @@ export const topics = {
                 "@value": "de bzhin gshegs pa bdun/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227158"
+        "parent": "O9TAXTBRC2016052KG227158",
+        "tbrcId": "T012AG03552",
+        "rank": 1858
     },
     "T568": {
         "label": [
@@ -6710,14 +11890,18 @@ export const topics = {
                 "@value": "medicine buddha"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227158"
+        "parent": "O9TAXTBRC2016052KG227158",
+        "tbrcId": "T568",
+        "rank": 1864
     },
     "T1855": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "sman bla mched brgyad/"
         },
-        "parent": "O9TAXTBRC2016052KG227158"
+        "parent": "O9TAXTBRC2016052KG227158",
+        "tbrcId": "T1855",
+        "rank": 1866
     },
     "T681": {
         "label": [
@@ -6747,7 +11931,9 @@ export const topics = {
                 "@value": "venerable maitreya in the tradition of nirrtipada"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227158"
+        "parent": "O9TAXTBRC2016052KG227158",
+        "tbrcId": "T2GS1159",
+        "rank": 1884
     },
     "T953": {
         "label": [
@@ -6760,14 +11946,18 @@ export const topics = {
                 "@value": "the eight close sons"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227158"
+        "parent": "O9TAXTBRC2016052KG227158",
+        "tbrcId": "T953",
+        "rank": 1872
     },
     "T567": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "shAkya thub pa bka' gdams lha bzhi/"
         },
-        "parent": "O9TAXTBRC2016052KG227158"
+        "parent": "O9TAXTBRC2016052KG227158",
+        "tbrcId": "T567",
+        "rank": 1853
     },
     "T1804": {
         "label": [
@@ -6784,7 +11974,9 @@ export const topics = {
                 "@value": "the ever-excellent"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227158"
+        "parent": "O9TAXTBRC2016052KG227158",
+        "tbrcId": "T1804",
+        "rank": 1877
     },
     "T8LS14948": {
         "label": {
@@ -6808,7 +12000,9 @@ export const topics = {
                 "@value": "rnam par snang mdzad/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227158"
+        "parent": "O9TAXTBRC2016052KG227158",
+        "tbrcId": "T1903",
+        "rank": 1860
     },
     "T2GS1131": {
         "label": [
@@ -6842,7 +12036,9 @@ export const topics = {
                 "@value": "merusikhara muni"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227158"
+        "parent": "O9TAXTBRC2016052KG227158",
+        "tbrcId": "T688",
+        "rank": 1854
     },
     "T1602": {
         "label": {
@@ -6862,7 +12058,9 @@ export const topics = {
                 "@value": "Jowo Mikyo Dorje"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227158"
+        "parent": "O9TAXTBRC2016052KG227158",
+        "tbrcId": "T4CZ57129",
+        "rank": 1890
     },
     "T69": {
         "label": [
@@ -6879,7 +12077,9 @@ export const topics = {
                 "@value": "曼殊室利"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227158"
+        "parent": "O9TAXTBRC2016052KG227158",
+        "tbrcId": "T69",
+        "rank": 1879
     },
     "O9TAXTBRC2016052KG227200": {
         "sub": [
@@ -7623,7 +12823,9 @@ export const topics = {
                 "@value": "Tutelary Deitys"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227157"
+        "parent": "O9TAXTBRC2016052KG227157",
+        "tbrcId": "2",
+        "rank": 1894
     },
     "T992": {
         "label": [
@@ -7636,7 +12838,9 @@ export const topics = {
                 "@value": "vimalosnisa 5 devatmaka"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T992",
+        "rank": 2183
     },
     "T1705": {
         "label": {
@@ -7674,14 +12878,18 @@ export const topics = {
                 "@value": "acala of the eight monkeys"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T670",
+        "rank": 2176
     },
     "T1813": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "mkha' 'gro bdud 'dul drag mo (stag sham)"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1813",
+        "rank": 2006
     },
     "T435": {
         "label": [
@@ -7694,7 +12902,9 @@ export const topics = {
                 "@value": "hevajra sahaja"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T435",
+        "rank": 2058
     },
     "T906": {
         "label": {
@@ -7714,14 +12924,18 @@ export const topics = {
                 "@value": "dakini"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T2614",
+        "rank": 2000
     },
     "T2605": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "gu ru drag po rdo rje gro lod (a 'dzom 'brug pa)"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T2605",
+        "rank": 2469
     },
     "T418": {
         "label": [
@@ -7734,7 +12948,9 @@ export const topics = {
                 "@value": "cakrasamvara 62 devatmaka luhipa krama"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T418",
+        "rank": 1916
     },
     "T593": {
         "label": [
@@ -7747,7 +12963,9 @@ export const topics = {
                 "@value": "thugs chen yi ge drug pa/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T593",
+        "rank": 2246
     },
     "T1725": {
         "label": [
@@ -7764,7 +12982,9 @@ export const topics = {
                 "@value": "gdugs dkar mo can/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1725",
+        "rank": 2430
     },
     "T737": {
         "label": [
@@ -7781,7 +13001,9 @@ export const topics = {
                 "@value": "white hayagriva"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T737",
+        "rank": 2102
     },
     "T1PD108846": {
         "label": [
@@ -7794,28 +13016,36 @@ export const topics = {
                 "@value": "yi dam drag po/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1PD108846",
+        "rank": 1901
     },
     "T00AG01322": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "dzaM b+ha la ljang khu (byang gter lugs)"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T00AG01322",
+        "rank": 2514
     },
     "T1327": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "gu ru spros med don sgrub (rol pa'i rdo rje)"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1327",
+        "rank": 2490
     },
     "T2114": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "phag mo lha mo bco lnga snyan rgyud lugs/"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T2114",
+        "rank": 1973
     },
     "T2GS1213": {
         "label": [
@@ -7832,7 +13062,9 @@ export const topics = {
                 "@value": "sgrol ma rab tu dpa' ba/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T2GS1213",
+        "rank": 2379
     },
     "T676": {
         "label": [
@@ -7849,7 +13081,9 @@ export const topics = {
                 "@value": "mahapratyangira"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T676",
+        "rank": 1944
     },
     "T601": {
         "label": [
@@ -7866,14 +13100,18 @@ export const topics = {
                 "@value": "thugs rje chen po nam mkha'i rgyal po/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T601",
+        "rank": 2262
     },
     "T1392": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "tshe dpag med gnam lcags rdo rje ('ja' tshon snying po)"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1392",
+        "rank": 2137
     },
     "T2GS1084": {
         "label": [
@@ -7886,7 +13124,9 @@ export const topics = {
                 "@value": "wish-fulfilling-wheel white tara in the tradition of gnyan lo tsa ba"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T2GS1084",
+        "rank": 2393
     },
     "T995": {
         "label": [
@@ -7940,7 +13180,9 @@ export const topics = {
                 "@value": "blue vajravidarana"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T487",
+        "rank": 2192
     },
     "T1687": {
         "label": {
@@ -7954,14 +13196,18 @@ export const topics = {
             "@language": "bo-x-ewts",
             "@value": "zhi khro (gnam chos)"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T461",
+        "rank": 2459
     },
     "T1803": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "phag mo shes rab gsal byed/"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1803",
+        "rank": 1961
     },
     "T1083": {
         "label": {
@@ -7995,21 +13241,27 @@ export const topics = {
                 "@value": "rnam snang mngon byang lha 122 mtshan ma gnyis/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1011",
+        "rank": 2122
     },
     "T2GS1014": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "bla ma rdo rje sems dpa' lha 9"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T2GS1014",
+        "rank": 2133
     },
     "T1066": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "bde mchog khro bo rdo rje sems dpa' lha 51 bshad rgyud mngon brjod bla ma/"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1066",
+        "rank": 1936
     },
     "T569": {
         "label": [
@@ -8035,14 +13287,18 @@ export const topics = {
                 "@value": "ro langs ma/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T741",
+        "rank": 1978
     },
     "T1290": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "thub pa lnga /"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1290",
+        "rank": 2127
     },
     "T727": {
         "label": [
@@ -8055,7 +13311,9 @@ export const topics = {
                 "@value": "thugs rje chen po sna tshogs dbang po/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T727",
+        "rank": 2242
     },
     "T00AG0324": {
         "label": [
@@ -8068,7 +13326,9 @@ export const topics = {
                 "@value": "sgrol ma nyer gcig (nyi sbas lugs)"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T00AG0324",
+        "rank": 2347
     },
     "T2314": {
         "label": {
@@ -8108,21 +13368,27 @@ export const topics = {
                 "@value": "gsang 'dus spyan ras gzigs dbang phyug lha 19 jo bo lugs/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T985",
+        "rank": 1910
     },
     "T1GS138764": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "karma gu ru (bkra shis stobs rgyal)"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1GS138764",
+        "rank": 2488
     },
     "T1086": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "ma hA mA ya lha 5"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1086",
+        "rank": 2110
     },
     "T2GS1203": {
         "label": [
@@ -8139,7 +13405,9 @@ export const topics = {
                 "@value": "tara source of attainments"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T2GS1203",
+        "rank": 2370
     },
     "T2291": {
         "label": {
@@ -8159,7 +13427,9 @@ export const topics = {
                 "@value": "rdo rje rnam 'joms sngon po lha 15 'brug lugs/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1002",
+        "rank": 2186
     },
     "T691": {
         "label": [
@@ -8172,7 +13442,9 @@ export const topics = {
                 "@value": "trisamayavyuha ekantanayaka"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T691",
+        "rank": 2125
     },
     "T00AG01174": {
         "label": [
@@ -8185,14 +13457,18 @@ export const topics = {
                 "@value": "vajrapani nilambaradhara"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T00AG01174",
+        "rank": 2305
     },
     "T1006": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "gdugs dkar po can ma lha 27"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1006",
+        "rank": 2445
     },
     "T747": {
         "label": [
@@ -8205,7 +13481,9 @@ export const topics = {
                 "@value": "dzaM b+ha la nag po kha che paN chen lugs/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T747",
+        "rank": 2511
     },
     "T695": {
         "label": [
@@ -8222,14 +13500,18 @@ export const topics = {
                 "@value": "prthivi devi"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T695",
+        "rank": 2440
     },
     "T1337": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "sgrol ma 'jigs pa brgyad skyob/"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1337",
+        "rank": 2334
     },
     "T1070": {
         "label": [
@@ -8242,21 +13524,27 @@ export const topics = {
                 "@value": "rdo rje phag gdong chen mo lha 37"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1070",
+        "rank": 1953
     },
     "T853": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "'jigs byed zhal gcig phyag gnyis rwa lugs nye brgyud/"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T853",
+        "rank": 2038
     },
     "T00AG01280": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "gnyen po lha bzhi (dag snang rgya can lugs)"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T00AG01280",
+        "rank": 2108
     },
     "T678": {
         "label": [
@@ -8273,14 +13561,18 @@ export const topics = {
                 "@value": "white manjughosa of the wisdom wheel"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T678",
+        "rank": 2281
     },
     "T1GS108143": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "kye rdor lha dgu/"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1GS108143",
+        "rank": 2059
     },
     "T428": {
         "label": [
@@ -8297,7 +13589,9 @@ export const topics = {
                 "@value": "金刚瑜伽母"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T428",
+        "rank": 1956
     },
     "T2GS1086": {
         "label": [
@@ -8314,21 +13608,27 @@ export const topics = {
                 "@value": "white sarasvati"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T2GS1086",
+        "rank": 2409
     },
     "T1GS147809": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "tshe dpag med sprul sku stag lung bka' brgyud lugs/"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1GS147809",
+        "rank": 2151
     },
     "T1085": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "ku ru kulle lha 15"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1085",
+        "rank": 2401
     },
     "T2GS1206": {
         "label": [
@@ -8345,14 +13645,18 @@ export const topics = {
                 "@value": "tara accomplisher of bliss"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T2GS1206",
+        "rank": 2373
     },
     "T2294": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "gu ru drag po dbu dgu (legs ldan rdo rje)"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T2294",
+        "rank": 2473
     },
     "T00JR803": {
         "label": {
@@ -8372,14 +13676,18 @@ export const topics = {
                 "@value": "khyung /"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T788",
+        "rank": 2209
     },
     "T856": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "sgrol ma rnal 'byor zhi sbas lugs/"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T856",
+        "rank": 2345
     },
     "T1786": {
         "label": [
@@ -8396,28 +13704,36 @@ export const topics = {
                 "@value": "金刚橛"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1786",
+        "rank": 2074
     },
     "T1482": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "khros ma lha lnga /"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1482",
+        "rank": 1970
     },
     "T322": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "thugs chen 'gro 'dul (nyang ral)"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T322",
+        "rank": 2267
     },
     "T469": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "bde mchog sangs rgyas mnyam sbyor/"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T469",
+        "rank": 1931
     },
     "T1021": {
         "label": [
@@ -8430,14 +13746,18 @@ export const topics = {
                 "@value": "'jigs byed lha 9 'am 17 skyo lugs/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1021",
+        "rank": 2025
     },
     "T2230": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "'jam dbyangs dkar po shes rab blo 'phel/"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T2230",
+        "rank": 2283
     },
     "T1401": {
         "label": {
@@ -8458,7 +13778,9 @@ export const topics = {
             "@language": "bo-x-ewts",
             "@value": "gu ru drag po gnam lcags me 'khor (zhig po gling pa)"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1GS129604",
+        "rank": 2468
     },
     "T724": {
         "label": [
@@ -8478,7 +13800,9 @@ export const topics = {
             "@language": "bo-x-ewts",
             "@value": "rta mgrin dmar po grub rgyal lugs/"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T904",
+        "rank": 2103
     },
     "T2GS1205": {
         "label": [
@@ -8495,14 +13819,18 @@ export const topics = {
                 "@value": "prapustitara"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T2GS1205",
+        "rank": 2372
     },
     "T1194": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "yang dag he ru ka"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1194",
+        "rank": 2460
     },
     "T2GS1221": {
         "label": [
@@ -8519,7 +13847,9 @@ export const topics = {
                 "@value": "sokavinodanatara"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T2GS1221",
+        "rank": 2384
     },
     "T353": {
         "label": {
@@ -8552,21 +13882,27 @@ export const topics = {
                 "@value": "jambhala pranasadhana rakta"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T749",
+        "rank": 2509
     },
     "T855": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "sgrol dkar tshe khrid jo bo lugs/"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T855",
+        "rank": 2364
     },
     "T8LS15614": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "tshe dbang rig 'dzin/"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T8LS15614",
+        "rank": 2530
     },
     "T1432": {
         "label": [
@@ -8583,14 +13919,18 @@ export const topics = {
                 "@value": "jambhala"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1432",
+        "rank": 2500
     },
     "T484": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "sgrol dkar yid bzhin nor mchog"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T484",
+        "rank": 2395
     },
     "T8LS15611": {
         "label": [
@@ -8603,7 +13943,9 @@ export const topics = {
                 "@value": "prahevajra"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T8LS15611",
+        "rank": 2493
     },
     "T1024": {
         "label": [
@@ -8629,7 +13971,9 @@ export const topics = {
                 "@value": "bde mchog lha 13 mai tri lugs/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1053",
+        "rank": 1922
     },
     "T2GS1208": {
         "label": [
@@ -8646,14 +13990,18 @@ export const topics = {
                 "@value": "tara the great peaceful one"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T2GS1208",
+        "rank": 2375
     },
     "T003JR5329": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "phur pa (rgyal po lugs)"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T003JR5329",
+        "rank": 2084
     },
     "T619": {
         "label": [
@@ -8677,35 +14025,45 @@ export const topics = {
             "@language": "bo-x-ewts",
             "@value": "gshin rje gdong drug gnubs lugs/"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T2046",
+        "rank": 2033
     },
     "T1PD110133": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "spyan ras gzigs lha bcu gsum/"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1PD110133",
+        "rank": 2231
     },
     "T00AG0336": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "gu ru pad+ma rgyal po/"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T00AG0336",
+        "rank": 2483
     },
     "T1GS2519": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "ku ru ku l+le sngon mo/"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1GS2519",
+        "rank": 2400
     },
     "T858": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "sgrol ma ser mo bkra shis don grub ma tsandra go mi'i lugs/"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T858",
+        "rank": 2365
     },
     "T4CZ15540": {
         "label": [
@@ -8718,7 +14076,9 @@ export const topics = {
                 "@value": "mahacitavati"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T4CZ15540",
+        "rank": 2435
     },
     "T714": {
         "label": [
@@ -8735,7 +14095,9 @@ export const topics = {
                 "@value": "garuda pita"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T714",
+        "rank": 2213
     },
     "T1023": {
         "label": [
@@ -8748,7 +14110,9 @@ export const topics = {
                 "@value": "'jigs byed gtso rkyang tsong kha pa'i nye rgyud lugs/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1023",
+        "rank": 2026
     },
     "T130": {
         "label": [
@@ -8765,7 +14129,9 @@ export const topics = {
                 "@value": "喜金剛"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T130",
+        "rank": 2052
     },
     "T582": {
         "label": [
@@ -8782,7 +14148,9 @@ export const topics = {
                 "@value": "vajrabhairava sanksipta"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T582",
+        "rank": 2030
     },
     "T711": {
         "label": [
@@ -8799,7 +14167,9 @@ export const topics = {
                 "@value": "vajragaruda samvara"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T711",
+        "rank": 1932
     },
     "T1018": {
         "label": [
@@ -8812,7 +14182,9 @@ export const topics = {
                 "@value": "gshin rje gshed gdong pa drug rwa lugs lha 21"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1018",
+        "rank": 2028
     },
     "T1260": {
         "label": [
@@ -8825,7 +14197,9 @@ export const topics = {
                 "@value": "sgrol dkar yid bzhin 'khor lo ba ri lugs/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1260",
+        "rank": 2392
     },
     "T00AG01366": {
         "label": {
@@ -8845,7 +14219,9 @@ export const topics = {
                 "@value": "'jig rten gsum las rnam par rgyal ba/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T4CZ15556",
+        "rank": 2202
     },
     "T645": {
         "label": [
@@ -8862,7 +14238,9 @@ export const topics = {
                 "@value": "rakta tara"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T645",
+        "rank": 2356
     },
     "T650": {
         "label": [
@@ -8879,21 +14257,27 @@ export const topics = {
                 "@value": "sgrol ma phyag brgyad/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T650",
+        "rank": 2336
     },
     "T2304": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rdo rje gro lod hUM sgrub ('jam mgon)"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T2304",
+        "rank": 2467
     },
     "T01AG03006": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rta mgrin yang phyungs dmar po (chos kyi blo gros)"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T01AG03006",
+        "rank": 2105
     },
     "T4CZ15633": {
         "label": [
@@ -8906,21 +14290,27 @@ export const topics = {
                 "@value": "rdo rje sa 'og"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T4CZ15633",
+        "rank": 2219
     },
     "T2542": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "phyag rdor gtum chen/"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T2542",
+        "rank": 2307
     },
     "T1GS122410": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "dbyangs can dmar mo (bdud 'dul rdo rje)"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1GS122410",
+        "rank": 2412
     },
     "T2155": {
         "label": [
@@ -8933,14 +14323,18 @@ export const topics = {
                 "@value": "hevajra-sanksipta-pancadaka 49-devatmaka"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T2155",
+        "rank": 2005
     },
     "T00AG0339": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "pad+ma thod 'phreng rtsal/"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T00AG0339",
+        "rank": 2474
     },
     "T2GS1212": {
         "label": [
@@ -8957,21 +14351,27 @@ export const topics = {
                 "@value": "jagadakarsanatara"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T2GS1212",
+        "rank": 2378
     },
     "T1409": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "thub pa lha so lnga (kha 'bar ma'i gzungs)"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1409",
+        "rank": 2128
     },
     "T1GS124512": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "'jam dpal nA ga rak+sha (sprul sku mi 'gyur rdo rje)"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1GS124512",
+        "rank": 2296
     },
     "T559": {
         "label": [
@@ -8988,7 +14388,9 @@ export const topics = {
                 "@value": "sgrol ljang yan lag drug pa gnyan lugs/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T559",
+        "rank": 2397
     },
     "T588": {
         "label": [
@@ -9005,14 +14407,18 @@ export const topics = {
                 "@value": "tortoise-legged varahi"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T588",
+        "rank": 1977
     },
     "T8LS15658": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "grub ldan ma/"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T8LS15658",
+        "rank": 2525
     },
     "T1346": {
         "label": [
@@ -9025,7 +14431,9 @@ export const topics = {
                 "@value": "vajradaka"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1346",
+        "rank": 1999
     },
     "T2GS1160": {
         "label": [
@@ -9059,7 +14467,9 @@ export const topics = {
                 "@value": "kneeling, blue, wrathful king arya-acala"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T665",
+        "rank": 2177
     },
     "T702": {
         "label": [
@@ -9089,7 +14499,9 @@ export const topics = {
                 "@value": "manjughosa, lion of debaters"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T40",
+        "rank": 2279
     },
     "T2GS1218": {
         "label": [
@@ -9102,7 +14514,9 @@ export const topics = {
                 "@value": "trailokyavijayatara"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T2GS1218",
+        "rank": 2358
     },
     "T1055": {
         "label": [
@@ -9115,28 +14529,36 @@ export const topics = {
                 "@value": "phag mo lha 5 kaM tshang lugs/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1055",
+        "rank": 1951
     },
     "T1667": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rta khyung 'bar ba ('jigs med gling pa)"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1667",
+        "rank": 2487
     },
     "T2175": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "sgrol ma dkar mo lha 9 'chi med 'phags ma'i snying tig"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T2175",
+        "rank": 2387
     },
     "T335": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "klong chen snying thig dpal chen 'dus pa/"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T335",
+        "rank": 2497
     },
     "T4CZ15531": {
         "label": [
@@ -9149,7 +14571,9 @@ export const topics = {
                 "@value": "vajrananga"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T4CZ15531",
+        "rank": 2288
     },
     "T00JR3170": {
         "label": [
@@ -9162,14 +14586,18 @@ export const topics = {
                 "@value": "'jigs byed lha 13"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T00JR3170",
+        "rank": 2021
     },
     "T2303": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "gu ru drag po rdo rje drag rtsal (mchog gyur gling pa)"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T2303",
+        "rank": 2464
     },
     "T606": {
         "label": [
@@ -9182,7 +14610,9 @@ export const topics = {
                 "@value": "sgrol ma bka' gdams lha bzhi las byung ba/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T606",
+        "rank": 2386
     },
     "T891": {
         "label": {
@@ -9196,7 +14626,9 @@ export const topics = {
             "@language": "bo-x-ewts",
             "@value": "rdo rje sems dpa' sgyu 'phrul zhi ba/"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T305",
+        "rank": 2134
     },
     "T1075": {
         "label": [
@@ -9209,21 +14641,27 @@ export const topics = {
                 "@value": "catuhpitha 77 (99) devatmaka rngog krama"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1075",
+        "rank": 2116
     },
     "T1060": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "bde mchog rdo rje mkha' 'gro he ru ka lha 62 bshad rgyud nas bshad pa/"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1060",
+        "rank": 1923
     },
     "T2087": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "'jigs byed lha 13 rol pa'i rdo rje'i lugs/"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T2087",
+        "rank": 2037
     },
     "T558": {
         "label": [
@@ -9240,7 +14678,9 @@ export const topics = {
                 "@value": "tara (cintamani sukla)"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T558",
+        "rank": 2391
     },
     "T563": {
         "label": [
@@ -9270,7 +14710,9 @@ export const topics = {
                 "@value": "'jam dpal dmar po/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T00AG0281",
+        "rank": 2294
     },
     "T716": {
         "label": [
@@ -9287,7 +14729,9 @@ export const topics = {
                 "@value": "manjughosa krsna"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T716",
+        "rank": 2278
     },
     "T2GS1192": {
         "label": [
@@ -9313,14 +14757,18 @@ export const topics = {
                 "@value": "vajracarcika"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T4CZ15537",
+        "rank": 2428
     },
     "T1AT287": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rta mgrin rdo rje me char/"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1AT287",
+        "rank": 2088
     },
     "T00JR3557": {
         "label": {
@@ -9353,14 +14801,18 @@ export const topics = {
                 "@value": "sarvadurgatiparisodhana mandalas"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T974",
+        "rank": 2121
     },
     "T2CN4770": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "gu ru gzi brjid rdo rje/"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T2CN4770",
+        "rank": 2476
     },
     "T1005": {
         "label": [
@@ -9373,7 +14825,9 @@ export const topics = {
                 "@value": "'od zer dri med lha 6"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1005",
+        "rank": 2182
     },
     "T652": {
         "label": [
@@ -9386,14 +14840,18 @@ export const topics = {
                 "@value": "tara cunda"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T652",
+        "rank": 2363
     },
     "T894": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "'khrus lha lnga /"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T894",
+        "rank": 2451
     },
     "T417": {
         "label": [
@@ -9410,7 +14868,9 @@ export const topics = {
                 "@value": "密集金刚"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T417",
+        "rank": 1905
     },
     "T836": {
         "label": {
@@ -9430,7 +14890,9 @@ export const topics = {
                 "@value": "aparajita"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T736",
+        "rank": 2179
     },
     "T1036": {
         "label": [
@@ -9443,35 +14905,45 @@ export const topics = {
                 "@value": "sita sarasvati"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1036",
+        "rank": 2414
     },
     "T78": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "'jig rten gsum las rnam par rgyal ba lha 1105"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T78",
+        "rank": 2266
     },
     "T520": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "tshe dpag med (lung lugs)"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T520",
+        "rank": 2150
     },
     "T1282": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "bde mchog snyan brgyud yum bka' ras chung lugs/"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1282",
+        "rank": 1949
     },
     "T2110": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "lhag pa'i lha nyer gnyis ('brug pa)"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T2110",
+        "rank": 2156
     },
     "T704": {
         "label": [
@@ -9488,7 +14960,9 @@ export const topics = {
                 "@value": "parnasabari pita"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T704",
+        "rank": 2423
     },
     "T667": {
         "label": [
@@ -9505,7 +14979,9 @@ export const topics = {
                 "@value": "mi g.yo ba khro bo gtum po jo bo rje'i lugs/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T667",
+        "rank": 2173
     },
     "T672": {
         "label": [
@@ -9518,21 +14994,27 @@ export const topics = {
                 "@value": "amitayus in the tradition of ba ri lo ts+tsha ba"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T672",
+        "rank": 2154
     },
     "T2CN4988": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "bla ma bde chen dbang phyug"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T2CN4988",
+        "rank": 2522
     },
     "T1669": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "gsang bdag rdo rje be con (mchog gyur gling pa)"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1669",
+        "rank": 2207
     },
     "T658": {
         "label": [
@@ -9549,28 +15031,36 @@ export const topics = {
                 "@value": "slightly fierce red vajrapani"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T658",
+        "rank": 2320
     },
     "T2CN4663": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "gsang bdag gtum po me 'bar/"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T2CN4663",
+        "rank": 2324
     },
     "T908": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "khyung dmar/"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T908",
+        "rank": 2206
     },
     "T003JR4606": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "phur pa (rog lugs)"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T003JR4606",
+        "rank": 2079
     },
     "T2GS1157": {
         "label": [
@@ -9587,7 +15077,9 @@ export const topics = {
                 "@value": "three-and-a-half-syllable avalokita"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T2GS1157",
+        "rank": 2227
     },
     "T962": {
         "label": {
@@ -9607,7 +15099,9 @@ export const topics = {
                 "@value": "candradevi"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T4CZ15354",
+        "rank": 2441
     },
     "T1065": {
         "label": [
@@ -9620,7 +15114,9 @@ export const topics = {
                 "@value": "bde mchog drag po phyag 'bum lha 62 bshad mngon brjod bla ma lugs/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1065",
+        "rank": 1935
     },
     "T595": {
         "label": [
@@ -9633,7 +15129,9 @@ export const topics = {
                 "@value": "amoghapasa avalokitesvara (ba ri lugs)"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T595",
+        "rank": 2270
     },
     "T526": {
         "label": [
@@ -9646,7 +15144,9 @@ export const topics = {
                 "@value": "thugs rje chen po rgyal ba rgya mtsho lha dgu/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T526",
+        "rank": 2233
     },
     "T603": {
         "label": [
@@ -9663,14 +15163,18 @@ export const topics = {
                 "@value": "avalokitesvara ekadasamukha astabhayatrana"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T603",
+        "rank": 2238
     },
     "T1062": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "bde mchog 'khor los sgyur drug lha 71"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1062",
+        "rank": 1934
     },
     "T1394": {
         "label": {
@@ -9684,14 +15188,18 @@ export const topics = {
             "@language": "bo-x-ewts",
             "@value": "tshe rta/"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T2113",
+        "rank": 2129
     },
     "T1313": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rtsa gsum/"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1313",
+        "rank": 2496
     },
     "T489": {
         "label": [
@@ -9704,7 +15212,9 @@ export const topics = {
                 "@value": "nagaraksa manjusri"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T489",
+        "rank": 2299
     },
     "T671": {
         "label": [
@@ -9730,7 +15240,9 @@ export const topics = {
                 "@value": "mahamantranusarini"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T4CZ15539",
+        "rank": 2434
     },
     "T628": {
         "label": {
@@ -9754,7 +15266,9 @@ export const topics = {
                 "@value": "vajravidāraṇa"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T2549",
+        "rank": 2189
     },
     "T657": {
         "label": [
@@ -9771,14 +15285,18 @@ export const topics = {
                 "@value": "vajrapani canda"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T657",
+        "rank": 2317
     },
     "T2523": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "gzungs grwa lnga rdo rje 'phreng ba'i lugs/"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T2523",
+        "rank": 2166
     },
     "T907": {
         "label": {
@@ -9792,14 +15310,18 @@ export const topics = {
             "@language": "bo-x-ewts",
             "@value": "gu ru dar nag ber chen (gu ru chos dbang)"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T2289",
+        "rank": 2491
     },
     "T899": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "'jam dbyangs ngag gi dbang phyug"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T899",
+        "rank": 2286
     },
     "T4CZ15630": {
         "label": [
@@ -9812,21 +15334,27 @@ export const topics = {
                 "@value": "cuklaikajata"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T4CZ15630",
+        "rank": 2342
     },
     "T2565": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "gshin rje gshed phyag rgya zil gnon (rgya zhang khrom)"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T2565",
+        "rank": 2045
     },
     "T2181": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "dus 'khor lha dgu/"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T2181",
+        "rank": 2067
     },
     "T976": {
         "label": [
@@ -9839,7 +15367,9 @@ export const topics = {
                 "@value": "sarvavid"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T976",
+        "rank": 2119
     },
     "T981": {
         "label": [
@@ -9852,21 +15382,27 @@ export const topics = {
                 "@value": "manjughosa guhyaka"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T981",
+        "rank": 2301
     },
     "T2167": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "bde mchog lha 5 ni gu lugs/"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T2167",
+        "rank": 1930
     },
     "T1826": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "mkha' spyod dkar mo/"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1826",
+        "rank": 1987
     },
     "T594": {
         "label": [
@@ -9883,7 +15419,9 @@ export const topics = {
                 "@value": "avalokita as one of the four ka-dam deities"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T594",
+        "rank": 2240
     },
     "T2GS1210": {
         "label": [
@@ -9900,7 +15438,9 @@ export const topics = {
                 "@value": "paripacanatara"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T2GS1210",
+        "rank": 2376
     },
     "T677": {
         "label": [
@@ -9930,7 +15470,9 @@ export const topics = {
                 "@value": "thugs rje chen po don yod lcags kyu/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T729",
+        "rank": 2248
     },
     "T00AG0326": {
         "label": {
@@ -9944,7 +15486,9 @@ export const topics = {
             "@language": "bo-x-ewts",
             "@value": "'jam dpal klu bdud nA ga rak+sha (me ban rin chen gling pa)"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1GS124510",
+        "rank": 2303
     },
     "T662": {
         "label": [
@@ -9961,7 +15505,9 @@ export const topics = {
                 "@value": "hayagriva garudapaksavat"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T662",
+        "rank": 2094
     },
     "T1631": {
         "label": [
@@ -9978,21 +15524,27 @@ export const topics = {
                 "@value": "難陀"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1631",
+        "rank": 2215
     },
     "T2093": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "bde mchog lha lnga /"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T2093",
+        "rank": 1926
     },
     "T2112": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rta phyag khyung gsum/"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T2112",
+        "rank": 2222
     },
     "T1316": {
         "label": {
@@ -10016,7 +15568,9 @@ export const topics = {
                 "@value": "sgrol ma yongs rdzogs byed ma/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T2GS1202",
+        "rank": 2369
     },
     "T2293": {
         "label": {
@@ -10030,21 +15584,27 @@ export const topics = {
             "@language": "bo-x-ewts",
             "@value": "bdag med lha mo nyer gsum/"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T2CZ5182",
+        "rank": 1976
     },
     "T2GS996": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "kye rdo rje rngog lugs/"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T2GS996",
+        "rank": 2054
     },
     "T964": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rta mgrin dbang gi rgyal po (gu ru tshe brtan rgyal mtshan lugs)"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T964",
+        "rank": 2104
     },
     "T979": {
         "label": [
@@ -10057,28 +15617,36 @@ export const topics = {
                 "@value": "navosnisa sakyamuni"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T979",
+        "rank": 2184
     },
     "T2290": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rgyal ba zhi khro tshe dpag med lha bcu gsum (byang gter)"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T2290",
+        "rank": 2142
     },
     "T1067": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "bde mchog mkha' 'gro rgya mtsho 'khor lo bcu gnyis lha 1500"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1067",
+        "rank": 1941
     },
     "T1072": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "yang dag he ru ka zla gam dgu pa 'khon so lugs/"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1072",
+        "rank": 1945
     },
     "T00AG01095": {
         "label": [
@@ -10091,7 +15659,9 @@ export const topics = {
                 "@value": "twenty-five disciples of padmasambhava"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T00AG01095",
+        "rank": 2495
     },
     "T2040": {
         "label": {
@@ -10111,49 +15681,63 @@ export const topics = {
                 "@value": "thugs chen ka sarpa Ni lha lnga /"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T597",
+        "rank": 2244
     },
     "T1662": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "gnyen po lha gsum (rta mgrin)"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1662",
+        "rank": 2098
     },
     "T513": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "'jam dpal tshe bdag rnon po/"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T513",
+        "rank": 2292
     },
     "T1AT501": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rdo rje sder mo/"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1AT501",
+        "rank": 1983
     },
     "T00AG0330": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "blo ldan mchog sred/"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T00AG0330",
+        "rank": 2479
     },
     "T1396": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "gu ru drag po rdo rje gro lod ('ja' tshon snying po)"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1396",
+        "rank": 2461
     },
     "T1GS124502": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "'jam dpal shin tu khros pa nA ga rak+sha (myang ral nyi ma 'od zer)"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1GS124502",
+        "rank": 2302
     },
     "T399": {
         "label": [
@@ -10166,7 +15750,9 @@ export const topics = {
                 "@value": "jambhala (krsna)"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T399",
+        "rank": 2504
     },
     "T1059": {
         "label": [
@@ -10179,7 +15765,9 @@ export const topics = {
                 "@value": "cakrasamvara mahasamvarodayatantra 13 devatmaka"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1059",
+        "rank": 1937
     },
     "T2144": {
         "label": [
@@ -10192,7 +15780,9 @@ export const topics = {
                 "@value": "kalacakra mahasamvara"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T2144",
+        "rank": 2068
     },
     "T2GS1201": {
         "label": [
@@ -10205,7 +15795,9 @@ export const topics = {
                 "@value": "lord of the array of the triple samaya"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T2GS1201",
+        "rank": 2123
     },
     "T1087": {
         "label": {
@@ -10232,14 +15824,18 @@ export const topics = {
                 "@value": "vajrapani jagadbhadra krama"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1003",
+        "rank": 2318
     },
     "T2MS9698": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rdo rje phur pa (byang gter lugs)"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T2MS9698",
+        "rank": 2078
     },
     "T983": {
         "label": [
@@ -10252,21 +15848,27 @@ export const topics = {
                 "@value": "gsang 'dus mi bskyod rdo rje lha 32 rngog lugs/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T983",
+        "rank": 1907
     },
     "T2GS1018": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "'jigs byed lha 9 rol pa'i rdo rje'i lugs/"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T2GS1018",
+        "rank": 2018
     },
     "T1000": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rdo rje rnam 'joms dkar po lha 19 sa ba ri pa'i lugs/"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1000",
+        "rank": 2185
     },
     "T823": {
         "label": {
@@ -10310,14 +15912,18 @@ export const topics = {
                 "@value": "manjusrivajra"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T00AG0328",
+        "rank": 2289
     },
     "T00AG0333": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "gu ru nyi ma 'od zer/"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T00AG0333",
+        "rank": 2481
     },
     "T664": {
         "label": [
@@ -10330,21 +15936,27 @@ export const topics = {
                 "@value": "hayagriva in the tradition of the great pandita of kashmir"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T664",
+        "rank": 2101
     },
     "T4CZ15561": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "mkha' lding /"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T4CZ15561",
+        "rank": 2073
     },
     "T1716": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "sgrol ma g.yul bzlog"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1716",
+        "rank": 2348
     },
     "T989": {
         "label": [
@@ -10370,7 +15982,9 @@ export const topics = {
                 "@value": "rta mgrin lcags ral ran/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T2GS1155",
+        "rank": 2097
     },
     "T1CZ14": {
         "label": [
@@ -10383,7 +15997,9 @@ export const topics = {
                 "@value": "the goddess marici from the dharani"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1CZ14",
+        "rank": 2007
     },
     "T2GS1207": {
         "label": [
@@ -10400,7 +16016,9 @@ export const topics = {
                 "@value": "sanganasanitara"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T2GS1207",
+        "rank": 2374
     },
     "T2295": {
         "label": {
@@ -10433,7 +16051,9 @@ export const topics = {
                 "@value": "kalacakra ekavira"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1GS102896",
+        "rank": 2064
     },
     "T1074": {
         "label": [
@@ -10463,21 +16083,27 @@ export const topics = {
                 "@value": "'jig rten dbang phyug gsang sgrub mi tra dzwa ki'i lugs/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T600",
+        "rank": 2230
     },
     "T857": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "sgrol ma btson 'don ma/"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T857",
+        "rank": 2338
     },
     "T00AG0332": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "shAkya seng+ge"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T00AG0332",
+        "rank": 2480
     },
     "T708": {
         "label": [
@@ -10494,7 +16120,9 @@ export const topics = {
                 "@value": "green wrathful ucchusma"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T708",
+        "rank": 2196
     },
     "T902": {
         "label": {
@@ -10508,7 +16136,9 @@ export const topics = {
             "@language": "bo-x-ewts",
             "@value": "dzaM b+ha la dkar po/"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1378",
+        "rank": 2502
     },
     "T710": {
         "label": [
@@ -10525,28 +16155,36 @@ export const topics = {
                 "@value": "wrathful sambara burning on touch"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T710",
+        "rank": 1943
     },
     "T2048": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "'jam dpal gshed dmar (bka' ma)"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T2048",
+        "rank": 2041
     },
     "T01AG03032": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "'chi med 'phags ma sgrol ma ('chi med 'phags ma snying thig)"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T01AG03032",
+        "rank": 2366
     },
     "T2154": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "kye rdor lha dgu stag lung dz+nyA na lugs/"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T2154",
+        "rank": 2056
     },
     "T641": {
         "label": [
@@ -10559,7 +16197,9 @@ export const topics = {
                 "@value": "rdo rje phur pa ('khon lugs)"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T641",
+        "rank": 2076
     },
     "T00AG0338": {
         "label": [
@@ -10579,7 +16219,9 @@ export const topics = {
             "@language": "bo-x-ewts",
             "@value": "tshe dpag med mda' 'phel ma/"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T2472",
+        "rank": 2140
     },
     "T825": {
         "label": {
@@ -10593,7 +16235,9 @@ export const topics = {
             "@language": "bo-x-ewts",
             "@value": "dbyangs can ma dkar mo sa man+ta shrI lugs/"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T830",
+        "rank": 2413
     },
     "T3CN15347": {
         "label": {
@@ -10613,14 +16257,18 @@ export const topics = {
                 "@value": "sumbha"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T4CZ15620",
+        "rank": 2199
     },
     "T2151": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "kye rdo rje lha dgu mar lugs/"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T2151",
+        "rank": 2055
     },
     "T311": {
         "label": [
@@ -10633,14 +16281,18 @@ export const topics = {
                 "@value": "'jam dpal/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T311",
+        "rank": 2274
     },
     "T00AG0335": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "gu ru mtsho skyes rdo rje/"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T00AG0335",
+        "rank": 2482
     },
     "T580": {
         "label": [
@@ -10657,14 +16309,18 @@ export const topics = {
                 "@value": "vajravega"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T580",
+        "rank": 2070
     },
     "T00AG01274": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "ye shes mtsho rgyal (dag snang rgya can)"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T00AG01274",
+        "rank": 2494
     },
     "T584": {
         "label": [
@@ -10677,14 +16333,18 @@ export const topics = {
                 "@value": "phag mo zhal gnyis ma dpyal lugs/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T584",
+        "rank": 1963
     },
     "T1GS129608": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "gu ru drag po phur mjug can (gnam chos)"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1GS129608",
+        "rank": 2471
     },
     "T128": {
         "label": [
@@ -10697,7 +16357,9 @@ export const topics = {
                 "@value": "dzaM b+ha la ser po gtso rkyang /"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T128",
+        "rank": 2501
     },
     "T713": {
         "label": [
@@ -10714,7 +16376,9 @@ export const topics = {
                 "@value": "garuda upadesakrama sabala"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T713",
+        "rank": 2212
     },
     "T2GS1209": {
         "label": [
@@ -10731,7 +16395,9 @@ export const topics = {
                 "@value": "shaking frowning tara"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T2GS1209",
+        "rank": 2354
     },
     "T00AG01368": {
         "label": {
@@ -10751,7 +16417,9 @@ export const topics = {
                 "@value": "paramasva"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T4CZ15558",
+        "rank": 2109
     },
     "T647": {
         "label": [
@@ -10764,21 +16432,27 @@ export const topics = {
                 "@value": "tara pita according to the transmission of kha che paN chen"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T647",
+        "rank": 2361
     },
     "T2010": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "phag mo lha 13 gsum nA ro lugs/"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T2010",
+        "rank": 1974
     },
     "T2365": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "thugs rje chen po gsang sgrub/"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T2365",
+        "rank": 2258
     },
     "T525": {
         "label": [
@@ -10799,7 +16473,9 @@ export const topics = {
                 "@value": "十一面观世音"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T525",
+        "rank": 2235
     },
     "T1026": {
         "label": [
@@ -10825,7 +16501,9 @@ export const topics = {
                 "@value": "rdo rje dbyings lha 37 yang dag par sbyor ba'i rgyud nas gsungs pa/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T2157",
+        "rank": 2117
     },
     "T2GS1214": {
         "label": [
@@ -10842,7 +16520,9 @@ export const topics = {
                 "@value": "tara white as the moon"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T2GS1214",
+        "rank": 2390
     },
     "T602": {
         "label": [
@@ -10859,7 +16539,9 @@ export const topics = {
                 "@value": "wish-fulfilling wheel (cintamani-cakra) avalokita"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T602",
+        "rank": 2224
     },
     "T1780": {
         "label": [
@@ -10876,7 +16558,9 @@ export const topics = {
                 "@value": "nine-deity usnisavijaya"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1780",
+        "rank": 2163
     },
     "T1393": {
         "label": {
@@ -10896,7 +16580,9 @@ export const topics = {
                 "@value": "wish-fulfilling-wheel white tara in the tradition of mahapandita vanaratna"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T2GS1085",
+        "rank": 2394
     },
     "T1KG86198": {
         "label": {
@@ -10910,7 +16596,9 @@ export const topics = {
             "@language": "bo-x-ewts",
             "@value": "zhi khro (bde chen gling pa)"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T462",
+        "rank": 2457
     },
     "T1057": {
         "label": [
@@ -10923,7 +16611,9 @@ export const topics = {
                 "@value": "bde mchog lha 62 phyag rdor stod 'grel lugs/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1057",
+        "rank": 1920
     },
     "T1042": {
         "label": [
@@ -10936,7 +16626,9 @@ export const topics = {
                 "@value": "shes rab kyi lha/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1042",
+        "rank": 2406
     },
     "T00AG01277": {
         "label": {
@@ -10960,7 +16652,9 @@ export const topics = {
                 "@value": "khyung khra rgyud lugs/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T712",
+        "rank": 2211
     },
     "T608": {
         "label": [
@@ -10977,7 +16671,9 @@ export const topics = {
                 "@value": "sita tara according to the tradition of kha che paN chen"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T608",
+        "rank": 2359
     },
     "T2GS1174": {
         "label": [
@@ -10990,7 +16686,9 @@ export const topics = {
                 "@value": "vajrapani spirit-subduer, new tradition"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T2GS1174",
+        "rank": 2309
     },
     "T651": {
         "label": [
@@ -11007,21 +16705,27 @@ export const topics = {
                 "@value": "venerabla kapali-tara"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T651",
+        "rank": 2337
     },
     "T1012": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "'jam dbyangs a ra pa tsa na lha 5"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1012",
+        "rank": 2285
     },
     "T54": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "bla ma gsang 'dus thod 'phreng rtsal/"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T54",
+        "rank": 1913
     },
     "T835": {
         "label": {
@@ -11041,7 +16745,9 @@ export const topics = {
                 "@value": "black parna sabari"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T2GS1178",
+        "rank": 2421
     },
     "T1767": {
         "label": {
@@ -11055,14 +16761,18 @@ export const topics = {
             "@language": "bo-x-ewts",
             "@value": "khams gsum rnam rgyal lha 1037"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T970",
+        "rank": 2268
     },
     "T912": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "gtsug tor 'bar ba/"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T912",
+        "rank": 2180
     },
     "T2156": {
         "label": {
@@ -11076,21 +16786,27 @@ export const topics = {
             "@language": "bo-x-ewts",
             "@value": "ku ru kul+le/"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T00AG0325",
+        "rank": 2398
     },
     "T832": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "tshe dpag med grub rgyal lugs (tshar lugs)"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T832",
+        "rank": 2149
     },
     "T876": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "dam tshig rdo rje/"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T876",
+        "rank": 2205
     },
     "T74": {
         "label": [
@@ -11107,21 +16823,27 @@ export const topics = {
                 "@value": "時輪"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T74",
+        "rank": 2063
     },
     "T2148": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rdo rje phag mo (bstan gnyis gling pa)"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T2148",
+        "rank": 1957
     },
     "T2317": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "'chi med tsaNDa li (mkhyen brtse'i dbang po)"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T2317",
+        "rank": 2162
     },
     "T1041": {
         "label": {
@@ -11141,7 +16863,9 @@ export const topics = {
                 "@value": "in+dra mkha' spyod/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T586",
+        "rank": 1990
     },
     "T571": {
         "label": [
@@ -11158,7 +16882,9 @@ export const topics = {
                 "@value": "innate sahaja guhyasamaja"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T571",
+        "rank": 1912
     },
     "T700": {
         "label": [
@@ -11175,7 +16901,9 @@ export const topics = {
                 "@value": "wrathful vignantaka (hindrance slayer) from the guhyasamaja"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T700",
+        "rank": 1914
     },
     "T1007": {
         "label": [
@@ -11201,7 +16929,9 @@ export const topics = {
                 "@value": "21 forms of tara"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T744",
+        "rank": 2333
     },
     "T649": {
         "label": [
@@ -11244,14 +16974,18 @@ export const topics = {
                 "@value": "pancaraksadevi"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T896",
+        "rank": 2011
     },
     "T838": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "tshe dpag med lha dgu (sa lugs)"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T838",
+        "rank": 2144
     },
     "T2012": {
         "label": [
@@ -11264,14 +16998,18 @@ export const topics = {
                 "@value": "buddhakapala"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T2012",
+        "rank": 2111
     },
     "T1GS124494": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "tshe dpag med 'chi med sku gsum 'dus pa ('phreng po gter ston shes rab 'od zer)"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1GS124494",
+        "rank": 2146
     },
     "T1061": {
         "label": {
@@ -11304,7 +17042,9 @@ export const topics = {
                 "@value": "samvara sita (ayuhsadhana)"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T577",
+        "rank": 1942
     },
     "T135": {
         "label": [
@@ -11317,14 +17057,18 @@ export const topics = {
                 "@value": "bde mchog lha 62 nag po lugs/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T135",
+        "rank": 1919
     },
     "T1452": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "khyad par lha gsum/"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1452",
+        "rank": 2158
     },
     "T706": {
         "label": [
@@ -11341,14 +17085,18 @@ export const topics = {
                 "@value": "vidyarajni grahamatrka"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T706",
+        "rank": 2446
     },
     "T1376": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "sku gsum zhi khro (klong gsal snying po)"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1376",
+        "rank": 2458
     },
     "T00JR3352": {
         "label": {
@@ -11362,7 +17110,9 @@ export const topics = {
             "@language": "bo-x-ewts",
             "@value": "dbyangs can dmar mo gsang sgrub bo dong lugs/"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1039",
+        "rank": 2408
     },
     "T653": {
         "label": [
@@ -11375,7 +17125,9 @@ export const topics = {
                 "@value": "ucarya vajrapani"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T653",
+        "rank": 2312
     },
     "T4CZ15356": {
         "label": [
@@ -11388,14 +17140,18 @@ export const topics = {
                 "@value": "purnabhadra"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T4CZ15356",
+        "rank": 2443
     },
     "T1320": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "tshe dpag med dwangs ma bcud 'dren (dag snang rgya can)"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1320",
+        "rank": 2157
     },
     "T2163": {
         "label": {
@@ -11409,14 +17165,18 @@ export const topics = {
             "@language": "bo-x-ewts",
             "@value": "'jam dbyangs bla med lugs/"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1822",
+        "rank": 2277
     },
     "T1866": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "bla ma gsang 'dus (gu ru chos dbang)"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1866",
+        "rank": 5958
     },
     "T1064": {
         "label": [
@@ -11429,14 +17189,18 @@ export const topics = {
                 "@value": "cakrasamvara kharamukha 37 devatmaka"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1064",
+        "rank": 1929
     },
     "T1891": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "yum chen mo/"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1891",
+        "rank": 2403
     },
     "T576": {
         "label": [
@@ -11453,7 +17217,9 @@ export const topics = {
                 "@value": "white sambara"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T576",
+        "rank": 1928
     },
     "T76": {
         "label": [
@@ -11466,7 +17232,9 @@ export const topics = {
                 "@value": "bde mchog lha 5 dril bu zhabs lugs/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T76",
+        "rank": 1917
     },
     "T659": {
         "label": [
@@ -11483,7 +17251,9 @@ export const topics = {
                 "@value": "vajrapani nilambaradhara sugatigarbha krama"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T659",
+        "rank": 2328
     },
     "T1351": {
         "label": [
@@ -11509,14 +17279,18 @@ export const topics = {
                 "@value": "gshin rje gshed dmar po/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1613",
+        "rank": 2035
     },
     "T4CZ15632": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rdo rje snang byed gser/"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T4CZ15632",
+        "rank": 2218
     },
     "T154": {
         "label": [
@@ -11533,14 +17307,18 @@ export const topics = {
                 "@value": "vajrabhairava alone"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T154",
+        "rank": 2020
     },
     "T1565": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "gshin rje gshed 'char ka nag po/"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1565",
+        "rank": 2048
     },
     "T1009": {
         "label": [
@@ -11553,14 +17331,18 @@ export const topics = {
                 "@value": "srung ba'i lha mo lnga lha 56"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1009",
+        "rank": 2008
     },
     "T1111": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rta mgrin yang gsang khros pa/"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1111",
+        "rank": 2091
     },
     "T1038": {
         "label": {
@@ -11591,7 +17373,9 @@ export const topics = {
             "@language": "bo-x-ewts",
             "@value": "mkha' 'gro sde lnga (shangs pa bka' brgyud)"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1828",
+        "rank": 2014
     },
     "T592": {
         "label": [
@@ -11608,7 +17392,9 @@ export const topics = {
                 "@value": "wisdom-illuminating white varahi"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T592",
+        "rank": 1965
     },
     "T2246": {
         "label": {
@@ -11628,14 +17414,18 @@ export const topics = {
                 "@value": "don yod zhags pa lha lnga kha che paN chen lugs/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T596",
+        "rank": 2273
     },
     "T012AG03337": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "sgrol ma rnal 'byor ma/"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T012AG03337",
+        "rank": 2349
     },
     "T1063": {
         "label": [
@@ -11648,7 +17438,9 @@ export const topics = {
                 "@value": "manjusrivajra"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1063",
+        "rank": 1925
     },
     "T432": {
         "label": [
@@ -11674,7 +17466,9 @@ export const topics = {
                 "@value": "cakrasamvara 5 devatmaka kaM tshang krama"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1054",
+        "rank": 1938
     },
     "T579": {
         "label": [
@@ -11691,7 +17485,9 @@ export const topics = {
                 "@value": "sahaja kalacakra"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T579",
+        "rank": 2066
     },
     "T751": {
         "label": [
@@ -11708,14 +17504,18 @@ export const topics = {
                 "@value": "syamajambhala (kalacakrakrama)"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T751",
+        "rank": 2512
     },
     "T003JR4624": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "zhi khro phur gsum (kaH thog)"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T003JR4624",
+        "rank": 2456
     },
     "T2593": {
         "label": {
@@ -11735,7 +17535,9 @@ export const topics = {
                 "@value": "vajrasattva"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T452",
+        "rank": 2131
     },
     "T1118": {
         "label": {
@@ -11763,7 +17565,9 @@ export const topics = {
                 "@value": "white prajnaparamita"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T2GS1161",
+        "rank": 2405
     },
     "T1069": {
         "label": {
@@ -11777,14 +17581,18 @@ export const topics = {
             "@language": "bo-x-ewts",
             "@value": "phag mo zhal gnyis ma/"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T41",
+        "rank": 1958
     },
     "T2115": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "phag mo bden gnyis zhal can/"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T2115",
+        "rank": 1962
     },
     "T599": {
         "label": [
@@ -11801,7 +17609,9 @@ export const topics = {
                 "@value": "thugs rje chen po sems nyid ngal gso/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T599",
+        "rank": 2260
     },
     "T757": {
         "label": [
@@ -11814,21 +17624,27 @@ export const topics = {
                 "@value": "vasundhara in the tradition of jamari"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T757",
+        "rank": 2515
     },
     "T003JR402": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rdo rje rnam par 'joms pa khro dkar/"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T003JR402",
+        "rank": 2187
     },
     "T1632": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "klu rgyal mi mgon dkar po/"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1632",
+        "rank": 2217
     },
     "T583": {
         "label": [
@@ -11849,28 +17665,36 @@ export const topics = {
                 "@value": "nA ro mkha' spyod ma/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T583",
+        "rank": 1985
     },
     "T1715": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rdo rje phag mo lha 13 ma/"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1715",
+        "rank": 1948
     },
     "T2146": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "kye rdor sku rdo rje zhal gcig phyag gnyis pa nag po lugs lha dgu/"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T2146",
+        "rank": 2057
     },
     "T1700": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "mi 'khrugs pa lha 13"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1700",
+        "rank": 2170
     },
     "T660": {
         "label": [
@@ -11900,14 +17724,18 @@ export const topics = {
                 "@value": "rdo rje me dang nyi ma 'bar ba/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T4CZ15557",
+        "rank": 2201
     },
     "T1CZ13": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rta mgon sbrag sgrub/"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1CZ13",
+        "rank": 2107
     },
     "T646": {
         "label": [
@@ -11927,7 +17755,9 @@ export const topics = {
             "@language": "bo-x-ewts",
             "@value": "rdo rje dbyug pa sngon po/"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T4CZ15634",
+        "rank": 2220
     },
     "T1CZ6": {
         "label": {
@@ -11947,7 +17777,9 @@ export const topics = {
                 "@value": "gshin rje gshed dgra nag lha 13 rwa lugs/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T927",
+        "rank": 2031
     },
     "T1GS122411": {
         "label": {
@@ -11991,14 +17823,18 @@ export const topics = {
                 "@value": "five-deity wish-granting gem according to the tradition of atisa"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T598",
+        "rank": 2247
     },
     "T2354": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "khro bcu/"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T2354",
+        "rank": 2049
     },
     "T589": {
         "label": [
@@ -12011,7 +17847,9 @@ export const topics = {
                 "@value": "vajravarahi according to the tradition of the brahmin sridhara"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T589",
+        "rank": 1979
     },
     "T756": {
         "label": [
@@ -12028,14 +17866,18 @@ export const topics = {
                 "@value": "vasudhārā"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T756",
+        "rank": 2520
     },
     "T1GS135818": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rdo rje phag mo gsang sgrub (byang gter)"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1GS135818",
+        "rank": 1955
     },
     "T703": {
         "label": [
@@ -12052,7 +17894,9 @@ export const topics = {
                 "@value": "usnisasitatapatra"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T703",
+        "rank": 2429
     },
     "T666": {
         "label": [
@@ -12069,7 +17913,9 @@ export const topics = {
                 "@value": "white acala"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T666",
+        "rank": 2171
     },
     "T2GS1215": {
         "label": [
@@ -12086,7 +17932,9 @@ export const topics = {
                 "@value": "kanakavarnatara"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T2GS1215",
+        "rank": 2380
     },
     "T1664": {
         "label": {
@@ -12100,7 +17948,9 @@ export const topics = {
             "@language": "bo-x-ewts",
             "@value": "phur pa jo mo lugs/"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T01JR252",
+        "rank": 2075
     },
     "T1056": {
         "label": [
@@ -12113,7 +17963,9 @@ export const topics = {
                 "@value": "vajrayogini 37 devatmaka rwa krama"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1056",
+        "rank": 1952
     },
     "T956": {
         "label": {
@@ -12144,14 +17996,18 @@ export const topics = {
             "@language": "bo-x-ewts",
             "@value": "tshe dpag med lha lnga 'jam lugs/"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T2019",
+        "rank": 2143
     },
     "T1CZ16": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "khyung nag"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1CZ16",
+        "rank": 2208
     },
     "T997": {
         "label": [
@@ -12164,7 +18020,9 @@ export const topics = {
                 "@value": "avalokitesvara mahakarunika 37 devatmaka"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T997",
+        "rank": 2251
     },
     "T43": {
         "label": [
@@ -12181,7 +18039,9 @@ export const topics = {
                 "@value": "vajravarahi chinnamunda"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T43",
+        "rank": 1959
     },
     "T1076": {
         "label": [
@@ -12194,7 +18054,9 @@ export const topics = {
                 "@value": "gdan bzhi yum bka' ye shes dbang phyug ma lha 13 rngog lugs/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1076",
+        "rank": 2115
     },
     "T2044": {
         "label": [
@@ -12220,7 +18082,9 @@ export const topics = {
                 "@value": "the goddess candika, attendant of four armed gnosis mahakala"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T2GS1231",
+        "rank": 1981
     },
     "T560": {
         "label": [
@@ -12233,7 +18097,9 @@ export const topics = {
                 "@value": "rakta kurukulla"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T560",
+        "rank": 2399
     },
     "T2GS1158": {
         "label": [
@@ -12246,28 +18112,36 @@ export const topics = {
                 "@value": "dbyangs can ma dkar mo phyag bzhi pa/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T2GS1158",
+        "rank": 2415
     },
     "T2269": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "kha 'bar ma dkar mo/"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T2269",
+        "rank": 2160
     },
     "T1182": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "gshin rje'i gshed khro chu dug gdong nag po/"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1182",
+        "rank": 2034
     },
     "T2150": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rdo rje bdag med ma lha mo 15"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T2150",
+        "rank": 2062
     },
     "T759": {
         "label": [
@@ -12284,14 +18158,18 @@ export const topics = {
                 "@value": "vasudhara the cowherd"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T759",
+        "rank": 2517
     },
     "T00AG0334": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "gu ru seng+ge sgra sgrog"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T00AG0334",
+        "rank": 2484
     },
     "T4CZ15534": {
         "label": [
@@ -12304,7 +18182,9 @@ export const topics = {
                 "@value": "rdo rje lcags sgrog ma/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T4CZ15534",
+        "rank": 1994
     },
     "T698": {
         "label": [
@@ -12321,7 +18201,9 @@ export const topics = {
                 "@value": "blue-green vajravidarana"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T698",
+        "rank": 2191
     },
     "T821": {
         "label": [
@@ -12334,14 +18216,18 @@ export const topics = {
                 "@value": "thugs chen don yod zhags pa/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T821",
+        "rank": 2269
     },
     "T1GS129603": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rdo rje gro lod hUM sgrub ('bri gung rin chen phun tshogs)"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1GS129603",
+        "rank": 2466
     },
     "T4CZ15611": {
         "label": [
@@ -12354,49 +18240,63 @@ export const topics = {
                 "@value": "raktatara jagadvasamkara"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T4CZ15611",
+        "rank": 2341
     },
     "T2520": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "sgrol ma (stag phu dag snang)"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T2520",
+        "rank": 2343
     },
     "T2133": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rta mgrin rdo rje me 'bar (yongs dge)"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T2133",
+        "rank": 2089
     },
     "T1CZ15": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "phyag rdor gtum po khyung lnga (dge ldan lugs )"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1CZ15",
+        "rank": 2322
     },
     "T2137": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rdo rje sgrol ma/"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T2137",
+        "rank": 2352
     },
     "T1PD114149": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "gtsug tor dri med/"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1PD114149",
+        "rank": 2181
     },
     "T1324": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "bla ma yid bzhin nor bu (rnam gnyis chu bo gcig 'dus)"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1324",
+        "rank": 2498
     },
     "T4CZ15554": {
         "label": [
@@ -12409,7 +18309,9 @@ export const topics = {
                 "@value": "rgya nag rim pa'i sgrol ma/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T4CZ15554",
+        "rank": 2339
     },
     "T643": {
         "label": [
@@ -12422,14 +18324,18 @@ export const topics = {
                 "@value": "tara pithisvari uddiyana"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T643",
+        "rank": 2355
     },
     "T1AT454": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rta phag"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1AT454",
+        "rank": 2099
     },
     "T2GS1128": {
         "label": [
@@ -12442,7 +18348,9 @@ export const topics = {
                 "@value": "the sky-clad goddess"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T2GS1128",
+        "rank": 2425
     },
     "T2153": {
         "label": {
@@ -12462,14 +18370,18 @@ export const topics = {
                 "@value": "bhurkumkuta from the revelations of the bar chad kun sel of mchog gyur gling pa"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T01AG03331",
+        "rank": 2194
     },
     "T2197": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "mkha' 'gro bdud 'dul drag mo (mati rat+na )"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T2197",
+        "rank": 2001
     },
     "T668": {
         "label": [
@@ -12486,7 +18398,9 @@ export const topics = {
                 "@value": "four-armed acala"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T668",
+        "rank": 2174
     },
     "T697": {
         "label": [
@@ -12499,7 +18413,9 @@ export const topics = {
                 "@value": "guhyajnana dakini"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T697",
+        "rank": 1998
     },
     "T709": {
         "label": [
@@ -12512,14 +18428,18 @@ export const topics = {
                 "@value": "mkha' 'gro rme brtsegs khro mo/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T709",
+        "rank": 2012
     },
     "T00AG01276": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "thugs rje chen po 'jigs rten dbang phyug (dag snang rgya can lugs)"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T00AG01276",
+        "rank": 2263
     },
     "T1734": {
         "label": [
@@ -12536,14 +18456,18 @@ export const topics = {
                 "@value": "大威德金剛"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1734",
+        "rank": 2019
     },
     "T1568": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rdo rje phur pa spu gri reg gcod (gar dbang rdo rje)"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1568",
+        "rank": 2080
     },
     "T4CZ15355": {
         "label": [
@@ -12556,7 +18480,9 @@ export const topics = {
                 "@value": "spyan yangs ma/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T4CZ15355",
+        "rank": 2442
     },
     "T2GS1222": {
         "label": [
@@ -12573,14 +18499,18 @@ export const topics = {
                 "@value": "tara granter of boons"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T2GS1222",
+        "rank": 2385
     },
     "T1CZ47": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "lha bzhi dril sgrub/"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1CZ47",
+        "rank": 2253
     },
     "T2GS1173": {
         "label": [
@@ -12597,21 +18527,27 @@ export const topics = {
                 "@value": "wealth-granting tara"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T2GS1173",
+        "rank": 2357
     },
     "T8LS14946": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rgyal ba rigs lnga /"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T8LS14946",
+        "rank": 1904
     },
     "T53": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "bla ma gsang 'dus thun mong /"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T53",
+        "rank": 2499
     },
     "T00JR2666": {
         "label": {
@@ -12625,7 +18561,9 @@ export const topics = {
             "@language": "bo-x-ewts",
             "@value": "thugs rje chen po phyag stong spyan stong /"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T00JR996",
+        "rank": 2241
     },
     "T1987": {
         "label": [
@@ -12642,14 +18580,18 @@ export const topics = {
                 "@value": "rdo rje 'chang /"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1987",
+        "rank": 1903
     },
     "T527": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "phyag rdor gtum po drag po/"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T527",
+        "rank": 2327
     },
     "T00AG01321": {
         "label": [
@@ -12662,7 +18604,9 @@ export const topics = {
                 "@value": "jambhala krsna in the tradition of guru chos dbang"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T00AG01321",
+        "rank": 2513
     },
     "T50": {
         "label": [
@@ -12675,21 +18619,27 @@ export const topics = {
                 "@value": "hayagriva guhyasahana"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T50",
+        "rank": 2092
     },
     "T00AG0340": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "mtsho skye rdo rje/"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T00AG0340",
+        "rank": 2475
     },
     "T875": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "so sor 'brang ma dkar mo/"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T875",
+        "rank": 1982
     },
     "T1749": {
         "label": {
@@ -12703,7 +18653,9 @@ export const topics = {
             "@language": "bo-x-ewts",
             "@value": "rdo rje bdag med ma lha mo 15 mar lugs/"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T2152",
+        "rank": 1996
     },
     "T2143": {
         "label": [
@@ -12716,35 +18668,45 @@ export const topics = {
                 "@value": "dus 'khor sku gsung thugs yongs rdzogs lha 634"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T2143",
+        "rank": 2065
     },
     "T630": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "bdag med lha mo bco lnga /"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T630",
+        "rank": 1997
     },
     "T464": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "zhi khro (mchog gling)"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T464",
+        "rank": 2455
     },
     "T00AG01279": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "sgrol dkar (dag snang rgya can lugs)"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T00AG01279",
+        "rank": 2389
     },
     "T2396": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "'jam dpal tshe bdag me'i spu gri/"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T2396",
+        "rank": 2293
     },
     "T920": {
         "label": {
@@ -12764,35 +18726,45 @@ export const topics = {
                 "@value": "red parna sabari"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T2GS1176",
+        "rank": 2419
     },
     "T1827": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "mkha' spyod dmar po/"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1827",
+        "rank": 1986
     },
     "T4CZ15544": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "gtum po cher khros pa/"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T4CZ15544",
+        "rank": 2198
     },
     "T1677": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "mkha' 'gro gsang ba kun 'dus (jo mo sman mo)"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1677",
+        "rank": 2002
     },
     "T332": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "sgyu 'phrul khro bo/"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T332",
+        "rank": 2204
     },
     "T740": {
         "label": [
@@ -12809,7 +18781,9 @@ export const topics = {
                 "@value": "dhvajagrakeyura"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T740",
+        "rank": 2447
     },
     "T4CZ15541": {
         "label": [
@@ -12822,7 +18796,9 @@ export const topics = {
                 "@value": "phyir zlog ma/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T4CZ15541",
+        "rank": 2436
     },
     "T00AG0327": {
         "label": [
@@ -12842,28 +18818,36 @@ export const topics = {
             "@language": "bo-x-ewts",
             "@value": "'jam dbyangs gtso 'khor lnga /"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T636",
+        "rank": 2276
     },
     "T834": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "tshe dpag med sprul sku sa skya gser chos lugs/"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T834",
+        "rank": 2155
     },
     "T878": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "za byed rdo rje mkha' 'gro/"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T878",
+        "rank": 2015
     },
     "T2GS1044": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rta mgrin khams gsum yongs sgrol/"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T2GS1044",
+        "rank": 2090
     },
     "T131": {
         "label": [
@@ -12876,7 +18860,9 @@ export const topics = {
                 "@value": "vajrapanjara"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T131",
+        "rank": 2061
     },
     "T3JT12423": {
         "label": [
@@ -12906,14 +18892,18 @@ export const topics = {
                 "@value": "gsang 'dus 'jam pa'i rdo rje ye shes zhabs lugs lha 19"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T984",
+        "rank": 1908
     },
     "T00AG01278": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "thugs rje chen po sems nyid ngal bso (dag snang rgya can lugs)"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T00AG01278",
+        "rank": 2225
     },
     "T573": {
         "label": [
@@ -12930,14 +18920,18 @@ export const topics = {
                 "@value": "innate (sahaj) sambara"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T573",
+        "rank": 1927
     },
     "T965": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "phyir bzlog 'khor lo 'bar ba/"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T965",
+        "rank": 2221
     },
     "T746": {
         "label": [
@@ -12950,7 +18944,9 @@ export const topics = {
                 "@value": "jambhala bahudeva ekavirasadhana"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T746",
+        "rank": 2510
     },
     "T731": {
         "label": [
@@ -12963,7 +18959,9 @@ export const topics = {
                 "@value": "sahaja guhyapati"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T731",
+        "rank": 2329
     },
     "T4CZ15547": {
         "label": [
@@ -12976,7 +18974,9 @@ export const topics = {
                 "@value": "rdo rje hUM mdzad/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T4CZ15547",
+        "rank": 2200
     },
     "T1040": {
         "label": {
@@ -12996,7 +18996,9 @@ export const topics = {
                 "@value": "thugs rje chen po (thang stong lugs)"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T012AG03390",
+        "rank": 2261
     },
     "T1950": {
         "label": [
@@ -13009,21 +19011,27 @@ export const topics = {
                 "@value": "peaceful deities"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1950",
+        "rank": 1900
     },
     "T00JR647": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "'jam dbyangs rigs lnga /"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T00JR647",
+        "rank": 2275
     },
     "T833": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "tshe dpag med grub rgyal lugs (sa lugs)"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T833",
+        "rank": 2138
     },
     "T2145": {
         "label": {
@@ -13037,7 +19045,9 @@ export const topics = {
             "@language": "bo-x-ewts",
             "@value": "kye rdo rje rigs bsdus/"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1454",
+        "rank": 2060
     },
     "T1GS147808": {
         "label": [
@@ -13054,7 +19064,9 @@ export const topics = {
                 "@value": "rig pa rma bya chen mo/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1GS147808",
+        "rank": 2432
     },
     "T2149": {
         "label": {
@@ -13081,7 +19093,9 @@ export const topics = {
             "@language": "bo-x-ewts",
             "@value": "bde chen rgyal mo/"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1956",
+        "rank": 1966
     },
     "T1152": {
         "label": {
@@ -13101,7 +19115,9 @@ export const topics = {
                 "@value": "avalokitesvara amoghapujamani"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T730",
+        "rank": 2249
     },
     "T655": {
         "label": [
@@ -13118,7 +19134,9 @@ export const topics = {
                 "@value": "vajrapani in the sakya tradition"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T655",
+        "rank": 2316
     },
     "T4CZ15546": {
         "label": [
@@ -13131,7 +19149,9 @@ export const topics = {
                 "@value": "gshin rje gshed nag po/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T4CZ15546",
+        "rank": 2046
     },
     "T2071": {
         "label": {
@@ -13145,28 +19165,36 @@ export const topics = {
             "@language": "bo-x-ewts",
             "@value": "tshe sgrub nye brgyud thang rgyal lugs/"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1030",
+        "rank": 2147
     },
     "T00JR73": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "thugs rje chen po gsang ba 'dus pa (chags med lugs)"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T00JR73",
+        "rank": 2250
     },
     "T47": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "phyag rdor dregs 'dul/"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T47",
+        "rank": 2323
     },
     "T1785": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rdo rje gro lod/"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1785",
+        "rank": 2485
     },
     "T2165": {
         "label": {
@@ -13186,7 +19214,9 @@ export const topics = {
                 "@value": "'phags mchog 'jig rten mgon po/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T00UNK195",
+        "rank": 2257
     },
     "T00AG0329": {
         "label": {
@@ -13200,7 +19230,9 @@ export const topics = {
             "@language": "bo-x-ewts",
             "@value": "yang gsang karma drag po (dag snang rgya can)"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1GS129607",
+        "rank": 2470
     },
     "T986": {
         "label": [
@@ -13220,7 +19252,9 @@ export const topics = {
             "@language": "bo-x-ewts",
             "@value": "gu ru drag po raksha thod phreng (mchog gyur gling pa)"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T2334",
+        "rank": 2463
     },
     "T750": {
         "label": [
@@ -13233,7 +19267,9 @@ export const topics = {
                 "@value": "jambhala rakta in the treasure tradition of grwa pa mngon shes"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T750",
+        "rank": 2507
     },
     "T1045": {
         "label": {
@@ -13260,7 +19296,9 @@ export const topics = {
                 "@value": "kavaca yogini connected with the cakrasamvara tantra"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T575",
+        "rank": 1947
     },
     "T2GS1220": {
         "label": [
@@ -13273,14 +19311,18 @@ export const topics = {
                 "@value": "paramabhisekadatara"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T2GS1220",
+        "rank": 2383
     },
     "T38": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "bla ma zhi ba nyang lugs/"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T38",
+        "rank": 2523
     },
     "T748": {
         "label": [
@@ -13297,7 +19339,9 @@ export const topics = {
                 "@value": "five-deity white jambhala in the tradition of atisa"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T748",
+        "rank": 2505
     },
     "T733": {
         "label": [
@@ -13314,7 +19358,9 @@ export const topics = {
                 "@value": "gos dkar mo/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T733",
+        "rank": 2424
     },
     "T591": {
         "label": [
@@ -13331,14 +19377,18 @@ export const topics = {
                 "@value": "nine deity wrathful black varahi"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T591",
+        "rank": 1971
     },
     "T1365": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "thugs chen (tshem bu lugs)"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1365",
+        "rank": 2239
     },
     "T1037": {
         "label": {
@@ -13378,7 +19428,9 @@ export const topics = {
             "@language": "bo-x-ewts",
             "@value": "'jigs byed lha 13 rwa tshar gnyis kyi lugs/"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T429",
+        "rank": 2022
     },
     "T434": {
         "label": [
@@ -13391,7 +19443,9 @@ export const topics = {
                 "@value": "kye rdo rje man ngag lugs lha dgu/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T434",
+        "rank": 2053
     },
     "T397": {
         "label": [
@@ -13404,14 +19458,18 @@ export const topics = {
                 "@value": "khyung khra/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T397",
+        "rank": 2210
     },
     "T511": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "dzaM b+ha la dmar po/"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T511",
+        "rank": 2503
     },
     "T739": {
         "label": [
@@ -13428,7 +19486,9 @@ export const topics = {
                 "@value": "marici with green (bay) horses"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T739",
+        "rank": 2417
     },
     "T687": {
         "label": [
@@ -13441,7 +19501,9 @@ export const topics = {
                 "@value": "'od zer can ma khab skud can/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T687",
+        "rank": 2416
     },
     "T01AG03283": {
         "label": {
@@ -13455,7 +19517,9 @@ export const topics = {
             "@language": "bo-x-ewts",
             "@value": "rdo rje sems dpa' yab yum (bla med lugs)"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1766",
+        "rank": 2135
     },
     "T565": {
         "label": [
@@ -13468,14 +19532,18 @@ export const topics = {
                 "@value": "trisamayavyuha sakyamuni"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T565",
+        "rank": 2124
     },
     "T00AG01405": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "sgrol dkar (jo nang lugs)"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T00AG01405",
+        "rank": 2396
     },
     "T590": {
         "label": [
@@ -13488,7 +19556,9 @@ export const topics = {
                 "@value": "go bzlog lhan cig skyes ma/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T590",
+        "rank": 1980
     },
     "T642": {
         "label": [
@@ -13505,7 +19575,9 @@ export const topics = {
                 "@value": "avalokitesvara sadaksara"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T642",
+        "rank": 2234
     },
     "T449": {
         "label": [
@@ -13518,7 +19590,9 @@ export const topics = {
                 "@value": "padmasambhava"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T449",
+        "rank": 2478
     },
     "T1GS147787": {
         "label": [
@@ -13531,7 +19605,9 @@ export const topics = {
                 "@value": "'jigs byed ser po/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1GS147787",
+        "rank": 2036
     },
     "T990": {
         "label": [
@@ -13544,14 +19620,18 @@ export const topics = {
                 "@value": "rakta yamari 5 devatmaka mahasiddha virupa krama"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T990",
+        "rank": 2042
     },
     "T012AG03338": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "'jam dpal chos dbyings gsung dbang /"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T012AG03338",
+        "rank": 2291
     },
     "T104": {
         "label": [
@@ -13564,14 +19644,18 @@ export const topics = {
                 "@value": "vajrabhairava"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T104",
+        "rank": 2016
     },
     "T1811": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "phyag rdor gtum po gsang sgrub/"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1811",
+        "rank": 2330
     },
     "T581": {
         "label": [
@@ -13584,14 +19668,18 @@ export const topics = {
                 "@value": "yamari sahaja (rakta)"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T581",
+        "rank": 2040
     },
     "T1013": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "dri med rnam gnyis/"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1013",
+        "rank": 2126
     },
     "T585": {
         "label": [
@@ -13604,14 +19692,18 @@ export const topics = {
                 "@value": "maitri khecari"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T585",
+        "rank": 1989
     },
     "T2248": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "phyag rdor 'chi bdag 'joms pa/"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T2248",
+        "rank": 2308
     },
     "T738": {
         "label": [
@@ -13628,14 +19720,18 @@ export const topics = {
                 "@value": "red acala"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T738",
+        "rank": 2178
     },
     "T00AG01365": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "zab bdun rtsa gsum tshe dpag med dkar po/"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T00AG01365",
+        "rank": 2153
     },
     "T648": {
         "label": [
@@ -13652,7 +19748,9 @@ export const topics = {
                 "@value": "dream-showing tara"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T648",
+        "rank": 2362
     },
     "T4CZ15559": {
         "label": [
@@ -13665,7 +19763,9 @@ export const topics = {
                 "@value": "vajrashrikhale"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T4CZ15559",
+        "rank": 2438
     },
     "T1052": {
         "label": {
@@ -13679,28 +19779,36 @@ export const topics = {
             "@language": "bo-x-ewts",
             "@value": "thugs chen phyag bzhi pa/"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T2020",
+        "rank": 2245
     },
     "T4CZ15636": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rgan byad ma/"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T4CZ15636",
+        "rank": 2439
     },
     "T1671": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rta mgrin gsang ba 'dus pa ( rat+na gling pa)"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1671",
+        "rank": 2087
     },
     "T1PD181163": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "dug phur/"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1PD181163",
+        "rank": 2081
     },
     "T996": {
         "label": [
@@ -13713,7 +19821,9 @@ export const topics = {
                 "@value": "amoghapasa 16 devatmaka"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T996",
+        "rank": 2272
     },
     "T2GS1211": {
         "label": [
@@ -13730,7 +19840,9 @@ export const topics = {
                 "@value": "tara light of prosperity"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T2GS1211",
+        "rank": 2377
     },
     "T674": {
         "label": [
@@ -13747,14 +19859,18 @@ export const topics = {
                 "@value": "white amitayus in the tradition of mitrayogin"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T674",
+        "rank": 2141
     },
     "T1817": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "sgrol ma 'jigs pa kun sel (mchog gyur gling pa)"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1817",
+        "rank": 2368
     },
     "T2264": {
         "label": [
@@ -13771,14 +19887,18 @@ export const topics = {
                 "@value": "khadiravani tara"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T2264",
+        "rank": 2346
     },
     "T01JR186": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "sgrol ma rigs lnga /"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T01JR186",
+        "rank": 2367
     },
     "T993": {
         "label": [
@@ -13791,21 +19911,27 @@ export const topics = {
                 "@value": "amitayus 9 devatmaka jetari krama"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T993",
+        "rank": 2145
     },
     "T149": {
         "label": {
             "@language": "en",
             "@value": "'jam dbyangs dmar ser gtso rkyang"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T149",
+        "rank": 2284
     },
     "T1345": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "gsang bde 'jigs gsum/"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1345",
+        "rank": 2027
     },
     "T758": {
         "label": [
@@ -13822,14 +19948,18 @@ export const topics = {
                 "@value": "captivating manohara vasudhara"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T758",
+        "rank": 2516
     },
     "T003JR403": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rdo rje rnam par 'joms pa khro nag lha bco lnga /"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T003JR403",
+        "rank": 2188
     },
     "T2GS1217": {
         "label": [
@@ -13846,7 +19976,9 @@ export const topics = {
                 "@value": "tara proclaiming the sound of hum"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T2GS1217",
+        "rank": 2381
     },
     "T1058": {
         "label": [
@@ -13859,7 +19991,9 @@ export const topics = {
                 "@value": "bde mchog 'khrul spong lha 62 'jigs med 'byung gnas lugs/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1058",
+        "rank": 1933
     },
     "T690": {
         "label": [
@@ -13872,7 +20006,9 @@ export const topics = {
                 "@value": "buddhalocana"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T690",
+        "rank": 2426
     },
     "T4CZ15530": {
         "label": [
@@ -13885,7 +20021,9 @@ export const topics = {
                 "@value": "raktalokecvara"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T4CZ15530",
+        "rank": 2256
     },
     "T694": {
         "label": [
@@ -13902,7 +20040,9 @@ export const topics = {
                 "@value": "vasudhara rakta"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T694",
+        "rank": 2519
     },
     "T605": {
         "label": [
@@ -13915,7 +20055,9 @@ export const topics = {
                 "@value": "thugs rje chen po seng+ge sgra/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T605",
+        "rank": 2236
     },
     "T4CZ326967": {
         "label": {
@@ -13929,7 +20071,9 @@ export const topics = {
             "@language": "bo-x-ewts",
             "@value": "khros ma nag mo gsang sgrub/"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T852",
+        "rank": 1969
     },
     "T2GS1179": {
         "label": [
@@ -13942,7 +20086,9 @@ export const topics = {
                 "@value": "green parna sabari"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T2GS1179",
+        "rank": 2422
     },
     "T1768": {
         "label": [
@@ -13955,14 +20101,18 @@ export const topics = {
                 "@value": "jnanadakini"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1768",
+        "rank": 2004
     },
     "T955": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "tshe lha rnam gsum/"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T955",
+        "rank": 2159
     },
     "T1GS124517": {
         "label": {
@@ -13982,14 +20132,18 @@ export const topics = {
                 "@value": "seven syllable lokesvara in the tradition of mitrayogin"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T2GS1088",
+        "rank": 2226
     },
     "T999": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "mi 'khrugs pa lha 9 jo bo lugs/"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T999",
+        "rank": 2169
     },
     "T2GS1165": {
         "label": [
@@ -14002,14 +20156,18 @@ export const topics = {
                 "@value": "sgrol ljang (kha che paN chen lugs)"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T2GS1165",
+        "rank": 2353
     },
     "T1816": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "sme ba brtsegs pa/"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1816",
+        "rank": 2193
     },
     "T45": {
         "label": [
@@ -14033,7 +20191,9 @@ export const topics = {
             "@language": "bo-x-ewts",
             "@value": "rdo rje phag mo lha bco lnga /"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T2GS903",
+        "rank": 1950
     },
     "T519": {
         "label": {
@@ -14053,7 +20213,9 @@ export const topics = {
                 "@value": "skul byed ma/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T4CZ15536",
+        "rank": 2431
     },
     "T4CZ15521": {
         "label": [
@@ -14066,14 +20228,18 @@ export const topics = {
                 "@value": "rdo rje gnams lcags 'bar ba/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T4CZ15521",
+        "rank": 2203
     },
     "T1084": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "sangs rgyas thod pa lha 9"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1084",
+        "rank": 2112
     },
     "T587": {
         "label": [
@@ -14090,7 +20256,9 @@ export const topics = {
                 "@value": "urdhvapada vajra varahi"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T587",
+        "rank": 1975
     },
     "T4CZ15215": {
         "label": [
@@ -14117,7 +20285,9 @@ export const topics = {
             "@language": "bo-x-ewts",
             "@value": "nA ro gsang spyod/"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1704",
+        "rank": 1988
     },
     "T701": {
         "label": [
@@ -14134,14 +20304,18 @@ export const topics = {
                 "@value": "white visvamatr"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T701",
+        "rank": 2069
     },
     "T745": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "dzaM b+ha la ser po gsang 'dus las byung ba/"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T745",
+        "rank": 2506
     },
     "T693": {
         "label": [
@@ -14154,21 +20328,27 @@ export const topics = {
                 "@value": "dpal mo snying gi gser thig can/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T693",
+        "rank": 1993
     },
     "T1GS129602": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "gu ru drag po pad+ma gtum po (mi 'gyur las 'phro gling pa; mkhyen brtse'i dbang po'i yang gter)"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1GS129602",
+        "rank": 2465
     },
     "T851": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "phag mo skor gsum dpyal lugs/"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T851",
+        "rank": 1964
     },
     "T389": {
         "label": [
@@ -14185,7 +20365,9 @@ export const topics = {
                 "@value": "dbyangs can ma/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T389",
+        "rank": 2407
     },
     "T998": {
         "label": [
@@ -14198,7 +20380,9 @@ export const topics = {
                 "@value": "vajraksobhya 9 devatmaka"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T998",
+        "rank": 2168
     },
     "T440": {
         "label": [
@@ -14218,14 +20402,18 @@ export const topics = {
             "@language": "bo-x-ewts",
             "@value": "gu ru drag dmar ('o bran lugs)"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T518",
+        "rank": 2486
     },
     "T1681": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "thugs rje chen po ngan song kun skyobs (rdo rje gling pa)"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1681",
+        "rank": 2264
     },
     "T765": {
         "label": [
@@ -14242,7 +20430,9 @@ export const topics = {
                 "@value": "apalala nagaraja"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T765",
+        "rank": 2216
     },
     "T707": {
         "label": [
@@ -14259,7 +20449,9 @@ export const topics = {
                 "@value": "dhumavarna-krodha-bhurkunkuta"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T707",
+        "rank": 2195
     },
     "T2GS1219": {
         "label": [
@@ -14276,7 +20468,9 @@ export const topics = {
                 "@value": "tara crushing disputants"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T2GS1219",
+        "rank": 2382
     },
     "T699": {
         "label": [
@@ -14293,7 +20487,9 @@ export const topics = {
                 "@value": "vajravidarana sita"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T699",
+        "rank": 2190
     },
     "T2GS1204": {
         "label": [
@@ -14310,28 +20506,36 @@ export const topics = {
                 "@value": "duhkhadahanatara"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T2GS1204",
+        "rank": 2371
     },
     "T1391": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "thugs chen ngan song rang grol ('ja' tshon snying po)"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1391",
+        "rank": 2237
     },
     "T8LS15660": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "yongs 'khyud bde ma/"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T8LS15660",
+        "rank": 2524
     },
     "T1653": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "nad bdag stobs 'joms/"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1653",
+        "rank": 2106
     },
     "T1377": {
         "label": [
@@ -14344,7 +20548,9 @@ export const topics = {
                 "@value": "sarvabuddhasamayoga"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1377",
+        "rank": 2452
     },
     "T2GS1156": {
         "label": [
@@ -14357,7 +20563,9 @@ export const topics = {
                 "@value": "red sarasvati"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T2GS1156",
+        "rank": 2411
     },
     "T1049": {
         "label": {
@@ -14381,7 +20589,9 @@ export const topics = {
                 "@value": "venerable lady with skull ornaments"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T696",
+        "rank": 2450
     },
     "T1338": {
         "label": [
@@ -14398,7 +20608,9 @@ export const topics = {
                 "@value": "iṣṭadevatā"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1338",
+        "rank": 1899
     },
     "T4CZ15357": {
         "label": [
@@ -14411,7 +20623,9 @@ export const topics = {
                 "@value": "dpal bcom ldan 'das ral pa gcig pa/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T4CZ15357",
+        "rank": 2444
     },
     "T854": {
         "label": {
@@ -14425,7 +20639,9 @@ export const topics = {
             "@language": "bo-x-ewts",
             "@value": "phyag rgya'i rig 'dzin/"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T8LS15613",
+        "rank": 2529
     },
     "T4CZ15551": {
         "label": [
@@ -14438,7 +20654,9 @@ export const topics = {
                 "@value": "spyan ras gzigs dbang phyug mgrin pa sngon po can/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T4CZ15551",
+        "rank": 2229
     },
     "T2GS1172": {
         "label": [
@@ -14451,7 +20669,9 @@ export const topics = {
                 "@value": "jinasagara avalokita known as the four sugatas combined"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T2GS1172",
+        "rank": 2232
     },
     "T52": {
         "label": [
@@ -14464,14 +20684,18 @@ export const topics = {
                 "@value": "hayagriva lohakhadga"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T52",
+        "rank": 2093
     },
     "T314": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "thugs rje chen po sdug bsngal rang grol/"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T314",
+        "rank": 2259
     },
     "T2198": {
         "label": {
@@ -14517,14 +20741,18 @@ export const topics = {
                 "@value": "stong chen mo rab tu 'joms pa/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T4CZ15538",
+        "rank": 2433
     },
     "T193": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "kun rig rtsa ba lha so bdun/"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T193",
+        "rank": 2120
     },
     "T618": {
         "label": [
@@ -14561,7 +20789,9 @@ export const topics = {
                 "@value": "chos dbyings gsung gi dbang phyug lha 219"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T980",
+        "rank": 2072
     },
     "T2049": {
         "label": {
@@ -14575,7 +20805,9 @@ export const topics = {
             "@language": "bo-x-ewts",
             "@value": "rgyud sde lnga rigs bsdus shangs lugs/"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T2166",
+        "rank": 2050
     },
     "T003JR4506": {
         "label": [
@@ -14595,7 +20827,9 @@ export const topics = {
             "@language": "bo-x-ewts",
             "@value": "'jigs byed klu brgyad/"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1GS2518",
+        "rank": 2032
     },
     "T4CZ15529": {
         "label": [
@@ -14608,14 +20842,18 @@ export const topics = {
                 "@value": "trailokyavashamkaralokeshvara"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T4CZ15529",
+        "rank": 2252
     },
     "T8LS15612": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "lhun grub rig 'dzin/"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T8LS15612",
+        "rank": 2528
     },
     "T1025": {
         "label": [
@@ -14635,7 +20873,9 @@ export const topics = {
             "@language": "bo-x-ewts",
             "@value": "gsang 'dus 'phags lugs/"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1430",
+        "rank": 1911
     },
     "T2GS1171": {
         "label": [
@@ -14652,7 +20892,9 @@ export const topics = {
                 "@value": "avalokita destroying with the vajra essence"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T2GS1171",
+        "rank": 2228
     },
     "T4CZ15543": {
         "label": [
@@ -14665,7 +20907,9 @@ export const topics = {
                 "@value": "sgrol ma rab tu dang ba/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T4CZ15543",
+        "rank": 2340
     },
     "T728": {
         "label": [
@@ -14678,7 +20922,9 @@ export const topics = {
                 "@value": "avalokitesvara sukhavati"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T728",
+        "rank": 2243
     },
     "T661": {
         "label": [
@@ -14691,7 +20937,9 @@ export const topics = {
                 "@value": "hayagriva sahaja ekavira"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T661",
+        "rank": 2100
     },
     "T1022": {
         "label": [
@@ -14704,21 +20952,27 @@ export const topics = {
                 "@value": "vajrabhairava 49 devatmaka (zhang lugs)"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1022",
+        "rank": 2023
     },
     "T2171": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "bde mchog snyan brgyud he ru ka yab yum 10 ngam rdzong snyan brgyud/"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T2171",
+        "rank": 1939
     },
     "T2102": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "gshin rje gshed dmar spros med zab khrid/"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T2102",
+        "rank": 2047
     },
     "T686": {
         "label": [
@@ -14731,7 +20985,9 @@ export const topics = {
                 "@value": "'od zer can ma gzungs las byung ba/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T686",
+        "rank": 2418
     },
     "T873": {
         "label": [
@@ -14761,21 +21017,27 @@ export const topics = {
                 "@value": "cakrasaṃvara"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T423",
+        "rank": 1915
     },
     "T967": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rdo rje dbyings lha 1037"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T967",
+        "rank": 2118
     },
     "T00JR770": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "gu ru dpa' bo sde lnga /"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T00JR770",
+        "rank": 2489
     },
     "T2GS1177": {
         "label": [
@@ -14792,21 +21054,27 @@ export const topics = {
                 "@value": "blue parna sabari"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T2GS1177",
+        "rank": 2420
     },
     "T1675": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "'jam dpal gshin rje gshed yang bzlog me'i spu gri/"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1675",
+        "rank": 2043
     },
     "T4CZ15528": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "ha la ha la 'jig rten dbang phyug"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T4CZ15528",
+        "rank": 2254
     },
     "T2GS1162": {
         "label": [
@@ -14819,7 +21087,9 @@ export const topics = {
                 "@value": "secret practice kurukulla"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T2GS1162",
+        "rank": 2402
     },
     "T42": {
         "label": [
@@ -14836,14 +21106,18 @@ export const topics = {
                 "@value": "vajravarahi arthasiddha"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T42",
+        "rank": 1960
     },
     "T8LS15615": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rnam smin rig 'dzin/"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T8LS15615",
+        "rank": 2531
     },
     "T1071": {
         "label": [
@@ -14863,7 +21137,9 @@ export const topics = {
             "@language": "bo-x-ewts",
             "@value": "mdzes ldan ma/"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T8LS15657",
+        "rank": 2526
     },
     "T2310": {
         "label": {
@@ -14883,14 +21159,18 @@ export const topics = {
                 "@value": "vajragandhari"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T4CZ15542",
+        "rank": 2437
     },
     "T187": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "'jigs byed lha 9 mal lugs/"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T187",
+        "rank": 2024
     },
     "T2170": {
         "label": {
@@ -14910,7 +21190,9 @@ export const topics = {
                 "@value": "catuhpitha"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1205",
+        "rank": 2114
     },
     "T570": {
         "label": [
@@ -14923,14 +21205,18 @@ export const topics = {
                 "@value": "guhyasamaja manjuvajra"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T570",
+        "rank": 1906
     },
     "T2302": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "gu ru drag po ye shes zil gnon (mchog gyur gling pa)"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T2302",
+        "rank": 2462
     },
     "T1239": {
         "label": {
@@ -14950,14 +21236,18 @@ export const topics = {
                 "@value": "bde mchog dang 'brel ba'i go cha'i dpa' bo drug"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T574",
+        "rank": 1946
     },
     "T1PD181162": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "thugs rje chen po 'gro ba kun grol/"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1PD181162",
+        "rank": 2265
     },
     "T982": {
         "label": [
@@ -14970,7 +21260,9 @@ export const topics = {
                 "@value": "guhyasamaja aksobhyavajra 32 devatmaka (ngor lugs)"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T982",
+        "rank": 1909
     },
     "T609": {
         "label": [
@@ -14987,7 +21279,9 @@ export const topics = {
                 "@value": "divasanta ratrikruddha tara"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T609",
+        "rank": 2360
     },
     "T1GS148157": {
         "label": [
@@ -15021,7 +21315,9 @@ export const topics = {
                 "@value": "mamaki devi"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T732",
+        "rank": 2009
     },
     "T8LS14949": {
         "label": [
@@ -15034,7 +21330,9 @@ export const topics = {
                 "@value": "usnisavijaya"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T8LS14949",
+        "rank": 2164
     },
     "T1466": {
         "label": {
@@ -15048,7 +21346,9 @@ export const topics = {
             "@language": "bo-x-ewts",
             "@value": "grong khyer ngan song las sgrol ba jo bo lugs/"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1032",
+        "rank": 2344
     },
     "T2GS1169": {
         "label": [
@@ -15061,14 +21361,18 @@ export const topics = {
                 "@value": "yellow amoghapasa"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T2GS1169",
+        "rank": 2271
     },
     "T8LS15656": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "phra men rgya mtsho/"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T8LS15656",
+        "rank": 2527
     },
     "T715": {
         "label": [
@@ -15085,7 +21389,9 @@ export const topics = {
                 "@value": "sramana devi"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T715",
+        "rank": 2427
     },
     "T663": {
         "label": [
@@ -15098,7 +21404,9 @@ export const topics = {
                 "@value": "rta mgrin shwa na bzhi bskor du grags pa jo bo lugs/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T663",
+        "rank": 2096
     },
     "T2GS1216": {
         "label": [
@@ -15115,28 +21423,36 @@ export const topics = {
                 "@value": "tara the victorious usnisa"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T2GS1216",
+        "rank": 2350
     },
     "T919": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "nor rgyun ma ser mo/"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T919",
+        "rank": 2518
     },
     "T1330": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "'jam dpal gshin rje gshed dregs pa 'joms byed (gter bdag gling pa)"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1330",
+        "rank": 2044
     },
     "T1KG5607": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "gu ru drag po me'i spu gri (nyang lugs)"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1KG5607",
+        "rank": 2472
     },
     "T988": {
         "label": [
@@ -15156,7 +21472,9 @@ export const topics = {
             "@language": "bo-x-ewts",
             "@value": "'jigs byed ro langs brgyad skor dang phyag mtshan 32 gyis bskor ba rwa lugs/"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1019",
+        "rank": 2029
     },
     "T973": {
         "label": [
@@ -15169,7 +21487,9 @@ export const topics = {
                 "@value": "sri-paramadya kulasangraha"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T973",
+        "rank": 2071
     },
     "T00JR885": {
         "label": [
@@ -15186,21 +21506,27 @@ export const topics = {
                 "@value": "金剛亥母"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T00JR885",
+        "rank": 1954
     },
     "T2CN4940": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "bla ma rdo rje thod pa rtsal/"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T2CN4940",
+        "rank": 2521
     },
     "T1299": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "bdud rtsi 'khyil pa/"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1299",
+        "rank": 2197
     },
     "T735": {
         "label": [
@@ -15213,7 +21539,9 @@ export const topics = {
                 "@value": "tsun+da dkar po (lha mo)"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T735",
+        "rank": 1984
     },
     "T00AG01320": {
         "label": [
@@ -15226,7 +21554,9 @@ export const topics = {
                 "@value": "jambhala pita in the tradition of klong gsal snying po"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T00AG01320",
+        "rank": 2508
     },
     "T1073": {
         "label": [
@@ -15239,7 +21569,9 @@ export const topics = {
                 "@value": "buddhakapala 25 devatmaka rngog krama"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1073",
+        "rank": 2113
     },
     "T44": {
         "label": [
@@ -15252,7 +21584,9 @@ export const topics = {
                 "@value": "khros ma nag mo/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T44",
+        "rank": 1968
     },
     "T669": {
         "label": [
@@ -15269,7 +21603,9 @@ export const topics = {
                 "@value": "four-legged acala"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T669",
+        "rank": 2175
     },
     "T2GS1168": {
         "label": [
@@ -15282,7 +21618,9 @@ export const topics = {
                 "@value": "wisdom-illuminating white varahi as taught in the ancient texts tradition"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T2GS1168",
+        "rank": 2410
     },
     "T012AG03389": {
         "label": [
@@ -15321,7 +21659,9 @@ export const topics = {
                 "@value": "janguli"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T4CZ15535",
+        "rank": 2448
     },
     "T624": {
         "label": [
@@ -15334,21 +21674,27 @@ export const topics = {
                 "@value": "nairātmya"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T624",
+        "rank": 1995
     },
     "T822": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "phyag rdor 'khor chen gtso rkyang (dge ldan lugs)"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T822",
+        "rank": 2310
     },
     "T2CN4662": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "gsang bdag bdud rtsi thigs pa/"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T2CN4662",
+        "rank": 2331
     },
     "T1207": {
         "label": [
@@ -15361,7 +21707,9 @@ export const topics = {
                 "@value": "hayagriva padmanatesvara"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1207",
+        "rank": 2095
     },
     "T972": {
         "label": [
@@ -15374,21 +21722,27 @@ export const topics = {
                 "@value": "vajrasekhara kulasangraha"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T972",
+        "rank": 2051
     },
     "T1KG1599": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "mkha' 'gro skal pa bzang mo/"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1KG1599",
+        "rank": 2003
     },
     "T1564": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "'jam dpal tshe bdag nag po/"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1564",
+        "rank": 2300
     },
     "T2138": {
         "label": {
@@ -15402,7 +21756,9 @@ export const topics = {
             "@language": "bo-x-ewts",
             "@value": "phur pa yang gsang bcud dril (mchog gyur gling pa)"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T2307",
+        "rank": 2085
     },
     "T415": {
         "label": [
@@ -15422,7 +21778,9 @@ export const topics = {
             "@language": "bo-x-ewts",
             "@value": "'jam dpal kha thun nag po (bka' ma)"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T2047",
+        "rank": 2297
     },
     "T734": {
         "label": [
@@ -15439,7 +21797,9 @@ export const topics = {
                 "@value": "two-armed usnisavijaya"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T734",
+        "rank": 2165
     },
     "T4CZ15555": {
         "label": [
@@ -15452,7 +21812,9 @@ export const topics = {
                 "@value": "lha mo lnga /"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T4CZ15555",
+        "rank": 2010
     },
     "T644": {
         "label": [
@@ -15465,7 +21827,9 @@ export const topics = {
                 "@value": "wish-fulfilling gem tara"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T644",
+        "rank": 2335
     },
     "T673": {
         "label": [
@@ -15482,7 +21846,9 @@ export const topics = {
                 "@value": "amitayus caturbhuja sita"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T673",
+        "rank": 2139
     },
     "T828": {
         "label": {
@@ -15496,7 +21862,9 @@ export const topics = {
             "@language": "bo-x-ewts",
             "@value": "bde mchog lha 62"
         },
-        "parent": "O9TAXTBRC2016052KG227200"
+        "parent": "O9TAXTBRC2016052KG227200",
+        "tbrcId": "T1GS147789",
+        "rank": 1924
     },
     "O9TAXTBRC2016052KG227926": {
         "sub": [
@@ -15921,14 +22289,18 @@ export const topics = {
                 "@value": "Protectors"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227157"
+        "parent": "O9TAXTBRC2016052KG227157",
+        "tbrcId": "3",
+        "rank": 2533
     },
     "T929": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "beg tse lcam sring tshar lugs/"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T929",
+        "rank": 2700
     },
     "T1CZ18": {
         "label": {
@@ -15942,7 +22314,9 @@ export const topics = {
             "@language": "bo-x-ewts",
             "@value": "dbang phyug chen po (lha chen)"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T512",
+        "rank": 2719
     },
     "T4CZ15352": {
         "label": [
@@ -15955,7 +22329,9 @@ export const topics = {
                 "@value": "nagi"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T4CZ15352",
+        "rank": 2796
     },
     "T500": {
         "label": [
@@ -15968,35 +22344,45 @@ export const topics = {
                 "@value": "rdo rje gshog rgod ma (srung ma)"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T500",
+        "rank": 2690
     },
     "T480": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "sgrol byed nag po (srung ma)"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T480",
+        "rank": 2784
     },
     "T1933": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rdo rje dgra 'dul/"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T1933",
+        "rank": 2809
     },
     "T1GS147931": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "mgon po beng dmar lha gnyis pa (zhwa lu lugs)"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T1GS147931",
+        "rank": 2571
     },
     "T1497": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "dge bsnyen ri bo che/"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T1497",
+        "rank": 2848
     },
     "T763": {
         "label": [
@@ -16013,14 +22399,18 @@ export const topics = {
                 "@value": "four armed, white ganapati, condensed in the tradition of atisa"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T763",
+        "rank": 2708
     },
     "T1KG8477": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "gnyan po g.yu rtse/"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T1KG8477",
+        "rank": 2840
     },
     "T411": {
         "label": [
@@ -16033,7 +22423,9 @@ export const topics = {
                 "@value": "mahakala sadbhuja"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T411",
+        "rank": 2541
     },
     "T743": {
         "label": [
@@ -16050,14 +22442,18 @@ export const topics = {
                 "@value": "ganapati pita"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T743",
+        "rank": 2707
     },
     "T960": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "dkar bdud lcam dral 'khon lugs/"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T960",
+        "rank": 2730
     },
     "T492": {
         "label": [
@@ -16070,21 +22466,27 @@ export const topics = {
                 "@value": "mgon po dkar po/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T492",
+        "rank": 2597
     },
     "T92": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "yam shud dmar po/"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T92",
+        "rank": 2685
     },
     "T1GS139159": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "'o de gung rgyal/"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T1GS139159",
+        "rank": 2828
     },
     "T1599": {
         "label": [
@@ -16097,14 +22499,18 @@ export const topics = {
                 "@value": "mahakala panjaranatha"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T1599",
+        "rank": 2560
     },
     "T1AT289": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "dge bsnyen ston rgyal dkar po/"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T1AT289",
+        "rank": 2835
     },
     "T1KG6064": {
         "label": [
@@ -16125,14 +22531,18 @@ export const topics = {
                 "@value": "हनुमान"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T1KG6064",
+        "rank": 2858
     },
     "T01AG02844": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "srid pa'i lha chen/"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T01AG02844",
+        "rank": 2756
     },
     "T2GS1129": {
         "label": [
@@ -16145,7 +22555,9 @@ export const topics = {
                 "@value": "black, six-armed, quick acting gnosis mahakala, remover of all obstacles"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T2GS1129",
+        "rank": 2550
     },
     "T925": {
         "label": [
@@ -16158,28 +22570,36 @@ export const topics = {
                 "@value": "excellent mahakala, the three brothers"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T925",
+        "rank": 2590
     },
     "T1050": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "srog bdag dmar po/"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T1050",
+        "rank": 2758
     },
     "T1274": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "mgon po phyag bzhi pa (tshal lugs)"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T1274",
+        "rank": 2553
     },
     "T2372": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "zangs ri btsan rgod/"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T2372",
+        "rank": 2812
     },
     "T4CZ15233": {
         "label": [
@@ -16192,49 +22612,63 @@ export const topics = {
                 "@value": "dhumangari"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T4CZ15233",
+        "rank": 2650
     },
     "T2CN4589": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "bdud mgon rong lha rgyal mtshan/"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T2CN4589",
+        "rank": 2813
     },
     "T1107": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "'bar ba rtsal/"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T1107",
+        "rank": 2643
     },
     "T2GS223": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "dpal mgon don lnga /"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T2GS223",
+        "rank": 2609
     },
     "T554": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rgyal chen sde bzhi/"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T554",
+        "rank": 2623
     },
     "T506": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "dur khrod bdag mo (srung ma)"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T506",
+        "rank": 2672
     },
     "T1434": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "dam can rnam gsum/"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T1434",
+        "rank": 2613
     },
     "T1279": {
         "label": [
@@ -16247,7 +22681,9 @@ export const topics = {
                 "@value": "lha mo dud sol ma (dwags po lugs)"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T1279",
+        "rank": 2652
     },
     "T2GS1198": {
         "label": [
@@ -16260,21 +22696,27 @@ export const topics = {
                 "@value": "four faced sri mahakala connected with the period of accomplishment"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T2GS1198",
+        "rank": 2603
     },
     "T1885": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "'phrin las thogs med rtsal (yul lha)"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T1885",
+        "rank": 2778
     },
     "T1863": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "ge sar (lha)"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T1863",
+        "rank": 2826
     },
     "T2CN5007": {
         "label": {
@@ -16288,7 +22730,9 @@ export const topics = {
             "@language": "bo-x-ewts",
             "@value": "mgon po gri gug (chos skyong)"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T1GS108074",
+        "rank": 2562
     },
     "T2GS1136": {
         "label": [
@@ -16301,35 +22745,45 @@ export const topics = {
                 "@value": "yaksi remati"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T2GS1136",
+        "rank": 2687
     },
     "T1GS141059": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "mgon po legs ldan/"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T1GS141059",
+        "rank": 2598
     },
     "T1415": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "skyes lha/"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T1415",
+        "rank": 2811
     },
     "T2CN4932": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "skrag med nyi shar/"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T2CN4932",
+        "rank": 2641
     },
     "T174": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "a phyi chos kyi sgrol ma/"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T174",
+        "rank": 2692
     },
     "T1403": {
         "label": [
@@ -16342,7 +22796,9 @@ export const topics = {
                 "@value": "brgya byin/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T1403",
+        "rank": 2754
     },
     "T1620": {
         "label": {
@@ -16362,7 +22818,9 @@ export const topics = {
                 "@value": "white, four-faced mahakala, life increasing"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T2GS1186",
+        "rank": 2578
     },
     "T2161": {
         "label": [
@@ -16375,21 +22833,27 @@ export const topics = {
                 "@value": "vajramahakalapanjaranatha 12-devatmaka"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T2161",
+        "rank": 2565
     },
     "T1110": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "mgon po phyag bzhi pa ('bri gung lugs)"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T1110",
+        "rank": 2545
     },
     "T1GS108639": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "se sdug"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T1GS108639",
+        "rank": 2839
     },
     "T2103": {
         "label": [
@@ -16402,21 +22866,27 @@ export const topics = {
                 "@value": "the three red deities"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T2103",
+        "rank": 2702
     },
     "T2573": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "bya 'gur (drag btsan)"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T2573",
+        "rank": 2808
     },
     "T1314": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "lha mo spyi/"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T1314",
+        "rank": 2657
     },
     "T1GS147795": {
         "label": [
@@ -16429,7 +22899,9 @@ export const topics = {
                 "@value": "'jig rten pa'i lha/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T1GS147795",
+        "rank": 2750
     },
     "T773": {
         "label": [
@@ -16442,28 +22914,36 @@ export const topics = {
                 "@value": "mgon po ljang khu tshe bdag"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T773",
+        "rank": 2600
     },
     "T1278": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "mgon po phyag bzhi pa (snyan brgyud)"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T1278",
+        "rank": 2542
     },
     "T01JR254": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "ma mgon lcam dral/"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T01JR254",
+        "rank": 2684
     },
     "T1GS108075": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "tsher gseb chos skyong bstan ma/"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T1GS108075",
+        "rank": 2659
     },
     "T761": {
         "label": [
@@ -16476,63 +22956,81 @@ export const topics = {
                 "@value": "aparajita (yaksa)"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T761",
+        "rank": 2712
     },
     "T2108": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "mgon po khro bcu/"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T2108",
+        "rank": 2567
     },
     "T00KG02743": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "mgon po lha dgu/"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T00KG02743",
+        "rank": 2592
     },
     "T2CN5006": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "bdud mo nyi shar me long /"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T2CN5006",
+        "rank": 2794
     },
     "T490": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "mgon po legs ldan tshogs kyi bdag po/"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T490",
+        "rank": 2591
     },
     "T1623": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "kun 'khyil mched gsum (mchog gyur gling pa)"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T1623",
+        "rank": 2783
     },
     "T2GS981": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "dri za/"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T2GS981",
+        "rank": 2857
     },
     "T1438": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "dgra lha/"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T1438",
+        "rank": 2759
     },
     "T1601": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "mgon po sku rags ma/"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T1601",
+        "rank": 2557
     },
     "T00KG02580": {
         "label": [
@@ -16545,35 +23043,45 @@ export const topics = {
                 "@value": "naked mahakala with copper knife"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T00KG02580",
+        "rank": 2589
     },
     "T1440": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "bog to ha kang a kwo la/"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T1440",
+        "rank": 2781
     },
     "T1KG5606": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rnam sras drag po rta sngon ma (gnubs chen lugs)"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T1KG5606",
+        "rank": 2636
     },
     "T00KG02674": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "zangs gri skor gsum/"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T00KG02674",
+        "rank": 2610
     },
     "T923": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "mgon po gur lha gsum/"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T923",
+        "rank": 2561
     },
     "T2CN4717": {
         "label": {
@@ -16587,7 +23095,9 @@ export const topics = {
             "@language": "bo-x-ewts",
             "@value": "rdo rje g.yu sgron ma/"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T1928",
+        "rank": 2682
     },
     "T774": {
         "label": [
@@ -16600,21 +23110,27 @@ export const topics = {
                 "@value": "four armed gnosis mahakala great protector of the doctrine in the tradition of nagarjuna"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T774",
+        "rank": 2551
     },
     "T1642": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "nag po skor gsum ( pad+ma gling pa)"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T1642",
+        "rank": 2742
     },
     "T1636": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "zhing lha tshangs pa/"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T1636",
+        "rank": 2753
     },
     "T742": {
         "label": [
@@ -16627,7 +23143,9 @@ export const topics = {
                 "@value": "hariti yaksini"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T742",
+        "rank": 2696
     },
     "T928": {
         "label": [
@@ -16644,7 +23162,9 @@ export const topics = {
                 "@value": "master of the charnal ground brother and sister"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T928",
+        "rank": 2673
     },
     "T491": {
         "label": [
@@ -16657,14 +23177,18 @@ export const topics = {
                 "@value": "mgon po phyag bzhi zhi ba sbas pa lugs/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T491",
+        "rank": 2546
     },
     "T012AG03590": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "dam can/"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T012AG03590",
+        "rank": 2622
     },
     "T2268": {
         "label": {
@@ -16678,14 +23202,18 @@ export const topics = {
             "@language": "bo-x-ewts",
             "@value": "rdo rje blo gros/"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T1KG5702",
+        "rank": 2787
     },
     "T1566": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "lha rtse yid bzhin bdud 'joms (yul lha)"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T1566",
+        "rank": 2773
     },
     "T2GS1194": {
         "label": [
@@ -16698,21 +23226,27 @@ export const topics = {
                 "@value": "prince jinarsabha"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T2GS1194",
+        "rank": 2642
     },
     "T2567": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "'brong ri smug po/"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T2567",
+        "rank": 2849
     },
     "T198": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "dam can chos rgyal (chos srung)"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T198",
+        "rank": 2612
     },
     "T2GS1111": {
         "label": {
@@ -16726,14 +23260,18 @@ export const topics = {
             "@language": "bo-x-ewts",
             "@value": "lha btsan (stag lung bka' srung)"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T2007",
+        "rank": 2801
     },
     "T1GS10762": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "gil bar jo bo/"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T1GS10762",
+        "rank": 2762
     },
     "T1843": {
         "label": [
@@ -16746,21 +23284,27 @@ export const topics = {
                 "@value": "zhing skyong dbang po/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T1843",
+        "rank": 2604
     },
     "T1GS138848": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rgyal po byes chas ke tu/"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T1GS138848",
+        "rank": 2843
     },
     "T1AT288": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rdo rje ngan ne ma/"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T1AT288",
+        "rank": 2699
     },
     "T1047": {
         "label": [
@@ -16773,70 +23317,90 @@ export const topics = {
                 "@value": "the lady of the desire realm known as the smoke-clad glorious goddess"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T1047",
+        "rank": 2651
     },
     "T1500": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "skyes ri/"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T1500",
+        "rank": 2841
     },
     "T911": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "seng gdong ma ba ri lugs/"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T911",
+        "rank": 2669
     },
     "T924": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "mgon po zhal bzhi pa/"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T924",
+        "rank": 2543
     },
     "T2041": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "dam can lcam dral/"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T2041",
+        "rank": 2618
     },
     "T1718": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rgyal chen ngal bsos po/"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T1718",
+        "rank": 2626
     },
     "T2524": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "bstan ma bcu gnyis/"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T2524",
+        "rank": 2679
     },
     "T1GS1588": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "phrin las thogs med rtsal/"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T1GS1588",
+        "rank": 2774
     },
     "T1448": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "sa bdag"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T1448",
+        "rank": 2842
     },
     "T1GS108650": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "klu bdud dug gi spu gri/"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T1GS108650",
+        "rank": 2800
     },
     "T2338": {
         "label": [
@@ -16849,14 +23413,18 @@ export const topics = {
                 "@value": "mgon po ber nag can/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T2338",
+        "rank": 2595
     },
     "T488": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "lo k+tri pA la (drang srong)"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T488",
+        "rank": 2745
     },
     "T2CN4867": {
         "label": {
@@ -16870,21 +23438,27 @@ export const topics = {
             "@language": "bo-x-ewts",
             "@value": "bla ma nor lha/"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T1862",
+        "rank": 2724
     },
     "T1641": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "lam lha/"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T1641",
+        "rank": 2854
     },
     "T1AT293": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "sku khyams/"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T1AT293",
+        "rank": 2802
     },
     "T753": {
         "label": [
@@ -16901,14 +23475,18 @@ export const topics = {
                 "@value": "rnam sras dmar po gar mkhan mchog gsang sgrub/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T753",
+        "rank": 2629
     },
     "T1916": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rdo rje de ne ma/"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T1916",
+        "rank": 2788
     },
     "T2GS1189": {
         "label": [
@@ -16921,7 +23499,9 @@ export const topics = {
                 "@value": "dog faced traksad mahakala for secret practice"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T2GS1189",
+        "rank": 2583
     },
     "T401": {
         "label": [
@@ -16934,14 +23514,18 @@ export const topics = {
                 "@value": "sridevi"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T401",
+        "rank": 2645
     },
     "T1860": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "'ba' lung gangs mtsho gnyan po/"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T1860",
+        "rank": 2776
     },
     "T950": {
         "label": [
@@ -16954,14 +23538,18 @@ export const topics = {
                 "@value": "mahākāla"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T950",
+        "rank": 2538
     },
     "T1615": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "tshogs bdag (gnam chos)"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T1615",
+        "rank": 2709
     },
     "T1436": {
         "label": [
@@ -16974,21 +23562,27 @@ export const topics = {
                 "@value": "brahma"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T1436",
+        "rank": 2752
     },
     "T2CN4931": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rdzong btsan pa/"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T2CN4931",
+        "rank": 2814
     },
     "T2251": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rdo rje rab brtan ma (lha mo)"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T2251",
+        "rank": 2648
     },
     "T495": {
         "label": [
@@ -17001,14 +23595,18 @@ export const topics = {
                 "@value": "dandadhara mahakala"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T495",
+        "rank": 2599
     },
     "T2172": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "mgon po phyag bzhi pa kaM tshang lugs/"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T2172",
+        "rank": 2547
     },
     "T00JR774": {
         "label": [
@@ -17045,14 +23643,18 @@ export const topics = {
             "@language": "bo-x-ewts",
             "@value": "'bar ba rdo rje/"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T1GS108638",
+        "rank": 2838
     },
     "T1738": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "sprul pa'i chos rgyal/"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T1738",
+        "rank": 2733
     },
     "T120": {
         "label": [
@@ -17069,35 +23671,45 @@ export const topics = {
                 "@value": "terrible vaisravana"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T120",
+        "rank": 2639
     },
     "T2572": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rdo rje bdud 'dul (lha btsan)"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T2572",
+        "rank": 2817
     },
     "T2391": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rdo rje chos sgron/"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T2391",
+        "rank": 2677
     },
     "T00AG01404": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "bka' srung sman btsun mched lnga /"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T00AG01404",
+        "rank": 2674
     },
     "T1GS108634": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "zhog lha phyug po/"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T1GS108634",
+        "rank": 2837
     },
     "T1926": {
         "label": [
@@ -17110,14 +23722,18 @@ export const topics = {
                 "@value": "rnam thos sras (zangs dkar lugs)"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T1926",
+        "rank": 2625
     },
     "T1PD98454": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "khro zil khrom/"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T1PD98454",
+        "rank": 2806
     },
     "T772": {
         "label": [
@@ -17130,28 +23746,36 @@ export const topics = {
                 "@value": "mahakala rakta"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T772",
+        "rank": 2548
     },
     "T1GS108152": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "ne ser jo bo chen po/"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T1GS108152",
+        "rank": 2765
     },
     "T1904": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "bkra shis do kha ma/"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T1904",
+        "rank": 2786
     },
     "T1622": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "bse rag"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T1622",
+        "rank": 2856
     },
     "T498": {
         "label": [
@@ -17168,7 +23792,9 @@ export const topics = {
                 "@value": "ekajatī"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T498",
+        "rank": 2644
     },
     "T2GS1188": {
         "label": [
@@ -17181,7 +23807,9 @@ export const topics = {
                 "@value": "yak-faced traksad mahakala"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T2GS1188",
+        "rank": 2582
     },
     "T510": {
         "label": [
@@ -17194,21 +23822,27 @@ export const topics = {
                 "@value": "zhang blon rdo rje bdud 'dul phyi sgrub/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T510",
+        "rank": 2779
     },
     "T2326": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "lha mo 'dod khams dbang phyug ma/"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T2326",
+        "rank": 2653
     },
     "T1100": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "spu gri rnam gsum (srung ma)"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T1100",
+        "rank": 2741
     },
     "T561": {
         "label": [
@@ -17225,14 +23859,18 @@ export const topics = {
                 "@value": "kamaraja (rakta)"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T561",
+        "rank": 2704
     },
     "T1841": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "mgon po mthing ba/"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T1841",
+        "rank": 2570
     },
     "T2GS1190": {
         "label": [
@@ -17245,42 +23883,54 @@ export const topics = {
                 "@value": "mgon po trak+Shad ma ning /"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T2GS1190",
+        "rank": 2584
     },
     "T1KG5605": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rnam sras ser chen sprin gseb ma (gnyal pa nyi ma shes rab)"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T1KG5605",
+        "rank": 2635
     },
     "T2259": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "pad+ma 'od 'bar/"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T2259",
+        "rank": 2819
     },
     "T2519": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "bse rgod (gzhi bdag)"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T2519",
+        "rank": 2770
     },
     "T012AG03667": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "skyes bu lung btsan lcam sring /"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T012AG03667",
+        "rank": 2815
     },
     "T2237": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "mgon po che chung (sa lugs)"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T2237",
+        "rank": 2601
     },
     "T1927": {
         "label": {
@@ -17294,42 +23944,54 @@ export const topics = {
             "@language": "bo-x-ewts",
             "@value": "nag po chen po khro bo bcu gcig"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T00KG02745",
+        "rank": 2549
     },
     "T1105": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rab brjid (dge bsnyen)"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T1105",
+        "rank": 2847
     },
     "T1424": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rgyal po (srung ma)"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T1424",
+        "rank": 2761
     },
     "T1GS108649": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "btsan rgod mthu stobs pa/"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T1GS108649",
+        "rank": 2767
     },
     "T1406": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "kong btsun de mo/"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T1406",
+        "rank": 2655
     },
     "T2267": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rta lha/"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T2267",
+        "rank": 2855
     },
     "T2GS1193": {
         "label": [
@@ -17342,21 +24004,27 @@ export const topics = {
                 "@value": "prince nada kubera"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T2GS1193",
+        "rank": 2640
     },
     "T486": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "gza' (srung ma)"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T486",
+        "rank": 2731
     },
     "T499": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "re ma tI/"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T499",
+        "rank": 2686
     },
     "T2CN4865": {
         "label": {
@@ -17370,14 +24038,18 @@ export const topics = {
             "@language": "bo-x-ewts",
             "@value": "'phying dkar jo bo/"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T1GS148162",
+        "rank": 2764
     },
     "T1854": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "gnod sbyin lha mang /"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T1854",
+        "rank": 2823
     },
     "T1329": {
         "label": [
@@ -17390,28 +24062,36 @@ export const topics = {
                 "@value": "gter ma protectors"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T1329",
+        "rank": 2822
     },
     "T1842": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "mgon po trak+Shad/"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T1842",
+        "rank": 2581
     },
     "T1GS138847": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "yang g+ha bza' (gnod sbyin)"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T1GS138847",
+        "rank": 2718
     },
     "T459": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "sde bdun (srung ma)"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T459",
+        "rank": 2743
     },
     "T764": {
         "label": [
@@ -17424,35 +24104,45 @@ export const topics = {
                 "@value": "ganapati rakta caturbhuja"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T764",
+        "rank": 2710
     },
     "T910": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "seng gdong rigs lnga /"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T910",
+        "rank": 2667
     },
     "T1729": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "ye brdzu gnyan po/"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T1729",
+        "rank": 2833
     },
     "T1932": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rdo rje 'bar ba rtsal/"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T1932",
+        "rank": 2831
     },
     "T2CN4264": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "srid pa'i rgyal mo mu kha le/"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T2CN4264",
+        "rank": 2793
     },
     "T408": {
         "label": [
@@ -17465,14 +24155,18 @@ export const topics = {
                 "@value": "local deities"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T408",
+        "rank": 2757
     },
     "T1GS147930": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "mgon po stag zhon (jo bo rje lha gcig nas brgyud pa)"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T1GS147930",
+        "rank": 2573
     },
     "T2CN4861": {
         "label": {
@@ -17486,7 +24180,9 @@ export const topics = {
             "@language": "bo-x-ewts",
             "@value": "mgon po ma ning /"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T493",
+        "rank": 2594
     },
     "T2GS1196": {
         "label": [
@@ -17499,35 +24195,45 @@ export const topics = {
                 "@value": "authority-averting (ajna-vinivarta) ganapati ragavajra"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T2GS1196",
+        "rank": 2706
     },
     "T1AT436": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "seng gdong ma dmar mo/"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T1AT436",
+        "rank": 2666
     },
     "T1GS139158": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "'od chen 'bar ma/"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T1GS139158",
+        "rank": 2646
     },
     "T1GS147819": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "mgon po bram nag bshan pa drug bskor/"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T1GS147819",
+        "rank": 2575
     },
     "T1201": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rdo rje shugs ldan/"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T1201",
+        "rank": 2852
     },
     "T2GS1181": {
         "label": [
@@ -17540,21 +24246,27 @@ export const topics = {
                 "@value": "knife mahakala in the tradition of the great pandita of kashmir"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T2GS1181",
+        "rank": 2572
     },
     "T2CN4853": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "zhing skyong srog bdud nag mo/"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T2CN4853",
+        "rank": 2608
     },
     "T2628": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "lha srin sde brgyad/"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T2628",
+        "rank": 2748
     },
     "T1CZ165": {
         "label": {
@@ -17568,7 +24280,9 @@ export const topics = {
             "@language": "bo-x-ewts",
             "@value": "karma 'phrin las/"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T1GS108648",
+        "rank": 2766
     },
     "T926": {
         "label": [
@@ -17581,14 +24295,18 @@ export const topics = {
                 "@value": "glorious army-repulsing queen"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T926",
+        "rank": 2647
     },
     "T2458": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "nag mo chen mo/"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T2458",
+        "rank": 2662
     },
     "T1305": {
         "label": [
@@ -17601,21 +24319,27 @@ export const topics = {
                 "@value": "ma hA ba la/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T1305",
+        "rank": 2720
     },
     "T1AT292": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "mer chen gnas srung rdo rje 'od dkar/"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T1AT292",
+        "rank": 2803
     },
     "T112": {
         "label": {
             "@language": "sa-alalc97",
             "@value": "rnam sras ser chen lha dgu"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T112",
+        "rank": 2630
     },
     "T752": {
         "label": [
@@ -17632,7 +24356,9 @@ export const topics = {
                 "@value": "manibhadra"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T752",
+        "rank": 2820
     },
     "T767": {
         "label": [
@@ -17649,7 +24375,9 @@ export const topics = {
                 "@value": "kundhali"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T767",
+        "rank": 2785
     },
     "T612": {
         "label": [
@@ -17666,21 +24394,27 @@ export const topics = {
                 "@value": "vaisravana nilasva raktasula"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T612",
+        "rank": 2627
     },
     "T1741": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rdo rje grags ldan/"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T1741",
+        "rank": 2737
     },
     "T494": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "mgon po stag zhon ma/"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T494",
+        "rank": 2556
     },
     "T2GS1184": {
         "label": [
@@ -17693,7 +24427,9 @@ export const topics = {
                 "@value": "red, four faced sri-mahakala subjugating"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T2GS1184",
+        "rank": 2577
     },
     "T2GS1199": {
         "label": [
@@ -17706,49 +24442,63 @@ export const topics = {
                 "@value": "four faced mahakala connected with the period of service"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T2GS1199",
+        "rank": 2587
     },
     "T2CN4100": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "mal gro gzi can/"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T2CN4100",
+        "rank": 2797
     },
     "T1227": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "lha mo bu rdzi ma/"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T1227",
+        "rank": 2725
     },
     "T505": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "seng gdong can (srung ma)"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T505",
+        "rank": 2671
     },
     "T2CN4818": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "lha mo duk+ti ka"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T2CN4818",
+        "rank": 2654
     },
     "T1864": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "a rab yul lha ra nyag gnyan po/"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T1864",
+        "rank": 2777
     },
     "T2616": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "u ma de wI/"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T2616",
+        "rank": 2792
     },
     "T1925": {
         "label": [
@@ -17761,7 +24511,9 @@ export const topics = {
                 "@value": "mgon po bya rog gdong /"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T1925",
+        "rank": 2539
     },
     "T01AG03136": {
         "label": [
@@ -17774,28 +24526,36 @@ export const topics = {
                 "@value": "mahakala caturbhuja"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T01AG03136",
+        "rank": 2552
     },
     "T1GS135701": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "sbid lha/"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T1GS135701",
+        "rank": 2760
     },
     "T1744": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "karma ba dz+ra/"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T1744",
+        "rank": 2846
     },
     "T1GS122423": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "mthu chen sde bzhi (rgya zhang khrom)"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T1GS122423",
+        "rank": 2821
     },
     "T755": {
         "label": [
@@ -17812,7 +24572,9 @@ export const topics = {
                 "@value": "mahalaksmi devi"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T755",
+        "rank": 2726
     },
     "T2GS1135": {
         "label": [
@@ -17825,35 +24587,45 @@ export const topics = {
                 "@value": "las gshin dmar po khrag mdog (srung ma)"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T2GS1135",
+        "rank": 2621
     },
     "T1416": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "pho lha dung skyong dkar po/"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T1416",
+        "rank": 2790
     },
     "T1923": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "klu bdud nag po/"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T1923",
+        "rank": 2798
     },
     "T97": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "ma mo/"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T97",
+        "rank": 2780
     },
     "T497": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "sngags srung sde lnga (srung ma)"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T497",
+        "rank": 2695
     },
     "T118": {
         "label": [
@@ -17870,7 +24642,9 @@ export const topics = {
                 "@value": "vaisravana kubera svarottama"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T118",
+        "rank": 2633
     },
     "T00KG02672": {
         "label": [
@@ -17883,7 +24657,9 @@ export const topics = {
                 "@value": "black servant-demon yama"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T00KG02672",
+        "rank": 2616
     },
     "T2GS1187": {
         "label": [
@@ -17896,7 +24672,9 @@ export const topics = {
                 "@value": "mgon po zhal bzhi pa las sbyor mgon po/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T2GS1187",
+        "rank": 2580
     },
     "T1852": {
         "label": [
@@ -17909,21 +24687,27 @@ export const topics = {
                 "@value": "gaṇeśa"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T1852",
+        "rank": 2701
     },
     "T1740": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "bse khrab can/"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T1740",
+        "rank": 2729
     },
     "T2534": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rdo rje drag rgyal ma/"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T2534",
+        "rank": 2660
     },
     "T122": {
         "label": [
@@ -17936,42 +24720,54 @@ export const topics = {
                 "@value": "vaisravana nilasva krsna"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T122",
+        "rank": 2634
     },
     "T2CN4822": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "stobs ldan drag shul dbang po/"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T2CN4822",
+        "rank": 2607
     },
     "T1919": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "dkor bdag ma mo/"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T1919",
+        "rank": 2795
     },
     "T2236": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "li byin ha ra/"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T2236",
+        "rank": 2791
     },
     "T1930": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "dam can snyon kha chen po/"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T1930",
+        "rank": 2614
     },
     "T1745": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "tha 'og chos rgyal/"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T1745",
+        "rank": 2740
     },
     "T406": {
         "label": [
@@ -17988,28 +24784,36 @@ export const topics = {
                 "@value": "protective deities"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T406",
+        "rank": 2749
     },
     "T2CN4953": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "bya gdong ma/"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T2CN4953",
+        "rank": 2656
     },
     "T2GS1145": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "mgon po zhal bzhi pa gdong gnyan can/"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T2GS1145",
+        "rank": 2558
     },
     "T442": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "las kyi gshin rje/"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T442",
+        "rank": 2617
     },
     "T2GS1230": {
         "label": [
@@ -18026,21 +24830,27 @@ export const topics = {
                 "@value": "vajramahakalapanjaranatha 8-devatmaka"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T2GS1230",
+        "rank": 2564
     },
     "T509": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rnam sras nang sgrub mdung dmar can/"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T509",
+        "rank": 2628
     },
     "T1GS139156": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "mgon po bram gzugs can/"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T1GS139156",
+        "rank": 2559
     },
     "T1KG4535": {
         "label": [
@@ -18053,63 +24863,81 @@ export const topics = {
                 "@value": "vishnu"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T1KG4535",
+        "rank": 2734
     },
     "T848": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "bla bslu/"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T848",
+        "rank": 2850
     },
     "T1499": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "g.yag ri/"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T1499",
+        "rank": 2853
     },
     "T331": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "tsi'u dmar po (srung ma)"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T331",
+        "rank": 2738
     },
     "T1GS147801": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rdo rje khyung lung ma/"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T1GS147801",
+        "rank": 2698
     },
     "T2239": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "dgra 'dul bstan skyong /"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T2239",
+        "rank": 2772
     },
     "T1AT290": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "tshwa sman klu 'od 'bar ma/"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T1AT290",
+        "rank": 2799
     },
     "T1652": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "gzhi bdag rten bkol/"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T1652",
+        "rank": 2771
     },
     "T1929": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "cig car dmar po/"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T1929",
+        "rank": 2832
     },
     "T110": {
         "label": [
@@ -18126,7 +24954,9 @@ export const topics = {
                 "@value": "vaisravana ayurdhara sita"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T110",
+        "rank": 2632
     },
     "T2GS1139": {
         "label": [
@@ -18139,21 +24969,27 @@ export const topics = {
                 "@value": "four-armed nagi remati"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T2GS1139",
+        "rank": 2689
     },
     "T1GS139029": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "dbyu gu 64"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T1GS139029",
+        "rank": 2714
     },
     "T1931": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rdo rje kun skyob/"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T1931",
+        "rank": 2805
     },
     "T2GS1146": {
         "label": [
@@ -18166,21 +25002,27 @@ export const topics = {
                 "@value": "jackal-faced pisaca"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T2GS1146",
+        "rank": 2661
     },
     "T00JR3358": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "drang srong nag po/"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T00JR3358",
+        "rank": 2721
     },
     "T1AT435": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "sngags srung /"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T1AT435",
+        "rank": 2694
     },
     "T012AG03494": {
         "label": [
@@ -18193,21 +25035,27 @@ export const topics = {
                 "@value": "bla ma nor lha (bar chad kun sel)"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T012AG03494",
+        "rank": 2723
     },
     "T1GS147818": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "gur gyi mgon po sprin gseb ma (thang stong nye brgyud)"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T1GS147818",
+        "rank": 2569
     },
     "T503": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "bshan pa dmar nag (srung ma)"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T503",
+        "rank": 2619
     },
     "T2GS1144": {
         "label": [
@@ -18220,21 +25068,27 @@ export const topics = {
                 "@value": "blue dharmaraja karmayama"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T2GS1144",
+        "rank": 2615
     },
     "T1844": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "kha ba dkar po (gnas bdag)"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T1844",
+        "rank": 2789
     },
     "T1CZ10": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "gzhi bdag lha'i dge bsnyen gzi brjid 'phags/"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T1CZ10",
+        "rank": 2769
     },
     "T197": {
         "label": [
@@ -18251,14 +25105,18 @@ export const topics = {
                 "@value": "vaiśravaṇa"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T197",
+        "rank": 2624
     },
     "T1319": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "kun thub rgyal mo (bdud 'dul rdo rje)"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T1319",
+        "rank": 2664
     },
     "T126": {
         "label": [
@@ -18275,28 +25133,36 @@ export const topics = {
                 "@value": "vaisravana caturyudha atiguhya"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T126",
+        "rank": 2631
     },
     "T501": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "ma mo srog sgrub ma (srung ma)"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T501",
+        "rank": 2739
     },
     "T1934": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "ya ba skya bdun/"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T1934",
+        "rank": 2717
     },
     "T1046": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "mgon po bram nag shan pa drug thang rgyal lugs/"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T1046",
+        "rank": 2574
     },
     "T4CZ15353": {
         "label": [
@@ -18309,14 +25175,18 @@ export const topics = {
                 "@value": "gnod sbyin/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T4CZ15353",
+        "rank": 2716
     },
     "T1GS108651": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "dga' gdong chos skyong /"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T1GS108651",
+        "rank": 2755
     },
     "T2GS1183": {
         "label": [
@@ -18329,7 +25199,9 @@ export const topics = {
                 "@value": "blue, four-faced sri-mahakala, soul releasing"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T2GS1183",
+        "rank": 2576
     },
     "T012AG03495": {
         "label": [
@@ -18342,14 +25214,18 @@ export const topics = {
                 "@value": "local deity of a rab yul"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T012AG03495",
+        "rank": 2816
     },
     "T2319": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "bdud 'dul seng gdong dmar mo (klong gsal snying po)"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T2319",
+        "rank": 2670
     },
     "T504": {
         "label": [
@@ -18362,14 +25238,18 @@ export const topics = {
                 "@value": "vajrasadhu"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T504",
+        "rank": 2824
     },
     "T00JR3350": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "gnyan po rdo rje brag btsan/"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T00JR3350",
+        "rank": 2810
     },
     "T2GS1223": {
         "label": [
@@ -18382,7 +25262,9 @@ export const topics = {
                 "@value": "traksad mahakala on foot"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T2GS1223",
+        "rank": 2585
     },
     "T114": {
         "label": [
@@ -18399,42 +25281,54 @@ export const topics = {
                 "@value": "rnam sras ljang ser be con/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T114",
+        "rank": 2637
     },
     "T2190": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "gnyan chen thang lha/"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T2190",
+        "rank": 2830
     },
     "T1CZ7": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "phying dkar jo bo rgyal mtshan (srung ma)"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T1CZ7",
+        "rank": 2763
     },
     "T1922": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "klu dge"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T1922",
+        "rank": 2851
     },
     "T8LS14982": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "lha thams cad mkhyen pa/"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T8LS14982",
+        "rank": 2751
     },
     "T2094": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "mgon po phyag bzhi pa lha 13"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T2094",
+        "rank": 2544
     },
     "T2GS1134": {
         "label": [
@@ -18447,14 +25341,18 @@ export const topics = {
                 "@value": "putra brother and sister"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T2GS1134",
+        "rank": 2728
     },
     "T2159": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "gur gyi mgon po gri gug lha lnga /"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T2159",
+        "rank": 2563
     },
     "T400": {
         "label": [
@@ -18467,42 +25365,54 @@ export const topics = {
                 "@value": "simhamukhi"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T400",
+        "rank": 2665
     },
     "T1108": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "kha 'bar ma/"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T1108",
+        "rank": 2680
     },
     "T507": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "brtan ma bcu gnyis (srung ma)"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T507",
+        "rank": 2681
     },
     "T1435": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "ku be ra/"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T1435",
+        "rank": 2638
     },
     "T2173": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "ye shes mgon po phyag bzhi pa lha 30 dwags po snyan brgyud lugs/"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T2173",
+        "rank": 2555
     },
     "T1CZ91": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "'go ba'i lha lnga /"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T1CZ91",
+        "rank": 2703
     },
     "T2GS1226": {
         "label": [
@@ -18515,7 +25425,9 @@ export const topics = {
                 "@value": "panjara mahakala brother and sister"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T2GS1226",
+        "rank": 2568
     },
     "T306": {
         "label": [
@@ -18528,14 +25440,18 @@ export const topics = {
                 "@value": "tshe ring mched lnga (srung ma)"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T306",
+        "rank": 2675
     },
     "T172": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "'brom bu jo bo (yul lha)"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T172",
+        "rank": 2775
     },
     "T2CN3469": {
         "label": {
@@ -18555,7 +25471,9 @@ export const topics = {
                 "@value": "traksad mahakala in the dwags po tradition"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T2GS1233",
+        "rank": 2586
     },
     "T2CZ7874": {
         "label": [
@@ -18568,56 +25486,72 @@ export const topics = {
                 "@value": "srog bdag rdo rje drag po rtsal/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T2CZ7874",
+        "rank": 2836
     },
     "T1GS148133": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "mgon po zhal gcig phyag drug"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T1GS148133",
+        "rank": 2540
     },
     "T1450": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "lce spyang sngon mo/"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T1450",
+        "rank": 2663
     },
     "T1CZ1062": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "k+She Ta pA la/"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T1CZ1062",
+        "rank": 2818
     },
     "T2533": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rdo rje klu mo/"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T2533",
+        "rank": 2683
     },
     "T1AT297": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "bka' srung mdzod lnga stag rtse/"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T1AT297",
+        "rank": 2804
     },
     "T1759": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rgyal chen/"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T1759",
+        "rank": 2834
     },
     "T1CZ8": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rgyal chen bkwan yun chang /"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T1CZ8",
+        "rank": 2844
     },
     "T2GS1137": {
         "label": [
@@ -18634,7 +25568,9 @@ export const topics = {
                 "@value": "sridevi sankhapali"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T2GS1137",
+        "rank": 2649
     },
     "T771": {
         "label": [
@@ -18647,14 +25583,18 @@ export const topics = {
                 "@value": "mgon po ser po blo 'phel/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T771",
+        "rank": 2588
     },
     "T1276": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "mgon po phyag bzhi pa (thel lugs dang tshal lugs)"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T1276",
+        "rank": 2554
     },
     "T8LS14983": {
         "label": [
@@ -18667,7 +25607,9 @@ export const topics = {
                 "@value": "gzhon nu gdong drug"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T8LS14983",
+        "rank": 2722
     },
     "T441": {
         "label": {
@@ -18681,14 +25623,18 @@ export const topics = {
             "@language": "bo-x-ewts",
             "@value": "rdo rje brag rdzong ma/"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T2070",
+        "rank": 2697
     },
     "T2327": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "dug gdong nag po (srung ma)"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T2327",
+        "rank": 2768
     },
     "T508": {
         "label": [
@@ -18701,7 +25647,9 @@ export const topics = {
                 "@value": "pehar"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T508",
+        "rank": 2736
     },
     "T562": {
         "label": [
@@ -18718,21 +25666,27 @@ export const topics = {
                 "@value": "great red sri ganapati"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T562",
+        "rank": 2711
     },
     "T01AG03034": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "yul skyong chen po rdo rje nga 'dra seng chen rgyal po mched brgyad bsang gsol/"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T01AG03034",
+        "rank": 2827
     },
     "T2470": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "gnod sbyin 'khor lo/"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T2470",
+        "rank": 2605
     },
     "T2GS1191": {
         "label": [
@@ -18745,21 +25699,27 @@ export const topics = {
                 "@value": "the three yuk gu ma sisters"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T2GS1191",
+        "rank": 2713
     },
     "T2162": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "gur gyi mgon po lha 17"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T2162",
+        "rank": 2566
     },
     "T1670": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "sngags srung ma/"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T1670",
+        "rank": 2678
     },
     "T2GS1133": {
         "label": [
@@ -18772,14 +25732,18 @@ export const topics = {
                 "@value": "dkar mo nyi zla lcam dral (srung ma)"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T2GS1133",
+        "rank": 2691
     },
     "T2238": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rgyal chen karma 'phrin las/"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T2238",
+        "rank": 2845
     },
     "T2587": {
         "label": [
@@ -18799,21 +25763,27 @@ export const topics = {
             "@language": "bo-x-ewts",
             "@value": "spu gri gsum/"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T2085",
+        "rank": 2579
     },
     "T1496": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "mgar ba nag po/"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T1496",
+        "rank": 2746
     },
     "T012AG03666": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "gter srung chen po dge bsnyen smyo kha/"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T012AG03666",
+        "rank": 2747
     },
     "T2GS1138": {
         "label": [
@@ -18826,49 +25796,63 @@ export const topics = {
                 "@value": "demoness remati"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T2GS1138",
+        "rank": 2688
     },
     "T2069": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "gnod sbyin ma/"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T2069",
+        "rank": 2715
     },
     "T1419": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "gre bo klu btsan drag po/"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T1419",
+        "rank": 2782
     },
     "T00KG02744": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "pu tra ming sring /"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T00KG02744",
+        "rank": 2611
     },
     "T00AG01162": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "nags rin lugs kyi seng gdong dmar mo/"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T00AG01162",
+        "rank": 2668
     },
     "T2116": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "mgon po lha mang /"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T2116",
+        "rank": 2593
     },
     "T2532": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "kha rag khyung btsun/"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T2532",
+        "rank": 2693
     },
     "T2KG207433": {
         "label": {
@@ -18882,21 +25866,27 @@ export const topics = {
             "@language": "bo-x-ewts",
             "@value": "lcam sring (chos skyong)"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T1439",
+        "rank": 2727
     },
     "T2288": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "ma mgon sde brgyad/"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T2288",
+        "rank": 2744
     },
     "T1423": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "btsan/"
         },
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T1423",
+        "rank": 2825
     },
     "T502": {
         "label": [
@@ -18909,7 +25899,9 @@ export const topics = {
                 "@value": "rahula"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T502",
+        "rank": 2732
     },
     "T2GS1143": {
         "label": [
@@ -18922,7 +25914,9 @@ export const topics = {
                 "@value": "las gshin dmar po ma ru tse bzhis skor ba/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227934"
+        "parent": "O9TAXTBRC2016052KG227934",
+        "tbrcId": "T2GS1143",
+        "rank": 2620
     },
     "O9TAXTBRC2016052KG228290": {
         "sub": [
@@ -18960,7 +25954,9 @@ export const topics = {
                 "@value": "Social Sciences"
             }
         ],
-        "parent": "O9TAXTBRC201605"
+        "parent": "O9TAXTBRC201605",
+        "tbrcId": "pa",
+        "rank": 7450
     },
     "O9TAXTBRC2016052KG228306": {
         "sub": [
@@ -18980,7 +25976,9 @@ export const topics = {
                 "@value": "人口"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228290"
+        "parent": "O9TAXTBRC2016052KG228290",
+        "tbrcId": "2",
+        "rank": 7526
     },
     "T2CZ8071": {
         "label": [
@@ -18993,7 +25991,9 @@ export const topics = {
                 "@value": "population , total people, the number of people"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228306"
+        "parent": "O9TAXTBRC2016052KG228306",
+        "tbrcId": "T2CZ8071",
+        "rank": 7531
     },
     "O9TAXTBRC2016052KG228406": {
         "sub": [
@@ -19023,7 +26023,9 @@ export const topics = {
                 "@value": "gnyen sgrig lam srol/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228406"
+        "parent": "O9TAXTBRC2016052KG228406",
+        "tbrcId": "T2018",
+        "rank": 3771
     },
     "T4PD931": {
         "label": {
@@ -19053,7 +26055,9 @@ export const topics = {
                 "@value": "战争"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228290"
+        "parent": "O9TAXTBRC2016052KG228290",
+        "tbrcId": "5",
+        "rank": 7559
     },
     "T2201": {
         "label": [
@@ -19066,7 +26070,9 @@ export const topics = {
                 "@value": "dmag 'khrug"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228312"
+        "parent": "O9TAXTBRC2016052KG228312",
+        "tbrcId": "T2201",
+        "rank": 7564
     },
     "T2214": {
         "label": [
@@ -19079,7 +26085,9 @@ export const topics = {
                 "@value": "bod dmag"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228312"
+        "parent": "O9TAXTBRC2016052KG228312",
+        "tbrcId": "T2214",
+        "rank": 7569
     },
     "T1GS148158": {
         "label": [
@@ -19092,7 +26100,9 @@ export const topics = {
                 "@value": "dmag rtsis/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228312"
+        "parent": "O9TAXTBRC2016052KG228312",
+        "tbrcId": "T1GS148158",
+        "rank": 7574
     },
     "T1165": {
         "label": [
@@ -19105,7 +26115,9 @@ export const topics = {
                 "@value": "rgyal srung /"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228312"
+        "parent": "O9TAXTBRC2016052KG228312",
+        "tbrcId": "T1165",
+        "rank": 7579
     },
     "O9TAXTBRC2016052KG228362": {
         "sub": [
@@ -19129,7 +26141,9 @@ export const topics = {
                 "@value": "环境"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228290"
+        "parent": "O9TAXTBRC2016052KG228290",
+        "tbrcId": "11",
+        "rank": 7780
     },
     "T2568": {
         "label": [
@@ -19142,7 +26156,9 @@ export const topics = {
                 "@value": "flood damage"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228362"
+        "parent": "O9TAXTBRC2016052KG228362",
+        "tbrcId": "T2568",
+        "rank": 3831
     },
     "T363": {
         "label": [
@@ -19155,7 +26171,9 @@ export const topics = {
                 "@value": "natural disasters"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228362"
+        "parent": "O9TAXTBRC2016052KG228362",
+        "tbrcId": "T363",
+        "rank": 4059
     },
     "T2036": {
         "label": [
@@ -19168,7 +26186,9 @@ export const topics = {
                 "@value": "khor yug"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228362"
+        "parent": "O9TAXTBRC2016052KG228362",
+        "tbrcId": "T2036",
+        "rank": 7785
     },
     "T1KG16253": {
         "label": [
@@ -19181,7 +26201,9 @@ export const topics = {
                 "@value": "waste"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228362"
+        "parent": "O9TAXTBRC2016052KG228362",
+        "tbrcId": "T1KG16253",
+        "rank": 7790
     },
     "T2409": {
         "label": [
@@ -19194,7 +26216,9 @@ export const topics = {
                 "@value": "earthquakes"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228362"
+        "parent": "O9TAXTBRC2016052KG228362",
+        "tbrcId": "T2409",
+        "rank": 3836
     },
     "O9TAXTBRC2016052KG228372": {
         "sub": [
@@ -19214,7 +26238,9 @@ export const topics = {
                 "@value": "心理学"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228290"
+        "parent": "O9TAXTBRC2016052KG228290",
+        "tbrcId": "14",
+        "rank": 7818
     },
     "T2586": {
         "label": [
@@ -19227,7 +26253,9 @@ export const topics = {
                 "@value": "psychology"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228372"
+        "parent": "O9TAXTBRC2016052KG228372",
+        "tbrcId": "T2586",
+        "rank": 7823
     },
     "O9TAXTBRC2016052KG228377": {
         "sub": [
@@ -19248,7 +26276,9 @@ export const topics = {
                 "@value": "欲经"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228290"
+        "parent": "O9TAXTBRC2016052KG228290",
+        "tbrcId": "16",
+        "rank": 7845
     },
     "T2016": {
         "label": [
@@ -19265,14 +26295,18 @@ export const topics = {
                 "@value": "erotics"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228377"
+        "parent": "O9TAXTBRC2016052KG228377",
+        "tbrcId": "T2016",
+        "rank": 7850
     },
     "T1KG15778": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "'khrig gtam/"
         },
-        "parent": "O9TAXTBRC2016052KG228377"
+        "parent": "O9TAXTBRC2016052KG228377",
+        "tbrcId": "T1KG15778",
+        "rank": 7855
     },
     "O9TAXTBRC2016052KG228370": {
         "sub": [
@@ -19292,7 +26326,9 @@ export const topics = {
                 "@value": "图书馆学"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228290"
+        "parent": "O9TAXTBRC2016052KG228290",
+        "tbrcId": "13",
+        "rank": 7807
     },
     "T1936": {
         "label": [
@@ -19305,7 +26341,9 @@ export const topics = {
                 "@value": "library science"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228370"
+        "parent": "O9TAXTBRC2016052KG228370",
+        "tbrcId": "T1936",
+        "rank": 7812
     },
     "O9TAXTBRC2016052KG228334": {
         "sub": [
@@ -19339,21 +26377,27 @@ export const topics = {
                 "@value": "Law/Legal document"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228290"
+        "parent": "O9TAXTBRC2016052KG228290",
+        "tbrcId": "9",
+        "rank": 7663
     },
     "T00JR764": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "gzu dpang /"
         },
-        "parent": "O9TAXTBRC2016052KG228334"
+        "parent": "O9TAXTBRC2016052KG228334",
+        "tbrcId": "T00JR764",
+        "rank": 3956
     },
     "T8LS1425": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "bka' rtsa/"
         },
-        "parent": "O9TAXTBRC2016052KG228334"
+        "parent": "O9TAXTBRC2016052KG228334",
+        "tbrcId": "T8LS1425",
+        "rank": 7678
     },
     "T1963": {
         "label": [
@@ -19366,14 +26410,18 @@ export const topics = {
                 "@value": "taxation"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228334"
+        "parent": "O9TAXTBRC2016052KG228334",
+        "tbrcId": "T1963",
+        "rank": 7718
     },
     "T1791": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "zhal lce bcu gsum/"
         },
-        "parent": "O9TAXTBRC2016052KG228334"
+        "parent": "O9TAXTBRC2016052KG228334",
+        "tbrcId": "T1791",
+        "rank": 7688
     },
     "T1PD108900": {
         "label": [
@@ -19386,7 +26434,9 @@ export const topics = {
                 "@value": "'dum khra/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228334"
+        "parent": "O9TAXTBRC2016052KG228334",
+        "tbrcId": "T1PD108900",
+        "rank": 7708
     },
     "T00EGS1017187": {
         "label": [
@@ -19399,7 +26449,9 @@ export const topics = {
                 "@value": "national etiquette and customs"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228334"
+        "parent": "O9TAXTBRC2016052KG228334",
+        "tbrcId": "T00EGS1017187",
+        "rank": 7723
     },
     "T4PD930": {
         "label": {
@@ -19419,7 +26471,9 @@ export const topics = {
                 "@value": "rtsa tshig ('grems yig)"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228334"
+        "parent": "O9TAXTBRC2016052KG228334",
+        "tbrcId": "T1PD108896",
+        "rank": 7698
     },
     "T384": {
         "label": [
@@ -19432,7 +26486,9 @@ export const topics = {
                 "@value": "khrims/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228334"
+        "parent": "O9TAXTBRC2016052KG228334",
+        "tbrcId": "T384",
+        "rank": 7668
     },
     "T1PD108882": {
         "label": [
@@ -19445,7 +26501,9 @@ export const topics = {
                 "@value": "公文，命令，执照"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228334"
+        "parent": "O9TAXTBRC2016052KG228334",
+        "tbrcId": "T1PD108882",
+        "rank": 7673
     },
     "T1PD108884": {
         "label": [
@@ -19462,35 +26520,45 @@ export const topics = {
                 "@value": "gan rgya/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228334"
+        "parent": "O9TAXTBRC2016052KG228334",
+        "tbrcId": "T1PD108884",
+        "rank": 7713
     },
     "T2MS14906": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "ri dwags rgyag"
         },
-        "parent": "O9TAXTBRC2016052KG228334"
+        "parent": "O9TAXTBRC2016052KG228334",
+        "tbrcId": "T2MS14906",
+        "rank": 7728
     },
     "T3JT12490": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "zhal lce bcu gnyis/"
         },
-        "parent": "O9TAXTBRC2016052KG228334"
+        "parent": "O9TAXTBRC2016052KG228334",
+        "tbrcId": "T3JT12490",
+        "rank": 7683
     },
     "T1PD108895": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "dpyad khra/"
         },
-        "parent": "O9TAXTBRC2016052KG228334"
+        "parent": "O9TAXTBRC2016052KG228334",
+        "tbrcId": "T1PD108895",
+        "rank": 7703
     },
     "T1790": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "zhal lce bcu drug"
         },
-        "parent": "O9TAXTBRC2016052KG228334"
+        "parent": "O9TAXTBRC2016052KG228334",
+        "tbrcId": "T1790",
+        "rank": 7693
     },
     "O9TAXTBRC2016052KG228317": {
         "sub": [
@@ -19512,7 +26580,9 @@ export const topics = {
                 "@value": "教育"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228290"
+        "parent": "O9TAXTBRC2016052KG228290",
+        "tbrcId": "6",
+        "rank": 7585
     },
     "T266": {
         "label": [
@@ -19525,7 +26595,9 @@ export const topics = {
                 "@value": "textbook"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228317"
+        "parent": "O9TAXTBRC2016052KG228317",
+        "tbrcId": "T266",
+        "rank": 7595
     },
     "T234": {
         "label": [
@@ -19538,7 +26610,9 @@ export const topics = {
                 "@value": "slob sbyong"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228317"
+        "parent": "O9TAXTBRC2016052KG228317",
+        "tbrcId": "T234",
+        "rank": 7590
     },
     "T2390": {
         "label": [
@@ -19551,7 +26625,9 @@ export const topics = {
                 "@value": "teaching curriculum"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228317"
+        "parent": "O9TAXTBRC2016052KG228317",
+        "tbrcId": "T2390",
+        "rank": 7600
     },
     "O9TAXTBRC2016052KG228350": {
         "sub": [
@@ -19581,7 +26657,9 @@ export const topics = {
                 "@value": "Sociology"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228290"
+        "parent": "O9TAXTBRC2016052KG228290",
+        "tbrcId": "10",
+        "rank": 7734
     },
     "T1PD53279": {
         "label": [
@@ -19594,7 +26672,9 @@ export const topics = {
                 "@value": "religion"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228350"
+        "parent": "O9TAXTBRC2016052KG228350",
+        "tbrcId": "T1PD53279",
+        "rank": 7749
     },
     "T388": {
         "label": [
@@ -19607,7 +26687,9 @@ export const topics = {
                 "@value": "mtshan nyid rig pa/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228350"
+        "parent": "O9TAXTBRC2016052KG228350",
+        "tbrcId": "T388",
+        "rank": 7754
     },
     "T3CN9711": {
         "label": [
@@ -19650,7 +26732,9 @@ export const topics = {
                 "@value": "confucianism"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228350"
+        "parent": "O9TAXTBRC2016052KG228350",
+        "tbrcId": "T1176",
+        "rank": 7759
     },
     "T1KG10156": {
         "label": [
@@ -19663,7 +26747,9 @@ export const topics = {
                 "@value": "dialectics"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228350"
+        "parent": "O9TAXTBRC2016052KG228350",
+        "tbrcId": "T1KG10156",
+        "rank": 7774
     },
     "T1971": {
         "label": [
@@ -19676,7 +26762,9 @@ export const topics = {
                 "@value": "lha med smra ba/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228350"
+        "parent": "O9TAXTBRC2016052KG228350",
+        "tbrcId": "T1971",
+        "rank": 7739
     },
     "T1KG21080": {
         "label": [
@@ -19689,7 +26777,9 @@ export const topics = {
                 "@value": "spyi tshogs ring lugs/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228350"
+        "parent": "O9TAXTBRC2016052KG228350",
+        "tbrcId": "T1KG21080",
+        "rank": 7769
     },
     "T1172": {
         "label": [
@@ -19702,7 +26792,9 @@ export const topics = {
                 "@value": "gung khran ring lugs/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228350"
+        "parent": "O9TAXTBRC2016052KG228350",
+        "tbrcId": "T1172",
+        "rank": 7744
     },
     "T1147": {
         "label": [
@@ -19719,7 +26811,9 @@ export const topics = {
                 "@value": "christian"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228350"
+        "parent": "O9TAXTBRC2016052KG228350",
+        "tbrcId": "T1147",
+        "rank": 7764
     },
     "T1KG89007": {
         "label": [
@@ -19773,7 +26867,9 @@ export const topics = {
                 "@value": "政治"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228290"
+        "parent": "O9TAXTBRC2016052KG228290",
+        "tbrcId": "1",
+        "rank": 7455
     },
     "T371": {
         "label": [
@@ -19799,7 +26895,9 @@ export const topics = {
                 "@value": "church and state"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228291"
+        "parent": "O9TAXTBRC2016052KG228291",
+        "tbrcId": "T1907",
+        "rank": 7500
     },
     "T1KG20656": {
         "label": [
@@ -19812,14 +26910,18 @@ export const topics = {
                 "@value": "dmangs gtso/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228291"
+        "parent": "O9TAXTBRC2016052KG228291",
+        "tbrcId": "T1KG20656",
+        "rank": 7490
     },
     "T2384": {
         "label": {
             "@language": "en",
             "@value": "tibet (china)--officials and employees"
         },
-        "parent": "O9TAXTBRC2016052KG228291"
+        "parent": "O9TAXTBRC2016052KG228291",
+        "tbrcId": "T2384",
+        "rank": 7520
     },
     "T00JR3375": {
         "label": [
@@ -19832,7 +26934,9 @@ export const topics = {
                 "@value": "(treatises on) the relation between temporal and spiritual matters"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228291"
+        "parent": "O9TAXTBRC2016052KG228291",
+        "tbrcId": "T00JR3375",
+        "rank": 7470
     },
     "T294": {
         "label": [
@@ -19845,7 +26949,9 @@ export const topics = {
                 "@value": "cultural revolution"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228291"
+        "parent": "O9TAXTBRC2016052KG228291",
+        "tbrcId": "T294",
+        "rank": 7510
     },
     "T1KG22038": {
         "label": [
@@ -19858,7 +26964,9 @@ export const topics = {
                 "@value": "human rights"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228291"
+        "parent": "O9TAXTBRC2016052KG228291",
+        "tbrcId": "T1KG22038",
+        "rank": 7495
     },
     "T2229": {
         "label": [
@@ -19878,7 +26986,9 @@ export const topics = {
             "@language": "en",
             "@value": "poster -- chinese"
         },
-        "parent": "O9TAXTBRC2016052KG228291"
+        "parent": "O9TAXTBRC2016052KG228291",
+        "tbrcId": "T1KG6063",
+        "rank": 7515
     },
     "T1151": {
         "label": [
@@ -19904,28 +27014,36 @@ export const topics = {
                 "@value": "polity"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228291"
+        "parent": "O9TAXTBRC2016052KG228291",
+        "tbrcId": "T8LS16960",
+        "rank": 7460
     },
     "T2CZ5021": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "chos srid/"
         },
-        "parent": "O9TAXTBRC2016052KG228291"
+        "parent": "O9TAXTBRC2016052KG228291",
+        "tbrcId": "T2CZ5021",
+        "rank": 7485
     },
     "T2622": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "bod kyi chab srid/"
         },
-        "parent": "O9TAXTBRC2016052KG228291"
+        "parent": "O9TAXTBRC2016052KG228291",
+        "tbrcId": "T2622",
+        "rank": 7465
     },
     "T1175": {
         "label": {
             "@language": "en",
             "@value": "politics and government"
         },
-        "parent": "O9TAXTBRC2016052KG228291"
+        "parent": "O9TAXTBRC2016052KG228291",
+        "tbrcId": "T1175",
+        "rank": 7505
     },
     "O9TAXTBRC2016052KG228308": {
         "sub": [
@@ -19945,7 +27063,9 @@ export const topics = {
                 "@value": "藏学"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228290"
+        "parent": "O9TAXTBRC2016052KG228290",
+        "tbrcId": "3",
+        "rank": 7537
     },
     "T212": {
         "label": [
@@ -19958,7 +27078,9 @@ export const topics = {
                 "@value": "tibetology"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228308"
+        "parent": "O9TAXTBRC2016052KG228308",
+        "tbrcId": "T212",
+        "rank": 7542
     },
     "O9TAXTBRC2016052KG228380": {
         "sub": [
@@ -20002,7 +27124,9 @@ export const topics = {
                 "@value": "brtags thabs/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228290"
+        "parent": "O9TAXTBRC2016052KG228290",
+        "tbrcId": "17",
+        "rank": 7861
     },
     "T1756": {
         "label": [
@@ -20015,7 +27139,9 @@ export const topics = {
                 "@value": "ltas/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228380"
+        "parent": "O9TAXTBRC2016052KG228380",
+        "tbrcId": "T1756",
+        "rank": 7905
     },
     "T1234": {
         "label": [
@@ -20028,7 +27154,9 @@ export const topics = {
                 "@value": "brtag thabs/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228380"
+        "parent": "O9TAXTBRC2016052KG228380",
+        "tbrcId": "T1234",
+        "rank": 7866
     },
     "T2278": {
         "label": [
@@ -20041,7 +27169,9 @@ export const topics = {
                 "@value": "examination of the flame of butter lamps"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228380"
+        "parent": "O9TAXTBRC2016052KG228380",
+        "tbrcId": "T2278",
+        "rank": 7885
     },
     "T2006": {
         "label": [
@@ -20054,7 +27184,9 @@ export const topics = {
                 "@value": "li ma brtag pa/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228380"
+        "parent": "O9TAXTBRC2016052KG228380",
+        "tbrcId": "T2006",
+        "rank": 7950
     },
     "T2039": {
         "label": [
@@ -20067,14 +27199,18 @@ export const topics = {
                 "@value": "method of determining death"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228380"
+        "parent": "O9TAXTBRC2016052KG228380",
+        "tbrcId": "T2039",
+        "rank": 7955
     },
     "T00JR769": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "skye rgyud lung bstan/"
         },
-        "parent": "O9TAXTBRC2016052KG228380"
+        "parent": "O9TAXTBRC2016052KG228380",
+        "tbrcId": "T00JR769",
+        "rank": 7970
     },
     "T1CZ57": {
         "label": [
@@ -20100,42 +27236,54 @@ export const topics = {
                 "@value": "rno mthong /"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228380"
+        "parent": "O9TAXTBRC2016052KG228380",
+        "tbrcId": "T405",
+        "rank": 7925
     },
     "T1626": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "thod brtag"
         },
-        "parent": "O9TAXTBRC2016052KG228380"
+        "parent": "O9TAXTBRC2016052KG228380",
+        "tbrcId": "T1626",
+        "rank": 7875
     },
     "T1GS147806": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "sa glang brtags tshul/"
         },
-        "parent": "O9TAXTBRC2016052KG228380"
+        "parent": "O9TAXTBRC2016052KG228380",
+        "tbrcId": "T1GS147806",
+        "rank": 7895
     },
     "T1PD106852": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "byis pa'i rna pra/"
         },
-        "parent": "O9TAXTBRC2016052KG228380"
+        "parent": "O9TAXTBRC2016052KG228380",
+        "tbrcId": "T1PD106852",
+        "rank": 7935
     },
     "T2280": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "gar skye brtags pa/"
         },
-        "parent": "O9TAXTBRC2016052KG228380"
+        "parent": "O9TAXTBRC2016052KG228380",
+        "tbrcId": "T2280",
+        "rank": 7900
     },
     "T817": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "pra/"
         },
-        "parent": "O9TAXTBRC2016052KG228380"
+        "parent": "O9TAXTBRC2016052KG228380",
+        "tbrcId": "T817",
+        "rank": 7940
     },
     "T33": {
         "label": [
@@ -20148,7 +27296,9 @@ export const topics = {
                 "@value": "ma 'ongs lung bstan/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228380"
+        "parent": "O9TAXTBRC2016052KG228380",
+        "tbrcId": "T33",
+        "rank": 7965
     },
     "T826": {
         "label": [
@@ -20161,7 +27311,9 @@ export const topics = {
                 "@value": "占夢"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228380"
+        "parent": "O9TAXTBRC2016052KG228380",
+        "tbrcId": "T826",
+        "rank": 7870
     },
     "T2279": {
         "label": [
@@ -20174,7 +27326,9 @@ export const topics = {
                 "@value": "examination of signs of the length of life"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228380"
+        "parent": "O9TAXTBRC2016052KG228380",
+        "tbrcId": "T2279",
+        "rank": 7890
     },
     "T1CZ26": {
         "label": [
@@ -20187,7 +27341,9 @@ export const topics = {
                 "@value": "system of divination using a rosary"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228380"
+        "parent": "O9TAXTBRC2016052KG228380",
+        "tbrcId": "T1CZ26",
+        "rank": 7910
     },
     "T2244": {
         "label": [
@@ -20220,7 +27376,9 @@ export const topics = {
             "@language": "bo-x-ewts",
             "@value": "brtag ril bsgril ba/"
         },
-        "parent": "O9TAXTBRC2016052KG228380"
+        "parent": "O9TAXTBRC2016052KG228380",
+        "tbrcId": "T2283",
+        "rank": 7915
     },
     "T1PD106860": {
         "label": [
@@ -20233,7 +27391,9 @@ export const topics = {
                 "@value": "divination"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228380"
+        "parent": "O9TAXTBRC2016052KG228380",
+        "tbrcId": "T1PD106860",
+        "rank": 7930
     },
     "T1171": {
         "label": [
@@ -20246,28 +27406,36 @@ export const topics = {
                 "@value": "mo dpe/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228380"
+        "parent": "O9TAXTBRC2016052KG228380",
+        "tbrcId": "T1171",
+        "rank": 7920
     },
     "T4CZ16889": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "mi dpyad/"
         },
-        "parent": "O9TAXTBRC2016052KG228380"
+        "parent": "O9TAXTBRC2016052KG228380",
+        "tbrcId": "T4CZ16889",
+        "rank": 7945
     },
     "T1PD96320": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rta dpyad/"
         },
-        "parent": "O9TAXTBRC2016052KG228380"
+        "parent": "O9TAXTBRC2016052KG228380",
+        "tbrcId": "T1PD96320",
+        "rank": 7960
     },
     "T4CZ16890": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "bya rog gi skad brtag pa/"
         },
-        "parent": "O9TAXTBRC2016052KG228380"
+        "parent": "O9TAXTBRC2016052KG228380",
+        "tbrcId": "T4CZ16890",
+        "rank": 7880
     },
     "O9TAXTBRC2016052KG228330": {
         "sub": [
@@ -20289,7 +27457,9 @@ export const topics = {
                 "@value": "Geography"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228290"
+        "parent": "O9TAXTBRC2016052KG228290",
+        "tbrcId": "8",
+        "rank": 7642
     },
     "T1977": {
         "label": [
@@ -20302,14 +27472,18 @@ export const topics = {
                 "@value": "sa zhib/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228330"
+        "parent": "O9TAXTBRC2016052KG228330",
+        "tbrcId": "T1977",
+        "rank": 7652
     },
     "T2083": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "go la/"
         },
-        "parent": "O9TAXTBRC2016052KG228330"
+        "parent": "O9TAXTBRC2016052KG228330",
+        "tbrcId": "T2083",
+        "rank": 7657
     },
     "T1148": {
         "label": [
@@ -20326,7 +27500,9 @@ export const topics = {
                 "@value": "地理"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228330"
+        "parent": "O9TAXTBRC2016052KG228330",
+        "tbrcId": "T1148",
+        "rank": 7647
     },
     "O9TAXTBRC2016052KG228374": {
         "sub": [
@@ -20347,7 +27523,9 @@ export const topics = {
                 "@value": "格言"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228290"
+        "parent": "O9TAXTBRC2016052KG228290",
+        "tbrcId": "15",
+        "rank": 7829
     },
     "T2033": {
         "label": [
@@ -20360,7 +27538,9 @@ export const topics = {
                 "@value": "nītiśāstra"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228374"
+        "parent": "O9TAXTBRC2016052KG228374",
+        "tbrcId": "T2033",
+        "rank": 7834
     },
     "T245": {
         "label": [
@@ -20373,7 +27553,9 @@ export const topics = {
                 "@value": "didactic works"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228374"
+        "parent": "O9TAXTBRC2016052KG228374",
+        "tbrcId": "T245",
+        "rank": 7839
     },
     "T10MS14648": {
         "label": [
@@ -20413,7 +27595,9 @@ export const topics = {
                 "@value": "经济"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228290"
+        "parent": "O9TAXTBRC2016052KG228290",
+        "tbrcId": "7",
+        "rank": 7606
     },
     "T1KG858": {
         "label": [
@@ -20426,14 +27610,18 @@ export const topics = {
                 "@value": "economy"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228321"
+        "parent": "O9TAXTBRC2016052KG228321",
+        "tbrcId": "T1KG858",
+        "rank": 7611
     },
     "T00KG0635": {
         "label": {
             "@language": "en",
             "@value": "world trade organization­-china, china­-commercial policy"
         },
-        "parent": "O9TAXTBRC2016052KG228321"
+        "parent": "O9TAXTBRC2016052KG228321",
+        "tbrcId": "T00KG0635",
+        "rank": 7636
     },
     "T2208": {
         "label": [
@@ -20459,7 +27647,9 @@ export const topics = {
                 "@value": "wool trading"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228321"
+        "parent": "O9TAXTBRC2016052KG228321",
+        "tbrcId": "T2206",
+        "rank": 7631
     },
     "T1939": {
         "label": [
@@ -20472,7 +27662,9 @@ export const topics = {
                 "@value": "tibetan book market"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228321"
+        "parent": "O9TAXTBRC2016052KG228321",
+        "tbrcId": "T1939",
+        "rank": 7626
     },
     "T1KG15970": {
         "label": [
@@ -20485,7 +27677,9 @@ export const topics = {
                 "@value": "money"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228321"
+        "parent": "O9TAXTBRC2016052KG228321",
+        "tbrcId": "T1KG15970",
+        "rank": 4023
     },
     "T1160": {
         "label": [
@@ -20498,7 +27692,9 @@ export const topics = {
                 "@value": "economic development"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228321"
+        "parent": "O9TAXTBRC2016052KG228321",
+        "tbrcId": "T1160",
+        "rank": 7616
     },
     "T1184": {
         "label": [
@@ -20511,7 +27707,9 @@ export const topics = {
                 "@value": "tourism"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228321"
+        "parent": "O9TAXTBRC2016052KG228321",
+        "tbrcId": "T1184",
+        "rank": 7621
     },
     "O9TAXTBRC2016052KG228368": {
         "sub": [
@@ -20531,7 +27729,9 @@ export const topics = {
                 "@value": "考古"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228290"
+        "parent": "O9TAXTBRC2016052KG228290",
+        "tbrcId": "12",
+        "rank": 7796
     },
     "T1940": {
         "label": [
@@ -20544,7 +27744,9 @@ export const topics = {
                 "@value": "gna' dpyad rig pa/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228368"
+        "parent": "O9TAXTBRC2016052KG228368",
+        "tbrcId": "T1940",
+        "rank": 7801
     },
     "O9TAXTBRC2016052KG228310": {
         "sub": [
@@ -20564,7 +27766,9 @@ export const topics = {
                 "@value": "Women"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228290"
+        "parent": "O9TAXTBRC2016052KG228290",
+        "tbrcId": "4",
+        "rank": 7548
     },
     "T2419": {
         "label": [
@@ -20577,7 +27781,9 @@ export const topics = {
                 "@value": "skyes ma/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228310"
+        "parent": "O9TAXTBRC2016052KG228310",
+        "tbrcId": "T2419",
+        "rank": 7553
     },
     "O9TAXTBRC2016052KG226384": {
         "sub": [
@@ -20600,7 +27806,9 @@ export const topics = {
                 "@value": "Logic"
             }
         ],
-        "parent": "O9TAXTBRC201605"
+        "parent": "O9TAXTBRC201605",
+        "tbrcId": "nga",
+        "rank": 3358
     },
     "O9TAXTBRC2016052KG226385": {
         "sub": [
@@ -20642,7 +27850,9 @@ export const topics = {
                 "@value": "Pramāṇa"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226385"
+        "parent": "O9TAXTBRC2016052KG226385",
+        "tbrcId": "T370",
+        "rank": 3368
     },
     "T3CN2025": {
         "label": [
@@ -20682,7 +27892,9 @@ export const topics = {
                 "@value": "Specific Topics in Logic"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226384"
+        "parent": "O9TAXTBRC2016052KG226384",
+        "tbrcId": "2",
+        "rank": 3373
     },
     "T96": {
         "label": [
@@ -20699,7 +27911,9 @@ export const topics = {
                 "@value": "logic manual"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226388"
+        "parent": "O9TAXTBRC2016052KG226388",
+        "tbrcId": "T96",
+        "rank": 3378
     },
     "T1CZ834": {
         "label": [
@@ -20712,7 +27926,9 @@ export const topics = {
                 "@value": "critical examination"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226388"
+        "parent": "O9TAXTBRC2016052KG226388",
+        "tbrcId": "T1CZ834",
+        "rank": 3386
     },
     "T323": {
         "label": [
@@ -20733,14 +27949,18 @@ export const topics = {
                 "@value": "性相"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226388"
+        "parent": "O9TAXTBRC2016052KG226388",
+        "tbrcId": "T323",
+        "rank": 3382
     },
     "T00JR3585": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "ldog pa/"
         },
-        "parent": "O9TAXTBRC2016052KG226388"
+        "parent": "O9TAXTBRC2016052KG226388",
+        "tbrcId": "T00JR3585",
+        "rank": 3390
     },
     "O9TAXTBRC2016052KG226393": {
         "sub": [
@@ -20768,21 +27988,27 @@ export const topics = {
                 "@value": "Epistemology"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226384"
+        "parent": "O9TAXTBRC2016052KG226384",
+        "tbrcId": "3",
+        "rank": 3395
     },
     "T1422": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "bem shes ldan min 'du byed gsum/"
         },
-        "parent": "O9TAXTBRC2016052KG226393"
+        "parent": "O9TAXTBRC2016052KG226393",
+        "tbrcId": "T1422",
+        "rank": 3432
     },
     "T2353": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rnam shes ye shes kun gzhi/"
         },
-        "parent": "O9TAXTBRC2016052KG226393"
+        "parent": "O9TAXTBRC2016052KG226393",
+        "tbrcId": "T2353",
+        "rank": 3428
     },
     "T614": {
         "label": [
@@ -20795,7 +28021,9 @@ export const topics = {
                 "@value": "citta"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226393"
+        "parent": "O9TAXTBRC2016052KG226393",
+        "tbrcId": "T614",
+        "rank": 3404
     },
     "T1420": {
         "label": [
@@ -20812,21 +28040,27 @@ export const topics = {
                 "@value": "心类学"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226393"
+        "parent": "O9TAXTBRC2016052KG226393",
+        "tbrcId": "T1420",
+        "rank": 3400
     },
     "T2107": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rnam rig"
         },
-        "parent": "O9TAXTBRC2016052KG226393"
+        "parent": "O9TAXTBRC2016052KG226393",
+        "tbrcId": "T2107",
+        "rank": 3416
     },
     "T1247": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rnam rtog"
         },
-        "parent": "O9TAXTBRC2016052KG226393"
+        "parent": "O9TAXTBRC2016052KG226393",
+        "tbrcId": "T1247",
+        "rank": 3420
     },
     "T1359": {
         "label": [
@@ -20839,14 +28073,18 @@ export const topics = {
                 "@value": "citta-caitta"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226393"
+        "parent": "O9TAXTBRC2016052KG226393",
+        "tbrcId": "T1359",
+        "rank": 3408
     },
     "T1133": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "yid dang kun gzhi/"
         },
-        "parent": "O9TAXTBRC2016052KG226393"
+        "parent": "O9TAXTBRC2016052KG226393",
+        "tbrcId": "T1133",
+        "rank": 3412
     },
     "T1363": {
         "label": [
@@ -20859,7 +28097,9 @@ export const topics = {
                 "@value": "klesa"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226393"
+        "parent": "O9TAXTBRC2016052KG226393",
+        "tbrcId": "T1363",
+        "rank": 3424
     },
     "O9TAXTBRC2016052KG226403": {
         "sub": [
@@ -20892,7 +28132,9 @@ export const topics = {
                 "@value": "因类学"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226384"
+        "parent": "O9TAXTBRC2016052KG226384",
+        "tbrcId": "4",
+        "rank": 3437
     },
     "T1235": {
         "label": [
@@ -20909,7 +28151,9 @@ export const topics = {
                 "@value": "因类学"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226403"
+        "parent": "O9TAXTBRC2016052KG226403",
+        "tbrcId": "T1235",
+        "rank": 3442
     },
     "T1KG18568": {
         "label": [
@@ -20922,28 +28166,36 @@ export const topics = {
                 "@value": "jest"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226403"
+        "parent": "O9TAXTBRC2016052KG226403",
+        "tbrcId": "T1KG18568",
+        "rank": 3482
     },
     "T1898": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "mngon sum (tshad ma)"
         },
-        "parent": "O9TAXTBRC2016052KG226403"
+        "parent": "O9TAXTBRC2016052KG226403",
+        "tbrcId": "T1898",
+        "rank": 3470
     },
     "T1KG605": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rtsod zlog"
         },
-        "parent": "O9TAXTBRC2016052KG226403"
+        "parent": "O9TAXTBRC2016052KG226403",
+        "tbrcId": "T1KG605",
+        "rank": 3494
     },
     "T00EGS1017604": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rdul cha med/"
         },
-        "parent": "O9TAXTBRC2016052KG226403"
+        "parent": "O9TAXTBRC2016052KG226403",
+        "tbrcId": "T00EGS1017604",
+        "rank": 3454
     },
     "T2GS1330": {
         "label": [
@@ -20956,63 +28208,81 @@ export const topics = {
                 "@value": "substance"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226403"
+        "parent": "O9TAXTBRC2016052KG226403",
+        "tbrcId": "T2GS1330",
+        "rank": 3450
     },
     "T1477": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "dgag gzhi/"
         },
-        "parent": "O9TAXTBRC2016052KG226403"
+        "parent": "O9TAXTBRC2016052KG226403",
+        "tbrcId": "T1477",
+        "rank": 3486
     },
     "T1896": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rang don (tshad ma)"
         },
-        "parent": "O9TAXTBRC2016052KG226403"
+        "parent": "O9TAXTBRC2016052KG226403",
+        "tbrcId": "T1896",
+        "rank": 3462
     },
     "T2003": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "phyogs chos 'khor lo/"
         },
-        "parent": "O9TAXTBRC2016052KG226403"
+        "parent": "O9TAXTBRC2016052KG226403",
+        "tbrcId": "T2003",
+        "rank": 3446
     },
     "T1899": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "gzhan don (tshad ma)"
         },
-        "parent": "O9TAXTBRC2016052KG226403"
+        "parent": "O9TAXTBRC2016052KG226403",
+        "tbrcId": "T1899",
+        "rank": 3466
     },
     "T2344": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "thal bzlog"
         },
-        "parent": "O9TAXTBRC2016052KG226403"
+        "parent": "O9TAXTBRC2016052KG226403",
+        "tbrcId": "T2344",
+        "rank": 3490
     },
     "T00EGS1017605": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "skad cig cha med/"
         },
-        "parent": "O9TAXTBRC2016052KG226403"
+        "parent": "O9TAXTBRC2016052KG226403",
+        "tbrcId": "T00EGS1017605",
+        "rank": 3458
     },
     "T2024": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "sgrub ngag (tshad ma)"
         },
-        "parent": "O9TAXTBRC2016052KG226403"
+        "parent": "O9TAXTBRC2016052KG226403",
+        "tbrcId": "T2024",
+        "rank": 3474
     },
     "T1897": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "tshad ma grub pa/"
         },
-        "parent": "O9TAXTBRC2016052KG226403"
+        "parent": "O9TAXTBRC2016052KG226403",
+        "tbrcId": "T1897",
+        "rank": 3478
     },
     "O9TAXTBRC2016052KG228444": {
         "sub": [
@@ -21038,7 +28308,9 @@ export const topics = {
                 "@value": "dpyad gzhi'i rgyu cha/"
             }
         ],
-        "parent": "O9TAXTBRC201605"
+        "parent": "O9TAXTBRC201605",
+        "tbrcId": "ba",
+        "rank": 8110
     },
     "O9TAXTBRC2016052KG228449": {
         "sub": [
@@ -21058,7 +28330,9 @@ export const topics = {
                 "@value": "传记宝库"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228444"
+        "parent": "O9TAXTBRC2016052KG228444",
+        "tbrcId": "3",
+        "rank": 8133
     },
     "T1986": {
         "label": [
@@ -21071,7 +28345,9 @@ export const topics = {
                 "@value": "biographical dictionaries"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228449"
+        "parent": "O9TAXTBRC2016052KG228449",
+        "tbrcId": "T1986",
+        "rank": 8137
     },
     "O9TAXTBRC2016052KG228461": {
         "sub": [
@@ -21126,7 +28402,9 @@ export const topics = {
                 "@value": "Place names"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228444"
+        "parent": "O9TAXTBRC2016052KG228444",
+        "tbrcId": "7",
+        "rank": 8193
     },
     "T2550": {
         "label": [
@@ -21139,7 +28417,9 @@ export const topics = {
                 "@value": "dur khrod/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228461"
+        "parent": "O9TAXTBRC2016052KG228461",
+        "tbrcId": "T2550",
+        "rank": 8283
     },
     "T1KG6223": {
         "label": [
@@ -21152,7 +28432,9 @@ export const topics = {
                 "@value": "phyi rgyal/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228461"
+        "parent": "O9TAXTBRC2016052KG228461",
+        "tbrcId": "T1KG6223",
+        "rank": 4069
     },
     "T2252": {
         "label": [
@@ -21172,28 +28454,36 @@ export const topics = {
             "@language": "bo-x-ewts",
             "@value": "grwa tshang /"
         },
-        "parent": "O9TAXTBRC2016052KG228461"
+        "parent": "O9TAXTBRC2016052KG228461",
+        "tbrcId": "T2MS14919",
+        "rank": 8228
     },
     "T2328": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "gsas mkhar/"
         },
-        "parent": "O9TAXTBRC2016052KG228461"
+        "parent": "O9TAXTBRC2016052KG228461",
+        "tbrcId": "T2328",
+        "rank": 8273
     },
     "T2DB25490": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "lcags zam/"
         },
-        "parent": "O9TAXTBRC2016052KG228461"
+        "parent": "O9TAXTBRC2016052KG228461",
+        "tbrcId": "T2DB25490",
+        "rank": 8324
     },
     "T2MS14705": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "lha khang /"
         },
-        "parent": "O9TAXTBRC2016052KG228461"
+        "parent": "O9TAXTBRC2016052KG228461",
+        "tbrcId": "T2MS14705",
+        "rank": 8223
     },
     "T1427": {
         "label": [
@@ -21206,21 +28496,27 @@ export const topics = {
                 "@value": "ma Ni 'khor lo/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228461"
+        "parent": "O9TAXTBRC2016052KG228461",
+        "tbrcId": "T1427",
+        "rank": 8253
     },
     "T1CZ838": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "chu tshan/"
         },
-        "parent": "O9TAXTBRC2016052KG228461"
+        "parent": "O9TAXTBRC2016052KG228461",
+        "tbrcId": "T1CZ838",
+        "rank": 8334
     },
     "T1PD108894": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rdzong gzhis/"
         },
-        "parent": "O9TAXTBRC2016052KG228461"
+        "parent": "O9TAXTBRC2016052KG228461",
+        "tbrcId": "T1PD108894",
+        "rank": 8278
     },
     "T1168": {
         "label": [
@@ -21246,7 +28542,9 @@ export const topics = {
                 "@value": "tsho ba/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228461"
+        "parent": "O9TAXTBRC2016052KG228461",
+        "tbrcId": "T2CZ10092",
+        "rank": 8339
     },
     "T2CZ8059": {
         "label": [
@@ -21259,7 +28557,9 @@ export const topics = {
                 "@value": "monument, stone pillar"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228461"
+        "parent": "O9TAXTBRC2016052KG228461",
+        "tbrcId": "T2CZ8059",
+        "rank": 8268
     },
     "T2DB5092": {
         "label": [
@@ -21276,7 +28576,9 @@ export const topics = {
                 "@value": "地名"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228461"
+        "parent": "O9TAXTBRC2016052KG228461",
+        "tbrcId": "T2DB5092",
+        "rank": 8198
     },
     "T1KG26414": {
         "label": [
@@ -21296,7 +28598,9 @@ export const topics = {
             "@language": "bo-x-ewts",
             "@value": "bshad grwa/"
         },
-        "parent": "O9TAXTBRC2016052KG228461"
+        "parent": "O9TAXTBRC2016052KG228461",
+        "tbrcId": "T2MS14704",
+        "rank": 8233
     },
     "T2DB25444": {
         "label": [
@@ -21309,14 +28613,18 @@ export const topics = {
                 "@value": "lab rtse/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228461"
+        "parent": "O9TAXTBRC2016052KG228461",
+        "tbrcId": "T2DB25444",
+        "rank": 8263
     },
     "T2120": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "yul chen/"
         },
-        "parent": "O9TAXTBRC2016052KG228461"
+        "parent": "O9TAXTBRC2016052KG228461",
+        "tbrcId": "T2120",
+        "rank": 8314
     },
     "T1PD95792": {
         "label": [
@@ -21329,7 +28637,9 @@ export const topics = {
                 "@value": "map"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228461"
+        "parent": "O9TAXTBRC2016052KG228461",
+        "tbrcId": "T1PD95792",
+        "rank": 8203
     },
     "T359": {
         "label": [
@@ -21346,21 +28656,27 @@ export const topics = {
                 "@value": "monasteries"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228461"
+        "parent": "O9TAXTBRC2016052KG228461",
+        "tbrcId": "T359",
+        "rank": 8208
     },
     "T2GS1006": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "gnas/"
         },
-        "parent": "O9TAXTBRC2016052KG228461"
+        "parent": "O9TAXTBRC2016052KG228461",
+        "tbrcId": "T2GS1006",
+        "rank": 8299
     },
     "T4CZ15582": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "'ol mo lung rings/"
         },
-        "parent": "O9TAXTBRC2016052KG228461"
+        "parent": "O9TAXTBRC2016052KG228461",
+        "tbrcId": "T4CZ15582",
+        "rank": 8364
     },
     "T2MS13270": {
         "label": [
@@ -21373,7 +28689,9 @@ export const topics = {
                 "@value": "gangs ri/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228461"
+        "parent": "O9TAXTBRC2016052KG228461",
+        "tbrcId": "T2MS13270",
+        "rank": 8309
     },
     "T2CZ10136": {
         "label": [
@@ -21386,7 +28704,9 @@ export const topics = {
                 "@value": "nags tshal/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228461"
+        "parent": "O9TAXTBRC2016052KG228461",
+        "tbrcId": "T2CZ10136",
+        "rank": 8329
     },
     "T1245": {
         "label": [
@@ -21399,21 +28719,27 @@ export const topics = {
                 "@value": "'brog sde/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228461"
+        "parent": "O9TAXTBRC2016052KG228461",
+        "tbrcId": "T1245",
+        "rank": 8344
     },
     "T2258": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "gtsug lag khang /"
         },
-        "parent": "O9TAXTBRC2016052KG228461"
+        "parent": "O9TAXTBRC2016052KG228461",
+        "tbrcId": "T2258",
+        "rank": 8218
     },
     "T2389": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "bang so/"
         },
-        "parent": "O9TAXTBRC2016052KG228461"
+        "parent": "O9TAXTBRC2016052KG228461",
+        "tbrcId": "T2389",
+        "rank": 8288
     },
     "T1KG24263": {
         "label": [
@@ -21433,7 +28759,9 @@ export const topics = {
             "@language": "bo-x-ewts",
             "@value": "ma Ni khang /"
         },
-        "parent": "O9TAXTBRC2016052KG228461"
+        "parent": "O9TAXTBRC2016052KG228461",
+        "tbrcId": "T2DB25443",
+        "rank": 8248
     },
     "T00KG09827": {
         "label": [
@@ -21446,7 +28774,9 @@ export const topics = {
                 "@value": "dar po che/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228461"
+        "parent": "O9TAXTBRC2016052KG228461",
+        "tbrcId": "T00KG09827",
+        "rank": 8258
     },
     "T2079": {
         "label": [
@@ -21463,7 +28793,9 @@ export const topics = {
                 "@value": "噶玛大营寺"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228461"
+        "parent": "O9TAXTBRC2016052KG228461",
+        "tbrcId": "T2079",
+        "rank": 8349
     },
     "T1113": {
         "label": [
@@ -21476,7 +28808,9 @@ export const topics = {
                 "@value": "tibet"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228461"
+        "parent": "O9TAXTBRC2016052KG228461",
+        "tbrcId": "T1113",
+        "rank": 8369
     },
     "T2CZ10052": {
         "label": [
@@ -21500,14 +28834,18 @@ export const topics = {
             "@language": "bo-x-ewts",
             "@value": "zam pa/"
         },
-        "parent": "O9TAXTBRC2016052KG228461"
+        "parent": "O9TAXTBRC2016052KG228461",
+        "tbrcId": "T2DB25491",
+        "rank": 8319
     },
     "T2080": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "sgrub grwa/"
         },
-        "parent": "O9TAXTBRC2016052KG228461"
+        "parent": "O9TAXTBRC2016052KG228461",
+        "tbrcId": "T2080",
+        "rank": 8238
     },
     "T818": {
         "label": [
@@ -21528,7 +28866,9 @@ export const topics = {
                 "@value": "窣堵波"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228461"
+        "parent": "O9TAXTBRC2016052KG228461",
+        "tbrcId": "T818",
+        "rank": 8243
     },
     "O9TAXTBRC2016052KG228451": {
         "sub": [
@@ -21548,7 +28888,9 @@ export const topics = {
                 "@value": "Journals/Periodicals"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228444"
+        "parent": "O9TAXTBRC2016052KG228444",
+        "tbrcId": "4",
+        "rank": 8142
     },
     "T297": {
         "label": [
@@ -21561,7 +28903,9 @@ export const topics = {
                 "@value": "journals"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228451"
+        "parent": "O9TAXTBRC2016052KG228451",
+        "tbrcId": "T297",
+        "rank": 8147
     },
     "O9TAXTBRC2016052KG228447": {
         "sub": [
@@ -21581,7 +28925,9 @@ export const topics = {
                 "@value": "百科书"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228444"
+        "parent": "O9TAXTBRC2016052KG228444",
+        "tbrcId": "2",
+        "rank": 8124
     },
     "T1830": {
         "label": [
@@ -21594,7 +28940,9 @@ export const topics = {
                 "@value": "encyclopedia"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228447"
+        "parent": "O9TAXTBRC2016052KG228447",
+        "tbrcId": "T1830",
+        "rank": 8128
     },
     "O9TAXTBRC2016052KG228445": {
         "sub": [
@@ -21614,7 +28962,9 @@ export const topics = {
                 "@value": "词典"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228444"
+        "parent": "O9TAXTBRC2016052KG228444",
+        "tbrcId": "1",
+        "rank": 8115
     },
     "T220": {
         "label": [
@@ -21627,7 +28977,9 @@ export const topics = {
                 "@value": "dictionary"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228445"
+        "parent": "O9TAXTBRC2016052KG228445",
+        "tbrcId": "T220",
+        "rank": 8119
     },
     "O9TAXTBRC2016052KG228458": {
         "sub": [
@@ -21648,7 +29000,9 @@ export const topics = {
                 "@value": "Handbooks"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228444"
+        "parent": "O9TAXTBRC2016052KG228444",
+        "tbrcId": "6",
+        "rank": 8177
     },
     "T1KG15794": {
         "label": [
@@ -21661,7 +29015,9 @@ export const topics = {
                 "@value": "handbook"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228458"
+        "parent": "O9TAXTBRC2016052KG228458",
+        "tbrcId": "T1KG15794",
+        "rank": 8181
     },
     "T1KG15050": {
         "label": [
@@ -21674,7 +29030,9 @@ export const topics = {
                 "@value": "management handbook"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228458"
+        "parent": "O9TAXTBRC2016052KG228458",
+        "tbrcId": "T1KG15050",
+        "rank": 8187
     },
     "O9TAXTBRC2016052KG228453": {
         "sub": [
@@ -21697,7 +29055,9 @@ export const topics = {
                 "@value": "新闻"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228444"
+        "parent": "O9TAXTBRC2016052KG228444",
+        "tbrcId": "5",
+        "rank": 8152
     },
     "T2585": {
         "label": [
@@ -21710,7 +29070,9 @@ export const topics = {
                 "@value": "radio broadcasting"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228453"
+        "parent": "O9TAXTBRC2016052KG228453",
+        "tbrcId": "T2585",
+        "rank": 8171
     },
     "T00KG03708": {
         "label": [
@@ -21723,7 +29085,9 @@ export const topics = {
                 "@value": "news"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228453"
+        "parent": "O9TAXTBRC2016052KG228453",
+        "tbrcId": "T00KG03708",
+        "rank": 8157
     },
     "T1983": {
         "label": [
@@ -21736,7 +29100,9 @@ export const topics = {
                 "@value": "journalistic writing"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228453"
+        "parent": "O9TAXTBRC2016052KG228453",
+        "tbrcId": "T1983",
+        "rank": 4859
     },
     "T8LS16963": {
         "label": [
@@ -21749,7 +29115,9 @@ export const topics = {
                 "@value": "tshags shog"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228453"
+        "parent": "O9TAXTBRC2016052KG228453",
+        "tbrcId": "T8LS16963",
+        "rank": 8161
     },
     "O9TAXTBRC2016052KG226920": {
         "sub": [
@@ -21771,7 +29139,9 @@ export const topics = {
                 "@value": "Collected Writings"
             }
         ],
-        "parent": "O9TAXTBRC201605"
+        "parent": "O9TAXTBRC201605",
+        "tbrcId": "tha",
+        "rank": 5851
     },
     "O9TAXTBRC2016052KG226921": {
         "sub": [
@@ -21802,7 +29172,9 @@ export const topics = {
                 "@value": "Collected Works"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226920"
+        "parent": "O9TAXTBRC2016052KG226920",
+        "tbrcId": "tha",
+        "rank": 5851
     },
     "O9TAXTBRC2016052KG227123": {
         "sub": [
@@ -21823,14 +29195,18 @@ export const topics = {
                 "@value": "香巴"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226921"
+        "parent": "O9TAXTBRC2016052KG226921",
+        "tbrcId": "6",
+        "rank": 6795
     },
     "T383": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "shangs pa bka' brgyud/"
         },
-        "parent": "O9TAXTBRC2016052KG227123"
+        "parent": "O9TAXTBRC2016052KG227123",
+        "tbrcId": "T383",
+        "rank": 6800
     },
     "O9TAXTBRC2016052KG227125": {
         "sub": [
@@ -21853,7 +29229,9 @@ export const topics = {
                 "@value": "shangpa related topics"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227123"
+        "parent": "O9TAXTBRC2016052KG227123",
+        "tbrcId": "4",
+        "rank": 152
     },
     "T1483": {
         "label": [
@@ -21866,14 +29244,18 @@ export const topics = {
                 "@value": "six teachings of niguma"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227125"
+        "parent": "O9TAXTBRC2016052KG227125",
+        "tbrcId": "T1483",
+        "rank": 6809
     },
     "T1825": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "me tog mkha' spyod dkar dmar/"
         },
-        "parent": "O9TAXTBRC2016052KG227125"
+        "parent": "O9TAXTBRC2016052KG227125",
+        "tbrcId": "T1825",
+        "rank": 1991
     },
     "T1587": {
         "label": {
@@ -21900,7 +29282,9 @@ export const topics = {
                 "@value": "collected works"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226921"
+        "parent": "O9TAXTBRC2016052KG226921",
+        "tbrcId": "T208",
+        "rank": 5859
     },
     "O9TAXTBRC2016052KG227143": {
         "sub": [
@@ -21920,14 +29304,18 @@ export const topics = {
                 "@value": "宁竹"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226921"
+        "parent": "O9TAXTBRC2016052KG226921",
+        "tbrcId": "9",
+        "rank": 6895
     },
     "T1542": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "o rgyan bsnyen sgrub/"
         },
-        "parent": "O9TAXTBRC2016052KG227143"
+        "parent": "O9TAXTBRC2016052KG227143",
+        "tbrcId": "T1542",
+        "rank": 6900
     },
     "O9TAXTBRC2016052KG227145": {
         "sub": [
@@ -21948,7 +29336,9 @@ export const topics = {
                 "@value": "小派系"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226921"
+        "parent": "O9TAXTBRC2016052KG226921",
+        "tbrcId": "10",
+        "rank": 6905
     },
     "O9TAXTBRC2016052KG227146": {
         "sub": [
@@ -21964,14 +29354,18 @@ export const topics = {
                 "@value": "博东"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227145"
+        "parent": "O9TAXTBRC2016052KG227145",
+        "tbrcId": "1",
+        "rank": 6910
     },
     "T2054": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "bo dong /"
         },
-        "parent": "O9TAXTBRC2016052KG227146"
+        "parent": "O9TAXTBRC2016052KG227146",
+        "tbrcId": "T2054",
+        "rank": 6913
     },
     "O9TAXTBRC2016052KG227148": {
         "sub": [
@@ -21987,14 +29381,18 @@ export const topics = {
                 "@value": "夏鲁"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227145"
+        "parent": "O9TAXTBRC2016052KG227145",
+        "tbrcId": "2",
+        "rank": 6919
     },
     "T1198": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "zhwa lu/"
         },
-        "parent": "O9TAXTBRC2016052KG227148"
+        "parent": "O9TAXTBRC2016052KG227148",
+        "tbrcId": "T1198",
+        "rank": 6922
     },
     "O9TAXTBRC2016052KG227150": {
         "sub": [
@@ -22032,7 +29430,9 @@ export const topics = {
                 "@value": "利美｜无偏见"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227150"
+        "parent": "O9TAXTBRC2016052KG227150",
+        "tbrcId": "T808",
+        "rank": 1542
     },
     "T1596": {
         "label": {
@@ -22066,7 +29466,9 @@ export const topics = {
                 "@value": "宁玛"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226921"
+        "parent": "O9TAXTBRC2016052KG226921",
+        "tbrcId": "2",
+        "rank": 5884
     },
     "O9TAXTBRC2016052KG226929": {
         "sub": [
@@ -22092,7 +29494,9 @@ export const topics = {
                 "@value": "Kama"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226927"
+        "parent": "O9TAXTBRC2016052KG226927",
+        "tbrcId": "1",
+        "rank": 5893
     },
     "T1PD181203": {
         "label": {
@@ -22120,21 +29524,27 @@ export const topics = {
             "@language": "bo-x-ewts",
             "@value": "bka' brgyad yongs 'dus/"
         },
-        "parent": "O9TAXTBRC2016052KG226929"
+        "parent": "O9TAXTBRC2016052KG226929",
+        "tbrcId": "T1374",
+        "rank": 5927
     },
     "T327": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "bka' brgyad bde gshegs 'dus pa (nyang ral nyi ma 'od zer)"
         },
-        "parent": "O9TAXTBRC2016052KG226929"
+        "parent": "O9TAXTBRC2016052KG226929",
+        "tbrcId": "T327",
+        "rank": 5913
     },
     "T310": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "bka' ma/"
         },
-        "parent": "O9TAXTBRC2016052KG226929"
+        "parent": "O9TAXTBRC2016052KG226929",
+        "tbrcId": "T310",
+        "rank": 5898
     },
     "T1370": {
         "label": {
@@ -22163,14 +29573,18 @@ export const topics = {
                 "@value": "意藏"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226927"
+        "parent": "O9TAXTBRC2016052KG226927",
+        "tbrcId": "3",
+        "rank": 6239
     },
     "T328": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "klong chen snying thig ('jigs med gling pa)"
         },
-        "parent": "O9TAXTBRC2016052KG227009"
+        "parent": "O9TAXTBRC2016052KG227009",
+        "tbrcId": "T328",
+        "rank": 6248
     },
     "T2604": {
         "label": [
@@ -22183,14 +29597,18 @@ export const topics = {
                 "@value": "dgongs gter/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227009"
+        "parent": "O9TAXTBRC2016052KG227009",
+        "tbrcId": "T2604",
+        "rank": 6244
     },
     "T463": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "grub thob thugs tig"
         },
-        "parent": "O9TAXTBRC2016052KG227009"
+        "parent": "O9TAXTBRC2016052KG227009",
+        "tbrcId": "T463",
+        "rank": 6252
     },
     "O9TAXTBRC2016052KG227013": {
         "sub": [
@@ -22220,21 +29638,27 @@ export const topics = {
                 "@value": "北藏"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226927"
+        "parent": "O9TAXTBRC2016052KG226927",
+        "tbrcId": "4",
+        "rank": 6257
     },
     "T521": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "bla ma longs sku rdzogs chen tshe dbang /"
         },
-        "parent": "O9TAXTBRC2016052KG227013"
+        "parent": "O9TAXTBRC2016052KG227013",
+        "tbrcId": "T521",
+        "rank": 6326
     },
     "T1792": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "lcags sdong ma tshar lugs/"
         },
-        "parent": "O9TAXTBRC2016052KG227013"
+        "parent": "O9TAXTBRC2016052KG227013",
+        "tbrcId": "T1792",
+        "rank": 6302
     },
     "T1199": {
         "label": [
@@ -22247,91 +29671,117 @@ export const topics = {
                 "@value": "byang gter/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227013"
+        "parent": "O9TAXTBRC2016052KG227013",
+        "tbrcId": "T1199",
+        "rank": 6261
     },
     "T522": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "tshe sgrub lcags sdong ma (byang gter)"
         },
-        "parent": "O9TAXTBRC2016052KG227013"
+        "parent": "O9TAXTBRC2016052KG227013",
+        "tbrcId": "T522",
+        "rank": 6278
     },
     "T1AT305": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "gcod yul dpa' bo'i thol glu/"
         },
-        "parent": "O9TAXTBRC2016052KG227013"
+        "parent": "O9TAXTBRC2016052KG227013",
+        "tbrcId": "T1AT305",
+        "rank": 6306
     },
     "T1889": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "dgongs pa zang thal/"
         },
-        "parent": "O9TAXTBRC2016052KG227013"
+        "parent": "O9TAXTBRC2016052KG227013",
+        "tbrcId": "T1889",
+        "rank": 6318
     },
     "T478": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rtsa gsum dril sgrub ('jam dbyangs bla ma)"
         },
-        "parent": "O9TAXTBRC2016052KG227013"
+        "parent": "O9TAXTBRC2016052KG227013",
+        "tbrcId": "T478",
+        "rank": 6322
     },
     "T1712": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "thugs rje chen po 'gro ba kun grol (byang gter)"
         },
-        "parent": "O9TAXTBRC2016052KG227013"
+        "parent": "O9TAXTBRC2016052KG227013",
+        "tbrcId": "T1712",
+        "rank": 6282
     },
     "T1713": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "thugs sgrub drag po rtsal (byang gter)"
         },
-        "parent": "O9TAXTBRC2016052KG227013"
+        "parent": "O9TAXTBRC2016052KG227013",
+        "tbrcId": "T1713",
+        "rank": 6266
     },
     "T1098": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "bla ma rig 'dzin gdung sgrub (rgod ldem 'phru can)"
         },
-        "parent": "O9TAXTBRC2016052KG227013"
+        "parent": "O9TAXTBRC2016052KG227013",
+        "tbrcId": "T1098",
+        "rank": 6274
     },
     "T1493": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rig 'dzin 'dus pa (rgod kyi ldem 'phru can)"
         },
-        "parent": "O9TAXTBRC2016052KG227013"
+        "parent": "O9TAXTBRC2016052KG227013",
+        "tbrcId": "T1493",
+        "rank": 6270
     },
     "T00EGS1016754": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "thugs chen sprul sku snying thig (gar dbang rdo rje)"
         },
-        "parent": "O9TAXTBRC2016052KG227013"
+        "parent": "O9TAXTBRC2016052KG227013",
+        "tbrcId": "T00EGS1016754",
+        "rank": 6294
     },
     "T1375": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "bsam pa lhun grub (rgod ldem 'phru can)"
         },
-        "parent": "O9TAXTBRC2016052KG227013"
+        "parent": "O9TAXTBRC2016052KG227013",
+        "tbrcId": "T1375",
+        "rank": 6290
     },
     "T1242": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "bla ma rig 'dzin yongs 'dus (mnga' ris paN chen)"
         },
-        "parent": "O9TAXTBRC2016052KG227013"
+        "parent": "O9TAXTBRC2016052KG227013",
+        "tbrcId": "T1242",
+        "rank": 6286
     },
     "T1243": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "gu ru sgrub thabs yon tan gter mdzod/"
         },
-        "parent": "O9TAXTBRC2016052KG227013"
+        "parent": "O9TAXTBRC2016052KG227013",
+        "tbrcId": "T1243",
+        "rank": 6298
     },
     "O9TAXTBRC2016052KG226937": {
         "sub": [
@@ -22428,91 +29878,117 @@ export const topics = {
             "@language": "bo-x-ewts",
             "@value": "mkha' 'gro gsang 'dus (mkhyen brtse'i dbang po)"
         },
-        "parent": "O9TAXTBRC2016052KG226937"
+        "parent": "O9TAXTBRC2016052KG226937",
+        "tbrcId": "T01AG03033",
+        "rank": 6206
     },
     "T515": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "bla ma gsang 'dus (gu ru chos dbang)"
         },
-        "parent": "O9TAXTBRC2016052KG226937"
+        "parent": "O9TAXTBRC2016052KG226937",
+        "tbrcId": "T515",
+        "rank": 5962
     },
     "T01AG02947": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "lce btsun snying thig (mkhyen brtse'i dbang po)"
         },
-        "parent": "O9TAXTBRC2016052KG226937"
+        "parent": "O9TAXTBRC2016052KG226937",
+        "tbrcId": "T01AG02947",
+        "rank": 6198
     },
     "T1PD45091": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "thugs sgrub dregs pa tshar gcod (gu ru chos dbang)"
         },
-        "parent": "O9TAXTBRC2016052KG226937"
+        "parent": "O9TAXTBRC2016052KG226937",
+        "tbrcId": "T1PD45091",
+        "rank": 5954
     },
     "T1657": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "thugs rje chen po gsang ba 'dus pa ( rat+na gling pa)"
         },
-        "parent": "O9TAXTBRC2016052KG226937"
+        "parent": "O9TAXTBRC2016052KG226937",
+        "tbrcId": "T1657",
+        "rank": 6018
     },
     "T1183": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "bka' brgyad gsang ba yongs rdzogs (gu ru chos dbang)"
         },
-        "parent": "O9TAXTBRC2016052KG226937"
+        "parent": "O9TAXTBRC2016052KG226937",
+        "tbrcId": "T1183",
+        "rank": 5950
     },
     "T1851": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "kun bzang dgongs 'dus (pad+ma gling pa)"
         },
-        "parent": "O9TAXTBRC2016052KG226937"
+        "parent": "O9TAXTBRC2016052KG226937",
+        "tbrcId": "T1851",
+        "rank": 6034
     },
     "T1395": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "dbang drag 'bar ba ('ja' tshon snying po)"
         },
-        "parent": "O9TAXTBRC2016052KG226937"
+        "parent": "O9TAXTBRC2016052KG226937",
+        "tbrcId": "T1395",
+        "rank": 5990
     },
     "T01JR184": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "mkha' 'gro snying thig (pad+ma las 'brel rtsal)"
         },
-        "parent": "O9TAXTBRC2016052KG226937"
+        "parent": "O9TAXTBRC2016052KG226937",
+        "tbrcId": "T01JR184",
+        "rank": 6050
     },
     "T2305": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "hUM skor snying thig (rdo rje gling pa)"
         },
-        "parent": "O9TAXTBRC2016052KG226937"
+        "parent": "O9TAXTBRC2016052KG226937",
+        "tbrcId": "T2305",
+        "rank": 6062
     },
     "T00AG01243": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "bi ma snying thig"
         },
-        "parent": "O9TAXTBRC2016052KG226937"
+        "parent": "O9TAXTBRC2016052KG226937",
+        "tbrcId": "T00AG01243",
+        "rank": 5946
     },
     "T2540": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "thugs chen 'khor ba las sgrol (zhig po gling pa)"
         },
-        "parent": "O9TAXTBRC2016052KG226937"
+        "parent": "O9TAXTBRC2016052KG226937",
+        "tbrcId": "T2540",
+        "rank": 6102
     },
     "T00AG01402": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "klong snying yang gsang bla sgrub thig le'i rgya can/"
         },
-        "parent": "O9TAXTBRC2016052KG226937"
+        "parent": "O9TAXTBRC2016052KG226937",
+        "tbrcId": "T00AG01402",
+        "rank": 5998
     },
     "T2MS11744": {
         "label": [
@@ -22525,105 +30001,135 @@ export const topics = {
                 "@value": "cycle of gter ma associated with Yeshe Tsogyal"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226937"
+        "parent": "O9TAXTBRC2016052KG226937",
+        "tbrcId": "T2MS11744",
+        "rank": 6114
     },
     "T2134": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "tshe sgrub thabs shes kha sbyor (yongs dge mi 'gyur rdo rje)"
         },
-        "parent": "O9TAXTBRC2016052KG226937"
+        "parent": "O9TAXTBRC2016052KG226937",
+        "tbrcId": "T2134",
+        "rank": 6150
     },
     "T1686": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "dkon mchog spyi 'dus/ ('ja' tshon snying po)"
         },
-        "parent": "O9TAXTBRC2016052KG226937"
+        "parent": "O9TAXTBRC2016052KG226937",
+        "tbrcId": "T1686",
+        "rank": 5986
     },
     "T530": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "'chi med rtsa gsum dril sgrub (chos rje gling pa)"
         },
-        "parent": "O9TAXTBRC2016052KG226937"
+        "parent": "O9TAXTBRC2016052KG226937",
+        "tbrcId": "T530",
+        "rank": 6134
     },
     "T1809": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "yi dam dgongs 'dus (bsam gtan gling pa)"
         },
-        "parent": "O9TAXTBRC2016052KG226937"
+        "parent": "O9TAXTBRC2016052KG226937",
+        "tbrcId": "T1809",
+        "rank": 6126
     },
     "T1GS129611": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "gu ru rdo rje drag rtsal (stag sham nus ldan rdo rje)"
         },
-        "parent": "O9TAXTBRC2016052KG226937"
+        "parent": "O9TAXTBRC2016052KG226937",
+        "tbrcId": "T1GS129611",
+        "rank": 6118
     },
     "T813": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "dam chos dgongs pa yongs 'dus (bdud 'dul rdo rje)"
         },
-        "parent": "O9TAXTBRC2016052KG226937"
+        "parent": "O9TAXTBRC2016052KG226937",
+        "tbrcId": "T813",
+        "rank": 6158
     },
     "T1115": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "bla ma dgongs 'dus rtsa ba'i thugs sgrub/"
         },
-        "parent": "O9TAXTBRC2016052KG226937"
+        "parent": "O9TAXTBRC2016052KG226937",
+        "tbrcId": "T1115",
+        "rank": 6074
     },
     "T1833": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "pad+ma bdz+ra/ (yongs dge)"
         },
-        "parent": "O9TAXTBRC2016052KG226937"
+        "parent": "O9TAXTBRC2016052KG226937",
+        "tbrcId": "T1833",
+        "rank": 6146
     },
     "T557": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "tshe sgrub gsang ba 'dus pa ( rat+na gling pa)"
         },
-        "parent": "O9TAXTBRC2016052KG226937"
+        "parent": "O9TAXTBRC2016052KG226937",
+        "tbrcId": "T557",
+        "rank": 6002
     },
     "T2029": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "bka' brgyad thugs kyi me long ( pad+ma gling pa)"
         },
-        "parent": "O9TAXTBRC2016052KG226937"
+        "parent": "O9TAXTBRC2016052KG226937",
+        "tbrcId": "T2029",
+        "rank": 6030
     },
     "T2597": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "phur pa gnam lcags spu gri (bdud 'dul rdo rje)"
         },
-        "parent": "O9TAXTBRC2016052KG226937"
+        "parent": "O9TAXTBRC2016052KG226937",
+        "tbrcId": "T2597",
+        "rank": 6170
     },
     "T00AG01370": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "bla ma drag po rta khyung 'bar ba ('jigs med gling pa)"
         },
-        "parent": "O9TAXTBRC2016052KG226937"
+        "parent": "O9TAXTBRC2016052KG226937",
+        "tbrcId": "T00AG01370",
+        "rank": 6186
     },
     "T01JR183": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "dpal chen bka' 'dus rgya mtsho ('jigs med gling pa)"
         },
-        "parent": "O9TAXTBRC2016052KG226937"
+        "parent": "O9TAXTBRC2016052KG226937",
+        "tbrcId": "T01JR183",
+        "rank": 6182
     },
     "T00AG01369": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "klong chen snying thig gi bla ma rig 'dzin 'dus pa ('jigs med gling pa)"
         },
-        "parent": "O9TAXTBRC2016052KG226937"
+        "parent": "O9TAXTBRC2016052KG226937",
+        "tbrcId": "T00AG01369",
+        "rank": 6190
     },
     "T00AG01281": {
         "label": {
@@ -22637,175 +30143,225 @@ export const topics = {
             "@language": "bo-x-ewts",
             "@value": "bla ma kun 'dus yid bzhin nro bu/"
         },
-        "parent": "O9TAXTBRC2016052KG226937"
+        "parent": "O9TAXTBRC2016052KG226937",
+        "tbrcId": "T537",
+        "rank": 6078
     },
     "T1GS129605": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "gro lod hUm sgrub (bdud 'dul rdo rje)"
         },
-        "parent": "O9TAXTBRC2016052KG226937"
+        "parent": "O9TAXTBRC2016052KG226937",
+        "tbrcId": "T1GS129605",
+        "rank": 6166
     },
     "T1308": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rig 'dzin byin 'bebs/"
         },
-        "parent": "O9TAXTBRC2016052KG226937"
+        "parent": "O9TAXTBRC2016052KG226937",
+        "tbrcId": "T1308",
+        "rank": 6234
     },
     "T01AG03059": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "bla sgrub 'od gsal snying thig (chos kyi blo gros)"
         },
-        "parent": "O9TAXTBRC2016052KG226937"
+        "parent": "O9TAXTBRC2016052KG226937",
+        "tbrcId": "T01AG03059",
+        "rank": 6230
     },
     "T1241": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "thugs sgrub yang snying 'dus pa (rat+na gling pa)"
         },
-        "parent": "O9TAXTBRC2016052KG226937"
+        "parent": "O9TAXTBRC2016052KG226937",
+        "tbrcId": "T1241",
+        "rank": 6014
     },
     "T1390": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "'ja' tshon pod drug"
         },
-        "parent": "O9TAXTBRC2016052KG226937"
+        "parent": "O9TAXTBRC2016052KG226937",
+        "tbrcId": "T1390",
+        "rank": 5994
     },
     "T1371": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "bla ma drag po ye shes rab 'bar (klong gsal snying po)"
         },
-        "parent": "O9TAXTBRC2016052KG226937"
+        "parent": "O9TAXTBRC2016052KG226937",
+        "tbrcId": "T1371",
+        "rank": 6098
     },
     "T1810": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "bla ma'i thugs sgrub nor bu rgya mtsho/"
         },
-        "parent": "O9TAXTBRC2016052KG226937"
+        "parent": "O9TAXTBRC2016052KG226937",
+        "tbrcId": "T1810",
+        "rank": 6046
     },
     "T1814": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rtsa gsum yongs rdzogs rdo rje gro lod (yong dge mi 'gyur rdo rje)"
         },
-        "parent": "O9TAXTBRC2016052KG226937"
+        "parent": "O9TAXTBRC2016052KG226937",
+        "tbrcId": "T1814",
+        "rank": 6142
     },
     "T2CZ9234": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "zab mo yang tig"
         },
-        "parent": "O9TAXTBRC2016052KG226937"
+        "parent": "O9TAXTBRC2016052KG226937",
+        "tbrcId": "T2CZ9234",
+        "rank": 6082
     },
     "T2316": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "pad+ma tshe yi snying thig (mkhyen brtse'i dbang po)"
         },
-        "parent": "O9TAXTBRC2016052KG226937"
+        "parent": "O9TAXTBRC2016052KG226937",
+        "tbrcId": "T2316",
+        "rank": 6210
     },
     "T474": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rtsa gsum dril sgrub (kar lugs)"
         },
-        "parent": "O9TAXTBRC2016052KG226937"
+        "parent": "O9TAXTBRC2016052KG226937",
+        "tbrcId": "T474",
+        "rank": 6226
     },
     "T1GS124492": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "tshe sgrub rgyal ba 'dus pa (zhig po gling pa)"
         },
-        "parent": "O9TAXTBRC2016052KG226937"
+        "parent": "O9TAXTBRC2016052KG226937",
+        "tbrcId": "T1GS124492",
+        "rank": 6106
     },
     "T2313": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "phyag rdor gtum po me lceng phreng ba (gu ru chos dbang)"
         },
-        "parent": "O9TAXTBRC2016052KG226937"
+        "parent": "O9TAXTBRC2016052KG226937",
+        "tbrcId": "T2313",
+        "rank": 5966
     },
     "T315": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "thugs rje chen po yang snying 'dus pa/"
         },
-        "parent": "O9TAXTBRC2016052KG226937"
+        "parent": "O9TAXTBRC2016052KG226937",
+        "tbrcId": "T315",
+        "rank": 6054
     },
     "T471": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rtsa gsum dril sgrub (sangs rgyas bla ma)"
         },
-        "parent": "O9TAXTBRC2016052KG226937"
+        "parent": "O9TAXTBRC2016052KG226937",
+        "tbrcId": "T471",
+        "rank": 5978
     },
     "T1117": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "bla ma bka' 'dus rin chen gter spungs (rdo rje gling pa)"
         },
-        "parent": "O9TAXTBRC2016052KG226937"
+        "parent": "O9TAXTBRC2016052KG226937",
+        "tbrcId": "T1117",
+        "rank": 6066
     },
     "T1325": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "zab lam thugs kyi nor bu (chos rje gling pa)"
         },
-        "parent": "O9TAXTBRC2016052KG226937"
+        "parent": "O9TAXTBRC2016052KG226937",
+        "tbrcId": "T1325",
+        "rank": 6130
     },
     "T00JR3354": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "klong gsal mkha' 'gro snying thig"
         },
-        "parent": "O9TAXTBRC2016052KG226937"
+        "parent": "O9TAXTBRC2016052KG226937",
+        "tbrcId": "T00JR3354",
+        "rank": 6086
     },
     "T485": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rtsa gsum kun 'dus (zhig gling)"
         },
-        "parent": "O9TAXTBRC2016052KG226937"
+        "parent": "O9TAXTBRC2016052KG226937",
+        "tbrcId": "T485",
+        "rank": 6110
     },
     "T2139": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "bla ma nor bu rgya mtsho ( pad+ma gling pa)"
         },
-        "parent": "O9TAXTBRC2016052KG226937"
+        "parent": "O9TAXTBRC2016052KG226937",
+        "tbrcId": "T2139",
+        "rank": 6038
     },
     "T477": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rtsa gsum 'bras bu ( rat+na gling pa)"
         },
-        "parent": "O9TAXTBRC2016052KG226937"
+        "parent": "O9TAXTBRC2016052KG226937",
+        "tbrcId": "T477",
+        "rank": 6006
     },
     "T2596": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "tshe yang phur gsum (bdud 'dul rdo rje)"
         },
-        "parent": "O9TAXTBRC2016052KG226937"
+        "parent": "O9TAXTBRC2016052KG226937",
+        "tbrcId": "T2596",
+        "rank": 6162
     },
     "T539": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "gu ru'i mtshan brgya rtsa brgyad kyi bstod pa (klong gsal)"
         },
-        "parent": "O9TAXTBRC2016052KG226937"
+        "parent": "O9TAXTBRC2016052KG226937",
+        "tbrcId": "T539",
+        "rank": 6094
     },
     "T2132": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "gu ru drag po rdo rje pha lam (yongs dge)"
         },
-        "parent": "O9TAXTBRC2016052KG226937"
+        "parent": "O9TAXTBRC2016052KG226937",
+        "tbrcId": "T2132",
+        "rank": 6138
     },
     "T448": {
         "label": [
@@ -22818,119 +30374,153 @@ export const topics = {
                 "@value": "gter ma/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226937"
+        "parent": "O9TAXTBRC2016052KG226937",
+        "tbrcId": "T448",
+        "rank": 5936
     },
     "T532": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rtsa gsum spyi 'dus snying tig (mkhyen brtse'i dbang po)"
         },
-        "parent": "O9TAXTBRC2016052KG226937"
+        "parent": "O9TAXTBRC2016052KG226937",
+        "tbrcId": "T532",
+        "rank": 6202
     },
     "T351": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "zhi khro dgongs pa rang grol/ ( karma gling pa)"
         },
-        "parent": "O9TAXTBRC2016052KG226937"
+        "parent": "O9TAXTBRC2016052KG226937",
+        "tbrcId": "T351",
+        "rank": 5982
     },
     "T1339": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "bla ma dgongs 'dus (sangs rgyas gling pa)"
         },
-        "parent": "O9TAXTBRC2016052KG226937"
+        "parent": "O9TAXTBRC2016052KG226937",
+        "tbrcId": "T1339",
+        "rank": 6026
     },
     "T1101": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rtsa gsum thugs sgrub (sangs rgyas gling pa)"
         },
-        "parent": "O9TAXTBRC2016052KG226937"
+        "parent": "O9TAXTBRC2016052KG226937",
+        "tbrcId": "T1101",
+        "rank": 6022
     },
     "T543": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "gu ru'i gsol 'debs lam zab le'u bdun ma (kong sprul)"
         },
-        "parent": "O9TAXTBRC2016052KG226937"
+        "parent": "O9TAXTBRC2016052KG226937",
+        "tbrcId": "T543",
+        "rank": 6222
     },
     "T1097": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "bla ma bde mchog 'khor lo (rgya ston pad+ma dbang phyug; mkhyen brtse'i yang gter)"
         },
-        "parent": "O9TAXTBRC2016052KG226937"
+        "parent": "O9TAXTBRC2016052KG226937",
+        "tbrcId": "T1097",
+        "rank": 6214
     },
     "T2592": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "dam chos sprul sku snying thig (bdud 'dul rdo rje)"
         },
-        "parent": "O9TAXTBRC2016052KG226937"
+        "parent": "O9TAXTBRC2016052KG226937",
+        "tbrcId": "T2592",
+        "rank": 6154
     },
     "T516": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "bla ma yongs rdzogs (nyang ral)"
         },
-        "parent": "O9TAXTBRC2016052KG226937"
+        "parent": "O9TAXTBRC2016052KG226937",
+        "tbrcId": "T516",
+        "rank": 5970
     },
     "T531": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rtsa gsum zab mo kun 'dus/"
         },
-        "parent": "O9TAXTBRC2016052KG226937"
+        "parent": "O9TAXTBRC2016052KG226937",
+        "tbrcId": "T531",
+        "rank": 6178
     },
     "T2312": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rta mgrin yang phyung nag po (nyang ral)"
         },
-        "parent": "O9TAXTBRC2016052KG226937"
+        "parent": "O9TAXTBRC2016052KG226937",
+        "tbrcId": "T2312",
+        "rank": 5974
     },
     "T1GS129612": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "gsang thig snying po'i skor ('jam mgon kong sprul)"
         },
-        "parent": "O9TAXTBRC2016052KG226937"
+        "parent": "O9TAXTBRC2016052KG226937",
+        "tbrcId": "T1GS129612",
+        "rank": 6218
     },
     "T470": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "gter gzhung /"
         },
-        "parent": "O9TAXTBRC2016052KG226937"
+        "parent": "O9TAXTBRC2016052KG226937",
+        "tbrcId": "T470",
+        "rank": 5941
     },
     "T1373": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rdo rje snying po (klong gsal snying po)"
         },
-        "parent": "O9TAXTBRC2016052KG226937"
+        "parent": "O9TAXTBRC2016052KG226937",
+        "tbrcId": "T1373",
+        "rank": 6090
     },
     "T523": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "tshe sgrub rdo rje phreng ba (pad gling lugs)"
         },
-        "parent": "O9TAXTBRC2016052KG226937"
+        "parent": "O9TAXTBRC2016052KG226937",
+        "tbrcId": "T523",
+        "rank": 6042
     },
     "T01AG03005": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "phrin las phur pa'i gnad tig (mkhyen brtse'i dbang po)"
         },
-        "parent": "O9TAXTBRC2016052KG226937"
+        "parent": "O9TAXTBRC2016052KG226937",
+        "tbrcId": "T01AG03005",
+        "rank": 6194
     },
     "T1096": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "thugs sgrub bde gshegs 'dus pa (stag lung sangs rgyas dbon)"
         },
-        "parent": "O9TAXTBRC2016052KG226937"
+        "parent": "O9TAXTBRC2016052KG226937",
+        "tbrcId": "T1096",
+        "rank": 6070
     },
     "O9TAXTBRC2016052KG227049": {
         "sub": [
@@ -22958,28 +30548,36 @@ export const topics = {
                 "@value": "净见部"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226927"
+        "parent": "O9TAXTBRC2016052KG226927",
+        "tbrcId": "7",
+        "rank": 6423
     },
     "T2287": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "sku gsum rigs 'dus zab tig (mkhyen brtse'i dbang po)"
         },
-        "parent": "O9TAXTBRC2016052KG227049"
+        "parent": "O9TAXTBRC2016052KG227049",
+        "tbrcId": "T2287",
+        "rank": 6452
     },
     "T1AT302": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "snang bzhi/"
         },
-        "parent": "O9TAXTBRC2016052KG227049"
+        "parent": "O9TAXTBRC2016052KG227049",
+        "tbrcId": "T1AT302",
+        "rank": 6447
     },
     "T00AG01273": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "thugs sgrub yang snying kun 'dus (dag snang rgya can)"
         },
-        "parent": "O9TAXTBRC2016052KG227049"
+        "parent": "O9TAXTBRC2016052KG227049",
+        "tbrcId": "T00AG01273",
+        "rank": 6442
     },
     "T805": {
         "label": [
@@ -22992,42 +30590,54 @@ export const topics = {
                 "@value": "visionary experiences"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227049"
+        "parent": "O9TAXTBRC2016052KG227049",
+        "tbrcId": "T805",
+        "rank": 6428
     },
     "T1328": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "dag snang srin yul ma (rol pa'i rdo rje)"
         },
-        "parent": "O9TAXTBRC2016052KG227049"
+        "parent": "O9TAXTBRC2016052KG227049",
+        "tbrcId": "T1328",
+        "rank": 6437
     },
     "T1GS129606": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "gu ru drag po rdo rje gro lod (dag snang rgya can)"
         },
-        "parent": "O9TAXTBRC2016052KG227049"
+        "parent": "O9TAXTBRC2016052KG227049",
+        "tbrcId": "T1GS129606",
+        "rank": 6462
     },
     "T1119": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "gnam chos (mi 'gyur rdo rje)"
         },
-        "parent": "O9TAXTBRC2016052KG227049"
+        "parent": "O9TAXTBRC2016052KG227049",
+        "tbrcId": "T1119",
+        "rank": 6467
     },
     "T00AG01246": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "dag snang rgya can/"
         },
-        "parent": "O9TAXTBRC2016052KG227049"
+        "parent": "O9TAXTBRC2016052KG227049",
+        "tbrcId": "T00AG01246",
+        "rank": 6432
     },
     "T00UNK58": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "nam mkha' gsum/"
         },
-        "parent": "O9TAXTBRC2016052KG227049"
+        "parent": "O9TAXTBRC2016052KG227049",
+        "tbrcId": "T00UNK58",
+        "rank": 6457
     },
     "O9TAXTBRC2016052KG227036": {
         "sub": [
@@ -23058,35 +30668,45 @@ export const topics = {
                 "@value": "New rediscovered teachings"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226927"
+        "parent": "O9TAXTBRC2016052KG226927",
+        "tbrcId": "6",
+        "rank": 6361
     },
     "T2140": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "yang gsang thugs kyi phur gcig (mchog gyur gling pa)"
         },
-        "parent": "O9TAXTBRC2016052KG227036"
+        "parent": "O9TAXTBRC2016052KG227036",
+        "tbrcId": "T2140",
+        "rank": 6406
     },
     "T00AG01362": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "thugs rje chen po pad+ma gtsug tor (mchog gyur gling pa)"
         },
-        "parent": "O9TAXTBRC2016052KG227036"
+        "parent": "O9TAXTBRC2016052KG227036",
+        "tbrcId": "T00AG01362",
+        "rank": 6394
     },
     "T1486": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "pad+ma'i gsang thig dgongs 'dus (sangs rgyas dbang 'dus)"
         },
-        "parent": "O9TAXTBRC2016052KG227036"
+        "parent": "O9TAXTBRC2016052KG227036",
+        "tbrcId": "T1486",
+        "rank": 6418
     },
     "T553": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "bla ma'i thugs sgrub yid bzhin nor bu bsam pa lhun grub/"
         },
-        "parent": "O9TAXTBRC2016052KG227036"
+        "parent": "O9TAXTBRC2016052KG227036",
+        "tbrcId": "T553",
+        "rank": 6414
     },
     "T012AG03489": {
         "label": [
@@ -23099,56 +30719,72 @@ export const topics = {
                 "@value": "the collected revelations of mchog gyur gling pa"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227036"
+        "parent": "O9TAXTBRC2016052KG227036",
+        "tbrcId": "T012AG03489",
+        "rank": 6370
     },
     "T00AG01363": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "thugs chen 'khor ba dong sprugs (mchog gyur gling pa)"
         },
-        "parent": "O9TAXTBRC2016052KG227036"
+        "parent": "O9TAXTBRC2016052KG227036",
+        "tbrcId": "T00AG01363",
+        "rank": 6402
     },
     "T1317": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "bla ma'i thugs sgrub (mchog gyur gling pa)"
         },
-        "parent": "O9TAXTBRC2016052KG227036"
+        "parent": "O9TAXTBRC2016052KG227036",
+        "tbrcId": "T1317",
+        "rank": 6410
     },
     "T00AG01364": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "zab pa skor bdun (mchog gyur gling pa)"
         },
-        "parent": "O9TAXTBRC2016052KG227036"
+        "parent": "O9TAXTBRC2016052KG227036",
+        "tbrcId": "T00AG01364",
+        "rank": 6378
     },
     "T1861": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "bla ma'i thugs sgrub bar chad kun sel (mchog gyur gling pa)"
         },
-        "parent": "O9TAXTBRC2016052KG227036"
+        "parent": "O9TAXTBRC2016052KG227036",
+        "tbrcId": "T1861",
+        "rank": 6382
     },
     "T00AG01324": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "dga' rab rdo rje snying thig (mchog gyur gling pa)"
         },
-        "parent": "O9TAXTBRC2016052KG227036"
+        "parent": "O9TAXTBRC2016052KG227036",
+        "tbrcId": "T00AG01324",
+        "rank": 6374
     },
     "T1815": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "thugs sgrub dgongs pa kun 'dus (mchog gyur gling pa)"
         },
-        "parent": "O9TAXTBRC2016052KG227036"
+        "parent": "O9TAXTBRC2016052KG227036",
+        "tbrcId": "T1815",
+        "rank": 6398
     },
     "T533": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rtsa gsum tshe zab (mchog gling)"
         },
-        "parent": "O9TAXTBRC2016052KG227036"
+        "parent": "O9TAXTBRC2016052KG227036",
+        "tbrcId": "T533",
+        "rank": 6386
     },
     "O9TAXTBRC2016052KG227029": {
         "sub": [
@@ -23173,7 +30809,9 @@ export const topics = {
                 "@value": "南藏"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226927"
+        "parent": "O9TAXTBRC2016052KG226927",
+        "tbrcId": "UNKNOWN",
+        "rank": 6330
     },
     "T8LS16966": {
         "label": [
@@ -23186,49 +30824,63 @@ export const topics = {
                 "@value": "lho gter/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227029"
+        "parent": "O9TAXTBRC2016052KG227029",
+        "tbrcId": "T8LS16966",
+        "rank": 6336
     },
     "T1GS129609": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "gu ru drag dmar (gter bdag gling pa)"
         },
-        "parent": "O9TAXTBRC2016052KG227029"
+        "parent": "O9TAXTBRC2016052KG227029",
+        "tbrcId": "T1GS129609",
+        "rank": 6356
     },
     "T01AG03284": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "gsang bdag (lho gter lugs)"
         },
-        "parent": "O9TAXTBRC2016052KG227029"
+        "parent": "O9TAXTBRC2016052KG227029",
+        "tbrcId": "T01AG03284",
+        "rank": 6352
     },
     "T1321": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rig 'dzin thugs thig (gter bdag gling pa)"
         },
-        "parent": "O9TAXTBRC2016052KG227029"
+        "parent": "O9TAXTBRC2016052KG227029",
+        "tbrcId": "T1321",
+        "rank": 6348
     },
     "T00AG01245": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "smin gling rdor sems/"
         },
-        "parent": "O9TAXTBRC2016052KG227029"
+        "parent": "O9TAXTBRC2016052KG227029",
+        "tbrcId": "T00AG01245",
+        "rank": 6344
     },
     "T01AG03281": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "dbang chen gsang ba 'dus pa (gter bdag gling pa)"
         },
-        "parent": "O9TAXTBRC2016052KG227029"
+        "parent": "O9TAXTBRC2016052KG227029",
+        "tbrcId": "T01AG03281",
+        "rank": 6340
     },
     "T1082": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rnying ma/"
         },
-        "parent": "O9TAXTBRC2016052KG226927"
+        "parent": "O9TAXTBRC2016052KG226927",
+        "tbrcId": "T1082",
+        "rank": 5889
     },
     "O9TAXTBRC2016052KG227130": {
         "sub": [
@@ -23249,14 +30901,18 @@ export const topics = {
                 "@value": "希解和觉域"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226921"
+        "parent": "O9TAXTBRC2016052KG226921",
+        "tbrcId": "7",
+        "rank": 6830
     },
     "T194": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "gcod/"
         },
-        "parent": "O9TAXTBRC2016052KG227130"
+        "parent": "O9TAXTBRC2016052KG227130",
+        "tbrcId": "T194",
+        "rank": 6835
     },
     "O9TAXTBRC2016052KG227132": {
         "sub": [
@@ -23279,14 +30935,18 @@ export const topics = {
                 "@value": "Chod related topics"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227130"
+        "parent": "O9TAXTBRC2016052KG227130",
+        "tbrcId": "4",
+        "rank": 152
     },
     "T1GS135821": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "dur gcod/"
         },
-        "parent": "O9TAXTBRC2016052KG227132"
+        "parent": "O9TAXTBRC2016052KG227132",
+        "tbrcId": "T1GS135821",
+        "rank": 6849
     },
     "T1GS135820": {
         "label": {
@@ -23300,7 +30960,9 @@ export const topics = {
             "@language": "bo-x-ewts",
             "@value": "gcod (bka' ma lugs)"
         },
-        "parent": "O9TAXTBRC2016052KG227132"
+        "parent": "O9TAXTBRC2016052KG227132",
+        "tbrcId": "T003JR4919",
+        "rank": 6844
     },
     "T1GS107984": {
         "label": [
@@ -23367,21 +31029,27 @@ export const topics = {
             "@language": "bo-x-ewts",
             "@value": "sa skya/"
         },
-        "parent": "O9TAXTBRC2016052KG227070"
+        "parent": "O9TAXTBRC2016052KG227070",
+        "tbrcId": "T617",
+        "rank": 6527
     },
     "T1560": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "lam sbas bshad/"
         },
-        "parent": "O9TAXTBRC2016052KG227070"
+        "parent": "O9TAXTBRC2016052KG227070",
+        "tbrcId": "T1560",
+        "rank": 6537
     },
     "T1PD110728": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "lam 'bras tshogs bshad/"
         },
-        "parent": "O9TAXTBRC2016052KG227070"
+        "parent": "O9TAXTBRC2016052KG227070",
+        "tbrcId": "T1PD110728",
+        "rank": 6542
     },
     "T00UNK1": {
         "label": [
@@ -23394,14 +31062,18 @@ export const topics = {
                 "@value": "esoteric description"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227070"
+        "parent": "O9TAXTBRC2016052KG227070",
+        "tbrcId": "T00UNK1",
+        "rank": 6547
     },
     "T1GS138984": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "lam 'bras slob bshad/"
         },
-        "parent": "O9TAXTBRC2016052KG227070"
+        "parent": "O9TAXTBRC2016052KG227070",
+        "tbrcId": "T1GS138984",
+        "rank": 6532
     },
     "O9TAXTBRC2016052KG227076": {
         "sub": [
@@ -23434,7 +31106,9 @@ export const topics = {
                 "@value": "ngor"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227076"
+        "parent": "O9TAXTBRC2016052KG227076",
+        "tbrcId": "T8LS16958",
+        "rank": 6556
     },
     "O9TAXTBRC2016052KG227078": {
         "sub": [
@@ -23461,7 +31135,9 @@ export const topics = {
             "@language": "bo-x-ewts",
             "@value": "tshar pa'i lugs srol/"
         },
-        "parent": "O9TAXTBRC2016052KG227078"
+        "parent": "O9TAXTBRC2016052KG227078",
+        "tbrcId": "T00AG02467",
+        "rank": 6565
     },
     "O9TAXTBRC2016052KG227080": {
         "sub": [
@@ -23477,7 +31153,9 @@ export const topics = {
                 "@value": "宗巴"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227069"
+        "parent": "O9TAXTBRC2016052KG227069",
+        "tbrcId": "UNKNOWN",
+        "rank": 6570
     },
     "T8LS16959": {
         "label": [
@@ -23490,7 +31168,9 @@ export const topics = {
                 "@value": "zongpa"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227080"
+        "parent": "O9TAXTBRC2016052KG227080",
+        "tbrcId": "T8LS16959",
+        "rank": 6574
     },
     "O9TAXTBRC2016052KG226923": {
         "sub": [
@@ -23512,7 +31192,9 @@ export const topics = {
                 "@value": "苯波"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226921"
+        "parent": "O9TAXTBRC2016052KG226921",
+        "tbrcId": "1",
+        "rank": 5863
     },
     "T247": {
         "label": [
@@ -23529,7 +31211,9 @@ export const topics = {
                 "@value": "bon"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226923"
+        "parent": "O9TAXTBRC2016052KG226923",
+        "tbrcId": "T247",
+        "rank": 5868
     },
     "T1710": {
         "label": [
@@ -23542,7 +31226,9 @@ export const topics = {
                 "@value": "new bon"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226923"
+        "parent": "O9TAXTBRC2016052KG226923",
+        "tbrcId": "T1710",
+        "rank": 5873
     },
     "T1KG22286": {
         "label": [
@@ -23555,7 +31241,9 @@ export const topics = {
                 "@value": "canonical works of bon"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226923"
+        "parent": "O9TAXTBRC2016052KG226923",
+        "tbrcId": "T1KG22286",
+        "rank": 5878
     },
     "O9TAXTBRC2016052KG227082": {
         "sub": [
@@ -23583,7 +31271,9 @@ export const topics = {
                 "@value": "bka' brgyud/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226921"
+        "parent": "O9TAXTBRC2016052KG226921",
+        "tbrcId": "5",
+        "rank": 6580
     },
     "O9TAXTBRC2016052KG227089": {
         "sub": [
@@ -23607,7 +31297,9 @@ export const topics = {
                 "@value": "帕竹噶举"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227082"
+        "parent": "O9TAXTBRC2016052KG227082",
+        "tbrcId": "2",
+        "rank": 6617
     },
     "O9TAXTBRC2016052KG227097": {
         "sub": [
@@ -23639,42 +31331,54 @@ export const topics = {
             "@language": "bo-x-ewts",
             "@value": "'brug pa dkar brgyud/"
         },
-        "parent": "O9TAXTBRC2016052KG227097"
+        "parent": "O9TAXTBRC2016052KG227097",
+        "tbrcId": "T816",
+        "rank": 6660
     },
     "T3JT13056": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "bar 'brug bka' brgyud/"
         },
-        "parent": "O9TAXTBRC2016052KG227097"
+        "parent": "O9TAXTBRC2016052KG227097",
+        "tbrcId": "T3JT13056",
+        "rank": 6665
     },
     "T10MS14532": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "stod 'brug"
         },
-        "parent": "O9TAXTBRC2016052KG227097"
+        "parent": "O9TAXTBRC2016052KG227097",
+        "tbrcId": "T10MS14532",
+        "rank": 6671
     },
     "T3JT13055": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "smad 'brug bka' brgyud/"
         },
-        "parent": "O9TAXTBRC2016052KG227097"
+        "parent": "O9TAXTBRC2016052KG227097",
+        "tbrcId": "T3JT13055",
+        "rank": 6677
     },
     "T1104": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "'ba' ra bka' brgyud/"
         },
-        "parent": "O9TAXTBRC2016052KG227097"
+        "parent": "O9TAXTBRC2016052KG227097",
+        "tbrcId": "T1104",
+        "rank": 6689
     },
     "T2447": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "ma bdun bka' brgyud/"
         },
-        "parent": "O9TAXTBRC2016052KG227097"
+        "parent": "O9TAXTBRC2016052KG227097",
+        "tbrcId": "T2447",
+        "rank": 6683
     },
     "O9TAXTBRC2016052KG227108": {
         "sub": [
@@ -23690,14 +31394,18 @@ export const topics = {
                 "@value": "g.ya' bzang /"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227089"
+        "parent": "O9TAXTBRC2016052KG227089",
+        "tbrcId": "7",
+        "rank": 6716
     },
     "T2MS13229": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "g.ya' bzang bka' brgyud/"
         },
-        "parent": "O9TAXTBRC2016052KG227108"
+        "parent": "O9TAXTBRC2016052KG227108",
+        "tbrcId": "T2MS13229",
+        "rank": 6720
     },
     "O9TAXTBRC2016052KG227110": {
         "sub": [
@@ -23724,7 +31432,9 @@ export const topics = {
             "@language": "bo-x-ewts",
             "@value": "shug gseb bka' brgyud/"
         },
-        "parent": "O9TAXTBRC2016052KG227110"
+        "parent": "O9TAXTBRC2016052KG227110",
+        "tbrcId": "T2MS13227",
+        "rank": 6730
     },
     "O9TAXTBRC2016052KG227095": {
         "sub": [
@@ -23751,7 +31461,9 @@ export const topics = {
             "@language": "bo-x-ewts",
             "@value": "khro phu bka' brgyud/"
         },
-        "parent": "O9TAXTBRC2016052KG227095"
+        "parent": "O9TAXTBRC2016052KG227095",
+        "tbrcId": "T2MS13225",
+        "rank": 6650
     },
     "O9TAXTBRC2016052KG227106": {
         "sub": [
@@ -23767,14 +31479,18 @@ export const topics = {
                 "@value": "叶尔巴噶举"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227089"
+        "parent": "O9TAXTBRC2016052KG227089",
+        "tbrcId": "6",
+        "rank": 6706
     },
     "T1186": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "yel pa bka' brgyud/"
         },
-        "parent": "O9TAXTBRC2016052KG227106"
+        "parent": "O9TAXTBRC2016052KG227106",
+        "tbrcId": "T1186",
+        "rank": 6710
     },
     "O9TAXTBRC2016052KG227093": {
         "sub": [
@@ -23790,14 +31506,18 @@ export const topics = {
                 "@value": "达隆噶举"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227089"
+        "parent": "O9TAXTBRC2016052KG227089",
+        "tbrcId": "2",
+        "rank": 6636
     },
     "T869": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "stag lung bka' brgyud/"
         },
-        "parent": "O9TAXTBRC2016052KG227093"
+        "parent": "O9TAXTBRC2016052KG227093",
+        "tbrcId": "T869",
+        "rank": 6640
     },
     "O9TAXTBRC2016052KG227104": {
         "sub": [
@@ -23813,14 +31533,18 @@ export const topics = {
                 "@value": "smar pa/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227089"
+        "parent": "O9TAXTBRC2016052KG227089",
+        "tbrcId": "5",
+        "rank": 6696
     },
     "T1678": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "smar pa bka' brgyud/"
         },
-        "parent": "O9TAXTBRC2016052KG227104"
+        "parent": "O9TAXTBRC2016052KG227104",
+        "tbrcId": "T1678",
+        "rank": 6700
     },
     "O9TAXTBRC2016052KG227091": {
         "sub": [
@@ -23847,21 +31571,27 @@ export const topics = {
             "@language": "bo-x-ewts",
             "@value": "'bri gung bka' brgyud/"
         },
-        "parent": "O9TAXTBRC2016052KG227091"
+        "parent": "O9TAXTBRC2016052KG227091",
+        "tbrcId": "T1190",
+        "rank": 6630
     },
     "T1385": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "phag gru bka' brgyud/"
         },
-        "parent": "O9TAXTBRC2016052KG227089"
+        "parent": "O9TAXTBRC2016052KG227089",
+        "tbrcId": "T1385",
+        "rank": 6621
     },
     "T807": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "mar pa bka' brgyud/"
         },
-        "parent": "O9TAXTBRC2016052KG227082"
+        "parent": "O9TAXTBRC2016052KG227082",
+        "tbrcId": "T807",
+        "rank": 6589
     },
     "O9TAXTBRC2016052KG227087": {
         "sub": [
@@ -23888,28 +31618,36 @@ export const topics = {
             "@language": "bo-x-ewts",
             "@value": "'ba' rom bka' brgyud/"
         },
-        "parent": "O9TAXTBRC2016052KG227087"
+        "parent": "O9TAXTBRC2016052KG227087",
+        "tbrcId": "T1384",
+        "rank": 6611
     },
     "T2MS13223": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "dwags po bka' brgyud/"
         },
-        "parent": "O9TAXTBRC2016052KG227082"
+        "parent": "O9TAXTBRC2016052KG227082",
+        "tbrcId": "T2MS13223",
+        "rank": 6601
     },
     "T1187": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "bka' brgyud/"
         },
-        "parent": "O9TAXTBRC2016052KG227082"
+        "parent": "O9TAXTBRC2016052KG227082",
+        "tbrcId": "T1187",
+        "rank": 6585
     },
     "T1682": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rngog bka' brgyud/"
         },
-        "parent": "O9TAXTBRC2016052KG227082"
+        "parent": "O9TAXTBRC2016052KG227082",
+        "tbrcId": "T1682",
+        "rank": 6595
     },
     "O9TAXTBRC2016052KG227112": {
         "sub": [
@@ -23938,21 +31676,27 @@ export const topics = {
             "@language": "bo-x-ewts",
             "@value": "karma bka' brgyud/"
         },
-        "parent": "O9TAXTBRC2016052KG227112"
+        "parent": "O9TAXTBRC2016052KG227112",
+        "tbrcId": "T1386",
+        "rank": 6741
     },
     "T1KG8538": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "gnas mdo bka' brgyud/"
         },
-        "parent": "O9TAXTBRC2016052KG227112"
+        "parent": "O9TAXTBRC2016052KG227112",
+        "tbrcId": "T1KG8538",
+        "rank": 6752
     },
     "T2446": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "zur mang bka' brgyud/"
         },
-        "parent": "O9TAXTBRC2016052KG227112"
+        "parent": "O9TAXTBRC2016052KG227112",
+        "tbrcId": "T2446",
+        "rank": 6746
     },
     "O9TAXTBRC2016052KG227118": {
         "sub": [
@@ -23975,35 +31719,45 @@ export const topics = {
                 "@value": "kagyu related topics"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227082"
+        "parent": "O9TAXTBRC2016052KG227082",
+        "tbrcId": "4",
+        "rank": 152
     },
     "T1269": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "dgongs gcig"
         },
-        "parent": "O9TAXTBRC2016052KG227118"
+        "parent": "O9TAXTBRC2016052KG227118",
+        "tbrcId": "T1269",
+        "rank": 6788
     },
     "T1270": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "lhan skyes rnam bzhi ('bri gung lugs)"
         },
-        "parent": "O9TAXTBRC2016052KG227118"
+        "parent": "O9TAXTBRC2016052KG227118",
+        "tbrcId": "T1270",
+        "rank": 6783
     },
     "T1268": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "thugs chen phyag rdzogs zung 'jug"
         },
-        "parent": "O9TAXTBRC2016052KG227118"
+        "parent": "O9TAXTBRC2016052KG227118",
+        "tbrcId": "T1268",
+        "rank": 6778
     },
     "T1462": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "snyan gyi shog dril bzhi/"
         },
-        "parent": "O9TAXTBRC2016052KG227118"
+        "parent": "O9TAXTBRC2016052KG227118",
+        "tbrcId": "T1462",
+        "rank": 6773
     },
     "O9TAXTBRC2016052KG227116": {
         "sub": [
@@ -24030,7 +31784,9 @@ export const topics = {
             "@language": "bo-x-ewts",
             "@value": "tshal pa bka' brgyud/"
         },
-        "parent": "O9TAXTBRC2016052KG227116"
+        "parent": "O9TAXTBRC2016052KG227116",
+        "tbrcId": "T1387",
+        "rank": 6762
     },
     "O9TAXTBRC2016052KG227059": {
         "sub": [
@@ -24052,7 +31808,9 @@ export const topics = {
                 "@value": "Kadam and Gelug"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226921"
+        "parent": "O9TAXTBRC2016052KG226921",
+        "tbrcId": "3",
+        "rank": 6473
     },
     "O9TAXTBRC2016052KG227060": {
         "sub": [
@@ -24072,14 +31830,18 @@ export const topics = {
                 "@value": "噶当"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227059"
+        "parent": "O9TAXTBRC2016052KG227059",
+        "tbrcId": "3",
+        "rank": 6473
     },
     "T791": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "bka' gdams/"
         },
-        "parent": "O9TAXTBRC2016052KG227060"
+        "parent": "O9TAXTBRC2016052KG227060",
+        "tbrcId": "T791",
+        "rank": 6478
     },
     "O9TAXTBRC2016052KG227062": {
         "sub": [
@@ -24106,7 +31868,9 @@ export const topics = {
             "@language": "bo-x-ewts",
             "@value": "dge lugs/"
         },
-        "parent": "O9TAXTBRC2016052KG227062"
+        "parent": "O9TAXTBRC2016052KG227062",
+        "tbrcId": "T819",
+        "rank": 6483
     },
     "O9TAXTBRC2016052KG227064": {
         "sub": [
@@ -24129,14 +31893,18 @@ export const topics = {
                 "@value": "Special Topics"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227059"
+        "parent": "O9TAXTBRC2016052KG227059",
+        "tbrcId": "4",
+        "rank": 152
     },
     "T1244": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "dmigs brtse ma/"
         },
-        "parent": "O9TAXTBRC2016052KG227064"
+        "parent": "O9TAXTBRC2016052KG227064",
+        "tbrcId": "T1244",
+        "rank": 6503
     },
     "T1357": {
         "label": {
@@ -24156,14 +31924,18 @@ export const topics = {
                 "@value": "sodasabindu"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227064"
+        "parent": "O9TAXTBRC2016052KG227064",
+        "tbrcId": "T1349",
+        "rank": 6498
     },
     "T1350": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "lha chos bdun ldan/"
         },
-        "parent": "O9TAXTBRC2016052KG227064"
+        "parent": "O9TAXTBRC2016052KG227064",
+        "tbrcId": "T1350",
+        "rank": 6493
     },
     "O9TAXTBRC2016052KG227137": {
         "sub": [
@@ -24184,7 +31956,9 @@ export const topics = {
                 "@value": "Sixfold Yoga"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226921"
+        "parent": "O9TAXTBRC2016052KG226921",
+        "tbrcId": "8",
+        "rank": 6865
     },
     "T360": {
         "label": [
@@ -24197,7 +31971,9 @@ export const topics = {
                 "@value": "sbyor drug"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227137"
+        "parent": "O9TAXTBRC2016052KG227137",
+        "tbrcId": "T360",
+        "rank": 6870
     },
     "O9TAXTBRC2016052KG227139": {
         "sub": [
@@ -24219,28 +31995,36 @@ export const topics = {
                 "@value": "Jordruk related topics"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227137"
+        "parent": "O9TAXTBRC2016052KG227137",
+        "tbrcId": "4",
+        "rank": 152
     },
     "T012AG03335": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "dus 'khor (jo nang lugs)"
         },
-        "parent": "O9TAXTBRC2016052KG227139"
+        "parent": "O9TAXTBRC2016052KG227139",
+        "tbrcId": "T012AG03335",
+        "rank": 6889
     },
     "T1255": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "jo nang bka' babs drug ldan/"
         },
-        "parent": "O9TAXTBRC2016052KG227139"
+        "parent": "O9TAXTBRC2016052KG227139",
+        "tbrcId": "T1255",
+        "rank": 6879
     },
     "T1823": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "sbyor drug stan thog gcig ma/"
         },
-        "parent": "O9TAXTBRC2016052KG227139"
+        "parent": "O9TAXTBRC2016052KG227139",
+        "tbrcId": "T1823",
+        "rank": 6884
     },
     "O9TAXTBRC2016052KG227153": {
         "sub": [
@@ -24260,7 +32044,9 @@ export const topics = {
                 "@value": "著作"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226920"
+        "parent": "O9TAXTBRC2016052KG226920",
+        "tbrcId": "2",
+        "rank": 6945
     },
     "T1KG21749": {
         "label": [
@@ -24273,7 +32059,9 @@ export const topics = {
                 "@value": "gsung rtsom/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227153"
+        "parent": "O9TAXTBRC2016052KG227153",
+        "tbrcId": "T1KG21749",
+        "rank": 6950
     },
     "O9TAXTBRC2016052KG227155": {
         "sub": [
@@ -24293,7 +32081,9 @@ export const topics = {
                 "@value": "文选"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226920"
+        "parent": "O9TAXTBRC2016052KG226920",
+        "tbrcId": "3",
+        "rank": 6955
     },
     "T413": {
         "label": [
@@ -24306,7 +32096,9 @@ export const topics = {
                 "@value": "miscellany"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG227155"
+        "parent": "O9TAXTBRC2016052KG227155",
+        "tbrcId": "T413",
+        "rank": 6960
     },
     "O9TAXTBRC2016052KG228410": {
         "sub": [
@@ -24335,7 +32127,9 @@ export const topics = {
                 "@value": "自然科学"
             }
         ],
-        "parent": "O9TAXTBRC201605"
+        "parent": "O9TAXTBRC201605",
+        "tbrcId": "pha",
+        "rank": 7977
     },
     "O9TAXTBRC2016052KG228441": {
         "sub": [
@@ -24369,7 +32163,9 @@ export const topics = {
                 "@value": "natural sciences"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228441"
+        "parent": "O9TAXTBRC2016052KG228441",
+        "tbrcId": "pha",
+        "rank": 7977
     },
     "T1KG22573": {
         "label": [
@@ -24408,7 +32204,9 @@ export const topics = {
                 "@value": "技术"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228410"
+        "parent": "O9TAXTBRC2016052KG228410",
+        "tbrcId": "6",
+        "rank": 8066
     },
     "T2378": {
         "label": [
@@ -24421,7 +32219,9 @@ export const topics = {
                 "@value": "tshan rig lag rtsal/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228428"
+        "parent": "O9TAXTBRC2016052KG228428",
+        "tbrcId": "T2378",
+        "rank": 8071
     },
     "T2412": {
         "label": [
@@ -24434,7 +32234,9 @@ export const topics = {
                 "@value": "kam pu Tar/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228428"
+        "parent": "O9TAXTBRC2016052KG228428",
+        "tbrcId": "T2412",
+        "rank": 8081
     },
     "T00KG010092": {
         "label": [
@@ -24447,7 +32249,9 @@ export const topics = {
                 "@value": "cha 'phrin lag rtsal/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228428"
+        "parent": "O9TAXTBRC2016052KG228428",
+        "tbrcId": "T00KG010092",
+        "rank": 8076
     },
     "O9TAXTBRC2016052KG228432": {
         "sub": [
@@ -24467,7 +32271,9 @@ export const topics = {
                 "@value": "植物学"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228410"
+        "parent": "O9TAXTBRC2016052KG228410",
+        "tbrcId": "7",
+        "rank": 8087
     },
     "T8LS16961": {
         "label": [
@@ -24480,7 +32286,9 @@ export const topics = {
                 "@value": "botany"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228432"
+        "parent": "O9TAXTBRC2016052KG228432",
+        "tbrcId": "T8LS16961",
+        "rank": 8092
     },
     "O9TAXTBRC2016052KG228421": {
         "sub": [
@@ -24500,7 +32308,9 @@ export const topics = {
                 "@value": "生物学"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228410"
+        "parent": "O9TAXTBRC2016052KG228410",
+        "tbrcId": "4",
+        "rank": 8034
     },
     "T1137": {
         "label": [
@@ -24513,7 +32323,9 @@ export const topics = {
                 "@value": "skye dngos rig pa/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228421"
+        "parent": "O9TAXTBRC2016052KG228421",
+        "tbrcId": "T1137",
+        "rank": 8039
     },
     "O9TAXTBRC2016052KG228439": {
         "sub": [
@@ -24533,7 +32345,9 @@ export const topics = {
                 "@value": "Related topic"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228410"
+        "parent": "O9TAXTBRC2016052KG228410",
+        "tbrcId": "4",
+        "rank": 152
     },
     "T00EGS1016786": {
         "label": [
@@ -24546,7 +32360,9 @@ export const topics = {
                 "@value": "nang chos dang tshan rig"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228439"
+        "parent": "O9TAXTBRC2016052KG228439",
+        "tbrcId": "T00EGS1016786",
+        "rank": 3741
     },
     "O9TAXTBRC2016052KG228434": {
         "sub": [
@@ -24569,7 +32385,9 @@ export const topics = {
                 "@value": "动物学"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228410"
+        "parent": "O9TAXTBRC2016052KG228410",
+        "tbrcId": "8",
+        "rank": 8098
     },
     "T1KG26410": {
         "label": [
@@ -24621,7 +32439,9 @@ export const topics = {
                 "@value": "dud 'gro rig pa/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228434"
+        "parent": "O9TAXTBRC2016052KG228434",
+        "tbrcId": "T8LS16962",
+        "rank": 8103
     },
     "O9TAXTBRC2016052KG228419": {
         "sub": [
@@ -24641,7 +32461,9 @@ export const topics = {
                 "@value": "rdzas sbyor rig pa/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228410"
+        "parent": "O9TAXTBRC2016052KG228410",
+        "tbrcId": "3",
+        "rank": 8023
     },
     "T1179": {
         "label": [
@@ -24654,7 +32476,9 @@ export const topics = {
                 "@value": "rdzas rig"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228419"
+        "parent": "O9TAXTBRC2016052KG228419",
+        "tbrcId": "T1179",
+        "rank": 8028
     },
     "O9TAXTBRC2016052KG228411": {
         "sub": [
@@ -24678,7 +32502,9 @@ export const topics = {
                 "@value": "Mathematics"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228410"
+        "parent": "O9TAXTBRC2016052KG228410",
+        "tbrcId": "1",
+        "rank": 7982
     },
     "T1174": {
         "label": [
@@ -24691,14 +32517,18 @@ export const topics = {
                 "@value": "ang rtsis/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228411"
+        "parent": "O9TAXTBRC2016052KG228411",
+        "tbrcId": "T1174",
+        "rank": 7987
     },
     "T1805": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "ang yig"
         },
-        "parent": "O9TAXTBRC2016052KG228411"
+        "parent": "O9TAXTBRC2016052KG228411",
+        "tbrcId": "T1805",
+        "rank": 8007
     },
     "T2131": {
         "label": [
@@ -24711,7 +32541,9 @@ export const topics = {
                 "@value": "calculation using stones"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228411"
+        "parent": "O9TAXTBRC2016052KG228411",
+        "tbrcId": "T2131",
+        "rank": 8002
     },
     "T1136": {
         "label": [
@@ -24724,7 +32556,9 @@ export const topics = {
                 "@value": "algebra"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228411"
+        "parent": "O9TAXTBRC2016052KG228411",
+        "tbrcId": "T1136",
+        "rank": 7997
     },
     "T1135": {
         "label": [
@@ -24737,7 +32571,9 @@ export const topics = {
                 "@value": "geometry"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228411"
+        "parent": "O9TAXTBRC2016052KG228411",
+        "tbrcId": "T1135",
+        "rank": 7992
     },
     "O9TAXTBRC2016052KG228423": {
         "sub": [
@@ -24760,7 +32596,9 @@ export const topics = {
                 "@value": "农学"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228410"
+        "parent": "O9TAXTBRC2016052KG228410",
+        "tbrcId": "5",
+        "rank": 8045
     },
     "T1177": {
         "label": [
@@ -24773,7 +32611,9 @@ export const topics = {
                 "@value": "zhing las/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228423"
+        "parent": "O9TAXTBRC2016052KG228423",
+        "tbrcId": "T1177",
+        "rank": 8050
     },
     "T1123": {
         "label": [
@@ -24790,7 +32630,9 @@ export const topics = {
                 "@value": "ksetra"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228423"
+        "parent": "O9TAXTBRC2016052KG228423",
+        "tbrcId": "T1123",
+        "rank": 8055
     },
     "T2621": {
         "label": [
@@ -24803,14 +32645,18 @@ export const topics = {
                 "@value": "ja shing btab pa/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228423"
+        "parent": "O9TAXTBRC2016052KG228423",
+        "tbrcId": "T2621",
+        "rank": 8060
     },
     "T1629": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "lud sbyor/"
         },
-        "parent": "O9TAXTBRC2016052KG228423"
+        "parent": "O9TAXTBRC2016052KG228423",
+        "tbrcId": "T1629",
+        "rank": 3960
     },
     "O9TAXTBRC2016052KG228417": {
         "sub": [
@@ -24830,7 +32676,9 @@ export const topics = {
                 "@value": "Physics"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228410"
+        "parent": "O9TAXTBRC2016052KG228410",
+        "tbrcId": "2",
+        "rank": 8012
     },
     "T1138": {
         "label": [
@@ -24847,7 +32695,9 @@ export const topics = {
                 "@value": "物理"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG228417"
+        "parent": "O9TAXTBRC2016052KG228417",
+        "tbrcId": "T1138",
+        "rank": 8017
     },
     "O9TAXTBRC2016052KG225383": {
         "sub": [
@@ -24875,7 +32725,9 @@ export const topics = {
                 "@value": "Buddhist Study"
             }
         ],
-        "parent": "O9TAXTBRC201605"
+        "parent": "O9TAXTBRC201605",
+        "tbrcId": "ga",
+        "rank": 256
     },
     "O9TAXTBRC2016052KG226371": {
         "sub": [
@@ -24900,14 +32752,18 @@ export const topics = {
                 "@value": "bstod tshogs/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225383"
+        "parent": "O9TAXTBRC2016052KG225383",
+        "tbrcId": "8",
+        "rank": 3334
     },
     "T901": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "bsngags pa/"
         },
-        "parent": "O9TAXTBRC2016052KG226371"
+        "parent": "O9TAXTBRC2016052KG226371",
+        "tbrcId": "T901",
+        "rank": 3343
     },
     "T1222": {
         "label": [
@@ -24920,7 +32776,9 @@ export const topics = {
                 "@value": "gnas bstod/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226371"
+        "parent": "O9TAXTBRC2016052KG226371",
+        "tbrcId": "T1222",
+        "rank": 3342
     },
     "T67": {
         "label": [
@@ -24941,7 +32799,9 @@ export const topics = {
                 "@value": "stotra"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226371"
+        "parent": "O9TAXTBRC2016052KG226371",
+        "tbrcId": "T67",
+        "rank": 3340
     },
     "T1146": {
         "label": [
@@ -24954,21 +32814,27 @@ export const topics = {
                 "@value": "bstod dbyangs/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226371"
+        "parent": "O9TAXTBRC2016052KG226371",
+        "tbrcId": "T1146",
+        "rank": 3341
     },
     "T1478": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "zin tho/"
         },
-        "parent": "O9TAXTBRC2016052KG226371"
+        "parent": "O9TAXTBRC2016052KG226371",
+        "tbrcId": "T1478",
+        "rank": 3344
     },
     "T1PD110101": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "bstod tshogs/"
         },
-        "parent": "O9TAXTBRC2016052KG226371"
+        "parent": "O9TAXTBRC2016052KG226371",
+        "tbrcId": "T1PD110101",
+        "rank": 3339
     },
     "O9TAXTBRC2016052KG226334": {
         "sub": [
@@ -25044,7 +32910,9 @@ export const topics = {
                 "@value": "講說"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226334"
+        "parent": "O9TAXTBRC2016052KG226334",
+        "tbrcId": "T1029",
+        "rank": 3326
     },
     "T1732": {
         "label": [
@@ -25057,7 +32925,9 @@ export const topics = {
                 "@value": "speech on investiture"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226334"
+        "parent": "O9TAXTBRC2016052KG226334",
+        "tbrcId": "T1732",
+        "rank": 3330
     },
     "T10MS12837": {
         "label": [
@@ -25070,7 +32940,9 @@ export const topics = {
                 "@value": "commentary on the intent"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226334"
+        "parent": "O9TAXTBRC2016052KG226334",
+        "tbrcId": "T10MS12837",
+        "rank": 3302
     },
     "T304": {
         "label": [
@@ -25083,7 +32955,9 @@ export const topics = {
                 "@value": "annotated commentary"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226334"
+        "parent": "O9TAXTBRC2016052KG226334",
+        "tbrcId": "T304",
+        "rank": 3300
     },
     "T1CZ4665": {
         "label": [
@@ -25096,7 +32970,9 @@ export const topics = {
                 "@value": "detailed analysis"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226334"
+        "parent": "O9TAXTBRC2016052KG226334",
+        "tbrcId": "T1CZ4665",
+        "rank": 3314
     },
     "T4JW5424": {
         "label": [
@@ -25109,7 +32985,9 @@ export const topics = {
                 "@value": "autocommentary"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226334"
+        "parent": "O9TAXTBRC2016052KG226334",
+        "tbrcId": "T4JW5424",
+        "rank": 3305
     },
     "T3CN11351": {
         "label": {
@@ -25129,7 +33007,9 @@ export const topics = {
                 "@value": "method of explaining"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226334"
+        "parent": "O9TAXTBRC2016052KG226334",
+        "tbrcId": "T340",
+        "rank": 3320
     },
     "T2398": {
         "label": [
@@ -25146,21 +33026,27 @@ export const topics = {
                 "@value": "概要"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226334"
+        "parent": "O9TAXTBRC2016052KG226334",
+        "tbrcId": "T2398",
+        "rank": 3316
     },
     "T00EGS1017673": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rgyan bdun/"
         },
-        "parent": "O9TAXTBRC2016052KG226334"
+        "parent": "O9TAXTBRC2016052KG226334",
+        "tbrcId": "T00EGS1017673",
+        "rank": 3312
     },
     "T10MS14464": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "ngo sprod/"
         },
-        "parent": "O9TAXTBRC2016052KG226334"
+        "parent": "O9TAXTBRC2016052KG226334",
+        "tbrcId": "T10MS14464",
+        "rank": 3319
     },
     "T61": {
         "label": [
@@ -25194,21 +33080,27 @@ export const topics = {
                 "@value": "explanations of the mandala offering"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226334"
+        "parent": "O9TAXTBRC2016052KG226334",
+        "tbrcId": "T29",
+        "rank": 3328
     },
     "T250": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "gnyen bshad/"
         },
-        "parent": "O9TAXTBRC2016052KG226334"
+        "parent": "O9TAXTBRC2016052KG226334",
+        "tbrcId": "T250",
+        "rank": 3332
     },
     "T1973": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "sho bshad/"
         },
-        "parent": "O9TAXTBRC2016052KG226334"
+        "parent": "O9TAXTBRC2016052KG226334",
+        "tbrcId": "T1973",
+        "rank": 3331
     },
     "T1372": {
         "label": [
@@ -25221,7 +33113,9 @@ export const topics = {
                 "@value": "khog dbub/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226334"
+        "parent": "O9TAXTBRC2016052KG226334",
+        "tbrcId": "T1372",
+        "rank": 3318
     },
     "T1491": {
         "label": [
@@ -25242,7 +33136,9 @@ export const topics = {
                 "@value": "commentary on difficult points"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226334"
+        "parent": "O9TAXTBRC2016052KG226334",
+        "tbrcId": "T1491",
+        "rank": 3301
     },
     "T1431": {
         "label": [
@@ -25255,7 +33151,9 @@ export const topics = {
                 "@value": "tantra classification"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226334"
+        "parent": "O9TAXTBRC2016052KG226334",
+        "tbrcId": "T1431",
+        "rank": 3311
     },
     "T012AG03703": {
         "label": [
@@ -25268,7 +33166,9 @@ export const topics = {
                 "@value": "supplement"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226334"
+        "parent": "O9TAXTBRC2016052KG226334",
+        "tbrcId": "T012AG03703",
+        "rank": 3322
     },
     "T1AT670": {
         "label": [
@@ -25294,7 +33194,9 @@ export const topics = {
                 "@value": "vocabulary"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226334"
+        "parent": "O9TAXTBRC2016052KG226334",
+        "tbrcId": "T2377",
+        "rank": 3315
     },
     "T2397": {
         "label": [
@@ -25307,21 +33209,27 @@ export const topics = {
                 "@value": "word by word commentary"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226334"
+        "parent": "O9TAXTBRC2016052KG226334",
+        "tbrcId": "T2397",
+        "rank": 3304
     },
     "T2608": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "dbu zhwa mthong grol/"
         },
-        "parent": "O9TAXTBRC2016052KG226334"
+        "parent": "O9TAXTBRC2016052KG226334",
+        "tbrcId": "T2608",
+        "rank": 3329
     },
     "T11MS31": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rgyas bshad/"
         },
-        "parent": "O9TAXTBRC2016052KG226334"
+        "parent": "O9TAXTBRC2016052KG226334",
+        "tbrcId": "T11MS31",
+        "rank": 3309
     },
     "T4CZ15086": {
         "label": [
@@ -25334,7 +33242,9 @@ export const topics = {
                 "@value": "fully able to separate. analyze, treatise, dissertation, accurate analysis."
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226334"
+        "parent": "O9TAXTBRC2016052KG226334",
+        "tbrcId": "T4CZ15086",
+        "rank": 3310
     },
     "T1KG8787": {
         "label": [
@@ -25347,21 +33257,27 @@ export const topics = {
                 "@value": "root text"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226334"
+        "parent": "O9TAXTBRC2016052KG226334",
+        "tbrcId": "T1KG8787",
+        "rank": 4084
     },
     "T11MS21": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rgyas 'grel/"
         },
-        "parent": "O9TAXTBRC2016052KG226334"
+        "parent": "O9TAXTBRC2016052KG226334",
+        "tbrcId": "T11MS21",
+        "rank": 3307
     },
     "T2339": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "dka' gnas/"
         },
-        "parent": "O9TAXTBRC2016052KG226334"
+        "parent": "O9TAXTBRC2016052KG226334",
+        "tbrcId": "T2339",
+        "rank": 3317
     },
     "T3JT5054": {
         "label": [
@@ -25374,7 +33290,9 @@ export const topics = {
                 "@value": "commentary of meaning"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226334"
+        "parent": "O9TAXTBRC2016052KG226334",
+        "tbrcId": "T3JT5054",
+        "rank": 3306
     },
     "T1763": {
         "label": [
@@ -25387,7 +33305,9 @@ export const topics = {
                 "@value": "exegesis of the general meaning"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226334"
+        "parent": "O9TAXTBRC2016052KG226334",
+        "tbrcId": "T1763",
+        "rank": 3325
     },
     "T132": {
         "label": [
@@ -25408,7 +33328,9 @@ export const topics = {
                 "@value": "ṭīkā"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226334"
+        "parent": "O9TAXTBRC2016052KG226334",
+        "tbrcId": "T132",
+        "rank": 3299
     },
     "T1488": {
         "label": [
@@ -25421,14 +33343,18 @@ export const topics = {
                 "@value": "'bru 'grel/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226334"
+        "parent": "O9TAXTBRC2016052KG226334",
+        "tbrcId": "T1488",
+        "rank": 3303
     },
     "T1900": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "sdom tshig"
         },
-        "parent": "O9TAXTBRC2016052KG226334"
+        "parent": "O9TAXTBRC2016052KG226334",
+        "tbrcId": "T1900",
+        "rank": 3313
     },
     "T1CZ56": {
         "label": [
@@ -25441,14 +33367,18 @@ export const topics = {
                 "@value": "analysis"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226334"
+        "parent": "O9TAXTBRC2016052KG226334",
+        "tbrcId": "T1CZ56",
+        "rank": 3308
     },
     "T476": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rtsa tshig"
         },
-        "parent": "O9TAXTBRC2016052KG226334"
+        "parent": "O9TAXTBRC2016052KG226334",
+        "tbrcId": "T476",
+        "rank": 3321
     },
     "T916": {
         "label": [
@@ -25461,7 +33391,9 @@ export const topics = {
                 "@value": "spyi bshad/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226334"
+        "parent": "O9TAXTBRC2016052KG226334",
+        "tbrcId": "T916",
+        "rank": 3324
     },
     "O9TAXTBRC2016052KG226273": {
         "sub": [
@@ -25481,7 +33413,9 @@ export const topics = {
                 "@value": "经院参考文献"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225383"
+        "parent": "O9TAXTBRC2016052KG225383",
+        "tbrcId": "5",
+        "rank": 3230
     },
     "T447": {
         "label": [
@@ -25494,7 +33428,9 @@ export const topics = {
                 "@value": "yig cha/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226273"
+        "parent": "O9TAXTBRC2016052KG226273",
+        "tbrcId": "T447",
+        "rank": 3235
     },
     "O9TAXTBRC2016052KG226378": {
         "sub": [
@@ -25518,7 +33454,9 @@ export const topics = {
                 "@value": "Question and response/polemic"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225383"
+        "parent": "O9TAXTBRC2016052KG225383",
+        "tbrcId": "9",
+        "rank": 3346
     },
     "T102": {
         "label": [
@@ -25531,14 +33469,18 @@ export const topics = {
                 "@value": "polemic"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226378"
+        "parent": "O9TAXTBRC2016052KG226378",
+        "tbrcId": "T102",
+        "rank": 3355
     },
     "T615": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "zhus lan/"
         },
-        "parent": "O9TAXTBRC2016052KG226378"
+        "parent": "O9TAXTBRC2016052KG226378",
+        "tbrcId": "T615",
+        "rank": 3352
     },
     "T28": {
         "label": [
@@ -25551,7 +33493,9 @@ export const topics = {
                 "@value": "questions and responses"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226378"
+        "parent": "O9TAXTBRC2016052KG226378",
+        "tbrcId": "T28",
+        "rank": 3351
     },
     "T1KG18753": {
         "label": [
@@ -25564,14 +33508,18 @@ export const topics = {
                 "@value": "topic of discussion"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226378"
+        "parent": "O9TAXTBRC2016052KG226378",
+        "tbrcId": "T1KG18753",
+        "rank": 3354
     },
     "T1765": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "dogs slong /"
         },
-        "parent": "O9TAXTBRC2016052KG226378"
+        "parent": "O9TAXTBRC2016052KG226378",
+        "tbrcId": "T1765",
+        "rank": 3353
     },
     "O9TAXTBRC2016052KG225715": {
         "sub": [
@@ -25596,7 +33544,9 @@ export const topics = {
                 "@value": "Tantra Tradition"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225383"
+        "parent": "O9TAXTBRC2016052KG225383",
+        "tbrcId": "3",
+        "rank": 1605
     },
     "O9TAXTBRC2016052KG225725": {
         "sub": [
@@ -25616,7 +33566,9 @@ export const topics = {
                 "@value": "瑜伽部"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225715"
+        "parent": "O9TAXTBRC2016052KG225715",
+        "tbrcId": "3",
+        "rank": 1642
     },
     "T971": {
         "label": [
@@ -25629,7 +33581,9 @@ export const topics = {
                 "@value": "yogatantra"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225725"
+        "parent": "O9TAXTBRC2016052KG225725",
+        "tbrcId": "T971",
+        "rank": 1647
     },
     "O9TAXTBRC2016052KG225717": {
         "sub": [
@@ -25653,7 +33607,9 @@ export const topics = {
                 "@value": "Kriya Tantra"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225715"
+        "parent": "O9TAXTBRC2016052KG225715",
+        "tbrcId": "1 ",
+        "rank": 1614
     },
     "T147": {
         "label": [
@@ -25666,7 +33622,9 @@ export const topics = {
                 "@value": "smyung gnas/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225717"
+        "parent": "O9TAXTBRC2016052KG225717",
+        "tbrcId": "T147",
+        "rank": 1627
     },
     "T1992": {
         "label": [
@@ -25687,7 +33645,9 @@ export const topics = {
                 "@value": "kriyātantra"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225717"
+        "parent": "O9TAXTBRC2016052KG225717",
+        "tbrcId": "T1992",
+        "rank": 1619
     },
     "T2395": {
         "label": [
@@ -25704,21 +33664,27 @@ export const topics = {
                 "@value": "oM ma Ni pad+me hUM/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225717"
+        "parent": "O9TAXTBRC2016052KG225717",
+        "tbrcId": "T2395",
+        "rank": 3786
     },
     "T1610": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "ma Ni phan yon/"
         },
-        "parent": "O9TAXTBRC2016052KG225717"
+        "parent": "O9TAXTBRC2016052KG225717",
+        "tbrcId": "T1610",
+        "rank": 3791
     },
     "T638": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rdo rje rnam 'joms rgyud/"
         },
-        "parent": "O9TAXTBRC2016052KG225717"
+        "parent": "O9TAXTBRC2016052KG225717",
+        "tbrcId": "T638",
+        "rank": 1623
     },
     "T2129": {
         "label": [
@@ -25739,7 +33705,9 @@ export const topics = {
                 "@value": "續"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225715"
+        "parent": "O9TAXTBRC2016052KG225715",
+        "tbrcId": "T2129",
+        "rank": 1610
     },
     "O9TAXTBRC2016052KG225727": {
         "sub": [
@@ -25860,7 +33828,9 @@ export const topics = {
                 "@value": "rnal 'byor bla med rgyud/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225715"
+        "parent": "O9TAXTBRC2016052KG225715",
+        "tbrcId": "4",
+        "rank": 1653
     },
     "O9TAXTBRC2016052KG225829": {
         "parent": "O9TAXTBRC2016052KG225727"
@@ -25870,14 +33840,18 @@ export const topics = {
             "@language": "bo-x-ewts",
             "@value": "yang dag par sbyor ba/"
         },
-        "parent": "O9TAXTBRC2016052KG225727"
+        "parent": "O9TAXTBRC2016052KG225727",
+        "tbrcId": "T134",
+        "rank": 1668
     },
     "T2DB4534": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "a ro'i rdzogs chen/"
         },
-        "parent": "O9TAXTBRC2016052KG225727"
+        "parent": "O9TAXTBRC2016052KG225727",
+        "tbrcId": "T2DB4534",
+        "rank": 1748
     },
     "T10MS14285": {
         "label": [
@@ -25890,28 +33864,36 @@ export const topics = {
                 "@value": "vajra verses"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225727"
+        "parent": "O9TAXTBRC2016052KG225727",
+        "tbrcId": "T10MS14285",
+        "rank": 1716
     },
     "T1976": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "gnyis med rgyud (bla med rgyud)"
         },
-        "parent": "O9TAXTBRC2016052KG225727"
+        "parent": "O9TAXTBRC2016052KG225727",
+        "tbrcId": "T1976",
+        "rank": 1660
     },
     "T2CN4716": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "gsang bdag snyan brgyud/"
         },
-        "parent": "O9TAXTBRC2016052KG225727"
+        "parent": "O9TAXTBRC2016052KG225727",
+        "tbrcId": "T2CN4716",
+        "rank": 1692
     },
     "T1875": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "man ngag sde/"
         },
-        "parent": "O9TAXTBRC2016052KG225727"
+        "parent": "O9TAXTBRC2016052KG225727",
+        "tbrcId": "T1875",
+        "rank": 1675
     },
     "T626": {
         "label": [
@@ -25924,56 +33906,72 @@ export const topics = {
                 "@value": "bde mchog rgyud/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225727"
+        "parent": "O9TAXTBRC2016052KG225727",
+        "tbrcId": "T626",
+        "rank": 1662
     },
     "T1281": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "bde mchog snyan brgyud yab bka' ras chung lugs/"
         },
-        "parent": "O9TAXTBRC2016052KG225727"
+        "parent": "O9TAXTBRC2016052KG225727",
+        "tbrcId": "T1281",
+        "rank": 1685
     },
     "T528": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "ma rgyud snying po don gsum/"
         },
-        "parent": "O9TAXTBRC2016052KG225727"
+        "parent": "O9TAXTBRC2016052KG225727",
+        "tbrcId": "T528",
+        "rank": 1722
     },
     "T1472": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rnal 'byor lnga pa/"
         },
-        "parent": "O9TAXTBRC2016052KG225727"
+        "parent": "O9TAXTBRC2016052KG225727",
+        "tbrcId": "T1472",
+        "rank": 1704
     },
     "T2095": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rnal 'byor bcu gcig pa/"
         },
-        "parent": "O9TAXTBRC2016052KG225727"
+        "parent": "O9TAXTBRC2016052KG225727",
+        "tbrcId": "T2095",
+        "rank": 1744
     },
     "T1991": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "he ru ka'i rigs kyi rgyud/"
         },
-        "parent": "O9TAXTBRC2016052KG225727"
+        "parent": "O9TAXTBRC2016052KG225727",
+        "tbrcId": "T1991",
+        "rank": 1661
     },
     "T1561": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "brda' don gsal ba/"
         },
-        "parent": "O9TAXTBRC2016052KG225727"
+        "parent": "O9TAXTBRC2016052KG225727",
+        "tbrcId": "T1561",
+        "rank": 4098
     },
     "T1584": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "phyag chen ga'u ma/"
         },
-        "parent": "O9TAXTBRC2016052KG225727"
+        "parent": "O9TAXTBRC2016052KG225727",
+        "tbrcId": "T1584",
+        "rank": 1733
     },
     "T2GS1318": {
         "label": [
@@ -25986,7 +33984,9 @@ export const topics = {
                 "@value": "four demons of the gcod system"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225727"
+        "parent": "O9TAXTBRC2016052KG225727",
+        "tbrcId": "T2GS1318",
+        "rank": 1731
     },
     "T15": {
         "label": [
@@ -26003,14 +34003,18 @@ export const topics = {
                 "@value": "samkranti"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225727"
+        "parent": "O9TAXTBRC2016052KG225727",
+        "tbrcId": "T15",
+        "rank": 1713
     },
     "T2618": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "phyag chen rnal 'byor bzhi/"
         },
-        "parent": "O9TAXTBRC2016052KG225727"
+        "parent": "O9TAXTBRC2016052KG225727",
+        "tbrcId": "T2618",
+        "rank": 1702
     },
     "T307": {
         "label": [
@@ -26043,35 +34047,45 @@ export const topics = {
             "@language": "bo-x-ewts",
             "@value": "a ti yo ga"
         },
-        "parent": "O9TAXTBRC2016052KG225727"
+        "parent": "O9TAXTBRC2016052KG225727",
+        "tbrcId": "T1PD109541",
+        "rank": 1671
     },
     "T1283": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "phyag chen lhan cig skyes sbyor ('ba' ra lugs)"
         },
-        "parent": "O9TAXTBRC2016052KG225727"
+        "parent": "O9TAXTBRC2016052KG225727",
+        "tbrcId": "T1283",
+        "rank": 1687
     },
     "T1506": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rten 'brel snying po/"
         },
-        "parent": "O9TAXTBRC2016052KG225727"
+        "parent": "O9TAXTBRC2016052KG225727",
+        "tbrcId": "T1506",
+        "rank": 1730
     },
     "T2461": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "a nu yo ga"
         },
-        "parent": "O9TAXTBRC2016052KG225727"
+        "parent": "O9TAXTBRC2016052KG225727",
+        "tbrcId": "T2461",
+        "rank": 1672
     },
     "T2187": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "ma rgyud (bla med rgyud)"
         },
-        "parent": "O9TAXTBRC2016052KG225727"
+        "parent": "O9TAXTBRC2016052KG225727",
+        "tbrcId": "T2187",
+        "rank": 1664
     },
     "T394": {
         "label": [
@@ -26084,14 +34098,18 @@ export const topics = {
                 "@value": "six yogas of nāropa (nA ro pa)"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225727"
+        "parent": "O9TAXTBRC2016052KG225727",
+        "tbrcId": "T394",
+        "rank": 1720
     },
     "T930": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "thang stong snyan brgyud/"
         },
-        "parent": "O9TAXTBRC2016052KG225727"
+        "parent": "O9TAXTBRC2016052KG225727",
+        "tbrcId": "T930",
+        "rank": 1691
     },
     "T867": {
         "label": [
@@ -26119,21 +34137,27 @@ export const topics = {
             "@language": "bo-x-ewts",
             "@value": "ras chung snyan rgyud/"
         },
-        "parent": "O9TAXTBRC2016052KG225727"
+        "parent": "O9TAXTBRC2016052KG225727",
+        "tbrcId": "T1914",
+        "rank": 1688
     },
     "T1575": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "dril bu rim lnga /"
         },
-        "parent": "O9TAXTBRC2016052KG225727"
+        "parent": "O9TAXTBRC2016052KG225727",
+        "tbrcId": "T1575",
+        "rank": 1670
     },
     "T003JR4173": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rgyud bcu bdun/"
         },
-        "parent": "O9TAXTBRC2016052KG225727"
+        "parent": "O9TAXTBRC2016052KG225727",
+        "tbrcId": "T003JR4173",
+        "rank": 1682
     },
     "T1GS129193": {
         "label": [
@@ -26146,28 +34170,36 @@ export const topics = {
                 "@value": "brda rtags/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225727"
+        "parent": "O9TAXTBRC2016052KG225727",
+        "tbrcId": "T1GS129193",
+        "rank": 1725
     },
     "T003JR4759": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rdzong 'phrang /"
         },
-        "parent": "O9TAXTBRC2016052KG225727"
+        "parent": "O9TAXTBRC2016052KG225727",
+        "tbrcId": "T003JR4759",
+        "rank": 1676
     },
     "T1801": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rnal 'byor gsum/"
         },
-        "parent": "O9TAXTBRC2016052KG225727"
+        "parent": "O9TAXTBRC2016052KG225727",
+        "tbrcId": "T1801",
+        "rank": 1701
     },
     "T1877": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "shin tu spros med/"
         },
-        "parent": "O9TAXTBRC2016052KG225727"
+        "parent": "O9TAXTBRC2016052KG225727",
+        "tbrcId": "T1877",
+        "rank": 1698
     },
     "T1691": {
         "label": [
@@ -26180,49 +34212,63 @@ export const topics = {
                 "@value": "vayu"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225727"
+        "parent": "O9TAXTBRC2016052KG225727",
+        "tbrcId": "T1691",
+        "rank": 1738
     },
     "T2DB4533": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "klong sde/"
         },
-        "parent": "O9TAXTBRC2016052KG225727"
+        "parent": "O9TAXTBRC2016052KG225727",
+        "tbrcId": "T2DB4533",
+        "rank": 1673
     },
     "T1120": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rdo rje'i rnal 'byor/"
         },
-        "parent": "O9TAXTBRC2016052KG225727"
+        "parent": "O9TAXTBRC2016052KG225727",
+        "tbrcId": "T1120",
+        "rank": 1703
     },
     "T2232": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "phag mo zab rgya/"
         },
-        "parent": "O9TAXTBRC2016052KG225727"
+        "parent": "O9TAXTBRC2016052KG225727",
+        "tbrcId": "T2232",
+        "rank": 1695
     },
     "T1975": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "pha rgyud (bla med rgyud)"
         },
-        "parent": "O9TAXTBRC2016052KG225727"
+        "parent": "O9TAXTBRC2016052KG225727",
+        "tbrcId": "T1975",
+        "rank": 1663
     },
     "T1874": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "ma ha yo ga"
         },
-        "parent": "O9TAXTBRC2016052KG225727"
+        "parent": "O9TAXTBRC2016052KG225727",
+        "tbrcId": "T1874",
+        "rank": 1659
     },
     "T1280": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "bde mchog snyan brgyud (ngam rdzong lugs)"
         },
-        "parent": "O9TAXTBRC2016052KG225727"
+        "parent": "O9TAXTBRC2016052KG225727",
+        "tbrcId": "T1280",
+        "rank": 1686
     },
     "T309": {
         "label": {
@@ -26236,28 +34282,36 @@ export const topics = {
             "@language": "bo-x-ewts",
             "@value": "gtum mo/"
         },
-        "parent": "O9TAXTBRC2016052KG225727"
+        "parent": "O9TAXTBRC2016052KG225727",
+        "tbrcId": "T1538",
+        "rank": 1739
     },
     "T1547": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "gtum mo lam rdzogs/"
         },
-        "parent": "O9TAXTBRC2016052KG225727"
+        "parent": "O9TAXTBRC2016052KG225727",
+        "tbrcId": "T1547",
+        "rank": 1734
     },
     "T1369": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "klong sde rdo rje zam pa/"
         },
-        "parent": "O9TAXTBRC2016052KG225727"
+        "parent": "O9TAXTBRC2016052KG225727",
+        "tbrcId": "T1369",
+        "rank": 1677
     },
     "T2599": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "klong dgu/"
         },
-        "parent": "O9TAXTBRC2016052KG225727"
+        "parent": "O9TAXTBRC2016052KG225727",
+        "tbrcId": "T2599",
+        "rank": 1727
     },
     "T356": {
         "label": [
@@ -26278,21 +34332,27 @@ export const topics = {
                 "@value": "夢"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225727"
+        "parent": "O9TAXTBRC2016052KG225727",
+        "tbrcId": "T356",
+        "rank": 3901
     },
     "T631": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "kye rdor rgyud/"
         },
-        "parent": "O9TAXTBRC2016052KG225727"
+        "parent": "O9TAXTBRC2016052KG225727",
+        "tbrcId": "T631",
+        "rank": 1666
     },
     "T2MS13266": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "gsang spyod snyan brgyud/"
         },
-        "parent": "O9TAXTBRC2016052KG225727"
+        "parent": "O9TAXTBRC2016052KG225727",
+        "tbrcId": "T2MS13266",
+        "rank": 1690
     },
     "T202": {
         "label": [
@@ -26318,7 +34378,9 @@ export const topics = {
                 "@value": "theg pa rim pa dgu/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225727"
+        "parent": "O9TAXTBRC2016052KG225727",
+        "tbrcId": "T32",
+        "rank": 1721
     },
     "T1955": {
         "label": [
@@ -26331,7 +34393,9 @@ export const topics = {
                 "@value": "ritual messengers"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225727"
+        "parent": "O9TAXTBRC2016052KG225727",
+        "tbrcId": "T1955",
+        "rank": 3941
     },
     "T2564": {
         "label": [
@@ -26344,7 +34408,9 @@ export const topics = {
                 "@value": "luminosity"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225727"
+        "parent": "O9TAXTBRC2016052KG225727",
+        "tbrcId": "T2564",
+        "rank": 1740
     },
     "T2MS15107": {
         "label": [
@@ -26357,49 +34423,63 @@ export const topics = {
                 "@value": "rainbow body"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225727"
+        "parent": "O9TAXTBRC2016052KG225727",
+        "tbrcId": "T2MS15107",
+        "rank": 1724
     },
     "T633": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "dus 'khor rgyud/"
         },
-        "parent": "O9TAXTBRC2016052KG225727"
+        "parent": "O9TAXTBRC2016052KG225727",
+        "tbrcId": "T633",
+        "rank": 1667
     },
     "T1389": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "thod rgal/"
         },
-        "parent": "O9TAXTBRC2016052KG225727"
+        "parent": "O9TAXTBRC2016052KG225727",
+        "tbrcId": "T1389",
+        "rank": 1710
     },
     "T11MS4": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "ring brgyud/"
         },
-        "parent": "O9TAXTBRC2016052KG225727"
+        "parent": "O9TAXTBRC2016052KG225727",
+        "tbrcId": "T11MS4",
+        "rank": 1694
     },
     "T1989": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rnal 'byor ma'i rgyud/"
         },
-        "parent": "O9TAXTBRC2016052KG225727"
+        "parent": "O9TAXTBRC2016052KG225727",
+        "tbrcId": "T1989",
+        "rank": 1665
     },
     "T2063": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "'khor 'das dbyer med/"
         },
-        "parent": "O9TAXTBRC2016052KG225727"
+        "parent": "O9TAXTBRC2016052KG225727",
+        "tbrcId": "T2063",
+        "rank": 1750
     },
     "T466": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "na rak dong sprugs/"
         },
-        "parent": "O9TAXTBRC2016052KG225727"
+        "parent": "O9TAXTBRC2016052KG225727",
+        "tbrcId": "T466",
+        "rank": 1711
     },
     "T4CZ15623": {
         "label": [
@@ -26412,7 +34492,9 @@ export const topics = {
                 "@value": "the Nyingma tantras"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225727"
+        "parent": "O9TAXTBRC2016052KG225727",
+        "tbrcId": "T4CZ15623",
+        "rank": 1678
     },
     "T616": {
         "label": [
@@ -26425,7 +34507,9 @@ export const topics = {
                 "@value": "our yogas"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225727"
+        "parent": "O9TAXTBRC2016052KG225727",
+        "tbrcId": "T616",
+        "rank": 1706
     },
     "T288": {
         "label": [
@@ -26442,7 +34526,9 @@ export const topics = {
                 "@value": "yogic postures"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225727"
+        "parent": "O9TAXTBRC2016052KG225727",
+        "tbrcId": "T288",
+        "rank": 1712
     },
     "T439": {
         "label": [
@@ -26455,7 +34541,9 @@ export const topics = {
                 "@value": "yoga"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225727"
+        "parent": "O9TAXTBRC2016052KG225727",
+        "tbrcId": "T439",
+        "rank": 1705
     },
     "T1294": {
         "label": [
@@ -26468,7 +34556,9 @@ export const topics = {
                 "@value": "sems sde/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225727"
+        "parent": "O9TAXTBRC2016052KG225727",
+        "tbrcId": "T1294",
+        "rank": 1674
     },
     "T10MS11132": {
         "label": [
@@ -26481,42 +34571,54 @@ export const topics = {
                 "@value": "bde mchog snyan brgyud/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225727"
+        "parent": "O9TAXTBRC2016052KG225727",
+        "tbrcId": "T10MS11132",
+        "rank": 1683
     },
     "T1592": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "bsre 'pho/"
         },
-        "parent": "O9TAXTBRC2016052KG225727"
+        "parent": "O9TAXTBRC2016052KG225727",
+        "tbrcId": "T1592",
+        "rank": 1743
     },
     "T1264": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "gegs sel gzer lnga /"
         },
-        "parent": "O9TAXTBRC2016052KG225727"
+        "parent": "O9TAXTBRC2016052KG225727",
+        "tbrcId": "T1264",
+        "rank": 1717
     },
     "T2179": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rim pa bzhi pa (bde mchog)"
         },
-        "parent": "O9TAXTBRC2016052KG225727"
+        "parent": "O9TAXTBRC2016052KG225727",
+        "tbrcId": "T2179",
+        "rank": 1684
     },
     "T8LS15536": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "zla gsang thig le/"
         },
-        "parent": "O9TAXTBRC2016052KG225727"
+        "parent": "O9TAXTBRC2016052KG225727",
+        "tbrcId": "T8LS15536",
+        "rank": 1669
     },
     "T1876": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "spros bcas/"
         },
-        "parent": "O9TAXTBRC2016052KG225727"
+        "parent": "O9TAXTBRC2016052KG225727",
+        "tbrcId": "T1876",
+        "rank": 1696
     },
     "T00JR397": {
         "label": [
@@ -26529,14 +34631,18 @@ export const topics = {
                 "@value": "the practice of transferring one's consciousness into another body"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225727"
+        "parent": "O9TAXTBRC2016052KG225727",
+        "tbrcId": "T00JR397",
+        "rank": 1714
     },
     "T2245": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rgyud gsum/"
         },
-        "parent": "O9TAXTBRC2016052KG225727"
+        "parent": "O9TAXTBRC2016052KG225727",
+        "tbrcId": "T2245",
+        "rank": 1697
     },
     "T00KG03596": {
         "label": [
@@ -26549,14 +34655,18 @@ export const topics = {
                 "@value": "technique"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225727"
+        "parent": "O9TAXTBRC2016052KG225727",
+        "tbrcId": "T00KG03596",
+        "rank": 3881
     },
     "T2096": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "langka li/"
         },
-        "parent": "O9TAXTBRC2016052KG225727"
+        "parent": "O9TAXTBRC2016052KG225727",
+        "tbrcId": "T2096",
+        "rank": 1726
     },
     "T1KG1285": {
         "label": [
@@ -26573,21 +34683,27 @@ export const topics = {
                 "@value": "magical display"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225727"
+        "parent": "O9TAXTBRC2016052KG225727",
+        "tbrcId": "T1KG1285",
+        "rank": 3851
     },
     "T2561": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "bde stong /"
         },
-        "parent": "O9TAXTBRC2016052KG225727"
+        "parent": "O9TAXTBRC2016052KG225727",
+        "tbrcId": "T2561",
+        "rank": 1745
     },
     "T00AG0341": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "brgyud pa gsum/"
         },
-        "parent": "O9TAXTBRC2016052KG225727"
+        "parent": "O9TAXTBRC2016052KG225727",
+        "tbrcId": "T00AG0341",
+        "rank": 1709
     },
     "T163": {
         "label": [
@@ -26604,7 +34720,9 @@ export const topics = {
                 "@value": "sampannakrama"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225727"
+        "parent": "O9TAXTBRC2016052KG225727",
+        "tbrcId": "T163",
+        "rank": 1719
     },
     "T2GS1319": {
         "label": [
@@ -26617,14 +34735,18 @@ export const topics = {
                 "@value": "amṛta"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225727"
+        "parent": "O9TAXTBRC2016052KG225727",
+        "tbrcId": "T2GS1319",
+        "rank": 3911
     },
     "T865": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "phyag chen yi ge bzhi pa/"
         },
-        "parent": "O9TAXTBRC2016052KG225727"
+        "parent": "O9TAXTBRC2016052KG225727",
+        "tbrcId": "T865",
+        "rank": 1732
     },
     "T1336": {
         "label": [
@@ -26641,7 +34763,9 @@ export const topics = {
                 "@value": "金剛乘"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225727"
+        "parent": "O9TAXTBRC2016052KG225727",
+        "tbrcId": "T1336",
+        "rank": 1658
     },
     "T4CZ2413": {
         "label": [
@@ -26654,7 +34778,9 @@ export const topics = {
                 "@value": "unelaborate, (empowerment)"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225727"
+        "parent": "O9TAXTBRC2016052KG225727",
+        "tbrcId": "T4CZ2413",
+        "rank": 1699
     },
     "T1CZ30": {
         "label": [
@@ -26667,35 +34793,45 @@ export const topics = {
                 "@value": "stages, utpatti and sampannakrama; development and completion"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225727"
+        "parent": "O9TAXTBRC2016052KG225727",
+        "tbrcId": "T1CZ30",
+        "rank": 1718
     },
     "T1878": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rab tu spros med/"
         },
-        "parent": "O9TAXTBRC2016052KG225727"
+        "parent": "O9TAXTBRC2016052KG225727",
+        "tbrcId": "T1878",
+        "rank": 1700
     },
     "T629": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "o la pa ti/"
         },
-        "parent": "O9TAXTBRC2016052KG225727"
+        "parent": "O9TAXTBRC2016052KG225727",
+        "tbrcId": "T629",
+        "rank": 1735
     },
     "T1676": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "ngam rdzong snyan brgyud/"
         },
-        "parent": "O9TAXTBRC2016052KG225727"
+        "parent": "O9TAXTBRC2016052KG225727",
+        "tbrcId": "T1676",
+        "rank": 1689
     },
     "T2563": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "sgyu lus/"
         },
-        "parent": "O9TAXTBRC2016052KG225727"
+        "parent": "O9TAXTBRC2016052KG225727",
+        "tbrcId": "T2563",
+        "rank": 1715
     },
     "T969": {
         "label": [
@@ -26712,42 +34848,54 @@ export const topics = {
                 "@value": "手印"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225727"
+        "parent": "O9TAXTBRC2016052KG225727",
+        "tbrcId": "T969",
+        "rank": 1742
     },
     "T2086": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "phyag rgya bzhi/"
         },
-        "parent": "O9TAXTBRC2016052KG225727"
+        "parent": "O9TAXTBRC2016052KG225727",
+        "tbrcId": "T2086",
+        "rank": 1708
     },
     "T4CZ15394": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "zung 'jug"
         },
-        "parent": "O9TAXTBRC2016052KG225727"
+        "parent": "O9TAXTBRC2016052KG225727",
+        "tbrcId": "T4CZ15394",
+        "rank": 1746
     },
     "T325": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rtsa rlung thig le/"
         },
-        "parent": "O9TAXTBRC2016052KG225727"
+        "parent": "O9TAXTBRC2016052KG225727",
+        "tbrcId": "T325",
+        "rank": 1737
     },
     "T1880": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "gsang lam/"
         },
-        "parent": "O9TAXTBRC2016052KG225727"
+        "parent": "O9TAXTBRC2016052KG225727",
+        "tbrcId": "T1880",
+        "rank": 1747
     },
     "T623": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "smon lam dbang bzhi/"
         },
-        "parent": "O9TAXTBRC2016052KG225727"
+        "parent": "O9TAXTBRC2016052KG225727",
+        "tbrcId": "T623",
+        "rank": 1736
     },
     "T00UNK2": {
         "label": [
@@ -26760,28 +34908,36 @@ export const topics = {
                 "@value": "vajra body"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225727"
+        "parent": "O9TAXTBRC2016052KG225727",
+        "tbrcId": "T00UNK2",
+        "rank": 1723
     },
     "T1606": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "snyan brgyud steng sgo chos drug"
         },
-        "parent": "O9TAXTBRC2016052KG225727"
+        "parent": "O9TAXTBRC2016052KG225727",
+        "tbrcId": "T1606",
+        "rank": 1729
     },
     "T803": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "'dus pa mdo/"
         },
-        "parent": "O9TAXTBRC2016052KG225727"
+        "parent": "O9TAXTBRC2016052KG225727",
+        "tbrcId": "T803",
+        "rank": 1741
     },
     "T1576": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "nag po rim bzhi/"
         },
-        "parent": "O9TAXTBRC2016052KG225727"
+        "parent": "O9TAXTBRC2016052KG225727",
+        "tbrcId": "T1576",
+        "rank": 1680
     },
     "T1562": {
         "label": [
@@ -26794,21 +34950,27 @@ export const topics = {
                 "@value": "pancakrama"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225727"
+        "parent": "O9TAXTBRC2016052KG225727",
+        "tbrcId": "T1562",
+        "rank": 1681
     },
     "T11MS3": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "nye brgyud/"
         },
-        "parent": "O9TAXTBRC2016052KG225727"
+        "parent": "O9TAXTBRC2016052KG225727",
+        "tbrcId": "T11MS3",
+        "rank": 1693
     },
     "T2092": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "e wam/"
         },
-        "parent": "O9TAXTBRC2016052KG225727"
+        "parent": "O9TAXTBRC2016052KG225727",
+        "tbrcId": "T2092",
+        "rank": 1728
     },
     "O9TAXTBRC2016052KG225723": {
         "sub": [
@@ -26828,7 +34990,9 @@ export const topics = {
                 "@value": "行部"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225715"
+        "parent": "O9TAXTBRC2016052KG225715",
+        "tbrcId": "2",
+        "rank": 1632
     },
     "T2186": {
         "label": [
@@ -26841,7 +35005,9 @@ export const topics = {
                 "@value": "caryatantra"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225723"
+        "parent": "O9TAXTBRC2016052KG225723",
+        "tbrcId": "T2186",
+        "rank": 1637
     },
     "O9TAXTBRC2016052KG225830": {
         "sub": [
@@ -26952,35 +35118,45 @@ export const topics = {
                 "@value": "修法及坛城"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225715"
+        "parent": "O9TAXTBRC2016052KG225715",
+        "tbrcId": "5",
+        "rank": 1752
     },
     "T1471": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "dpa' bo 'bru gcig pa/"
         },
-        "parent": "O9TAXTBRC2016052KG225830"
+        "parent": "O9TAXTBRC2016052KG225830",
+        "tbrcId": "T1471",
+        "rank": 1825
     },
     "T839": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "sgra mi snyan gyi tshe sgrub/"
         },
-        "parent": "O9TAXTBRC2016052KG225830"
+        "parent": "O9TAXTBRC2016052KG225830",
+        "tbrcId": "T839",
+        "rank": 1765
     },
     "T524": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "'chi med dpal ster tshe sgrub (thang stong lugs)"
         },
-        "parent": "O9TAXTBRC2016052KG225830"
+        "parent": "O9TAXTBRC2016052KG225830",
+        "tbrcId": "T524",
+        "rank": 1767
     },
     "T1248": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "sgrub pa/"
         },
-        "parent": "O9TAXTBRC2016052KG225830"
+        "parent": "O9TAXTBRC2016052KG225830",
+        "tbrcId": "T1248",
+        "rank": 1805
     },
     "T80": {
         "label": [
@@ -26997,7 +35173,9 @@ export const topics = {
                 "@value": "曼荼羅"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225830"
+        "parent": "O9TAXTBRC2016052KG225830",
+        "tbrcId": "T80",
+        "rank": 1763
     },
     "T627": {
         "label": [
@@ -27010,35 +35188,45 @@ export const topics = {
                 "@value": "mantra"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225830"
+        "parent": "O9TAXTBRC2016052KG225830",
+        "tbrcId": "T627",
+        "rank": 1831
     },
     "T1CZ29": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "sgrub mchod/"
         },
-        "parent": "O9TAXTBRC2016052KG225830"
+        "parent": "O9TAXTBRC2016052KG225830",
+        "tbrcId": "T1CZ29",
+        "rank": 1816
     },
     "T00KG02667": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "bsnyen sgrub las gsum/"
         },
-        "parent": "O9TAXTBRC2016052KG225830"
+        "parent": "O9TAXTBRC2016052KG225830",
+        "tbrcId": "T00KG02667",
+        "rank": 1829
     },
     "T968": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "sgrub dkyil/"
         },
-        "parent": "O9TAXTBRC2016052KG225830"
+        "parent": "O9TAXTBRC2016052KG225830",
+        "tbrcId": "T968",
+        "rank": 1757
     },
     "T1GS118689": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rtsa sgrub/"
         },
-        "parent": "O9TAXTBRC2016052KG225830"
+        "parent": "O9TAXTBRC2016052KG225830",
+        "tbrcId": "T1GS118689",
+        "rank": 1786
     },
     "T164": {
         "label": [
@@ -27051,14 +35239,18 @@ export const topics = {
                 "@value": "utpattikrama"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225830"
+        "parent": "O9TAXTBRC2016052KG225830",
+        "tbrcId": "T164",
+        "rank": 1783
     },
     "T1GS145346": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "nam mkha'i zas su za ba/"
         },
-        "parent": "O9TAXTBRC2016052KG225830"
+        "parent": "O9TAXTBRC2016052KG225830",
+        "tbrcId": "T1GS145346",
+        "rank": 1775
     },
     "T1461": {
         "label": [
@@ -27071,14 +35263,18 @@ export const topics = {
                 "@value": "seven mandalas of the rngog tradition"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225830"
+        "parent": "O9TAXTBRC2016052KG225830",
+        "tbrcId": "T1461",
+        "rank": 1800
     },
     "T1GS118690": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "dpa' bo rkyang sgrub/"
         },
-        "parent": "O9TAXTBRC2016052KG225830"
+        "parent": "O9TAXTBRC2016052KG225830",
+        "tbrcId": "T1GS118690",
+        "rank": 1828
     },
     "T2135": {
         "label": [
@@ -27091,7 +35287,9 @@ export const topics = {
                 "@value": "施身法"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225830"
+        "parent": "O9TAXTBRC2016052KG225830",
+        "tbrcId": "T2135",
+        "rank": 1804
     },
     "T475": {
         "label": [
@@ -27104,21 +35302,27 @@ export const topics = {
                 "@value": "stages of a given visualization"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225830"
+        "parent": "O9TAXTBRC2016052KG225830",
+        "tbrcId": "T475",
+        "rank": 1784
     },
     "T1380": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "'bru gsum rdor bzlas/"
         },
-        "parent": "O9TAXTBRC2016052KG225830"
+        "parent": "O9TAXTBRC2016052KG225830",
+        "tbrcId": "T1380",
+        "rank": 1823
     },
     "T1381": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "gzungs sgrub/"
         },
-        "parent": "O9TAXTBRC2016052KG225830"
+        "parent": "O9TAXTBRC2016052KG225830",
+        "tbrcId": "T1381",
+        "rank": 1792
     },
     "T837": {
         "label": {
@@ -27132,28 +35336,36 @@ export const topics = {
             "@language": "bo-x-ewts",
             "@value": "thugs dkyil/"
         },
-        "parent": "O9TAXTBRC2016052KG225830"
+        "parent": "O9TAXTBRC2016052KG225830",
+        "tbrcId": "T1213",
+        "rank": 1764
     },
     "T2422": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "lha mo'i sgrub mchod (thim phu)"
         },
-        "parent": "O9TAXTBRC2016052KG225830"
+        "parent": "O9TAXTBRC2016052KG225830",
+        "tbrcId": "T2422",
+        "rank": 1819
     },
     "T1GS138983": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "lam zab nang ma/"
         },
-        "parent": "O9TAXTBRC2016052KG225830"
+        "parent": "O9TAXTBRC2016052KG225830",
+        "tbrcId": "T1GS138983",
+        "rank": 1795
     },
     "T1848": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "gzungs kyi sgra bsgrubs/"
         },
-        "parent": "O9TAXTBRC2016052KG225830"
+        "parent": "O9TAXTBRC2016052KG225830",
+        "tbrcId": "T1848",
+        "rank": 1789
     },
     "T012AG03391": {
         "label": [
@@ -27166,14 +35378,18 @@ export const topics = {
                 "@value": "yi ge drug (thang rgyal lugs)"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225830"
+        "parent": "O9TAXTBRC2016052KG225830",
+        "tbrcId": "T012AG03391",
+        "rank": 1787
     },
     "T1AT414": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "dngos grub blang ba/"
         },
-        "parent": "O9TAXTBRC2016052KG225830"
+        "parent": "O9TAXTBRC2016052KG225830",
+        "tbrcId": "T1AT414",
+        "rank": 1791
     },
     "T552": {
         "label": [
@@ -27186,7 +35402,9 @@ export const topics = {
                 "@value": "kayamandala"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225830"
+        "parent": "O9TAXTBRC2016052KG225830",
+        "tbrcId": "T552",
+        "rank": 1798
     },
     "T1GS124889": {
         "label": [
@@ -27199,14 +35417,18 @@ export const topics = {
                 "@value": "藥食瑜伽"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225830"
+        "parent": "O9TAXTBRC2016052KG225830",
+        "tbrcId": "T1GS124889",
+        "rank": 1790
     },
     "T159": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "dkyil chog"
         },
-        "parent": "O9TAXTBRC2016052KG225830"
+        "parent": "O9TAXTBRC2016052KG225830",
+        "tbrcId": "T159",
+        "rank": 1797
     },
     "T540": {
         "label": [
@@ -27223,7 +35445,9 @@ export const topics = {
                 "@value": "guru practice"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225830"
+        "parent": "O9TAXTBRC2016052KG225830",
+        "tbrcId": "T540",
+        "rank": 1810
     },
     "T546": {
         "label": {
@@ -27237,7 +35461,9 @@ export const topics = {
             "@language": "bo-x-ewts",
             "@value": "lam zab phyi ma/"
         },
-        "parent": "O9TAXTBRC2016052KG225830"
+        "parent": "O9TAXTBRC2016052KG225830",
+        "tbrcId": "T1GS138982",
+        "rank": 1793
     },
     "T2603": {
         "label": [
@@ -27250,7 +35476,9 @@ export const topics = {
                 "@value": "protection against weapons"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225830"
+        "parent": "O9TAXTBRC2016052KG225830",
+        "tbrcId": "T2603",
+        "rank": 1782
     },
     "T1993": {
         "label": {
@@ -27271,21 +35499,27 @@ export const topics = {
             "@language": "bo-x-ewts",
             "@value": "phyag chen lnga ldan/"
         },
-        "parent": "O9TAXTBRC2016052KG225830"
+        "parent": "O9TAXTBRC2016052KG225830",
+        "tbrcId": "T1216",
+        "rank": 1811
     },
     "T840": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "tshe rta zung 'brel 'chi med dpal ster (thang rgyal nye brgyud)"
         },
-        "parent": "O9TAXTBRC2016052KG225830"
+        "parent": "O9TAXTBRC2016052KG225830",
+        "tbrcId": "T840",
+        "rank": 1769
     },
     "T812": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rig 'dzin srog sgrub (nam mkha' 'jigs med)"
         },
-        "parent": "O9TAXTBRC2016052KG225830"
+        "parent": "O9TAXTBRC2016052KG225830",
+        "tbrcId": "T812",
+        "rank": 6310
     },
     "T5": {
         "label": [
@@ -27302,28 +35536,36 @@ export const topics = {
                 "@value": "visualization"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225830"
+        "parent": "O9TAXTBRC2016052KG225830",
+        "tbrcId": "T5",
+        "rank": 1762
     },
     "T1GS128714": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "'phrin las lam khyer/"
         },
-        "parent": "O9TAXTBRC2016052KG225830"
+        "parent": "O9TAXTBRC2016052KG225830",
+        "tbrcId": "T1GS128714",
+        "rank": 1781
     },
     "T1068": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "sngags phreng /"
         },
-        "parent": "O9TAXTBRC2016052KG225830"
+        "parent": "O9TAXTBRC2016052KG225830",
+        "tbrcId": "T1068",
+        "rank": 1837
     },
     "T1GS147807": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rdo rje'i tshe sgrub/"
         },
-        "parent": "O9TAXTBRC2016052KG225830"
+        "parent": "O9TAXTBRC2016052KG225830",
+        "tbrcId": "T1GS147807",
+        "rank": 1766
     },
     "T1408": {
         "label": [
@@ -27336,7 +35578,9 @@ export const topics = {
                 "@value": "護輪"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225830"
+        "parent": "O9TAXTBRC2016052KG225830",
+        "tbrcId": "T1408",
+        "rank": 1834
     },
     "T27": {
         "label": [
@@ -27353,7 +35597,9 @@ export const topics = {
                 "@value": "longevity rituals"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225830"
+        "parent": "O9TAXTBRC2016052KG225830",
+        "tbrcId": "T27",
+        "rank": 1770
     },
     "T877": {
         "label": [
@@ -27366,35 +35612,45 @@ export const topics = {
                 "@value": "sgom bzlas/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225830"
+        "parent": "O9TAXTBRC2016052KG225830",
+        "tbrcId": "T877",
+        "rank": 1814
     },
     "T1181": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "sgrub skor/"
         },
-        "parent": "O9TAXTBRC2016052KG225830"
+        "parent": "O9TAXTBRC2016052KG225830",
+        "tbrcId": "T1181",
+        "rank": 1759
     },
     "T00JR2912": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "sgom sgrub/"
         },
-        "parent": "O9TAXTBRC2016052KG225830"
+        "parent": "O9TAXTBRC2016052KG225830",
+        "tbrcId": "T00JR2912",
+        "rank": 1832
     },
     "T2594": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "tshe sgrub bdud rtsi 'khyil ba (legs ldan rje)"
         },
-        "parent": "O9TAXTBRC2016052KG225830"
+        "parent": "O9TAXTBRC2016052KG225830",
+        "tbrcId": "T2594",
+        "rank": 1768
     },
     "T1AT470": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "thugs sgrub/"
         },
-        "parent": "O9TAXTBRC2016052KG225830"
+        "parent": "O9TAXTBRC2016052KG225830",
+        "tbrcId": "T1AT470",
+        "rank": 1820
     },
     "T4": {
         "label": [
@@ -27407,21 +35663,27 @@ export const topics = {
                 "@value": "guruyoga"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225830"
+        "parent": "O9TAXTBRC2016052KG225830",
+        "tbrcId": "T4",
+        "rank": 1801
     },
     "T1318": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "tshogs sgrub/"
         },
-        "parent": "O9TAXTBRC2016052KG225830"
+        "parent": "O9TAXTBRC2016052KG225830",
+        "tbrcId": "T1318",
+        "rank": 1780
     },
     "T1286": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "lam zab thun mong ma yin pa/"
         },
-        "parent": "O9TAXTBRC2016052KG225830"
+        "parent": "O9TAXTBRC2016052KG225830",
+        "tbrcId": "T1286",
+        "rank": 1802
     },
     "T151": {
         "label": [
@@ -27442,21 +35704,27 @@ export const topics = {
                 "@value": "method for invoking"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225830"
+        "parent": "O9TAXTBRC2016052KG225830",
+        "tbrcId": "T151",
+        "rank": 1785
     },
     "T2043": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "byug bdug brab gsum/"
         },
-        "parent": "O9TAXTBRC2016052KG225830"
+        "parent": "O9TAXTBRC2016052KG225830",
+        "tbrcId": "T2043",
+        "rank": 1839
     },
     "T316": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rdzogs chen bla sgrub/"
         },
-        "parent": "O9TAXTBRC2016052KG225830"
+        "parent": "O9TAXTBRC2016052KG225830",
+        "tbrcId": "T316",
+        "rank": 1818
     },
     "T1465": {
         "label": [
@@ -27469,63 +35737,81 @@ export const topics = {
                 "@value": "guhyasadhana"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225830"
+        "parent": "O9TAXTBRC2016052KG225830",
+        "tbrcId": "T1465",
+        "rank": 1808
     },
     "T317": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rdzogs chen sgrub mchod/"
         },
-        "parent": "O9TAXTBRC2016052KG225830"
+        "parent": "O9TAXTBRC2016052KG225830",
+        "tbrcId": "T317",
+        "rank": 1817
     },
     "T1094": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "nang sgrub/"
         },
-        "parent": "O9TAXTBRC2016052KG225830"
+        "parent": "O9TAXTBRC2016052KG225830",
+        "tbrcId": "T1094",
+        "rank": 1806
     },
     "T1747": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "sgrub chen/"
         },
-        "parent": "O9TAXTBRC2016052KG225830"
+        "parent": "O9TAXTBRC2016052KG225830",
+        "tbrcId": "T1747",
+        "rank": 1840
     },
     "T453": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "sgrub khog"
         },
-        "parent": "O9TAXTBRC2016052KG225830"
+        "parent": "O9TAXTBRC2016052KG225830",
+        "tbrcId": "T453",
+        "rank": 1836
     },
     "T2168": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "sgyu lus dbang mo/"
         },
-        "parent": "O9TAXTBRC2016052KG225830"
+        "parent": "O9TAXTBRC2016052KG225830",
+        "tbrcId": "T2168",
+        "rank": 1803
     },
     "T1494": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "srog sdom gzer bzhi/"
         },
-        "parent": "O9TAXTBRC2016052KG225830"
+        "parent": "O9TAXTBRC2016052KG225830",
+        "tbrcId": "T1494",
+        "rank": 1830
     },
     "T2MS13267": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "snyan brgyud/"
         },
-        "parent": "O9TAXTBRC2016052KG225830"
+        "parent": "O9TAXTBRC2016052KG225830",
+        "tbrcId": "T2MS13267",
+        "rank": 1776
     },
     "T457": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "bdag bskyed/"
         },
-        "parent": "O9TAXTBRC2016052KG225830"
+        "parent": "O9TAXTBRC2016052KG225830",
+        "tbrcId": "T457",
+        "rank": 1813
     },
     "T1": {
         "label": [
@@ -27542,7 +35828,9 @@ export const topics = {
                 "@value": "sādhana"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225830"
+        "parent": "O9TAXTBRC2016052KG225830",
+        "tbrcId": "T1",
+        "rank": 1758
     },
     "T1CZ48": {
         "label": [
@@ -27555,28 +35843,36 @@ export const topics = {
                 "@value": "uncommon sadhana"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225830"
+        "parent": "O9TAXTBRC2016052KG225830",
+        "tbrcId": "T1CZ48",
+        "rank": 1760
     },
     "T1388": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "khregs chod/"
         },
-        "parent": "O9TAXTBRC2016052KG225830"
+        "parent": "O9TAXTBRC2016052KG225830",
+        "tbrcId": "T1388",
+        "rank": 1794
     },
     "T1685": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "bde chen zhing sgrub/"
         },
-        "parent": "O9TAXTBRC2016052KG225830"
+        "parent": "O9TAXTBRC2016052KG225830",
+        "tbrcId": "T1685",
+        "rank": 1812
     },
     "T874": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "shangs pa bka' brgyud gsang sgrub skor gsum/"
         },
-        "parent": "O9TAXTBRC2016052KG225830"
+        "parent": "O9TAXTBRC2016052KG225830",
+        "tbrcId": "T874",
+        "rank": 1824
     },
     "T00UNK53": {
         "label": {
@@ -27590,14 +35886,18 @@ export const topics = {
             "@language": "bo-x-ewts",
             "@value": "rta mgrin gsang sgrub lugs gnyis/"
         },
-        "parent": "O9TAXTBRC2016052KG225830"
+        "parent": "O9TAXTBRC2016052KG225830",
+        "tbrcId": "T1CZ11",
+        "rank": 1796
     },
     "T1CZ63": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "phyi sgrub/"
         },
-        "parent": "O9TAXTBRC2016052KG225830"
+        "parent": "O9TAXTBRC2016052KG225830",
+        "tbrcId": "T1CZ63",
+        "rank": 1807
     },
     "T1476": {
         "label": [
@@ -27610,14 +35910,18 @@ export const topics = {
                 "@value": "three-dimensional mandala"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225830"
+        "parent": "O9TAXTBRC2016052KG225830",
+        "tbrcId": "T1476",
+        "rank": 1799
     },
     "T1265": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "thun bzhi bla ma'i rnal 'byor (kaM tshang lugs)"
         },
-        "parent": "O9TAXTBRC2016052KG225830"
+        "parent": "O9TAXTBRC2016052KG225830",
+        "tbrcId": "T1265",
+        "rank": 1788
     },
     "T1266": {
         "label": [
@@ -27630,35 +35934,45 @@ export const topics = {
                 "@value": "enhancement or progress in practice"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225830"
+        "parent": "O9TAXTBRC2016052KG225830",
+        "tbrcId": "T1266",
+        "rank": 1777
     },
     "T1464": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "sbrul 'byin/"
         },
-        "parent": "O9TAXTBRC2016052KG225830"
+        "parent": "O9TAXTBRC2016052KG225830",
+        "tbrcId": "T1464",
+        "rank": 1827
     },
     "T1824": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rgyud sde lnga /"
         },
-        "parent": "O9TAXTBRC2016052KG225830"
+        "parent": "O9TAXTBRC2016052KG225830",
+        "tbrcId": "T1824",
+        "rank": 1778
     },
     "T1AT473": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "zhi khro'i thugs sgrub/"
         },
-        "parent": "O9TAXTBRC2016052KG225830"
+        "parent": "O9TAXTBRC2016052KG225830",
+        "tbrcId": "T1AT473",
+        "rank": 1821
     },
     "T1382": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "bam sgrub/"
         },
-        "parent": "O9TAXTBRC2016052KG225830"
+        "parent": "O9TAXTBRC2016052KG225830",
+        "tbrcId": "T1382",
+        "rank": 1838
     },
     "T01AG02845": {
         "label": [
@@ -27678,7 +35992,9 @@ export const topics = {
             "@language": "bo-x-ewts",
             "@value": "mdun bskyed/"
         },
-        "parent": "O9TAXTBRC2016052KG225830"
+        "parent": "O9TAXTBRC2016052KG225830",
+        "tbrcId": "T1214",
+        "rank": 1815
     },
     "T1191": {
         "label": [
@@ -27691,28 +36007,36 @@ export const topics = {
                 "@value": "deities"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225830"
+        "parent": "O9TAXTBRC2016052KG225830",
+        "tbrcId": "T1191",
+        "rank": 1833
     },
     "T2297": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "tshig bdun bla sgrub/"
         },
-        "parent": "O9TAXTBRC2016052KG225830"
+        "parent": "O9TAXTBRC2016052KG225830",
+        "tbrcId": "T2297",
+        "rank": 1809
     },
     "T957": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "sgrub thabs rgya mtsho/"
         },
-        "parent": "O9TAXTBRC2016052KG225830"
+        "parent": "O9TAXTBRC2016052KG225830",
+        "tbrcId": "T957",
+        "rank": 1761
     },
     "T555": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "'chi med tshe sgrub bu ston gong khug ma/"
         },
-        "parent": "O9TAXTBRC2016052KG225830"
+        "parent": "O9TAXTBRC2016052KG225830",
+        "tbrcId": "T555",
+        "rank": 1774
     },
     "T1099": {
         "label": {
@@ -27733,7 +36057,9 @@ export const topics = {
             "@language": "bo-x-ewts",
             "@value": "las rung /"
         },
-        "parent": "O9TAXTBRC2016052KG225830"
+        "parent": "O9TAXTBRC2016052KG225830",
+        "tbrcId": "T2371",
+        "rank": 1822
     },
     "T01AG03135": {
         "label": {
@@ -27747,14 +36073,18 @@ export const topics = {
             "@language": "bo-x-ewts",
             "@value": "tshe sgrub (sangs rgyas gsang ba'i lugs)"
         },
-        "parent": "O9TAXTBRC2016052KG225830"
+        "parent": "O9TAXTBRC2016052KG225830",
+        "tbrcId": "T003JR4608",
+        "rank": 1771
     },
     "T468": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "tshe skor phrin las rgyas pa/"
         },
-        "parent": "O9TAXTBRC2016052KG225830"
+        "parent": "O9TAXTBRC2016052KG225830",
+        "tbrcId": "T468",
+        "rank": 1772
     },
     "T1425": {
         "label": [
@@ -27767,14 +36097,18 @@ export const topics = {
                 "@value": "shes rab sgrub tshul/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225830"
+        "parent": "O9TAXTBRC2016052KG225830",
+        "tbrcId": "T1425",
+        "rank": 1835
     },
     "T1GS145344": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "dam can gsang sgrub dmar mo/"
         },
-        "parent": "O9TAXTBRC2016052KG225830"
+        "parent": "O9TAXTBRC2016052KG225830",
+        "tbrcId": "T1GS145344",
+        "rank": 1826
     },
     "O9TAXTBRC2016052KG225923": {
         "sub": [
@@ -27799,7 +36133,9 @@ export const topics = {
                 "@value": "Ritual Practice"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225383"
+        "parent": "O9TAXTBRC2016052KG225383",
+        "tbrcId": "4",
+        "rank": 2862
     },
     "O9TAXTBRC2016052KG226111": {
         "sub": [
@@ -27887,7 +36223,9 @@ export const topics = {
                 "@value": "事业修法"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225923"
+        "parent": "O9TAXTBRC2016052KG225923",
+        "tbrcId": "2",
+        "rank": 3042
     },
     "T1208": {
         "label": [
@@ -27900,14 +36238,18 @@ export const topics = {
                 "@value": "sorcery. black magic"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226111"
+        "parent": "O9TAXTBRC2016052KG226111",
+        "tbrcId": "T1208",
+        "rank": 3061
     },
     "T2231": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "lha 'dre sde brgyad bka' shog"
         },
-        "parent": "O9TAXTBRC2016052KG226111"
+        "parent": "O9TAXTBRC2016052KG226111",
+        "tbrcId": "T2231",
+        "rank": 3116
     },
     "T326": {
         "label": [
@@ -27920,28 +36262,36 @@ export const topics = {
                 "@value": "sman sgrub/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226111"
+        "parent": "O9TAXTBRC2016052KG226111",
+        "tbrcId": "T326",
+        "rank": 3059
     },
     "T1799": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "smad las/"
         },
-        "parent": "O9TAXTBRC2016052KG226111"
+        "parent": "O9TAXTBRC2016052KG226111",
+        "tbrcId": "T1799",
+        "rank": 3081
     },
     "T1917": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "jo bskul/"
         },
-        "parent": "O9TAXTBRC2016052KG226111"
+        "parent": "O9TAXTBRC2016052KG226111",
+        "tbrcId": "T1917",
+        "rank": 3105
     },
     "T00KG02749": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "gtor ma bsham tshul/"
         },
-        "parent": "O9TAXTBRC2016052KG226111"
+        "parent": "O9TAXTBRC2016052KG226111",
+        "tbrcId": "T00KG02749",
+        "rank": 3107
     },
     "T1CZ9": {
         "label": [
@@ -27954,14 +36304,18 @@ export const topics = {
                 "@value": "ritual for sending off the ransom"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226111"
+        "parent": "O9TAXTBRC2016052KG226111",
+        "tbrcId": "T1CZ9",
+        "rank": 3078
     },
     "T1706": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "gdab las/"
         },
-        "parent": "O9TAXTBRC2016052KG226111"
+        "parent": "O9TAXTBRC2016052KG226111",
+        "tbrcId": "T1706",
+        "rank": 3097
     },
     "T98": {
         "label": [
@@ -27974,14 +36328,18 @@ export const topics = {
                 "@value": "thread-cross rituals"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226111"
+        "parent": "O9TAXTBRC2016052KG226111",
+        "tbrcId": "T98",
+        "rank": 3053
     },
     "T1651": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "brgyags rngan/"
         },
-        "parent": "O9TAXTBRC2016052KG226111"
+        "parent": "O9TAXTBRC2016052KG226111",
+        "tbrcId": "T1651",
+        "rank": 3092
     },
     "T398": {
         "label": [
@@ -27994,7 +36352,9 @@ export const topics = {
                 "@value": "羯磨集"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226111"
+        "parent": "O9TAXTBRC2016052KG226111",
+        "tbrcId": "T398",
+        "rank": 3048
     },
     "T1433": {
         "label": [
@@ -28007,7 +36367,9 @@ export const topics = {
                 "@value": "drug cu ma'i gtor ma"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226111"
+        "parent": "O9TAXTBRC2016052KG226111",
+        "tbrcId": "T1433",
+        "rank": 3050
     },
     "T2376": {
         "label": [
@@ -28020,84 +36382,108 @@ export const topics = {
                 "@value": "息業"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226111"
+        "parent": "O9TAXTBRC2016052KG226111",
+        "tbrcId": "T2376",
+        "rank": 3103
     },
     "T1GS107986": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "cha bzhi/"
         },
-        "parent": "O9TAXTBRC2016052KG226111"
+        "parent": "O9TAXTBRC2016052KG226111",
+        "tbrcId": "T1GS107986",
+        "rank": 3051
     },
     "T2325": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "mdos chen/"
         },
-        "parent": "O9TAXTBRC2016052KG226111"
+        "parent": "O9TAXTBRC2016052KG226111",
+        "tbrcId": "T2325",
+        "rank": 3104
     },
     "T1650": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "sde brgyad bcos thabs/"
         },
-        "parent": "O9TAXTBRC2016052KG226111"
+        "parent": "O9TAXTBRC2016052KG226111",
+        "tbrcId": "T1650",
+        "rank": 3089
     },
     "T1200": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "sri mnan/"
         },
-        "parent": "O9TAXTBRC2016052KG226111"
+        "parent": "O9TAXTBRC2016052KG226111",
+        "tbrcId": "T1200",
+        "rank": 3052
     },
     "T410": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "drag po'i gtor chen/"
         },
-        "parent": "O9TAXTBRC2016052KG226111"
+        "parent": "O9TAXTBRC2016052KG226111",
+        "tbrcId": "T410",
+        "rank": 3094
     },
     "T012AG03592": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "mdos zlog"
         },
-        "parent": "O9TAXTBRC2016052KG226111"
+        "parent": "O9TAXTBRC2016052KG226111",
+        "tbrcId": "T012AG03592",
+        "rank": 3073
     },
     "T1569": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "ma Ni bum sgrub/"
         },
-        "parent": "O9TAXTBRC2016052KG226111"
+        "parent": "O9TAXTBRC2016052KG226111",
+        "tbrcId": "T1569",
+        "rank": 3060
     },
     "T886": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "gtor chen/"
         },
-        "parent": "O9TAXTBRC2016052KG226111"
+        "parent": "O9TAXTBRC2016052KG226111",
+        "tbrcId": "T886",
+        "rank": 3093
     },
     "T2051": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "'gres byang /"
         },
-        "parent": "O9TAXTBRC2016052KG226111"
+        "parent": "O9TAXTBRC2016052KG226111",
+        "tbrcId": "T2051",
+        "rank": 3071
     },
     "T1883": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "lab brtsas brtsigs gso/"
         },
-        "parent": "O9TAXTBRC2016052KG226111"
+        "parent": "O9TAXTBRC2016052KG226111",
+        "tbrcId": "T1883",
+        "rank": 3090
     },
     "T2518": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "tshogs bzlog"
         },
-        "parent": "O9TAXTBRC2016052KG226111"
+        "parent": "O9TAXTBRC2016052KG226111",
+        "tbrcId": "T2518",
+        "rank": 3117
     },
     "T1470": {
         "label": [
@@ -28110,21 +36496,27 @@ export const topics = {
                 "@value": "bskrad pa/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226111"
+        "parent": "O9TAXTBRC2016052KG226111",
+        "tbrcId": "T1470",
+        "rank": 3108
     },
     "T1737": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "gter sgrub/"
         },
-        "parent": "O9TAXTBRC2016052KG226111"
+        "parent": "O9TAXTBRC2016052KG226111",
+        "tbrcId": "T1737",
+        "rank": 3085
     },
     "T00JR777": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "mnan sreg 'phang /"
         },
-        "parent": "O9TAXTBRC2016052KG226111"
+        "parent": "O9TAXTBRC2016052KG226111",
+        "tbrcId": "T00JR777",
+        "rank": 3072
     },
     "T2467": {
         "label": [
@@ -28137,14 +36529,18 @@ export const topics = {
                 "@value": "授權"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226111"
+        "parent": "O9TAXTBRC2016052KG226111",
+        "tbrcId": "T2467",
+        "rank": 3106
     },
     "T1739": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "spyi bstabs/"
         },
-        "parent": "O9TAXTBRC2016052KG226111"
+        "parent": "O9TAXTBRC2016052KG226111",
+        "tbrcId": "T1739",
+        "rank": 3114
     },
     "T1CZ23": {
         "label": [
@@ -28157,28 +36553,36 @@ export const topics = {
                 "@value": "preparation of thread-crosses for the violent spirits (btsan)"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226111"
+        "parent": "O9TAXTBRC2016052KG226111",
+        "tbrcId": "T1CZ23",
+        "rank": 3077
     },
     "T887": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "cha gsum gtor ma/"
         },
-        "parent": "O9TAXTBRC2016052KG226111"
+        "parent": "O9TAXTBRC2016052KG226111",
+        "tbrcId": "T887",
+        "rank": 3054
     },
     "T472": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "sman mchod/"
         },
-        "parent": "O9TAXTBRC2016052KG226111"
+        "parent": "O9TAXTBRC2016052KG226111",
+        "tbrcId": "T472",
+        "rank": 3100
     },
     "T1412": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rigs brgyud rgyas par byed pa'i las/"
         },
-        "parent": "O9TAXTBRC2016052KG226111"
+        "parent": "O9TAXTBRC2016052KG226111",
+        "tbrcId": "T1412",
+        "rank": 3110
     },
     "T454": {
         "label": [
@@ -28191,14 +36595,18 @@ export const topics = {
                 "@value": "production of medicinal pellets"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226111"
+        "parent": "O9TAXTBRC2016052KG226111",
+        "tbrcId": "T454",
+        "rank": 3057
     },
     "T00JR772": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "sngags byang /"
         },
-        "parent": "O9TAXTBRC2016052KG226111"
+        "parent": "O9TAXTBRC2016052KG226111",
+        "tbrcId": "T00JR772",
+        "rank": 3069
     },
     "T00JR775": {
         "label": {
@@ -28212,7 +36620,9 @@ export const topics = {
             "@language": "bo-x-ewts",
             "@value": "brgya bzhi/"
         },
-        "parent": "O9TAXTBRC2016052KG226111"
+        "parent": "O9TAXTBRC2016052KG226111",
+        "tbrcId": "T1240",
+        "rank": 3091
     },
     "T003JR156": {
         "label": [
@@ -28225,49 +36635,63 @@ export const topics = {
                 "@value": "bringing under one's power or control"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226111"
+        "parent": "O9TAXTBRC2016052KG226111",
+        "tbrcId": "T003JR156",
+        "rank": 3075
     },
     "T339": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "'khrugs bskang /"
         },
-        "parent": "O9TAXTBRC2016052KG226111"
+        "parent": "O9TAXTBRC2016052KG226111",
+        "tbrcId": "T339",
+        "rank": 3064
     },
     "T1010": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rig gtad/"
         },
-        "parent": "O9TAXTBRC2016052KG226111"
+        "parent": "O9TAXTBRC2016052KG226111",
+        "tbrcId": "T1010",
+        "rank": 3063
     },
     "T1341": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "mkha' 'gro bsu bzlog"
         },
-        "parent": "O9TAXTBRC2016052KG226111"
+        "parent": "O9TAXTBRC2016052KG226111",
+        "tbrcId": "T1341",
+        "rank": 3113
     },
     "T00KG02669": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "bsad las kyi 'khor lo/"
         },
-        "parent": "O9TAXTBRC2016052KG226111"
+        "parent": "O9TAXTBRC2016052KG226111",
+        "tbrcId": "T00KG02669",
+        "rank": 3083
     },
     "T1798": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "stod las/"
         },
-        "parent": "O9TAXTBRC2016052KG226111"
+        "parent": "O9TAXTBRC2016052KG226111",
+        "tbrcId": "T1798",
+        "rank": 3080
     },
     "T847": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "sun zlog"
         },
-        "parent": "O9TAXTBRC2016052KG226111"
+        "parent": "O9TAXTBRC2016052KG226111",
+        "tbrcId": "T847",
+        "rank": 3065
     },
     "T1808": {
         "label": [
@@ -28280,56 +36704,72 @@ export const topics = {
                 "@value": "mngon spyod/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226111"
+        "parent": "O9TAXTBRC2016052KG226111",
+        "tbrcId": "T1808",
+        "rank": 3079
     },
     "T1304": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "dam sri mnan pa/"
         },
-        "parent": "O9TAXTBRC2016052KG226111"
+        "parent": "O9TAXTBRC2016052KG226111",
+        "tbrcId": "T1304",
+        "rank": 3115
     },
     "T1306": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rgab 'dre mnan pa/"
         },
-        "parent": "O9TAXTBRC2016052KG226111"
+        "parent": "O9TAXTBRC2016052KG226111",
+        "tbrcId": "T1306",
+        "rank": 3102
     },
     "T1724": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "ma Ni ril sgrub/"
         },
-        "parent": "O9TAXTBRC2016052KG226111"
+        "parent": "O9TAXTBRC2016052KG226111",
+        "tbrcId": "T1724",
+        "rank": 3058
     },
     "T2299": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "mnan thabs/"
         },
-        "parent": "O9TAXTBRC2016052KG226111"
+        "parent": "O9TAXTBRC2016052KG226111",
+        "tbrcId": "T2299",
+        "rank": 3084
     },
     "T1397": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "gtor sgrub chen mo/"
         },
-        "parent": "O9TAXTBRC2016052KG226111"
+        "parent": "O9TAXTBRC2016052KG226111",
+        "tbrcId": "T1397",
+        "rank": 3049
     },
     "T1840": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "bdud bzlog"
         },
-        "parent": "O9TAXTBRC2016052KG226111"
+        "parent": "O9TAXTBRC2016052KG226111",
+        "tbrcId": "T1840",
+        "rank": 3112
     },
     "T2250": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "dmod bskul/"
         },
-        "parent": "O9TAXTBRC2016052KG226111"
+        "parent": "O9TAXTBRC2016052KG226111",
+        "tbrcId": "T2250",
+        "rank": 3099
     },
     "T1332": {
         "label": [
@@ -28342,35 +36782,45 @@ export const topics = {
                 "@value": "rituals of protection, aversion, and slaughter"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226111"
+        "parent": "O9TAXTBRC2016052KG226111",
+        "tbrcId": "T1332",
+        "rank": 3098
     },
     "T2373": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "dgra bgegs sgrol gtad/"
         },
-        "parent": "O9TAXTBRC2016052KG226111"
+        "parent": "O9TAXTBRC2016052KG226111",
+        "tbrcId": "T2373",
+        "rank": 3068
     },
     "T2375": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "gshed 'dul/"
         },
-        "parent": "O9TAXTBRC2016052KG226111"
+        "parent": "O9TAXTBRC2016052KG226111",
+        "tbrcId": "T2375",
+        "rank": 3111
     },
     "T1727": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "bskang mdos/"
         },
-        "parent": "O9TAXTBRC2016052KG226111"
+        "parent": "O9TAXTBRC2016052KG226111",
+        "tbrcId": "T1727",
+        "rank": 3076
     },
     "T1719": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "gter bum sba tshul/"
         },
-        "parent": "O9TAXTBRC2016052KG226111"
+        "parent": "O9TAXTBRC2016052KG226111",
+        "tbrcId": "T1719",
+        "rank": 3096
     },
     "T003JR4920": {
         "label": [
@@ -28383,7 +36833,9 @@ export const topics = {
                 "@value": "liberation offering"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226111"
+        "parent": "O9TAXTBRC2016052KG226111",
+        "tbrcId": "T003JR4920",
+        "rank": 3086
     },
     "T1417": {
         "label": [
@@ -28396,35 +36848,45 @@ export const topics = {
                 "@value": "me mchod/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226111"
+        "parent": "O9TAXTBRC2016052KG226111",
+        "tbrcId": "T1417",
+        "rank": 3055
     },
     "T1379": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "'gugs 'dren/"
         },
-        "parent": "O9TAXTBRC2016052KG226111"
+        "parent": "O9TAXTBRC2016052KG226111",
+        "tbrcId": "T1379",
+        "rank": 3062
     },
     "T00JR2544": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "hUM sgrub/"
         },
-        "parent": "O9TAXTBRC2016052KG226111"
+        "parent": "O9TAXTBRC2016052KG226111",
+        "tbrcId": "T00JR2544",
+        "rank": 3070
     },
     "T003JR67": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "sreg blug"
         },
-        "parent": "O9TAXTBRC2016052KG226111"
+        "parent": "O9TAXTBRC2016052KG226111",
+        "tbrcId": "T003JR67",
+        "rank": 3087
     },
     "T1621": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "srog gtad/"
         },
-        "parent": "O9TAXTBRC2016052KG226111"
+        "parent": "O9TAXTBRC2016052KG226111",
+        "tbrcId": "T1621",
+        "rank": 3056
     },
     "T2188": {
         "label": {
@@ -28438,7 +36900,9 @@ export const topics = {
             "@language": "bo-x-ewts",
             "@value": "las bzhi'i kha bsgyur/"
         },
-        "parent": "O9TAXTBRC2016052KG226111"
+        "parent": "O9TAXTBRC2016052KG226111",
+        "tbrcId": "T1340",
+        "rank": 3109
     },
     "T2521": {
         "label": [
@@ -28451,7 +36915,9 @@ export const topics = {
                 "@value": "las mtha'"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226111"
+        "parent": "O9TAXTBRC2016052KG226111",
+        "tbrcId": "T2521",
+        "rank": 3101
     },
     "T1807": {
         "label": [
@@ -28464,21 +36930,27 @@ export const topics = {
                 "@value": "washing the linga"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226111"
+        "parent": "O9TAXTBRC2016052KG226111",
+        "tbrcId": "T1807",
+        "rank": 3088
     },
     "T1322": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "las sbyor/"
         },
-        "parent": "O9TAXTBRC2016052KG226111"
+        "parent": "O9TAXTBRC2016052KG226111",
+        "tbrcId": "T1322",
+        "rank": 3095
     },
     "T1882": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "srog sgrub/"
         },
-        "parent": "O9TAXTBRC2016052KG226111"
+        "parent": "O9TAXTBRC2016052KG226111",
+        "tbrcId": "T1882",
+        "rank": 3066
     },
     "O9TAXTBRC2016052KG226264": {
         "sub": [
@@ -28505,7 +36977,9 @@ export const topics = {
                 "@value": "thor bu sna tshogs/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225923"
+        "parent": "O9TAXTBRC2016052KG225923",
+        "tbrcId": "6",
+        "rank": 3215
     },
     "T00JR2881": {
         "label": [
@@ -28518,21 +36992,27 @@ export const topics = {
                 "@value": "grub rtags/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226264"
+        "parent": "O9TAXTBRC2016052KG226264",
+        "tbrcId": "T00JR2881",
+        "rank": 3226
     },
     "T1404": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "skye 'chi bar do/"
         },
-        "parent": "O9TAXTBRC2016052KG226264"
+        "parent": "O9TAXTBRC2016052KG226264",
+        "tbrcId": "T1404",
+        "rank": 3220
     },
     "T2CN4866": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "dpa' bo/"
         },
-        "parent": "O9TAXTBRC2016052KG226264"
+        "parent": "O9TAXTBRC2016052KG226264",
+        "tbrcId": "T2CN4866",
+        "rank": 3223
     },
     "T165": {
         "label": [
@@ -28549,7 +37029,9 @@ export const topics = {
                 "@value": "antarabhava"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226264"
+        "parent": "O9TAXTBRC2016052KG226264",
+        "tbrcId": "T165",
+        "rank": 3221
     },
     "T336": {
         "label": [
@@ -28570,7 +37052,9 @@ export const topics = {
                 "@value": "三昧耶戒"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226264"
+        "parent": "O9TAXTBRC2016052KG226264",
+        "tbrcId": "T336",
+        "rank": 3227
     },
     "T802": {
         "label": [
@@ -28583,7 +37067,9 @@ export const topics = {
                 "@value": "vidyadhara"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226264"
+        "parent": "O9TAXTBRC2016052KG226264",
+        "tbrcId": "T802",
+        "rank": 3224
     },
     "T4CZ15589": {
         "label": [
@@ -28600,14 +37086,18 @@ export const topics = {
                 "@value": "vajrayana-mulangapatti"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226264"
+        "parent": "O9TAXTBRC2016052KG226264",
+        "tbrcId": "T4CZ15589",
+        "rank": 3222
     },
     "T1442": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "sngags kyi brtul zhugs/"
         },
-        "parent": "O9TAXTBRC2016052KG226264"
+        "parent": "O9TAXTBRC2016052KG226264",
+        "tbrcId": "T1442",
+        "rank": 3225
     },
     "O9TAXTBRC2016052KG226188": {
         "sub": [
@@ -28650,14 +37140,18 @@ export const topics = {
                 "@value": "金刚乘法器"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225923"
+        "parent": "O9TAXTBRC2016052KG225923",
+        "tbrcId": "4",
+        "rank": 3130
     },
     "T1301": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rak+ta/"
         },
-        "parent": "O9TAXTBRC2016052KG226188"
+        "parent": "O9TAXTBRC2016052KG226188",
+        "tbrcId": "T1301",
+        "rank": 3153
     },
     "T1467": {
         "label": [
@@ -28670,21 +37164,27 @@ export const topics = {
                 "@value": "clay votive tablets"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226188"
+        "parent": "O9TAXTBRC2016052KG226188",
+        "tbrcId": "T1467",
+        "rank": 3138
     },
     "T1407": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "bya btang yo byad/"
         },
-        "parent": "O9TAXTBRC2016052KG226188"
+        "parent": "O9TAXTBRC2016052KG226188",
+        "tbrcId": "T1407",
+        "rank": 3137
     },
     "T1383": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rlung 'khor/"
         },
-        "parent": "O9TAXTBRC2016052KG226188"
+        "parent": "O9TAXTBRC2016052KG226188",
+        "tbrcId": "T1383",
+        "rank": 3156
     },
     "T1302": {
         "label": [
@@ -28697,7 +37197,9 @@ export const topics = {
                 "@value": "minium"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226188"
+        "parent": "O9TAXTBRC2016052KG226188",
+        "tbrcId": "T1302",
+        "rank": 3154
     },
     "T2449": {
         "label": [
@@ -28710,21 +37212,27 @@ export const topics = {
                 "@value": "ladle"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226188"
+        "parent": "O9TAXTBRC2016052KG226188",
+        "tbrcId": "T2449",
+        "rank": 3159
     },
     "T1857": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "thun mtshams/"
         },
-        "parent": "O9TAXTBRC2016052KG226188"
+        "parent": "O9TAXTBRC2016052KG226188",
+        "tbrcId": "T1857",
+        "rank": 3160
     },
     "T1495": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rnam bcu dbang ldan/"
         },
-        "parent": "O9TAXTBRC2016052KG226188"
+        "parent": "O9TAXTBRC2016052KG226188",
+        "tbrcId": "T1495",
+        "rank": 3140
     },
     "T2MS15108": {
         "label": [
@@ -28737,7 +37245,9 @@ export const topics = {
                 "@value": "vajra"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226188"
+        "parent": "O9TAXTBRC2016052KG226188",
+        "tbrcId": "T2MS15108",
+        "rank": 3146
     },
     "T00AG01412": {
         "label": [
@@ -28750,14 +37260,18 @@ export const topics = {
                 "@value": "tsakli"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226188"
+        "parent": "O9TAXTBRC2016052KG226188",
+        "tbrcId": "T00AG01412",
+        "rank": 3135
     },
     "T1KG14978": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rdo rje theg pa'i yo byad/"
         },
-        "parent": "O9TAXTBRC2016052KG226188"
+        "parent": "O9TAXTBRC2016052KG226188",
+        "tbrcId": "T1KG14978",
+        "rank": 3134
     },
     "T639": {
         "label": [
@@ -28770,21 +37284,27 @@ export const topics = {
                 "@value": "kapala"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226188"
+        "parent": "O9TAXTBRC2016052KG226188",
+        "tbrcId": "T639",
+        "rank": 3144
     },
     "T1303": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "skong rdzas/"
         },
-        "parent": "O9TAXTBRC2016052KG226188"
+        "parent": "O9TAXTBRC2016052KG226188",
+        "tbrcId": "T1303",
+        "rank": 3155
     },
     "T1GS129610": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "las bum/"
         },
-        "parent": "O9TAXTBRC2016052KG226188"
+        "parent": "O9TAXTBRC2016052KG226188",
+        "tbrcId": "T1GS129610",
+        "rank": 3143
     },
     "T1906": {
         "label": [
@@ -28797,7 +37317,9 @@ export const topics = {
                 "@value": "blessing bestowing objects"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226188"
+        "parent": "O9TAXTBRC2016052KG226188",
+        "tbrcId": "T1906",
+        "rank": 3161
     },
     "T2MS15109": {
         "label": [
@@ -28814,35 +37336,45 @@ export const topics = {
                 "@value": "ritual bell"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226188"
+        "parent": "O9TAXTBRC2016052KG226188",
+        "tbrcId": "T2MS15109",
+        "rank": 3147
     },
     "T2127": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rdo rje dang dril bu/"
         },
-        "parent": "O9TAXTBRC2016052KG226188"
+        "parent": "O9TAXTBRC2016052KG226188",
+        "tbrcId": "T2127",
+        "rank": 3145
     },
     "T2270": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "btags grol/"
         },
-        "parent": "O9TAXTBRC2016052KG226188"
+        "parent": "O9TAXTBRC2016052KG226188",
+        "tbrcId": "T2270",
+        "rank": 3139
     },
     "T00JR3355": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rdzas tho/"
         },
-        "parent": "O9TAXTBRC2016052KG226188"
+        "parent": "O9TAXTBRC2016052KG226188",
+        "tbrcId": "T00JR3355",
+        "rank": 3136
     },
     "T1300": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "bla rdo/"
         },
-        "parent": "O9TAXTBRC2016052KG226188"
+        "parent": "O9TAXTBRC2016052KG226188",
+        "tbrcId": "T1300",
+        "rank": 3150
     },
     "T866": {
         "label": [
@@ -28855,14 +37387,18 @@ export const topics = {
                 "@value": "sacred substances"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226188"
+        "parent": "O9TAXTBRC2016052KG226188",
+        "tbrcId": "T866",
+        "rank": 3141
     },
     "T804": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "bram ze skye bdun/"
         },
-        "parent": "O9TAXTBRC2016052KG226188"
+        "parent": "O9TAXTBRC2016052KG226188",
+        "tbrcId": "T804",
+        "rank": 3142
     },
     "T4CZ6660": {
         "label": [
@@ -28875,42 +37411,54 @@ export const topics = {
                 "@value": "sgom thag"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226188"
+        "parent": "O9TAXTBRC2016052KG226188",
+        "tbrcId": "T4CZ6660",
+        "rank": 3151
     },
     "T2128": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "bdud rtsi ril bu/"
         },
-        "parent": "O9TAXTBRC2016052KG226188"
+        "parent": "O9TAXTBRC2016052KG226188",
+        "tbrcId": "T2128",
+        "rank": 3157
     },
     "T00JR74": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "myong grol/"
         },
-        "parent": "O9TAXTBRC2016052KG226188"
+        "parent": "O9TAXTBRC2016052KG226188",
+        "tbrcId": "T00JR74",
+        "rank": 3148
     },
     "T1116": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "srog 'khor/"
         },
-        "parent": "O9TAXTBRC2016052KG226188"
+        "parent": "O9TAXTBRC2016052KG226188",
+        "tbrcId": "T1116",
+        "rank": 3149
     },
     "T01AG03137": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "'thor nas/"
         },
-        "parent": "O9TAXTBRC2016052KG226188"
+        "parent": "O9TAXTBRC2016052KG226188",
+        "tbrcId": "T01AG03137",
+        "rank": 3152
     },
     "T2545": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "tshe chang /"
         },
-        "parent": "O9TAXTBRC2016052KG226188"
+        "parent": "O9TAXTBRC2016052KG226188",
+        "tbrcId": "T2545",
+        "rank": 3158
     },
     "O9TAXTBRC2016052KG226181": {
         "sub": [
@@ -28931,21 +37479,27 @@ export const topics = {
                 "@value": "烟供"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225923"
+        "parent": "O9TAXTBRC2016052KG225923",
+        "tbrcId": "3",
+        "rank": 3119
     },
     "T173": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "bsangs mchod/"
         },
-        "parent": "O9TAXTBRC2016052KG226181"
+        "parent": "O9TAXTBRC2016052KG226181",
+        "tbrcId": "T173",
+        "rank": 3123
     },
     "T1PD92832": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "mnol bsang /"
         },
-        "parent": "O9TAXTBRC2016052KG226181"
+        "parent": "O9TAXTBRC2016052KG226181",
+        "tbrcId": "T1PD92832",
+        "rank": 3125
     },
     "T18": {
         "label": [
@@ -28958,7 +37512,9 @@ export const topics = {
                 "@value": "bsangs gsur/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226181"
+        "parent": "O9TAXTBRC2016052KG226181",
+        "tbrcId": "T18",
+        "rank": 3126
     },
     "T012AG03496": {
         "label": [
@@ -28971,21 +37527,27 @@ export const topics = {
                 "@value": "purification of misdeeds"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226181"
+        "parent": "O9TAXTBRC2016052KG226181",
+        "tbrcId": "T012AG03496",
+        "rank": 3128
     },
     "T1236": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "klu bsangs/"
         },
-        "parent": "O9TAXTBRC2016052KG226181"
+        "parent": "O9TAXTBRC2016052KG226181",
+        "tbrcId": "T1236",
+        "rank": 3124
     },
     "T1PD92833": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "grib bsang /"
         },
-        "parent": "O9TAXTBRC2016052KG226181"
+        "parent": "O9TAXTBRC2016052KG226181",
+        "tbrcId": "T1PD92833",
+        "rank": 3127
     },
     "O9TAXTBRC2016052KG226217": {
         "sub": [
@@ -29050,35 +37612,45 @@ export const topics = {
                 "@value": "chos spyod/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225923"
+        "parent": "O9TAXTBRC2016052KG225923",
+        "tbrcId": "5",
+        "rank": 3163
     },
     "T1AT471": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "sdig sgrib rang grol/"
         },
-        "parent": "O9TAXTBRC2016052KG226217"
+        "parent": "O9TAXTBRC2016052KG226217",
+        "tbrcId": "T1AT471",
+        "rank": 3177
     },
     "T2121": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rtsa sngags/"
         },
-        "parent": "O9TAXTBRC2016052KG226217"
+        "parent": "O9TAXTBRC2016052KG226217",
+        "tbrcId": "T2121",
+        "rank": 3175
     },
     "T2249": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "nyal ba gnyid kyi rnal 'byor/"
         },
-        "parent": "O9TAXTBRC2016052KG226217"
+        "parent": "O9TAXTBRC2016052KG226217",
+        "tbrcId": "T2249",
+        "rank": 3205
     },
     "T1559": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rang byin rlabs/"
         },
-        "parent": "O9TAXTBRC2016052KG226217"
+        "parent": "O9TAXTBRC2016052KG226217",
+        "tbrcId": "T1559",
+        "rank": 3212
     },
     "T1017": {
         "label": [
@@ -29091,7 +37663,9 @@ export const topics = {
                 "@value": "重诵"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226217"
+        "parent": "O9TAXTBRC2016052KG226217",
+        "tbrcId": "T1017",
+        "rank": 3181
     },
     "T2189": {
         "label": [
@@ -29104,14 +37678,18 @@ export const topics = {
                 "@value": "百字明"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226217"
+        "parent": "O9TAXTBRC2016052KG226217",
+        "tbrcId": "T2189",
+        "rank": 3197
     },
     "T1AT437": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "mchod rdzas byin rlabs/"
         },
-        "parent": "O9TAXTBRC2016052KG226217"
+        "parent": "O9TAXTBRC2016052KG226217",
+        "tbrcId": "T1AT437",
+        "rank": 3199
     },
     "T145": {
         "label": [
@@ -29124,14 +37702,18 @@ export const topics = {
                 "@value": "calling upon the lama from afar"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226217"
+        "parent": "O9TAXTBRC2016052KG226217",
+        "tbrcId": "T145",
+        "rank": 3189
     },
     "T2MS20121": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "bar do thos grol/"
         },
-        "parent": "O9TAXTBRC2016052KG226217"
+        "parent": "O9TAXTBRC2016052KG226217",
+        "tbrcId": "T2MS20121",
+        "rank": 3186
     },
     "T1212": {
         "label": [
@@ -29144,28 +37726,36 @@ export const topics = {
                 "@value": "reciting the names"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226217"
+        "parent": "O9TAXTBRC2016052KG226217",
+        "tbrcId": "T1212",
+        "rank": 3202
     },
     "T879": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "sngags ltung bcos thabs/"
         },
-        "parent": "O9TAXTBRC2016052KG226217"
+        "parent": "O9TAXTBRC2016052KG226217",
+        "tbrcId": "T879",
+        "rank": 3210
     },
     "T2MS12423": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "bar chad lam sel/"
         },
-        "parent": "O9TAXTBRC2016052KG226217"
+        "parent": "O9TAXTBRC2016052KG226217",
+        "tbrcId": "T2MS12423",
+        "rank": 3213
     },
     "T1GS147800": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "tshogs mchod brgya rtsa/"
         },
-        "parent": "O9TAXTBRC2016052KG226217"
+        "parent": "O9TAXTBRC2016052KG226217",
+        "tbrcId": "T1GS147800",
+        "rank": 3184
     },
     "T00JR690": {
         "label": [
@@ -29178,14 +37768,18 @@ export const topics = {
                 "@value": "prayer to be reborn in sukhavati, the western paradise of amitabha"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226217"
+        "parent": "O9TAXTBRC2016052KG226217",
+        "tbrcId": "T00JR690",
+        "rank": 3208
     },
     "T1473": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "smon lam lnga /"
         },
-        "parent": "O9TAXTBRC2016052KG226217"
+        "parent": "O9TAXTBRC2016052KG226217",
+        "tbrcId": "T1473",
+        "rank": 3209
     },
     "T2579": {
         "label": [
@@ -29198,21 +37792,27 @@ export const topics = {
                 "@value": "compilation of recitations"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226217"
+        "parent": "O9TAXTBRC2016052KG226217",
+        "tbrcId": "T2579",
+        "rank": 3170
     },
     "T544": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rgyun khyer/"
         },
-        "parent": "O9TAXTBRC2016052KG226217"
+        "parent": "O9TAXTBRC2016052KG226217",
+        "tbrcId": "T544",
+        "rank": 3188
     },
     "T1CZ49": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rkang brgyad bstod pa/"
         },
-        "parent": "O9TAXTBRC2016052KG226217"
+        "parent": "O9TAXTBRC2016052KG226217",
+        "tbrcId": "T1CZ49",
+        "rank": 3178
     },
     "T680": {
         "label": [
@@ -29229,7 +37829,9 @@ export const topics = {
                 "@value": "manjughosa purnamatistotrasadhanakirtita"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226217"
+        "parent": "O9TAXTBRC2016052KG226217",
+        "tbrcId": "T680",
+        "rank": 3194
     },
     "T312": {
         "label": [
@@ -29242,7 +37844,9 @@ export const topics = {
                 "@value": "vajrasattva contemplation"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226217"
+        "parent": "O9TAXTBRC2016052KG226217",
+        "tbrcId": "T312",
+        "rank": 3192
     },
     "T330": {
         "label": [
@@ -29255,28 +37859,36 @@ export const topics = {
                 "@value": "gaṇacakrapuja"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226217"
+        "parent": "O9TAXTBRC2016052KG226217",
+        "tbrcId": "T330",
+        "rank": 3182
     },
     "T1709": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "sgrol ma maN+Dal bzhi pa/"
         },
-        "parent": "O9TAXTBRC2016052KG226217"
+        "parent": "O9TAXTBRC2016052KG226217",
+        "tbrcId": "T1709",
+        "rank": 3196
     },
     "T1GS147797": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "bsgom bzlas/"
         },
-        "parent": "O9TAXTBRC2016052KG226217"
+        "parent": "O9TAXTBRC2016052KG226217",
+        "tbrcId": "T1GS147797",
+        "rank": 3190
     },
     "T2253": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "mgon po'i rtsa sngags/"
         },
-        "parent": "O9TAXTBRC2016052KG226217"
+        "parent": "O9TAXTBRC2016052KG226217",
+        "tbrcId": "T2253",
+        "rank": 3207
     },
     "T00JR3437": {
         "label": [
@@ -29289,14 +37901,18 @@ export const topics = {
                 "@value": "reverential petitions to the previous lives of a lama"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226217"
+        "parent": "O9TAXTBRC2016052KG226217",
+        "tbrcId": "T00JR3437",
+        "rank": 3174
     },
     "T1753": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "sngags/"
         },
-        "parent": "O9TAXTBRC2016052KG226217"
+        "parent": "O9TAXTBRC2016052KG226217",
+        "tbrcId": "T1753",
+        "rank": 3171
     },
     "T936": {
         "label": [
@@ -29309,7 +37925,9 @@ export const topics = {
                 "@value": "garland of offering; offering verses"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226217"
+        "parent": "O9TAXTBRC2016052KG226217",
+        "tbrcId": "T936",
+        "rank": 3191
     },
     "T138": {
         "label": [
@@ -29326,7 +37944,9 @@ export const topics = {
                 "@value": "worship of the guru"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226217"
+        "parent": "O9TAXTBRC2016052KG226217",
+        "tbrcId": "T138",
+        "rank": 3183
     },
     "T536": {
         "label": [
@@ -29339,14 +37959,18 @@ export const topics = {
                 "@value": "liturgical recitation"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226217"
+        "parent": "O9TAXTBRC2016052KG226217",
+        "tbrcId": "T536",
+        "rank": 3185
     },
     "T1617": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rta gzungs/"
         },
-        "parent": "O9TAXTBRC2016052KG226217"
+        "parent": "O9TAXTBRC2016052KG226217",
+        "tbrcId": "T1617",
+        "rank": 3206
     },
     "T933": {
         "label": [
@@ -29363,7 +37987,9 @@ export const topics = {
                 "@value": "gzungs sngags/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226217"
+        "parent": "O9TAXTBRC2016052KG226217",
+        "tbrcId": "T933",
+        "rank": 3200
     },
     "T637": {
         "label": [
@@ -29376,7 +38002,9 @@ export const topics = {
                 "@value": "'don thabs/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226217"
+        "parent": "O9TAXTBRC2016052KG226217",
+        "tbrcId": "T637",
+        "rank": 3172
     },
     "T11": {
         "label": [
@@ -29389,49 +38017,63 @@ export const topics = {
                 "@value": "prayers to teachers of the lineage of transmission"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226217"
+        "parent": "O9TAXTBRC2016052KG226217",
+        "tbrcId": "T11",
+        "rank": 3201
     },
     "T430": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "dga' ldan lha brgya ma/"
         },
-        "parent": "O9TAXTBRC2016052KG226217"
+        "parent": "O9TAXTBRC2016052KG226217",
+        "tbrcId": "T430",
+        "rank": 3195
     },
     "T1831": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "bstan pa rgyas pa'i smon lam/"
         },
-        "parent": "O9TAXTBRC2016052KG226217"
+        "parent": "O9TAXTBRC2016052KG226217",
+        "tbrcId": "T1831",
+        "rank": 3173
     },
     "T2272": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "thos grol/"
         },
-        "parent": "O9TAXTBRC2016052KG226217"
+        "parent": "O9TAXTBRC2016052KG226217",
+        "tbrcId": "T2272",
+        "rank": 3187
     },
     "T2615": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "drag sngags/"
         },
-        "parent": "O9TAXTBRC2016052KG226217"
+        "parent": "O9TAXTBRC2016052KG226217",
+        "tbrcId": "T2615",
+        "rank": 3176
     },
     "T860": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rten 'brel snying po'i gzungs/"
         },
-        "parent": "O9TAXTBRC2016052KG226217"
+        "parent": "O9TAXTBRC2016052KG226217",
+        "tbrcId": "T860",
+        "rank": 3193
     },
     "T2147": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "ba dz+ra gu ru/"
         },
-        "parent": "O9TAXTBRC2016052KG226217"
+        "parent": "O9TAXTBRC2016052KG226217",
+        "tbrcId": "T2147",
+        "rank": 3211
     },
     "T937": {
         "label": [
@@ -29444,14 +38086,18 @@ export const topics = {
                 "@value": "ganacakra"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226217"
+        "parent": "O9TAXTBRC2016052KG226217",
+        "tbrcId": "T937",
+        "rank": 3179
     },
     "T843": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "stong mchod/"
         },
-        "parent": "O9TAXTBRC2016052KG226217"
+        "parent": "O9TAXTBRC2016052KG226217",
+        "tbrcId": "T843",
+        "rank": 3203
     },
     "T2CZ10088": {
         "label": [
@@ -29464,28 +38110,36 @@ export const topics = {
                 "@value": "modern times"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226217"
+        "parent": "O9TAXTBRC2016052KG226217",
+        "tbrcId": "T2CZ10088",
+        "rank": 3169
     },
     "T225": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "chos spyod/"
         },
-        "parent": "O9TAXTBRC2016052KG226217"
+        "parent": "O9TAXTBRC2016052KG226217",
+        "tbrcId": "T225",
+        "rank": 3168
     },
     "T1480": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "ngag byin rlabs/"
         },
-        "parent": "O9TAXTBRC2016052KG226217"
+        "parent": "O9TAXTBRC2016052KG226217",
+        "tbrcId": "T1480",
+        "rank": 3198
     },
     "T1915": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "bla mgon/"
         },
-        "parent": "O9TAXTBRC2016052KG226217"
+        "parent": "O9TAXTBRC2016052KG226217",
+        "tbrcId": "T1915",
+        "rank": 3204
     },
     "T1309": {
         "label": [
@@ -29498,7 +38152,9 @@ export const topics = {
                 "@value": "six meditation sessions"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226217"
+        "parent": "O9TAXTBRC2016052KG226217",
+        "tbrcId": "T1309",
+        "rank": 3180
     },
     "O9TAXTBRC2016052KG225924": {
         "sub": [
@@ -29703,14 +38359,18 @@ export const topics = {
                 "@value": "cho ga"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225923"
+        "parent": "O9TAXTBRC2016052KG225923",
+        "tbrcId": "1",
+        "rank": 2867
     },
     "T1GS129601": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rjes chog"
         },
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T1GS129601",
+        "rank": 2901
     },
     "T1020": {
         "label": [
@@ -29723,42 +38383,54 @@ export const topics = {
                 "@value": "wrathful fire puja"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T1020",
+        "rank": 2893
     },
     "T1707": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rten 'bul/"
         },
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T1707",
+        "rank": 3032
     },
     "T1095": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "don dbang /"
         },
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T1095",
+        "rank": 2881
     },
     "T1237": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "klu gtor/"
         },
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T1237",
+        "rank": 2920
     },
     "T1902": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "tsha gsur/"
         },
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T1902",
+        "rank": 2907
     },
     "T1635": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "lo tog la phan pa'i cho ga"
         },
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T1635",
+        "rank": 2957
     },
     "T416": {
         "label": [
@@ -29775,7 +38447,9 @@ export const topics = {
                 "@value": "santikahomavidhi"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T416",
+        "rank": 2890
     },
     "T455": {
         "label": [
@@ -29788,21 +38462,27 @@ export const topics = {
                 "@value": "descent of blessings"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T455",
+        "rank": 2992
     },
     "T473": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "tshe dbang /"
         },
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T473",
+        "rank": 2879
     },
     "T1220": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "'phrin bcol/"
         },
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T1220",
+        "rank": 2930
     },
     "T1258": {
         "label": {
@@ -29816,28 +38496,36 @@ export const topics = {
             "@language": "bo-x-ewts",
             "@value": "srid spel/"
         },
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T1639",
+        "rank": 3965
     },
     "T00JR760": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "skul byang /"
         },
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T00JR760",
+        "rank": 2914
     },
     "T1AT452": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "gsang dbang /"
         },
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T1AT452",
+        "rank": 2877
     },
     "T1456": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "thog srung /"
         },
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T1456",
+        "rank": 2962
     },
     "T1GS128716": {
         "label": [
@@ -29850,21 +38538,27 @@ export const topics = {
                 "@value": "protection of the body"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T1GS128716",
+        "rank": 3013
     },
     "T2276": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "za yig"
         },
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T2276",
+        "rank": 3002
     },
     "T1CZ5": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "baM skongs/"
         },
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T1CZ5",
+        "rank": 2927
     },
     "T1CZ19": {
         "label": [
@@ -29877,7 +38571,9 @@ export const topics = {
                 "@value": "a drink offering to the eight classes of Gods and Spirits"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T1CZ19",
+        "rank": 2975
     },
     "T1CZ25": {
         "label": [
@@ -29890,7 +38586,9 @@ export const topics = {
                 "@value": "phyugs glud/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T1CZ25",
+        "rank": 2959
     },
     "T2038": {
         "label": [
@@ -29903,7 +38601,9 @@ export const topics = {
                 "@value": "removal of obstacles"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T2038",
+        "rank": 2981
     },
     "T872": {
         "label": [
@@ -29923,7 +38623,9 @@ export const topics = {
             "@language": "bo-x-ewts",
             "@value": "glud chog"
         },
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T2610",
+        "rank": 2954
     },
     "T4CZ363957": {
         "label": {
@@ -29937,14 +38639,18 @@ export const topics = {
             "@language": "bo-x-ewts",
             "@value": "mchod rol/"
         },
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T2104",
+        "rank": 2905
     },
     "T1GS108144": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "grib srung /"
         },
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T1GS108144",
+        "rank": 3018
     },
     "T249": {
         "label": [
@@ -29957,35 +38663,45 @@ export const topics = {
                 "@value": "rituals for offering"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T249",
+        "rank": 2983
     },
     "T1720": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "'byung bzhi gtor ma/"
         },
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T1720",
+        "rank": 2970
     },
     "T1783": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "sgrib sbyang /"
         },
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T1783",
+        "rank": 3000
     },
     "T1GS110789": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "dbang gi sta gon/"
         },
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T1GS110789",
+        "rank": 2884
     },
     "T00JR2086": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "srog 'dren/"
         },
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T00JR2086",
+        "rank": 2911
     },
     "T1647": {
         "label": [
@@ -29998,7 +38714,9 @@ export const topics = {
                 "@value": "blessing special sites"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T1647",
+        "rank": 3001
     },
     "T8": {
         "label": [
@@ -30019,21 +38737,27 @@ export const topics = {
                 "@value": "homa"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T8",
+        "rank": 2888
     },
     "T2517": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "bum bskyed/"
         },
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T2517",
+        "rank": 2899
     },
     "T467": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "skong chog"
         },
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T467",
+        "rank": 2928
     },
     "T1437": {
         "label": [
@@ -30046,42 +38770,54 @@ export const topics = {
                 "@value": "bar chad zlog pa/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T1437",
+        "rank": 2980
     },
     "T1GS145345": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "tshe sring /"
         },
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T1GS145345",
+        "rank": 2998
     },
     "T1GS147798": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "sa brtag bslang sbyang sbyang /"
         },
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T1GS147798",
+        "rank": 3023
     },
     "T1GS110790": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "bdag dbang /"
         },
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T1GS110790",
+        "rank": 2878
     },
     "T1633": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "'bu srung /"
         },
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T1633",
+        "rank": 2972
     },
     "T2336": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "gshin po 'drer mi 'ong ba/"
         },
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T2336",
+        "rank": 3011
     },
     "T1481": {
         "label": [
@@ -30094,7 +38830,9 @@ export const topics = {
                 "@value": "sku gdung sreg chog"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T1481",
+        "rank": 2933
     },
     "T2601": {
         "label": [
@@ -30107,21 +38845,27 @@ export const topics = {
                 "@value": "dug nad srung ba/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T2601",
+        "rank": 3036
     },
     "T1699": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "gzungs chog"
         },
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T1699",
+        "rank": 2938
     },
     "T1458": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "gtor chog"
         },
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T1458",
+        "rank": 2923
     },
     "T175": {
         "label": [
@@ -30134,14 +38878,18 @@ export const topics = {
                 "@value": "sbyang chog"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T175",
+        "rank": 2940
     },
     "T1451": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rkun ma srung ba/"
         },
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T1451",
+        "rank": 3040
     },
     "T845": {
         "label": [
@@ -30154,7 +38902,9 @@ export const topics = {
                 "@value": "sen mo bsreg pa'i cho ga"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T845",
+        "rank": 2918
     },
     "T810": {
         "label": [
@@ -30167,7 +38917,9 @@ export const topics = {
                 "@value": "gnas lung /"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T810",
+        "rank": 2941
     },
     "T978": {
         "label": [
@@ -30184,14 +38936,18 @@ export const topics = {
                 "@value": "火葬"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T978",
+        "rank": 2934
     },
     "T00JR399": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "gsol kha/"
         },
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T00JR399",
+        "rank": 2951
     },
     "T438": {
         "label": [
@@ -30204,14 +38960,18 @@ export const topics = {
                 "@value": "ajna"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T438",
+        "rank": 2994
     },
     "T1GS6338": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "sha brgya zan brgya/"
         },
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T1GS6338",
+        "rank": 2976
     },
     "T00KG02665": {
         "label": [
@@ -30231,14 +38991,18 @@ export const topics = {
             "@language": "bo-x-ewts",
             "@value": "sman bla mdo chog"
         },
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T870",
+        "rank": 2887
     },
     "T419": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "bcu cha'i sbyin sreg"
         },
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T419",
+        "rank": 2894
     },
     "T35": {
         "label": [
@@ -30251,14 +39015,18 @@ export const topics = {
                 "@value": "bum sgrub/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T35",
+        "rank": 3025
     },
     "T00JR624": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "dmar byang /"
         },
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T00JR624",
+        "rank": 2913
     },
     "T1044": {
         "label": [
@@ -30278,7 +39046,9 @@ export const topics = {
             "@language": "bo-x-ewts",
             "@value": "'dod gsol/"
         },
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T1226",
+        "rank": 2991
     },
     "T10MS14317": {
         "label": [
@@ -30302,7 +39072,9 @@ export const topics = {
             "@language": "bo-x-ewts",
             "@value": "yang bzlog"
         },
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T00JR763",
+        "rank": 2915
     },
     "T19": {
         "label": [
@@ -30315,7 +39087,9 @@ export const topics = {
                 "@value": "regular propitiation"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T19",
+        "rank": 2988
     },
     "T21": {
         "label": [
@@ -30332,21 +39106,27 @@ export const topics = {
                 "@value": "mandala abhiseka vidhi"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T21",
+        "rank": 2882
     },
     "T1015": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "sa ts+tshA gdab chog"
         },
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T1015",
+        "rank": 2898
     },
     "T1781": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rnam rgyal bum sgrub/"
         },
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T1781",
+        "rank": 3006
     },
     "T4CZ15132": {
         "label": [
@@ -30363,21 +39143,27 @@ export const topics = {
                 "@value": "hand offering, personal skull cup"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T4CZ15132",
+        "rank": 3038
     },
     "T1AT306": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "bgegs gtor/"
         },
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T1AT306",
+        "rank": 2990
     },
     "T2415": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "mdos glud/"
         },
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T2415",
+        "rank": 2952
     },
     "T2136": {
         "label": [
@@ -30394,7 +39180,9 @@ export const topics = {
                 "@value": "paustikahoma"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T2136",
+        "rank": 2892
     },
     "T1648": {
         "label": [
@@ -30407,7 +39195,9 @@ export const topics = {
                 "@value": "binding deities to oath"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T1648",
+        "rank": 3020
     },
     "T26": {
         "label": [
@@ -30420,7 +39210,9 @@ export const topics = {
                 "@value": "golden water offerings"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T26",
+        "rank": 2977
     },
     "T799": {
         "label": [
@@ -30433,7 +39225,9 @@ export const topics = {
                 "@value": "turning back of mongol invaders"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T799",
+        "rank": 2916
     },
     "T1CZ67": {
         "label": {
@@ -30447,7 +39241,9 @@ export const topics = {
             "@language": "bo-x-ewts",
             "@value": "brul gtor/"
         },
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T1GS107985",
+        "rank": 2996
     },
     "T4CZ359084": {
         "label": [
@@ -30467,21 +39263,27 @@ export const topics = {
             "@language": "bo-x-ewts",
             "@value": "bzlog bsgyur/"
         },
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T1726",
+        "rank": 2978
     },
     "T940": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "gdung mchod/"
         },
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T940",
+        "rank": 3027
     },
     "T1307": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "sa dpyad/"
         },
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T1307",
+        "rank": 3028
     },
     "T1405": {
         "label": [
@@ -30494,28 +39296,36 @@ export const topics = {
                 "@value": "klu'i sbyin sreg"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T1405",
+        "rank": 2895
     },
     "T944": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rgyal mtshan 'dzugs chog"
         },
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T944",
+        "rank": 2903
     },
     "T1GS9766": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "su rU pa'i gtor ma/"
         },
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T1GS9766",
+        "rank": 2948
     },
     "T1619": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rta glud/"
         },
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T1619",
+        "rank": 2956
     },
     "T961": {
         "label": [
@@ -30528,14 +39338,18 @@ export const topics = {
                 "@value": "tenth day rituals"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T961",
+        "rank": 3029
     },
     "T1292": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "ting nge 'dzin gyi dbang ('ba' ra lugs)"
         },
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T1292",
+        "rank": 2880
     },
     "T4CZ15519": {
         "label": [
@@ -30548,14 +39362,18 @@ export const topics = {
                 "@value": "rig sngags srung ba/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T4CZ15519",
+        "rank": 3039
     },
     "T1228": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "gshegs gtor/"
         },
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T1228",
+        "rank": 2982
     },
     "T1027": {
         "label": [
@@ -30568,7 +39386,9 @@ export const topics = {
                 "@value": "protection of children"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T1027",
+        "rank": 3030
     },
     "T1221": {
         "label": [
@@ -30581,7 +39401,9 @@ export const topics = {
                 "@value": "wind horse"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T1221",
+        "rank": 2989
     },
     "T1256": {
         "label": {
@@ -30601,14 +39423,18 @@ export const topics = {
                 "@value": "disposal of the dead"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T1961",
+        "rank": 3012
     },
     "T00JR761": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "khrus dbang /"
         },
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T00JR761",
+        "rank": 2886
     },
     "T2625": {
         "label": {
@@ -30622,98 +39448,126 @@ export const topics = {
             "@language": "bo-x-ewts",
             "@value": "ri khrus/"
         },
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T012AG03493",
+        "rank": 2965
     },
     "T1447": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "byabs khrus/"
         },
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T1447",
+        "rank": 3031
     },
     "T00JR2124": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "bskyed chog"
         },
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T00JR2124",
+        "rank": 2909
     },
     "T2629": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "las bzhi/"
         },
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T2629",
+        "rank": 2896
     },
     "T2541": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "dmag bzlog"
         },
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T2541",
+        "rank": 2999
     },
     "T3JT5431": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "dmar gsur/"
         },
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T3JT5431",
+        "rank": 2974
     },
     "T1CZ12": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "zhi rgyas dbang gi sbyin sreg gi cho ga"
         },
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T1CZ12",
+        "rank": 2889
     },
     "T1703": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "thod dbang /"
         },
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T1703",
+        "rank": 2883
     },
     "T1GS108146": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "gri thogs srung ba/"
         },
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T1GS108146",
+        "rank": 3016
     },
     "T1692": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rgyal chen tho 'dzugs/"
         },
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T1692",
+        "rank": 2904
     },
     "T1219": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "gtor 'bul/"
         },
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T1219",
+        "rank": 2987
     },
     "T1GS129190": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "'dzul chog"
         },
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T1GS129190",
+        "rank": 3010
     },
     "T1206": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "klu chog"
         },
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T1206",
+        "rank": 2924
     },
     "T00JR2087": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "dmod bzlog"
         },
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T00JR2087",
+        "rank": 2912
     },
     "T1742": {
         "label": [
@@ -30726,7 +39580,9 @@ export const topics = {
                 "@value": "水食子"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T1742",
+        "rank": 2921
     },
     "T9": {
         "label": [
@@ -30739,7 +39595,9 @@ export const topics = {
                 "@value": "prayer for long life"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T9",
+        "rank": 2931
     },
     "T48": {
         "label": [
@@ -30756,14 +39614,18 @@ export const topics = {
                 "@value": "dbang /"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T48",
+        "rank": 2875
     },
     "T1366": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "gtor ma brgya rtsa/"
         },
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T1366",
+        "rank": 2971
     },
     "T1501": {
         "label": [
@@ -30776,28 +39638,36 @@ export const topics = {
                 "@value": "sad srung ba/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T1501",
+        "rank": 2960
     },
     "T1GS47741": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "chab gtor 'jam dpal ma/"
         },
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T1GS47741",
+        "rank": 2947
     },
     "T1634": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "lo glud/"
         },
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T1634",
+        "rank": 2958
     },
     "T00JR3374": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "gzhag thabs/"
         },
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T00JR3374",
+        "rank": 3021
     },
     "T2352": {
         "label": {
@@ -30817,14 +39687,18 @@ export const topics = {
                 "@value": "dgra jag chom kun srung ba/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T2602",
+        "rank": 2997
     },
     "T2084": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rdzas srung /"
         },
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T2084",
+        "rank": 3019
     },
     "T1459": {
         "label": [
@@ -30841,7 +39715,9 @@ export const topics = {
                 "@value": "水施"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T1459",
+        "rank": 2966
     },
     "T1257": {
         "label": {
@@ -30855,35 +39731,45 @@ export const topics = {
             "@language": "bo-x-ewts",
             "@value": "'chi bslu/"
         },
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T846",
+        "rank": 3026
     },
     "T885": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "mig 'byed/"
         },
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T885",
+        "rank": 2908
     },
     "T1683": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "byang chog"
         },
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T1683",
+        "rank": 2942
     },
     "T1CZ20": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "dug sel/"
         },
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T1CZ20",
+        "rank": 3034
     },
     "T2471": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rten bskyed/"
         },
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T2471",
+        "rank": 3035
     },
     "T1CZ24": {
         "label": [
@@ -30896,14 +39782,18 @@ export const topics = {
                 "@value": "byis pa'i gdon glud/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T1CZ24",
+        "rank": 2955
     },
     "T2511": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "zhabs brtan/"
         },
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T2511",
+        "rank": 3005
     },
     "T00KG02746": {
         "label": {
@@ -30917,7 +39807,9 @@ export const topics = {
             "@language": "bo-x-ewts",
             "@value": "me dbang /"
         },
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T00JR758",
+        "rank": 2945
     },
     "T1736": {
         "label": [
@@ -30930,7 +39822,9 @@ export const topics = {
                 "@value": "bskul ba/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T1736",
+        "rank": 2993
     },
     "T00JR140": {
         "label": {
@@ -30950,56 +39844,72 @@ export const topics = {
                 "@value": "prosperity rituals"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T22",
+        "rank": 2969
     },
     "T2210": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "dbang bzhi/"
         },
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T2210",
+        "rank": 2876
     },
     "T1782": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "lho sgo"
         },
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T1782",
+        "rank": 3916
     },
     "T1AT307": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "yon sbyong /"
         },
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T1AT307",
+        "rank": 3007
     },
     "T1310": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "dkar gtor/"
         },
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T1310",
+        "rank": 2949
     },
     "T1348": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "gzungs 'bul/"
         },
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T1348",
+        "rank": 2986
     },
     "T1820": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "mchod rten brgya rtsa brgyad gdab pa'i cho ga"
         },
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T1820",
+        "rank": 2917
     },
     "T1AT500": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "dkar gsur/"
         },
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T1AT500",
+        "rank": 2973
     },
     "T1870": {
         "label": [
@@ -31012,7 +39922,9 @@ export const topics = {
                 "@value": "funeral rituals"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T1870",
+        "rank": 3033
     },
     "T7": {
         "label": [
@@ -31029,7 +39941,9 @@ export const topics = {
                 "@value": "rjes gnang /"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T7",
+        "rank": 2885
     },
     "T2311": {
         "label": [
@@ -31042,7 +39956,9 @@ export const topics = {
                 "@value": "magnetizing fire ritual"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T2311",
+        "rank": 2891
     },
     "T1GS129188": {
         "label": [
@@ -31055,14 +39971,18 @@ export const topics = {
                 "@value": "srid srung /"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T1GS129188",
+        "rank": 3008
     },
     "T1GS129189": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "srung ba rdo rje'i go cha/"
         },
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T1GS129189",
+        "rank": 3009
     },
     "T3JT5301": {
         "label": [
@@ -31075,14 +39995,18 @@ export const topics = {
                 "@value": "char gcod/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T3JT5301",
+        "rank": 2964
     },
     "T00JR771": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "dgra mnan/"
         },
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T00JR771",
+        "rank": 2946
     },
     "T00AG01323": {
         "label": [
@@ -31095,28 +40019,36 @@ export const topics = {
                 "@value": "ritual for the increase of the two accumulations (bsod nams kyi tshogs dang ye shes kyi tshogs)"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T00AG01323",
+        "rank": 2902
     },
     "T1367": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "mchod gtor/"
         },
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T1367",
+        "rank": 2929
     },
     "T2335": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "sa slong /"
         },
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T2335",
+        "rank": 3003
     },
     "T897": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "byad 'grol/"
         },
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T897",
+        "rank": 2932
     },
     "T2600": {
         "label": [
@@ -31129,7 +40061,9 @@ export const topics = {
                 "@value": "protection from disease, evil spirits, and obstacles"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T2600",
+        "rank": 3024
     },
     "T1GS129192": {
         "label": [
@@ -31142,21 +40076,27 @@ export const topics = {
                 "@value": "god kha srung ba/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T1GS129192",
+        "rank": 3015
     },
     "T829": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "maN+Dal bzhi pa/"
         },
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T829",
+        "rank": 2897
     },
     "T2050": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "bgegs bskrad/"
         },
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T2050",
+        "rank": 2925
     },
     "T844": {
         "label": [
@@ -31182,14 +40122,18 @@ export const topics = {
                 "@value": "rasayana"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T941",
+        "rank": 2995
     },
     "T883": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "gdon sgrol/"
         },
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T883",
+        "rank": 2979
     },
     "T977": {
         "label": [
@@ -31210,14 +40154,18 @@ export const topics = {
                 "@value": "vidhi"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T977",
+        "rank": 2872
     },
     "T1209": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "gtor bsngos/"
         },
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T1209",
+        "rank": 2919
     },
     "T437": {
         "label": [
@@ -31230,14 +40178,18 @@ export const topics = {
                 "@value": "hail prevention"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T437",
+        "rank": 2963
     },
     "T1GS10764": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "sa chog"
         },
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T1GS10764",
+        "rank": 2939
     },
     "T1CZ17": {
         "label": [
@@ -31254,7 +40206,9 @@ export const topics = {
                 "@value": "防雹"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T1CZ17",
+        "rank": 2961
     },
     "T01JR188": {
         "label": [
@@ -31267,14 +40221,18 @@ export const topics = {
                 "@value": "purifying an abode (of sentient beings)"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T01JR188",
+        "rank": 2943
     },
     "T012AG03702": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "sman rak gtor gsum/"
         },
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T012AG03702",
+        "rank": 2967
     },
     "T1CZ22": {
         "label": [
@@ -31287,7 +40245,9 @@ export const topics = {
                 "@value": "ritual for the creation of thread-cross for the gyalpo spirits"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T1CZ22",
+        "rank": 2953
     },
     "T458": {
         "label": [
@@ -31300,7 +40260,9 @@ export const topics = {
                 "@value": "torma empowerment"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T458",
+        "rank": 2906
     },
     "T1028": {
         "label": [
@@ -31317,7 +40279,9 @@ export const topics = {
                 "@value": "rab gnas/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T1028",
+        "rank": 2985
     },
     "T1GS151639": {
         "label": [
@@ -31330,7 +40294,9 @@ export const topics = {
                 "@value": "summoning of the bla spirit"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T1GS151639",
+        "rank": 3022
     },
     "T1225": {
         "label": {
@@ -31344,7 +40310,9 @@ export const topics = {
             "@language": "bo-x-ewts",
             "@value": "bzlog thabs/"
         },
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T00JR762",
+        "rank": 2935
     },
     "T1CZ27": {
         "label": [
@@ -31364,14 +40332,18 @@ export const topics = {
             "@language": "bo-x-ewts",
             "@value": "pho nya sgom bskul/"
         },
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T2042",
+        "rank": 3004
     },
     "T1GS108510": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "spyan 'dren khrus gsol/"
         },
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T1GS108510",
+        "rank": 2950
     },
     "T93": {
         "label": [
@@ -31384,28 +40356,36 @@ export const topics = {
                 "@value": "bskang chog"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T93",
+        "rank": 2926
     },
     "T905": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "gtor bzlog"
         },
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T905",
+        "rank": 2984
     },
     "T1AT269": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "zlog pa/"
         },
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T1AT269",
+        "rank": 2936
     },
     "T00KG02673": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rab gnas zhag bdun ma/"
         },
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T00KG02673",
+        "rank": 2944
     },
     "T170": {
         "label": [
@@ -31422,14 +40402,18 @@ export const topics = {
                 "@value": "bali"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T170",
+        "rank": 2968
     },
     "T1GS108147": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "kha zas 'ong bar byed pa/"
         },
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T1GS108147",
+        "rank": 3017
     },
     "T895": {
         "label": [
@@ -31442,42 +40426,54 @@ export const topics = {
                 "@value": "khrus chog"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T895",
+        "rank": 2900
     },
     "T1GS129191": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "'jigs pa brgyad srung ba/"
         },
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T1GS129191",
+        "rank": 3014
     },
     "T00KG02658": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "phyir bzlog"
         },
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T00KG02658",
+        "rank": 2910
     },
     "T1PD114150": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "mdo chog"
         },
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T1PD114150",
+        "rank": 2937
     },
     "T00KG02676": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rims bsrung /"
         },
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T00KG02676",
+        "rank": 3037
     },
     "T1743": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "gsur mchod/"
         },
-        "parent": "O9TAXTBRC2016052KG225924"
+        "parent": "O9TAXTBRC2016052KG225924",
+        "tbrcId": "T1743",
+        "rank": 2922
     },
     "O9TAXTBRC2016052KG225384": {
         "sub": [
@@ -31515,7 +40511,9 @@ export const topics = {
                 "@value": "tibetan buddhism"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225384"
+        "parent": "O9TAXTBRC2016052KG225384",
+        "tbrcId": "T350",
+        "rank": 270
     },
     "T00AG01549": {
         "label": [
@@ -31528,7 +40526,9 @@ export const topics = {
                 "@value": "bka' bsdu gsum/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225384"
+        "parent": "O9TAXTBRC2016052KG225384",
+        "tbrcId": "T00AG01549",
+        "rank": 278
     },
     "T308": {
         "label": [
@@ -31541,7 +40541,9 @@ export const topics = {
                 "@value": "dharmachakras"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225384"
+        "parent": "O9TAXTBRC2016052KG225384",
+        "tbrcId": "T308",
+        "rank": 274
     },
     "T1871": {
         "label": [
@@ -31558,7 +40560,9 @@ export const topics = {
                 "@value": "four classes of tantra"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225384"
+        "parent": "O9TAXTBRC2016052KG225384",
+        "tbrcId": "T1871",
+        "rank": 286
     },
     "T3CN2024": {
         "label": [
@@ -31575,7 +40579,9 @@ export const topics = {
                 "@value": "三藏"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225384"
+        "parent": "O9TAXTBRC2016052KG225384",
+        "tbrcId": "T3CN2024",
+        "rank": 282
     },
     "T770": {
         "label": [
@@ -31592,7 +40598,9 @@ export const topics = {
                 "@value": "佛教"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225384"
+        "parent": "O9TAXTBRC2016052KG225384",
+        "tbrcId": "T770",
+        "rank": 266
     },
     "O9TAXTBRC2016052KG226275": {
         "sub": [
@@ -31669,28 +40677,36 @@ export const topics = {
                 "@value": "讲义"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225383"
+        "parent": "O9TAXTBRC2016052KG225383",
+        "tbrcId": "6",
+        "rank": 3239
     },
     "T1364": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "snying po don gsum/"
         },
-        "parent": "O9TAXTBRC2016052KG226275"
+        "parent": "O9TAXTBRC2016052KG226275",
+        "tbrcId": "T1364",
+        "rank": 3284
     },
     "T945": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rlung khrid/"
         },
-        "parent": "O9TAXTBRC2016052KG226275"
+        "parent": "O9TAXTBRC2016052KG226275",
+        "tbrcId": "T945",
+        "rank": 3247
     },
     "T1284": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rten 'brel rab bdun khrid 'brug lugs/"
         },
-        "parent": "O9TAXTBRC2016052KG226275"
+        "parent": "O9TAXTBRC2016052KG226275",
+        "tbrcId": "T1284",
+        "rank": 3264
     },
     "T157": {
         "label": [
@@ -31703,21 +40719,27 @@ export const topics = {
                 "@value": "explanation of the empowerment"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226275"
+        "parent": "O9TAXTBRC2016052KG226275",
+        "tbrcId": "T157",
+        "rank": 3272
     },
     "T1548": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "yon po bsrang ba/"
         },
-        "parent": "O9TAXTBRC2016052KG226275"
+        "parent": "O9TAXTBRC2016052KG226275",
+        "tbrcId": "T1548",
+        "rank": 3277
     },
     "T1593": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "sbyor drug (khrid)"
         },
-        "parent": "O9TAXTBRC2016052KG226275"
+        "parent": "O9TAXTBRC2016052KG226275",
+        "tbrcId": "T1593",
+        "rank": 3261
     },
     "T1888": {
         "label": {
@@ -31738,7 +40760,9 @@ export const topics = {
             "@language": "bo-x-ewts",
             "@value": "bsangs yig"
         },
-        "parent": "O9TAXTBRC2016052KG226275"
+        "parent": "O9TAXTBRC2016052KG226275",
+        "tbrcId": "T10MS14575",
+        "rank": 3279
     },
     "T1550": {
         "label": {
@@ -31752,14 +40776,18 @@ export const topics = {
             "@language": "bo-x-ewts",
             "@value": "kaH thog khrid chen bcu gsum/"
         },
-        "parent": "O9TAXTBRC2016052KG226275"
+        "parent": "O9TAXTBRC2016052KG226275",
+        "tbrcId": "T00JR990",
+        "rank": 3265
     },
     "T1112": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "sems khrid/"
         },
-        "parent": "O9TAXTBRC2016052KG226275"
+        "parent": "O9TAXTBRC2016052KG226275",
+        "tbrcId": "T1112",
+        "rank": 3253
     },
     "T200": {
         "label": [
@@ -31772,7 +40800,9 @@ export const topics = {
                 "@value": "khrid yig"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226275"
+        "parent": "O9TAXTBRC2016052KG226275",
+        "tbrcId": "T200",
+        "rank": 3245
     },
     "T00JR398": {
         "label": [
@@ -31785,63 +40815,81 @@ export const topics = {
                 "@value": "mun khrid/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226275"
+        "parent": "O9TAXTBRC2016052KG226275",
+        "tbrcId": "T00JR398",
+        "rank": 3250
     },
     "T1531": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "spyan ras gzigs kyi dmar khrid tshem bu lugs/"
         },
-        "parent": "O9TAXTBRC2016052KG226275"
+        "parent": "O9TAXTBRC2016052KG226275",
+        "tbrcId": "T1531",
+        "rank": 3267
     },
     "T2366": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "dmar khrid/"
         },
-        "parent": "O9TAXTBRC2016052KG226275"
+        "parent": "O9TAXTBRC2016052KG226275",
+        "tbrcId": "T2366",
+        "rank": 3252
     },
     "T1541": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "dus 'khor snyan brgyud (khrid)"
         },
-        "parent": "O9TAXTBRC2016052KG226275"
+        "parent": "O9TAXTBRC2016052KG226275",
+        "tbrcId": "T1541",
+        "rank": 3291
     },
     "T00KG02675": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "nang khrid kyi zhal shes/"
         },
-        "parent": "O9TAXTBRC2016052KG226275"
+        "parent": "O9TAXTBRC2016052KG226275",
+        "tbrcId": "T00KG02675",
+        "rank": 3255
     },
     "T1GS147793": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "tshe khrid 'chi med rdo rje'i srog shing /"
         },
-        "parent": "O9TAXTBRC2016052KG226275"
+        "parent": "O9TAXTBRC2016052KG226275",
+        "tbrcId": "T1GS147793",
+        "rank": 3258
     },
     "T1695": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "dag snang zhing sbyong /"
         },
-        "parent": "O9TAXTBRC2016052KG226275"
+        "parent": "O9TAXTBRC2016052KG226275",
+        "tbrcId": "T1695",
+        "rank": 3274
     },
     "T46": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "phyag rdor gsang sgrub/"
         },
-        "parent": "O9TAXTBRC2016052KG226275"
+        "parent": "O9TAXTBRC2016052KG226275",
+        "tbrcId": "T46",
+        "rank": 3289
     },
     "T1288": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "khrid chung brgyad/"
         },
-        "parent": "O9TAXTBRC2016052KG226275"
+        "parent": "O9TAXTBRC2016052KG226275",
+        "tbrcId": "T1288",
+        "rank": 3269
     },
     "T1577": {
         "label": {
@@ -31855,14 +40903,18 @@ export const topics = {
             "@language": "bo-x-ewts",
             "@value": "khrid chen brgyad/"
         },
-        "parent": "O9TAXTBRC2016052KG226275"
+        "parent": "O9TAXTBRC2016052KG226275",
+        "tbrcId": "T1287",
+        "rank": 3268
     },
     "T1534": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "spyan ras gzigs kyi dmar khrid zla rgyal lugs/"
         },
-        "parent": "O9TAXTBRC2016052KG226275"
+        "parent": "O9TAXTBRC2016052KG226275",
+        "tbrcId": "T1534",
+        "rank": 3270
     },
     "T1267": {
         "label": {
@@ -31876,42 +40928,54 @@ export const topics = {
             "@language": "bo-x-ewts",
             "@value": "mdo rgyud bsre ba/"
         },
-        "parent": "O9TAXTBRC2016052KG226275"
+        "parent": "O9TAXTBRC2016052KG226275",
+        "tbrcId": "T1552",
+        "rank": 3285
     },
     "T1551": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "mchod rten drung thob/"
         },
-        "parent": "O9TAXTBRC2016052KG226275"
+        "parent": "O9TAXTBRC2016052KG226275",
+        "tbrcId": "T1551",
+        "rank": 3292
     },
     "T1259": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "tshe khrid/"
         },
-        "parent": "O9TAXTBRC2016052KG226275"
+        "parent": "O9TAXTBRC2016052KG226275",
+        "tbrcId": "T1259",
+        "rank": 3248
     },
     "T11MS10": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "lung /"
         },
-        "parent": "O9TAXTBRC2016052KG226275"
+        "parent": "O9TAXTBRC2016052KG226275",
+        "tbrcId": "T11MS10",
+        "rank": 3278
     },
     "T1GS108077": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "dga' ldan 'pho khrid/"
         },
-        "parent": "O9TAXTBRC2016052KG226275"
+        "parent": "O9TAXTBRC2016052KG226275",
+        "tbrcId": "T1GS108077",
+        "rank": 3259
     },
     "T1253": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "jo nang khrid brgya/"
         },
-        "parent": "O9TAXTBRC2016052KG226275"
+        "parent": "O9TAXTBRC2016052KG226275",
+        "tbrcId": "T1253",
+        "rank": 3262
     },
     "T395": {
         "label": [
@@ -31924,49 +40988,63 @@ export const topics = {
                 "@value": "instruction on the view"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226275"
+        "parent": "O9TAXTBRC2016052KG226275",
+        "tbrcId": "T395",
+        "rank": 3254
     },
     "T1697": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "gsang spyod mnal lam ma/"
         },
-        "parent": "O9TAXTBRC2016052KG226275"
+        "parent": "O9TAXTBRC2016052KG226275",
+        "tbrcId": "T1697",
+        "rank": 3273
     },
     "T1262": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rlung sems gnyis med/"
         },
-        "parent": "O9TAXTBRC2016052KG226275"
+        "parent": "O9TAXTBRC2016052KG226275",
+        "tbrcId": "T1262",
+        "rank": 3288
     },
     "T1735": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rnga chings/"
         },
-        "parent": "O9TAXTBRC2016052KG226275"
+        "parent": "O9TAXTBRC2016052KG226275",
+        "tbrcId": "T1735",
+        "rank": 3283
     },
     "T1545": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "zab pa'i tshul dgu/"
         },
-        "parent": "O9TAXTBRC2016052KG226275"
+        "parent": "O9TAXTBRC2016052KG226275",
+        "tbrcId": "T1545",
+        "rank": 3276
     },
     "T01AG03287": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "dbang tho/"
         },
-        "parent": "O9TAXTBRC2016052KG226275"
+        "parent": "O9TAXTBRC2016052KG226275",
+        "tbrcId": "T01AG03287",
+        "rank": 3287
     },
     "T1544": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "bsam mi khyab/"
         },
-        "parent": "O9TAXTBRC2016052KG226275"
+        "parent": "O9TAXTBRC2016052KG226275",
+        "tbrcId": "T1544",
+        "rank": 3275
     },
     "T01JR141": {
         "label": [
@@ -31979,28 +41057,36 @@ export const topics = {
                 "@value": "abolition of animal sacrifice"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226275"
+        "parent": "O9TAXTBRC2016052KG226275",
+        "tbrcId": "T01JR141",
+        "rank": 3282
     },
     "T2178": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rwa khrid rwa rtse sems 'dzin/"
         },
-        "parent": "O9TAXTBRC2016052KG226275"
+        "parent": "O9TAXTBRC2016052KG226275",
+        "tbrcId": "T2178",
+        "rank": 3260
     },
     "T1GS108508": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rgya ra'i lta khrid/"
         },
-        "parent": "O9TAXTBRC2016052KG226275"
+        "parent": "O9TAXTBRC2016052KG226275",
+        "tbrcId": "T1GS108508",
+        "rank": 3281
     },
     "T11MS11": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "khrid/"
         },
-        "parent": "O9TAXTBRC2016052KG226275"
+        "parent": "O9TAXTBRC2016052KG226275",
+        "tbrcId": "T11MS11",
+        "rank": 3244
     },
     "T1698": {
         "label": {
@@ -32020,21 +41106,27 @@ export const topics = {
                 "@value": "instructional scroll"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226275"
+        "parent": "O9TAXTBRC2016052KG226275",
+        "tbrcId": "T2GS1099",
+        "rank": 3280
     },
     "T00KG02748": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "gsang khrid/"
         },
-        "parent": "O9TAXTBRC2016052KG226275"
+        "parent": "O9TAXTBRC2016052KG226275",
+        "tbrcId": "T00KG02748",
+        "rank": 3249
     },
     "T1966": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "lha khrid/"
         },
-        "parent": "O9TAXTBRC2016052KG226275"
+        "parent": "O9TAXTBRC2016052KG226275",
+        "tbrcId": "T1966",
+        "rank": 3256
     },
     "T1273": {
         "label": {
@@ -32055,14 +41147,18 @@ export const topics = {
             "@language": "bo-x-ewts",
             "@value": "pra khrid/"
         },
-        "parent": "O9TAXTBRC2016052KG226275"
+        "parent": "O9TAXTBRC2016052KG226275",
+        "tbrcId": "T1GS118660",
+        "rank": 3251
     },
     "T1594": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "sems khrid yid bzhin nor bu/"
         },
-        "parent": "O9TAXTBRC2016052KG226275"
+        "parent": "O9TAXTBRC2016052KG226275",
+        "tbrcId": "T1594",
+        "rank": 3257
     },
     "T1555": {
         "label": {
@@ -32082,28 +41178,36 @@ export const topics = {
                 "@value": "klog thabs/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226275"
+        "parent": "O9TAXTBRC2016052KG226275",
+        "tbrcId": "T1016",
+        "rank": 3286
     },
     "T11MS42": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "don khrid/"
         },
-        "parent": "O9TAXTBRC2016052KG226275"
+        "parent": "O9TAXTBRC2016052KG226275",
+        "tbrcId": "T11MS42",
+        "rank": 3246
     },
     "T1530": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "tshe dpag med dkar po (khrid)"
         },
-        "parent": "O9TAXTBRC2016052KG226275"
+        "parent": "O9TAXTBRC2016052KG226275",
+        "tbrcId": "T1530",
+        "rank": 3290
     },
     "T1155": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "ro snyoms (khrid)"
         },
-        "parent": "O9TAXTBRC2016052KG226275"
+        "parent": "O9TAXTBRC2016052KG226275",
+        "tbrcId": "T1155",
+        "rank": 3263
     },
     "T1CZ28": {
         "label": [
@@ -32116,14 +41220,18 @@ export const topics = {
                 "@value": "rituals for the sevasadhana"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226275"
+        "parent": "O9TAXTBRC2016052KG226275",
+        "tbrcId": "T1CZ28",
+        "rank": 3271
     },
     "T2065": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "thugs chen dmar khrid/"
         },
-        "parent": "O9TAXTBRC2016052KG226275"
+        "parent": "O9TAXTBRC2016052KG226275",
+        "tbrcId": "T2065",
+        "rank": 3266
     },
     "O9TAXTBRC2016052KG225391": {
         "sub": [
@@ -32148,7 +41256,9 @@ export const topics = {
                 "@value": "mdo phyogs/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225383"
+        "parent": "O9TAXTBRC2016052KG225383",
+        "tbrcId": "2",
+        "rank": 295
     },
     "O9TAXTBRC2016052KG225530": {
         "sub": [
@@ -32171,7 +41281,9 @@ export const topics = {
                 "@value": "修心道次"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225391"
+        "parent": "O9TAXTBRC2016052KG225391",
+        "tbrcId": "5",
+        "rank": 828
     },
     "O9TAXTBRC2016052KG225531": {
         "sub": [
@@ -32214,14 +41326,18 @@ export const topics = {
                 "@value": "General Topics of Mind Training"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225530"
+        "parent": "O9TAXTBRC2016052KG225530",
+        "tbrcId": "1",
+        "rank": 833
     },
     "T1291": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "ri chos yon tan kun byung gi ma drug"
         },
-        "parent": "O9TAXTBRC2016052KG225531"
+        "parent": "O9TAXTBRC2016052KG225531",
+        "tbrcId": "T1291",
+        "rank": 922
     },
     "T1109": {
         "label": [
@@ -32234,7 +41350,9 @@ export const topics = {
                 "@value": "retreat manuals"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225531"
+        "parent": "O9TAXTBRC2016052KG225531",
+        "tbrcId": "T1109",
+        "rank": 914
     },
     "T1429": {
         "label": [
@@ -32247,21 +41365,27 @@ export const topics = {
                 "@value": "dge sdig blang dor/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225531"
+        "parent": "O9TAXTBRC2016052KG225531",
+        "tbrcId": "T1429",
+        "rank": 874
     },
     "T1881": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "theg pa chen po'i blo sbyong /"
         },
-        "parent": "O9TAXTBRC2016052KG225531"
+        "parent": "O9TAXTBRC2016052KG225531",
+        "tbrcId": "T1881",
+        "rank": 854
     },
     "T1GS147790": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "dge sbyor/"
         },
-        "parent": "O9TAXTBRC2016052KG225531"
+        "parent": "O9TAXTBRC2016052KG225531",
+        "tbrcId": "T1GS147790",
+        "rank": 866
     },
     "T238": {
         "label": [
@@ -32278,7 +41402,9 @@ export const topics = {
                 "@value": "graduated approach"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225531"
+        "parent": "O9TAXTBRC2016052KG225531",
+        "tbrcId": "T238",
+        "rank": 838
     },
     "T012AG03497": {
         "label": [
@@ -32291,14 +41417,18 @@ export const topics = {
                 "@value": "explanation of the dharma"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225531"
+        "parent": "O9TAXTBRC2016052KG225531",
+        "tbrcId": "T012AG03497",
+        "rank": 902
     },
     "T1512": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "skyes bu gsum/"
         },
-        "parent": "O9TAXTBRC2016052KG225531"
+        "parent": "O9TAXTBRC2016052KG225531",
+        "tbrcId": "T1512",
+        "rank": 858
     },
     "T1352": {
         "label": [
@@ -32311,14 +41441,18 @@ export const topics = {
                 "@value": "stages of teachings"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225531"
+        "parent": "O9TAXTBRC2016052KG225531",
+        "tbrcId": "T1352",
+        "rank": 842
     },
     "T1750": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "tshogs chos/"
         },
-        "parent": "O9TAXTBRC2016052KG225531"
+        "parent": "O9TAXTBRC2016052KG225531",
+        "tbrcId": "T1750",
+        "rank": 910
     },
     "T393": {
         "label": [
@@ -32335,7 +41469,9 @@ export const topics = {
                 "@value": "修心"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225531"
+        "parent": "O9TAXTBRC2016052KG225531",
+        "tbrcId": "T393",
+        "rank": 850
     },
     "T161": {
         "label": [
@@ -32356,35 +41492,45 @@ export const topics = {
                 "@value": "benefits to be derived"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225531"
+        "parent": "O9TAXTBRC2016052KG225531",
+        "tbrcId": "T161",
+        "rank": 882
     },
     "T1PD109547": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "'chad nyan/"
         },
-        "parent": "O9TAXTBRC2016052KG225531"
+        "parent": "O9TAXTBRC2016052KG225531",
+        "tbrcId": "T1PD109547",
+        "rank": 894
     },
     "T1487": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "nyes dmigs/"
         },
-        "parent": "O9TAXTBRC2016052KG225531"
+        "parent": "O9TAXTBRC2016052KG225531",
+        "tbrcId": "T1487",
+        "rank": 878
     },
     "T1223": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "yon tan bkod pa/"
         },
-        "parent": "O9TAXTBRC2016052KG225531"
+        "parent": "O9TAXTBRC2016052KG225531",
+        "tbrcId": "T1223",
+        "rank": 886
     },
     "T1GS10599": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "'jug sgo rnam gsum/"
         },
-        "parent": "O9TAXTBRC2016052KG225531"
+        "parent": "O9TAXTBRC2016052KG225531",
+        "tbrcId": "T1GS10599",
+        "rank": 930
     },
     "T541": {
         "label": [
@@ -32401,14 +41547,18 @@ export const topics = {
                 "@value": "修持"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225531"
+        "parent": "O9TAXTBRC2016052KG225531",
+        "tbrcId": "T541",
+        "rank": 862
     },
     "T2GS1322": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "dge ba/"
         },
-        "parent": "O9TAXTBRC2016052KG225531"
+        "parent": "O9TAXTBRC2016052KG225531",
+        "tbrcId": "T2GS1322",
+        "rank": 870
     },
     "T1217": {
         "label": [
@@ -32425,21 +41575,27 @@ export const topics = {
                 "@value": "三十七道品"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225531"
+        "parent": "O9TAXTBRC2016052KG225531",
+        "tbrcId": "T1217",
+        "rank": 846
     },
     "T1PD109546": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "bshad sgrub/"
         },
-        "parent": "O9TAXTBRC2016052KG225531"
+        "parent": "O9TAXTBRC2016052KG225531",
+        "tbrcId": "T1PD109546",
+        "rank": 898
     },
     "T1600": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "ri chos snying po ma drug"
         },
-        "parent": "O9TAXTBRC2016052KG225531"
+        "parent": "O9TAXTBRC2016052KG225531",
+        "tbrcId": "T1600",
+        "rank": 918
     },
     "T1167": {
         "label": [
@@ -32452,21 +41608,27 @@ export const topics = {
                 "@value": "dpe chos/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225531"
+        "parent": "O9TAXTBRC2016052KG225531",
+        "tbrcId": "T1167",
+        "rank": 906
     },
     "T1344": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "sbyor chos drug"
         },
-        "parent": "O9TAXTBRC2016052KG225531"
+        "parent": "O9TAXTBRC2016052KG225531",
+        "tbrcId": "T1344",
+        "rank": 890
     },
     "T1355": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "khrom bshad/"
         },
-        "parent": "O9TAXTBRC2016052KG225531"
+        "parent": "O9TAXTBRC2016052KG225531",
+        "tbrcId": "T1355",
+        "rank": 926
     },
     "O9TAXTBRC2016052KG225556": {
         "sub": [
@@ -32492,7 +41654,9 @@ export const topics = {
                 "@value": "共乘修心道次"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225530"
+        "parent": "O9TAXTBRC2016052KG225530",
+        "tbrcId": "2",
+        "rank": 935
     },
     "O9TAXTBRC2016052KG225562": {
         "sub": [
@@ -32513,7 +41677,9 @@ export const topics = {
                 "@value": "The death and impermanence"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225556"
+        "parent": "O9TAXTBRC2016052KG225556",
+        "tbrcId": "2",
+        "rank": 962
     },
     "T2061": {
         "label": [
@@ -32526,7 +41692,9 @@ export const topics = {
                 "@value": "impermanence"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225562"
+        "parent": "O9TAXTBRC2016052KG225562",
+        "tbrcId": "T2061",
+        "rank": 971
     },
     "T2088": {
         "label": [
@@ -32543,21 +41711,27 @@ export const topics = {
                 "@value": "'chi ba/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225562"
+        "parent": "O9TAXTBRC2016052KG225562",
+        "tbrcId": "T2088",
+        "rank": 967
     },
     "T1285": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "lam zab thun mong /"
         },
-        "parent": "O9TAXTBRC2016052KG225556"
+        "parent": "O9TAXTBRC2016052KG225556",
+        "tbrcId": "T1285",
+        "rank": 948
     },
     "T1KG8469": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "blo ldog rnam bzhi/"
         },
-        "parent": "O9TAXTBRC2016052KG225556"
+        "parent": "O9TAXTBRC2016052KG225556",
+        "tbrcId": "T1KG8469",
+        "rank": 944
     },
     "O9TAXTBRC2016052KG225560": {
         "sub": [
@@ -32577,14 +41751,18 @@ export const topics = {
                 "@value": "人身难得"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225556"
+        "parent": "O9TAXTBRC2016052KG225556",
+        "tbrcId": "1",
+        "rank": 952
     },
     "T1KG8470": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "dal 'byor rnyed dka'"
         },
-        "parent": "O9TAXTBRC2016052KG225560"
+        "parent": "O9TAXTBRC2016052KG225560",
+        "tbrcId": "T1KG8470",
+        "rank": 957
     },
     "O9TAXTBRC2016052KG225571": {
         "sub": [
@@ -32606,7 +41784,9 @@ export const topics = {
                 "@value": "The causes and consequences of karmic actions"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225556"
+        "parent": "O9TAXTBRC2016052KG225556",
+        "tbrcId": "4",
+        "rank": 1002
     },
     "T2126": {
         "label": [
@@ -32623,7 +41803,9 @@ export const topics = {
                 "@value": "karmic causality"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225571"
+        "parent": "O9TAXTBRC2016052KG225571",
+        "tbrcId": "T2126",
+        "rank": 1007
     },
     "T00EGS1017686": {
         "label": [
@@ -32640,14 +41822,18 @@ export const topics = {
                 "@value": "rgyu 'bras/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225571"
+        "parent": "O9TAXTBRC2016052KG225571",
+        "tbrcId": "T00EGS1017686",
+        "rank": 1011
     },
     "T2GS1007": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "dge 'bras/"
         },
-        "parent": "O9TAXTBRC2016052KG225571"
+        "parent": "O9TAXTBRC2016052KG225571",
+        "tbrcId": "T2GS1007",
+        "rank": 1015
     },
     "T179": {
         "label": [
@@ -32664,7 +41850,9 @@ export const topics = {
                 "@value": "general preliminaries"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225556"
+        "parent": "O9TAXTBRC2016052KG225556",
+        "tbrcId": "T179",
+        "rank": 940
     },
     "O9TAXTBRC2016052KG225565": {
         "sub": [
@@ -32688,7 +41876,9 @@ export const topics = {
                 "@value": "轮回痛苦"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225556"
+        "parent": "O9TAXTBRC2016052KG225556",
+        "tbrcId": "3",
+        "rank": 976
     },
     "T1413": {
         "label": [
@@ -32705,7 +41895,9 @@ export const topics = {
                 "@value": "轮回"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225565"
+        "parent": "O9TAXTBRC2016052KG225565",
+        "tbrcId": "T1413",
+        "rank": 981
     },
     "T210": {
         "label": [
@@ -32726,7 +41918,9 @@ export const topics = {
                 "@value": "samsaran nihsaranam"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225565"
+        "parent": "O9TAXTBRC2016052KG225565",
+        "tbrcId": "T210",
+        "rank": 989
     },
     "T1908": {
         "label": [
@@ -32739,21 +41933,27 @@ export const topics = {
                 "@value": "dben pa/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225565"
+        "parent": "O9TAXTBRC2016052KG225565",
+        "tbrcId": "T1908",
+        "rank": 997
     },
     "T2367": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "'khrul snang /"
         },
-        "parent": "O9TAXTBRC2016052KG225565"
+        "parent": "O9TAXTBRC2016052KG225565",
+        "tbrcId": "T2367",
+        "rank": 985
     },
     "T1556": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "sdug bsngal gsum/"
         },
-        "parent": "O9TAXTBRC2016052KG225565"
+        "parent": "O9TAXTBRC2016052KG225565",
+        "tbrcId": "T1556",
+        "rank": 993
     },
     "O9TAXTBRC2016052KG225575": {
         "sub": [
@@ -32778,7 +41978,9 @@ export const topics = {
                 "@value": "大乘修心道次"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225530"
+        "parent": "O9TAXTBRC2016052KG225530",
+        "tbrcId": "3",
+        "rank": 1021
     },
     "O9TAXTBRC2016052KG225577": {
         "sub": [
@@ -32800,7 +42002,9 @@ export const topics = {
                 "@value": "拜师"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225575"
+        "parent": "O9TAXTBRC2016052KG225575",
+        "tbrcId": "1",
+        "rank": 1030
     },
     "T1693": {
         "label": [
@@ -32817,7 +42021,9 @@ export const topics = {
                 "@value": "仰慕｜敬重｜敬信｜虔敬"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225577"
+        "parent": "O9TAXTBRC2016052KG225577",
+        "tbrcId": "T1693",
+        "rank": 1039
     },
     "T1GS108073": {
         "label": [
@@ -32834,7 +42040,9 @@ export const topics = {
                 "@value": "thanksgiving"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225577"
+        "parent": "O9TAXTBRC2016052KG225577",
+        "tbrcId": "T1GS108073",
+        "rank": 1043
     },
     "T2081": {
         "label": [
@@ -32851,7 +42059,9 @@ export const topics = {
                 "@value": "如何拜师"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225577"
+        "parent": "O9TAXTBRC2016052KG225577",
+        "tbrcId": "T2081",
+        "rank": 1035
     },
     "O9TAXTBRC2016052KG225600": {
         "sub": [
@@ -32898,14 +42108,18 @@ export const topics = {
                 "@value": "积资除障"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225575"
+        "parent": "O9TAXTBRC2016052KG225575",
+        "tbrcId": "4",
+        "rank": 1128
     },
     "T1887": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "skyes rabs gsol 'debs/"
         },
-        "parent": "O9TAXTBRC2016052KG225600"
+        "parent": "O9TAXTBRC2016052KG225600",
+        "tbrcId": "T1887",
+        "rank": 1217
     },
     "T1362": {
         "label": [
@@ -32918,7 +42132,9 @@ export const topics = {
                 "@value": "maṇḍalapūjāvidhi"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225600"
+        "parent": "O9TAXTBRC2016052KG225600",
+        "tbrcId": "T1362",
+        "rank": 1157
     },
     "T1784": {
         "label": [
@@ -32935,7 +42151,9 @@ export const topics = {
                 "@value": "accumulating merit"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225600"
+        "parent": "O9TAXTBRC2016052KG225600",
+        "tbrcId": "T1784",
+        "rank": 1133
     },
     "T444": {
         "label": [
@@ -32952,7 +42170,9 @@ export const topics = {
                 "@value": "放生"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225600"
+        "parent": "O9TAXTBRC2016052KG225600",
+        "tbrcId": "T444",
+        "rank": 1197
     },
     "T337": {
         "label": [
@@ -32969,7 +42189,9 @@ export const topics = {
                 "@value": "忏悔"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225600"
+        "parent": "O9TAXTBRC2016052KG225600",
+        "tbrcId": "T337",
+        "rank": 1177
     },
     "T1092": {
         "label": [
@@ -32986,7 +42208,9 @@ export const topics = {
                 "@value": "悔罪｜忏悔"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225600"
+        "parent": "O9TAXTBRC2016052KG225600",
+        "tbrcId": "T1092",
+        "rank": 1189
     },
     "T1051": {
         "label": [
@@ -33003,14 +42227,18 @@ export const topics = {
                 "@value": "offerings and praises"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225600"
+        "parent": "O9TAXTBRC2016052KG225600",
+        "tbrcId": "T1051",
+        "rank": 1173
     },
     "T849": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rgyun bshags/"
         },
-        "parent": "O9TAXTBRC2016052KG225600"
+        "parent": "O9TAXTBRC2016052KG225600",
+        "tbrcId": "T849",
+        "rank": 1193
     },
     "T2247": {
         "label": [
@@ -33027,7 +42255,9 @@ export const topics = {
                 "@value": "sdig sgrib sbyong thabs/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225600"
+        "parent": "O9TAXTBRC2016052KG225600",
+        "tbrcId": "T2247",
+        "rank": 1137
     },
     "T932": {
         "label": [
@@ -33044,7 +42274,9 @@ export const topics = {
                 "@value": "seven branches"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225600"
+        "parent": "O9TAXTBRC2016052KG225600",
+        "tbrcId": "T932",
+        "rank": 1141
     },
     "T433": {
         "label": [
@@ -33065,7 +42297,9 @@ export const topics = {
                 "@value": "prostrations"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225600"
+        "parent": "O9TAXTBRC2016052KG225600",
+        "tbrcId": "T433",
+        "rank": 1145
     },
     "T2560": {
         "label": [
@@ -33082,14 +42316,18 @@ export const topics = {
                 "@value": "method for making amends for transgressions"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225600"
+        "parent": "O9TAXTBRC2016052KG225600",
+        "tbrcId": "T2560",
+        "rank": 1181
     },
     "T479": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "mar me'i smon lam/"
         },
-        "parent": "O9TAXTBRC2016052KG225600"
+        "parent": "O9TAXTBRC2016052KG225600",
+        "tbrcId": "T479",
+        "rank": 1233
     },
     "T140": {
         "label": [
@@ -33106,7 +42344,9 @@ export const topics = {
                 "@value": "祈请"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225600"
+        "parent": "O9TAXTBRC2016052KG225600",
+        "tbrcId": "T140",
+        "rank": 1213
     },
     "T343": {
         "label": [
@@ -33123,7 +42363,9 @@ export const topics = {
                 "@value": "请求"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225600"
+        "parent": "O9TAXTBRC2016052KG225600",
+        "tbrcId": "T343",
+        "rank": 1209
     },
     "T23": {
         "label": [
@@ -33144,7 +42386,9 @@ export const topics = {
                 "@value": "parinamana"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225600"
+        "parent": "O9TAXTBRC2016052KG225600",
+        "tbrcId": "T23",
+        "rank": 1221
     },
     "T1938": {
         "label": [
@@ -33157,7 +42401,9 @@ export const topics = {
                 "@value": "worship with flowers, flower offerings"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225600"
+        "parent": "O9TAXTBRC2016052KG225600",
+        "tbrcId": "T1938",
+        "rank": 1165
     },
     "T34": {
         "label": [
@@ -33178,7 +42424,9 @@ export const topics = {
                 "@value": "praṇidhāna"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225600"
+        "parent": "O9TAXTBRC2016052KG225600",
+        "tbrcId": "T34",
+        "rank": 1229
     },
     "T1689": {
         "label": [
@@ -33199,7 +42447,9 @@ export const topics = {
                 "@value": "maṅgalam"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225600"
+        "parent": "O9TAXTBRC2016052KG225600",
+        "tbrcId": "T1689",
+        "rank": 1241
     },
     "T1892": {
         "label": [
@@ -33212,21 +42462,27 @@ export const topics = {
                 "@value": "confession and purification"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225600"
+        "parent": "O9TAXTBRC2016052KG225600",
+        "tbrcId": "T1892",
+        "rank": 1185
     },
     "T1721": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "sangs rgyas stong mchod/"
         },
-        "parent": "O9TAXTBRC2016052KG225600"
+        "parent": "O9TAXTBRC2016052KG225600",
+        "tbrcId": "T1721",
+        "rank": 1161
     },
     "T2001": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "bsngo smon shis brjod/"
         },
-        "parent": "O9TAXTBRC2016052KG225600"
+        "parent": "O9TAXTBRC2016052KG225600",
+        "tbrcId": "T2001",
+        "rank": 1237
     },
     "T2183": {
         "label": [
@@ -33243,7 +42499,9 @@ export const topics = {
                 "@value": "茶供"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225600"
+        "parent": "O9TAXTBRC2016052KG225600",
+        "tbrcId": "T2183",
+        "rank": 1169
     },
     "T2356": {
         "label": [
@@ -33256,14 +42514,18 @@ export const topics = {
                 "@value": "gnas bskor/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225600"
+        "parent": "O9TAXTBRC2016052KG225600",
+        "tbrcId": "T2356",
+        "rank": 1201
     },
     "T859": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "phyag mchod/"
         },
-        "parent": "O9TAXTBRC2016052KG225600"
+        "parent": "O9TAXTBRC2016052KG225600",
+        "tbrcId": "T859",
+        "rank": 1149
     },
     "T529": {
         "label": [
@@ -33280,7 +42542,9 @@ export const topics = {
                 "@value": "pūjanā"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225600"
+        "parent": "O9TAXTBRC2016052KG225600",
+        "tbrcId": "T529",
+        "rank": 1153
     },
     "T880": {
         "label": [
@@ -33297,7 +42561,9 @@ export const topics = {
                 "@value": "rjes yi rangs/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225600"
+        "parent": "O9TAXTBRC2016052KG225600",
+        "tbrcId": "T880",
+        "rank": 1205
     },
     "T412": {
         "label": [
@@ -33310,7 +42576,9 @@ export const topics = {
                 "@value": "prayers turning the merit"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225600"
+        "parent": "O9TAXTBRC2016052KG225600",
+        "tbrcId": "T412",
+        "rank": 1225
     },
     "O9TAXTBRC2016052KG225591": {
         "sub": [
@@ -33337,7 +42605,9 @@ export const topics = {
                 "@value": "发心"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225575"
+        "parent": "O9TAXTBRC2016052KG225575",
+        "tbrcId": "3",
+        "rank": 1090
     },
     "T4CZ15473": {
         "label": [
@@ -33350,7 +42620,9 @@ export const topics = {
                 "@value": "the four immeasurables"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225591"
+        "parent": "O9TAXTBRC2016052KG225591",
+        "tbrcId": "T4CZ15473",
+        "rank": 1119
     },
     "T1GS108652": {
         "label": [
@@ -33367,7 +42639,9 @@ export const topics = {
                 "@value": "愿菩提心"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225591"
+        "parent": "O9TAXTBRC2016052KG225591",
+        "tbrcId": "T1GS108652",
+        "rank": 1107
     },
     "T352": {
         "label": [
@@ -33384,7 +42658,9 @@ export const topics = {
                 "@value": "the bodhicitta of entering"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225591"
+        "parent": "O9TAXTBRC2016052KG225591",
+        "tbrcId": "T352",
+        "rank": 1111
     },
     "T2064": {
         "label": [
@@ -33397,14 +42673,18 @@ export const topics = {
                 "@value": "bodhicitta"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225591"
+        "parent": "O9TAXTBRC2016052KG225591",
+        "tbrcId": "T2064",
+        "rank": 1099
     },
     "T1694": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "byams snying rje/"
         },
-        "parent": "O9TAXTBRC2016052KG225591"
+        "parent": "O9TAXTBRC2016052KG225591",
+        "tbrcId": "T1694",
+        "rank": 1115
     },
     "T338": {
         "label": [
@@ -33421,14 +42701,18 @@ export const topics = {
                 "@value": "sems bskyed/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225591"
+        "parent": "O9TAXTBRC2016052KG225591",
+        "tbrcId": "T338",
+        "rank": 1095
     },
     "T465": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "skyabs sems/"
         },
-        "parent": "O9TAXTBRC2016052KG225591"
+        "parent": "O9TAXTBRC2016052KG225591",
+        "tbrcId": "T465",
+        "rank": 1123
     },
     "T209": {
         "label": [
@@ -33449,7 +42733,9 @@ export const topics = {
                 "@value": "kun slong /"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225591"
+        "parent": "O9TAXTBRC2016052KG225591",
+        "tbrcId": "T209",
+        "rank": 1103
     },
     "O9TAXTBRC2016052KG225581": {
         "sub": [
@@ -33477,7 +42763,9 @@ export const topics = {
                 "@value": "皈依"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225575"
+        "parent": "O9TAXTBRC2016052KG225575",
+        "tbrcId": "2",
+        "rank": 1048
     },
     "T1760": {
         "label": [
@@ -33498,7 +42786,9 @@ export const topics = {
                 "@value": "triratna"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225581"
+        "parent": "O9TAXTBRC2016052KG225581",
+        "tbrcId": "T1760",
+        "rank": 1057
     },
     "T139": {
         "label": [
@@ -33515,7 +42805,9 @@ export const topics = {
                 "@value": "tshogs zhing /"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225581"
+        "parent": "O9TAXTBRC2016052KG225581",
+        "tbrcId": "T139",
+        "rank": 1073
     },
     "T108": {
         "label": [
@@ -33532,7 +42824,9 @@ export const topics = {
                 "@value": "major and minor marks"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225581"
+        "parent": "O9TAXTBRC2016052KG225581",
+        "tbrcId": "T108",
+        "rank": 1077
     },
     "T2464": {
         "label": [
@@ -33566,7 +42860,9 @@ export const topics = {
                 "@value": "abandoning and realization"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225581"
+        "parent": "O9TAXTBRC2016052KG225581",
+        "tbrcId": "T3CN2026",
+        "rank": 1085
     },
     "T1297": {
         "label": [
@@ -33583,7 +42879,9 @@ export const topics = {
                 "@value": "taking refuge"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225581"
+        "parent": "O9TAXTBRC2016052KG225581",
+        "tbrcId": "T1297",
+        "rank": 1053
     },
     "T1492": {
         "label": [
@@ -33600,7 +42898,9 @@ export const topics = {
                 "@value": "六十种妙音支分"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225581"
+        "parent": "O9TAXTBRC2016052KG225581",
+        "tbrcId": "T1492",
+        "rank": 1081
     },
     "T4CZ16772": {
         "label": [
@@ -33617,7 +42917,9 @@ export const topics = {
                 "@value": "dharma"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225581"
+        "parent": "O9TAXTBRC2016052KG225581",
+        "tbrcId": "T4CZ16772",
+        "rank": 1065
     },
     "T386": {
         "label": [
@@ -33638,7 +42940,9 @@ export const topics = {
                 "@value": "buddha"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225581"
+        "parent": "O9TAXTBRC2016052KG225581",
+        "tbrcId": "T386",
+        "rank": 1061
     },
     "T1254": {
         "label": [
@@ -33655,7 +42959,9 @@ export const topics = {
                 "@value": "不共前行"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225575"
+        "parent": "O9TAXTBRC2016052KG225575",
+        "tbrcId": "T1254",
+        "rank": 1026
     },
     "O9TAXTBRC2016052KG225629": {
         "sub": [
@@ -33695,7 +43001,9 @@ export const topics = {
                 "@value": "nyams len dngos gzhi/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225575"
+        "parent": "O9TAXTBRC2016052KG225575",
+        "tbrcId": "5",
+        "rank": 1246
     },
     "T1246": {
         "label": [
@@ -33712,21 +43020,27 @@ export const topics = {
                 "@value": "禅修次第"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225629"
+        "parent": "O9TAXTBRC2016052KG225629",
+        "tbrcId": "T1246",
+        "rank": 1271
     },
     "T1AT672": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rig pa ngo sprod/"
         },
-        "parent": "O9TAXTBRC2016052KG225629"
+        "parent": "O9TAXTBRC2016052KG225629",
+        "tbrcId": "T1AT672",
+        "rank": 1586
     },
     "T1696": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "chos brgyad mgo snyoms/"
         },
-        "parent": "O9TAXTBRC2016052KG225629"
+        "parent": "O9TAXTBRC2016052KG225629",
+        "tbrcId": "T1696",
+        "rank": 1295
     },
     "T545": {
         "label": [
@@ -33743,7 +43057,9 @@ export const topics = {
                 "@value": "道用"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225629"
+        "parent": "O9TAXTBRC2016052KG225629",
+        "tbrcId": "T545",
+        "rank": 1303
     },
     "T1511": {
         "label": [
@@ -33760,21 +43076,27 @@ export const topics = {
                 "@value": "aking ease in mind itself"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225629"
+        "parent": "O9TAXTBRC2016052KG225629",
+        "tbrcId": "T1511",
+        "rank": 1594
     },
     "T2184": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "gnas gsum/"
         },
-        "parent": "O9TAXTBRC2016052KG225629"
+        "parent": "O9TAXTBRC2016052KG225629",
+        "tbrcId": "T2184",
+        "rank": 1578
     },
     "T1AT453": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "chos lnga /"
         },
-        "parent": "O9TAXTBRC2016052KG225629"
+        "parent": "O9TAXTBRC2016052KG225629",
+        "tbrcId": "T1AT453",
+        "rank": 1582
     },
     "T1722": {
         "label": [
@@ -33795,7 +43117,9 @@ export const topics = {
                 "@value": "wisdom"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225629"
+        "parent": "O9TAXTBRC2016052KG225629",
+        "tbrcId": "T1722",
+        "rank": 1263
     },
     "T00KG02742": {
         "label": [
@@ -33812,7 +43136,9 @@ export const topics = {
                 "@value": "亲训"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225629"
+        "parent": "O9TAXTBRC2016052KG225629",
+        "tbrcId": "T00KG02742",
+        "rank": 1287
     },
     "T3CN2033": {
         "label": [
@@ -33829,14 +43155,18 @@ export const topics = {
                 "@value": "phar phyin drug"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225629"
+        "parent": "O9TAXTBRC2016052KG225629",
+        "tbrcId": "T3CN2033",
+        "rank": 1251
     },
     "T1263": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "sku gsum ngo sprod/"
         },
-        "parent": "O9TAXTBRC2016052KG225629"
+        "parent": "O9TAXTBRC2016052KG225629",
+        "tbrcId": "T1263",
+        "rank": 1590
     },
     "T456": {
         "label": [
@@ -33857,7 +43187,9 @@ export const topics = {
                 "@value": "指示"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225629"
+        "parent": "O9TAXTBRC2016052KG225629",
+        "tbrcId": "T456",
+        "rank": 1283
     },
     "T4CZ16839": {
         "label": [
@@ -33878,7 +43210,9 @@ export const topics = {
                 "@value": "dana"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225629"
+        "parent": "O9TAXTBRC2016052KG225629",
+        "tbrcId": "T4CZ16839",
+        "rank": 1259
     },
     "T1KG1401": {
         "label": [
@@ -33891,14 +43225,18 @@ export const topics = {
                 "@value": "testament"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225629"
+        "parent": "O9TAXTBRC2016052KG225629",
+        "tbrcId": "T1KG1401",
+        "rank": 3841
     },
     "T1402": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "shar sgom/"
         },
-        "parent": "O9TAXTBRC2016052KG225629"
+        "parent": "O9TAXTBRC2016052KG225629",
+        "tbrcId": "T1402",
+        "rank": 1275
     },
     "T1185": {
         "label": [
@@ -33919,7 +43257,9 @@ export const topics = {
                 "@value": "行为"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225629"
+        "parent": "O9TAXTBRC2016052KG225629",
+        "tbrcId": "T1185",
+        "rank": 1291
     },
     "T58": {
         "label": [
@@ -33945,7 +43285,9 @@ export const topics = {
                 "@value": "the giving and taking [practice of bodhi chitta]"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225629"
+        "parent": "O9TAXTBRC2016052KG225629",
+        "tbrcId": "T1CZ58",
+        "rank": 1299
     },
     "T1249": {
         "label": [
@@ -33966,7 +43308,9 @@ export const topics = {
                 "@value": "bhāvanā"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225629"
+        "parent": "O9TAXTBRC2016052KG225629",
+        "tbrcId": "T1249",
+        "rank": 1267
     },
     "T3CN2034": {
         "label": [
@@ -33983,7 +43327,9 @@ export const topics = {
                 "@value": "四摄法"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225629"
+        "parent": "O9TAXTBRC2016052KG225629",
+        "tbrcId": "T3CN2034",
+        "rank": 1255
     },
     "T613": {
         "label": [
@@ -34004,7 +43350,9 @@ export const topics = {
                 "@value": "語訣"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225629"
+        "parent": "O9TAXTBRC2016052KG225629",
+        "tbrcId": "T613",
+        "rank": 1279
     },
     "O9TAXTBRC2016052KG225651": {
         "sub": [
@@ -34027,7 +43375,9 @@ export const topics = {
                 "@value": "Summary Topics of Mind Training"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225530"
+        "parent": "O9TAXTBRC2016052KG225530",
+        "tbrcId": "4",
+        "rank": 1309
     },
     "T1358": {
         "label": [
@@ -34040,7 +43390,9 @@ export const topics = {
                 "@value": "lam gyi gnad gsum/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225651"
+        "parent": "O9TAXTBRC2016052KG225651",
+        "tbrcId": "T1358",
+        "rank": 1318
     },
     "T1335": {
         "label": [
@@ -34057,7 +43409,9 @@ export const topics = {
                 "@value": "见、修、行"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225651"
+        "parent": "O9TAXTBRC2016052KG225651",
+        "tbrcId": "T1335",
+        "rank": 1314
     },
     "T1504": {
         "label": [
@@ -34074,14 +43428,18 @@ export const topics = {
                 "@value": "free from the four attachments"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225651"
+        "parent": "O9TAXTBRC2016052KG225651",
+        "tbrcId": "T1504",
+        "rank": 1326
     },
     "T1289": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "dge sbyor bdun pa/"
         },
-        "parent": "O9TAXTBRC2016052KG225651"
+        "parent": "O9TAXTBRC2016052KG225651",
+        "tbrcId": "T1289",
+        "rank": 1330
     },
     "O9TAXTBRC2016052KG225656": {
         "sub": [
@@ -34103,7 +43461,9 @@ export const topics = {
                 "@value": "宗理"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225391"
+        "parent": "O9TAXTBRC2016052KG225391",
+        "tbrcId": "6",
+        "rank": 1336
     },
     "O9TAXTBRC2016052KG225657": {
         "sub": [
@@ -34128,7 +43488,9 @@ export const topics = {
                 "@value": "总目"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225656"
+        "parent": "O9TAXTBRC2016052KG225656",
+        "tbrcId": "1",
+        "rank": 1341
     },
     "T2023": {
         "label": [
@@ -34141,7 +43503,9 @@ export const topics = {
                 "@value": "clarification of doubtful points"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225657"
+        "parent": "O9TAXTBRC2016052KG225657",
+        "tbrcId": "T2023",
+        "rank": 1362
     },
     "T385": {
         "label": [
@@ -34162,7 +43526,9 @@ export const topics = {
                 "@value": "grub mtha'"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225657"
+        "parent": "O9TAXTBRC2016052KG225657",
+        "tbrcId": "T385",
+        "rank": 1346
     },
     "T1215": {
         "label": [
@@ -34175,7 +43541,9 @@ export const topics = {
                 "@value": "mtha' gcod/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225657"
+        "parent": "O9TAXTBRC2016052KG225657",
+        "tbrcId": "T1215",
+        "rank": 1358
     },
     "T381": {
         "label": [
@@ -34192,7 +43560,9 @@ export const topics = {
                 "@value": "view"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225657"
+        "parent": "O9TAXTBRC2016052KG225657",
+        "tbrcId": "T381",
+        "rank": 1350
     },
     "T299": {
         "label": [
@@ -34213,7 +43583,9 @@ export const topics = {
                 "@value": "伺察"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225657"
+        "parent": "O9TAXTBRC2016052KG225657",
+        "tbrcId": "T299",
+        "rank": 1354
     },
     "T2192": {
         "label": [
@@ -34230,7 +43602,9 @@ export const topics = {
                 "@value": "founder of a new tradition开山祖师"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225657"
+        "parent": "O9TAXTBRC2016052KG225657",
+        "tbrcId": "T2192",
+        "rank": 1366
     },
     "O9TAXTBRC2016052KG225664": {
         "sub": [
@@ -34278,7 +43652,9 @@ export const topics = {
                 "@value": "印度学派"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225656"
+        "parent": "O9TAXTBRC2016052KG225656",
+        "tbrcId": "2",
+        "rank": 1371
     },
     "T632": {
         "label": [
@@ -34295,7 +43671,9 @@ export const topics = {
                 "@value": "de kho na nyid/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225664"
+        "parent": "O9TAXTBRC2016052KG225664",
+        "tbrcId": "T632",
+        "rank": 1440
     },
     "T4CZ16807": {
         "label": [
@@ -34308,14 +43686,18 @@ export const topics = {
                 "@value": "yogacaraya bhumi"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225664"
+        "parent": "O9TAXTBRC2016052KG225664",
+        "tbrcId": "T4CZ16807",
+        "rank": 1488
     },
     "T1KG5756": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "chos kyi sdom bzhi/"
         },
-        "parent": "O9TAXTBRC2016052KG225664"
+        "parent": "O9TAXTBRC2016052KG225664",
+        "tbrcId": "T1KG5756",
+        "rank": 1448
     },
     "T3CN2032": {
         "label": [
@@ -34336,7 +43718,9 @@ export const topics = {
                 "@value": "Sautrantika school,"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225664"
+        "parent": "O9TAXTBRC2016052KG225664",
+        "tbrcId": "T3CN2032",
+        "rank": 1380
     },
     "T1502": {
         "label": [
@@ -34349,7 +43733,9 @@ export const topics = {
                 "@value": "bdag med chos kyi phyag rgya/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225664"
+        "parent": "O9TAXTBRC2016052KG225664",
+        "tbrcId": "T1502",
+        "rank": 1452
     },
     "T2GS1043": {
         "label": [
@@ -34362,7 +43748,9 @@ export const topics = {
                 "@value": "sravaka"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225664"
+        "parent": "O9TAXTBRC2016052KG225664",
+        "tbrcId": "T2GS1043",
+        "rank": 1408
     },
     "T4CZ16806": {
         "label": [
@@ -34375,21 +43763,27 @@ export const topics = {
                 "@value": "rnal 'byor spyod pa/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225664"
+        "parent": "O9TAXTBRC2016052KG225664",
+        "tbrcId": "T4CZ16806",
+        "rank": 1484
     },
     "T1764": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "dbu ma lta ba/"
         },
-        "parent": "O9TAXTBRC2016052KG225664"
+        "parent": "O9TAXTBRC2016052KG225664",
+        "tbrcId": "T1764",
+        "rank": 1400
     },
     "T00EGS1017603": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "lhan skyes spong tshul/"
         },
-        "parent": "O9TAXTBRC2016052KG225664"
+        "parent": "O9TAXTBRC2016052KG225664",
+        "tbrcId": "T00EGS1017603",
+        "rank": 1476
     },
     "T1873": {
         "label": [
@@ -34410,7 +43804,9 @@ export const topics = {
                 "@value": "triyāna"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225664"
+        "parent": "O9TAXTBRC2016052KG225664",
+        "tbrcId": "T1873",
+        "rank": 1404
     },
     "T2077": {
         "label": [
@@ -34423,7 +43819,9 @@ export const topics = {
                 "@value": "de bzhin gshegs pa'i snying po"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225664"
+        "parent": "O9TAXTBRC2016052KG225664",
+        "tbrcId": "T2077",
+        "rank": 1456
     },
     "T1KG3717": {
         "label": [
@@ -34444,7 +43842,9 @@ export const topics = {
                 "@value": "great vehical"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225664"
+        "parent": "O9TAXTBRC2016052KG225664",
+        "tbrcId": "T1KG3717",
+        "rank": 1420
     },
     "T2055": {
         "label": [
@@ -34461,7 +43861,9 @@ export const topics = {
                 "@value": "sems tsam pa/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225664"
+        "parent": "O9TAXTBRC2016052KG225664",
+        "tbrcId": "T2055",
+        "rank": 1384
     },
     "T3JT4939": {
         "label": [
@@ -34474,7 +43876,9 @@ export const topics = {
                 "@value": "rang rgyal/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225664"
+        "parent": "O9TAXTBRC2016052KG225664",
+        "tbrcId": "T3JT4939",
+        "rank": 1412
     },
     "T3CN2031": {
         "label": [
@@ -34495,14 +43899,18 @@ export const topics = {
                 "@value": "毘婆沙部｜有部"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225664"
+        "parent": "O9TAXTBRC2016052KG225664",
+        "tbrcId": "T3CN2031",
+        "rank": 1376
     },
     "T2058": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "gzhi lam 'bras bu/"
         },
-        "parent": "O9TAXTBRC2016052KG225664"
+        "parent": "O9TAXTBRC2016052KG225664",
+        "tbrcId": "T2058",
+        "rank": 1428
     },
     "T233": {
         "label": [
@@ -34523,14 +43931,18 @@ export const topics = {
                 "@value": "中道"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225664"
+        "parent": "O9TAXTBRC2016052KG225664",
+        "tbrcId": "T233",
+        "rank": 1388
     },
     "T00EGS1017602": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "kun btags spong tshul/"
         },
-        "parent": "O9TAXTBRC2016052KG225664"
+        "parent": "O9TAXTBRC2016052KG225664",
+        "tbrcId": "T00EGS1017602",
+        "rank": 1472
     },
     "T2060": {
         "label": [
@@ -34547,14 +43959,18 @@ export const topics = {
                 "@value": "hinayana"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225664"
+        "parent": "O9TAXTBRC2016052KG225664",
+        "tbrcId": "T2060",
+        "rank": 1416
     },
     "T00EGS1017607": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "zhig pa dngos po/"
         },
-        "parent": "O9TAXTBRC2016052KG225664"
+        "parent": "O9TAXTBRC2016052KG225664",
+        "tbrcId": "T00EGS1017607",
+        "rank": 1468
     },
     "T942": {
         "label": [
@@ -34571,7 +43987,9 @@ export const topics = {
                 "@value": "了义不了义｜了義不了義"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225664"
+        "parent": "O9TAXTBRC2016052KG225664",
+        "tbrcId": "T942",
+        "rank": 1460
     },
     "T2343": {
         "label": [
@@ -34592,7 +44010,9 @@ export const topics = {
                 "@value": "consequentialist"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225664"
+        "parent": "O9TAXTBRC2016052KG225664",
+        "tbrcId": "T2343",
+        "rank": 1396
     },
     "T2MS12316": {
         "label": [
@@ -34605,7 +44025,9 @@ export const topics = {
                 "@value": "paramitayana"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225664"
+        "parent": "O9TAXTBRC2016052KG225664",
+        "tbrcId": "T2MS12316",
+        "rank": 1424
     },
     "T1441": {
         "label": [
@@ -34622,14 +44044,18 @@ export const topics = {
                 "@value": "dvayasatya, satyadvaya"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225664"
+        "parent": "O9TAXTBRC2016052KG225664",
+        "tbrcId": "T1441",
+        "rank": 1432
     },
     "T1528": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "sbas don/"
         },
-        "parent": "O9TAXTBRC2016052KG225664"
+        "parent": "O9TAXTBRC2016052KG225664",
+        "tbrcId": "T1528",
+        "rank": 1464
     },
     "T2342": {
         "label": [
@@ -34646,14 +44072,18 @@ export const topics = {
                 "@value": "自续派"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225664"
+        "parent": "O9TAXTBRC2016052KG225664",
+        "tbrcId": "T2342",
+        "rank": 1392
     },
     "T00EGS1017606": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "chos can mthun snang dgag mi dgag"
         },
-        "parent": "O9TAXTBRC2016052KG225664"
+        "parent": "O9TAXTBRC2016052KG225664",
+        "tbrcId": "T00EGS1017606",
+        "rank": 1480
     },
     "T2194": {
         "label": [
@@ -34670,7 +44100,9 @@ export const topics = {
                 "@value": "chos dbyings/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225664"
+        "parent": "O9TAXTBRC2016052KG225664",
+        "tbrcId": "T2194",
+        "rank": 1444
     },
     "T2072": {
         "label": [
@@ -34691,7 +44123,9 @@ export const topics = {
                 "@value": "śūnyatā"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225664"
+        "parent": "O9TAXTBRC2016052KG225664",
+        "tbrcId": "T2072",
+        "rank": 1436
     },
     "O9TAXTBRC2016052KG225694": {
         "sub": [
@@ -34730,14 +44164,18 @@ export const topics = {
                 "@value": "Tibetan Schools"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225656"
+        "parent": "O9TAXTBRC2016052KG225656",
+        "tbrcId": "3",
+        "rank": 1493
     },
     "T1261": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "phyag chen lhan cig skyes sbyor/"
         },
-        "parent": "O9TAXTBRC2016052KG225694"
+        "parent": "O9TAXTBRC2016052KG225694",
+        "tbrcId": "T1261",
+        "rank": 1570
     },
     "T2GS1324": {
         "label": [
@@ -34754,7 +44192,9 @@ export const topics = {
                 "@value": "chos sku'i ye shes/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225694"
+        "parent": "O9TAXTBRC2016052KG225694",
+        "tbrcId": "T2GS1324",
+        "rank": 1598
     },
     "T235": {
         "label": [
@@ -34771,21 +44211,27 @@ export const topics = {
                 "@value": "八大修证传承"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225694"
+        "parent": "O9TAXTBRC2016052KG225694",
+        "tbrcId": "T235",
+        "rank": 1498
     },
     "T2CN4664": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "phyag rdzogs dbu gsum/"
         },
-        "parent": "O9TAXTBRC2016052KG225694"
+        "parent": "O9TAXTBRC2016052KG225694",
+        "tbrcId": "T2CN4664",
+        "rank": 1554
     },
     "T820": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "thugs chen phyag chen zung 'jug"
         },
-        "parent": "O9TAXTBRC2016052KG225694"
+        "parent": "O9TAXTBRC2016052KG225694",
+        "tbrcId": "T820",
+        "rank": 1562
     },
     "T1543": {
         "label": [
@@ -34802,7 +44248,9 @@ export const topics = {
                 "@value": "lam 'bras/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225694"
+        "parent": "O9TAXTBRC2016052KG225694",
+        "tbrcId": "T1543",
+        "rank": 1538
     },
     "T1334": {
         "label": [
@@ -34823,21 +44271,27 @@ export const topics = {
                 "@value": "great middle way"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225694"
+        "parent": "O9TAXTBRC2016052KG225694",
+        "tbrcId": "T1334",
+        "rank": 1526
     },
     "T1788": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "phyag rdzogs zung 'jug"
         },
-        "parent": "O9TAXTBRC2016052KG225694"
+        "parent": "O9TAXTBRC2016052KG225694",
+        "tbrcId": "T1788",
+        "rank": 1558
     },
     "T2056": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "gnas lugs/"
         },
-        "parent": "O9TAXTBRC2016052KG225694"
+        "parent": "O9TAXTBRC2016052KG225694",
+        "tbrcId": "T2056",
+        "rank": 1514
     },
     "T2177": {
         "label": [
@@ -34854,21 +44308,27 @@ export const topics = {
                 "@value": "自空"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225694"
+        "parent": "O9TAXTBRC2016052KG225694",
+        "tbrcId": "T2177",
+        "rank": 1518
     },
     "T2057": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "hwa shang lta ba/"
         },
-        "parent": "O9TAXTBRC2016052KG225694"
+        "parent": "O9TAXTBRC2016052KG225694",
+        "tbrcId": "T2057",
+        "rank": 1550
     },
     "T2193": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "sangs rgyas kyi snying po/"
         },
-        "parent": "O9TAXTBRC2016052KG225694"
+        "parent": "O9TAXTBRC2016052KG225694",
+        "tbrcId": "T2193",
+        "rank": 1546
     },
     "T199": {
         "label": [
@@ -34885,7 +44345,9 @@ export const topics = {
                 "@value": "mahāmudrā"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225694"
+        "parent": "O9TAXTBRC2016052KG225694",
+        "tbrcId": "T199",
+        "rank": 1530
     },
     "T1169": {
         "label": [
@@ -34902,14 +44364,18 @@ export const topics = {
                 "@value": "他空"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225694"
+        "parent": "O9TAXTBRC2016052KG225694",
+        "tbrcId": "T1169",
+        "rank": 1522
     },
     "T2076": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "gnyug ma'i sems/"
         },
-        "parent": "O9TAXTBRC2016052KG225694"
+        "parent": "O9TAXTBRC2016052KG225694",
+        "tbrcId": "T2076",
+        "rank": 1566
     },
     "T1356": {
         "label": [
@@ -34926,21 +44392,27 @@ export const topics = {
                 "@value": "轮涅无别"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225694"
+        "parent": "O9TAXTBRC2016052KG225694",
+        "tbrcId": "T1356",
+        "rank": 1506
     },
     "T1546": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "lhan cig skyes grub/"
         },
-        "parent": "O9TAXTBRC2016052KG225694"
+        "parent": "O9TAXTBRC2016052KG225694",
+        "tbrcId": "T1546",
+        "rank": 1574
     },
     "T1514": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "srid zhi mnyam nyid/"
         },
-        "parent": "O9TAXTBRC2016052KG225694"
+        "parent": "O9TAXTBRC2016052KG225694",
+        "tbrcId": "T1514",
+        "rank": 1510
     },
     "T354": {
         "label": [
@@ -34961,14 +44433,18 @@ export const topics = {
                 "@value": "mahasanti"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225694"
+        "parent": "O9TAXTBRC2016052KG225694",
+        "tbrcId": "T354",
+        "rank": 1534
     },
     "T2392": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "snang stong dbyer med/"
         },
-        "parent": "O9TAXTBRC2016052KG225694"
+        "parent": "O9TAXTBRC2016052KG225694",
+        "tbrcId": "T2392",
+        "rank": 1502
     },
     "O9TAXTBRC2016052KG225512": {
         "sub": [
@@ -34990,7 +44466,9 @@ export const topics = {
                 "@value": "论藏"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225391"
+        "parent": "O9TAXTBRC2016052KG225391",
+        "tbrcId": "4",
+        "rank": 748
     },
     "O9TAXTBRC2016052KG225513": {
         "sub": [
@@ -35010,7 +44488,9 @@ export const topics = {
                 "@value": "General Topics of Abhidhamma Pitaka"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225512"
+        "parent": "O9TAXTBRC2016052KG225512",
+        "tbrcId": "1",
+        "rank": 753
     },
     "T59": {
         "label": [
@@ -35058,7 +44538,9 @@ export const topics = {
                 "@value": "分支主题"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225512"
+        "parent": "O9TAXTBRC2016052KG225512",
+        "tbrcId": "2",
+        "rank": 763
     },
     "T2627": {
         "label": [
@@ -35079,7 +44561,9 @@ export const topics = {
                 "@value": "bden pa bzhi/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225515"
+        "parent": "O9TAXTBRC2016052KG225515",
+        "tbrcId": "T2627",
+        "rank": 768
     },
     "T2MS14791": {
         "label": [
@@ -35092,7 +44576,9 @@ export const topics = {
                 "@value": "rdzogs ldan/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225515"
+        "parent": "O9TAXTBRC2016052KG225515",
+        "tbrcId": "T2MS14791",
+        "rank": 808
     },
     "T00KG07620": {
         "label": [
@@ -35105,7 +44591,9 @@ export const topics = {
                 "@value": "skye ba snga phyi/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225515"
+        "parent": "O9TAXTBRC2016052KG225515",
+        "tbrcId": "T00KG07620",
+        "rank": 784
     },
     "T4CZ15520": {
         "label": [
@@ -35126,7 +44614,9 @@ export const topics = {
                 "@value": "five sense"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225515"
+        "parent": "O9TAXTBRC2016052KG225515",
+        "tbrcId": "T4CZ15520",
+        "rank": 796
     },
     "T2281": {
         "label": [
@@ -35139,7 +44629,9 @@ export const topics = {
                 "@value": "缘起"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225515"
+        "parent": "O9TAXTBRC2016052KG225515",
+        "tbrcId": "T2281",
+        "rank": 776
     },
     "T00EGS1017856": {
         "label": [
@@ -35156,7 +44648,9 @@ export const topics = {
                 "@value": "bskal pa/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225515"
+        "parent": "O9TAXTBRC2016052KG225515",
+        "tbrcId": "T00EGS1017856",
+        "rank": 804
     },
     "T1981": {
         "label": [
@@ -35177,7 +44671,9 @@ export const topics = {
                 "@value": "Five Components"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225515"
+        "parent": "O9TAXTBRC2016052KG225515",
+        "tbrcId": "T1981",
+        "rank": 792
     },
     "T2551": {
         "label": [
@@ -35190,7 +44686,9 @@ export const topics = {
                 "@value": "cosmos"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225515"
+        "parent": "O9TAXTBRC2016052KG225515",
+        "tbrcId": "T2551",
+        "rank": 800
     },
     "T1361": {
         "label": [
@@ -35203,7 +44701,9 @@ export const topics = {
                 "@value": "pratityasamutpada"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225515"
+        "parent": "O9TAXTBRC2016052KG225515",
+        "tbrcId": "T1361",
+        "rank": 772
     },
     "T2394": {
         "label": [
@@ -35220,14 +44720,18 @@ export const topics = {
                 "@value": "naraka"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225515"
+        "parent": "O9TAXTBRC2016052KG225515",
+        "tbrcId": "T2394",
+        "rank": 812
     },
     "T2211": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rten 'brel bzhi/"
         },
-        "parent": "O9TAXTBRC2016052KG225515"
+        "parent": "O9TAXTBRC2016052KG225515",
+        "tbrcId": "T2211",
+        "rank": 780
     },
     "T1GS1589": {
         "label": [
@@ -35244,7 +44748,9 @@ export const topics = {
                 "@value": "四大"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225515"
+        "parent": "O9TAXTBRC2016052KG225515",
+        "tbrcId": "T1GS1589",
+        "rank": 788
     },
     "O9TAXTBRC2016052KG225528": {
         "sub": [
@@ -35264,7 +44770,9 @@ export const topics = {
                 "@value": "Related Topics of Abhidhamma Pitaka"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225512"
+        "parent": "O9TAXTBRC2016052KG225512",
+        "tbrcId": "4",
+        "rank": 152
     },
     "T1231": {
         "label": [
@@ -35281,7 +44789,9 @@ export const topics = {
                 "@value": "numerical categories"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225528"
+        "parent": "O9TAXTBRC2016052KG225528",
+        "tbrcId": "T1231",
+        "rank": 822
     },
     "O9TAXTBRC2016052KG225398": {
         "sub": [
@@ -35303,7 +44813,9 @@ export const topics = {
                 "@value": "经藏"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225391"
+        "parent": "O9TAXTBRC2016052KG225391",
+        "tbrcId": "2",
+        "rank": 318
     },
     "O9TAXTBRC2016052KG225399": {
         "sub": [
@@ -35328,14 +44840,18 @@ export const topics = {
                 "@value": "General Topics of Sutta Pitika"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225398"
+        "parent": "O9TAXTBRC2016052KG225398",
+        "tbrcId": "1",
+        "rank": 323
     },
     "T1GS104308": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "sbrul mdo/"
         },
-        "parent": "O9TAXTBRC2016052KG225399"
+        "parent": "O9TAXTBRC2016052KG225399",
+        "tbrcId": "T1GS104308",
+        "rank": 344
     },
     "T2008": {
         "label": [
@@ -35352,7 +44868,9 @@ export const topics = {
                 "@value": "宝积经"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225399"
+        "parent": "O9TAXTBRC2016052KG225399",
+        "tbrcId": "T2008",
+        "rank": 336
     },
     "T2005": {
         "label": [
@@ -35373,14 +44891,18 @@ export const topics = {
                 "@value": "般若波羅蜜多"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225399"
+        "parent": "O9TAXTBRC2016052KG225399",
+        "tbrcId": "T2005",
+        "rank": 332
     },
     "T00UNK196": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "nges don gyi mdo/"
         },
-        "parent": "O9TAXTBRC2016052KG225399"
+        "parent": "O9TAXTBRC2016052KG225399",
+        "tbrcId": "T00UNK196",
+        "rank": 348
     },
     "T769": {
         "label": [
@@ -35397,7 +44919,9 @@ export const topics = {
                 "@value": "sutra"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225399"
+        "parent": "O9TAXTBRC2016052KG225399",
+        "tbrcId": "T769",
+        "rank": 328
     },
     "T00AG0322": {
         "label": [
@@ -35418,7 +44942,9 @@ export const topics = {
                 "@value": "Avataṃsaka Sūtra"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225399"
+        "parent": "O9TAXTBRC2016052KG225399",
+        "tbrcId": "T00AG0322",
+        "rank": 340
     },
     "O9TAXTBRC2016052KG225406": {
         "sub": [
@@ -35457,7 +44983,9 @@ export const topics = {
                 "@value": "Specific Topics of Sutta Pitika"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225398"
+        "parent": "O9TAXTBRC2016052KG225398",
+        "tbrcId": "2",
+        "rank": 353
     },
     "T2212": {
         "label": {
@@ -35507,7 +45035,9 @@ export const topics = {
                 "@value": "rupadhatu arupyadhatu"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225406"
+        "parent": "O9TAXTBRC2016052KG225406",
+        "tbrcId": "T211",
+        "rank": 374
     },
     "T313": {
         "label": [
@@ -35520,7 +45050,9 @@ export const topics = {
                 "@value": "zhi gnas/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225406"
+        "parent": "O9TAXTBRC2016052KG225406",
+        "tbrcId": "T313",
+        "rank": 386
     },
     "T2271": {
         "label": {
@@ -35544,7 +45076,9 @@ export const topics = {
                 "@value": "paths and bhumis"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225406"
+        "parent": "O9TAXTBRC2016052KG225406",
+        "tbrcId": "T1091",
+        "rank": 378
     },
     "T1988": {
         "label": [
@@ -35561,7 +45095,9 @@ export const topics = {
                 "@value": "samādhi"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225406"
+        "parent": "O9TAXTBRC2016052KG225406",
+        "tbrcId": "T1988",
+        "rank": 382
     },
     "T2026": {
         "label": [
@@ -35578,14 +45114,18 @@ export const topics = {
                 "@value": "rnam thar sgo gsum/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225406"
+        "parent": "O9TAXTBRC2016052KG225406",
+        "tbrcId": "T2026",
+        "rank": 410
     },
     "T2117": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "zhugs gnas/"
         },
-        "parent": "O9TAXTBRC2016052KG225406"
+        "parent": "O9TAXTBRC2016052KG225406",
+        "tbrcId": "T2117",
+        "rank": 398
     },
     "T2277": {
         "label": [
@@ -35598,7 +45138,9 @@ export const topics = {
                 "@value": "prescience"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225406"
+        "parent": "O9TAXTBRC2016052KG225406",
+        "tbrcId": "T2277",
+        "rank": 394
     },
     "T36": {
         "label": [
@@ -35615,14 +45157,18 @@ export const topics = {
                 "@value": "般若"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225406"
+        "parent": "O9TAXTBRC2016052KG225406",
+        "tbrcId": "T36",
+        "rank": 358
     },
     "T1230": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "'gog snyoms/"
         },
-        "parent": "O9TAXTBRC2016052KG225406"
+        "parent": "O9TAXTBRC2016052KG225406",
+        "tbrcId": "T1230",
+        "rank": 402
     },
     "T2261": {
         "label": [
@@ -35648,7 +45194,9 @@ export const topics = {
                 "@value": "二十僧伽"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225406"
+        "parent": "O9TAXTBRC2016052KG225406",
+        "tbrcId": "T1748",
+        "rank": 370
     },
     "T2025": {
         "label": [
@@ -35661,14 +45209,18 @@ export const topics = {
                 "@value": "八事"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225406"
+        "parent": "O9TAXTBRC2016052KG225406",
+        "tbrcId": "T2025",
+        "rank": 362
     },
     "T2004": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "myang 'das/"
         },
-        "parent": "O9TAXTBRC2016052KG225406"
+        "parent": "O9TAXTBRC2016052KG225406",
+        "tbrcId": "T2004",
+        "rank": 406
     },
     "T2274": {
         "label": [
@@ -35694,7 +45246,9 @@ export const topics = {
                 "@value": "vipasyana"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225406"
+        "parent": "O9TAXTBRC2016052KG225406",
+        "tbrcId": "T1796",
+        "rank": 390
     },
     "T333": {
         "label": [
@@ -35711,7 +45265,9 @@ export const topics = {
                 "@value": "七十义"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225406"
+        "parent": "O9TAXTBRC2016052KG225406",
+        "tbrcId": "T333",
+        "rank": 366
     },
     "O9TAXTBRC2016052KG225427": {
         "sub": [
@@ -35754,7 +45310,9 @@ export const topics = {
                 "@value": "相关主题"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225398"
+        "parent": "O9TAXTBRC2016052KG225398",
+        "tbrcId": "4",
+        "rank": 152
     },
     "T1KG9082": {
         "label": {
@@ -35782,7 +45340,9 @@ export const topics = {
                 "@value": "paradise of amitabha"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225427"
+        "parent": "O9TAXTBRC2016052KG225427",
+        "tbrcId": "T1353",
+        "rank": 444
     },
     "T1GS148709": {
         "label": [
@@ -35799,7 +45359,9 @@ export const topics = {
                 "@value": "密严剎土"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225427"
+        "parent": "O9TAXTBRC2016052KG225427",
+        "tbrcId": "T1GS148709",
+        "rank": 480
     },
     "T1130": {
         "label": [
@@ -35816,7 +45378,9 @@ export const topics = {
                 "@value": "杨柳宫"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225427"
+        "parent": "O9TAXTBRC2016052KG225427",
+        "tbrcId": "T1130",
+        "rank": 456
     },
     "T1GS138846": {
         "label": [
@@ -35833,7 +45397,9 @@ export const topics = {
                 "@value": "copper colored mountain"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225427"
+        "parent": "O9TAXTBRC2016052KG225427",
+        "tbrcId": "T1GS138846",
+        "rank": 476
     },
     "T2202": {
         "label": [
@@ -35850,7 +45416,9 @@ export const topics = {
                 "@value": "璁叶庄严刹土"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225427"
+        "parent": "O9TAXTBRC2016052KG225427",
+        "tbrcId": "T2202",
+        "rank": 460
     },
     "T2078": {
         "label": [
@@ -35867,7 +45435,9 @@ export const topics = {
                 "@value": "法身"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225427"
+        "parent": "O9TAXTBRC2016052KG225427",
+        "tbrcId": "T2078",
+        "rank": 428
     },
     "T2MS5993": {
         "label": [
@@ -35880,7 +45450,9 @@ export const topics = {
                 "@value": "five treatises of maitreya"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225427"
+        "parent": "O9TAXTBRC2016052KG225427",
+        "tbrcId": "T2MS5993",
+        "rank": 488
     },
     "T1414": {
         "label": [
@@ -35906,7 +45478,9 @@ export const topics = {
                 "@value": "litany of names"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225427"
+        "parent": "O9TAXTBRC2016052KG225427",
+        "tbrcId": "T01JR185",
+        "rank": 484
     },
     "T535": {
         "label": [
@@ -35927,7 +45501,9 @@ export const topics = {
                 "@value": "三身"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225427"
+        "parent": "O9TAXTBRC2016052KG225427",
+        "tbrcId": "T535",
+        "rank": 420
     },
     "T1PD106850": {
         "label": [
@@ -35948,7 +45524,9 @@ export const topics = {
                 "@value": "Kṣetra"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225427"
+        "parent": "O9TAXTBRC2016052KG225427",
+        "tbrcId": "T1PD106850",
+        "rank": 440
     },
     "T2009": {
         "label": [
@@ -35965,7 +45543,9 @@ export const topics = {
                 "@value": "abhirati"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225427"
+        "parent": "O9TAXTBRC2016052KG225427",
+        "tbrcId": "T2009",
+        "rank": 448
     },
     "T634": {
         "label": [
@@ -35986,7 +45566,9 @@ export const topics = {
                 "@value": "Śambhalaḥ"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225427"
+        "parent": "O9TAXTBRC2016052KG225427",
+        "tbrcId": "T634",
+        "rank": 468
     },
     "T2MS14938": {
         "label": [
@@ -36019,7 +45601,9 @@ export const topics = {
             "@language": "bo-x-ewts",
             "@value": "sku bzhi/"
         },
-        "parent": "O9TAXTBRC2016052KG225427"
+        "parent": "O9TAXTBRC2016052KG225427",
+        "tbrcId": "T1490",
+        "rank": 424
     },
     "T1132": {
         "label": [
@@ -36036,7 +45620,9 @@ export const topics = {
                 "@value": "普陀山"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225427"
+        "parent": "O9TAXTBRC2016052KG225427",
+        "tbrcId": "T1132",
+        "rank": 452
     },
     "T2027": {
         "label": {
@@ -36064,7 +45650,9 @@ export const topics = {
                 "@value": "报身"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225427"
+        "parent": "O9TAXTBRC2016052KG225427",
+        "tbrcId": "T2363",
+        "rank": 432
     },
     "T2345": {
         "label": [
@@ -36085,14 +45673,18 @@ export const topics = {
                 "@value": "nirmanakaya"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225427"
+        "parent": "O9TAXTBRC2016052KG225427",
+        "tbrcId": "T2345",
+        "rank": 436
     },
     "T1AT296": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "pad+ma drwa ba'i gling /"
         },
-        "parent": "O9TAXTBRC2016052KG225427"
+        "parent": "O9TAXTBRC2016052KG225427",
+        "tbrcId": "T1AT296",
+        "rank": 472
     },
     "T2351": {
         "label": [
@@ -36109,7 +45701,9 @@ export const topics = {
                 "@value": "兜率天"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225427"
+        "parent": "O9TAXTBRC2016052KG225427",
+        "tbrcId": "T2351",
+        "rank": 464
     },
     "T2GS224": {
         "label": [
@@ -36122,7 +45716,9 @@ export const topics = {
                 "@value": "zur bkol bzhi/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225427"
+        "parent": "O9TAXTBRC2016052KG225427",
+        "tbrcId": "T2GS224",
+        "rank": 492
     },
     "O9TAXTBRC2016052KG225452": {
         "sub": [
@@ -36144,7 +45740,9 @@ export const topics = {
                 "@value": "律藏"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225391"
+        "parent": "O9TAXTBRC2016052KG225391",
+        "tbrcId": "3",
+        "rank": 498
     },
     "O9TAXTBRC2016052KG225453": {
         "sub": [
@@ -36165,7 +45763,9 @@ export const topics = {
                 "@value": "General Topics of Vinaya Pitika"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225452"
+        "parent": "O9TAXTBRC2016052KG225452",
+        "tbrcId": "1",
+        "rank": 503
     },
     "T1426": {
         "label": [
@@ -36178,7 +45778,9 @@ export const topics = {
                 "@value": "sila"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225453"
+        "parent": "O9TAXTBRC2016052KG225453",
+        "tbrcId": "T1426",
+        "rank": 512
     },
     "T55": {
         "label": [
@@ -36195,7 +45797,9 @@ export const topics = {
                 "@value": "monastic discipline"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225453"
+        "parent": "O9TAXTBRC2016052KG225453",
+        "tbrcId": "T55",
+        "rank": 508
     },
     "O9TAXTBRC2016052KG225456": {
         "sub": [
@@ -36239,7 +45843,9 @@ export const topics = {
                 "@value": "gzhung don bye brag"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225452"
+        "parent": "O9TAXTBRC2016052KG225452",
+        "tbrcId": "2",
+        "rank": 517
     },
     "T82": {
         "label": [
@@ -36256,7 +45862,9 @@ export const topics = {
                 "@value": "比丘尼"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225456"
+        "parent": "O9TAXTBRC2016052KG225456",
+        "tbrcId": "T82",
+        "rank": 554
     },
     "T2098": {
         "label": [
@@ -36277,14 +45885,18 @@ export const topics = {
                 "@value": "Upasaka"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225456"
+        "parent": "O9TAXTBRC2016052KG225456",
+        "tbrcId": "T2098",
+        "rank": 530
     },
     "T8LS15040": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "dge slong gi sdom pa/"
         },
-        "parent": "O9TAXTBRC2016052KG225456"
+        "parent": "O9TAXTBRC2016052KG225456",
+        "tbrcId": "T8LS15040",
+        "rank": 570
     },
     "T8LS16583": {
         "label": [
@@ -36297,7 +45909,9 @@ export const topics = {
                 "@value": "pratividhAn"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225456"
+        "parent": "O9TAXTBRC2016052KG225456",
+        "tbrcId": "T8LS16583",
+        "rank": 614
     },
     "T2413": {
         "label": [
@@ -36314,7 +45928,9 @@ export const topics = {
                 "@value": "vegetarianism"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225456"
+        "parent": "O9TAXTBRC2016052KG225456",
+        "tbrcId": "T2413",
+        "rank": 586
     },
     "T1856": {
         "label": [
@@ -36327,7 +45943,9 @@ export const topics = {
                 "@value": "dbyar gnas/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225456"
+        "parent": "O9TAXTBRC2016052KG225456",
+        "tbrcId": "T1856",
+        "rank": 578
     },
     "T1611": {
         "label": [
@@ -36348,28 +45966,36 @@ export const topics = {
                 "@value": "Bhikṣu"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225456"
+        "parent": "O9TAXTBRC2016052KG225456",
+        "tbrcId": "T1611",
+        "rank": 550
     },
     "T1489": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "nyes byas/"
         },
-        "parent": "O9TAXTBRC2016052KG225456"
+        "parent": "O9TAXTBRC2016052KG225456",
+        "tbrcId": "T1489",
+        "rank": 610
     },
     "T2MS11339": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "'dul ba'i ltung ba/"
         },
-        "parent": "O9TAXTBRC2016052KG225456"
+        "parent": "O9TAXTBRC2016052KG225456",
+        "tbrcId": "T2MS11339",
+        "rank": 602
     },
     "T881": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "so thar bshags sdom/"
         },
-        "parent": "O9TAXTBRC2016052KG225456"
+        "parent": "O9TAXTBRC2016052KG225456",
+        "tbrcId": "T881",
+        "rank": 558
     },
     "T1757": {
         "label": [
@@ -36386,7 +46012,9 @@ export const topics = {
                 "@value": "aup'as'ik'a"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225456"
+        "parent": "O9TAXTBRC2016052KG225456",
+        "tbrcId": "T1757",
+        "rank": 534
     },
     "T2364": {
         "label": [
@@ -36399,7 +46027,9 @@ export const topics = {
                 "@value": "pravarana"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225456"
+        "parent": "O9TAXTBRC2016052KG225456",
+        "tbrcId": "T2364",
+        "rank": 582
     },
     "T2GS1005": {
         "label": [
@@ -36412,14 +46042,18 @@ export const topics = {
                 "@value": "One-day precepts"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225456"
+        "parent": "O9TAXTBRC2016052KG225456",
+        "tbrcId": "T2GS1005",
+        "rank": 526
     },
     "T2578": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "pham ltung /"
         },
-        "parent": "O9TAXTBRC2016052KG225456"
+        "parent": "O9TAXTBRC2016052KG225456",
+        "tbrcId": "T2578",
+        "rank": 606
     },
     "T868": {
         "label": [
@@ -36432,7 +46066,9 @@ export const topics = {
                 "@value": "'dul ba'i cho ga"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225456"
+        "parent": "O9TAXTBRC2016052KG225456",
+        "tbrcId": "T868",
+        "rank": 594
     },
     "T809": {
         "label": [
@@ -36449,7 +46085,9 @@ export const topics = {
                 "@value": "poṣadha"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225456"
+        "parent": "O9TAXTBRC2016052KG225456",
+        "tbrcId": "T809",
+        "rank": 574
     },
     "T1894": {
         "label": [
@@ -36466,14 +46104,18 @@ export const topics = {
                 "@value": "dge tshul ma/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225456"
+        "parent": "O9TAXTBRC2016052KG225456",
+        "tbrcId": "T1894",
+        "rank": 542
     },
     "T949": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "gzhi gsum/"
         },
-        "parent": "O9TAXTBRC2016052KG225456"
+        "parent": "O9TAXTBRC2016052KG225456",
+        "tbrcId": "T949",
+        "rank": 590
     },
     "T2GS983": {
         "label": [
@@ -36490,14 +46132,18 @@ export const topics = {
                 "@value": "so thar sdom pa/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225456"
+        "parent": "O9TAXTBRC2016052KG225456",
+        "tbrcId": "T2GS983",
+        "rank": 522
     },
     "T1368": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "dge slong gi bslab bya/"
         },
-        "parent": "O9TAXTBRC2016052KG225456"
+        "parent": "O9TAXTBRC2016052KG225456",
+        "tbrcId": "T1368",
+        "rank": 566
     },
     "T2KG2755": {
         "label": {
@@ -36511,14 +46157,18 @@ export const topics = {
             "@language": "bo-x-ewts",
             "@value": "sdom pa 'bog chog"
         },
-        "parent": "O9TAXTBRC2016052KG225456"
+        "parent": "O9TAXTBRC2016052KG225456",
+        "tbrcId": "T1298",
+        "rank": 598
     },
     "T1787": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "dge tshul gyi bslab bya/"
         },
-        "parent": "O9TAXTBRC2016052KG225456"
+        "parent": "O9TAXTBRC2016052KG225456",
+        "tbrcId": "T1787",
+        "rank": 562
     },
     "T2195": {
         "label": [
@@ -36539,7 +46189,9 @@ export const topics = {
                 "@value": "nun with six precepts"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225456"
+        "parent": "O9TAXTBRC2016052KG225456",
+        "tbrcId": "T2195",
+        "rank": 546
     },
     "T1967": {
         "label": [
@@ -36560,7 +46212,9 @@ export const topics = {
                 "@value": "shramanera"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225456"
+        "parent": "O9TAXTBRC2016052KG225456",
+        "tbrcId": "T1967",
+        "rank": 538
     },
     "O9TAXTBRC2016052KG225482": {
         "sub": [
@@ -36582,7 +46236,9 @@ export const topics = {
                 "@value": "Related Topics of Vinaya Pitika"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225452"
+        "parent": "O9TAXTBRC2016052KG225452",
+        "tbrcId": "4",
+        "rank": 152
     },
     "O9TAXTBRC2016052KG225483": {
         "sub": [
@@ -36614,7 +46270,9 @@ export const topics = {
                 "@value": "Related religious titles"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225482"
+        "parent": "O9TAXTBRC2016052KG225482",
+        "tbrcId": "1",
+        "rank": 624
     },
     "T2082": {
         "label": [
@@ -36635,14 +46293,18 @@ export const topics = {
                 "@value": "徒"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225483"
+        "parent": "O9TAXTBRC2016052KG225483",
+        "tbrcId": "T2082",
+        "rank": 645
     },
     "T2359": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "lha pa/"
         },
-        "parent": "O9TAXTBRC2016052KG225483"
+        "parent": "O9TAXTBRC2016052KG225483",
+        "tbrcId": "T2359",
+        "rank": 677
     },
     "T10MS14283": {
         "label": [
@@ -36655,7 +46317,9 @@ export const topics = {
                 "@value": "siddha"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225483"
+        "parent": "O9TAXTBRC2016052KG225483",
+        "tbrcId": "T10MS14283",
+        "rank": 673
     },
     "T1895": {
         "label": [
@@ -36668,7 +46332,9 @@ export const topics = {
                 "@value": "执事"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225483"
+        "parent": "O9TAXTBRC2016052KG225483",
+        "tbrcId": "T1895",
+        "rank": 657
     },
     "T1754": {
         "label": [
@@ -36685,7 +46351,9 @@ export const topics = {
                 "@value": "bstan 'dzin skyes chen/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225483"
+        "parent": "O9TAXTBRC2016052KG225483",
+        "tbrcId": "T1754",
+        "rank": 641
     },
     "T450": {
         "label": [
@@ -36698,7 +46366,9 @@ export const topics = {
                 "@value": "revealers of hidden treasures"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225483"
+        "parent": "O9TAXTBRC2016052KG225483",
+        "tbrcId": "T450",
+        "rank": 669
     },
     "T167": {
         "label": [
@@ -36715,7 +46385,9 @@ export const topics = {
                 "@value": "bla ma/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225483"
+        "parent": "O9TAXTBRC2016052KG225483",
+        "tbrcId": "T167",
+        "rank": 633
     },
     "T1251": {
         "label": [
@@ -36728,7 +46400,9 @@ export const topics = {
                 "@value": "translators"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225483"
+        "parent": "O9TAXTBRC2016052KG225483",
+        "tbrcId": "T1251",
+        "rank": 649
     },
     "T376": {
         "label": [
@@ -36745,7 +46419,9 @@ export const topics = {
                 "@value": "Abbot"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225483"
+        "parent": "O9TAXTBRC2016052KG225483",
+        "tbrcId": "T376",
+        "rank": 629
     },
     "T620": {
         "label": [
@@ -36758,7 +46434,9 @@ export const topics = {
                 "@value": "rdo rje slob dpon/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225483"
+        "parent": "O9TAXTBRC2016052KG225483",
+        "tbrcId": "T620",
+        "rank": 637
     },
     "T1755": {
         "label": [
@@ -36771,14 +46449,18 @@ export const topics = {
                 "@value": "patrons of the dharma"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225483"
+        "parent": "O9TAXTBRC2016052KG225483",
+        "tbrcId": "T1755",
+        "rank": 661
     },
     "T1980": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "sngags pa/"
         },
-        "parent": "O9TAXTBRC2016052KG225483"
+        "parent": "O9TAXTBRC2016052KG225483",
+        "tbrcId": "T1980",
+        "rank": 665
     },
     "T2MS14920": {
         "label": [
@@ -36795,7 +46477,9 @@ export const topics = {
                 "@value": "格西"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225483"
+        "parent": "O9TAXTBRC2016052KG225483",
+        "tbrcId": "T2MS14920",
+        "rank": 653
     },
     "O9TAXTBRC2016052KG225497": {
         "sub": [
@@ -36819,7 +46503,9 @@ export const topics = {
                 "@value": "相关戒律"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225482"
+        "parent": "O9TAXTBRC2016052KG225482",
+        "tbrcId": "2",
+        "rank": 682
     },
     "T201": {
         "label": [
@@ -36832,7 +46518,9 @@ export const topics = {
                 "@value": "sdom gsum/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225497"
+        "parent": "O9TAXTBRC2016052KG225497",
+        "tbrcId": "T201",
+        "rank": 687
     },
     "T1400": {
         "label": [
@@ -36845,14 +46533,18 @@ export const topics = {
                 "@value": "discipline of the bodhisattva"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225497"
+        "parent": "O9TAXTBRC2016052KG225497",
+        "tbrcId": "T1400",
+        "rank": 691
     },
     "T1858": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "gsang sngags sdom pa/"
         },
-        "parent": "O9TAXTBRC2016052KG225497"
+        "parent": "O9TAXTBRC2016052KG225497",
+        "tbrcId": "T1858",
+        "rank": 695
     },
     "T1161": {
         "label": [
@@ -36865,14 +46557,18 @@ export const topics = {
                 "@value": "lower vinaya transmission"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225497"
+        "parent": "O9TAXTBRC2016052KG225497",
+        "tbrcId": "T1161",
+        "rank": 703
     },
     "T11MS5": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "sdom brgyud/"
         },
-        "parent": "O9TAXTBRC2016052KG225497"
+        "parent": "O9TAXTBRC2016052KG225497",
+        "tbrcId": "T11MS5",
+        "rank": 699
     },
     "O9TAXTBRC2016052KG225503": {
         "sub": [
@@ -36899,14 +46595,18 @@ export const topics = {
                 "@value": "相关寺规"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225482"
+        "parent": "O9TAXTBRC2016052KG225482",
+        "tbrcId": "3",
+        "rank": 708
     },
     "T2CN5081": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "mdo sde'i mchod pa/"
         },
-        "parent": "O9TAXTBRC2016052KG225503"
+        "parent": "O9TAXTBRC2016052KG225503",
+        "tbrcId": "T2CN5081",
+        "rank": 725
     },
     "T10": {
         "label": [
@@ -36919,28 +46619,36 @@ export const topics = {
                 "@value": "monastery regulations"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225503"
+        "parent": "O9TAXTBRC2016052KG225503",
+        "tbrcId": "T10",
+        "rank": 713
     },
     "T329": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "tshogs gtam/"
         },
-        "parent": "O9TAXTBRC2016052KG225503"
+        "parent": "O9TAXTBRC2016052KG225503",
+        "tbrcId": "T329",
+        "rank": 729
     },
     "T2DB4587": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "dus mchod/"
         },
-        "parent": "O9TAXTBRC2016052KG225503"
+        "parent": "O9TAXTBRC2016052KG225503",
+        "tbrcId": "T2DB4587",
+        "rank": 721
     },
     "T2099": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "gaNDi/"
         },
-        "parent": "O9TAXTBRC2016052KG225503"
+        "parent": "O9TAXTBRC2016052KG225503",
+        "tbrcId": "T2099",
+        "rank": 733
     },
     "T1GS129194": {
         "label": [
@@ -36953,14 +46661,18 @@ export const topics = {
                 "@value": "spyad pa/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225503"
+        "parent": "O9TAXTBRC2016052KG225503",
+        "tbrcId": "T1GS129194",
+        "rank": 737
     },
     "T1GS130095": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "sman bzhi/"
         },
-        "parent": "O9TAXTBRC2016052KG225503"
+        "parent": "O9TAXTBRC2016052KG225503",
+        "tbrcId": "T1GS130095",
+        "rank": 741
     },
     "T409": {
         "label": [
@@ -36973,7 +46685,9 @@ export const topics = {
                 "@value": "procedural manual"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225503"
+        "parent": "O9TAXTBRC2016052KG225503",
+        "tbrcId": "T409",
+        "rank": 717
     },
     "O9TAXTBRC2016052KG225392": {
         "sub": [
@@ -36997,7 +46711,9 @@ export const topics = {
                 "@value": "General Topics of Sutra Tradition"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225391"
+        "parent": "O9TAXTBRC2016052KG225391",
+        "tbrcId": "1",
+        "rank": 300
     },
     "T2002": {
         "label": [
@@ -37010,7 +46726,9 @@ export const topics = {
                 "@value": "Sutra Tradition"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225392"
+        "parent": "O9TAXTBRC2016052KG225392",
+        "tbrcId": "T2002",
+        "rank": 305
     },
     "T1229": {
         "label": [
@@ -37027,7 +46745,9 @@ export const topics = {
                 "@value": "gzhung chen bka' pod lnga /"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225392"
+        "parent": "O9TAXTBRC2016052KG225392",
+        "tbrcId": "T1229",
+        "rank": 309
     },
     "T1KG4314": {
         "label": [
@@ -37057,7 +46777,9 @@ export const topics = {
                 "@value": "gzhung chen brgyad/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225392"
+        "parent": "O9TAXTBRC2016052KG225392",
+        "tbrcId": "T1KG21096",
+        "rank": 290
     },
     "T3JT12491": {
         "label": [
@@ -37070,7 +46792,9 @@ export const topics = {
                 "@value": "Thirteen major philosophical texts"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG225392"
+        "parent": "O9TAXTBRC2016052KG225392",
+        "tbrcId": "T3JT12491",
+        "rank": 313
     },
     "O9TAXTBRC2016052KG226418": {
         "sub": [
@@ -37094,7 +46818,9 @@ export const topics = {
                 "@value": "声明"
             }
         ],
-        "parent": "O9TAXTBRC201605"
+        "parent": "O9TAXTBRC201605",
+        "tbrcId": "ca",
+        "rank": 3500
     },
     "O9TAXTBRC2016052KG226419": {
         "sub": [
@@ -37120,14 +46846,18 @@ export const topics = {
                 "@value": "legs sbyar gyi sgra mdo/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226418"
+        "parent": "O9TAXTBRC2016052KG226418",
+        "tbrcId": "1",
+        "rank": 3505
     },
     "T1GS10598": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rtags gsum/"
         },
-        "parent": "O9TAXTBRC2016052KG226419"
+        "parent": "O9TAXTBRC2016052KG226419",
+        "tbrcId": "T1GS10598",
+        "rank": 3529
     },
     "T282": {
         "label": [
@@ -37144,14 +46874,18 @@ export const topics = {
                 "@value": "sanskrit grammar"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226419"
+        "parent": "O9TAXTBRC2016052KG226419",
+        "tbrcId": "T282",
+        "rank": 3509
     },
     "T1849": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "ting mtha'"
         },
-        "parent": "O9TAXTBRC2016052KG226419"
+        "parent": "O9TAXTBRC2016052KG226419",
+        "tbrcId": "T1849",
+        "rank": 3533
     },
     "T283": {
         "label": [
@@ -37164,7 +46898,9 @@ export const topics = {
                 "@value": "sarasvativyakarana"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226419"
+        "parent": "O9TAXTBRC2016052KG226419",
+        "tbrcId": "T283",
+        "rank": 3521
     },
     "T2349": {
         "label": [
@@ -37177,14 +46913,18 @@ export const topics = {
                 "@value": "mtshams sbyor lnga pa/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226419"
+        "parent": "O9TAXTBRC2016052KG226419",
+        "tbrcId": "T2349",
+        "rank": 3525
     },
     "T1850": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "tsAn+dra pa (sgra)"
         },
-        "parent": "O9TAXTBRC2016052KG226419"
+        "parent": "O9TAXTBRC2016052KG226419",
+        "tbrcId": "T1850",
+        "rank": 3517
     },
     "T966": {
         "label": [
@@ -37197,7 +46937,9 @@ export const topics = {
                 "@value": "ka lA pa/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226419"
+        "parent": "O9TAXTBRC2016052KG226419",
+        "tbrcId": "T966",
+        "rank": 3513
     },
     "O9TAXTBRC2016052KG226427": {
         "sub": [
@@ -37229,7 +46971,9 @@ export const topics = {
                 "@value": "Tibetan grammar"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226418"
+        "parent": "O9TAXTBRC2016052KG226418",
+        "tbrcId": "2",
+        "rank": 3538
     },
     "T213": {
         "label": [
@@ -37242,7 +46986,9 @@ export const topics = {
                 "@value": "calligraphy"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226427"
+        "parent": "O9TAXTBRC2016052KG226427",
+        "tbrcId": "T213",
+        "rank": 3595
     },
     "T2191": {
         "label": [
@@ -37255,21 +47001,27 @@ export const topics = {
                 "@value": "post final or border"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226427"
+        "parent": "O9TAXTBRC2016052KG226427",
+        "tbrcId": "T2191",
+        "rank": 3571
     },
     "T2512": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "yi ge"
         },
-        "parent": "O9TAXTBRC2016052KG226427"
+        "parent": "O9TAXTBRC2016052KG226427",
+        "tbrcId": "T2512",
+        "rank": 3591
     },
     "T1680": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "la don/"
         },
-        "parent": "O9TAXTBRC2016052KG226427"
+        "parent": "O9TAXTBRC2016052KG226427",
+        "tbrcId": "T1680",
+        "rank": 3559
     },
     "T4CZ16893": {
         "label": [
@@ -37282,14 +47034,18 @@ export const topics = {
                 "@value": "brda sprod/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226427"
+        "parent": "O9TAXTBRC2016052KG226427",
+        "tbrcId": "T4CZ16893",
+        "rank": 3543
     },
     "T2346": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "rnam dbye brgyad/"
         },
-        "parent": "O9TAXTBRC2016052KG226427"
+        "parent": "O9TAXTBRC2016052KG226427",
+        "tbrcId": "T2346",
+        "rank": 3555
     },
     "T214": {
         "label": [
@@ -37302,7 +47058,9 @@ export const topics = {
                 "@value": "skung yig"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226427"
+        "parent": "O9TAXTBRC2016052KG226427",
+        "tbrcId": "T214",
+        "rank": 3599
     },
     "T1974": {
         "label": [
@@ -37315,7 +47073,9 @@ export const topics = {
                 "@value": "yig rigs/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226427"
+        "parent": "O9TAXTBRC2016052KG226427",
+        "tbrcId": "T1974",
+        "rank": 4834
     },
     "T2022": {
         "label": [
@@ -37328,14 +47088,18 @@ export const topics = {
                 "@value": "dus gsum yi ge"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226427"
+        "parent": "O9TAXTBRC2016052KG226427",
+        "tbrcId": "T2022",
+        "rank": 3587
     },
     "T2347": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "bya byed/"
         },
-        "parent": "O9TAXTBRC2016052KG226427"
+        "parent": "O9TAXTBRC2016052KG226427",
+        "tbrcId": "T2347",
+        "rank": 3563
     },
     "T186": {
         "label": [
@@ -37348,7 +47112,9 @@ export const topics = {
                 "@value": "grammar"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226427"
+        "parent": "O9TAXTBRC2016052KG226427",
+        "tbrcId": "T186",
+        "rank": 3547
     },
     "T2623": {
         "label": [
@@ -37361,14 +47127,18 @@ export const topics = {
                 "@value": "bya tshig"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226427"
+        "parent": "O9TAXTBRC2016052KG226427",
+        "tbrcId": "T2623",
+        "rank": 3583
     },
     "T2348": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "bdag gzhan/"
         },
-        "parent": "O9TAXTBRC2016052KG226427"
+        "parent": "O9TAXTBRC2016052KG226427",
+        "tbrcId": "T2348",
+        "rank": 3567
     },
     "O9TAXTBRC2016052KG226441": {
         "sub": [
@@ -37405,7 +47175,9 @@ export const topics = {
                 "@value": "Linguistics"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226418"
+        "parent": "O9TAXTBRC2016052KG226418",
+        "tbrcId": "3",
+        "rank": 3604
     },
     "T2387": {
         "label": [
@@ -37418,7 +47190,9 @@ export const topics = {
                 "@value": "rgyal rong skad/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226441"
+        "parent": "O9TAXTBRC2016052KG226441",
+        "tbrcId": "T2387",
+        "rank": 3650
     },
     "T1KG22693": {
         "label": [
@@ -37461,7 +47235,9 @@ export const topics = {
                 "@value": "tibetan language"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226441"
+        "parent": "O9TAXTBRC2016052KG226441",
+        "tbrcId": "T265",
+        "rank": 3615
     },
     "T1PD95804": {
         "label": [
@@ -37474,7 +47250,9 @@ export const topics = {
                 "@value": "sog skad/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226441"
+        "parent": "O9TAXTBRC2016052KG226441",
+        "tbrcId": "T1PD95804",
+        "rank": 3630
     },
     "T1KG6167": {
         "label": [
@@ -37487,7 +47265,9 @@ export const topics = {
                 "@value": "chinese language"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226441"
+        "parent": "O9TAXTBRC2016052KG226441",
+        "tbrcId": "T1KG6167",
+        "rank": 3620
     },
     "T2591": {
         "label": [
@@ -37500,7 +47280,9 @@ export const topics = {
                 "@value": "rgya dkar yig ge"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226441"
+        "parent": "O9TAXTBRC2016052KG226441",
+        "tbrcId": "T2591",
+        "rank": 3625
     },
     "T1KG6138": {
         "label": [
@@ -37526,7 +47308,9 @@ export const topics = {
                 "@value": "rdzong kha/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226441"
+        "parent": "O9TAXTBRC2016052KG226441",
+        "tbrcId": "T2416",
+        "rank": 3645
     },
     "T378": {
         "label": [
@@ -37539,7 +47323,9 @@ export const topics = {
                 "@value": "lha sa kha skad/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226441"
+        "parent": "O9TAXTBRC2016052KG226441",
+        "tbrcId": "T378",
+        "rank": 3635
     },
     "T1KG6119": {
         "label": [
@@ -37552,14 +47338,18 @@ export const topics = {
                 "@value": "yulshul dialect"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226441"
+        "parent": "O9TAXTBRC2016052KG226441",
+        "tbrcId": "T1KG6119",
+        "rank": 3660
     },
     "T2388": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "dwags po skad/"
         },
-        "parent": "O9TAXTBRC2016052KG226441"
+        "parent": "O9TAXTBRC2016052KG226441",
+        "tbrcId": "T2388",
+        "rank": 3655
     },
     "T2KG200021": {
         "label": [
@@ -37585,7 +47375,9 @@ export const topics = {
                 "@value": "skad brda rig pa/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226441"
+        "parent": "O9TAXTBRC2016052KG226441",
+        "tbrcId": "T228",
+        "rank": 3610
     },
     "T1158": {
         "label": [
@@ -37598,7 +47390,9 @@ export const topics = {
                 "@value": "amdo dialect"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226441"
+        "parent": "O9TAXTBRC2016052KG226441",
+        "tbrcId": "T1158",
+        "rank": 3640
     },
     "T2KG200020": {
         "label": [
@@ -37641,7 +47435,9 @@ export const topics = {
                 "@value": "nyi hong skad/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226441"
+        "parent": "O9TAXTBRC2016052KG226441",
+        "tbrcId": "T287",
+        "rank": 3665
     },
     "O9TAXTBRC2016052KG226460": {
         "sub": [
@@ -37684,7 +47480,9 @@ export const topics = {
                 "@value": "grammatical name"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226460"
+        "parent": "O9TAXTBRC2016052KG226460",
+        "tbrcId": "T2262",
+        "rank": 3705
     },
     "T1252": {
         "label": [
@@ -37701,7 +47499,9 @@ export const topics = {
                 "@value": "翻译"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226460"
+        "parent": "O9TAXTBRC2016052KG226460",
+        "tbrcId": "T1252",
+        "rank": 3695
     },
     "T218": {
         "label": [
@@ -37714,7 +47514,9 @@ export const topics = {
                 "@value": "spelling"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226460"
+        "parent": "O9TAXTBRC2016052KG226460",
+        "tbrcId": "T218",
+        "rank": 3675
     },
     "T443": {
         "label": [
@@ -37727,7 +47529,9 @@ export const topics = {
                 "@value": "brda rnying /"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226460"
+        "parent": "O9TAXTBRC2016052KG226460",
+        "tbrcId": "T443",
+        "rank": 3579
     },
     "T1157": {
         "label": [
@@ -37740,7 +47544,9 @@ export const topics = {
                 "@value": "translation"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226460"
+        "parent": "O9TAXTBRC2016052KG226460",
+        "tbrcId": "T1157",
+        "rank": 3690
     },
     "T1KG3848": {
         "label": [
@@ -37753,7 +47559,9 @@ export const topics = {
                 "@value": "index"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226460"
+        "parent": "O9TAXTBRC2016052KG226460",
+        "tbrcId": "T1KG3848",
+        "rank": 3700
     },
     "T143": {
         "label": [
@@ -37779,14 +47587,18 @@ export const topics = {
                 "@value": "brda bkrol/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226460"
+        "parent": "O9TAXTBRC2016052KG226460",
+        "tbrcId": "T1893",
+        "rank": 3575
     },
     "T794": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "zhe sa/"
         },
-        "parent": "O9TAXTBRC2016052KG226460"
+        "parent": "O9TAXTBRC2016052KG226460",
+        "tbrcId": "T794",
+        "rank": 3781
     },
     "T1985": {
         "label": [
@@ -37799,7 +47611,9 @@ export const topics = {
                 "@value": "study of terminology"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226460"
+        "parent": "O9TAXTBRC2016052KG226460",
+        "tbrcId": "T1985",
+        "rank": 3685
     },
     "T240": {
         "label": [
@@ -37812,7 +47626,9 @@ export const topics = {
                 "@value": "skad shan sbyar/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226460"
+        "parent": "O9TAXTBRC2016052KG226460",
+        "tbrcId": "T240",
+        "rank": 3680
     },
     "O9TAXTBRC2016052KG226472": {
         "sub": [
@@ -37882,7 +47698,9 @@ export const topics = {
                 "@value": "terminology"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226473"
+        "parent": "O9TAXTBRC2016052KG226473",
+        "tbrcId": "T1197",
+        "rank": 3716
     },
     "T1KG26408": {
         "label": [
@@ -37938,7 +47756,9 @@ export const topics = {
                 "@value": "ming /"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226473"
+        "parent": "O9TAXTBRC2016052KG226473",
+        "tbrcId": "T1128",
+        "rank": 4074
     },
     "T1KG14134": {
         "label": [
@@ -37951,7 +47771,9 @@ export const topics = {
                 "@value": "zhi bde/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226473"
+        "parent": "O9TAXTBRC2016052KG226473",
+        "tbrcId": "T1KG14134",
+        "rank": 3891
     },
     "T1KG26409": {
         "label": [
@@ -37977,7 +47799,9 @@ export const topics = {
                 "@value": "non-violence and peace"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226473"
+        "parent": "O9TAXTBRC2016052KG226473",
+        "tbrcId": "T1KG18540",
+        "rank": 3886
     },
     "T177": {
         "label": [
@@ -38061,7 +47885,9 @@ export const topics = {
                 "@value": "rang lus mer sreg"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226473"
+        "parent": "O9TAXTBRC2016052KG226473",
+        "tbrcId": "T1KG16182",
+        "rank": 3896
     },
     "T8LS41949": {
         "label": [
@@ -38112,7 +47938,9 @@ export const topics = {
                 "@value": "discussions of terms and categories"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226489"
+        "parent": "O9TAXTBRC2016052KG226489",
+        "tbrcId": "T1770",
+        "rank": 4089
     },
     "T347": {
         "label": [
@@ -38125,14 +47953,18 @@ export const topics = {
                 "@value": "object of scholastic knowledge"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226489"
+        "parent": "O9TAXTBRC2016052KG226489",
+        "tbrcId": "T347",
+        "rank": 3721
     },
     "T11MS60": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "zhib 'jug"
         },
-        "parent": "O9TAXTBRC2016052KG226489"
+        "parent": "O9TAXTBRC2016052KG226489",
+        "tbrcId": "T11MS60",
+        "rank": 3969
     },
     "T1KG5399": {
         "label": [
@@ -38145,7 +47977,9 @@ export const topics = {
                 "@value": "veda"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226489"
+        "parent": "O9TAXTBRC2016052KG226489",
+        "tbrcId": "T1KG5399",
+        "rank": 3821
     },
     "T229": {
         "label": [
@@ -38158,7 +47992,9 @@ export const topics = {
                 "@value": "arts & sciences"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226489"
+        "parent": "O9TAXTBRC2016052KG226489",
+        "tbrcId": "T229",
+        "rank": 4064
     },
     "T1KG5001": {
         "label": [
@@ -38171,7 +48007,9 @@ export const topics = {
                 "@value": "lecture"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226489"
+        "parent": "O9TAXTBRC2016052KG226489",
+        "tbrcId": "T1KG5001",
+        "rank": 4079
     },
     "O9TAXTBRC2016052KG226496": {
         "sub": [
@@ -38226,14 +48064,18 @@ export const topics = {
                 "@value": "tea"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226496"
+        "parent": "O9TAXTBRC2016052KG226496",
+        "tbrcId": "T00EGS1018105",
+        "rank": 3998
     },
     "T1PD96325": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "lo gsar/"
         },
-        "parent": "O9TAXTBRC2016052KG226496"
+        "parent": "O9TAXTBRC2016052KG226496",
+        "tbrcId": "T1PD96325",
+        "rank": 3761
     },
     "T1649": {
         "label": [
@@ -38246,7 +48088,9 @@ export const topics = {
                 "@value": "first fruits offering"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226496"
+        "parent": "O9TAXTBRC2016052KG226496",
+        "tbrcId": "T1649",
+        "rank": 3766
     },
     "T2393": {
         "label": [
@@ -38259,14 +48103,18 @@ export const topics = {
                 "@value": "charm boxes"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226496"
+        "parent": "O9TAXTBRC2016052KG226496",
+        "tbrcId": "T2393",
+        "rank": 4318
     },
     "T1195": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "lho pa/"
         },
-        "parent": "O9TAXTBRC2016052KG226496"
+        "parent": "O9TAXTBRC2016052KG226496",
+        "tbrcId": "T1195",
+        "rank": 3921
     },
     "T1312": {
         "label": [
@@ -38279,7 +48127,9 @@ export const topics = {
                 "@value": "zhwa/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226496"
+        "parent": "O9TAXTBRC2016052KG226496",
+        "tbrcId": "T1312",
+        "rank": 3988
     },
     "T2MS14902": {
         "label": [
@@ -38292,7 +48142,9 @@ export const topics = {
                 "@value": "ethnicity"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226496"
+        "parent": "O9TAXTBRC2016052KG226496",
+        "tbrcId": "T2MS14902",
+        "rank": 3806
     },
     "T1KG5878": {
         "label": [
@@ -38305,14 +48157,18 @@ export const topics = {
                 "@value": "four castes"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226496"
+        "parent": "O9TAXTBRC2016052KG226496",
+        "tbrcId": "T1KG5878",
+        "rank": 3826
     },
     "T1144": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "dmangs srol/"
         },
-        "parent": "O9TAXTBRC2016052KG226496"
+        "parent": "O9TAXTBRC2016052KG226496",
+        "tbrcId": "T1144",
+        "rank": 3751
     },
     "T1KG18545": {
         "label": [
@@ -38325,7 +48181,9 @@ export const topics = {
                 "@value": "tha ma kha/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226496"
+        "parent": "O9TAXTBRC2016052KG226496",
+        "tbrcId": "T1KG18545",
+        "rank": 4013
     },
     "T1163": {
         "label": [
@@ -38338,7 +48196,9 @@ export const topics = {
                 "@value": "marriage customs"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226496"
+        "parent": "O9TAXTBRC2016052KG226496",
+        "tbrcId": "T1163",
+        "rank": 3776
     },
     "T1KG18543": {
         "label": [
@@ -38351,7 +48211,9 @@ export const topics = {
                 "@value": "meat"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226496"
+        "parent": "O9TAXTBRC2016052KG226496",
+        "tbrcId": "T1KG18543",
+        "rank": 4003
     },
     "T1233": {
         "label": [
@@ -38364,7 +48226,9 @@ export const topics = {
                 "@value": "liturgical ornaments"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226496"
+        "parent": "O9TAXTBRC2016052KG226496",
+        "tbrcId": "T1233",
+        "rank": 3816
     },
     "T1KG5732": {
         "label": [
@@ -38377,7 +48241,9 @@ export const topics = {
                 "@value": "dus ston/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226496"
+        "parent": "O9TAXTBRC2016052KG226496",
+        "tbrcId": "T1KG5732",
+        "rank": 3756
     },
     "T404": {
         "label": [
@@ -38403,7 +48269,9 @@ export const topics = {
                 "@value": "swords and knives"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226496"
+        "parent": "O9TAXTBRC2016052KG226496",
+        "tbrcId": "T2400",
+        "rank": 3951
     },
     "T2028": {
         "label": [
@@ -38416,7 +48284,9 @@ export const topics = {
                 "@value": "customs"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226496"
+        "parent": "O9TAXTBRC2016052KG226496",
+        "tbrcId": "T2028",
+        "rank": 3746
     },
     "T1196": {
         "label": [
@@ -38429,7 +48299,9 @@ export const topics = {
                 "@value": "alcoholic drink"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226496"
+        "parent": "O9TAXTBRC2016052KG226496",
+        "tbrcId": "T1196",
+        "rank": 4008
     },
     "T2481": {
         "label": [
@@ -38442,7 +48314,9 @@ export const topics = {
                 "@value": "chas gos/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226496"
+        "parent": "O9TAXTBRC2016052KG226496",
+        "tbrcId": "T2481",
+        "rank": 3811
     },
     "T424": {
         "label": [
@@ -38455,7 +48329,9 @@ export const topics = {
                 "@value": "food and beverages"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226496"
+        "parent": "O9TAXTBRC2016052KG226496",
+        "tbrcId": "T424",
+        "rank": 3993
     },
     "T2MS14922": {
         "label": [
@@ -38472,14 +48348,18 @@ export const topics = {
                 "@value": "满族"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226496"
+        "parent": "O9TAXTBRC2016052KG226496",
+        "tbrcId": "T2MS14922",
+        "rank": 4037
     },
     "T2017": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "'jang pa/"
         },
-        "parent": "O9TAXTBRC2016052KG226496"
+        "parent": "O9TAXTBRC2016052KG226496",
+        "tbrcId": "T2017",
+        "rank": 4033
     },
     "T1398": {
         "label": {
@@ -38528,7 +48408,9 @@ export const topics = {
                 "@value": "gser 'phru/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226520"
+        "parent": "O9TAXTBRC2016052KG226520",
+        "tbrcId": "T1853",
+        "rank": 3936
     },
     "T898": {
         "label": [
@@ -38545,7 +48427,9 @@ export const topics = {
                 "@value": "輪"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226520"
+        "parent": "O9TAXTBRC2016052KG226520",
+        "tbrcId": "T898",
+        "rank": 3906
     },
     "T2450": {
         "label": [
@@ -38558,7 +48442,9 @@ export const topics = {
                 "@value": "vase"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226520"
+        "parent": "O9TAXTBRC2016052KG226520",
+        "tbrcId": "T2450",
+        "rank": 3926
     },
     "T1GS149122": {
         "label": [
@@ -38571,7 +48457,9 @@ export const topics = {
                 "@value": "painted wooden tablets"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226520"
+        "parent": "O9TAXTBRC2016052KG226520",
+        "tbrcId": "T1GS149122",
+        "rank": 3946
     },
     "T1913": {
         "label": [
@@ -38584,21 +48472,27 @@ export const topics = {
                 "@value": "ceremonial offering scarves"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226520"
+        "parent": "O9TAXTBRC2016052KG226520",
+        "tbrcId": "T1913",
+        "rank": 3871
     },
     "T884": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "klu bum/"
         },
-        "parent": "O9TAXTBRC2016052KG226520"
+        "parent": "O9TAXTBRC2016052KG226520",
+        "tbrcId": "T884",
+        "rank": 3931
     },
     "T1KG18505": {
         "label": {
             "@language": "bo-x-ewts",
             "@value": "jo dar/"
         },
-        "parent": "O9TAXTBRC2016052KG226520"
+        "parent": "O9TAXTBRC2016052KG226520",
+        "tbrcId": "T1KG18505",
+        "rank": 3979
     },
     "T1CZ5010": {
         "label": [
@@ -38611,7 +48505,9 @@ export const topics = {
                 "@value": "shariram"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226520"
+        "parent": "O9TAXTBRC2016052KG226520",
+        "tbrcId": "T1CZ5010",
+        "rank": 3796
     },
     "T1758": {
         "label": [
@@ -38624,7 +48520,9 @@ export const topics = {
                 "@value": "prayer banners"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226520"
+        "parent": "O9TAXTBRC2016052KG226520",
+        "tbrcId": "T1758",
+        "rank": 3984
     },
     "T2448": {
         "label": [
@@ -38637,6 +48535,8 @@ export const topics = {
                 "@value": "'phreng ba/"
             }
         ],
-        "parent": "O9TAXTBRC2016052KG226520"
+        "parent": "O9TAXTBRC2016052KG226520",
+        "tbrcId": "T2448",
+        "rank": 4028
     }
 }

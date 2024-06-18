@@ -307,7 +307,7 @@ const makeMainRoutes = () => {
                         } } />
                         */}
                         
-                        <Route exact path="/opensearch/search" render={(props) => <>
+                        <Route exact path="/osearch/search" render={(props) => <>
                            <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/instantsearch.css@7/themes/satellite-min.css" />
                            <SearchPage /> 
                         </>}/> 

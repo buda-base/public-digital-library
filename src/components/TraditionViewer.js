@@ -78,7 +78,7 @@ async function buildTree(id, glob, parent) {
       if(obj.length > 1 && obj[1]) obj = obj[1]
       if(obj) { 
         sub.push(obj)
-        if(id === "O9TAXTBRC201605" || parent === "O9TAXTBRC201605") // || glob[parent].parent === "O9TAXTBRC201605" ) 
+        //if(id === "O9TAXTBRC201605" || parent === "O9TAXTBRC201605" || glob[parent].parent === "O9TAXTBRC201605" ) 
         await buildTree(obj, glob, id)        
       }
     }
@@ -90,7 +90,10 @@ async function buildTree(id, glob, parent) {
 
   console.log("id:", id, prefLabel)
 
-  if(prefLabel) {
+  if(!prefLabel) {
+    console.warn("NO LABEL", id)
+    glob.noLabel.push({id, json})
+  } else {
     if(!Array.isArray(prefLabel)) prefLabel = [ prefLabel ]
     prefLabel = _.orderBy(prefLabel, [ (obj)=> obj["@language"] === "en" ? 0 : 1, "@language"], ["asc","asc"])
     const xpathExpression2 = `.//o:node[@value="${id}"]`;
@@ -142,8 +145,7 @@ async function buildTree(id, glob, parent) {
 
 /*
 // uncomment to rebuild tree then copy/paste object from console to ../lib/topics.js once finished (takes a few minutes)
-const newTopics = { notFound:[], multiple:[] }, newGenres = { notFound:[], multiple:[] }
-//buildTree("O3JW5309", newGenres).then(() => { console.log("genres:",newGenres) })
+const newTopics = { notFound:[], multiple:[], noLabel:[] }
 buildTree("O9TAXTBRC201605", newTopics).then(() => { console.log("topics:",newTopics) })
 */
 
@@ -222,32 +224,32 @@ export class TraditionViewer extends Component<State, Props>
         topic.sub.map(s => this.renderSubTopic(s, sublist, depth+1))
         //if(depth > 0) listing.push(<h5>{ getPropLabel(this, fullUri("bdr:"+t)) }</h5>)
         //listing.push(sublist)
-        listing.push({...label, rank:label?.value?.toLowerCase(), sublist, depth, hasSub:1}) 
+        listing.push({...label, rank:topic.rank ?? 9999, sublist, depth, hasSub:1}) 
       } else {
         //listing.push(<Link to={"../bdr:"+t+"/"}>{ getPropLabel(this, fullUri("bdr:"+t)) } [{topic?.sub?.length}]</Link>)  
-        listing.push({...label, rank:label?.value?.toLowerCase(), to:"../bdr:"+t+"/", depth, hasSub:1, length:topic?.sub?.length }) 
+        listing.push({...label, rank:topic.rank ?? 9999, to:"../bdr:"+t+"/", depth, hasSub:1, length:topic?.sub?.length }) 
       }
     } else {
       //listing.push(<Link to={"/search?r=bdr:"+t+"&t=Work"}>{ getPropLabel(this, fullUri("bdr:"+t)) }</Link>)
-      listing.push({...label, rank:label?.value?.toLowerCase(), to:"/search?r=bdr:"+t+"&t=Work", depth, hasSub:depth>1?1:0})
+      listing.push({...label, rank:topic.rank ?? 9999, to:"/search?r=bdr:"+t+"&t=Work", depth, hasSub:depth>1?1:0})
     }    
   }
   
   
   renderList(listing) {
 
-    const sort = _.orderBy(listing, ["depth", "hasSub", "lang", "rank"], ["asc", "asc", "desc", "asc"])
+    const sort = _.orderBy(listing, ["depth", "hasSub", /*"lang",*/ "rank"], ["asc", "asc", /*"desc",*/ "asc"])
 
     console.log("rl:",listing, sort)
 
     const res = []
     for(const e of sort) {
       if(e.sublist) {
-        if(e.depth > 0) res.push(<h5 lang={e.lang}>{e.value}</h5>)
+        if(e.depth > 0) res.push(<h5 lang={e.lang}>{e.value} | {e.rank}</h5>)
         res.push(this.renderList(e.sublist))
       }
-      else if(e.to) res.push(<Link lang={e.lang} to={e.to}>{e.value}{e.length?" ["+e.length+"]":""}</Link>)
-      else res.push(<i>{e.value} {e.lang}</i>)
+      else if(e.to) res.push(<Link lang={e.lang} to={e.to}>{e.value}{e.length?" ["+e.length+"]":""} | {e.rank}</Link>)
+      else res.push(<i>{e.value} {e.lang} | {e.rank}</i>)
     }
     return res
   }
