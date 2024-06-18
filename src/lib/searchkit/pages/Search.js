@@ -27,6 +27,15 @@ import CustomDateRange from "../components/CustomDateRange";
 import SearchBoxAutocomplete from "../components/SearchBoxAutocomplete";
 import RefinementListWithLabels from "../components/RefinementListWithLabels";
 
+// PDL
+import { top_right_menu } from '../../../components/App'
+import { Component } from 'react';
+import qs from 'query-string'
+import history from "../../../history"
+import store from '../../../index';
+import { initiateApp } from '../../../state/actions';
+
+
 const searchClient = Client(
   SearchkitConfig,
   {
@@ -46,99 +55,124 @@ const searchClient = Client(
   { debug: process.env.NODE_ENV === "development" }
 );
 
-const SearchPage = () => {
-  return (
-    <div className="AppSK">
-      <InstantSearch
-        indexName={process.env.REACT_APP_ELASTICSEARCH_INDEX}
-        routing={routingConfig}
-        searchClient={searchClient}
-      >
-        <div className="content">
-          <div className="filter">
-            <div className="filter-title">Sort by</div>
+export class SearchPage extends Component<State, Props>
+{
+  _urlParams = {}
 
-            <SortBy
-              items={[
-                {
-                  label: "default",
-                  value: process.env.REACT_APP_ELASTICSEARCH_INDEX,
-                },
-                {
-                  label: "sync scan date",
-                  value: "firstScanSyncDate_desc",
-                },
+  constructor(props) {
+      super(props);
+      
+      this._urlParams = qs.parse(history.location.search) 
+      
+      this.state = { collapse:{} } 
 
-                {
-                  label: "publication date (most recent) ",
-                  value: "publicationDate_desc",
-                },
+      if(!this.props.config) store.dispatch(initiateApp(this._urlParams,null,null,"tradition"))
+      
+  }
 
-                {
-                  label: "publication date (oldest)",
-                  value: "publicationDate_asc",
-                },
-              ]}
-            />
+  componentDidUpdate() { 
 
-            <div className="filter-title">type</div>
-            <RefinementList attribute="type" showMore={true} />
+      if(window.initFeedbucket) window.initFeedbucket()
 
-            <div className="filter-title">firstScanSyncDate</div>
-            <CustomDateRange attribute="firstScanSyncDate" />
+  }
 
-            <div className="filter-title">inCollection</div>
-            <RefinementListWithLabels
-              attribute="inCollection"
-              showMore={true}
-            />
-            <div className="filter-title">language</div>
-            <RefinementList attribute="language" showMore={true} />
+  render() {
+    return (
+      <>
+        { top_right_menu(this) }
+        <div className="AppSK">
+          <InstantSearch
+            indexName={process.env.REACT_APP_ELASTICSEARCH_INDEX}
+            routing={routingConfig}
+            searchClient={searchClient}
+          >
+            <div className="content">
+              <div className="filter">
+                <div className="filter-title">Sort by</div>
 
-            <div className="filter-title">associatedTradition</div>
-            <RefinementList attribute="associatedTradition" showMore={true} />
+                <SortBy
+                  items={[
+                    {
+                      label: "default",
+                      value: process.env.REACT_APP_ELASTICSEARCH_INDEX,
+                    },
+                    {
+                      label: "sync scan date",
+                      value: "firstScanSyncDate_desc",
+                    },
 
-            <div className="filter-title">personGender</div>
-            <RefinementList attribute="personGender" showMore={true} />
+                    {
+                      label: "publication date (most recent) ",
+                      value: "publicationDate_desc",
+                    },
 
-            <div className="filter-title">printMethod</div>
-            <RefinementList attribute="printMethod" showMore={true} />
+                    {
+                      label: "publication date (oldest)",
+                      value: "publicationDate_asc",
+                    },
+                  ]}
+                />
 
-            <div className="filter-title">script</div>
-            <RefinementList attribute="script" showMore={true} />
+                <div className="filter-title">type</div>
+                <RefinementList attribute="type" showMore={true} />
 
-            <div className="filter-title">workIsAbout</div>
-            <RefinementListWithLabels attribute="workIsAbout" showMore={true} />
+                <div className="filter-title">firstScanSyncDate</div>
+                <CustomDateRange attribute="firstScanSyncDate" />
 
-            <div className="filter-title">workGenre</div>
-            <RefinementListWithLabels attribute="workGenre" showMore={true} />
+                <div className="filter-title">inCollection</div>
+                <RefinementListWithLabels
+                  attribute="inCollection"
+                  showMore={true}
+                />
+                <div className="filter-title">language</div>
+                <RefinementList attribute="language" showMore={true} />
 
-            <div className="filter-title">author</div>
-            <RefinementListWithLabels attribute="author" showMore={true} />
+                <div className="filter-title">associatedTradition</div>
+                <RefinementList attribute="associatedTradition" showMore={true} />
 
-            <div className="filter-title">translator</div>
-            <RefinementListWithLabels attribute="translator" showMore={true} />
+                <div className="filter-title">personGender</div>
+                <RefinementList attribute="personGender" showMore={true} />
 
-            <div className="filter-title">associatedCentury</div>
-            <RefinementList attribute="associatedCentury" showMore={true} />
-          </div>
-          <div className="main-content">
-            <div className="search">
-              <SearchBoxAutocomplete />
-            </div>
-            <div className="hits">
-              <Configure hitsPerPage={20} />
-              <Hits hitComponent={CustomHit} />
-              <div className="pagination">
-                <Pagination />
+                <div className="filter-title">printMethod</div>
+                <RefinementList attribute="printMethod" showMore={true} />
+
+                <div className="filter-title">script</div>
+                <RefinementList attribute="script" showMore={true} />
+
+                <div className="filter-title">workIsAbout</div>
+                <RefinementListWithLabels attribute="workIsAbout" showMore={true} />
+
+                <div className="filter-title">workGenre</div>
+                <RefinementListWithLabels attribute="workGenre" showMore={true} />
+
+                <div className="filter-title">author</div>
+                <RefinementListWithLabels attribute="author" showMore={true} />
+
+                <div className="filter-title">translator</div>
+                <RefinementListWithLabels attribute="translator" showMore={true} />
+
+                <div className="filter-title">associatedCentury</div>
+                <RefinementList attribute="associatedCentury" showMore={true} />
+              </div>
+              <div className="main-content">
+                <div className="search">
+                  <SearchBoxAutocomplete />
+                </div>
+                <div className="hits">
+                  <Configure hitsPerPage={20} />
+                  <Hits hitComponent={CustomHit} />
+                  <div className="pagination">
+                    <Pagination />
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
+            {/* <CustomHits /> */}
+          </InstantSearch>
         </div>
-        {/* <CustomHits /> */}
-      </InstantSearch>
-    </div>
-  );
+      </>
+    );
+  }
 };
 
 export default SearchPage;

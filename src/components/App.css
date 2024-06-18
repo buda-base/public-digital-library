@@ -699,6 +699,16 @@ body > #pop-login { z-index:1000000 ;}
    margin-left:110px;
 }
 
+.AppSK {
+   width:1440px;
+   max-width:97%;
+   box-sizing: border-box;
+   margin:auto;
+   z-index:100000;
+   position: relative;
+
+}
+
 .inner-search-bar:not(#a) {
    width:1440px;
    max-width:97%;

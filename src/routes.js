@@ -46,7 +46,7 @@ import analytics from './components/Analytics'
 // TODO: new search 
 import "./lib/searchkit/index.css";
 import "./lib/searchkit/App.css";
-import SearchPage from "./lib/searchkit/pages/Search";
+import SearchPageContainer from "./containers/SearchPageContainer";
 
 const loggergen = new logdown('gen', { markdown: false });
 
@@ -309,7 +309,7 @@ const makeMainRoutes = () => {
                         
                         <Route exact path="/osearch/search" render={(props) => <>
                            <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/instantsearch.css@7/themes/satellite-min.css" />
-                           <SearchPage /> 
+                           <SearchPageContainer history={history} auth={auth} /> 
                         </>}/> 
                         
                         <Route exact path="/iiifcookielogin" render={(props) => {

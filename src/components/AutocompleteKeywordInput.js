@@ -80,7 +80,10 @@ export default function AutocompleteKeywordInput(props) {
         <div class="suggest-bg" onClick={removeSuggestions}></div>
         <div class="suggestions">
           { suggest.map(s => <span>
-              <Link to={"/search?q="+keywordtolucenequery(s.res.replace(/<[^>]+>/g,""), s.lang)+"&lg="+s.lang+"&t="+(s.category ? s.category : "Instance")}>
+              <Link to={ 
+                  //"/search?q="+keywordtolucenequery(s.res.replace(/<[^>]+>/g,""), s.lang)+"&lg="+s.lang+"&t="+(s.category ? s.category : "Instance")}>
+                  "/osearch/search?q="+encodeURIComponent(s.res.replace(/<[^>]+>/g,""))
+                }>
                 <span class="suggest-str">{HTMLparse(s.res)}</span>
                 { s.category && <>
                   <span class="suggest-in">in</span>
