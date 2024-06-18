@@ -44,8 +44,9 @@ import logdown from 'logdown'
 import analytics from './components/Analytics'
 
 // TODO: new search 
-//import "./lib/searchkit/App.css";
-//import SearchPage from "./lib/searchkit/pages/Search";
+import "./lib/searchkit/index.css";
+import "./lib/searchkit/App.css";
+import SearchPage from "./lib/searchkit/pages/Search";
 
 const loggergen = new logdown('gen', { markdown: false });
 
@@ -305,9 +306,12 @@ const makeMainRoutes = () => {
                            return (<ScriptLoader url={props.match.params.URL}/>)
                         } } />
                         */}
-                        {/* // TODO:
-                        <Route exact path="/searchkit" render={(props) => <SearchPage /> }/> 
-                        */}
+                        
+                        <Route exact path="/opensearch/search" render={(props) => <>
+                           <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/instantsearch.css@7/themes/satellite-min.css" />
+                           <SearchPage /> 
+                        </>}/> 
+                        
                         <Route exact path="/iiifcookielogin" render={(props) => {
                            return (<IIIFCookieLogin auth={auth} history={history} get={qs.parse(history.location.search)}/>)
                         } } />

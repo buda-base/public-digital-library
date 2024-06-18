@@ -78,7 +78,7 @@ async function buildTree(id, glob, parent) {
       if(obj.length > 1 && obj[1]) obj = obj[1]
       if(obj) { 
         sub.push(obj)
-        //if(id === "O9TAXTBRC201605" || parent === "O9TAXTBRC201605") // || glob[parent].parent === "O9TAXTBRC201605" ) 
+        if(id === "O9TAXTBRC201605" || parent === "O9TAXTBRC201605") // || glob[parent].parent === "O9TAXTBRC201605" ) 
         await buildTree(obj, glob, id)        
       }
     }
@@ -96,7 +96,10 @@ async function buildTree(id, glob, parent) {
     const xpathExpression2 = `.//o:node[@value="${id}"]`;
     const result2 = tbrc.evaluate(xpathExpression2, tbrc, nsResolver, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);    
     if (result2.snapshotLength > 0) {
-      console.log("value:", result2)
+      const elem = result2.snapshotItem(0)
+      console.log("value:", elem.getAttribute("value"), elem.getAttribute("nl"))
+      glob[id].tbrcId = elem.getAttribute("value")
+      glob[id].rank = Number(elem.getAttribute("nl"))
     } else {
       let found = false
       for (let i = 0; i < xml.snapshotLength; i++) {
@@ -112,24 +115,37 @@ async function buildTree(id, glob, parent) {
               const elem = result3.snapshotItem(i)
               return [elem.parentNode.getAttribute("value"),elem.parentNode.getAttribute("nl")]
             }).filter(n => !n[0].startsWith("T"))
-            if(filtered.length > 1) console.warn("MULTIPLE TOPIC FOUND", result3, prefLabel, filtered)
-            else console.log("label:", label["@value"], result3, filtered)
-            //glob[id].rank = 
+            if(filtered.length > 1) { 
+              console.warn("MULTIPLE TOPIC FOUND", result3, prefLabel, filtered, parent)
+              glob.multiple.push({id, filtered})
+            } else if(filtered.length === 1){ 
+              console.log("label:", label["@value"], result3, filtered)
+              glob[id].tbrcId = filtered[0][0]
+              glob[id].rank = Number(filtered[0][1])
+            } else {
+              console.error("TOPIC NOT FOUND", id, prefLabel)
+              glob.notFound.push({id, prefLabel})
+            }
             break;
           }
         }
 
       }
-      if(!found) console.error("TOPIC NOT FOUND", id, prefLabel)
+      if(!found) {
+        console.error("TOPIC NOT FOUND", id, prefLabel)
+        glob.notFound.push({id, prefLabel})
+      }
     }
   }
 }
 
 
+/*
 // uncomment to rebuild tree then copy/paste object from console to ../lib/topics.js once finished (takes a few minutes)
-const newTopics = {}, newGenres = {}
+const newTopics = { notFound:[], multiple:[] }, newGenres = { notFound:[], multiple:[] }
 //buildTree("O3JW5309", newGenres).then(() => { console.log("genres:",newGenres) })
 buildTree("O9TAXTBRC201605", newTopics).then(() => { console.log("topics:",newTopics) })
+*/
 
 
 const len = (k, topics) => {
