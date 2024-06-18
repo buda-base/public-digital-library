@@ -1388,6 +1388,7 @@ async function getManifest(url,iri,thumb) {
             else manifests = manif.manifests
             if(!collecManif) { 
                collecManif = manif.manifests[0]["@id"]
+               console.log("collec?",collecManif,manif,isSingle)
                store.dispatch(dataActions.gotManifest(manif,iri,collecManif,manif.manifests.length === 1))
             }
             if(!isSingle) collecManif = null  //manif.manifests[0]["@id"]
@@ -1427,9 +1428,17 @@ async function getManifest(url,iri,thumb) {
 
             let canvasID = manif.sequences[0].canvases[imageIndex]["@id"]
 
-            let image = getiiifthumbnailurl(imageres)
+            
+            let image = getiiifthumbnailurl(imageres), test
+            
+            // #869 catch error when fetching thumbnail
+            try {
+               //throw new ResourceNotFound('Problem fetching the resource (code:'+500+')',500); 
+               test = await api.getURLContents(image+"?t="+Date.now(),null,null,null,true)
+            } catch(e) {
+               console.error("server error fetching thumbnail", e, image)
+            }
 
-            let test = await api.getURLContents(image,null,null,null,true)
             
             //loggergen.log("img",test)
             
@@ -3333,8 +3342,18 @@ async function getOutline(iri,node?,volFromUri?) {
    let res = await api.loadOutline(iri,node,volFromUri) 
 
    //loggergen.log("gotO:",iri,JSON.stringify(res,null,3),node,volFromUri)
+   
+   if(res && res["@graph"] && Array.isArray(res["@graph"])) res["@graph"] = res["@graph"].map(r => { 
+      if(r.hasPart) {
+         if(!Array.isArray(r.hasPart)) r.hasPart = [ r.hasPart ]
+         r.hasPart = r.hasPart.filter(h => !res["@graph"].some(n => n.id === h && n.partType == "bdr:PartTypeCodicologicalVolume" ))
+         if(!r.hasPart?.length) delete r.hasPart
+      }
+      return r
+   }).filter(n => n && !(n.partType === "bdr:PartTypeCodicologicalVolume"))
 
    if(res && res["@graph"] && volFromUri) res["@graph"].map(r => { 
+
       // patch main node
       if(r.id == volFromUri
          && r.hasPart && r.hasPart !== iri && !r.hasPart.includes(iri) // quickfix for loop/crash in bdr:MW12827

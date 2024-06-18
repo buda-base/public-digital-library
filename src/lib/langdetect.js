@@ -76,10 +76,13 @@ export function narrowWithString(strtoguess, transtotest = ['ewts', 'iast', 'pin
 	// #756
 	strtoguess = strtoguess.replace(/[\[\]()|_]/g, " ")
 
-	//loggergen.log("nWs:",strtoguess,transtotest)
+	//console.log("nWs?",strtoguess,transtotest)
 	var wordlen = 0;
 	var triedrange = false;
 	for (let char of strtoguess) { // iterates on Unicode code points, not code units
+		if (char == '"') {
+			continue
+		}
 		if (char == " ") {
 			wordlen = 0;
 			continue

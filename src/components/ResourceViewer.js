@@ -460,6 +460,7 @@ let propOrder = {
       "rdfs:seeAlso",
       "bdo:incipit",
       "bdo:authorshipStatement",
+      "tmp:outlineAuthorshipStatement",
       "bdo:explicit",
       "bdo:colophon",
       "bdo:instanceEvent",
@@ -4773,7 +4774,7 @@ class ResourceViewer extends Component<Props,State>
                {
                   loggergen.log("here:",this.props.collecManif)
 
-                  if(this.props.imageAsset.match(/[/]collection[/]/) && (!this.props.collecManif || this.props.monovolume === false))
+                  if(this.props.imageAsset.match(/[/]collection[/]/) && (!this.props.collecManif || true || this.props.monovolume === false))
                   {
                      data.push({"collectionUri": this.props.imageAsset +"?continuous=true", location:"Test Collection Location" })
                      //if(this.props.manifests) data = data.concat(this.props.manifests.map(m => ({manifestUri:m["@id"],label:m["label"]})))
@@ -5166,7 +5167,7 @@ class ResourceViewer extends Component<Props,State>
 
          //loggergen.log("iiif:",this.props.firstImage,this.props.imageAsset,iiif,this.props.config)
 
-         let id = this.props.IRI.replace(/^[^:]+:./,"")
+         let id = this.props.IRI.replace(/^[^:]+:[MW]+/,"")
          if(this.props.imageAsset.match(/[/]i:/) || (this.props.imageAsset.match(/[/]wio:/) && this.props.manifests)) {
             pdfLink = iiif+"/download/pdf/wi:bdr:W"+id+"::bdr:I"+id ;
          }
@@ -6857,8 +6858,8 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
       let data = kZprop.map((k) => {
 
             let elem = this.getResourceElem(k);
-            // #783
-            if(k === bdo+"authorshipStatement" && this.props.outlines && !elem?.length) {
+            // #783 + #851
+            if(k === tmp+"outlineAuthorshipStatement" && this.props.outlines /*&& !elem?.length*/) {
                let nodes = this.props.outlines[this.props.IRI]
                if(nodes && nodes["@graph"]) nodes = nodes["@graph"] 
                if(nodes?.filter) {
@@ -8638,6 +8639,11 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
                                        let hideT = (lasTy === title.type)
                                        lasTy = title.type
                                        if(title && title["rdfs:label"]) title = title["rdfs:label"]
+                                       // #852
+                                       if(typeof title == "string") { 
+                                          let lang = narrowWithString(title)
+                                          title = { "@value": title, "@language":lang[0] === "tibt" ? "bo": "?" }
+                                       }
                                        if(!Array.isArray(title)) title = [ title ]                                      
                                        title = title.map(f => ({value:f["@value"],lang:f["@language"], type:"literal"}))                                       
                                        //loggergen.log("title?",JSON.stringify(title,null,3),g)
@@ -9264,7 +9270,9 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
          if(!serial) serial = this.getResourceElem(bdo+"collectionMember");
          if(!serial) serial = this.getResourceElem(bdo+"corporationHasMember");
          
-         const isEtextCollection = serial && !serial.some(k => k.value?.includes("/resource/W")) ;
+         // #871 
+         const isEtextCollection = serial && serial.some(k => k.value?.includes("/resource/IE")) ;
+         const isInstanceCollection = serial && serial.some(k => k.value?.includes("/resource/MW")) ;
 
          //loggergen.log("serial:",serial)
 
@@ -9312,7 +9320,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
          })
 
          if(related.length && related.length > 4) { 
-            let searchUrl = "/search?r="+this.props.IRI+"&t=Work&f=relation,inc,bdo:workIsAbout"
+            let searchUrl = "/search?r="+this.props.IRI+"&t=Work&f=relation,inc,bdo:workIsAbout&f=relation,inc,bdo:workGenre"
             related.push(<Link class="search" to={searchUrl}>{I18n.t("misc.seeMore")}</Link>)
          }
 
@@ -9339,7 +9347,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
             } else if(_T === "Place" || serial && _T === "Work") {
                searchUrl += "&t=Instance"+(this.props.useDLD?"&f=inDLD,inc,tmp:available":"")
             } else if( _T === "Product") {
-               searchUrl += "&t="+(isEtextCollection?"Etext":"Scan")+(this.props.useDLD?"&f=inDLD,inc,tmp:available":"")
+               searchUrl += "&t="+(isEtextCollection?"Etext":(isInstanceCollection?"Instance":"Scan"):"Scan")+(this.props.useDLD?"&f=inDLD,inc,tmp:available":"")
             } else if(_T === "Corporation") {
                searchUrl += "&t=Person"
             } else {
@@ -9606,7 +9614,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
          return ([
             getGDPRconsent(this),
             <div class={monlamResults ? "withMonlam" : ""}>               
-               { monlamResults && <link rel="stylesheet" href="https://monlamdic.com/dictionarys/files/css/basic.css" /> }
+               { monlamResults && <link rel="stylesheet" href="https://monlamdictionary.com/files/css/basic.css" /> }
                { top_right_menu(this,title,searchUrl,etextRes) }               
                { this.renderMirador(isMirador) }           
                <div class="resource etext-view" >
@@ -9643,9 +9651,10 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
       }
       else {
 
-         let listWithAS = [ ], tmpElem = this.getResourceElem(bdo+"authorshipStatement")
+         // #851
+         let listWithAS = [ ], tmpElem = this.getResourceElem(tmp+"outlineAuthorshipStatement")
          if(!tmpElem?.length && this.props.outlines && this.props.outlines[this.props.IRI]) {
-            listWithAS = [ bdo+"authorshipStatement" ]
+            listWithAS = [ tmp+"outlineAuthorshipStatement" ]
          }
          
          let theDataTop = this.renderData(topProps,iiifpres,title,otherLabels,"top-props","main-info")      

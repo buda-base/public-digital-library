@@ -151,7 +151,8 @@ footer#site-footer.no-syncs > div.head::before { background-color:#efefef; }
 .App:not(.home) { min-height:100vh;} 
 .App:not(.home) .SearchPane { min-height:calc(100vh - 80px - 50px * 0);  }
 
-[role='tooltip'] *, .App *,.nav *,.App *::before,.App *::after, .react-tabs *, .resource *:not(.fa):not(.material-icons), .resource + * *,
+
+#more-pages-menu a,[role='tooltip'] *, .App *,.nav *,.App *::before,.App *::after, .react-tabs *, .resource *:not(.fa):not(.material-icons), .resource + * *,
 .inRes *, #popDL.cite *, #menu-citationLang * { 
    font-family:"Noto Sans", "Noto Serif Tibetan", "Noto Serif Khmer", "Noto Sans Mongolian", "Roboto", "Helvetica", "Arial", sans-serif !important;
 }
@@ -212,7 +213,7 @@ body { overflow:auto !important;padding-right:0 !important; /*font-family:"Robot
    line-height: 53px;margin-top:0; margin-bottom:14px;text-align: left;;
 }
 
-.SearchPane #logo h1[lang="bo"] {  font-size:61px; margin-bottom:32px; font-weight:500; }
+.SearchPane #logo h1[lang="bo"] {  font-size:61px; margin-bottom:32px; font-weight:500; line-height: 105px; }
 
 .SearchPane #logo h1 + div {
    font-weight:500;
@@ -226,6 +227,10 @@ body { overflow:auto !important;padding-right:0 !important; /*font-family:"Robot
    font-weight: 400;
    text-align: left;
    /* letter-spacing: 0.31px; */
+}
+
+.SearchPane #logo h1[lang="bo"]~span {
+   line-height:200%;
 }
 
 .infoPanel {
@@ -296,7 +301,7 @@ body { overflow:auto !important;padding-right:0 !important; /*font-family:"Robot
 .msg-popup { position: fixed; top:0 ;left:0;right:0;bottom:0; display:flex; align-items: center; justify-content: center; z-index:100100;}
 .msg-popup .back { width: 100%; height:100%; background:rgba(0,0,0,0.5); position: absolute;}
 .msg-popup .front { background:white; padding:20px 40px;box-shadow: 0 0 10px 3px rgba(0,0,0,0.5); border-radius: 0px; z-index:1; max-width:80%; width:540px; position: relative;
-   box-sizing: border-box  ;
+   box-sizing: border-box  ; max-height:80%; overflow: auto;
 }
 .msg-popup .front p { color:#555; text-align: center; font-weight: 500; font-size: 15px;}
 .msg-popup .front p a { color:#d73449; font-weight:600; text-decoration: none; }
@@ -624,6 +629,7 @@ html[lang="bo"] .msg-popup .front p { font-size:18px;}
 
 .nav a { text-decoration: none; font-size:0; display:inline-block; }
 
+#more-pages-menu a,
 .nav #logo.khmer + .links a,
 footer #donate,
 .nav a#about,
@@ -655,6 +661,7 @@ footer #donate,
 
 .nav #logo #by span { padding-top:7px; text-transform:none; letter-spacing: 1px; font-weight:600;}
 
+#more-pages-menu a,
 .nav a#collections,
 .nav a#about { color: #192229;} 
 
@@ -2662,7 +2669,7 @@ div:has(.resource.preview) .infoPanel.inRes { margin:0 !important; }
 
 /* ------------------------------------------------------------------------------------------------------------------------ monlam*/
 
-/* @import "https://monlamdic.com/dictionarys/files/css/basic.css"; */
+/* @import "https://monlamdictionary.com/files/css/basic.css"; */
 
 .resource ~ .monlamResults { width:0px; position:relative; flex-shrink: 0; } 
 .resource ~ .monlamResults > div { width:0px; height:calc(100% - 2 * 80px); position:fixed; right:0; top:80px; background:white; overflow:auto; 
@@ -5544,6 +5551,10 @@ feedbucket-app:not(.on)  { display:none !important; }
 
 }
 
+#more-pages { display:none; margin-left:20px; cursor:pointer;}
+#more-pages-menu li:not(#a) { height:auto; padding:0; }
+#more-pages-menu li:not(#a) a { display:block; padding:12px 16px;}
+
 @media (max-width:1320px)
 {
    #latest .seeAll { margin-right:60px;}
@@ -5556,7 +5567,16 @@ feedbucket-app:not(.on)  { display:none !important; }
    */
 
    .nav { padding-left:24px;padding-right:24px; max-width:100%; box-sizing: border-box;} 
-   #about, #about + a:not(#collections) { display:none;}
+
+   #more-pages > span,
+   #more-pages { display:flex; align-items: center; }
+
+
+   #about, 
+   #guide,
+   #new-search
+   /* #about + a:not(#collections)  */
+   { display:none;}
 
    .nav .history { margin-left:auto;}
 
@@ -6305,14 +6325,16 @@ a.result + #matches.mobile,
 
 }
 
+#about + a:not(#collections) svg,
 #guide svg,
 .not-logged svg,
 .logged svg { display:none; }
 
 @media (max-width:665px)
 {
-   #guide svg { display:block; }
-   #guide > span { font-size:0; }
+
+   #about + a:not(#collections) svg { display:block; }
+   #about + a:not(#collections) > span { font-size:0; }
 
    .not-logged svg { display:block; }
    .not-logged > span { font-size:0; }
@@ -6321,11 +6343,14 @@ a.result + #matches.mobile,
    .logged > span { font-size:0; }
 
    .nav #logo a#BDRC span, 
-   .nav #logo a:last-child span, 
-   .nav #logo a:first-child span { font-size: 0px; }
+   .nav #logo a:last-child span
+   { font-size: 0px; }
+
+   .nav #logo a:first-child span { display:none; }
 
    .nav #logo.khmer + .links a { margin-left:0; margin-right:0px;}
 
+   #more-pages { margin-left:0; width:70px; }
    
    
    .nav.khmerServer > div > #lang,
@@ -6834,11 +6859,17 @@ a.result + #matches.mobile,
    .nav > div > #login > div > span, 
    .nav > div > :is(a,div,span) { margin:0 0 0 17px !important; }
    
-   .nav > div > #login { margin-left:8px !important;}
+   .nav > div > #login { margin-left:0px !important;}
 
 }
 
+
 @media (max-width:375px)
+{
+   .nav > div > #logo { display:none; }
+}
+
+@media (max-width:400px)
 {
    .nav > div > #lang,
    .nav > div > #login,
@@ -6886,6 +6917,10 @@ a.result + #matches.mobile,
 
 @media (max-width:480px) {
 
+ 
+   .infoPanel+.resource>.ariane {
+      top: 80px;
+   }
    
    /*
    html:not(.auto_rela) {
