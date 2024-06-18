@@ -41,6 +41,8 @@ Note: strings that don't need to appear in a language are translated as a single
 
 # Stanza for EZProxy
 
+https://help.oclc.org/Library_Management/EZproxy/EZproxy_database_stanzas/Database_stanzas_B/Buddhist_Digital_Resource_Center_(BUDA)
+
 ```
 AnonymousURL +https://ldspdi.bdrc.io/*
 AnonymousUrl +https://editserv.brdc.io/*
