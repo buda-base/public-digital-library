@@ -1158,7 +1158,7 @@ export function top_right_menu(that,etextTitle,backUrl,etextres)
          </div>
       ),
       innerSearch = (
-         that?.state.filters && !that?.props.keyword || that?.state.filters && that.props.advancedSearch 
+         that?.state.filters && !that?.props.keyword || that?.state.filters && that.props.advancedSearch || that.props.isOsearch
          ? null 
          : <div class={'inner-search-bar in-search-'+(that.state.filters?"true":"false")}>
             <div>

@@ -86,9 +86,14 @@ export class SearchPage extends Component<State, Props>
             routing={routingConfig}
             searchClient={searchClient}
           >
+            <div className="search inner-search-bar">
+              <div>
+                <SearchBoxAutocomplete />
+              </div>
+            </div>
             <div className="content">
               <div className="filter">
-                <div className="filter-title">Sort by</div>
+                <div className="filter-title"><p>Sort by</p></div>
 
                 <SortBy
                   items={[
@@ -113,52 +118,50 @@ export class SearchPage extends Component<State, Props>
                   ]}
                 />
 
-                <div className="filter-title">type</div>
+                <div className="filter-title"><p>type</p></div>
                 <RefinementList attribute="type" showMore={true} />
 
-                <div className="filter-title">firstScanSyncDate</div>
+                <div className="filter-title"><p>firstScanSyncDate</p></div>
                 <CustomDateRange attribute="firstScanSyncDate" />
 
-                <div className="filter-title">inCollection</div>
-                <RefinementListWithLabels
-                  attribute="inCollection"
-                  showMore={true}
+                <div className="filter-title"><p>inCollection</p></div>
+                <RefinementListWithLabels attribute="inCollection" showMore={true}
                 />
-                <div className="filter-title">language</div>
+                <div className="filter-title"><p>language</p></div>
                 <RefinementList attribute="language" showMore={true} />
 
-                <div className="filter-title">associatedTradition</div>
+                <div className="filter-title"><p>associatedTradition</p></div>
                 <RefinementList attribute="associatedTradition" showMore={true} />
 
-                <div className="filter-title">personGender</div>
+                <div className="filter-title"><p>personGender</p></div>
                 <RefinementList attribute="personGender" showMore={true} />
 
-                <div className="filter-title">printMethod</div>
+                <div className="filter-title"><p>printMethod</p></div>
                 <RefinementList attribute="printMethod" showMore={true} />
 
-                <div className="filter-title">script</div>
+                <div className="filter-title"><p>script</p></div>
                 <RefinementList attribute="script" showMore={true} />
 
-                <div className="filter-title">workIsAbout</div>
+                <div className="filter-title"><p>workIsAbout</p></div>
                 <RefinementListWithLabels attribute="workIsAbout" showMore={true} />
 
-                <div className="filter-title">workGenre</div>
+                <div className="filter-title"><p>workGenre</p></div>
                 <RefinementListWithLabels attribute="workGenre" showMore={true} />
 
-                <div className="filter-title">author</div>
+                <div className="filter-title"><p>author</p></div>
                 <RefinementListWithLabels attribute="author" showMore={true} />
 
-                <div className="filter-title">translator</div>
+                <div className="filter-title"><p>translator</p></div>
                 <RefinementListWithLabels attribute="translator" showMore={true} />
 
-                <div className="filter-title">associatedCentury</div>
+                <div className="filter-title"><p>associatedCentury</p></div>
                 <RefinementList attribute="associatedCentury" showMore={true} />
               </div>
               <div className="main-content">
-                <div className="search">
-                  <SearchBoxAutocomplete />
-                </div>
                 <div className="hits">
+                  <div className="pagination">
+                    <Pagination />
+                  </div>
                   <Configure hitsPerPage={20} />
                   <Hits hitComponent={CustomHit} />
                   <div className="pagination">

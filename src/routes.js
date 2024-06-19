@@ -309,7 +309,7 @@ const makeMainRoutes = () => {
                         
                         <Route exact path="/osearch/search" render={(props) => <>
                            <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/instantsearch.css@7/themes/satellite-min.css" />
-                           <SearchPageContainer history={history} auth={auth} /> 
+                           <SearchPageContainer history={history} auth={auth} isOsearch={true}/> 
                         </>}/> 
                         
                         <Route exact path="/iiifcookielogin" render={(props) => {

@@ -37,7 +37,7 @@ const MyDateRange = (props) => {
   }, [beforeDate, afterDate, attribute]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
-    <>
+    <div class="ais-CustomDateRange">
       <Configure attribute={attribute} filters={request} />
       <input
         type="date"
@@ -55,7 +55,7 @@ const MyDateRange = (props) => {
           setAfterDate(e.target.value);
         }}
       />
-    </>
+    </div>
   );
 };
 
