@@ -151,7 +151,7 @@ export class SearchPage extends Component<State, Props>
                 <div className="filter-title"><p>{getPropLabel(this,fullUri("bdo:workGenre"))}</p></div>
                 <RefinementListWithLocalLabels that={this} attribute="workGenre" showMore={true} />
 
-                <div className="filter-title"><p>{getPropLabel(this,fullUri("bdr:R0ER0019"))}</p></div>
+                <div className="filter-title"><p>{getPropLabel(this,fullUri("tmp:author"))}</p></div>
                 <RefinementListWithLabels attribute="author" showMore={true} />
 
                 <div className="filter-title"><p>{getPropLabel(this,fullUri("bdr:R0ER0026"))}</p></div>
