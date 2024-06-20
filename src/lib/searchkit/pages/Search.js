@@ -146,10 +146,10 @@ export class SearchPage extends Component<State, Props>
                 <RefinementListWithLocalLabels that={this} attribute="script" showMore={true} />
 
                 <div className="filter-title"><p>{getPropLabel(this,fullUri("bdo:workIsAbout"))}</p></div>
-                <RefinementListWithLabels attribute="workIsAbout" showMore={true} />
+                <RefinementListWithLocalLabels that={this} attribute="workIsAbout" showMore={true} />
 
                 <div className="filter-title"><p>{getPropLabel(this,fullUri("bdo:workGenre"))}</p></div>
-                <RefinementListWithLabels attribute="workGenre" showMore={true} />
+                <RefinementListWithLocalLabels that={this} attribute="workGenre" showMore={true} />
 
                 <div className="filter-title"><p>{getPropLabel(this,fullUri("bdr:R0ER0019"))}</p></div>
                 <RefinementListWithLabels attribute="author" showMore={true} />
