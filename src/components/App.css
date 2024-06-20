@@ -715,7 +715,7 @@ body > #pop-login { z-index:1000000 ;}
    width:14px;
 }
 
-.AppSK :not(#a) .ais-RefinementList-item--selected .ais-RefinementList-checkbox {
+.AppSK .ais-RefinementList-item--selected .ais-RefinementList-checkbox {
    background-color:white;
    color:rgb(215, 52, 73);
    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' class='MuiSvgIcon-root-3' focusable='false' viewBox='0 0 24 24' aria-hidden='true' style='fill: rgb(215, 52, 73);'%3E%3Cpath fill='none' d='M0 0h24v24H0z'%3E%3C/path%3E%3Cpath d='M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.11 0 2-.9 2-2V5c0-1.1-.89-2-2-2zm-9 14l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z'%3E%3C/path%3E%3C/svg%3E");
@@ -723,6 +723,9 @@ body > #pop-login { z-index:1000000 ;}
    box-shadow: none;
 }
 
+.AppSK .ais-RefinementList-labelText [lang="en"] {
+   text-transform: capitalize;
+}
 
 .AppSK .content {
    width:1440px;

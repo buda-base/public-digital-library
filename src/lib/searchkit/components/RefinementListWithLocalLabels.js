@@ -7,6 +7,8 @@ import { useRefinementList } from "react-instantsearch";
 // API
 import { fetchLabels } from "../api/LabelAPI";
 
+import { getPropLabel, fullUri } from '../../../components/App'
+
 const LANGUAGE = "bo-x-ewts";
 
 const getItem = (collection, id) => {
@@ -14,7 +16,7 @@ const getItem = (collection, id) => {
 };
 
 function CustomRefinementList(props) {
-  const { attribute } = props;
+  const { attribute, that, I18n_prefix } = props;
 
   const [currentItems, setCurrentItems] = useState([]);
 
@@ -28,53 +30,20 @@ function CustomRefinementList(props) {
   } = useRefinementList(props);
 
   useEffect(() => {
-    const itemIds = items.map((_item) => _item.value);
 
-    if (!localStorage.getItem(attribute)) {
-      localStorage.setItem(attribute, JSON.stringify([]));
-    }
+    
+    const newItems = items.map((_item) => ({
+      id: _item.value,
+      label: getPropLabel(that, fullUri("bdr:"+_item.value), true, false, I18n_prefix ? I18n_prefix+"."+_item.value.toLowerCase() : ""),
+    }));
 
-    let storage = JSON.parse(localStorage.getItem(attribute));
+    console.log("items:",attribute, items, that, newItems)
 
-    // const storedItemIds = storage.map((_storedItem) => _storedItem.id);
+    setCurrentItems(newItems);
+  
+  }, [attribute, items, that.props.dictionary, that.props.locale]);
 
-    const missingIds = itemIds.filter(
-      (_id) =>
-        !storage.find(
-          (_storedItem) =>
-            _storedItem.id === _id && _storedItem.lang === LANGUAGE
-        )
-    );
-
-    if (missingIds.length > 0) {
-      fetchLabels(missingIds, attribute, LANGUAGE)
-        .then((response) => {
-          const newItems = Object.entries(response).map(([id, label]) => {
-            return { id, label, lang: LANGUAGE };
-          });
-
-          storage = [...storage, ...newItems];
-          const newCurrentItems = storage.filter((_item) =>
-            itemIds.includes(_item.id)
-          );
-
-          setCurrentItems(newCurrentItems);
-          localStorage.setItem(attribute, JSON.stringify(storage));
-        })
-        .catch((error) => {
-          console.error(error);
-        });
-    } else {
-      const alreadyKnownItem = JSON.parse(localStorage.getItem(attribute));
-      const newItems = items.map((_item) => ({
-        id: _item.value,
-        label: getItem(alreadyKnownItem, _item.value).label,
-      }));
-
-      setCurrentItems(newItems);
-    }
-  }, [attribute, items]);
-
+  
   return (
     <div className="ais-RefinementList">
       {/* <input
@@ -109,7 +78,7 @@ function CustomRefinementList(props) {
           </li>
         ))}
       </ul>
-      { items.length >= 10 && 
+      { items.length >= 10 &&
         <button
           className="ais-RefinementList-showMore"
           onClick={toggleShowMore}

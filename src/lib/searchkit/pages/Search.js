@@ -21,14 +21,17 @@ import {
   SortBy,
 } from "react-instantsearch";
 
+import I18n from 'i18next';
+
 // Custom
 import CustomHit from "../components/CustomHit";
 import CustomDateRange from "../components/CustomDateRange";
 import SearchBoxAutocomplete from "../components/SearchBoxAutocomplete";
 import RefinementListWithLabels from "../components/RefinementListWithLabels";
+import RefinementListWithLocalLabels from "../components/RefinementListWithLocalLabels";
 
 // PDL
-import { top_right_menu } from '../../../components/App'
+import { top_right_menu, getPropLabel, fullUri } from '../../../components/App'
 import { Component } from 'react';
 import qs from 'query-string'
 import history from "../../../history"
@@ -118,44 +121,44 @@ export class SearchPage extends Component<State, Props>
                   ]}
                 />
 
-                <div className="filter-title"><p>type</p></div>
-                <RefinementList attribute="type" showMore={true} />
+                <div className="filter-title"><p>{I18n.t("Lsidebar.datatypes.title")}</p></div>
+                <RefinementListWithLocalLabels I18n_prefix={"types"} that={this} attribute="type" showMore={true} />
 
-                <div className="filter-title"><p>firstScanSyncDate</p></div>
+                <div className="filter-title"><p>{getPropLabel(this,fullUri("tmp:firstScanSyncDate"))}</p></div>
                 <CustomDateRange attribute="firstScanSyncDate" />
 
-                <div className="filter-title"><p>inCollection</p></div>
+                <div className="filter-title"><p>{getPropLabel(this,fullUri("bdo:inCollection"))}</p></div>
                 <RefinementListWithLabels attribute="inCollection" showMore={true}
                 />
-                <div className="filter-title"><p>language</p></div>
-                <RefinementList attribute="language" showMore={true} />
+                <div className="filter-title"><p>{getPropLabel(this,fullUri("bdo:language"))}</p></div>
+                <RefinementListWithLocalLabels that={this} attribute="language" showMore={true} />
 
-                <div className="filter-title"><p>associatedTradition</p></div>
-                <RefinementList attribute="associatedTradition" showMore={true} />
+                <div className="filter-title"><p>{getPropLabel(this,fullUri("bdo:associatedTradition"))}</p></div>
+                <RefinementListWithLocalLabels that={this} attribute="associatedTradition" showMore={true} />
 
-                <div className="filter-title"><p>personGender</p></div>
-                <RefinementList attribute="personGender" showMore={true} />
+                <div className="filter-title"><p>{getPropLabel(this,fullUri("bdo:personGender"))}</p></div>
+                <RefinementListWithLocalLabels that={this} attribute="personGender" showMore={true} />
 
-                <div className="filter-title"><p>printMethod</p></div>
-                <RefinementList attribute="printMethod" showMore={true} />
+                <div className="filter-title"><p>{getPropLabel(this,fullUri("bdo:printMethod"))}</p></div>
+                <RefinementListWithLocalLabels that={this} attribute="printMethod" showMore={true} />
 
-                <div className="filter-title"><p>script</p></div>
-                <RefinementList attribute="script" showMore={true} />
+                <div className="filter-title"><p>{getPropLabel(this,fullUri("bdo:script"))}</p></div>
+                <RefinementListWithLocalLabels that={this} attribute="script" showMore={true} />
 
-                <div className="filter-title"><p>workIsAbout</p></div>
+                <div className="filter-title"><p>{getPropLabel(this,fullUri("bdo:workIsAbout"))}</p></div>
                 <RefinementListWithLabels attribute="workIsAbout" showMore={true} />
 
-                <div className="filter-title"><p>workGenre</p></div>
+                <div className="filter-title"><p>{getPropLabel(this,fullUri("bdo:workGenre"))}</p></div>
                 <RefinementListWithLabels attribute="workGenre" showMore={true} />
 
-                <div className="filter-title"><p>author</p></div>
+                <div className="filter-title"><p>{getPropLabel(this,fullUri("bdr:R0ER0019"))}</p></div>
                 <RefinementListWithLabels attribute="author" showMore={true} />
 
-                <div className="filter-title"><p>translator</p></div>
+                <div className="filter-title"><p>{getPropLabel(this,fullUri("bdr:R0ER0026"))}</p></div>
                 <RefinementListWithLabels attribute="translator" showMore={true} />
 
-                <div className="filter-title"><p>associatedCentury</p></div>
-                <RefinementList attribute="associatedCentury" showMore={true} />
+                <div className="filter-title"><p>{getPropLabel(this,fullUri("tmp:associatedCentury"))}</p></div>
+                <RefinementListWithLocalLabels that={this} attribute="associatedCentury" showMore={true} />
               </div>
               <div className="main-content">
                 <div className="hits">

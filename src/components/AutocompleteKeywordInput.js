@@ -70,7 +70,7 @@ export default function AutocompleteKeywordInput(props) {
    }
 
    const removeSuggestions = () => { 
-    setTimeout(() => setSuggest([]), 150)
+    setTimeout(() => setSuggest([]), 350) // 150 might not be enough
    }
 
    return <>
