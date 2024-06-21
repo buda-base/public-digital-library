@@ -166,7 +166,7 @@ export class SearchPage extends Component<State, Props>
                     <Pagination />
                   </div>
                   <Configure hitsPerPage={20} />
-                  <Hits hitComponent={CustomHit} />
+                  <Hits hitComponent={({hit}) => <CustomHit hit={hit} that={this} />} />
                   <div className="pagination">
                     <Pagination />
                   </div>

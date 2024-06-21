@@ -166,9 +166,13 @@ const getCustomizedBdrcIndexRequest = (request) => {
       fields: {
         prefLabel_bo_x_ewts: {},
         altLabel_bo_x_ewts: {},
+        prefLabel_en: {},
+        altLabel_en: {},
         seriesName_bo_x_ewts: {},
         seriesName_en: {},
         content_en: {},
+        comment_bo_x_ewts:{},
+        comment_en:{}
       },
     },
     query:

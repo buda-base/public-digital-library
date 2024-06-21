@@ -1,5 +1,6 @@
 // Core
 import React, { useEffect, useState } from "react";
+import I18n from 'i18next';
 
 // hooks
 import { useRefinementList } from "react-instantsearch";
@@ -34,7 +35,9 @@ function CustomRefinementList(props) {
     
     const newItems = items.map((_item) => ({
       id: _item.value,
-      label: getPropLabel(that, fullUri("bdr:"+_item.value), true, false, I18n_prefix ? I18n_prefix+"."+_item.value.toLowerCase() : ""),
+      label: attribute === "associatedCentury" 
+        ? <span>{I18n.t("misc.ord",{num: _item.value})}</span>
+        : getPropLabel(that, fullUri("bdr:"+_item.value), true, false, I18n_prefix ? I18n_prefix+"."+_item.value.toLowerCase() : ""),
     }));
 
     console.log("items:",attribute, items, that, newItems)

@@ -2,7 +2,6 @@
 .App {
   display: flex;
   flex-direction: column;
-  height: 100vh;
 }
 
 .content {
@@ -73,4 +72,214 @@
   flex: 1 1 0px;
 
 
+}
+
+
+.AppSK .filter-title:not(:first-child) {
+  margin-top:20px;
+}
+
+.AppSK .ais-RefinementList-labelText {
+  font-size:12px;
+}
+
+.AppSK .ais-RefinementList-showMore {
+  font-size:10px;
+}
+
+.AppSK  .ais-CustomDateRange,
+.AppSK  .ais-SortBy,
+.AppSK .ais-RefinementList {
+  padding-top:6px;
+}
+
+
+.AppSK .ais-Highlight-highlighted, 
+.AppSK .ais-Snippet-highlighted {
+   background-color:#fce08d;
+   font-weight:700;
+   color:black;
+   padding:3px 5px;
+}
+
+.AppSK .ais-RefinementList-checkbox {
+   color:#444;
+   min-width:14px;
+   height:14px;
+   width:14px;
+}
+
+.AppSK .ais-RefinementList-item--selected .ais-RefinementList-checkbox {
+   background-color:white;
+   color:rgb(215, 52, 73);
+   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' class='MuiSvgIcon-root-3' focusable='false' viewBox='0 0 24 24' aria-hidden='true' style='fill: rgb(215, 52, 73);'%3E%3Cpath fill='none' d='M0 0h24v24H0z'%3E%3C/path%3E%3Cpath d='M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.11 0 2-.9 2-2V5c0-1.1-.89-2-2-2zm-9 14l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z'%3E%3C/path%3E%3C/svg%3E");
+   background-size:16px;
+   box-shadow: none;
+}
+
+.AppSK .ais-RefinementList-labelText [lang="en"] {
+   text-transform: capitalize;
+}
+
+.AppSK .ais-Hits-item {
+   position: relative;
+}
+
+.AppSK .ais-Hits-item .main {
+  display:flex;
+}
+
+.AppSK .ais-Hits-item .debug {
+   display: block; 
+   width:100%;
+}
+
+.AppSK .ais-Hits-item .debug button {
+   position:absolute; 
+   right:10px;
+   top:10px;   }
+
+.AppSK .content {
+   width:1440px;
+   max-width:97%;
+   box-sizing: border-box;
+   margin:auto;
+   z-index:10000;
+   position: relative;
+   background-color:#efefef;
+   padding:0 100px;
+}
+
+.AppSK .content .filter {
+   width:305px;
+   box-sizing: border-box;
+   padding-right:70px;
+}
+
+.AppSK .content .main-content {
+   width:calc(100% - 305px);
+}
+
+.AppSK .pagination {
+   margin-top:20px;
+   margin-bottom:20px;
+}
+
+.ais-Hits--empty + .pagination {
+   display:none;
+}
+
+:not(#a) .ais-SearchBox-form:before,
+:not(#a) .ais-SearchBox-loadingIndicator, 
+:not(#a) .ais-SearchBox-reset {
+   z-index:1000;
+}
+
+.ais-SearchBox-form {
+   z-index:1;
+   margin:auto;
+}
+
+.ais-CustomDateRange [type="date"] {
+  width:95px;
+}
+
+.AppSK .result .thumb a,
+.AppSK .result {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.AppSK .result .thumb a {
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  width:160px;
+  text-decoration: none;
+}
+
+.AppSK .result .thumb a::before {
+  content:"";
+  width:60px;
+  height:50px;
+  position:relative;
+  display: inline-block;    
+  background-size:contain ;
+  background-repeat: no-repeat;
+  background-position: center top;
+  background-image:url("/icons/search/instance.svg");
+}
+
+.AppSK .result.Person .thumb a::before {
+  background-image:url("/icons/search/person.svg");
+  width:70px;
+  height:70px;
+}
+
+
+.AppSK .result.Topic .thumb a::before {
+  background-image:url("/icons/search/topic.svg");
+  width:70px;
+  height:70px;
+}
+
+
+.AppSK .result.Place .thumb a::before {
+  background-image:url("/icons/search/place.svg");
+  width:70px;
+  height:90px;
+}
+
+
+.AppSK .result .num-box { width:22px;height:22px;border: 2px solid rgba(10,20,30,0.5); font-size:9px;color:rgba(10,20,30,0.75);font-weight:700;
+   display:inline-block;align-items: center;justify-content: center; box-sizing: border-box; cursor:pointer;line-height: 18px; text-align: center;
+   flex-shrink: 0;
+}
+
+.AppSK .result .num-box.checked {
+  background:#152631;color:white; 
+}
+
+.AppSK .result .data {
+  display: flex;
+  flex-direction: column;
+}
+
+.AppSK .result .data > .ais-Highlight {
+  color: rgba(0, 0, 0, 0.87);
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 22px;
+  display: block;
+  margin: 3px 0 5px 0;
+}
+
+.AppSK .result .data .names {
+  display:inline;
+  margin-top:10px;
+}
+
+.AppSK .result .data .names > span {
+  flex-grow:0;
+  flex-shrink:0;
+  display:inline;
+}
+
+.AppSK .result .data .names .ais-Highlight {
+  display:inline;
+}
+
+.AppSK .result .data .names > .label {
+  display: inline;
+  line-height: 20px;
+  position: relative;
+  font-size: 12px;
+  font-weight:700;
+}
+
+.AppSK .result .data .names > .label + span {
+  display: inline;
+  line-height: 20px;
+  position: relative;
+  font-size: 13px;
 }

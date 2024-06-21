@@ -700,74 +700,6 @@ body > #pop-login { z-index:1000000 ;}
    margin-left:110px;
 }
 
-:not(#a) .ais-Highlight-highlighted, 
-:not(#a) .ais-Snippet-highlighted {
-   background-color:#fce08d;
-   font-weight:500;
-   color:black;
-   padding:3px 5px;
-}
-
-.AppSK .ais-RefinementList-checkbox {
-   color:#444;
-   min-width:14px;
-   height:14px;
-   width:14px;
-}
-
-.AppSK .ais-RefinementList-item--selected .ais-RefinementList-checkbox {
-   background-color:white;
-   color:rgb(215, 52, 73);
-   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' class='MuiSvgIcon-root-3' focusable='false' viewBox='0 0 24 24' aria-hidden='true' style='fill: rgb(215, 52, 73);'%3E%3Cpath fill='none' d='M0 0h24v24H0z'%3E%3C/path%3E%3Cpath d='M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.11 0 2-.9 2-2V5c0-1.1-.89-2-2-2zm-9 14l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z'%3E%3C/path%3E%3C/svg%3E");
-   background-size:16px;
-   box-shadow: none;
-}
-
-.AppSK .ais-RefinementList-labelText [lang="en"] {
-   text-transform: capitalize;
-}
-
-.AppSK .content {
-   width:1440px;
-   max-width:97%;
-   box-sizing: border-box;
-   margin:auto;
-   z-index:10000;
-   position: relative;
-   background-color:#efefef;
-   padding:0 100px;
-}
-
-.AppSK .content .filter {
-   width:305px;
-   box-sizing: border-box;
-   padding-right:70px;
-}
-
-.AppSK .content .main-content {
-   width:calc(100% - 305px);
-}
-
-.AppSK .pagination {
-   margin-top:20px;
-   margin-bottom:20px;
-}
-
-.ais-Hits--empty + .pagination {
-   display:none;
-}
-
-:not(#a) .ais-SearchBox-form:before,
-:not(#a) .ais-SearchBox-loadingIndicator, 
-:not(#a) .ais-SearchBox-reset {
-   z-index:1000;
-}
-
-.ais-SearchBox-form {
-   z-index:1;
-   margin:auto;
-}
-
 .inner-search-bar:not(#a) {
    width:1440px;
    max-width:97%;
@@ -2337,28 +2269,10 @@ a.result .contenu ul > div:last-child h3:is([lang$="-khmr"],[lang="km"]) { font-
 }
 
 
-.AppSK .filter-title,
-.SidePane.left .widget-header {display:flex;justify-content:space-between;padding:0;border-bottom:1px solid #c1c1c1; cursor:pointer;}
-
-.AppSK .filter-title:not(:first-child) {
-   margin-top:20px;
-}
-
-.AppSK .ais-RefinementList-labelText {
-   font-size:12px;
-}
-
-.AppSK .ais-RefinementList-showMore {
-   font-size:10px;
-}
-
 .SidePane.left .widget-header svg { font-size:18px; }
 
-.AppSK  .ais-CustomDateRange,
-.AppSK  .ais-SortBy,
-.AppSK .ais-RefinementList {
-   padding-top:6px;
-}
+.AppSK .filter-title,
+.SidePane.left .widget-header {display:flex;justify-content:space-between;padding:0;border-bottom:1px solid #c1c1c1; cursor:pointer;}
 
 #settings + .widget-header { align-items: center;}
 #settings + .widget-header .header-icon { color:#4a4a4a; font-size:20px; padding-top:2px;padding-right:4px;}
@@ -2665,7 +2579,7 @@ a.result + #matches .result-content::before { left:110px; width:calc(100% - 110p
 
 .result-content #num-box svg { position:absolute; top:60px;}
 
-.result-content #num-box { width:20px;height:20px;border: 2px solid rgba(10,20,30,0.5); font-size:9px;color:rgba(10,20,30,0.75);font-weight:700;line-height:normal;
+.result-content #num-box { width:22px;height:22px;border: 2px solid rgba(10,20,30,0.5); font-size:9px;color:rgba(10,20,30,0.75);font-weight:700;line-height:normal;
    display:inline-flex;align-items: center;justify-content: center; box-sizing: border-box; vertical-align: top; line-height:10px; cursor:pointer;
    margin-right:5px;
 }
@@ -2675,6 +2589,8 @@ a.result + #matches .result-content::before { left:110px; width:calc(100% - 110p
 .result-content #icon { display: inline-block;width:calc(80px + 25px + 25px + 25px);height:90px; vertical-align: top; text-align: center;
    position:absolute;  margin-left:0px;
 }
+
+.AppSK .result .thumb a .RID,
 .result-content #icon .RID { color: rgba(118, 118, 118, 0.9); font-size:9px;font-weight:600; 
       max-width: 100px;  overflow: hidden; position: relative; text-overflow: ellipsis; text-align: center; margin: 5px auto; white-space: nowrap;
 }
@@ -2967,6 +2883,7 @@ h3.withdrawn svg:first-child { margin-left:0; }
 
 h3.withdrawn ~ * { opacity:0.45;}
 
+.AppSK .result .data .T,
 a.result .T { text-transform: uppercase; color:#4a4a4a; font-size:9px; font-weight:600; vertical-align:top; display: flex; 
    line-height:10px; margin-bottom:12px; align-items: center;}
 
