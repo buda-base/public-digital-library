@@ -31,7 +31,7 @@ import RefinementListWithLabels from "../components/RefinementListWithLabels";
 import RefinementListWithLocalLabels from "../components/RefinementListWithLocalLabels";
 
 // PDL
-import { top_right_menu, getPropLabel, fullUri } from '../../../components/App'
+import { top_right_menu, getPropLabel, fullUri, highlight } from '../../../components/App'
 import { Component } from 'react';
 import qs from 'query-string'
 import history from "../../../history"

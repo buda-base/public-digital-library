@@ -2,12 +2,13 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom"
 import { Highlight } from "react-instantsearch";
 import I18n from 'i18next';
+import {decode} from 'html-entities';
 
 import { RESULT_FIELDS } from "../constants/fields";
 
 import history from "../../../history"
 
-import { getPropLabel, fullUri } from '../../../components/App'
+import { getPropLabel, fullUri, getLangLabel, highlight } from '../../../components/App'
 import { sortLangScriptLabels, extendedPresets } from '../../../lib/transliterators'
 
 const skos  = "http://www.w3.org/2004/02/skos/core#";
@@ -31,11 +32,24 @@ const CustomHit = ({ hit, that }) => {
 
   useEffect(() => {
     const newLabel = []
-    if(hit) for(const k of Object.keys(hit)) {
-      if(k.startsWith("prefLabel")) { 
-        //console.log("k:",k,hit[k],lang)
-        const lang = k.replace(/^prefLabel_/,"").replace(/_/g,"-")
-        hit[k].map(h => newLabel.push({value:h, lang, hit, field: k}))
+    if(hit) { 
+      for(const name of ["prefLabel", "altLabel"]) {
+        for(const k of Object.keys(hit)) {
+          if(k.startsWith(name)) { 
+            //console.log("k:",k,hit[k],lang,hit)
+            const lang = k.replace(new RegExp(name+"_"),"").replace(/_/g,"-")
+            hit[k].map((h,i) => name == "prefLabel" || hit._highlightResult[k] && hit._highlightResult[k][i]?.matchedWords?.length 
+              ? newLabel.push({
+                  value: hit._highlightResult && hit._highlightResult[k] 
+                    ? decode((hit._highlightResult[k][i]?.value ?? "").replace(/<mark>/g,"↦").replace(/<\/mark>/g,"↤").replace(/↤ ↦/g, " "))
+                    : h, 
+                  field: k, num: i,
+                  lang, hit, 
+                })
+              : null
+            )
+          }
+        }
       }
     }
     let langs = that.props.langPreset
@@ -44,15 +58,22 @@ const CustomHit = ({ hit, that }) => {
     const sortLabels = sortLangScriptLabels(newLabel,langs.flat,langs.translit)
     console.log("ul:",sortLabels)
     if(sortLabels.length) { 
-      setTitle(<Hit debug={false} hit={sortLabels[0].hit} label={sortLabels[0].field} />)
+      const label = getLangLabel(that,skos+"prefLabel",[{ ...sortLabels[0] }])
+      //setTitle(<Hit debug={false} hit={sortLabels[0].hit} label={sortLabels[0].field} />)
+      setTitle(<span lang={label.lang}>{highlight(label.value)}</span>)
       if(sortLabels.length > 1) { 
         sortLabels.shift()
-        setNames(sortLabels.map(l => <Hit debug={false} hit={l.hit} label={l.field} />))
+        //setNames(sortLabels.map(l => <Hit debug={false} hit={l.hit} label={l.field} />))
+        setNames(sortLabels.map(label => <span lang={label.lang}>{highlight(label.value)}</span>))
       }
+      
     }
-  }, [hit, that])
+  }, [hit, that.props.langPreset])
 
 
+  const prop = ["Person","Topic","Place"].includes(hit.type[0])
+    ? "prop.tmp:otherName"
+    : "prop.tmp:otherTitle"
 
   return (<div class={"result "+hit.type}>        
     <div class="main">
@@ -63,12 +84,14 @@ const CustomHit = ({ hit, that }) => {
         </Link>        
       </div>
       <div class="data">      
-        <span class="T">{getPropLabel(that, fullUri("bdr:"+hit.type), true, false, "types."+(hit.type+"").toLowerCase())}</span>
-        {/* {{ hit.author && <Link to={"/show/bdr:"+hit.author}>{hit.author}</Link> } */} 
-        { title }
+          <Link to={"/show/bdr:"+hit.objectID}>
+            <span class="T">{getPropLabel(that, fullUri("bdr:"+hit.type), true, false, "types."+(hit.type+"").toLowerCase())}</span>
+            {/* {{ hit.author && <Link to={"/show/bdr:"+hit.author}>{hit.author}</Link> } */} 
+            { title }
+          </Link>
         { names.length > 0 && <>
           <span class="names">
-            <span class="label">{I18n.t("prop.tmp:otherName", {count: names.length})}<span class="colon">:</span></span>
+            <span class="label">{I18n.t(prop, {count: names.length})}<span class="colon">:</span></span>
             <span>{names}</span>
           </span>
         </> }

@@ -44,7 +44,7 @@ function CustomRefinementList(props) {
 
     setCurrentItems(newItems);
   
-  }, [attribute, items, that.props.dictionary, that.props.locale]);
+  }, [attribute, items, that.props.dictionary, that.props.locale, that.props.langPreset]);
 
   
   return (

@@ -94,12 +94,13 @@
 }
 
 
+.AppSK .result .highlight, 
 .AppSK .ais-Highlight-highlighted, 
 .AppSK .ais-Snippet-highlighted {
    background-color:#fce08d;
    font-weight:700;
    color:black;
-   padding:3px 5px;
+   padding:1px 5px;
 }
 
 .AppSK .ais-RefinementList-checkbox {
@@ -245,6 +246,7 @@
   flex-direction: column;
 }
 
+.AppSK .result .data  .T + span,
 .AppSK .result .data > .ais-Highlight {
   color: rgba(0, 0, 0, 0.87);
   font-size: 13px;
@@ -254,32 +256,43 @@
   margin: 3px 0 5px 0;
 }
 
+.AppSK .result .data > a {
+  text-decoration: none;
+}
+
 .AppSK .result .data .names {
-  display:inline;
-  margin-top:10px;
+  margin-top:5px;
+  display: flex;
+  align-items: baseline;
 }
 
 .AppSK .result .data .names > span {
-  flex-grow:0;
-  flex-shrink:0;
   display:inline;
+  flex-wrap: wrap;
 }
-
+.AppSK .result .data .highlight,
 .AppSK .result .data .names .ais-Highlight {
   display:inline;
 }
 
 .AppSK .result .data .names > .label {
-  display: inline;
-  line-height: 20px;
+  display: block;
   position: relative;
   font-size: 12px;
   font-weight:700;
+  margin-right:5px;
+  float:left;
+  flex-shrink: 0;
 }
 
 .AppSK .result .data .names > .label + span {
-  display: inline;
-  line-height: 20px;
-  position: relative;
   font-size: 13px;
 }
+
+.AppSK .result .data .names > .label + span > span {
+  display: block;
+  margin-bottom: 5px;
+  line-height: 18px;
+}
+
+
