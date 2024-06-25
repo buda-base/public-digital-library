@@ -70,9 +70,9 @@ function CustomRefinementList(props) {
 
           sessionStorage.setItem(attribute, JSON.stringify(storage));
 
-          newItems = newItems.filter(item => item.label != false).concat(renderItems(Object.keys(fetchedItems).map(it => ({ value: it.id }))))          
+          newItems = newItems.filter(item => item.label != false).concat(renderItems(Object.keys(fetchedItems).map(it => ({ value: it }))))          
 
-          console.log("ni:", newItems, storage)
+          console.log("ni:", items, newItems, storage)
         }
         catch(error) {
           console.error(error);
@@ -85,8 +85,9 @@ function CustomRefinementList(props) {
     
     updateItems()
 
-  }, [attribute, items, that.props.dictionary, that.props.locale, that.props.langPreset, searchClient.cache]);
+  }, [attribute, items, that.props.dictionary, that.props.locale, that.props.langPreset, searchClient.cache, isShowingMore]);
 
+  console.log("render:", attribute, currentItems)
   
   return (
     <div className="ais-RefinementList">
@@ -115,7 +116,7 @@ function CustomRefinementList(props) {
                 onChange={() => refine(item.value)}
               />
               <span className="ais-RefinementList-labelText">
-                {getItem(currentItems, item.value)?.label || item.label}
+                {currentItems.find((_item) => _item.id === item.value)?.label || item.label}
               </span>
               <span className="ais-RefinementList-count">{item.count}</span>
             </label>
