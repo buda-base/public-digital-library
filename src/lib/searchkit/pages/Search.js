@@ -27,7 +27,6 @@ import I18n from 'i18next';
 import CustomHit from "../components/CustomHit";
 import CustomDateRange from "../components/CustomDateRange";
 import SearchBoxAutocomplete from "../components/SearchBoxAutocomplete";
-import RefinementListWithLabels from "../components/RefinementListWithLabels";
 import RefinementListWithLocalLabels from "../components/RefinementListWithLocalLabels";
 
 // PDL
@@ -39,7 +38,7 @@ import store from '../../../index';
 import { initiateApp } from '../../../state/actions';
 
 
-const searchClient = Client(
+export const searchClient = Client(
   SearchkitConfig,
   {
     hooks: {
@@ -80,6 +79,9 @@ export class SearchPage extends Component<State, Props>
   }
 
   render() {
+
+    console.log("sC:", searchClient)
+
     return (
       <>
         { top_right_menu(this) }
@@ -128,7 +130,7 @@ export class SearchPage extends Component<State, Props>
                 <CustomDateRange attribute="firstScanSyncDate" />
 
                 <div className="filter-title"><p>{getPropLabel(this,fullUri("bdo:inCollection"))}</p></div>
-                <RefinementListWithLabels attribute="inCollection" showMore={true}
+                <RefinementListWithLocalLabels that={this} attribute="inCollection" showMore={true}
                 />
                 <div className="filter-title"><p>{getPropLabel(this,fullUri("bdo:language"))}</p></div>
                 <RefinementListWithLocalLabels that={this} attribute="language" showMore={true} />
@@ -152,10 +154,10 @@ export class SearchPage extends Component<State, Props>
                 <RefinementListWithLocalLabels that={this} attribute="workGenre" showMore={true} />
 
                 <div className="filter-title"><p>{getPropLabel(this,fullUri("tmp:author"))}</p></div>
-                <RefinementListWithLabels attribute="author" showMore={true} />
+                <RefinementListWithLocalLabels that={this} attribute="author" showMore={true} />
 
                 <div className="filter-title"><p>{getPropLabel(this,fullUri("bdr:R0ER0026"))}</p></div>
-                <RefinementListWithLabels attribute="translator" showMore={true} />
+                <RefinementListWithLocalLabels that={this} attribute="translator" showMore={true} />
 
                 <div className="filter-title"><p>{getPropLabel(this,fullUri("tmp:associatedCentury"))}</p></div>
                 <RefinementListWithLocalLabels that={this} attribute="associatedCentury" showMore={true} />

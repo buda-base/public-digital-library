@@ -81,6 +81,13 @@
 
 .AppSK .ais-RefinementList-labelText {
   font-size:12px;
+  white-space: normal;
+  text-overflow: inherit;
+}
+
+.AppSK .ais-RefinementList-labelText > span {
+  line-height: 18px;
+  display: inline-flex;
 }
 
 .AppSK .ais-RefinementList-showMore {

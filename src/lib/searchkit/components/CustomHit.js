@@ -56,7 +56,7 @@ const CustomHit = ({ hit, that }) => {
     if(!langs) return
     langs = extendedPresets(langs)
     const sortLabels = sortLangScriptLabels(newLabel,langs.flat,langs.translit)
-    console.log("ul:",sortLabels)
+    //console.log("ul:",sortLabels)
     if(sortLabels.length) { 
       const label = getLangLabel(that,skos+"prefLabel",[{ ...sortLabels[0] }])
       //setTitle(<Hit debug={false} hit={sortLabels[0].hit} label={sortLabels[0].field} />)

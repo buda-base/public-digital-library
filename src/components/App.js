@@ -729,7 +729,7 @@ function pretty(str:string) {
 }
 
 
-export function getPropLabel(that, i, withSpan = true, withLang = false, useI18n = "", useI18n_count = 1) {
+export function getPropLabel(that, i, withSpan = true, withLang = false, useI18n = "", useI18n_count = 1, storage) {
 
    
    if(!that.props.dictionary) return 
@@ -751,6 +751,12 @@ export function getPropLabel(that, i, withSpan = true, withLang = false, useI18n
    } else if(useI18n) {
       const t = I18n.t(useI18n, { count: useI18n_count })
       labels = [{ value:t, lang:that.props.locale }]
+   } else if(storage) {
+      
+      //label = "storage?"
+      if(storage[rid]?.label) labels = storage[rid].label 
+      else return false
+
    }
    
    //console.log("labels:", labels, i)
@@ -776,8 +782,10 @@ export function getPropLabel(that, i, withSpan = true, withLang = false, useI18n
          else if(label["@value"]) label = label["@value"]
 
       }
+   } else { 
+
+      label = that.pretty?that.pretty(i):pretty(i)
    }
-   else label = that.pretty?that.pretty(i):pretty(i)
 
    if(withSpan) return <span {...lang?{lang}:{}} >{label}</span>
    else if(!withLang) return label

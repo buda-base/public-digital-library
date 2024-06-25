@@ -8,7 +8,9 @@ import { useRefinementList } from "react-instantsearch";
 // API
 import { fetchLabels } from "../api/LabelAPI";
 
+import { searchClient } from "../pages/Search"
 import { getPropLabel, fullUri } from '../../../components/App'
+
 
 const LANGUAGE = "bo-x-ewts";
 
@@ -30,21 +32,60 @@ function CustomRefinementList(props) {
     toggleShowMore,
   } = useRefinementList(props);
 
-  useEffect(() => {
+  useEffect(() => {    
 
+    const updateItems = async () => {
+
+      const itemIds = items.map((_item) => _item.value);
+      
+      if (!sessionStorage.getItem(attribute)) {
+        sessionStorage.setItem(attribute, JSON.stringify({}));
+      }
+
+      let storage = JSON.parse(sessionStorage.getItem(attribute));
+
+      const renderItems = (items) => items.map((_item) => { 
+
+        const val = getPropLabel(that, fullUri("bdr:"+_item.value), true, false, I18n_prefix ? I18n_prefix+"."+_item.value.toLowerCase() : "", 1, storage)
+
+        return ({
+          id: _item.value,
+          label: attribute === "associatedCentury" 
+            ? <span>{I18n.t("misc.ord",{num: _item.value})}</span>
+            : val
+        })
+
+      });
+      
+      let newItems = renderItems(items)
+
+      const missingIds = newItems.filter((item) => item.label === false).map(item => item.id)
+      
+      if (missingIds.length > 0) {
+        try {
+
+          const fetchedItems = await fetchLabels(missingIds, attribute)
+          
+          storage = {...storage, ...fetchedItems };
+
+          sessionStorage.setItem(attribute, JSON.stringify(storage));
+
+          newItems = newItems.filter(item => item.label != false).concat(renderItems(Object.keys(fetchedItems).map(it => ({ value: it.id }))))          
+
+          console.log("ni:", newItems, storage)
+        }
+        catch(error) {
+          console.error(error);
+        };
+      }
+
+      setCurrentItems(newItems);
+
+    }
     
-    const newItems = items.map((_item) => ({
-      id: _item.value,
-      label: attribute === "associatedCentury" 
-        ? <span>{I18n.t("misc.ord",{num: _item.value})}</span>
-        : getPropLabel(that, fullUri("bdr:"+_item.value), true, false, I18n_prefix ? I18n_prefix+"."+_item.value.toLowerCase() : ""),
-    }));
+    updateItems()
 
-    console.log("items:",attribute, items, that, newItems)
-
-    setCurrentItems(newItems);
-  
-  }, [attribute, items, that.props.dictionary, that.props.locale, that.props.langPreset]);
+  }, [attribute, items, that.props.dictionary, that.props.locale, that.props.langPreset, searchClient.cache]);
 
   
   return (
