@@ -80,7 +80,7 @@ export class SearchPage extends Component<State, Props>
 
   render() {
 
-    console.log("sC:", searchClient)
+    //console.log("sC:", searchClient)
 
     return (
       <>

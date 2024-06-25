@@ -72,7 +72,7 @@ function CustomRefinementList(props) {
 
           newItems = newItems.filter(item => item.label != false).concat(renderItems(Object.keys(fetchedItems).map(it => ({ value: it }))))          
 
-          console.log("ni:", items, newItems, storage)
+          //console.log("ni:", items, newItems, storage)
         }
         catch(error) {
           console.error(error);
@@ -87,7 +87,7 @@ function CustomRefinementList(props) {
 
   }, [attribute, items, that.props.dictionary, that.props.locale, that.props.langPreset, searchClient.cache, isShowingMore]);
 
-  console.log("render:", attribute, currentItems)
+  //console.log("render:", attribute, currentItems)
   
   return (
     <div className="ais-RefinementList">
