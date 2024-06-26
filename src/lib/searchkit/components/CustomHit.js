@@ -29,6 +29,9 @@ const CustomHit = ({ hit, that }) => {
 
   const [title, setTitle] = useState()
   const [names, setNames] = useState([])
+  const [img, setImg] = useState("")
+  
+  //console.log("hit:",hit)
 
   useEffect(() => {
     const newLabel = []
@@ -68,6 +71,14 @@ const CustomHit = ({ hit, that }) => {
       }
       
     }
+
+    if(!["Person","Topic","Place"].includes(hit.type[0])) {
+      if(that.props.config) {
+        const iiif = that.props.config.iiif.endpoints[that.props.config.iiif.index] ?? "//iiif.bdrc.io"
+        setImg(iiif+"/bdr:"+(hit.inRootInstance ?? hit.objectID)+"::thumbnail/full/!1000,130/0/default.jpg")
+      }
+    }
+
   }, [hit, that.props.langPreset])
 
 
@@ -78,8 +89,9 @@ const CustomHit = ({ hit, that }) => {
   return (<div class={"result "+hit.type}>        
     <div class="main">
       <div class={"num-box "+(checked?"checked":"")} onClick={() => setChecked(!checked) }>{hit.__position}</div>
-      <div class="thumb">      
+      <div class={"thumb "+(img?"hasImg":"")}>      
         <Link to={"/show/bdr:"+hit.objectID}>
+          { img && <span class="img"><img src={img} onError={() => console.log("no img?",img)}/></span> }
           <span class="RID">bdr:{hit.objectID}</span>
         </Link>        
       </div>
@@ -100,7 +112,7 @@ const CustomHit = ({ hit, that }) => {
     <div class="debug" >
       <button onClick={() => setDebug(!debug)}>{debug?"!dbg":"dbg"}</button>
       { debug && <ul>
-        {RESULT_FIELDS.map(
+        {/* {RESULT_FIELDS.map(
           (_field, _key) =>
             !!hit[_field.label] && (
               <li key={_key}>
@@ -114,7 +126,11 @@ const CustomHit = ({ hit, that }) => {
                 )}
               </li>
             )
-        )}
+        )} */}
+        { Object.keys(hit).filter(k => !k.startsWith("_")).map(k => <li key={k}>
+            <b>{k} : </b>
+            {JSON.stringify(hit[k])}
+          </li>) }
       </ul> }
     </div>
   </div>);
