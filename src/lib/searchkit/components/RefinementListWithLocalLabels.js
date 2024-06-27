@@ -19,7 +19,13 @@ const getItem = (collection, id) => {
 };
 
 function CustomRefinementList(props) {
-  const { attribute, that, I18n_prefix } = props;
+  const { attribute, that, I18n_prefix, prefix, iri } = props;
+
+  const [title, setTitle] = useState("")
+
+  useEffect(() => {
+    setTitle(getPropLabel(that, fullUri(iri ?? (prefix ?? "bdo")+":"+attribute)))
+  }, [ that.props.dictionary ])
 
   const [currentItems, setCurrentItems] = useState([]);
 
@@ -87,10 +93,13 @@ function CustomRefinementList(props) {
 
   }, [attribute, items, that.props.dictionary, that.props.locale, that.props.langPreset, searchClient.cache, isShowingMore]);
 
-  //console.log("render:", attribute, currentItems)
+  console.log("render:", attribute, currentItems)
   
+  if(items.length === 0) return null
+
   return (
     <div className="ais-RefinementList">
+      <div className="filter-title"><p>{title}</p></div>
       {/* <input
         type="search"
         autoComplete="off"

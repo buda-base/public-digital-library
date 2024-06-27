@@ -787,7 +787,7 @@ export function getPropLabel(that, i, withSpan = true, withLang = false, useI18n
       label = that.pretty?that.pretty(i):pretty(i)
    }
 
-   if(withSpan) return <span {...lang?{lang}:{}} >{label}</span>
+   if(withSpan) return <span {...lang?{lang}:{}} class={label.includes(" ") ? "hasSpace":""}>{label}</span>
    else if(!withLang) return label
    else return {value:label,lang}
 }

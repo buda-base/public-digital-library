@@ -16,6 +16,7 @@
 .filter-title {
   font-weight: 600;
   padding: 20px 0;
+  margin-bottom:6px;
 }
 
 .main-content {
@@ -75,7 +76,7 @@
 }
 
 
-.AppSK .filter-title:not(:first-child) {
+.AppSK .filter-title.MT {
   margin-top:20px;
 }
 
@@ -92,12 +93,19 @@
 
 .AppSK .ais-RefinementList-showMore {
   font-size:10px;
+  margin-top:7px;
 }
 
-.AppSK  .ais-CustomDateRange,
-.AppSK  .ais-SortBy,
+.AppSK .ais-RefinementList-showMore:focus {
+  border-color:#bbbbbb;
+  box-shadow:0 0 0 1px #dddddd,0 2px 0 1px rgba(35,38,59,.05)
+}
+
+/* .AppSK  .ais-CustomDateRange,
+.AppSK  .ais-SortBy, */
 .AppSK .ais-RefinementList {
-  padding-top:6px;
+  padding-top:0px;
+  margin-top:20px;
 }
 
 
