@@ -37,6 +37,16 @@ const FACET_ATTRIBUTES = [
     field: "associatedCentury",
     type: "string",
   },
+  {
+    attribute: "scans_access",
+    field: "scans_access",
+    type: "integer"
+  },
+  {
+    attribute: "etext_access",
+    field: "etext_access",
+    type: "integer"
+  }
 ];
 
 export { FACET_ATTRIBUTES };

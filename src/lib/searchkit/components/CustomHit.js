@@ -92,7 +92,7 @@ const CustomHit = ({ hit, that }) => {
       <div class={"thumb "+(img?"hasImg":"")}>      
         <Link to={"/show/bdr:"+hit.objectID}>
           { img && <span class="img"><img src={img} onError={() => console.log("no img?",img)}/></span> }
-          <span class="RID">bdr:{hit.objectID}</span>
+          <span class="RID">{hit.objectID}</span>
         </Link>        
       </div>
       <div class="data">      

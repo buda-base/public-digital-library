@@ -283,7 +283,9 @@
       "tmp:subscribed":"Subscribed Collections",
       "tmp:otherInstance":"Other version of this work",
       "tmp:otherInstance_plural":"Other versions of this work",
-      "tmp:containingOutline": "Containing outline"
+      "tmp:containingOutline": "Containing outline",
+      "tmp:scans_access":"Scans Access",
+      "tmp:etext_access":"Etext Access"
    },
    "guided":{
       "keyword":"keyword",
@@ -789,7 +791,19 @@
       "imageN":"(this image is copyrighted and not available)",
       "fairuseEtext": "BDRC <bold>restricts access<\/bold> to this work because the work is under <bold>copyright<\/bold>.",
       "snippetV":"View a small snippet at BDRC",
-      "snippetH":"Hide snippet"
+      "snippetH":"Hide snippet",
+      "scans":{
+         "5":"Open Access / BDRC",
+         "4":"Open Access / IIIF",
+         "3":"Internet Archive only",
+         "2":"40p. extract",
+         "1":"Not Available"
+      },
+      "etext":{
+         "3":"Open Access",
+         "2":"Search only",
+         "1":"Not Available"
+      }
    },
    "location": {
       "beginV": "Begin volume: {{num}}",

@@ -1,6 +1,7 @@
 // Core
 import React, { useEffect, useState } from "react";
 import I18n from 'i18next';
+import _ from "lodash"
 
 // hooks
 import { useRefinementList } from "react-instantsearch";
@@ -19,7 +20,7 @@ const getItem = (collection, id) => {
 };
 
 function CustomRefinementList(props) {
-  const { attribute, that, I18n_prefix, prefix, iri } = props;
+  const { attribute, that, I18n_prefix, prefix, iri, sort } = props;
 
   const [title, setTitle] = useState("")
 
@@ -93,9 +94,11 @@ function CustomRefinementList(props) {
 
   }, [attribute, items, that.props.dictionary, that.props.locale, that.props.langPreset, searchClient.cache, isShowingMore]);
 
-  console.log("render:", attribute, currentItems)
+  console.log("render:", attribute, currentItems, items)
   
   if(items.length === 0) return null
+
+  const useItems = sort ? _.orderBy(items,["value"],["desc"]) : items
 
   return (
     <div className="ais-RefinementList">
@@ -110,7 +113,7 @@ function CustomRefinementList(props) {
         onChange={(event) => searchForItems(event.currentTarget.value)}
       /> */}
       <ul className="ais-RefinementList-list">
-        {items.map((item) => (
+        {useItems.map((item) => (
           <li
             key={item.label}
             className={`ais-RefinementList-item ${

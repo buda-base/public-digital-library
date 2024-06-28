@@ -39,6 +39,10 @@ import { initiateApp } from '../../../state/actions';
 
 
 const filters = [{
+    attribute:"scans_access", sort:true, I18n_prefix: "access.scans", prefix:"tmp"
+  },{
+    attribute:"etext_access", sort:true, I18n_prefix: "access.etext", prefix:"tmp"
+  },{
     attribute:"inCollection"
   },{ 
     attribute:"language" 
@@ -59,7 +63,7 @@ const filters = [{
   },{ 
     attribute:"translator", iri:"bdr:R0ER0026" 
   },{ 
-    attribute:"associatedCentury", prefix:"tmp" 
+    attribute:"associatedCentury", prefix:"tmp"
   }
 ]
 
