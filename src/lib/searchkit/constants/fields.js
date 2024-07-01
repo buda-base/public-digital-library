@@ -71,9 +71,7 @@ const NO_KEYWORD_FIELD = [
   { label: "firstScanSyncDate", highlightable: false },
   { label: "db_score", highlightable: false },
   { label: "pop_score", highlightable: false },
-  { label: "ric", highlightable: false },
-  { label: "scans_access", highlightable: false },
-  { label: "etext_access", highlightable: false },
+  { label: "ric", highlightable: false }
 ];
 
 const DATE_RANGE_FIELDS = ["firstScanSyncDate"];

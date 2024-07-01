@@ -797,12 +797,28 @@
          "4":"Open Access / IIIF",
          "3":"Internet Archive only",
          "2":"40p. extract",
-         "1":"Not Available"
+         "1":"Not Available",
+         "hit":{
+            "3":"archive.org",
+            "2":"40p. extract",
+            "1":"not vailable"
+         },
+         "quality":{
+            "5":"excellent",
+            "4":"very good",
+            "3":"good",
+            "2":"average",
+            "1":"poor"
+         }
       },
       "etext":{
          "3":"Open Access",
          "2":"Search only",
-         "1":"Not Available"
+         "1":"Not Available",
+         "hit":{
+            "2":"search only",
+            "1":"not available"
+         }
       }
    },
    "location": {

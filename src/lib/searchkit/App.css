@@ -330,6 +330,24 @@
   line-height: 18px;
 }
 
+.AppSK:not(#a) .result .thumb a .RID {
+  font-size:10px;
+  margin-bottom:0;
+  line-height:14px;
+}
+
+
+.AppSK:not(#a) .result .thumb a .RID ~ span {
+  font-size:10px;
+  line-height:14px;
+  color:black;
+  font-weight: 600;
+
+}
+
+
+.AppSK:not(#a) .result .thumb.hasImg a {
+}
 
 
 

@@ -46,6 +46,16 @@ const FACET_ATTRIBUTES = [
     attribute: "etext_access",
     field: "etext_access",
     type: "integer"
+  },
+  {
+    attribute: "scans_quality",
+    field: "scans_quality",
+    type: "float"
+  },
+  {
+    attribute: "etext_quality",
+    field: "etext_quality",
+    type: "float"
   }
 ];
 

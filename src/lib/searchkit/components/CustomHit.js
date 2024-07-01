@@ -93,6 +93,14 @@ const CustomHit = ({ hit, that }) => {
         <Link to={"/show/bdr:"+hit.objectID}>
           { img && <span class="img"><img src={img} onError={() => console.log("no img?",img)}/></span> }
           <span class="RID">{hit.objectID}</span>
+          { (hit.scans_access < 4 || hit.scans_quality) && <span>
+              <span>{I18n.t("types.images", {count:2})}{I18n.t("misc.colon")}</span>&nbsp;
+              {hit.scans_access < 4 ? I18n.t("access.scans.hit."+hit.scans_access) : "quality|"+hit.scans_quality}
+            </span>}
+          { (hit.etext_access < 3 || hit.etext_quality) && <span>
+              <span>{I18n.t("types.etext" )}{I18n.t("misc.colon")}</span>&nbsp;
+              {hit.etext_access < 3 ? I18n.t("access.etext.hit."+hit.etext_access) : "quality|"+hit.etext_quality}
+            </span>} 
         </Link>        
       </div>
       <div class="data">      

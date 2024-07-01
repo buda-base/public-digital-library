@@ -41,7 +41,11 @@ import { initiateApp } from '../../../state/actions';
 const filters = [{
     attribute:"scans_access", sort:true, I18n_prefix: "access.scans", prefix:"tmp"
   },{
+    attribute:"scans_quality", sort:true
+  },{
     attribute:"etext_access", sort:true, I18n_prefix: "access.etext", prefix:"tmp"
+  },{
+    attribute:"etext_quality", sort:true
   },{
     attribute:"inCollection"
   },{ 
