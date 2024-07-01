@@ -8483,9 +8483,9 @@ jsesc@~0.5.0:
   integrity sha1-597mbjXW/Bb3EP6R1c9p9w8IkR0=
 
 jsewts@^1.0.3:
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/jsewts/-/jsewts-1.0.3.tgz#3082ee67782b4db6dbb9edac948e3d31f0fce30d"
-  integrity sha512-QXp7CfDWnqu9M+xbv/avSDo7DLVnnlyZcKN1ko1DtNfyGAmNNKApJGvNofNxbAxH4Y/P1KFnc+4cscnmRNkCiw==
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/jsewts/-/jsewts-1.0.4.tgz#430f002a3afe4d21140844d11efa9d234047c95a"
+  integrity sha512-3+chOSYH7j7qtIdgX3uLdAqVHaw4asqkQfd5NEw9aOWkJZDxZew33VzG37zt0h2HExlFPOngW83qpwjZMWYKZw==
 
 json-parse-better-errors@^1.0.1, json-parse-better-errors@^1.0.2:
   version "1.0.2"
