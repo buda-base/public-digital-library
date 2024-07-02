@@ -28,6 +28,7 @@ import CustomHit from "../components/CustomHit";
 import CustomDateRange from "../components/CustomDateRange";
 import SearchBoxAutocomplete from "../components/SearchBoxAutocomplete";
 import RefinementListWithLocalLabels from "../components/RefinementListWithLocalLabels";
+import NumericList from "../components/NumericList";
 
 // PDL
 import { top_right_menu, getPropLabel, fullUri, highlight } from '../../../components/App'
@@ -40,12 +41,26 @@ import { initiateApp } from '../../../state/actions';
 
 const filters = [{
     attribute:"scans_access", sort:true, I18n_prefix: "access.scans", prefix:"tmp"
-  },{
-    attribute:"scans_quality", sort:true
+  //},{ // #881 not yet
+  //  attribute:"scans_quality", sort:true
   },{
     attribute:"etext_access", sort:true, I18n_prefix: "access.etext", prefix:"tmp"
-  },{
-    attribute:"etext_quality", sort:true
+  // },{
+  //   attribute:"etext_quality", sort:true, numeric:true, items:[
+  //     {
+  //       label:"manual-aligned", start:4, end:4
+  //     },{
+  //       label:"manual-unaligned", start:3, end:3
+  //     },{
+  //       label:"revised-OCR", start:2, end:2
+  //     },{
+  //       label:"high", start:0.95, end:1
+  //     },{
+  //       label:"medium", start:0.8, end:0.95
+  //     },{
+  //       label:"poor", start:0, end:0.8
+  //     }
+  //   ]
   },{
     attribute:"inCollection"
   },{ 
@@ -77,6 +92,7 @@ export const searchClient = Client(
     hooks: {
       beforeSearch: async (requests) => {
         const customizedRequest = requests.map((request) => {
+          console.log("requests?",requests)
           if (request.indexName === process.env.REACT_APP_ELASTICSEARCH_INDEX) {
             return getCustomizedBdrcIndexRequest(request);
           }
@@ -134,6 +150,7 @@ export class SearchPage extends Component<State, Props>
                 <div className="filter-title"><p>Sort by</p></div>
 
                 <SortBy
+                  initialIndex={process.env.REACT_APP_ELASTICSEARCH_INDEX}
                   items={[
                     {
                       label: "default",
@@ -162,7 +179,9 @@ export class SearchPage extends Component<State, Props>
                 <CustomDateRange attribute="firstScanSyncDate" />
 
                 { filters.map((filter) => 
-                    <RefinementListWithLocalLabels that={this} {...filter} showMore={true} />
+                    filter.numeric 
+                    ? <NumericList that={this} {...filter} />
+                    : <RefinementListWithLocalLabels that={this} {...filter} showMore={true} />
                   )
                 }
 

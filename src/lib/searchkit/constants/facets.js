@@ -40,18 +40,20 @@ const FACET_ATTRIBUTES = [
   {
     attribute: "scans_access",
     field: "scans_access",
-    type: "integer"
+    type: "string"
   },
   {
     attribute: "etext_access",
     field: "etext_access",
-    type: "integer"
+    type: "string"
   },
+  /*
   {
     attribute: "scans_quality",
     field: "scans_quality",
-    type: "float"
+    type: "numeric"
   },
+  */
   {
     attribute: "etext_quality",
     field: "etext_quality",

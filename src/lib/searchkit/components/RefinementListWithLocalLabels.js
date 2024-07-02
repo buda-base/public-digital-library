@@ -94,7 +94,7 @@ function CustomRefinementList(props) {
 
   }, [attribute, items, that.props.dictionary, that.props.locale, that.props.langPreset, searchClient.cache, isShowingMore]);
 
-  console.log("render:", attribute, currentItems, items)
+  //console.log("render:", attribute, props, currentItems, items)
   
   if(items.length === 0) return null
 

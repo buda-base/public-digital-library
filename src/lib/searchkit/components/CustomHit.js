@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Link } from "react-router-dom"
 import { Highlight } from "react-instantsearch";
 import I18n from 'i18next';
@@ -21,6 +21,8 @@ const Hit = ({ hit, label, debug = true }) => {
     </>
   );
 };
+
+
 
 const CustomHit = ({ hit, that }) => {
 
@@ -86,6 +88,23 @@ const CustomHit = ({ hit, that }) => {
     ? "prop.tmp:otherName"
     : "prop.tmp:otherTitle"
 
+  const formatDate = useCallback((val) => {
+    if((""+val).match(/^[0-9-]+T[0-9:.]+(Z+|[+][0-9:]+)$/)) {
+      let code = "en-US"
+      let opt = { month: 'long', day: 'numeric' }
+      if(that.props.locale === "bo") { 
+         code = "en-US-u-nu-tibt"; 
+         opt = { day:'2-digit', month:'2-digit', year:'numeric' } 
+         val = 'ཟླ་' + (new Intl.DateTimeFormat(code, opt).formatToParts(new Date(val)).map(p => p.type === 'literal'?' ཚེས་':p.value).join(''))
+      }
+      else {
+         if(that.props.locale === "zh") code = "zh-CN"
+         val = new Date(val).toLocaleDateString(code, { month: 'long', day: 'numeric', year:'numeric' });  // does not work for tibetan
+      }
+      return val
+    }
+  }, [that.props.local])
+    
   return (<div class={"result "+hit.type}>        
     <div class="main">
       <div class={"num-box "+(checked?"checked":"")} onClick={() => setChecked(!checked) }>{hit.__position}</div>
@@ -115,6 +134,14 @@ const CustomHit = ({ hit, that }) => {
             <span>{names}</span>
           </span>
         </> }
+        {
+          hit.firstScanSyncDate && <>
+            <span class="names">
+              <span class="label">{I18n.t("sort.lastS")}<span class="colon">:</span></span>
+              <span>{formatDate(hit.firstScanSyncDate)}</span>
+            </span>
+          </>
+        }
       </div>
     </div>
     <div class="debug" >
