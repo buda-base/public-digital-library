@@ -152,6 +152,21 @@ const getCustomQuery = (query, filter) => {
   };
 };
 
+const getCustomQueryNewAPI = (query, filter) => {
+  return {
+    function_score: {
+      script_score: {
+        script: {
+          id: "bdrc-score",
+        },
+      },
+      query: {
+        "bdrc-query": query
+      }
+    },
+  };
+};
+
 const getDefaultQuery = (filter) => {
   return {
     bool: {
@@ -205,7 +220,7 @@ const getCustomizedBdrcIndexRequest = (request) => {
     },
     query:
       userInput !== ""
-        ? getCustomQuery(userInput, userQueryFacetFilters)
+        ? getCustomQueryNewAPI(userInput, userQueryFacetFilters)
         : getDefaultQuery(userQueryFacetFilters),
   };
 

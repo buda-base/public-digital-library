@@ -1,4 +1,4 @@
-import Searchkit from "searchkit";
+import Searchkit,{ ESTransporter } from "searchkit";
 import { history } from "instantsearch.js/es/lib/routers";
 
 // Constant
@@ -17,10 +17,87 @@ const CONNECTION = {
     Authorization: `Basic ${process.env.REACT_APP_ELASTICSEARCH_BASIC_AUTH}`,
   },
 };
+
+class MyTransporter extends ESTransporter {
+  async performNetworkRequest(requests) {
+
+    // adapt to required format
+    let body = this.createElasticsearchQueryFromRequest(requests)      
+    body = body.split("\n")
+    body.shift()
+    body = body.join("\n")
+
+    // you can use any http client here
+    return fetch(process.env.REACT_APP_ELASTICSEARCH_HOST, {
+      headers: {
+        // Add custom headers here        
+        "Content-Type": "application/json",
+      },
+      body,
+      method: 'POST'
+    })
+  }
+
+  async msearch(requests): Promise {
+    try {
+      const response = await this.performNetworkRequest(requests)
+      let responses = await response.json()
+      if(!responses.status && !Array.isArray(responses)) responses = [ responses ]
+
+      if (this.settings?.debug) {
+        console.log('Elasticsearch response:')
+        console.log(JSON.stringify(responses))
+      }
+
+      if (responses.status >= 500) {
+        console.error(JSON.stringify(responses))
+        throw new Error(
+          'Elasticsearch Internal Error: Check your elasticsearch instance to make sure it can recieve requests.'
+        )
+      } else if (responses.status === 401) {
+        console.error(JSON.stringify(responses))
+        throw new Error(
+          'Cannot connect to Elasticsearch. Check your connection host and auth details (username/password or API Key required). You can also provide a custom Elasticsearch transporter to the API Client. See https://www.searchkit.co/docs/guides/setup-elasticsearch#connecting-with-usernamepassword for more details.'
+        )
+      } else if (responses.responses?.[0]?.status === 403) {
+        console.error(JSON.stringify(responses))
+        throw new Error(
+          'Auth Error: You do not have permission to access this index. Check you are calling the right index (specified in frontend) and your API Key permissions has access to the index.'
+        )
+      } else if (responses.status === 404 || responses.responses?.[0]?.status === 404) {
+        console.error(JSON.stringify(responses))
+        throw new Error(
+          'Elasticsearch index not found. Check your index name and make sure it exists.'
+        )
+      } else if (responses.status === 400 || responses.responses?.[0]?.status === 400) {
+        console.error(JSON.stringify(responses))
+        throw new Error(
+          `Elasticsearch Bad Request.
+
+          1. Check your query and make sure it is valid.
+          2. Check the field mapping. See documentation to make sure you are using text types for searching and keyword fields for faceting
+          3. Turn on debug mode to see the Elasticsearch query and the error response.
+          `
+        )
+      }
+
+      console.log("responses:",responses)
+
+      return responses
+    } catch (error) {
+      throw error
+    }
+  }
+
+}
+
 // Create a Searchkit client
 // This is the configuration for Searchkit, specifying the fields to attributes used for search, facets, etc.
 const SearchkitConfig = new Searchkit({
-  connection: CONNECTION,
+
+  connection: new MyTransporter(),
+  //connection: CONNECTION,
+
   search_settings: {
     search_attributes: SEARCH_FIELDS.filter(
       (_field) => _field.highlightable
@@ -57,7 +134,7 @@ const SearchkitConfig = new Searchkit({
       },
     },
   },
-});
+}, );
 
 const formatFirstScanSyncDateRangeFromUiState = (uiState) => {
   const { configure = {} } = uiState;
