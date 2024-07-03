@@ -285,7 +285,9 @@
       "tmp:otherInstance_plural":"Other versions of this work",
       "tmp:containingOutline": "Containing outline",
       "tmp:scans_access":"Scans Access",
-      "tmp:etext_access":"Etext Access"
+      "tmp:etext_access":"Etext Access",
+      "tmp:scans_quality":"Scans Quality",
+      "tmp:etext_quality":"Etext Quality"
    },
    "guided":{
       "keyword":"keyword",
@@ -801,14 +803,14 @@
          "hit":{
             "3":"archive.org",
             "2":"40p. extract",
-            "1":"not vailable"
+            "1":"not available"
          },
          "quality":{
-            "5":"excellent",
-            "4":"very good",
-            "3":"good",
-            "2":"average",
-            "1":"poor"
+            "0":{
+               "66-1":{"01":"good quality"},
+               "33-0":{"66":"average quality"},
+               "0-0":{"33":"poor quality"}
+            }
          }
       },
       "etext":{
@@ -818,6 +820,16 @@
          "hit":{
             "2":"search only",
             "1":"not available"
+         },
+         "quality":{
+            "3":{"99-4":{"01":"manual input / aligned with images"}},
+            "2":{"99-3":{"01":"manual input / not aligned with images"}},
+            "1":{"99-2":{"01":"reviewed OCR"}},
+            "0":{
+               "95-1":{"01":"very good OCR"},
+               "8-0":{"95":"usable OCR"},
+               "0-0":{"8":"poor quality OCR"}
+            }
          }
       }
    },

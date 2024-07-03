@@ -20,7 +20,7 @@ const getItem = (collection, id) => {
 };
 
 function CustomRefinementList(props) {
-  const { attribute, that, I18n_prefix, prefix, iri, sort } = props;
+  const { attribute, that, I18n_prefix, prefix, iri, sort, sortFunc } = props;
 
   const [title, setTitle] = useState("")
 
@@ -52,6 +52,8 @@ function CustomRefinementList(props) {
       let storage = JSON.parse(sessionStorage.getItem(attribute));
 
       const renderItems = (items) => items.map((_item) => { 
+
+        console.log("item:", _item)
 
         const val = getPropLabel(that, fullUri("bdr:"+_item.value), true, false, I18n_prefix ? I18n_prefix+"."+_item.value.toLowerCase() : "", 1, storage)
 
@@ -96,9 +98,9 @@ function CustomRefinementList(props) {
 
   //console.log("render:", attribute, props, currentItems, items)
   
-  if(items.length === 0) return null
+  if(items.length === 0 || items.filter((item) => item.count > 0).length === 0) return null
 
-  const useItems = sort ? _.orderBy(items,["value"],["desc"]) : items
+  const useItems = sort ? _.orderBy(items,sortFunc??["value"],["desc"]) : items
 
   return (
     <div className="ais-RefinementList">
@@ -114,7 +116,7 @@ function CustomRefinementList(props) {
       /> */}
       <ul className="ais-RefinementList-list">
         {useItems.map((item) => (
-          <li
+          item.count > 0 && <li
             key={item.label}
             className={`ais-RefinementList-item ${
               item.isRefined && "ais-RefinementList-item--selected"

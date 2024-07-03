@@ -4,6 +4,7 @@ import { Highlight } from "react-instantsearch";
 import I18n from 'i18next';
 import {decode} from 'html-entities';
 
+import { RANGE_FIELDS } from "../api/ElasticAPI";
 import { RESULT_FIELDS } from "../constants/fields";
 
 import history from "../../../history"
@@ -104,6 +105,18 @@ const CustomHit = ({ hit, that }) => {
       return val
     }
   }, [that.props.local])
+
+  const getQuality = (field, q) => {
+    for(const r of RANGE_FIELDS[field+"_quality"]) {
+      if(q >= r.from && q <= r.to) 
+        return I18n.t("access."+field+".quality."
+            +r.from.toLocaleString('en', { minimumFractionDigits: 1 })
+            +"-"
+            +r.to.toLocaleString('en', { minimumFractionDigits: 1 })
+        )
+    }
+    return "?"
+  }
     
   return (<div class={"result "+hit.type}>        
     <div class="main">
@@ -114,11 +127,11 @@ const CustomHit = ({ hit, that }) => {
           <span class="RID">{hit.objectID}</span>
           { (hit.scans_access < 4 || hit.scans_quality) && <span>
               <span>{I18n.t("types.images", {count:2})}{I18n.t("misc.colon")}</span>&nbsp;
-              {hit.scans_access < 4 ? I18n.t("access.scans.hit."+hit.scans_access) : "quality|"+hit.scans_quality}
+              {hit.scans_access < 4 ? I18n.t("access.scans.hit."+hit.scans_access) : getQuality("scans",hit.scans_quality)}
             </span>}
           { (hit.etext_access < 3 || hit.etext_quality) && <span>
               <span>{I18n.t("types.etext" )}{I18n.t("misc.colon")}</span>&nbsp;
-              {hit.etext_access < 3 ? I18n.t("access.etext.hit."+hit.etext_access) : "quality|"+hit.etext_quality}
+              {hit.etext_access < 3 ? I18n.t("access.etext.hit."+hit.etext_access) : getQuality("etext",hit.etext_quality)}
             </span>} 
         </Link>        
       </div>

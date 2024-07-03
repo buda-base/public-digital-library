@@ -1,5 +1,21 @@
 const DATE_RANGE_FIELDS = ["firstScanSyncDate"];
 
+const RANGE_FIELDS = { 
+  "etext_quality": [
+    { "from":0,    "to":0.8  },
+    { "from":0.8,  "to":0.95 },
+    { "from":0.95, "to":1.01 },
+    { "from":1.99, "to":2.01 },
+    { "from":2.99, "to":3.01 },
+    { "from":3.99, "to":4.01 }
+  ],
+  "scans_quality": [
+    { "from":0,    "to":0.33 },
+    { "from":0.33, "to":0.66 },
+    { "from":0.66, "to":1.01 }
+  ]
+};
+
 const forgeFacetFilters = (facetFilters, filters) => {
   let allFilters = [];
   if (facetFilters.length > 0) {
@@ -16,6 +32,9 @@ const forgeFacetFilters = (facetFilters, filters) => {
         if (DATE_RANGE_FIELDS.includes(field)) {
           return { range: { [field]: createDateRangeQuery(value) } };
         }
+        if (RANGE_FIELDS[field]) {
+          return { range: { [field]: createRangeQuery(value, field) } }
+        }
         return { term: { [field]: value } };
       }),
     },
@@ -26,17 +45,44 @@ const forgeFacetFilters = (facetFilters, filters) => {
 
 const forgeUserAggregateFacets = (facets, size) => {
   const fields = Array.isArray(facets) ? facets : [facets];
-
+    
   return fields.reduce((acc, field) => {
-    acc[field] = {
-      terms: {
-        field: field,
-        size: size,
-      },
+    let ranges
+    if(RANGE_FIELDS[field]) { 
+      acc[field] = { 
+        "range":{
+          field,
+          ranges: RANGE_FIELDS[field]
+        }
+      }
+    } else {
+      acc[field] = {
+        "terms": {
+          field: field,
+          size: size
+        },
+      }
     };
     return acc;
   }, {});
 };
+
+
+function createRangeQuery(rangeString, field) {
+  const regex = /^(.*)-(.*)$/;
+  const matches = rangeString.match(regex);
+
+  if (!matches) {
+    throw new Error("Invalid range string");
+  }
+
+  let [, gte, lte] = matches
+
+  if(gte === "*") gte = null
+  if(lte === "*") lte = null
+  
+  return ({gte, lte})
+}
 
 function createDateRangeQuery(dateRangeString) {
   const regex = /\[(.*) TO (.*)\]/;
@@ -61,6 +107,38 @@ function createDateRangeQuery(dateRangeString) {
   return query;
 }
 
+const getCustomQueryPart = (query, filter) => {
+  return ({
+    bool: {
+      filter: filter,
+      must: [
+        {
+          multi_match: {
+            type: "phrase",
+            query: query,
+            fields: [
+              "seriesName_bo_x_ewts^0.1",
+              "seriesName_en^0.1",
+              "authorshipStatement_bo_x_ewts^0.005",
+              "authorshipStatement_en^0.005",
+              "publisherName_bo_x_ewts^0.01",
+              "publisherLocation_bo_x_ewts^0.01",
+              "publisherName_en^0.01",
+              "publisherLocation_en^0.01",
+              "prefLabel_bo_x_ewts^1",
+              "prefLabel_en^1",
+              "comment_bo_x_ewts^0.0001",
+              "comment_en^0.0001",
+              "altLabel_bo_x_ewts^0.6",
+              "altLabel_en^0.6",
+            ],
+          },
+        }
+      ],
+    }
+  })
+}
+
 const getCustomQuery = (query, filter) => {
   return {
     function_score: {
@@ -69,35 +147,7 @@ const getCustomQuery = (query, filter) => {
           id: "bdrc-score",
         },
       },
-      query: {
-        bool: {
-          filter: filter,
-          must: [
-            {
-              multi_match: {
-                type: "phrase",
-                query: query,
-                fields: [
-                  "seriesName_bo_x_ewts^0.1",
-                  "seriesName_en^0.1",
-                  "authorshipStatement_bo_x_ewts^0.005",
-                  "authorshipStatement_en^0.005",
-                  "publisherName_bo_x_ewts^0.01",
-                  "publisherLocation_bo_x_ewts^0.01",
-                  "publisherName_en^0.01",
-                  "publisherLocation_en^0.01",
-                  "prefLabel_bo_x_ewts^1",
-                  "prefLabel_en^1",
-                  "comment_bo_x_ewts^0.0001",
-                  "comment_en^0.0001",
-                  "altLabel_bo_x_ewts^0.6",
-                  "altLabel_en^0.6",
-                ],
-              },
-            }
-          ],
-        },
-      },
+      query: getCustomQueryPart(query, filter) 
     },
   };
 };
@@ -159,8 +209,42 @@ const getCustomizedBdrcIndexRequest = (request) => {
         : getDefaultQuery(userQueryFacetFilters),
   };
 
+
+  console.log("userInput?", userInput, clonedRequest.body.query)
+
   return clonedRequest;
 };
+
+
+const getGenericRequest = (request) => {
+  let clonedRequest = Object.assign({}, request);
+  const userInput = request?.request?.params?.query || "";
+  const userFacetFilters = request?.request?.params?.facetFilters || [];
+  const userFacets = request?.request?.params?.facets || [];
+  const userMaxValuePerFacets =
+    request?.request?.params?.maxValuesPerFacet || 20;
+  const userFilters = request?.request?.params?.filters;
+
+  // Queries
+  const userQueryFacetFilters = forgeFacetFilters(
+    userFacetFilters,
+    userFilters
+  );
+  const userAggregates = forgeUserAggregateFacets(
+    userFacets,
+    userMaxValuePerFacets
+  );
+
+  clonedRequest.body.aggs = userAggregates
+  
+  if(userInput) clonedRequest.body.query = getCustomQueryPart(userInput, userQueryFacetFilters)
+  else clonedRequest.body.query.bool.filter = userQueryFacetFilters
+
+  console.log("userInput?", userInput, clonedRequest.body.query)
+
+  return clonedRequest;
+};
+
 
 const formatAutosuggestReponse = (hits, source = "autosuggest") => {
   if (source === "opensearch") {
@@ -201,6 +285,8 @@ const getAutocompleteElasticRequest = async (queryStr) => {
 };
 
 export {
+  RANGE_FIELDS,
+  getGenericRequest,
   getCustomizedBdrcIndexRequest,
   getAutocompleteElasticRequest,
   createDateRangeQuery,

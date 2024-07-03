@@ -47,17 +47,20 @@ const FACET_ATTRIBUTES = [
     field: "etext_access",
     type: "string"
   },
-  /*
   {
     attribute: "scans_quality",
     field: "scans_quality",
-    type: "numeric"
+    type: "string"
   },
-  */
   {
     attribute: "etext_quality",
     field: "etext_quality",
-    type: "float"
+    type: "string"
+  },
+  {
+    attribute: "publicationDate",
+    field: "publicationDate",
+    type: "string"
   }
 ];
 

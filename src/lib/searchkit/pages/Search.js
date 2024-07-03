@@ -8,7 +8,7 @@ import Client from "@searchkit/instantsearch-client";
 import SearchkitConfig, { routingConfig } from "../searchkit.config";
 
 // API
-import { getCustomizedBdrcIndexRequest } from "../api/ElasticAPI";
+import { getCustomizedBdrcIndexRequest, getGenericRequest } from "../api/ElasticAPI";
 
 // Components
 import {
@@ -28,7 +28,6 @@ import CustomHit from "../components/CustomHit";
 import CustomDateRange from "../components/CustomDateRange";
 import SearchBoxAutocomplete from "../components/SearchBoxAutocomplete";
 import RefinementListWithLocalLabels from "../components/RefinementListWithLocalLabels";
-import NumericList from "../components/NumericList";
 
 // PDL
 import { top_right_menu, getPropLabel, fullUri, highlight } from '../../../components/App'
@@ -41,26 +40,12 @@ import { initiateApp } from '../../../state/actions';
 
 const filters = [{
     attribute:"scans_access", sort:true, I18n_prefix: "access.scans", prefix:"tmp"
-  //},{ // #881 not yet
-  //  attribute:"scans_quality", sort:true
-  },{
+  },{ // #881 not yet
+  //  attribute:"scans_quality", sort:true, I18n_prefix: "access.scans.quality", prefix:"tmp"
+  //},{
     attribute:"etext_access", sort:true, I18n_prefix: "access.etext", prefix:"tmp"
-  // },{
-  //   attribute:"etext_quality", sort:true, numeric:true, items:[
-  //     {
-  //       label:"manual-aligned", start:4, end:4
-  //     },{
-  //       label:"manual-unaligned", start:3, end:3
-  //     },{
-  //       label:"revised-OCR", start:2, end:2
-  //     },{
-  //       label:"high", start:0.95, end:1
-  //     },{
-  //       label:"medium", start:0.8, end:0.95
-  //     },{
-  //       label:"poor", start:0, end:0.8
-  //     }
-  //   ]
+  },{
+    attribute:"etext_quality", sort:true, I18n_prefix: "access.etext.quality", prefix:"tmp"
   },{
     attribute:"inCollection"
   },{ 
@@ -82,7 +67,7 @@ const filters = [{
   },{ 
     attribute:"translator", iri:"bdr:R0ER0026" 
   },{ 
-    attribute:"associatedCentury", prefix:"tmp"
+    attribute:"associatedCentury", sort:true, sortFunc:(elem) => Number(elem.value.replace(/[^0-9]/g,"")), prefix:"tmp"
   }
 ]
 
@@ -91,13 +76,13 @@ export const searchClient = Client(
   {
     hooks: {
       beforeSearch: async (requests) => {
-        const customizedRequest = requests.map((request) => {
-          console.log("requests?",requests)
+        const customizedRequest = requests.map((request) => {          
           if (request.indexName === process.env.REACT_APP_ELASTICSEARCH_INDEX) {
             return getCustomizedBdrcIndexRequest(request);
           }
-          return request;
+          return getGenericRequest(request); //request;
         });
+        console.log("requests?",requests, customizedRequest)
 
         return customizedRequest;
       },
@@ -178,12 +163,7 @@ export class SearchPage extends Component<State, Props>
                 <div className="filter-title MT"><p>{getPropLabel(this,fullUri("tmp:firstScanSyncDate"))}</p></div>
                 <CustomDateRange attribute="firstScanSyncDate" />
 
-                { filters.map((filter) => 
-                    filter.numeric 
-                    ? <NumericList that={this} {...filter} />
-                    : <RefinementListWithLocalLabels that={this} {...filter} showMore={true} />
-                  )
-                }
+                { filters.map((filter) => <RefinementListWithLocalLabels that={this} {...filter} showMore={true} />) }
 
               </div>
               <div className="main-content">
