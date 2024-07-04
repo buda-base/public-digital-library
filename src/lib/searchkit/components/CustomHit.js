@@ -40,7 +40,7 @@ const CustomHit = ({ hit, that, sortItems }) => {
   const { uiState } = useInstantSearch()
   const { sortBy } = uiState?.[process.env.REACT_APP_ELASTICSEARCH_INDEX]
 
-  //console.log("hit:", hit, sortBy, uiState, publisher)
+  console.log("hit:", hit, sortBy, uiState, publisher)
 
   useEffect(() => {
     const newLabel = []

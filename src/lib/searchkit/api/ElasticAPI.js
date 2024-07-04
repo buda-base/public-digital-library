@@ -1,3 +1,9 @@
+
+
+import {
+  HIGHLIGHT_FIELDS
+} from "../constants/fields";
+
 const DATE_RANGE_FIELDS = ["firstScanSyncDate"];
 
 const RANGE_FIELDS = { 
@@ -212,17 +218,7 @@ const getCustomizedBdrcIndexRequest = (request) => {
     size: userHitsPerPage,
     aggs: userAggregates,
     highlight: {
-      fields: {
-        prefLabel_bo_x_ewts: {},
-        altLabel_bo_x_ewts: {},
-        prefLabel_en: {},
-        altLabel_en: {},
-        seriesName_bo_x_ewts: {},
-        seriesName_en: {},
-        content_en: {},
-        comment_bo_x_ewts:{},
-        comment_en:{}
-      },
+      fields: HIGHLIGHT_FIELDS.reduce((acc,f) => ({...acc, [f.label]:{}}), {}),
     },
     query:
       userInput !== ""
