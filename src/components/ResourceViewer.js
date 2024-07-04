@@ -10523,10 +10523,10 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
             { infoPanelR }
             <div {...searchUrl?{"data-searchUrl":searchUrl}:{}} className={"resource "+hasTabs+getEntiType(this.props.IRI).toLowerCase() + (this.props.simple?" simple":"") + (this.props.preview?" preview":"") /*+(!this.props.portraitPopupClosed?" portrait-warn-on":"")*/} {...this.props.simple?{onClick:sendMsg}:{}}>                                             
                {searchUrl && <div class="ariane">
-                  <Link to={fromStaticRoute?searchUrl:"/search?"+searchUrl} onClick={(ev) => {
+                  <Link to={fromStaticRoute?searchUrl:"/osearch/search?"+searchUrl} onClick={(ev) => {
                      this.props.onLoading("search",true)                     
 
-                     let pathname = "/search"
+                     let pathname = "/osearch/search"
                      if(fromStaticRoute){
                         pathname = "/"+fromStaticRoute
                         searchUrl = searchUrl.replace(new RegExp(fromStaticRoute+"[?]"),"")

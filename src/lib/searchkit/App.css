@@ -357,5 +357,14 @@
 .AppSK:not(#a) .result .thumb.hasImg a {
 }
 
+.AppSK .result .data .names.publisher > .label + span {
+  display:flex;
+  align-items: baseline;
+}
+
+.AppSK .result .data .names.publisher > .label + span span+span::before {
+  content:"; ";
+}
+
 
 

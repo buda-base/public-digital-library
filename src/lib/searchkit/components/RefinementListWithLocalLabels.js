@@ -53,7 +53,7 @@ function CustomRefinementList(props) {
 
       const renderItems = (items) => items.map((_item) => { 
 
-        console.log("item:", _item)
+        //console.log("item:", _item)
 
         const val = getPropLabel(that, fullUri("bdr:"+_item.value), true, false, I18n_prefix ? I18n_prefix+"."+_item.value.toLowerCase() : "", 1, storage)
 

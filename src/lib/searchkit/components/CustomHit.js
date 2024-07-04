@@ -1,11 +1,13 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { Link } from "react-router-dom"
-import { Highlight } from "react-instantsearch";
+import { Link, useLocation } from "react-router-dom"
+import { Highlight, useInstantSearch } from "react-instantsearch";
 import I18n from 'i18next';
 import {decode} from 'html-entities';
+import qs from 'query-string'
 
 import { RANGE_FIELDS } from "../api/ElasticAPI";
 import { RESULT_FIELDS } from "../constants/fields";
+import { routingConfig } from "../searchkit.config";
 
 import history from "../../../history"
 
@@ -25,7 +27,7 @@ const Hit = ({ hit, label, debug = true }) => {
 
 
 
-const CustomHit = ({ hit, that }) => {
+const CustomHit = ({ hit, that, sortItems }) => {
 
   const [debug, setDebug] = useState(false)
   const [checked, setChecked] = useState(false)
@@ -33,19 +35,24 @@ const CustomHit = ({ hit, that }) => {
   const [title, setTitle] = useState()
   const [names, setNames] = useState([])
   const [img, setImg] = useState("")
-  
-  //console.log("hit:",hit)
+  const [publisher, setPublisher] = useState([])
+
+  const { uiState } = useInstantSearch()
+  const { sortBy } = uiState?.[process.env.REACT_APP_ELASTICSEARCH_INDEX]
+
+  //console.log("hit:", hit, sortBy, uiState, publisher)
 
   useEffect(() => {
     const newLabel = []
+    let newPublisher = []
     if(hit) { 
-      for(const name of ["prefLabel", "altLabel"]) {
+      for(const name of ["prefLabel", "altLabel", "publisherName", "publisherLocation"]) {
         for(const k of Object.keys(hit)) {
           if(k.startsWith(name)) { 
             //console.log("k:",k,hit[k],lang,hit)
             const lang = k.replace(new RegExp(name+"_"),"").replace(/_/g,"-")
-            hit[k].map((h,i) => name == "prefLabel" || hit._highlightResult[k] && hit._highlightResult[k][i]?.matchedWords?.length 
-              ? newLabel.push({
+            hit[k].map((h,i) => name == "prefLabel" || name == "altLabel" && hit._highlightResult[k] && hit._highlightResult[k][i]?.matchedWords?.length || name.startsWith("publisher")
+              ? (name.startsWith("publisher")?newPublisher:newLabel).push({
                   value: hit._highlightResult && hit._highlightResult[k] 
                     ? decode((hit._highlightResult[k][i]?.value ?? "").replace(/<mark>/g,"↦").replace(/<\/mark>/g,"↤").replace(/↤ ↦/g, " "))
                     : h, 
@@ -82,9 +89,33 @@ const CustomHit = ({ hit, that }) => {
       }
     }
 
+
+    if(newPublisher.length) { 
+      const out = []
+      for(const name of ["publisherName", "publisherLocation"]) {
+        const labels = []
+        for(const p of newPublisher) {
+          if(p.field?.startsWith(name)) {
+            labels.push(p)
+          }
+        }
+        //console.log("labels:",labels)
+        if(labels.length) {
+          const sortLabels = sortLangScriptLabels(labels,langs.flat,langs.translit)
+          out.push(<span lang={sortLabels[0].lang}>{highlight(sortLabels[0].value)}</span>)
+        }
+      }
+      newPublisher = out
+    }
+
+    if(hit.publicationDate) {
+      newPublisher.push(<span>{I18n.t("punc.num",{num:hit.publicationDate, interpolation: {escapeValue: false}})}</span>)      
+    }
+
+    setPublisher(newPublisher)
+
   }, [hit, that.props.langPreset])
-
-
+ 
   const prop = ["Person","Topic","Place"].includes(hit.type[0])
     ? "prop.tmp:otherName"
     : "prop.tmp:otherTitle"
@@ -117,12 +148,14 @@ const CustomHit = ({ hit, that }) => {
     }
     return "?"
   }
-    
+
+  const link = "/show/bdr:"+hit.objectID+"?s="+encodeURIComponent(window.location.href.replace(/^https?:[/][/][^?]+[?]?/gi,""))
+
   return (<div class={"result "+hit.type}>        
     <div class="main">
       <div class={"num-box "+(checked?"checked":"")} onClick={() => setChecked(!checked) }>{hit.__position}</div>
       <div class={"thumb "+(img?"hasImg":"")}>      
-        <Link to={"/show/bdr:"+hit.objectID}>
+        <Link to={link}>
           { img && <span class="img"><img src={img} onError={() => console.log("no img?",img)}/></span> }
           <span class="RID">{hit.objectID}</span>
           { (hit.scans_access < 4 || hit.scans_quality) && <span>
@@ -136,7 +169,7 @@ const CustomHit = ({ hit, that }) => {
         </Link>        
       </div>
       <div class="data">      
-          <Link to={"/show/bdr:"+hit.objectID}>
+          <Link to={link}>
             <span class="T">{getPropLabel(that, fullUri("bdr:"+hit.type), true, false, "types."+(hit.type+"").toLowerCase())}</span>
             {/* {{ hit.author && <Link to={"/show/bdr:"+hit.author}>{hit.author}</Link> } */} 
             { title }
@@ -147,8 +180,25 @@ const CustomHit = ({ hit, that }) => {
             <span>{names}</span>
           </span>
         </> }
+        
+        {/* // to put in publisher
+          hit.publicationDate && sortBy?.startsWith("publicationDate") && <>
+            <span class="names">
+              <span class="label">{I18n.t("sort.yearP")}<span class="colon">:</span></span>
+              <span>{I18n.t("punc.num",{num:hit.publicationDate, interpolation: {escapeValue: false}})}</span>
+            </span>
+          </>
+        */}
         {
-          hit.firstScanSyncDate && <>
+          publisher.length > 0 && <>
+          <span class="names publisher">
+              <span class="label">{I18n.t("prop.tmp:publisherName")}<span class="colon">:</span></span>
+              <span>{publisher}</span>
+            </span>
+          </>
+        }
+        {
+          hit.firstScanSyncDate && sortBy?.startsWith("firstScanSyncDate") && <>
             <span class="names">
               <span class="label">{I18n.t("sort.lastS")}<span class="colon">:</span></span>
               <span>{formatDate(hit.firstScanSyncDate)}</span>

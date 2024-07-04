@@ -24,12 +24,14 @@ class MyTransporter extends ESTransporter {
     let body = this.createElasticsearchQueryFromRequest(requests)      
 
     // choose host dependening on keyword on not
-    const useMod = !body.includes("rank_feature")
+    const useMod = body.includes('"type":"phrase","query":"')
     let host = process.env.REACT_APP_ELASTICSEARCH_HOST_MOD
     if(!useMod) host = process.env.REACT_APP_ELASTICSEARCH_HOST
     else {
+      /* // no need anymore
       // adapt to required format
       body = body.split("\n")[1] 
+      */
     }    
 
     // you can use any http client here
@@ -47,8 +49,10 @@ class MyTransporter extends ESTransporter {
   async msearch(requests): Promise {
     try {
       const response = await this.performNetworkRequest(requests)
-      let responses = await response.json()
-      if(!responses.status && !responses.took && !Array.isArray(responses)) responses = [ responses ]
+      let responses = await response.json(), useMod = false
+      if(!responses.status && !responses.responses && !Array.isArray(responses)) { 
+        responses = { responses : [ responses ] }
+      }
 
       if (this.settings?.debug) {
         console.log('Elasticsearch response:')
@@ -89,7 +93,7 @@ class MyTransporter extends ESTransporter {
 
       console.log("responses:",responses)
 
-      return responses.responses ?? responses
+      return responses.responses  
     } catch (error) {
       throw error
     }

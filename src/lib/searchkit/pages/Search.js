@@ -108,13 +108,34 @@ export class SearchPage extends Component<State, Props>
 
   componentDidUpdate() { 
 
-      if(window.initFeedbucket) window.initFeedbucket()
+    if(window.initFeedbucket) window.initFeedbucket()    
 
   }
   
   render() {
     
-    //console.log("sC:", searchClient)    
+    console.log("sC:", searchClient, routingConfig)    
+
+    const sortItems = [
+      {
+        label: "default",
+        value: process.env.REACT_APP_ELASTICSEARCH_INDEX,
+      },
+      {
+        label: "sync scan date",
+        value: "firstScanSyncDate_desc",
+      },
+
+      {
+        label: "publication date (most recent) ",
+        value: "publicationDate_desc",
+      },
+
+      {
+        label: "publication date (oldest)",
+        value: "publicationDate_asc",
+      },
+    ]
 
     return (
       <>
@@ -136,26 +157,7 @@ export class SearchPage extends Component<State, Props>
 
                 <SortBy
                   initialIndex={process.env.REACT_APP_ELASTICSEARCH_INDEX}
-                  items={[
-                    {
-                      label: "default",
-                      value: process.env.REACT_APP_ELASTICSEARCH_INDEX,
-                    },
-                    {
-                      label: "sync scan date",
-                      value: "firstScanSyncDate_desc",
-                    },
-
-                    {
-                      label: "publication date (most recent) ",
-                      value: "publicationDate_desc",
-                    },
-
-                    {
-                      label: "publication date (oldest)",
-                      value: "publicationDate_asc",
-                    },
-                  ]}
+                  items={sortItems}
                 />
                 
                 <RefinementListWithLocalLabels I18n_prefix={"types"} that={this} attribute="type" showMore={true} title={I18n.t("Lsidebar.datatypes.title")}/>
@@ -172,7 +174,7 @@ export class SearchPage extends Component<State, Props>
                     <Pagination />
                   </div>
                   <Configure hitsPerPage={20} />
-                  <Hits hitComponent={({hit}) => <CustomHit hit={hit} that={this} />} />
+                  <Hits hitComponent={({hit}) => <CustomHit hit={hit} that={this} {...{ sortItems }}/>} />
                   <div className="pagination">
                     <Pagination />
                   </div>

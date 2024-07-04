@@ -113,8 +113,14 @@ const getCustomQueryPart = (query, filter, field) => {
       filter: filter
     }
   })
-  if(field === "bdrc-query") res.bool["bdrc-query"] = query
-  else res.bool.must = [
+  /* // WIP: query format
+  if(field === "bdrc-query") { 
+    if(!res.bool.filter.length) delete res.bool.filter
+    res.bool["bdrc-query"] = query
+  }
+  else 
+  */
+  res.bool.must = [
     {
       multi_match: {
         type: "phrase",
@@ -162,7 +168,7 @@ const getCustomQueryNewAPI = (query, filter) => {
           id: "bdrc-score",
         },
       },
-      query: getCustomQueryPart(query, filter, "bdrc-query")
+      query: getCustomQueryPart(query, filter) //, "bdrc-query")
     },
   };
 };
@@ -252,7 +258,7 @@ const getGenericRequest = (request) => {
 
   clonedRequest.body.aggs = userAggregates
   
-  if(userInput) clonedRequest.body.query = getCustomQueryPart(userInput, userQueryFacetFilters)
+  if(userInput) clonedRequest.body.query = getCustomQueryPart(userInput, userQueryFacetFilters) //, "bdrc-query")
   else clonedRequest.body.query.bool.filter = userQueryFacetFilters
 
   console.log("userInput?", userInput, clonedRequest.body.query)
