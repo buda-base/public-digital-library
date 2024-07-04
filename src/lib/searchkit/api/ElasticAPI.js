@@ -107,36 +107,38 @@ function createDateRangeQuery(dateRangeString) {
   return query;
 }
 
-const getCustomQueryPart = (query, filter) => {
-  return ({
+const getCustomQueryPart = (query, filter, field) => {
+  const res = ({
     bool: {
-      filter: filter,
-      must: [
-        {
-          multi_match: {
-            type: "phrase",
-            query: query,
-            fields: [
-              "seriesName_bo_x_ewts^0.1",
-              "seriesName_en^0.1",
-              "authorshipStatement_bo_x_ewts^0.005",
-              "authorshipStatement_en^0.005",
-              "publisherName_bo_x_ewts^0.01",
-              "publisherLocation_bo_x_ewts^0.01",
-              "publisherName_en^0.01",
-              "publisherLocation_en^0.01",
-              "prefLabel_bo_x_ewts^1",
-              "prefLabel_en^1",
-              "comment_bo_x_ewts^0.0001",
-              "comment_en^0.0001",
-              "altLabel_bo_x_ewts^0.6",
-              "altLabel_en^0.6",
-            ],
-          },
-        }
-      ],
+      filter: filter
     }
   })
+  if(field === "bdrc-query") res.bool["bdrc-query"] = query
+  else res.bool.must = [
+    {
+      multi_match: {
+        type: "phrase",
+        query: query,
+        fields: [
+          "seriesName_bo_x_ewts^0.1",
+          "seriesName_en^0.1",
+          "authorshipStatement_bo_x_ewts^0.005",
+          "authorshipStatement_en^0.005",
+          "publisherName_bo_x_ewts^0.01",
+          "publisherLocation_bo_x_ewts^0.01",
+          "publisherName_en^0.01",
+          "publisherLocation_en^0.01",
+          "prefLabel_bo_x_ewts^1",
+          "prefLabel_en^1",
+          "comment_bo_x_ewts^0.0001",
+          "comment_en^0.0001",
+          "altLabel_bo_x_ewts^0.6",
+          "altLabel_en^0.6",
+        ],
+      },
+    }
+  ]
+  return res
 }
 
 const getCustomQuery = (query, filter) => {
@@ -160,9 +162,7 @@ const getCustomQueryNewAPI = (query, filter) => {
           id: "bdrc-score",
         },
       },
-      query: {
-        "bdrc-query": query
-      }
+      query: getCustomQueryPart(query, filter, "bdrc-query")
     },
   };
 };

@@ -21,17 +21,23 @@ const CONNECTION = {
 class MyTransporter extends ESTransporter {
   async performNetworkRequest(requests) {
 
-    // adapt to required format
     let body = this.createElasticsearchQueryFromRequest(requests)      
-    body = body.split("\n")
-    body.shift()
-    body = body.join("\n")
+
+    // choose host dependening on keyword on not
+    const useMod = !body.includes("rank_feature")
+    let host = process.env.REACT_APP_ELASTICSEARCH_HOST_MOD
+    if(!useMod) host = process.env.REACT_APP_ELASTICSEARCH_HOST
+    else {
+      // adapt to required format
+      body = body.split("\n")[1] 
+    }    
 
     // you can use any http client here
-    return fetch(process.env.REACT_APP_ELASTICSEARCH_HOST, {
+    return fetch(host, {
       headers: {
         // Add custom headers here        
-        "Content-Type": "application/json",
+        Authorization: `Basic ${process.env.REACT_APP_ELASTICSEARCH_BASIC_AUTH}`,
+        "Content-Type": "application/json"
       },
       body,
       method: 'POST'
@@ -42,7 +48,7 @@ class MyTransporter extends ESTransporter {
     try {
       const response = await this.performNetworkRequest(requests)
       let responses = await response.json()
-      if(!responses.status && !Array.isArray(responses)) responses = [ responses ]
+      if(!responses.status && !responses.took && !Array.isArray(responses)) responses = [ responses ]
 
       if (this.settings?.debug) {
         console.log('Elasticsearch response:')
@@ -83,7 +89,7 @@ class MyTransporter extends ESTransporter {
 
       console.log("responses:",responses)
 
-      return responses
+      return responses.responses ?? responses
     } catch (error) {
       throw error
     }
