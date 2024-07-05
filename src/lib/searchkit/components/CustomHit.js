@@ -12,6 +12,7 @@ import { routingConfig } from "../searchkit.config";
 import history from "../../../history"
 
 import { getPropLabel, fullUri, getLangLabel, highlight } from '../../../components/App'
+import TextToggle from '../../../components/TextToggle'
 import { sortLangScriptLabels, extendedPresets } from '../../../lib/transliterators'
 
 const skos  = "http://www.w3.org/2004/02/skos/core#";
@@ -36,6 +37,10 @@ const CustomHit = ({ hit, that, sortItems }) => {
   const [names, setNames] = useState([])
   const [img, setImg] = useState("")
   const [publisher, setPublisher] = useState([])
+  const [note, setNote] = useState("")
+  const [authorshipStatement, setAuthorshipStatement] = useState("")
+
+  const [show, setShow] = useState({})
 
   const { uiState } = useInstantSearch()
   const { sortBy } = uiState?.[process.env.REACT_APP_ELASTICSEARCH_INDEX]
@@ -43,16 +48,21 @@ const CustomHit = ({ hit, that, sortItems }) => {
   console.log("hit:", hit, sortBy, uiState, publisher)
 
   useEffect(() => {
-    const newLabel = []
-    let newPublisher = []
+    const labels = {}
+
+    let langs = that.props.langPreset
+    if(!langs) return
+    langs = extendedPresets(langs)
+
     if(hit) { 
-      for(const name of ["prefLabel", "altLabel", "publisherName", "publisherLocation"]) {
+      for(const name of ["prefLabel", "altLabel", "publisherName", "publisherLocation", "summary", "authorshipStatement", "comment"]) {
+        if(!labels[name]) labels[name] = []
         for(const k of Object.keys(hit)) {
           if(k.startsWith(name)) { 
             //console.log("k:",k,hit[k],lang,hit)
             const lang = k.replace(new RegExp(name+"_"),"").replace(/_/g,"-")
-            hit[k].map((h,i) => name == "prefLabel" || name == "altLabel" && hit._highlightResult[k] && hit._highlightResult[k][i]?.matchedWords?.length || name.startsWith("publisher")
-              ? (name.startsWith("publisher")?newPublisher:newLabel).push({
+            hit[k].map((h,i) => name != "altLabel" || hit._highlightResult[k] && hit._highlightResult[k][i]?.matchedWords?.length 
+              ? labels[name].push({
                   value: hit._highlightResult && hit._highlightResult[k] 
                     ? decode((hit._highlightResult[k][i]?.value ?? "").replace(/<mark>/g,"↦").replace(/<\/mark>/g,"↤").replace(/↤ ↦/g, " "))
                     : h, 
@@ -62,14 +72,11 @@ const CustomHit = ({ hit, that, sortItems }) => {
               : null
             )
           }
-        }
+        }        
       }
     }
-    let langs = that.props.langPreset
-    if(!langs) return
-    langs = extendedPresets(langs)
-    const sortLabels = sortLangScriptLabels(newLabel,langs.flat,langs.translit)
-    //console.log("ul:",sortLabels)
+    
+    const sortLabels = sortLangScriptLabels(labels.prefLabel,langs.flat,langs.translit)
     if(sortLabels.length) { 
       const label = getLangLabel(that,skos+"prefLabel",[{ ...sortLabels[0] }])
       //setTitle(<Hit debug={false} hit={sortLabels[0].hit} label={sortLabels[0].field} />)
@@ -77,10 +84,9 @@ const CustomHit = ({ hit, that, sortItems }) => {
       if(sortLabels.length > 1) { 
         sortLabels.shift()
         //setNames(sortLabels.map(l => <Hit debug={false} hit={l.hit} label={l.field} />))
-        setNames(sortLabels.map(label => <span lang={label.lang}>{highlight(label.value)}</span>))
+        setNames((sortLabels.concat(sortLangScriptLabels(labels.altLabel,langs.flat,langs.translit))).map(label => <span lang={label.lang}>{highlight(label.value)}</span>))
       }
-      
-    }
+    }          
 
     if(!["Person","Topic","Place"].includes(hit.type[0])) {
       if(that.props.config) {
@@ -89,32 +95,56 @@ const CustomHit = ({ hit, that, sortItems }) => {
       }
     }
 
-
-    if(newPublisher.length) { 
-      const out = []
+    let out = []
+    if(labels.publisherName.length || labels.publisherLocation.length) { 
       for(const name of ["publisherName", "publisherLocation"]) {
-        const labels = []
-        for(const p of newPublisher) {
-          if(p.field?.startsWith(name)) {
-            labels.push(p)
-          }
-        }
-        //console.log("labels:",labels)
-        if(labels.length) {
-          const sortLabels = sortLangScriptLabels(labels,langs.flat,langs.translit)
+        if(labels[name].length) {
+          const sortLabels = sortLangScriptLabels(labels[name],langs.flat,langs.translit)
           out.push(<span lang={sortLabels[0].lang}>{highlight(sortLabels[0].value)}</span>)
         }
       }
-      newPublisher = out
     }
-
     if(hit.publicationDate) {
-      newPublisher.push(<span>{I18n.t("punc.num",{num:hit.publicationDate, interpolation: {escapeValue: false}})}</span>)      
+      out.push(<span>{I18n.t("punc.num",{num:hit.publicationDate, interpolation: {escapeValue: false}})}</span>)      
     }
+    setPublisher(out)
 
-    setPublisher(newPublisher)
+    const newShow = {}
+    out = []
+    for(const name of ["summary", "comment"]) {
+      if(labels[name].length) {
+        const sortLabels = sortLangScriptLabels(labels[name],langs.flat,langs.translit)
+        let lang = ""
+        for(const l of sortLabels) {
+          const label = l.value
+          
+          if(!lang) lang = l.lang
+          else if(lang != l.lang) break;
+          
+          //35
+          if(!label?.includes("↦")) label = label.replace(/[\n\r]/gm," ").replace(/^ *(([^ ]+ ){30})(.*?)$/,(m,g1,g2,g3)=>g1+(g3?" (...)":""))
+          else { 
+            //17
+            label = label.replace(/[\n\r]/gm," ").replace(/^ *(.*?)(([^ ]+ ){15} *↦)/,(m,g1,g2,g3)=>(g1?"(...) ":"")+g2)
+            label = label.replace(/[\n\r]/gm," ").replace(/(↤ *([^ ]+ ){15})(.*?)$/,(m,g1,g2,g3)=>g1+(g3?" (...)":""))
+          }
+          if(label.startsWith("(...)") || label.endsWith("(...)")) newShow.note = false          
 
-  }, [hit, that.props.langPreset])
+          out.push(<span lang={sortLabels[0].lang}>{highlight(label)}</span>)
+          
+
+          //out.push(<TextToggle text={<span lang={sortLabels[0].lang}>{highlight(label)}</span>} />)
+        }
+      }
+      // const fun = eval("set"+name[0].toUpperCase()+name.substring(1))
+      // console.log("fun:",fun)
+      // fun(out)
+    }
+    setNote(out)
+
+    console.log("labels:", labels)
+
+  }, [hit, that.props.langPreset, show])
  
   const prop = ["Person","Topic","Place"].includes(hit.type[0])
     ? "prop.tmp:otherName"
@@ -194,6 +224,14 @@ const CustomHit = ({ hit, that, sortItems }) => {
           <span class="names publisher">
               <span class="label">{I18n.t("prop.tmp:publisherName")}<span class="colon">:</span></span>
               <span>{publisher}</span>
+            </span>
+          </>
+        }
+        {
+          note.length > 0 && <>
+          <span class="names">
+              <span class="label">{I18n.t("prop.bdo:note", {count:note.length})}<span class="colon">:</span></span>
+              <span>{note}</span>
             </span>
           </>
         }
