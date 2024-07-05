@@ -3496,8 +3496,8 @@ class ResourceViewer extends Component<Props,State>
 
                   if(!hasIA) {
                      fairTxt = <>
-                        <a class="fairuse-IA-link no-IA" onClick={toggleSnippet}>{I18n.t("access.snippet"+(this.state.collapse.snippet?"H":"V"))}</a>
-                        <br/>
+                        {/* <a class="fairuse-IA-link no-IA" onClick={toggleSnippet}>{I18n.t("access.snippet"+(this.state.collapse.snippet?"H":"V"))}</a>*/}
+                        <br/> 
                         <Trans i18nKey="access.fairuse1" components={{ bold: <u /> }} /> { I18n.t("access.fairuse2")} <a href="mailto:help@bdrc.io">help@bdrc.io</a> { I18n.t("access.fairuse3")}
                      </>
                   } else {         
@@ -3506,18 +3506,18 @@ class ResourceViewer extends Component<Props,State>
                      let IAlink = this.getIAlink(loca, bdo)
 
                      fairTxt = <>
-                        <a class="fairuse-IA-link" target="_blank" href={IAlink}>
-                           <img class="ia" src="/IA.svg"/>
-                           {I18n.t("access.fairUseIA2")}
-                           <img class="link-out" src="/icons/link-out_fit.svg"/>
-                        </a>
-                        <a class="fairuse-IA-link" onClick={toggleSnippet}>{I18n.t("access.snippet"+(this.state.collapse.snippet?"H":"V"))}</a>
-                        <br/>
-                        <Trans i18nKey="access.fairUseIA1" components={{ bold: <u /> }} />
+                        <span class="fairuse-IA-link-new">
+                           {/* <img class="ia" src="/IA.svg"/> */}
+                           {<Trans i18nKey="access.fairUseIA3" components={{ icon:<img class="link-out" src="/icons/link-out_fit.svg"/>, lk:<a target="_blank" href={IAlink} /> }} />}
+                           {/* <img class="link-out" src="/icons/link-out_fit.svg"/> */}
+                        </span>
+                        {/* <a class="fairuse-IA-link" onClick={toggleSnippet}>{I18n.t("access.snippet"+(this.state.collapse.snippet?"H":"V"))}</a>*/}
+                        <br/> 
+                        <Trans i18nKey="access.fairUseIA4" components={{ bold: <u /> }} />
                      </>
                   }
 
-                  fairUse = <div class= {"data access "+(hasIA?" hasIA":" fairuse")}>
+                  fairUse = <div class= {"data access "+(hasIA?" hasIA newIA":" fairuse")}>
                         <h3>
                            <span style={{textTransform:"none"}}>
                            {/* {I18n.t("access.limited20")}<br/> */}
@@ -3555,10 +3555,10 @@ class ResourceViewer extends Component<Props,State>
                ret = [ 
                         quality,
                         fairUse,
-                        (!fairUse || this.state.collapse.snippet) &&(!this.props.IIIFerrors||!this.props.IIIFerrors[prefix+":"+pretty]|| this.props.IIIFerrors[prefix+":"+pretty].error?.code != 403)
+                        (!fairUse || this.state.collapse.snippet || true) &&(!this.props.IIIFerrors||!this.props.IIIFerrors[prefix+":"+pretty]|| this.props.IIIFerrors[prefix+":"+pretty].error?.code != 403)
                         ? <Link {...this.props.preview?{ target:"_blank" }:{}} className={"urilink " + prefix + (this.props.IIIFerrors&&this.props.IIIFerrors[prefix+":"+pretty]?.error.code ? " error-"+this.props.IIIFerrors[prefix+":"+pretty]?.error?.code : "")} onClick={checkDLD.bind(this)} to={vlink}>{thumb}</Link>
                         : null,
-                        (!fairUse || this.state.collapse.snippet || restrict) && <div class="images-thumb-links">
+                        (!fairUse || this.state.collapse.snippet || true || restrict) && <div class="images-thumb-links">
                            { restrict 
                               ? restrict 
                               :  !this.props.IIIFerrors||!this.props.IIIFerrors[prefix+":"+pretty]                            
@@ -7762,17 +7762,17 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
             let IAlink = this.getIAlink(loca, bdo)
 
             fairTxt = <>
-               <Trans i18nKey="access.fairUseIA1" components={{ bold: <u /> }} />
+               <Trans i18nKey="access.fairUseIA4" components={{ bold: <u /> }} />
                <br/><br/>
-               <a class="fairuse-IA-link" target="_blank" href={IAlink}>
-                  <img class="ia" src="/IA.svg"/>
-                  {I18n.t("access.fairUseIA2")}
-                  <img class="link-out" src="/icons/link-out_fit.svg"/>
-               </a>
+               <span class="fairuse-IA-link-new">
+                  {/* <img class="ia" src="/IA.svg"/> */}
+                  {<Trans i18nKey="access.fairUseIA3" components={{ icon:<img class="link-out" src="/icons/link-out_fit.svg"/>, lk:<a target="_blank"  href={IAlink} /> }} />}
+                  {/* <img class="link-out" src="/icons/link-out_fit.svg"/> */}
+               </span>
             </>
          }
 
-         return <div class= {"data access "+(hasIA?" hasIA":" fairuse")}>
+         return <div class= {"data access "+(hasIA?" hasIA newIA":" fairuse")}>
                   <h3>
                      <span style={{textTransform:"none"}}>
                      {/* {I18n.t("access.limited20")}<br/> */}

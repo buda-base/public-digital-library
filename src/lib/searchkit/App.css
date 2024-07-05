@@ -362,8 +362,55 @@
   align-items: baseline;
 }
 
-.AppSK .result .data .names.publisher > .label + span span+span::before {
+.AppSK .result .data .names.publisher > .label + span > span+span::before {
   content:"; ";
+}
+
+.resource .data.access.hasIA.newIA h3 {
+  justify-content: flex-start;
+  margin-bottom: 3px;
+}
+
+.resource .data.access.hasIA.newIA .fairuse-IA-link-new {
+  text-transform: none;
+  font-weight:600;
+}
+
+.resource .data.access.hasIA.newIA .fairuse-IA-link-new img {
+  vertical-align: -1px;
+}
+
+.resource .data.access.hasIA.newIA + a div {
+  position: relative;
+}
+
+.resource .data.access.hasIA.newIA + a div::after,
+.resource .data.access.hasIA.newIA + a div::before {
+  content:"";
+  position:absolute;
+  width:30px;
+  height:30px;
+  background:white;
+  z-index: 1;
+  bottom:1px;
+  left:1px;
+
+  border-radius: 50%;
+  box-shadow: 0 0 2px 1px rgba(0, 0, 0, .25);
+
+  background-image:url("/icons/unknown.svg") ;
+  background-size:18px auto;
+  background-repeat:no-repeat;
+  background-position: center;
+}
+
+
+.resource .data.access.hasIA.newIA + a div::after {
+  left:auto;
+  right:2px;
+  bottom:2px;
+  background-image:url("/IA.png") ;
+  box-shadow: 0 0 2px 2px  #d73449;
 }
 
 

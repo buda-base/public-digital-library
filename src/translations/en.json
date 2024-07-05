@@ -790,6 +790,8 @@
       "quality0": "We apologize for the poor quality of these scans, which might be in the wrong order or have other issues which may make them difficult to read. Because these may still be useful for scholarship, research or practice, we have chosen to make these available, while we continue to search for higher quality images.",
       "fairUseIA1": "This work is <bold>copyrighted by a third party<\/bold>. As a result, BDRC can only make very limited portions available for private research and study. The full text of the work is viewable on Internet Archive, a close partner of ours, through their Open Library program.",
       "fairUseIA2": "Borrow this text from Internet Archive",
+      "fairUseIA3": "The scans are available through the <lk>Internet Archive's Open Library Program <icon /></lk>",
+      "fairUseIA4": "BDRC can make limited portions available for private research and study upon request.",
       "not": "Images not available.",
       "imageN":"(this image is copyrighted and not available)",
       "fairuseEtext": "BDRC <bold>restricts access<\/bold> to this work because the work is under <bold>copyright<\/bold>.",
