@@ -245,11 +245,11 @@ export class TraditionViewer extends Component<State, Props>
     const res = []
     for(const e of sort) {
       if(e.sublist) {
-        if(e.depth > 0) res.push(<h5 lang={e.lang}>{e.value} | {e.rank}</h5>)
+        if(e.depth > 0) res.push(<h5 lang={e.lang}>{e.value}</h5>)// | {e.rank}</h5>)
         res.push(this.renderList(e.sublist))
       }
-      else if(e.to) res.push(<Link lang={e.lang} to={e.to}>{e.value}{e.length?" ["+e.length+"]":""} | {e.rank}</Link>)
-      else res.push(<i>{e.value} {e.lang} | {e.rank}</i>)
+      else if(e.to) res.push(<Link lang={e.lang} to={e.to}>{e.value}{e.length?" ["+e.length+"]":""}</Link>)// | {e.rank}</Link>)
+      else res.push(<i>{e.value} {e.lang}</i>)// | {e.rank}</i>)
     }
     return res
   }
