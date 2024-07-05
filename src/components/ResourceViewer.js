@@ -3563,7 +3563,7 @@ class ResourceViewer extends Component<Props,State>
                               ? restrict 
                               :  !this.props.IIIFerrors||!this.props.IIIFerrors[prefix+":"+pretty]                            
                                  ?  <>
-                                       <Link {...this.props.preview?{ target:"_blank" }:{}} className={"urilink "+ prefix} to={vlink} onClick={checkDLD.bind(this)}>{I18n.t("index.openViewer")}</Link>
+                                       <Link {...this.props.preview?{ target:"_blank" }:{}} className={"urilink "+ prefix} to={vlink} onClick={checkDLD.bind(this)}>{I18n.t("index.openViewer"+(fairUse?"FU":""))}</Link>
                                        <ResourceViewerContainer auth={this.props.auth} history={this.props.history} IRI={prefix+":"+pretty} pdfDownloadOnly={true} />
                                     </>
                                  :  this.props.IIIFerrors[prefix+":"+pretty].error.code === 401 && (!this.props.auth || !this.props.auth.isAuthenticated())
@@ -6462,7 +6462,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                      return false
                   }
                }>
-               {I18n.t("resource.download")}
+               {I18n.t("resource.download"+(fairUse?"FU":""))}
             </a>
             : that.props.manifestError && !that.props.manifestError.error.message.match(/Restricted access/) 
                ? <a class="urilink nolink">{I18n.t("viewer.pdferror2")} ({I18n.t("user.errors.server2")})</a>
