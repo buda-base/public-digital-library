@@ -388,8 +388,8 @@
 .resource .data.access.hasIA.newIA + a div::before {
   content:"";
   position:absolute;
-  width:30px;
-  height:30px;
+  width:28px;
+  height:28px;
   background:white;
   z-index: 1;
   bottom:1px;
@@ -399,9 +399,11 @@
   box-shadow: 0 0 2px 1px rgba(0, 0, 0, .25);
 
   background-image:url("/icons/unknown.svg") ;
-  background-size:18px auto;
+  background-size:auto 22px;
   background-repeat:no-repeat;
-  background-position: center;
+  background-position: 50%;
+
+  box-sizing: border-box;
 }
 
 
@@ -409,8 +411,11 @@
   left:auto;
   right:2px;
   bottom:2px;
+  background-size:18px;
   background-image:url("/IA.png") ;
+  background-position:50% 4px ; 
   box-shadow: 0 0 2px 2px  #d73449;
+
 }
 
 
