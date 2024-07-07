@@ -16,6 +16,7 @@
 .filter-title {
   font-weight: 600;
   padding: 20px 0;
+  margin-bottom:6px;
 }
 
 .main-content {
@@ -75,31 +76,46 @@
 }
 
 
-.AppSK .filter-title:not(:first-child) {
+.AppSK .filter-title.MT {
   margin-top:20px;
 }
 
 .AppSK .ais-RefinementList-labelText {
   font-size:12px;
+  white-space: normal;
+  text-overflow: inherit;
+}
+
+.AppSK .ais-RefinementList-labelText > span {
+  line-height: 18px;
+  display: inline-flex;
 }
 
 .AppSK .ais-RefinementList-showMore {
   font-size:10px;
+  margin-top:7px;
 }
 
-.AppSK  .ais-CustomDateRange,
-.AppSK  .ais-SortBy,
+.AppSK .ais-RefinementList-showMore:focus {
+  border-color:#bbbbbb;
+  box-shadow:0 0 0 1px #dddddd,0 2px 0 1px rgba(35,38,59,.05)
+}
+
+/* .AppSK  .ais-CustomDateRange,
+.AppSK  .ais-SortBy, */
 .AppSK .ais-RefinementList {
-  padding-top:6px;
+  padding-top:0px;
+  margin-top:20px;
 }
 
 
+.AppSK .result .highlight, 
 .AppSK .ais-Highlight-highlighted, 
 .AppSK .ais-Snippet-highlighted {
    background-color:#fce08d;
    font-weight:700;
    color:black;
-   padding:3px 5px;
+   padding:1px 5px;
 }
 
 .AppSK .ais-RefinementList-checkbox {
@@ -231,6 +247,26 @@
 }
 
 
+.AppSK .result .thumb.hasImg a::before {
+  content:none;
+} 
+
+.AppSK .result .thumb.hasImg a .img {
+  width:130px;
+  height:130px;
+  box-shadow: 0 1px 4px #cecece;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background:black;
+  overflow: hidden;
+}
+
+.AppSK .result .thumb.hasImg a img {
+  height:130px;
+}
+
+
 .AppSK .result .num-box { width:22px;height:22px;border: 2px solid rgba(10,20,30,0.5); font-size:9px;color:rgba(10,20,30,0.75);font-weight:700;
    display:inline-block;align-items: center;justify-content: center; box-sizing: border-box; cursor:pointer;line-height: 18px; text-align: center;
    flex-shrink: 0;
@@ -245,6 +281,7 @@
   flex-direction: column;
 }
 
+.AppSK .result .data  .T + span,
 .AppSK .result .data > .ais-Highlight {
   color: rgba(0, 0, 0, 0.87);
   font-size: 13px;
@@ -254,32 +291,134 @@
   margin: 3px 0 5px 0;
 }
 
+.AppSK .result .data > a {
+  text-decoration: none;
+}
+
 .AppSK .result .data .names {
-  display:inline;
-  margin-top:10px;
+  margin-top:5px;
+  display: flex;
+  align-items: baseline;
 }
 
 .AppSK .result .data .names > span {
-  flex-grow:0;
-  flex-shrink:0;
   display:inline;
+  flex-wrap: wrap;
 }
-
+.AppSK .result .data .highlight,
 .AppSK .result .data .names .ais-Highlight {
   display:inline;
 }
 
 .AppSK .result .data .names > .label {
-  display: inline;
-  line-height: 20px;
+  display: block;
   position: relative;
   font-size: 12px;
   font-weight:700;
+  margin-right:5px;
+  float:left;
+  flex-shrink: 0;
 }
 
 .AppSK .result .data .names > .label + span {
-  display: inline;
-  line-height: 20px;
-  position: relative;
   font-size: 13px;
 }
+
+.AppSK .result .data .names > .label + span > span {
+  display: block;
+  margin-bottom: 5px;
+  line-height: 18px;
+}
+
+.AppSK:not(#a) .result .thumb a .RID {
+  font-size:10px;
+  margin-bottom:0;
+  line-height:14px;
+}
+
+
+.AppSK:not(#a) .result .thumb a .RID ~ span {
+  font-size:10px;
+  line-height:14px;
+  color:black;
+  font-weight: 400;
+  text-align: center;
+}
+.AppSK:not(#a) .result .thumb a .RID ~ span span{
+  font-weight:700;
+}
+
+.AppSK .ais-HitsPerPage-select:focus, 
+.AppSK .ais-SortBy-select:focus {
+  border-color:#d73443;
+  box-shadow: none;
+}
+
+.AppSK:not(#a) .result .thumb.hasImg a {
+}
+
+.AppSK .result .data .names.publisher > .label + span {
+  display:flex;
+  align-items: baseline;
+}
+
+.AppSK .result .data .names.publisher > .label + span > span+span::before {
+  content:"; ";
+}
+
+.resource .data.access.hasIA.newIA h3 {
+  justify-content: flex-start;
+  margin-bottom: 3px;
+}
+
+.resource .data.access.hasIA.newIA .fairuse-IA-link-new {
+  text-transform: none;
+  font-weight:600;
+}
+
+.resource .data.access.hasIA.newIA .fairuse-IA-link-new img {
+  vertical-align: -1px;
+}
+
+.resource .data.access.hasIA.newIA + a div {
+  position: relative;
+}
+
+.resource .data.access.hasIA.newIA + a div::after,
+.resource .data.access.hasIA.newIA + a div::before {
+  content:"";
+  position:absolute;
+  width:28px;
+  height:28px;
+  background:white;
+  z-index: 1;
+  bottom:1px;
+  left:1px;
+
+  border-radius: 50%;
+  box-shadow: 0 0 2px 1px rgba(0, 0, 0, .25);
+
+  background-image:url("/icons/unknown.svg") ;
+  background-size:auto 22px;
+  background-repeat:no-repeat;
+  background-position: 50%;
+
+  box-sizing: border-box;
+}
+
+
+.resource .data.access.hasIA.newIA + a div::after {
+  left:auto;
+  right:2px;
+  bottom:2px;
+  background-size:18px;
+  background-image:url("/IA.png") ;
+  background-position:50% 4px ; 
+  box-shadow: 0 0 2px 2px  #d73449;
+
+}
+
+
+
+
+

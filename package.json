@@ -28,6 +28,7 @@
       "google-maps": "^3.3.0",
       "google-maps-react": "^2.0.0",
       "hanzi-tsconv": "^0.1.1",
+      "html-entities": "^2.5.2",
       "html-react-parser": "^1.2.7",
       "hunspell-bo": "https://github.com/eroux/hunspell-bo",
       "i18next": "^19.4.5",

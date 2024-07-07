@@ -1,6 +1,7 @@
 // Core
 import React, { useEffect, useState } from "react";
 import I18n from 'i18next';
+import _ from "lodash"
 
 // hooks
 import { useRefinementList } from "react-instantsearch";
@@ -8,7 +9,9 @@ import { useRefinementList } from "react-instantsearch";
 // API
 import { fetchLabels } from "../api/LabelAPI";
 
+import { searchClient } from "../pages/Search"
 import { getPropLabel, fullUri } from '../../../components/App'
+
 
 const LANGUAGE = "bo-x-ewts";
 
@@ -17,7 +20,13 @@ const getItem = (collection, id) => {
 };
 
 function CustomRefinementList(props) {
-  const { attribute, that, I18n_prefix } = props;
+  const { attribute, that, I18n_prefix, prefix, iri, sort, sortFunc } = props;
+
+  const [title, setTitle] = useState("")
+
+  useEffect(() => {
+    setTitle(getPropLabel(that, fullUri(iri ?? (prefix ?? "bdo")+":"+attribute)))
+  }, [ that.props.dictionary ])
 
   const [currentItems, setCurrentItems] = useState([]);
 
@@ -30,25 +39,72 @@ function CustomRefinementList(props) {
     toggleShowMore,
   } = useRefinementList(props);
 
-  useEffect(() => {
+  useEffect(() => {    
 
+    const updateItems = async () => {
+
+      const itemIds = items.map((_item) => _item.value);
+      
+      if (!sessionStorage.getItem(attribute)) {
+        sessionStorage.setItem(attribute, JSON.stringify({}));
+      }
+
+      let storage = JSON.parse(sessionStorage.getItem(attribute));
+
+      const renderItems = (items) => items.map((_item) => { 
+
+        //console.log("item:", _item)
+
+        const val = getPropLabel(that, fullUri("bdr:"+_item.value), true, false, I18n_prefix ? I18n_prefix+"."+_item.value.toLowerCase() : "", 1, storage)
+
+        return ({
+          id: _item.value,
+          label: attribute === "associatedCentury" 
+            ? <span>{I18n.t("misc.ord",{num: _item.value})}</span>
+            : val
+        })
+
+      });
+      
+      let newItems = renderItems(items)
+
+      const missingIds = newItems.filter((item) => item.label === false).map(item => item.id)
+      
+      if (missingIds.length > 0) {
+        try {
+
+          const fetchedItems = await fetchLabels(missingIds, attribute)
+          
+          storage = {...storage, ...fetchedItems };
+
+          sessionStorage.setItem(attribute, JSON.stringify(storage));
+
+          newItems = newItems.filter(item => item.label != false).concat(renderItems(Object.keys(fetchedItems).map(it => ({ value: it }))))          
+
+          //console.log("ni:", items, newItems, storage)
+        }
+        catch(error) {
+          console.error(error);
+        };
+      }
+
+      setCurrentItems(newItems);
+
+    }
     
-    const newItems = items.map((_item) => ({
-      id: _item.value,
-      label: attribute === "associatedCentury" 
-        ? <span>{I18n.t("misc.ord",{num: _item.value})}</span>
-        : getPropLabel(that, fullUri("bdr:"+_item.value), true, false, I18n_prefix ? I18n_prefix+"."+_item.value.toLowerCase() : ""),
-    }));
+    updateItems()
 
-    console.log("items:",attribute, items, that, newItems)
+  }, [attribute, items, that.props.dictionary, that.props.locale, that.props.langPreset, searchClient.cache, isShowingMore]);
 
-    setCurrentItems(newItems);
+  //console.log("render:", attribute, props, currentItems, items)
   
-  }, [attribute, items, that.props.dictionary, that.props.locale]);
+  if(items.length === 0 || items.filter((item) => item.count > 0).length === 0) return null
 
-  
+  const useItems = sort ? _.orderBy(items,sortFunc??["value"],["desc"]) : items
+
   return (
     <div className="ais-RefinementList">
+      <div className="filter-title"><p>{title}</p></div>
       {/* <input
         type="search"
         autoComplete="off"
@@ -59,8 +115,8 @@ function CustomRefinementList(props) {
         onChange={(event) => searchForItems(event.currentTarget.value)}
       /> */}
       <ul className="ais-RefinementList-list">
-        {items.map((item) => (
-          <li
+        {useItems.map((item) => (
+          item.count > 0 && <li
             key={item.label}
             className={`ais-RefinementList-item ${
               item.isRefined && "ais-RefinementList-item--selected"
@@ -74,7 +130,7 @@ function CustomRefinementList(props) {
                 onChange={() => refine(item.value)}
               />
               <span className="ais-RefinementList-labelText">
-                {getItem(currentItems, item.value)?.label || item.label}
+                {currentItems.find((_item) => _item.id === item.value)?.label || item.label}
               </span>
               <span className="ais-RefinementList-count">{item.count}</span>
             </label>

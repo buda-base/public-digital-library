@@ -33,27 +33,25 @@ export default function AutocompleteKeywordInput(props) {
     //console.log("auto:", searchString, server)
     
     if (searchString.length > 0) {
-            
+      
+
       try {
 
         const response = await fetch(server.endpoints[server.index]+'/autosuggest', { // ADJUST PORT IF NECESSARY
-        method: 'POST',
-          headers: {'Content-Type': 'application/json'},
-          body: JSON.stringify({query: searchString})
-        })
+          method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({query: searchString})
+          })
         const data = (await response.json()).filter(d => d.res)
         
-        //console.log("suggest:", data)
-
+        //console.log("suggest:", data, searchString, that.state.keyword)
+        
         setSuggest(data)
         
-
       }
       catch(error) { 
         console.error('Error fetching suggestions:', error);
       }
-      
-      that.setState({keyword:searchString})
 
     } else {
 
@@ -65,7 +63,11 @@ export default function AutocompleteKeywordInput(props) {
    const changeKeyword = (ev) => {
       ev.persist()
       //console.log("change:", ev)
-      setKeyword(ev.target.value)      
+
+      // #884 don't overwrite user input
+      that.setState({keyword:ev.target.value})
+
+      setKeyword(ev.target.value)            
       debounce(getAutocomplete)(ev)
    }
 

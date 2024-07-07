@@ -30,11 +30,11 @@ function CustomRefinementList(props) {
   useEffect(() => {
     const itemIds = items.map((_item) => _item.value);
 
-    if (!localStorage.getItem(attribute)) {
-      localStorage.setItem(attribute, JSON.stringify([]));
+    if (!sessionStorage.getItem(attribute)) {
+      sessionStorage.setItem(attribute, JSON.stringify([]));
     }
 
-    let storage = JSON.parse(localStorage.getItem(attribute));
+    let storage = JSON.parse(sessionStorage.getItem(attribute));
 
     // const storedItemIds = storage.map((_storedItem) => _storedItem.id);
 
@@ -49,8 +49,10 @@ function CustomRefinementList(props) {
     if (missingIds.length > 0) {
       fetchLabels(missingIds, attribute, LANGUAGE)
         .then((response) => {
+          console.log("resp:", attribute, response) 
+
           const newItems = Object.entries(response).map(([id, label]) => {
-            return { id, label, lang: LANGUAGE };
+            return { id:id.replace(/bdr:/,""), label, lang: LANGUAGE };
           });
 
           storage = [...storage, ...newItems];
@@ -59,13 +61,13 @@ function CustomRefinementList(props) {
           );
 
           setCurrentItems(newCurrentItems);
-          localStorage.setItem(attribute, JSON.stringify(storage));
+          sessionStorage.setItem(attribute, JSON.stringify(storage));
         })
         .catch((error) => {
           console.error(error);
         });
     } else {
-      const alreadyKnownItem = JSON.parse(localStorage.getItem(attribute));
+      const alreadyKnownItem = JSON.parse(sessionStorage.getItem(attribute));
       const newItems = items.map((_item) => ({
         id: _item.value,
         label: getItem(alreadyKnownItem, _item.value).label,

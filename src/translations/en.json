@@ -4,7 +4,8 @@
       "colon": ":",
       "num": "{{num}}",
       "lpar": "(",
-      "rpar": ")"
+      "rpar": ")",
+      "semic": "; "
    },
    "cookies":{
       "message":"This website uses a third party cookie to collect anonymous usage statistics and enhance the user experience (Google Analytics).",
@@ -283,7 +284,11 @@
       "tmp:subscribed":"Subscribed Collections",
       "tmp:otherInstance":"Other version of this work",
       "tmp:otherInstance_plural":"Other versions of this work",
-      "tmp:containingOutline": "Containing outline"
+      "tmp:containingOutline": "Containing outline",
+      "tmp:scans_access":"Scans Access",
+      "tmp:etext_access":"Etext Access",
+      "tmp:scans_quality":"Scans Quality",
+      "tmp:etext_quality":"Etext Quality"
    },
    "guided":{
       "keyword":"keyword",
@@ -351,7 +356,8 @@
       "userP": "User Profile",
       "personalI": "Personal Information",
       "relatedM": "Collection members of {{resLabel.value}}",
-      "relatedS": "Serial members of {{resLabel.value}}"
+      "relatedS": "Serial members of {{resLabel.value}}",
+      "openViewerFU": "Open Preview on BDRC"
    },
    "user": {
       "photo": {
@@ -699,7 +705,8 @@
       "notInList":"This PDF is not part of a collection subscribed to by your institution.<nl/>Please <lk>visit the BDRC platform</lk> and log in for access.",
       "continue":"Continue reading",
       "seeIn":"See this text in {{- txt}}",
-      "closeO":"Close outline"
+      "closeO":"Close outline",
+      "downloadFU": "Download Preview"
    },
    "tradition":{
       "boT":"Tibetan Tradition",
@@ -785,11 +792,51 @@
       "quality0": "We apologize for the poor quality of these scans, which might be in the wrong order or have other issues which may make them difficult to read. Because these may still be useful for scholarship, research or practice, we have chosen to make these available, while we continue to search for higher quality images.",
       "fairUseIA1": "This work is <bold>copyrighted by a third party<\/bold>. As a result, BDRC can only make very limited portions available for private research and study. The full text of the work is viewable on Internet Archive, a close partner of ours, through their Open Library program.",
       "fairUseIA2": "Borrow this text from Internet Archive",
+      "fairUseIA3": "The scans are available through the <lk>Internet Archive's Open Library Program <icon /></lk>",
+      "fairUseIA4": "BDRC can make limited portions available for private research and study upon request.",
       "not": "Images not available.",
       "imageN":"(this image is copyrighted and not available)",
       "fairuseEtext": "BDRC <bold>restricts access<\/bold> to this work because the work is under <bold>copyright<\/bold>.",
       "snippetV":"View a small snippet at BDRC",
-      "snippetH":"Hide snippet"
+      "snippetH":"Hide snippet",
+      "scans":{
+         "5":"Open Access / BDRC",
+         "4":"Open Access / IIIF",
+         "3":"Internet Archive only",
+         "2":"40p. extract",
+         "1":"Not Available",
+         "hit":{
+            "3":"archive.org",
+            "2":"40p. extract",
+            "1":"not available"
+         },
+         "quality":{
+            "0":{
+               "66-1":{"01":"good quality"},
+               "33-0":{"66":"average quality"},
+               "0-0":{"33":"poor quality"}
+            }
+         }
+      },
+      "etext":{
+         "3":"Open Access",
+         "2":"Search only",
+         "1":"Not Available",
+         "hit":{
+            "2":"search only",
+            "1":"not available"
+         },
+         "quality":{
+            "3":{"99-4":{"01":"manual input / aligned with images"}},
+            "2":{"99-3":{"01":"manual input / not aligned with images"}},
+            "1":{"99-2":{"01":"reviewed OCR"}},
+            "0":{
+               "95-1":{"01":"very good OCR"},
+               "8-0":{"95":"usable OCR"},
+               "0-0":{"8":"poor quality OCR"}
+            }
+         }
+      }
    },
    "location": {
       "beginV": "Begin volume: {{num}}",
