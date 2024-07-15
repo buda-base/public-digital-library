@@ -81,7 +81,12 @@ const mapStateToProps = (state,ownProps) => {
 
       if(work && work[workUri] && work[workUri][bdo+"workHasInstance"]) { 
          const inst = work[workUri][bdo+"workHasInstance"].filter(t => t.value != uri && t.value.startsWith(bdr+"MW"))
-         if(inst.length) resources[ownProps.IRI][uri][bdo+"workHasInstance"] = inst
+         if(inst?.length) resources[ownProps.IRI][uri][bdo+"workHasInstance"] = inst
+      }
+
+      if(work && work[workUri]) for(const prop of [bdo+"catalogInfo", bdo+"workIsAbout", bdo+"workGenre"]) {
+         const val = work[workUri][prop]
+         if(val?.length) resources[ownProps.IRI][uri][prop] = val
       }
    }
 

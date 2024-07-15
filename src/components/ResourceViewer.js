@@ -524,7 +524,10 @@ const topProperties = {
       tmp+"containingOutline",
       bdo+"instanceHasReproduction",
       tmp+"propHasScans",
-      tmp+"propHasEtext"
+      tmp+"propHasEtext",
+      bdo+"workIsAbout",
+      bdo+"workGenre",
+      bdo+"catalogInfo"
    ],
    "Images": [ 
       bdo+"hasTitle", 
@@ -565,7 +568,7 @@ let midProperties = {
    "Instance": [ 
       bdo+"workHasInstance",
       //bdo+"instanceOf",
-      bdo+"catalogInfo",
+      //bdo+"catalogInfo",
       bdo+"hasTitle", 
       skos+"prefLabel", 
       skos+"altLabel", 
