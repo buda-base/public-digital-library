@@ -809,6 +809,7 @@ body > #pop-login { z-index:1000000 ;}
    font-weight:600;
 }
 
+.inner-search-bar:not(#a) > div > span:last-child input ~ a.go button,
 .inner-search-bar:not(#a) > div > span:last-child input ~ button {
    position:absolute;
    right:0;
@@ -818,11 +819,11 @@ body > #pop-login { z-index:1000000 ;}
    margin-top:7px;
    margin-right:2px;
    z-index: 1000;
-   color:#ccc;
+   color:#aaa;
 }
 
 
-.inner-search-bar:not(#a) > div > span:last-child input ~ a {
+.inner-search-bar:not(#a) > div > span:last-child input ~ a:not(.go) {
    position:absolute;
    right:0;
    top:100%;

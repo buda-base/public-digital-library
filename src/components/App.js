@@ -7549,9 +7549,6 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      <span>Search</span>
                      <span>
                         <AutocompleteKeywordInput { ...{ that: this } }/>
-                        <IconButton>
-                           <SearchIcon />
-                        </IconButton>
                      </span>
                   </div>
                </div> }

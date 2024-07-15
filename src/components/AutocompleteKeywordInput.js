@@ -1,9 +1,11 @@
 
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, useCallback } from "react"
 import HTMLparse from "html-react-parser";
 import { Link } from "react-router-dom"
 import I18n from 'i18next';
 import $ from "jquery"
+import IconButton from '@material-ui/core/IconButton';
+import SearchIcon from '@material-ui/icons/Search';
 
 import { keywordtolucenequery, lucenequerytokeyword } from "./App"
 
@@ -59,8 +61,16 @@ export default function AutocompleteKeywordInput(props) {
       setSuggest([])
     }    
   }
+  const handleKeyDown = useCallback((ev) => {
+    
+     if (ev.key === 'Enter') {        
+       that.props.history.push({pathname:"/osearch/search",search:"?q="+encodeURIComponent(keyword)}); 
+     }
+
+  }, [keyword])
    
-   const changeKeyword = (ev) => {
+  const changeKeyword = (ev) => {    
+
       ev.persist()
       //console.log("change:", ev)
 
@@ -76,7 +86,7 @@ export default function AutocompleteKeywordInput(props) {
    }
 
    return <>
-    <input placeholder="Search" type="text" value={keyword ?? ""} onChange={changeKeyword} onFocus={changeKeyword} onBlur={removeSuggestions}
+    <input placeholder="Search" type="text" value={keyword ?? ""} onKeyDown={handleKeyDown} onChange={changeKeyword} onFocus={changeKeyword} onBlur={removeSuggestions}
       />
       { suggest?.length > 0 && <>
         <div class="suggest-bg" onClick={removeSuggestions}></div>
@@ -108,6 +118,13 @@ export default function AutocompleteKeywordInput(props) {
           },500)
           ev.preventDefault()
           ev.stopPropagation()          
-       }}>Advanced search</Link>}
+       }}>Advanced search</Link>}       
+      { keyword ? <Link className="go" to={"/osearch/search?q="+encodeURIComponent(keyword)}>
+          <IconButton>
+            <SearchIcon />
+          </IconButton>
+        </Link> : <IconButton>
+            <SearchIcon />
+          </IconButton> }
    </>
 }
