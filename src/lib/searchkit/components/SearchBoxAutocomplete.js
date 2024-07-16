@@ -199,6 +199,7 @@ const SearchBoxAutocomplete = (props) => {
           const newQuery = formatResponseForURLSearchParams(item.res);
           setQuery(newQuery);
           setIsFocused(false);
+          refine(newQuery);
         }}
         isVisible={isFocused}
       />

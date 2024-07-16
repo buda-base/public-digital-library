@@ -40,12 +40,13 @@ const CustomHit = ({ hit, that, sortItems }) => {
   const [note, setNote] = useState("")
   const [authorshipStatement, setAuthorshipStatement] = useState("")
 
-  const [show, setShow] = useState({})
+  const [showMore, setShowMore] = useState({})
+  const [expand, setExpand] = useState({})
 
   const { uiState } = useInstantSearch()
   const { sortBy } = uiState?.[process.env.REACT_APP_ELASTICSEARCH_INDEX]
 
-  console.log("hit:", hit, sortBy, uiState, publisher)
+  //console.log("hit:", hit, sortBy, uiState, publisher)
 
   useEffect(() => {
     const labels = {}
@@ -63,7 +64,7 @@ const CustomHit = ({ hit, that, sortItems }) => {
             const lang = k.replace(new RegExp(name+"_"),"").replace(/_/g,"-")
             hit[k].map((h,i) => name != "altLabel" || hit._highlightResult[k] && hit._highlightResult[k][i]?.matchedWords?.length 
               ? labels[name].push({
-                  value: hit._highlightResult && hit._highlightResult[k] 
+                  value: hit._highlightResult && hit._highlightResult[k] && hit._highlightResult[k][i]
                     ? decode((hit._highlightResult[k][i]?.value ?? "").replace(/<mark>/g,"↦").replace(/<\/mark>/g,"↤").replace(/↤ ↦/g, " "))
                     : h, 
                   field: k, num: i,
@@ -117,22 +118,25 @@ const CustomHit = ({ hit, that, sortItems }) => {
           ...acc,
           [l.lang]: (acc[l.lang] ? acc[l.lang]+I18n.t("punc.semic"):"")+l.value
         }),{})
+        console.log("byL:", byLang, labels[name])
         const sortLabels = sortLangScriptLabels(Object.keys(byLang).map(k => ({lang:k, value:byLang[k]})),langs.flat,langs.translit)
         let lang = ""
         for(const l of sortLabels) {
           const label = l.value
           
           if(!lang) lang = l.lang
-          else if(lang != l.lang) break;
-          
-          //35
-          if(!label?.includes("↦")) label = label.replace(/[\n\r]/gm," ").replace(/^ *(([^ ]+ ){30})(.*?)$/,(m,g1,g2,g3)=>g1+(g3?" (...)":""))
+          else if(lang != l.lang) break;          
+
+          const newLabel = label
+        
+          if(!newLabel?.includes("↦")) newLabel = newLabel.replace(/[\n\r]/gm," ").replace(/^ *(([^ ]+ ){35})(.*?)$/,(m,g1,g2,g3)=>g1+(g3?" (...)":""))
           else { 
-            //17
-            label = label.replace(/[\n\r]/gm," ").replace(/^ *(.*?)(([^ ]+ ){15} *↦)/,(m,g1,g2,g3)=>(g1?"(...) ":"")+g2)
-            label = label.replace(/[\n\r]/gm," ").replace(new RegExp("(↤ *([^ ]+ ){"+(30-(label.replace(/^.*↦/,"").match(/ /) || []).length)+"})(.*?)$"),(m,g1,g2,g3)=>g1+(g3?" (...)":""))
+            newLabel = newLabel.replace(/[\n\r]/gm," ").replace(/^ *(.*?)(([^ ]+ ){17} *↦)/,(m,g1,g2,g3)=>(g1?"(...) ":"")+g2)
+            newLabel = newLabel.replace(/[\n\r]/gm," ").replace(new RegExp("(↤ *([^ ]+ ){"+Math.max(1,(35-(newLabel.replace(/^.*↦/,"").match(/ /) || []).length))+"})(.*?)$"),(m,g1,g2,g3)=>g1+(g3?" (...)":""))
           }
-          if(label.startsWith("(...)") || label.endsWith("(...)")) newShow.note = false          
+          if(newLabel.startsWith("(...)") || newLabel.endsWith("(...)")) newShow.note = true          
+
+          if(!expand.note) label = newLabel        
 
           out.push(<span lang={sortLabels[0].lang}>{highlight(label)}</span>)
           
@@ -145,10 +149,11 @@ const CustomHit = ({ hit, that, sortItems }) => {
       // fun(out)
     }
     setNote(out)
+    setShowMore(newShow)
 
-    console.log("labels:", labels)
+    //console.log("labels:", labels, newShow)
 
-  }, [hit, that.props.langPreset, show])
+  }, [hit, that.props.langPreset, expand])
  
   const prop = ["Person","Topic","Place"].includes(hit.type[0])
     ? "prop.tmp:otherName"
@@ -183,6 +188,10 @@ const CustomHit = ({ hit, that, sortItems }) => {
     return "?"
   }
 
+  const toggleExpand = useCallback((tag) => {
+    setExpand({ ...expand, [tag]: !expand[tag] })
+  }, [expand])
+
   const link = "/show/bdr:"+hit.objectID+"?s="+encodeURIComponent(window.location.href.replace(/^https?:[/][/][^?]+[?]?/gi,""))
 
   return (<div class={"result "+hit.type}>        
@@ -196,7 +205,7 @@ const CustomHit = ({ hit, that, sortItems }) => {
               <span>{I18n.t("types.images", {count:2})}{I18n.t("misc.colon")}</span>&nbsp;
               {hit.scans_access < 4 ? I18n.t("access.scans.hit."+hit.scans_access) : getQuality("scans",hit.scans_quality)}
             </span>}
-          { (hit.etext_access < 3 || hit.etext_quality) && <span>
+          { hit.etext_access > 1 && <span>
               <span>{I18n.t("types.etext" )}{I18n.t("misc.colon")}</span>&nbsp;
               {hit.etext_access < 3 ? I18n.t("access.etext.hit."+hit.etext_access) : getQuality("etext",hit.etext_quality)}
             </span>} 
@@ -223,9 +232,21 @@ const CustomHit = ({ hit, that, sortItems }) => {
             </span>
           </>
         */}
+        { 
+          hit.inRootInstance?.length > 0 && <span class="names inRoot noNL">
+            <span class="label">{I18n.t("result.inRootInstance")}<span class="colon">:</span></span>
+            <span>{hit.inRootInstance?.map(a => <span><Link to="">{a}</Link></span>)}</span>
+          </span> 
+        }
+        { 
+          hit.author?.length > 0 && <span class="names author noNL">
+            <span class="label">{I18n.t("result.workBy")}<span class="colon">:</span></span>
+            <span>{hit.author?.map(a => <span><Link to="">{a}</Link></span>)}</span>
+          </span> 
+        }        
         {
           publisher.length > 0 && <>
-          <span class="names publisher">
+          <span class="names publisher noNL">
               <span class="label">{I18n.t("prop.tmp:publisherName")}<span class="colon">:</span></span>
               <span>{publisher}</span>
             </span>
@@ -235,7 +256,10 @@ const CustomHit = ({ hit, that, sortItems }) => {
           note.length > 0 && <>
           <span class="names">
               <span class="label">{I18n.t("prop.bdo:note", {count:note.length})}<span class="colon">:</span></span>
-              <span>{note}</span>
+              <span>
+                {note}
+                { showMore.note && <span className="toggle" onClick={() => toggleExpand("note")}>{I18n.t(expand.note ?"misc.hide":"Rsidebar.priority.more")}</span>}
+              </span>
             </span>
           </>
         }

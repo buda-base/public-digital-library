@@ -109,13 +109,15 @@
 }
 
 
-.AppSK .result .highlight, 
+
+
+.AppSK .result .highlight,
 .AppSK .ais-Highlight-highlighted, 
 .AppSK .ais-Snippet-highlighted {
-   background-color:#fce08d;
+   /* background-color:#fce08d; */
    font-weight:700;
    color:black;
-   padding:1px 5px;
+   /* padding:1px 5px; */
 }
 
 .AppSK .ais-RefinementList-checkbox {
@@ -293,6 +295,17 @@
 
 .AppSK .result .data > a {
   text-decoration: none;
+  
+}
+
+.AppSK .result .data > a > span:not(.T) span {
+  color:#d73449;
+  font-weight:500;
+  font-size:15px;
+}
+
+.AppSK .result .data > a > span:not(.T) .highlight {
+  font-weight:700;
 }
 
 .AppSK .result .data .names {
@@ -313,8 +326,8 @@
 .AppSK .result .data .names > .label {
   display: block;
   position: relative;
-  font-size: 12px;
-  font-weight:700;
+  font-size: 13px;
+  font-weight:600;
   margin-right:5px;
   float:left;
   flex-shrink: 0;
@@ -328,6 +341,11 @@
   display: block;
   margin-bottom: 5px;
   line-height: 18px;
+}
+
+.AppSK .result .data .names .toggle {
+  cursor:pointer;
+  color:#d73449;
 }
 
 .AppSK:not(#a) .result .thumb a .RID {
@@ -357,13 +375,18 @@
 .AppSK:not(#a) .result .thumb.hasImg a {
 }
 
-.AppSK .result .data .names.publisher > .label + span {
+.AppSK .result .data .names.noNL > .label + span {
   display:flex;
   align-items: baseline;
 }
 
-.AppSK .result .data .names.publisher > .label + span > span+span::before {
+.AppSK .result .data .names.noNL > .label + span > span+span::before {
   content:"; ";
+}
+
+.AppSK .result .data .names.noNL a {
+  text-decoration: none;
+  color:#d73449;
 }
 
 .resource .data.access.hasIA.newIA h3 {
