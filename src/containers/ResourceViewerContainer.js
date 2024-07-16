@@ -84,7 +84,7 @@ const mapStateToProps = (state,ownProps) => {
          if(inst?.length) resources[ownProps.IRI][uri][bdo+"workHasInstance"] = inst
       }
 
-      if(work && work[workUri]) for(const prop of [bdo+"catalogInfo", bdo+"workIsAbout", bdo+"workGenre"]) {
+      if(work && work[workUri]) for(const prop of [bdo+"catalogInfo", bdo+"workIsAbout", bdo+"workGenre", bdo+"workHasParallelsIn"]) {
          const val = work[workUri][prop]
          if(val?.length) resources[ownProps.IRI][uri][prop] = val
       }

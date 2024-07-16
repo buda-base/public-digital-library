@@ -429,6 +429,7 @@ let propOrder = {
       //"bdo:workType",
       "bdo:instanceHasReproduction",
       "bdo:instanceOf",
+      "bdo:workHasInstance",
       //"bdo:instanceReproductionOf",
       "tmp:siblingExpressions",
       "bdo:workHasParallelsIn",
@@ -447,7 +448,6 @@ let propOrder = {
       "bdo:script",
       "tmp:hasEtext",
       "bdo:hasReproduction",
-      "bdo:workHasInstance",
       "bdo:hasInstance",
       "bdo:contentLocation",
       //"bdo:inRootInstance",
@@ -515,8 +515,10 @@ const topProperties = {
       bdo+"language",
       bdo+"creator",
       bdo+"catalogInfo",
+      bdo+"workHasParallelsIn",
       bdo+"workTranslationOf",
-      bdo+"workHasInstance",
+      //bdo+"workHasTranslation",
+      //bdo+"workHasInstance",
    ],
    "Instance": [ 
       bdo+"creator",
@@ -527,7 +529,8 @@ const topProperties = {
       tmp+"propHasEtext",
       bdo+"workIsAbout",
       bdo+"workGenre",
-      bdo+"catalogInfo"
+      bdo+"catalogInfo",
+      bdo+"workHasParallelsIn",
    ],
    "Images": [ 
       bdo+"hasTitle", 
