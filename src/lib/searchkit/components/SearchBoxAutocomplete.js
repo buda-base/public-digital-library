@@ -9,10 +9,10 @@ import { debounce } from "../helpers/utils";
 // api
 import { getAutocompleteRequest } from "../api/AutosuggestAPI";
 
-const SearchBoxAction = ({ inputValue, isSearchStalled }) => {
+const SearchBoxAction = ({ inputValue, isSearchStalled, refine }) => {
   return (
     <>
-      <button type="submit" className="ais-SearchBox-submit">
+      <button type="submit" className="ais-SearchBox-submit" onClick={()=> refine(inputValue)}>
         Submit
       </button>
       <button
@@ -116,7 +116,9 @@ const SearchBoxAutocomplete = (props) => {
       setSuggestions([]);
     }
 
+    /* // disables search-as-you-type
     refine(newQuery);
+    */
   };
 
   const debouncedHandleChange = useCallback(
@@ -174,6 +176,7 @@ const SearchBoxAutocomplete = (props) => {
         onKeyDown={(e) => {
           if (e.key === "Enter") {
             setIsFocused(false);
+            refine(inputValue);
           }
         }}
         onChange={(event) => {
@@ -188,6 +191,7 @@ const SearchBoxAutocomplete = (props) => {
       <SearchBoxAction
         inputValue={inputValue}
         isSearchStalled={isSearchStalled}
+        refine={refine}
       />
       <SuggestsList
         items={suggestions}

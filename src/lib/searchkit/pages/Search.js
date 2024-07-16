@@ -148,7 +148,7 @@ export class SearchPage extends Component<State, Props>
           >
             <div className="search inner-search-bar">
               <div>
-                <SearchBoxAutocomplete />
+                <SearchBoxAutocomplete searchAsYouType={false}/>
               </div>
             </div>
             <div className="content">

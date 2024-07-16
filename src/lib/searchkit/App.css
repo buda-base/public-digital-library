@@ -422,3 +422,19 @@
 
 
 
+.AppSK .ais-SearchBox-submit {
+  display:block;
+  display: block;
+  position: absolute;
+  left: 2px;
+  z-index: 1000;
+  height: 44px;
+  width: 44px;
+  top: 6px;
+  color: transparent;
+  border-radius: 50%;
+}
+
+.AppSK .ais-SearchBox-submit:hover {
+  background:#ccc5;
+}

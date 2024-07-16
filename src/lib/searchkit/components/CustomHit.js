@@ -113,7 +113,11 @@ const CustomHit = ({ hit, that, sortItems }) => {
     out = []
     for(const name of ["summary", "comment"]) {
       if(labels[name].length) {
-        const sortLabels = sortLangScriptLabels(labels[name],langs.flat,langs.translit)
+        const byLang = labels[name].reduce((acc,l) => ({
+          ...acc,
+          [l.lang]: (acc[l.lang] ? acc[l.lang]+I18n.t("punc.semic"):"")+l.value
+        }),{})
+        const sortLabels = sortLangScriptLabels(Object.keys(byLang).map(k => ({lang:k, value:byLang[k]})),langs.flat,langs.translit)
         let lang = ""
         for(const l of sortLabels) {
           const label = l.value
@@ -126,7 +130,7 @@ const CustomHit = ({ hit, that, sortItems }) => {
           else { 
             //17
             label = label.replace(/[\n\r]/gm," ").replace(/^ *(.*?)(([^ ]+ ){15} *↦)/,(m,g1,g2,g3)=>(g1?"(...) ":"")+g2)
-            label = label.replace(/[\n\r]/gm," ").replace(/(↤ *([^ ]+ ){15})(.*?)$/,(m,g1,g2,g3)=>g1+(g3?" (...)":""))
+            label = label.replace(/[\n\r]/gm," ").replace(new RegExp("(↤ *([^ ]+ ){"+(30-(label.replace(/^.*↦/,"").match(/ /) || []).length)+"})(.*?)$"),(m,g1,g2,g3)=>g1+(g3?" (...)":""))
           }
           if(label.startsWith("(...)") || label.endsWith("(...)")) newShow.note = false          
 
