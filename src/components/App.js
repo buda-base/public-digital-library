@@ -729,7 +729,7 @@ function pretty(str:string) {
 }
 
 
-export function getPropLabel(that, i, withSpan = true, withLang = false, useI18n = "", useI18n_count = 1, storage) {
+export function getPropLabel(that, i, withSpan = true, withLang = false, useI18n = "", useI18n_count = 1, storage, defaultToRID = false) {
 
    
    if(!that.props.dictionary) return 
@@ -753,13 +753,14 @@ export function getPropLabel(that, i, withSpan = true, withLang = false, useI18n
       labels = [{ value:t, lang:that.props.locale }]
    } else if(storage) {
       
-      //label = "storage?"
+      label = "storage?"
+
       if(storage[rid]?.label) labels = storage[rid].label 
-      else return false
+      else if(!defaultToRID) return false
 
    }
    
-   //console.log("labels:", labels, i)
+   console.log("labels:", labels, i)
 
    let lang
    if(labels) {

@@ -28,7 +28,7 @@ const Hit = ({ hit, label, debug = true }) => {
 
 
 
-const CustomHit = ({ hit, that, sortItems }) => {
+const CustomHit = ({ hit, that, sortItems, storage }) => {
 
   const [debug, setDebug] = useState(false)
   const [checked, setChecked] = useState(false)
@@ -46,7 +46,7 @@ const CustomHit = ({ hit, that, sortItems }) => {
   const { uiState } = useInstantSearch()
   const { sortBy } = uiState?.[process.env.REACT_APP_ELASTICSEARCH_INDEX]
 
-  //console.log("hit:", hit, sortBy, uiState, publisher)
+  console.log("hit:", hit, sortBy, uiState, publisher, storage)
 
   useEffect(() => {
     const labels = {}
@@ -128,14 +128,17 @@ const CustomHit = ({ hit, that, sortItems }) => {
           else if(lang != l.lang) break;          
 
           const newLabel = label
-        
-          if(!newLabel?.includes("↦")) newLabel = newLabel.replace(/[\n\r]/gm," ").replace(/^ *(([^ ]+ ){35})(.*?)$/,(m,g1,g2,g3)=>g1+(g3?" (...)":""))
-          else { 
-            newLabel = newLabel.replace(/[\n\r]/gm," ").replace(/^ *(.*?)(([^ ]+ ){17} *↦)/,(m,g1,g2,g3)=>(g1?"(...) ":"")+g2)
-            newLabel = newLabel.replace(/[\n\r]/gm," ").replace(new RegExp("(↤ *([^ ]+ ){"+Math.max(1,(35-(newLabel.replace(/^.*↦/,"").match(/ /) || []).length))+"})(.*?)$"),(m,g1,g2,g3)=>g1+(g3?" (...)":""))
+                  
+          if(!newLabel?.includes("↦")) {
+            newLabel = newLabel.replace(/[\n\r]/gm," ").replace(/^ *(([^ ]+ ){35})(.*?)$/,(m,g1,g2,g3)=>g1+(g3?" (...)":""))
+          } else {             
+            if((newLabel.match(/ /) || []).length > 35) {
+              newLabel = newLabel.replace(/[\n\r]/gm," ").replace(/^ *(.*?)(([^ ]+ ){17} *↦)/,(m,g1,g2,g3)=>(g1?"(...) ":"")+g2)
+              newLabel = newLabel.replace(/[\n\r]/gm," ").replace(new RegExp("(↤ *([^ ]+ ){"+Math.max(1,(35-(newLabel.replace(/^.*↦/,"").match(/ /) || []).length))+"})(.*?)$"),(m,g1,g2,g3)=>g1+(g3?" (...)":""))
+            }
           }
           if(newLabel.startsWith("(...)") || newLabel.endsWith("(...)")) newShow.note = true          
-
+        
           if(!expand.note) label = newLabel        
 
           out.push(<span lang={sortLabels[0].lang}>{highlight(label)}</span>)
@@ -218,7 +221,7 @@ const CustomHit = ({ hit, that, sortItems }) => {
             { title }
           </Link>
         { names.length > 0 && <>
-          <span class="names">
+          <span class="names noNL">
             <span class="label">{I18n.t(prop, {count: names.length})}<span class="colon">:</span></span>
             <span>{names}</span>
           </span>
@@ -235,13 +238,17 @@ const CustomHit = ({ hit, that, sortItems }) => {
         { 
           hit.inRootInstance?.length > 0 && <span class="names inRoot noNL">
             <span class="label">{I18n.t("result.inRootInstance")}<span class="colon">:</span></span>
-            <span>{hit.inRootInstance?.map(a => <span><Link to="">{a}</Link></span>)}</span>
+            <span>{hit.inRootInstance?.map(a => <span data-id={a}><Link to={"/show/bdr:"+a+"?part=bdr:"+hit.objectID}>{
+              getPropLabel(that, fullUri("bdr:"+a), true, true, "", 1, storage, true) ?? a
+            }</Link></span>)}</span>
           </span> 
         }
         { 
-          hit.author?.length > 0 && <span class="names author noNL">
+          (hit.author?.length > 0 || hit.translator?.length > 0) && <span class="names author noNL">
             <span class="label">{I18n.t("result.workBy")}<span class="colon">:</span></span>
-            <span>{hit.author?.map(a => <span><Link to="">{a}</Link></span>)}</span>
+            <span>{(hit.author ?? []).concat(hit.translator ?? []).map(a => <span data-id={a}><Link to="">{
+              getPropLabel(that, fullUri("bdr:"+a), true, true, "", 1, storage, true) ?? a
+            }</Link></span>)}</span>
           </span> 
         }        
         {
@@ -254,7 +261,7 @@ const CustomHit = ({ hit, that, sortItems }) => {
         }
         {
           note.length > 0 && <>
-          <span class="names">
+          <span class="names notes">
               <span class="label">{I18n.t("prop.bdo:note", {count:note.length})}<span class="colon">:</span></span>
               <span>
                 {note}

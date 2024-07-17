@@ -351,12 +351,11 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       },
       onReinitEtext(id:string) {
          const nav = document.querySelector(".over-nav")
-         if(nav) nav.scrollIntoView()
-         setTimeout(() => { 
-            let get = qs.parse(ownProps.history.location.search)
+         const get = qs.parse(ownProps.history.location.search)
+         if(nav && !get.part) nav.scrollIntoView()
+         setTimeout(() => {             
             if(get.part && get.part !== id) {
-               get.root = id
-   
+               get.root = id   
             }
             store.dispatch(initiateApp(get,id)) 
          }, 150);

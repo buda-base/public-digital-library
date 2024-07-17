@@ -1169,6 +1169,10 @@ body > #pop-login { z-index:1000000 ;}
    margin-top:0;
 }
 
+#latest > div {
+   font-size:0;
+}
+
 .App.tradition .tradi-content #latest > div:first-of-type {
    background-color:#fce08d;
    padding:45px 30px;
@@ -1198,7 +1202,7 @@ body > #pop-login { z-index:1000000 ;}
    margin:0 90px;
 }
 
-.App.tradition .tradi-content #latest .date {
+#latest .date {
    font-size:13px;
    opacity:0.65;
    float:right;

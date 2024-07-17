@@ -309,7 +309,7 @@
 }
 
 .AppSK .result .data .names {
-  margin-top:5px;
+  margin-top:6px;
   display: flex;
   align-items: baseline;
 }
@@ -338,14 +338,20 @@
 }
 
 .AppSK .result .data .names > .label + span > span {
-  display: block;
-  margin-bottom: 5px;
+  display: inline;
+  margin-bottom: 3px;
   line-height: 18px;
+}
+
+
+.AppSK .result .data .names.notes > .label + span > span {
+  display: block;
 }
 
 .AppSK .result .data .names .toggle {
   cursor:pointer;
   color:#d73449;
+  /* margin-left:5px; */
 }
 
 .AppSK:not(#a) .result .thumb a .RID {
@@ -376,7 +382,7 @@
 }
 
 .AppSK .result .data .names.noNL > .label + span {
-  display:flex;
+  display:inline;
   align-items: baseline;
 }
 

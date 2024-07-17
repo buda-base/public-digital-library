@@ -1,5 +1,6 @@
 // Core
-import React from "react";
+import React, { useState, useEffect, useCallback } from "react";
+import _ from "lodash"
 
 // Utils
 import Client from "@searchkit/instantsearch-client";
@@ -9,6 +10,7 @@ import SearchkitConfig, { routingConfig } from "../searchkit.config";
 
 // API
 import { getCustomizedBdrcIndexRequest, getGenericRequest } from "../api/ElasticAPI";
+import { fetchLabels } from "../api/LabelAPI";
 
 // Components
 import {
@@ -90,6 +92,84 @@ export const searchClient = Client(
   },
   { debug: process.env.NODE_ENV === "development" }
 );
+
+
+function HitsWithLabels(props) {
+
+  const {that, sortItems} = props
+
+  const [currentItems, setCurrentItems] = useState([]);
+  
+  const [storage, setStorage] = useState({})
+
+  const [fetching, setFetching] = useState({})
+
+  const goFetch = useCallback(async () => {
+
+    console.log("fetching:", fetching)
+
+    const attribute = "pagination"
+    const fetchedItems = await fetchLabels(Object.keys(fetching), attribute)
+    
+    console.log("fetched", fetchedItems)
+    
+    const newStorage = { ...storage }
+    newStorage[attribute] = { ...storage[attribute], ...fetchedItems }
+    sessionStorage.setItem(attribute, JSON.stringify(newStorage[attribute]));
+    
+    if(!_.isEqual(newStorage, storage)) setStorage(newStorage)
+
+  }, [fetching, storage])
+
+
+  useEffect(() => {
+    
+    if(!_.isEmpty(fetching)) goFetch()
+    
+  }, [fetching])
+
+  const prepItemsPage = (items) => {    
+    const attrs = ["author", "translator", "inRootInstance", "pagination"]
+    const itemIds = {}
+    const newStorage = { ...storage }
+    
+    for(const attribute of attrs) {
+      if (!sessionStorage.getItem(attribute)) {
+        sessionStorage.setItem(attribute, JSON.stringify({}));
+      }      
+      newStorage[attribute] = JSON.parse(sessionStorage.getItem(attribute));
+      for(const _item of items) {
+        if(_item[attribute]) _item[attribute].map(i => itemIds[i] = true);
+      }
+    }
+
+    const missingIds = {}
+    for(const id of Object.keys(itemIds)) {
+      let found = false
+      for(const attribute of attrs) { 
+        if(storage[attribute][id]){
+          found = true
+          break;
+        }
+      }
+      if(!found) missingIds[id] = true
+    }
+
+    const newFetching = { ...fetching, ...missingIds }
+    if(!_.isEqual(newFetching, fetching)) setFetching(newFetching)
+
+    console.log("prep:", items, itemIds, newStorage, missingIds, newFetching)
+    if(!_.isEqual(newStorage, storage)) setStorage(newStorage)
+
+    return items
+  }
+
+  return <Hits 
+    transformItems={prepItemsPage}
+    hitComponent={({hit}) => <CustomHit {...{ hit, that, sortItems, storage: Object.values(storage).reduce((acc,v) => ({...acc,...v}),{}) }}/>} 
+  />
+}
+
 
 export class SearchPage extends Component<State, Props>
 {
@@ -174,7 +254,7 @@ export class SearchPage extends Component<State, Props>
                     <Pagination />
                   </div>
                   <Configure hitsPerPage={20} />
-                  <Hits hitComponent={({hit}) => <CustomHit hit={hit} that={this} {...{ sortItems }}/>} />
+                  <HitsWithLabels that={this} {...{ sortItems }} />
                   <div className="pagination">
                     <Pagination />
                   </div>
