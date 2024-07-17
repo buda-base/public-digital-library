@@ -176,7 +176,9 @@ const SearchBoxAutocomplete = (props) => {
         onKeyDown={(e) => {
           if (e.key === "Enter") {
             setIsFocused(false);
+            /* // no need (submit button already triggered by default when hitting enter)
             refine(inputValue);
+            */
           }
         }}
         onChange={(event) => {
