@@ -109,6 +109,7 @@ import {svgEtextS,svgInstanceS,svgImageS} from "./icons"
 
 import {keywordtolucenequery,lucenequerytokeyword,lucenequerytokeywordmulti, isGroup} from './App';
 import ResourceViewerContainer from '../containers/ResourceViewerContainer'
+import InnerSearchPageContainer from '../containers/InnerSearchPageContainer'
 
 import HTMLparse from 'html-react-parser';
 
@@ -10587,7 +10588,12 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                   { _T !== "Etext" && this.renderNoAccess(fairUse) }
                   */}
                   
-                  { this.renderMirador(isMirador) }           
+                  { this.renderMirador(isMirador) }                            
+                  
+                  {/* // WIP: inner search results */}
+                  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/instantsearch.css@7/themes/satellite-min.css" />                           
+                  <InnerSearchPageContainer history={this.props.history} auth={this.props.auth} isOsearch={true} RID={this.props.IRI} T={_T}/> 
+                   
                   { theDataTop }
                   <div class="data" id="perma">{ this.perma_menu(pdfLink,monoVol,fairUse,kZprop.filter(k => k.startsWith(adm+"seeOther")), accessET && !etextAccessError)  }</div>
                   { theDataMid }

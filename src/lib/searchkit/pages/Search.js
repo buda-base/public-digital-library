@@ -94,7 +94,7 @@ export const searchClient = Client(
 );
 
 
-function HitsWithLabels(props) {
+export function HitsWithLabels(props) {
 
   const {that, sortItems} = props
 

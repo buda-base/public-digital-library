@@ -34,6 +34,7 @@ const forgeFacetFilters = (facetFilters, filters) => {
   let queryFilters = allFilters.map((group) => ({
     bool: {
       should: group.map((facet) => {
+        // TODO: handle OR
         const [field, value] = facet.split(":");
         if (DATE_RANGE_FIELDS.includes(field)) {
           return { range: { [field]: createDateRangeQuery(value) } };

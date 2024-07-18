@@ -186,8 +186,7 @@ export class TraditionViewer extends Component<State, Props>
 
   renderContent(t, route){ 
     return t.content?.map(c => {
-      let label = { value: "", lang: this.props.locale }
-      
+      let label = { value: "", lang: this.props.locale }, rid = (c.id ?? "").split(":")[1] ?? ""
       if(c.label) label = getLangLabel(this,skos+"prefLabel",c.label ?? [])
       else if(c.id) {
         if(c.id.startsWith("bdr:")) label = getPropLabel(this, fullUri(c.id), false, true)
@@ -196,7 +195,7 @@ export class TraditionViewer extends Component<State, Props>
 
       let link = route ?? c.to ?? t.to
       if(!link?.startsWith("/")) link = "/tradition/"+this.props.tradition+"/"+ link
-      link = link.replace(/:id/g, c.id)        
+      link = link.replace(/:rid/g, rid).replace(/:id/g, c.id).replace(/:n/g, (c.id??"").replace(/[^0-9]/g,""))                  
 
       return <Link to={link} className={(c.img ? "has-img ":"")+(c.classes??"")}>
           { c.img && <img src={c.img}/> }
@@ -231,7 +230,7 @@ export class TraditionViewer extends Component<State, Props>
       }
     } else {
       //listing.push(<Link to={"/search?r=bdr:"+t+"&t=Work"}>{ getPropLabel(this, fullUri("bdr:"+t)) }</Link>)
-      listing.push({...label, rank:topic.rank ?? MAXNL, to:"/search?r=bdr:"+t+"&t=Work", depth, hasSub:depth>1?1:0})
+      listing.push({...label, rank:topic.rank ?? MAXNL, to: "/osearch/search?workGenre%5B0%5D="+t /*"/search?r=bdr:"+t+"&t=Work"*/, depth, hasSub:depth>1?1:0})
     }    
   }
   
