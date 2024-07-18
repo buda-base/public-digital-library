@@ -205,6 +205,7 @@ const CustomHit = ({ hit, that, sortItems, storage }) => {
 
   return (<div class={"result "+hit.type}>        
     <div class="main">
+      <Link to={link} className="BG-link"></Link>
       <div class={"num-box "+(checked?"checked":"")} onClick={() => setChecked(!checked) }>{hit.__position}</div>
       <div class={"thumb "+(img?"hasImg":"")}>      
         <Link to={link}>

@@ -379,6 +379,32 @@
   font-weight:700;
 }
 
+.AppSK .result .main {
+  position: relative;
+}
+
+.AppSK .result .main .BG-link {
+  display: block;
+  width:100%;
+  height:100%;
+  /* background:blue; */
+  position: absolute;
+  left:0;
+  top:0;
+  z-index:0;
+}
+
+.AppSK .result .main .BG-link ~ * {
+  position: relative;
+  pointer-events: none;
+}
+
+.AppSK .result .main .BG-link ~ .num-box,
+.AppSK .result .main .BG-link ~ * a,
+.AppSK .result .main .BG-link ~ * span span {
+  pointer-events: auto;
+}
+
 .AppSK .ais-HitsPerPage-select:focus, 
 .AppSK .ais-SortBy-select:focus {
   border-color:#d73449;
@@ -395,6 +421,19 @@
 
 .AppSK .result .data .names.author.noNL > .label + span {
   display:flex;
+}
+
+.AppSK .result .data .names.author .author-links:empty {
+  display: none;
+}
+
+.AppSK .result .data .names.inRoot a,
+.AppSK .result .data .names.author a {
+  padding:8px 0;
+}
+
+.AppSK .result .data .names.author .authorship {
+  min-width:100%;
 }
 
 .AppSK .result .data .names.author.noNL > .label + span > span > span+span:not(.toggle)::before,
