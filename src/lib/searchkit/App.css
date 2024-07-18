@@ -295,7 +295,13 @@
 
 .AppSK .result .data > a {
   text-decoration: none;
-  
+  color:#d73449;
+}
+
+.AppSK .result:hover .data .names a:hover,
+.AppSK .result:hover .data > a .T + span:hover {
+  text-decoration: underline;
+  color:#d73449;
 }
 
 .AppSK .result .data > a > span:not(.T) span {
@@ -351,6 +357,7 @@
 .AppSK .result .data .names .toggle {
   cursor:pointer;
   color:#d73449;
+  font-weight: 500;
   /* margin-left:5px; */
 }
 
@@ -374,7 +381,7 @@
 
 .AppSK .ais-HitsPerPage-select:focus, 
 .AppSK .ais-SortBy-select:focus {
-  border-color:#d73443;
+  border-color:#d73449;
   box-shadow: none;
 }
 
@@ -386,8 +393,19 @@
   align-items: baseline;
 }
 
-.AppSK .result .data .names.noNL > .label + span > span+span::before {
+.AppSK .result .data .names.author.noNL > .label + span {
+  display:flex;
+}
+
+.AppSK .result .data .names.author.noNL > .label + span > span > span+span:not(.toggle)::before,
+.AppSK .result .data .names:not(.author).noNL > .label + span > span+span::before {
   content:"; ";
+}
+
+
+.AppSK .result .data .names.author.noNL > .label + span > span > span+span.toggle {
+  display: flex;
+  margin-top:3px;
 }
 
 .AppSK .result .data .names.noNL a {

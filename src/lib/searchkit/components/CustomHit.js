@@ -110,7 +110,8 @@ const CustomHit = ({ hit, that, sortItems, storage }) => {
 
     const newShow = {}
     out = []
-    for(const name of ["summary", "comment"]) {
+    let tag = "note"
+    for(const name of ["summary", "comment", "authorshipStatement"]) {      
       if(labels[name].length) {
         const byLang = labels[name].reduce((acc,l) => ({
           ...acc,
@@ -130,14 +131,13 @@ const CustomHit = ({ hit, that, sortItems, storage }) => {
           if(!newLabel?.includes("↦")) {
             newLabel = newLabel.replace(/[\n\r]/gm," ").replace(/^ *(([^ ]+ +){35})(.*)/, (m,g1,g2,g3)=>g1+(g3?" (...)":""))
           } else {             
-            if((newLabel.match(/ /) || []).length > 35) {
-              newLabel = newLabel.replace(/[\n\r]/gm," ").replace(/^ *(.*?)(([^ ]+ ){17} *↦)/,(m,g1,g2,g3)=>(g1?"(...) ":"")+g2)
-              newLabel = newLabel.replace(/[\n\r]/gm," ").replace(new RegExp("(↤ *([^ ]+ ){"+Math.max(1,(35-(newLabel.replace(/^.*↦/,"").match(/ /) || []).length))+"})(.*?)$"),(m,g1,g2,g3)=>g1+(g3?" (...)":""))
+            if((newLabel.match(/ /g) || []).length > 35) {
+              newLabel = newLabel.replace(/[\n\r]/gm," ").replace(/^ *(.*?)(([^ ]+ +){,17} *↦)/,(m,g1,g2,g3)=>(g1?"(...) ":"")+g2)
+              newLabel = newLabel.replace(new RegExp("(↤ *([^ ]+ +){"+Math.max(1,(35-(newLabel.replace(/^(.*?↦).*$/,"$1").match(/ /g) || []).length))+"})(.*?)$"),(m,g1,g2,g3)=>g1+(g3?" (...)":""))
             }
           }
-          if(newLabel.startsWith("(...)") || newLabel.endsWith("(...)")) newShow.note = true          
-        
-          if(!expand.note) label = newLabel        
+          if(newLabel.startsWith("(...)") || newLabel.endsWith("(...)")) newShow[tag] = true                  
+          if(!expand[tag]) label = newLabel        
 
           out.push(<span lang={sortLabels[0].lang}>{highlight(label)}</span>)
           
@@ -148,8 +148,14 @@ const CustomHit = ({ hit, that, sortItems, storage }) => {
       // const fun = eval("set"+name[0].toUpperCase()+name.substring(1))
       // console.log("fun:",fun)
       // fun(out)
+      if(name === "comment") {
+        setNote(out)
+        out = []
+        tag = "authorshipStatement"
+      } else if(name === "authorshipStatement") {
+        setAuthorshipStatement(out)
+      }
     }
-    setNote(out)
     setShowMore(newShow)
 
     //console.log("labels:", labels, newShow)
@@ -247,11 +253,22 @@ const CustomHit = ({ hit, that, sortItems, storage }) => {
           </span> 
         }
         { 
-          (hit.author?.length > 0 || hit.translator?.length > 0) && <span class="names author noNL">
+          (hit.author?.length > 0 || hit.translator?.length > 0 || authorshipStatement.length > 0) && <span class="names author noNL">
             <span class="label">{I18n.t("result.workBy")}<span class="colon">:</span></span>
-            <span>{(hit.author ?? []).concat(hit.translator ?? []).map(a => <span data-id={a}><Link to={"/show/bdr:"+a+backLink}>{
-              getPropLabel(that, fullUri("bdr:"+a), true, true, "", 1, storage, true) ?? a
-            }</Link></span>)}</span>
+            <span>
+              <span className="author-links">
+              {(hit.author ?? []).concat(hit.translator ?? [])
+                .map(a => <span data-id={a}>
+                  <Link to={"/show/bdr:"+a+backLink}>{ 
+                    getPropLabel(that, fullUri("bdr:"+a), true, true, "", 1, storage, true) ?? a 
+                  }</Link></span>
+              )}
+              </span>
+              { authorshipStatement.length > 0 && <span className="authorship">
+                { authorshipStatement }
+                { showMore.authorshipStatement && <span className="toggle" onClick={() => toggleExpand("authorshipStatement")}>{I18n.t(expand.authorshipStatement ?"misc.hide":"Rsidebar.priority.more")}</span>}
+              </span> }
+            </span>
           </span> 
         }        
         {
