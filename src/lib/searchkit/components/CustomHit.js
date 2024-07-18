@@ -193,7 +193,9 @@ const CustomHit = ({ hit, that, sortItems, storage }) => {
     setExpand({ ...expand, [tag]: !expand[tag] })
   }, [expand])
 
-  const link = "/show/bdr:"+hit.objectID+"?s="+encodeURIComponent(window.location.href.replace(/^https?:[/][/][^?]+[?]?/gi,""))
+
+  const backLink = "?s="+encodeURIComponent(window.location.href.replace(/^https?:[/][/][^?]+[?]?/gi,"")),
+    link = "/show/bdr:"+hit.objectID+backLink
 
   return (<div class={"result "+hit.type}>        
     <div class="main">
@@ -239,7 +241,7 @@ const CustomHit = ({ hit, that, sortItems, storage }) => {
         { 
           hit.inRootInstance?.length > 0 && <span class="names inRoot noNL">
             <span class="label">{I18n.t("result.inRootInstance")}<span class="colon">:</span></span>
-            <span>{hit.inRootInstance?.map(a => <span data-id={a}><Link to={"/show/bdr:"+a+"?part=bdr:"+hit.objectID}>{
+            <span>{hit.inRootInstance?.map(a => <span data-id={a}><Link to={"/show/bdr:"+a+backLink+"&part=bdr:"+hit.objectID}>{
               getPropLabel(that, fullUri("bdr:"+a), true, true, "", 1, storage, true) ?? a
             }</Link></span>)}</span>
           </span> 
@@ -247,7 +249,7 @@ const CustomHit = ({ hit, that, sortItems, storage }) => {
         { 
           (hit.author?.length > 0 || hit.translator?.length > 0) && <span class="names author noNL">
             <span class="label">{I18n.t("result.workBy")}<span class="colon">:</span></span>
-            <span>{(hit.author ?? []).concat(hit.translator ?? []).map(a => <span data-id={a}><Link to="">{
+            <span>{(hit.author ?? []).concat(hit.translator ?? []).map(a => <span data-id={a}><Link to={"/show/bdr:"+a+backLink}>{
               getPropLabel(that, fullUri("bdr:"+a), true, true, "", 1, storage, true) ?? a
             }</Link></span>)}</span>
           </span> 
