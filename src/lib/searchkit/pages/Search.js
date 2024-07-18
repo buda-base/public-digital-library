@@ -158,7 +158,7 @@ function HitsWithLabels(props) {
     const newFetching = { ...fetching, ...missingIds }
     if(!_.isEqual(newFetching, fetching)) setFetching(newFetching)
 
-    console.log("prep:", items, itemIds, newStorage, missingIds, newFetching)
+    //console.log("prep:", items, itemIds, newStorage, missingIds, newFetching)
     if(!_.isEqual(newStorage, storage)) setStorage(newStorage)
 
     return items

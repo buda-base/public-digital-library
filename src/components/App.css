@@ -2889,55 +2889,55 @@ h3.withdrawn svg:first-child { margin-left:0; }
 h3.withdrawn ~ * { opacity:0.45;}
 
 .AppSK .result .data .T,
-a.result .T { text-transform: uppercase; color:#4a4a4a; font-size:9px; font-weight:600; vertical-align:top; display: flex; 
+.result .T { text-transform: uppercase; color:#343434; font-size:9px; font-weight:600; vertical-align:top; display: flex; 
    line-height:10px; margin-bottom:12px; align-items: center;}
 
-a.result .T > span { display:inline-block; border:2px solid rgba(0,0,0,0.25); background:white; margin-left:15px; border-radius:2px; 
+.result .T > span:not([lang]) { display:inline-block; border:2px solid rgba(0,0,0,0.25); background:white; margin-left:15px; border-radius:2px; 
    display:inline-flex; align-items: center; justify-content: center; position:relative; height:14px; width:auto; padding:0 2px;
 }
-a.result .T > span::before { content:' '; font-size:10px; font-weight:700;  text-transform:none; }
+.result .T > span:not([lang])::before { content:' '; font-size:10px; font-weight:700;  text-transform:none; }
 
-a.result .T span[data-lang] + [data-lang] { margin-left:5px; }
+.result .T span[data-lang] + [data-lang] { margin-left:5px; }
 
-a.result .T span[data-lang$='En'] { border-color:rgba(0,150,255,0.5); }
-a.result .T span[data-lang$='En']::before { content:'EN'; font-weight:800; }
+.result .T span[data-lang$='En'] { border-color:rgba(0,150,255,0.5); }
+.result .T span[data-lang$='En']::before { content:'EN'; font-weight:800; }
 
-a.result .T span[data-lang$='Bo'] { border-color:#d73449; }
-a.result .T span[data-lang$='Bo']::before { content:'ཨ'; font-size:22px; font-weight:400; padding-top:3px; }
+.result .T span[data-lang$='Bo'] { border-color:#d73449; }
+.result .T span[data-lang$='Bo']::before { content:'ཨ'; font-size:22px; font-weight:400; padding-top:3px; }
 
-a.result .T span[data-lang$='Pi'] { border-color:rgba(250,150,0,1); }
-a.result .T span[data-lang$='Pi']::before { content:'Pi'; }
+.result .T span[data-lang$='Pi'] { border-color:rgba(250,150,0,1); }
+.result .T span[data-lang$='Pi']::before { content:'Pi'; }
 
-a.result .T span[data-lang$='Pgd'],
-a.result .T span[data-lang$='Sa'],
-a.result .T span[data-lang$='Inc'] { border-color:#fce08d; }
-a.result .T span[data-lang$='Pgd']::before,
-a.result .T span[data-lang$='Sa']::before,
-a.result .T span[data-lang$='Inc']::before { content:'अ'; font-size:16px; font-weight:400; padding-bottom:2px; }
+.result .T span[data-lang$='Pgd'],
+.result .T span[data-lang$='Sa'],
+.result .T span[data-lang$='Inc'] { border-color:#fce08d; }
+.result .T span[data-lang$='Pgd']::before,
+.result .T span[data-lang$='Sa']::before,
+.result .T span[data-lang$='Inc']::before { content:'अ'; font-size:16px; font-weight:400; padding-bottom:2px; }
 
-a.result .T span[data-lang$='Zh'] { border-color:rgba(0,50,255,1); }
-a.result .T span[data-lang$='Zh']::before { content:'中'; font-size:13px; font-weight:700; padding-bottom:2px; padding-right:2px; }
+.result .T span[data-lang$='Zh'] { border-color:rgba(0,50,255,1); }
+.result .T span[data-lang$='Zh']::before { content:'中'; font-size:13px; font-weight:700; padding-bottom:2px; padding-right:2px; }
 
-a.result .T span[data-lang$='Es']::before { content:'ES'; }
-a.result .T span[data-lang$='Fr']::before { content:'FR'; }
-a.result .T span[data-lang$='It']::before { content:'IT'; }
-a.result .T span[data-lang$='Nl']::before { content:'NL'; }
-a.result .T span[data-lang$='No']::before { content:'NO'; }
-a.result .T span[data-lang$='Ru']::before { content:'RU'; }
+.result .T span[data-lang$='Es']::before { content:'ES'; }
+.result .T span[data-lang$='Fr']::before { content:'FR'; }
+.result .T span[data-lang$='It']::before { content:'IT'; }
+.result .T span[data-lang$='Nl']::before { content:'NL'; }
+.result .T span[data-lang$='No']::before { content:'NO'; }
+.result .T span[data-lang$='Ru']::before { content:'RU'; }
 
-a.result .T span[data-lang$='Dz']::before { content:'Dz'; }
-a.result .T span[data-lang$='Hi']::before { content:'Hi'; }
-a.result .T span[data-lang$='Km']::before { content:'Km'; }
-a.result .T span[data-lang$='Mn']::before { content:'Mn'; }
-a.result .T span[data-lang$='Ne']::before { content:'Ne'; }
-a.result .T span[data-lang$='Ur']::before { content:'Ur'; }
-a.result .T span[data-lang$='My']::before { content:'My'; }
+.result .T span[data-lang$='Dz']::before { content:'Dz'; }
+.result .T span[data-lang$='Hi']::before { content:'Hi'; }
+.result .T span[data-lang$='Km']::before { content:'Km'; }
+.result .T span[data-lang$='Mn']::before { content:'Mn'; }
+.result .T span[data-lang$='Ne']::before { content:'Ne'; }
+.result .T span[data-lang$='Ur']::before { content:'Ur'; }
+.result .T span[data-lang$='My']::before { content:'My'; }
 
 /* TODO exhaustive support of languages/script */
 
-a.result .T span[data-lang*="/Script"]::before { visibility:hidden; } 
+.result .T span[data-lang*="/Script"]::before { visibility:hidden; } 
 
-a.result .T >span[data-lang*="/Script"] { padding-top:0}
+.result .T >span[data-lang*="/Script"] { padding-top:0}
 
 
 .resource > h2,

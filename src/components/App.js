@@ -760,7 +760,7 @@ export function getPropLabel(that, i, withSpan = true, withLang = false, useI18n
 
    }
    
-   console.log("labels:", labels, i)
+   //console.log("labels:", labels, i)
 
    let lang
    if(labels) {

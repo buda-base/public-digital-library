@@ -26,8 +26,6 @@ const Hit = ({ hit, label, debug = true }) => {
   );
 };
 
-
-
 const CustomHit = ({ hit, that, sortItems, storage }) => {
 
   const [debug, setDebug] = useState(false)
@@ -46,7 +44,7 @@ const CustomHit = ({ hit, that, sortItems, storage }) => {
   const { uiState } = useInstantSearch()
   const { sortBy } = uiState?.[process.env.REACT_APP_ELASTICSEARCH_INDEX]
 
-  console.log("hit:", hit, sortBy, uiState, publisher, storage)
+  //console.log("hit:", hit, sortBy, uiState, publisher, storage)
 
   useEffect(() => {
     const labels = {}
@@ -118,7 +116,7 @@ const CustomHit = ({ hit, that, sortItems, storage }) => {
           ...acc,
           [l.lang]: (acc[l.lang] ? acc[l.lang]+I18n.t("punc.semic"):"")+l.value
         }),{})
-        console.log("byL:", byLang, labels[name])
+        //console.log("byL:", byLang, labels[name])
         const sortLabels = sortLangScriptLabels(Object.keys(byLang).map(k => ({lang:k, value:byLang[k]})),langs.flat,langs.translit)
         let lang = ""
         for(const l of sortLabels) {
@@ -130,7 +128,7 @@ const CustomHit = ({ hit, that, sortItems, storage }) => {
           const newLabel = label
                   
           if(!newLabel?.includes("↦")) {
-            newLabel = newLabel.replace(/[\n\r]/gm," ").replace(/^ *(([^ ]+ ){35})(.*?)$/,(m,g1,g2,g3)=>g1+(g3?" (...)":""))
+            newLabel = newLabel.replace(/[\n\r]/gm," ").replace(/^ *(([^ ]+ +){35})(.*)/, (m,g1,g2,g3)=>g1+(g3?" (...)":""))
           } else {             
             if((newLabel.match(/ /) || []).length > 35) {
               newLabel = newLabel.replace(/[\n\r]/gm," ").replace(/^ *(.*?)(([^ ]+ ){17} *↦)/,(m,g1,g2,g3)=>(g1?"(...) ":"")+g2)
@@ -216,7 +214,10 @@ const CustomHit = ({ hit, that, sortItems, storage }) => {
       </div>
       <div class="data">      
           <Link to={link}>
-            <span class="T">{getPropLabel(that, fullUri("bdr:"+hit.type), true, false, "types."+(hit.type+"").toLowerCase())}</span>
+            <span class="T">
+              {getPropLabel(that, fullUri("bdr:"+hit.type), true, false, "types."+(hit.type+"").toLowerCase())}
+              {hit.script && hit.script.map(s => <span title={getPropLabel(that,fullUri('bdo:script'),false)+I18n.t("punc.colon")+" "+getPropLabel(that, fullUri("bdr:"+s), false)} data-lang={s.replace(/.*Script/)}>{s.replace(/^.*Script/,"")}</span>)}
+            </span>
             {/* {{ hit.author && <Link to={"/show/bdr:"+hit.author}>{hit.author}</Link> } */} 
             { title }
           </Link>
