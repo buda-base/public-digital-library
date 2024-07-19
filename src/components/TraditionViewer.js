@@ -230,7 +230,7 @@ export class TraditionViewer extends Component<State, Props>
       }
     } else {
       //listing.push(<Link to={"/search?r=bdr:"+t+"&t=Work"}>{ getPropLabel(this, fullUri("bdr:"+t)) }</Link>)
-      listing.push({...label, rank:topic.rank ?? MAXNL, to: "/osearch/search?workGenre%5B0%5D="+t /*"/search?r=bdr:"+t+"&t=Work"*/, depth, hasSub:depth>1?1:0})
+      listing.push({...label, rank:topic.rank ?? MAXNL, to: "/osearch/search?workIsAbout%5B0%5D="+t /*"/search?r=bdr:"+t+"&t=Work"*/, depth, hasSub:depth>1?1:0})
     }    
   }
   

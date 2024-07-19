@@ -61,6 +61,11 @@ const FACET_ATTRIBUTES = [
     attribute: "publicationDate",
     field: "publicationDate",
     type: "string"
+  },
+  {
+    attribute: "placeType",
+    field: "placeType",
+    type: "string"
   }
 ];
 
