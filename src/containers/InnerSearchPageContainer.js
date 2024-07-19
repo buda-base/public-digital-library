@@ -33,9 +33,12 @@ const mapStateToProps = (state,ownProps) => {
 
    let dictionary = state.data.dictionary ;
 
+   let loading = state.ui.loading  ;
+   
    let props = { config, locale, profileName, portraitPopupClosed, isNewUser, feedbucket, 
       langPreset,langIndex,langExt,
-      dictionary
+      dictionary,
+      loading
    }
 
    return props

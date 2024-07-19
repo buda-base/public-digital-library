@@ -706,7 +706,10 @@
       "continue":"Continue reading",
       "seeIn":"See this text in {{- txt}}",
       "closeO":"Close outline",
-      "downloadFU": "Download Preview"
+      "downloadFU": "Download Preview",
+      "findT":"Find Texts",
+      "findTbyP":"Find texts created by this person",
+      "findTaboutT":"Find texts about this topic"
    },
    "tradition":{
       "boT":"Tibetan Tradition",

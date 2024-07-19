@@ -1,6 +1,9 @@
 // Core
 import React, { Component, useState, useEffect, useCallback } from "react";
 import _ from "lodash"
+import Loader from "react-loader"
+import SimpleBar from 'simplebar-react';
+import 'simplebar/dist/simplebar.min.css';
 
 // Utils
 import Client from "@searchkit/instantsearch-client";
@@ -23,9 +26,12 @@ import {
 import I18n from 'i18next';
 
 // Custom
+import { getPropLabel, fullUri } from '../../../components/App'
 import CustomHit from "../components/CustomHit";
 import SearchBoxAutocomplete from "../components/SearchBoxAutocomplete";
-import { searchClient, HitsWithLabels } from "./Search";
+import { searchClient, HitsWithLabels, sortItems, filters } from "./Search";
+import RefinementListWithLocalLabels from "../components/RefinementListWithLocalLabels";
+import CustomDateRange from "../components/CustomDateRange";
 
 // PDL
 import qs from 'query-string'
@@ -60,44 +66,71 @@ export class InnerSearchPage extends Component<State, Props>
     let { RID, T } = this.props
     if(RID) RID = RID.split(":")[1]
 
-    let filters = ""
+    let pageFilters = "", placeholder = ""
     if(RID) {
-      // TODO: handle OR in ElasticAPI
-      if(T === "Person") filters = "author:"+RID //+" OR workIsAbout:"+RID 
-      else if(T === "Topic") filters = "workIsAbout:"+RID //+" OR workGenre:"+RID
+      // TODO: handle OR in ElasticAPI?
+      if(T === "Person") { 
+        pageFilters = "author:"+RID //+" OR workIsAbout:"+RID 
+        placeholder = I18n.t("resource.findTbyP")
+      }
+      else if(T === "Topic") { 
+        pageFilters = "workIsAbout:"+RID //+" OR workGenre:"+RID
+        placeholder = I18n.t("resource.findTaboutT")
+      }
     }
 
-    console.log("iSsC:", searchClient, routingConfig, this.props, filters)    
+    console.log("iSsC:", searchClient, routingConfig, this.props, pageFilters)    
 
-    return (
-      <>
-        { filters && <div className="AppSK InnerSearchPage">
+    return (<>
+      { pageFilters && <div className="AppSK InnerSearchPage data">
           <InstantSearch
             indexName={process.env.REACT_APP_ELASTICSEARCH_INDEX}
             routing={routingConfig}
             searchClient={searchClient}
           >
-            <div className="search inner-search-bar">
-              <div>
-                <SearchBoxAutocomplete searchAsYouType={false}/>
+            <Loader loaded={!this.props.loading}/>
+            <div data-props="tmp:search">
+              <div className="searchbox">
+                <h3><span><a class="propref"><span>{I18n.t("resource.findT")}{I18n.t("punc.colon")}</span></a></span></h3>
+                <div className="search inner-search-bar group">
+                  <div>
+                    <SearchBoxAutocomplete searchAsYouType={false} loading={this.props.loading} {...{ placeholder }}/>
+                  </div>
+                </div>
               </div>
-            </div>
-            <div className="content">
-              <div className="main-content">
-                <div className="hits">
-                  <Configure hitsPerPage={5} {...{ filters }} />
-                  <HitsWithLabels that={this}  />
-                  <div className="pagination">
-                    <Pagination />
+              <div className="content">
+
+                <SimpleBar className="filter">
+                  <div className="filter-title"><p>Sort by</p></div>
+
+                  <SortBy
+                    initialIndex={process.env.REACT_APP_ELASTICSEARCH_INDEX}
+                    items={sortItems}
+                  />
+                  
+                  <RefinementListWithLocalLabels I18n_prefix={"types"} that={this} attribute="type" showMore={true} title={I18n.t("Lsidebar.datatypes.title")}/>
+
+                  <div className="filter-title MT"><p>{getPropLabel(this,fullUri("tmp:firstScanSyncDate"))}</p></div>
+                  <CustomDateRange attribute="firstScanSyncDate" />
+
+                  { filters.map((filter) => <RefinementListWithLocalLabels that={this} {...filter} showMore={true} />) }
+
+                </SimpleBar>
+                <div className="main-content">
+                  <div className="hits">
+                    <Configure hitsPerPage={5} filters={pageFilters} />
+                    <HitsWithLabels that={this}  />
+                    <div className="pagination">
+                      <Pagination />
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
             {/* <CustomHits /> */}
-          </InstantSearch>
-        </div> }
-      </>
-    );
+        </InstantSearch>
+      </div>}
+    </>);
   }
 };
 

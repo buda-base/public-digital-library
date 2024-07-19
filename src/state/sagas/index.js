@@ -286,6 +286,8 @@ async function initiateApp(params,iri,myprops,route,isAuthCallback) {
       // [TODO] load only missing info when needed (see click on "got to annotation" for WCBC2237)
       if(iri) // || (params && params.r)) // && (!state.data.resources || !state.data.resources[iri]))
       {
+         store.dispatch(uiActions.loading(null, true));
+
          let res,Etext ;
          if(!iri) iri = params.r
 
@@ -310,11 +312,15 @@ async function initiateApp(params,iri,myprops,route,isAuthCallback) {
             // TODO do not load resource again
 
             if(!Etext) res = await api.loadResource(iri, params.preview)
-            else res = await api.loadEtextInfo(iri)         
+            else res = await api.loadEtextInfo(iri)      
+         
+            store.dispatch(uiActions.loading(null, false));
          }
          catch(e){
             logError(e)
             store.dispatch(dataActions.noResource(iri,e));
+
+            store.dispatch(uiActions.loading(null, false));
             return
          }
 

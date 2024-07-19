@@ -40,7 +40,7 @@ import store from '../../../index';
 import { initiateApp } from '../../../state/actions';
 
 
-const filters = [{
+export const filters = [{
     attribute:"scans_access", sort:true, I18n_prefix: "access.scans", prefix:"tmp"
   },{ // #881 not yet
   //  attribute:"scans_quality", sort:true, I18n_prefix: "access.scans.quality", prefix:"tmp"
@@ -72,6 +72,29 @@ const filters = [{
     attribute:"associatedCentury", sort:true, sortFunc:(elem) => Number(elem.value.replace(/[^0-9]/g,"")), prefix:"tmp"
   }
 ]
+
+
+export const sortItems = [
+  {
+    label: "default",
+    value: process.env.REACT_APP_ELASTICSEARCH_INDEX,
+  },
+  {
+    label: "sync scan date",
+    value: "firstScanSyncDate_desc",
+  },
+
+  {
+    label: "publication date (most recent) ",
+    value: "publicationDate_desc",
+  },
+
+  {
+    label: "publication date (oldest)",
+    value: "publicationDate_asc",
+  },
+]
+
 
 export const searchClient = Client(
   SearchkitConfig,
@@ -195,27 +218,6 @@ export class SearchPage extends Component<State, Props>
   render() {
     
     console.log("sC:", searchClient, routingConfig)    
-
-    const sortItems = [
-      {
-        label: "default",
-        value: process.env.REACT_APP_ELASTICSEARCH_INDEX,
-      },
-      {
-        label: "sync scan date",
-        value: "firstScanSyncDate_desc",
-      },
-
-      {
-        label: "publication date (most recent) ",
-        value: "publicationDate_desc",
-      },
-
-      {
-        label: "publication date (oldest)",
-        value: "publicationDate_asc",
-      },
-    ]
 
     return (
       <>

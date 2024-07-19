@@ -93,6 +93,7 @@ const formatResponseForURLSearchParams = (query) => {
 const SearchBoxAutocomplete = (props) => {
   const { query, refine } = useSearchBox(props);
   const { status } = useInstantSearch();
+  const { loading, placeholder } = props
 
   const [inputValue, setInputValue] = useState(query);
   const [isFocused, setIsFocused] = useState(false);
@@ -170,6 +171,7 @@ const SearchBoxAutocomplete = (props) => {
         maxLength={512}
         type="search"
         value={inputValue}
+        {...{ placeholder }}
         onFocus={() => {
           setIsFocused(true);
         }}
@@ -192,7 +194,7 @@ const SearchBoxAutocomplete = (props) => {
       />
       <SearchBoxAction
         inputValue={inputValue}
-        isSearchStalled={isSearchStalled}
+        isSearchStalled={isSearchStalled || loading}
         refine={refine}
       />
       <SuggestsList

@@ -182,6 +182,92 @@
   width:100%;
 }
 
+.top-props ~ .AppSK.InnerSearchPage {
+  margin-top:-30px;
+}
+
+.resource .AppSK.InnerSearchPage:not(#a) > [data-props]:not(#a) {
+  display:block !important;
+}
+
+.AppSK.InnerSearchPage .searchbox {
+  display:flex;
+  width:100%;
+  align-items: baseline;
+  justify-content: space-between;  
+}
+
+.AppSK.InnerSearchPage .searchbox h3 {
+  flex-shrink: 0;
+}
+.AppSK.InnerSearchPage .searchbox > .inner-search-bar:not(#a) {
+  width:calc(100% - 190px);
+  margin:0;
+  height:auto;
+  justify-content: flex-start;
+}
+
+.AppSK.InnerSearchPage .searchbox > .inner-search-bar:not(#a)::after {
+  content:none;
+}
+
+.AppSK.InnerSearchPage .searchbox > .inner-search-bar:not(#a) > div {
+  margin:0;
+  padding:0;
+  padding-bottom:40px;
+}
+
+.AppSK.InnerSearchPage .searchbox > .inner-search-bar:not(#a) > div > form {
+  margin:0;
+  width:100%;
+}
+
+.AppSK.InnerSearchPage .searchbox input::placeholder {
+  color:#00000077;
+}
+
+.AppSK.InnerSearchPage .searchbox > .inner-search-bar:not(#a) > div > form > input {
+  box-shadow: none;
+  border-bottom:1px solid black;
+  border-radius:0;
+}
+
+.AppSK.InnerSearchPage.data {
+  padding-top:0;
+}
+
+.AppSK.InnerSearchPage.data .content {
+  padding:0;
+  margin:0;
+  max-width:none;
+  justify-content: flex-end;
+  width:calc(100% + 70px);
+  left:-35px;
+  position: relative;
+}
+
+.AppSK.InnerSearchPage.data .content a:not(.ais-Pagination-link):hover {
+  border:none;
+}
+
+.AppSK.InnerSearchPage.data .content a.ais-Pagination-link {
+  color:black;
+  border-color:#d6d6e7;
+}
+
+.AppSK.InnerSearchPage.data .content .filter {
+  padding:35px 25px 35px 35px;
+  width:225px;  
+  max-height:100%;
+  position: absolute;
+  left:0;
+}
+
+.AppSK.InnerSearchPage.data .content .main-content {
+  padding:35px;
+  width:calc(100% - 260px);
+}
+
 .AppSK .pagination {
    margin-top:20px;
    margin-bottom:20px;
@@ -285,6 +371,11 @@
 .AppSK .result .data {
   display: flex;
   flex-direction: column;
+  padding:0;
+}
+
+.data#head + .data + link + .AppSK > div:first-child::after {
+  content:none !important;
 }
 
 .AppSK .result .data  .T + span,

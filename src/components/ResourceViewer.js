@@ -381,7 +381,6 @@ let propOrder = {
       "bdo:personName",
       "skos:prefLabel",
       "skos:altLabel",
-      "bdo:personGender",
       "bdo:personEvent",
       "bdo:kinWith",
       // "bdo:incarnationActivities",
@@ -390,6 +389,9 @@ let propOrder = {
       // "bdo:incarnationGeneral",
       "bdo:personStudentOf",
       "bdo:personTeacherOf",
+      "bdo:associatedTradition",
+      "tmp:hasRole",
+      "bdo:personGender",
       "bdo:note",
       "rdfs:seeAlso",
     ],
@@ -497,11 +499,16 @@ propOrder["Instance"] = propOrder["Work"]
 propOrder["Images"] = propOrder["Work"]
 
 const topProperties = {
-   "Person": [ 
-      bdo+"personName", 
+   "Topic": [ 
       skos+"prefLabel", 
       skos+"altLabel",
-      bdo+"personGender"
+      bdo+"note"
+   ],
+   "Person": [ 
+      //bdo+"personName", 
+      skos+"prefLabel", 
+      skos+"altLabel",
+      //bdo+"personGender"
    ],
    "Place": [ 
       skos+"prefLabel", 
@@ -581,6 +588,9 @@ let midProperties = {
       bdo+"publisherName",
       bdo+"publisherLocation",
       bdo+"editionStatement"
+   ],
+   "Person":[
+      bdo+"personName"
    ]
 }
 
@@ -5117,7 +5127,7 @@ class ResourceViewer extends Component<Props,State>
          }
       }
 
-      let ret = (<a class="propref" {...(k.match(/purl[.]bdrc[.]io/) && !k.match(/[/]tmp[/]/) ? {"href":k}:{})} target="_blank">{txt?txt:this.fullname(k,false,false,true,true,count)}</a>)
+      let ret = (<a class="propref" {...(k.match(/purl[.]bdrc[.]io/) && !k.match(/[/]tmp[/]/) ? {"href":k}:{})} target="_blank">{txt?<span>{txt}</span>:this.fullname(k,false,false,true,true,count)}</a>)
 
       if(tooltip && tooltip.value) ret = <Tooltip placement="bottom-start" classes={{tooltip:"commentT",popper:"commentP"}} style={{marginLeft:"50px"}} title={<div>{tooltip.value}</div>}>{ret}</Tooltip>
 
@@ -10576,7 +10586,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                        :title))}
                      {inTitle}
                      {dates}
-                     { ( _T === "Person" && createdBy && createdBy.length > 0 ) && <div class="browse-by"><Link to={"/search?r="+this.props.IRI+"&t=Work"}><img src="/icons/sidebar/work_white.svg"/>{I18n.t("resource.assoc")}</Link></div> }
+                     {/* { ( _T === "Person" && createdBy && createdBy.length > 0 ) && <div class="browse-by"><Link to={"/search?r="+this.props.IRI+"&t=Work"}><img src="/icons/sidebar/work_white.svg"/>{I18n.t("resource.assoc")}</Link></div> } */}
                      { this.props.preview && <a href={"/show/"+this.props.IRI} target="_blank">{I18n.t("resource.fullR")}<img src="/icons/link-out.svg"/></a>}
                   </div>
                   { this.props.preview && _T === "Place" && <div class="data" id="map">{this.renderData(false, kZprop.filter(k => mapProps.includes(k)),null,null,null,"header")}</div> }
@@ -10589,12 +10599,14 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                   */}
                   
                   { this.renderMirador(isMirador) }                            
+
+                  { theDataTop }
                   
                   {/* // WIP: inner search results */}
-                  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/instantsearch.css@7/themes/satellite-min.css" />                           
+                  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/instantsearch.css@7/themes/satellite-min.css" /
+                  >                           
                   <InnerSearchPageContainer history={this.props.history} auth={this.props.auth} isOsearch={true} RID={this.props.IRI} T={_T}/> 
                    
-                  { theDataTop }
                   <div class="data" id="perma">{ this.perma_menu(pdfLink,monoVol,fairUse,kZprop.filter(k => k.startsWith(adm+"seeOther")), accessET && !etextAccessError)  }</div>
                   { theDataMid }
                   { theDataBot }
