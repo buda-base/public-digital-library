@@ -312,6 +312,11 @@ const makeMainRoutes = () => {
                            <SearchPageContainer history={history} auth={auth} isOsearch={true}/> 
                         </>}/> 
                         
+                        <Route exact path="/osearch/associated/:RID/search" render={(props) => <>
+                           <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/instantsearch.css@7/themes/satellite-min.css" />
+                           <SearchPageContainer history={history} auth={auth} isOsearch={true} pageFilters={"associated_res:"+props.match.params.RID}/> 
+                        </>}/> 
+                        
                         <Route exact path="/iiifcookielogin" render={(props) => {
                            return (<IIIFCookieLogin auth={auth} history={history} get={qs.parse(history.location.search)}/>)
                         } } />

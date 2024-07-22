@@ -41,6 +41,8 @@ import { initiateApp } from '../../../state/actions';
 
 
 export const filters = [{
+    attribute:"placeType"
+  },{
     attribute:"scans_access", sort:true, I18n_prefix: "access.scans", prefix:"tmp"
   },{ // #881 not yet
   //  attribute:"scans_quality", sort:true, I18n_prefix: "access.scans.quality", prefix:"tmp"
@@ -217,7 +219,10 @@ export class SearchPage extends Component<State, Props>
   
   render() {
     
-    console.log("sC:", searchClient, routingConfig)    
+    const pageFilters = this.props.pageFilters ?? ""
+
+    console.log("sC:", searchClient, routingConfig, pageFilters)    
+
 
     return (
       <>
@@ -255,7 +260,7 @@ export class SearchPage extends Component<State, Props>
                   <div className="pagination">
                     <Pagination />
                   </div>
-                  <Configure hitsPerPage={20} />
+                  <Configure hitsPerPage={20} filters={pageFilters} />
                   <HitsWithLabels that={this} {...{ sortItems }} />
                   <div className="pagination">
                     <Pagination />

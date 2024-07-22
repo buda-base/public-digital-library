@@ -66,9 +66,10 @@ export class InnerSearchPage extends Component<State, Props>
     let { RID, T } = this.props
     if(RID) RID = RID.split(":")[1]
 
-    let pageFilters = "", placeholder = ""
+    let pageFilters = "associated_res:"+RID, placeholder = ""
     if(RID) {
-      // TODO: handle OR in ElasticAPI?
+      /*
+      // DONE: handle OR in ElasticAPI (use associated_res field instead)
       if(T === "Person") { 
         pageFilters = "author:"+RID //+" OR workIsAbout:"+RID 
         placeholder = I18n.t("resource.findTbyP")
@@ -77,6 +78,7 @@ export class InnerSearchPage extends Component<State, Props>
         pageFilters = "workIsAbout:"+RID //+" OR workGenre:"+RID
         placeholder = I18n.t("resource.findTaboutT")
       }
+      */
     }
 
     console.log("iSsC:", searchClient, routingConfig, this.props, pageFilters)    

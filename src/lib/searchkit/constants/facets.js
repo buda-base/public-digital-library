@@ -66,6 +66,11 @@ const FACET_ATTRIBUTES = [
     attribute: "placeType",
     field: "placeType",
     type: "string"
+  },
+  {
+    attribute: "associated_res",
+    field: "associated_res",
+    type: "string"
   }
 ];
 
