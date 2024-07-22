@@ -10602,11 +10602,13 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
 
                   { theDataTop }
                   
-                  {/* // WIP: inner search results */}
-                  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/instantsearch.css@7/themes/satellite-min.css" /
-                  >                           
-                  <InnerSearchPageContainer history={this.props.history} auth={this.props.auth} isOsearch={true} RID={this.props.IRI} T={_T}/> 
-                   
+                  { !["Work", "Instance", "Scans", "Etext"].includes(_T) && <>
+                     {/* // DONE: inner search results */}
+                     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/instantsearch.css@7/themes/satellite-min.css" /
+                     >                           
+                     <InnerSearchPageContainer history={this.props.history} auth={this.props.auth} isOsearch={true} RID={this.props.IRI} T={_T}/> 
+                   </>}
+
                   <div class="data" id="perma">{ this.perma_menu(pdfLink,monoVol,fairUse,kZprop.filter(k => k.startsWith(adm+"seeOther")), accessET && !etextAccessError)  }</div>
                   { theDataMid }
                   { theDataBot }
