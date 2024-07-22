@@ -34,6 +34,7 @@ const CustomHit = ({ hit, that, sortItems, storage }) => {
   const [title, setTitle] = useState()
   const [names, setNames] = useState([])
   const [img, setImg] = useState("")
+  const [imgError, setImgError] = useState(false)
   const [publisher, setPublisher] = useState([])
   const [note, setNote] = useState("")
   const [authorshipStatement, setAuthorshipStatement] = useState("")
@@ -90,7 +91,11 @@ const CustomHit = ({ hit, that, sortItems, storage }) => {
     if(!["Person","Topic","Place"].includes(hit.type[0])) {
       if(that.props.config) {
         const iiif = that.props.config.iiif.endpoints[that.props.config.iiif.index] ?? "//iiif.bdrc.io"
-        setImg(iiif+"/bdr:"+(hit.inRootInstance ?? hit.objectID)+"::thumbnail/full/!1000,130/0/default.jpg")
+        const imgPath = iiif+"/bdr:"+(hit.inRootInstance ?? hit.objectID)+"::thumbnail/full/!1000,130/0/default.jpg"
+        if(img != imgPath) { 
+          setImg(imgPath)
+          if(imgError) setImgError(false)
+        }
       }
     }
 
@@ -207,9 +212,9 @@ const CustomHit = ({ hit, that, sortItems, storage }) => {
     <div class="main">
       <Link to={link} className="BG-link"></Link>
       <div class={"num-box "+(checked?"checked":"")} onClick={() => setChecked(!checked) }>{hit.__position}</div>
-      <div class={"thumb "+(img?"hasImg":"")}>      
+      <div class={"thumb "+(img&&!imgError?"hasImg":"")}>      
         <Link to={link}>
-          { img && <span class="img"><img src={img} onError={() => setImg("")}/></span> }
+          { !imgError && img && <span class="img"><img src={img} onError={() => setImgError(true)}/></span> }
           <span class="RID">{hit.objectID}</span>
           { (hit.scans_access < 4 || hit.scans_quality) && <span>
               <span>{I18n.t("types.images", {count:2})}{I18n.t("misc.colon")}</span>&nbsp;
