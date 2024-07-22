@@ -209,7 +209,7 @@ const CustomHit = ({ hit, that, sortItems, storage }) => {
       <div class={"num-box "+(checked?"checked":"")} onClick={() => setChecked(!checked) }>{hit.__position}</div>
       <div class={"thumb "+(img?"hasImg":"")}>      
         <Link to={link}>
-          { img && <span class="img"><img src={img} onError={() => console.log("no img?",img)}/></span> }
+          { img && <span class="img"><img src={img} onError={() => setImg("")}/></span> }
           <span class="RID">{hit.objectID}</span>
           { (hit.scans_access < 4 || hit.scans_quality) && <span>
               <span>{I18n.t("types.images", {count:2})}{I18n.t("misc.colon")}</span>&nbsp;

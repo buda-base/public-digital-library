@@ -26,7 +26,7 @@ function CustomRefinementList(props) {
 
   useEffect(() => {
     setTitle(getPropLabel(that, fullUri(iri ?? (prefix ?? "bdo")+":"+attribute)))
-  }, [ that.props.dictionary ])
+  }, [ that.props.dictionary, that.props.locale ])
 
   const [currentItems, setCurrentItems] = useState([]);
 
