@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { Link, useLocation } from "react-router-dom"
 import { Highlight, useInstantSearch } from "react-instantsearch";
 import I18n from 'i18next';
@@ -43,9 +43,7 @@ const CustomHit = ({ hit, that, sortItems, storage }) => {
   const [expand, setExpand] = useState({})
 
   const { uiState } = useInstantSearch()
-  const { sortBy } = uiState?.[process.env.REACT_APP_ELASTICSEARCH_INDEX]
-
-  //console.log("hit:", hit, sortBy, uiState, publisher, storage)
+  const { sortBy, refinementList } = uiState?.[process.env.REACT_APP_ELASTICSEARCH_INDEX]
 
   useEffect(() => {
     const labels = {}
@@ -165,7 +163,7 @@ const CustomHit = ({ hit, that, sortItems, storage }) => {
 
     //console.log("labels:", labels, newShow)
 
-  }, [hit, that.props.langPreset, expand])
+  }, [hit, that.props.langPreset, expand, refinementList, sortBy, that.props.history?.location])
  
   const prop = ["Person","Topic","Place"].includes(hit.type[0])
     ? "prop.tmp:otherName"
@@ -207,6 +205,8 @@ const CustomHit = ({ hit, that, sortItems, storage }) => {
 
   const backLink = "?s="+encodeURIComponent(window.location.href.replace(/^https?:[/][/][^?]+[?]?/gi,"")),
     link = "/show/bdr:"+hit.objectID+backLink
+
+  console.log("hit:", hit, link, that.props.history?.location?.search, sortBy, refinementList, uiState, publisher, storage)
 
   return (<div class={"result "+hit.type}>        
     <div class="main">

@@ -93,7 +93,7 @@ const formatResponseForURLSearchParams = (query) => {
 const SearchBoxAutocomplete = (props) => {
   const { query, refine } = useSearchBox(props);
   const { status } = useInstantSearch();
-  const { loading, placeholder } = props
+  const { loading, placeholder, pageFilters } = props
 
   const [inputValue, setInputValue] = useState(query);
   const [isFocused, setIsFocused] = useState(false);
@@ -105,7 +105,7 @@ const SearchBoxAutocomplete = (props) => {
 
   useEffect(() => {
     if (query !== "") {
-      getAutocompleteRequest(query).then((requests) => {
+      getAutocompleteRequest(query, pageFilters).then((requests) => {
         setSuggestions(requests);
       });
     }
@@ -124,7 +124,7 @@ const SearchBoxAutocomplete = (props) => {
 
   const debouncedHandleChange = useCallback(
     debounce((newValue) => {
-      getAutocompleteRequest(newValue).then((requests) => {
+      getAutocompleteRequest(newValue, pageFilters).then((requests) => {
         setSuggestions(requests);
       });
     }, 350),

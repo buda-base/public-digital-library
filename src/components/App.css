@@ -1059,6 +1059,7 @@ body > #pop-login { z-index:1000000 ;}
 
 .App.tradition .tradi-content a.has-img img {
    display: block;
+   margin: auto;
 }
 
 
@@ -1066,9 +1067,6 @@ body > #pop-login { z-index:1000000 ;}
    width:140px;   
 }
 
-.App.tradition .tradi-content:not(#tradi-all) a.has-img img {
-   width:80px;   
-}
 
 
 .App.tradition .tradi-content#tradi-all a.has-img span {
@@ -1102,17 +1100,22 @@ body > #pop-login { z-index:1000000 ;}
    text-align: center;
 }
 
+
+.App.tradition #tradi-selected a.has-img span:not(#a),
 .App.tradition .tradi-content.main:not(#a) a.has-img span {
    width:130px;
 }
 
+
+.App.tradition #tradi-selected a.has-img img,
 .App.tradition .tradi-content.main:not(#a) a.has-img img {
    width:75px;
    height:75px;
    object-fit: cover;
-   display:inline-block;
+   display:block;
 }
 
+.App.tradition #tradi-selected a.has-img img,
 .App.tradition .tradi-content.main:not(#a) a.has-img img {
    margin-bottom:5px;
 }
