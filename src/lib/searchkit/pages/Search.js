@@ -41,8 +41,6 @@ import { initiateApp } from '../../../state/actions';
 
 
 export const filters = [{
-    attribute:"placeType"
-  },{
     attribute:"scans_access", sort:true, I18n_prefix: "access.scans", prefix:"tmp"
   },{ // #881 not yet
   //  attribute:"scans_quality", sort:true, I18n_prefix: "access.scans.quality", prefix:"tmp"
@@ -54,6 +52,8 @@ export const filters = [{
     attribute:"inCollection"
   },{ 
     attribute:"language" 
+  },{
+    attribute:"placeType", prefix:"tmp"
   },{ 
     attribute:"associatedTradition"  
   },{ 

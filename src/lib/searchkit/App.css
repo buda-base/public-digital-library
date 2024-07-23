@@ -619,3 +619,12 @@
 .AppSK .ais-SearchBox-submit:hover {
   background:#ccc5;
 }
+
+
+.resource [data-prop="tmp:outline"] #outline > h2 {
+  display: none;
+}
+
+.resource [data-prop="tmp:outline"] #outline:not(#a) {
+  padding:0;
+}

@@ -111,11 +111,13 @@ import {keywordtolucenequery,lucenequerytokeyword,lucenequerytokeywordmulti, isG
 import ResourceViewerContainer from '../containers/ResourceViewerContainer'
 import InnerSearchPageContainer from '../containers/InnerSearchPageContainer'
 
+import { getAutocompleteRequest } from "../lib/searchkit/api/AutosuggestAPI";
+import { SuggestsList } from "../lib/searchkit/components/SearchBoxAutocomplete";
+import { debounce } from "../lib/searchkit/helpers/utils";
+
+
 import HTMLparse from 'html-react-parser';
-
 import logdown from 'logdown'
-
-
 import SimpleBar from 'simplebar-react';
 import 'simplebar/dist/simplebar.min.css';
 
@@ -533,6 +535,7 @@ const topProperties = {
       bdo+"extentStatement",
       tmp+"containingOutline",
       bdo+"instanceHasReproduction",
+      tmp+"outline",
       tmp+"propHasScans",
       tmp+"propHasEtext",
       bdo+"workIsAbout",
@@ -919,7 +922,28 @@ class OutlineSearchBar extends Component<Props,State>
          language: props.that.state.outlineKWlang?props.that.state.outlineKWlang:"", 
          dataSource:[] 
       }
+
+      this.handleChangeKW = debounce((newValue) => {
+         console.log("debounce!",props.that.props.IRI)
+         getAutocompleteRequest(newValue, "associated_res:"+props.that.props.IRI.split(":")[1]).then((requests) => {
+            console.log("requests:", requests)
+            this.setState({ autocomplete: <SuggestsList
+                 items={requests}
+                 onClick={(item) => {
+                  /*
+                   const newQuery = formatResponseForURLSearchParams(item.res);
+                   setQuery(newQuery);
+                   setIsFocused(false);
+                   refine(newQuery);
+                   */
+                 }}
+                 isVisible={true}
+               /> })
+         });
+      }, 350)
+   
    }
+   
 
    changeOutlineKW(e, value) {
 
@@ -928,6 +952,14 @@ class OutlineSearchBar extends Component<Props,State>
       if(!this.props.that.state) return
 
       if(!value && e) value = e.target.value
+
+      // TODO: handle different language?
+      const lang = "bo-x-ewts"
+
+      this.setState({ value })
+
+      this.handleChangeKW(value)
+      return
 
       //loggergen.log("value:",value)
 
@@ -999,15 +1031,20 @@ class OutlineSearchBar extends Component<Props,State>
                      loca.search = loca.search.replace(/(&osearch|osearch)=[^&]+/, "").replace(/[?]&/,"?")
                      this.props.that.props.history.push(loca)
                   }
-               }}><Close/></span> }                  
-               { (this.state.value && this.state.dataSource && this.state.dataSource.length > 0) &&   
+               }}><Close/></span> }            
+               { this.state.autocomplete && <div>
+                     <Paper id="suggestions">
+                        { this.state.autocomplete }
+                     </Paper>
+                  </div> }
+               {/* (this.state.value && this.state.dataSource && this.state.dataSource.length > 0) &&   
                   <div><Paper id="suggestions">
                   { this.state.dataSource.map( (v) =>  {
                         let tab = v.split("@")
                         return (
                            <MenuItem key={v} style={{lineHeight:"1em"}} onClick={(e) => search(e,tab[1])}><span class="maxW">{ tab[0].replace(/["]/g,"")}</span> <SearchIcon style={{padding:"0 10px"}}/><span class="lang">{(I18n.t(""+(searchLangSelec[tab[1]]?searchLangSelec[tab[1]]:languages[tab[1]]))) }</span></MenuItem> ) 
                         } ) }
-                  </Paper></div> }
+                  </Paper></div> */}
             </div>
          </div>
       )
@@ -7262,7 +7299,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
          )
    }
 
-   renderData = (returnLen, kZprop, iiifpres, title, otherLabels, div = "", hash = "", prepend = [], append = []) => {
+   renderData = (returnLen, kZprop, iiifpres, title, otherLabels, div = "", hash = "", prepend = [], append = [], customData = {}) => {
 
       let { doMap, doRegion, regBox } = this.getMapInfo(kZprop);
 
@@ -7271,6 +7308,11 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
       let data = kZprop.map((k) => {
 
             let elem = this.getResourceElem(k);
+
+            if(!elem && customData[k]) {
+               return customData[k]
+            }
+
             // #783 + #851
             if(k === tmp+"outlineAuthorshipStatement" && this.props.outlines /*&& !elem?.length*/) {
                let nodes = this.props.outlines[this.props.IRI]
@@ -10216,7 +10258,12 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
             listWithAS = [ tmp+"outlineAuthorshipStatement" ]
          }
          
-         let theDataTop = this.renderData(false, topProps,iiifpres,title,otherLabels,"top-props","main-info",versionTitle?[this.renderGenericProp(versionTitle, _tmp+"versionTitle", this.format("h4",_tmp+"versionTitle","",false,"sub",[{...versionTitle, type:"literal"}]))]:[])      
+         let theOutline ;
+         if((!root || !root.length) && (!this.props.outlineOnly || this.state.collapse.containingOutline)) theOutline = this.renderOutline()      
+
+         if(theOutline && !this.props.outlineOnly) theOutline = <div data-prop="tmp:outline"><h3><span>Outline:</span></h3><div class="group">{theOutline}</div></div>
+
+         let theDataTop = this.renderData(false, topProps,iiifpres,title,otherLabels,"top-props","main-info",versionTitle?[this.renderGenericProp(versionTitle, _tmp+"versionTitle", this.format("h4",_tmp+"versionTitle","",false,"sub",[{...versionTitle, type:"literal"}]))]:[],[], { [_tmp+"outline"]: theOutline })      
          let { html: theDataMid, nbChildren: midPropsLen }= this.renderData(true, midProps,iiifpres,title,otherLabels,"mid-props", undefined, otherResourcesData) ?? {}
          let theDataBot = this.renderData(false, kZprop.filter(k => !topProps.includes(k) && !midProps.includes(k) && !extProps.includes(k)).concat(listWithAS),iiifpres,title,otherLabels,"bot-props", undefined)      
 
@@ -10229,9 +10276,6 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
          let theDataExt = this.renderData(false,extProps,iiifpres,title,otherLabels,"ext-props")      
          let theDataLegal = this.renderData(false,[adm+"metadataLegal"],iiifpres,title,otherLabels,"legal-props")      
          
-         let theOutline ;
-         if((!root || !root.length) && (!this.props.outlineOnly || this.state.collapse.containingOutline)) theOutline = this.renderOutline()      
-
          if(this.props.outlineOnly) {
             return (
                <>
@@ -10647,7 +10691,6 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                      </div> 
                   }         
                   { (!(etext && orig)) && theEtext }
-                  { theOutline }
                   { theDataLegal }
                   { theDataExt && 
                      <div class="data ext-props" id="ext-info">

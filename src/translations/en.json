@@ -288,7 +288,8 @@
       "tmp:scans_access":"Scans Access",
       "tmp:etext_access":"Etext Access",
       "tmp:scans_quality":"Scans Quality",
-      "tmp:etext_quality":"Etext Quality"
+      "tmp:etext_quality":"Etext Quality",
+      "tmp:placeType":"Place Type"
    },
    "guided":{
       "keyword":"keyword",

@@ -63,7 +63,7 @@ const SearchBoxAction = ({ inputValue, isSearchStalled, refine }) => {
   );
 };
 
-const SuggestsList = ({ items, onClick, isVisible, setIsVisible }) => {
+export const SuggestsList = ({ items, onClick, isVisible, setIsVisible }) => {
   return (
     <ul className="search-result-wrapper suggestions" hidden={!isVisible}>
       {items.map((_suggest, _index) => (
