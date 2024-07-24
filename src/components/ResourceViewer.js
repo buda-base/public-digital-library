@@ -1011,7 +1011,7 @@ class OutlineSearchBar extends Component<Props,State>
          <div class="search">
             <div>
                <input type="text" placeholder={I18n.t("resource.searchO")} value={this.state.value} //onChange={(e) => this.setState({value:e.target.value})}
-                  onFocus={this.changeOutlineKW.bind(this)} //onBlur={() => this.setState({autocomplete: undefined})}
+                  onFocus={this.changeOutlineKW.bind(this)} onBlur={() => setTimeout(() => this.setState({autocomplete: undefined}), 150)}
                   /*value={this.props.that.state.outlineKW} */ onChange={this.changeOutlineKW.bind(this)} 
                onKeyPress={ (e) => { 
                   if(e.key === 'Enter' && this.state.value) { 
@@ -1031,7 +1031,7 @@ class OutlineSearchBar extends Component<Props,State>
                      this.props.that.props.onResetOutlineKW()
                      let loca = { ...this.props.that.props.history.location }
                      if(!loca.search) loca.search = ""
-                     loca.search = loca.search.replace(/(&osearch|osearch)=[^&]+/, "").replace(/[?]&/,"?")
+                     loca.search = loca.search.replace(/((&?root)|(&?osearch))=[^&]+/g, "").replace(/[?]&/,"?")
                      this.props.that.props.history.push(loca)
                   }
                }}><Close/></span> }            
@@ -9489,7 +9489,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                if(!loca.search) loca.search = "?"
                else if(loca.search !== "?") loca.search += "&"
 
-               loca.search += "osearch="+keywordtolucenequery(val.trim(), lg)+"@"+lg
+               loca.search += "root="+root+"&osearch="+keywordtolucenequery(val.trim(), lg)+"@"+lg
 
                loggergen.log("loca!",loca)
 
@@ -10261,8 +10261,8 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
             listWithAS = [ tmp+"outlineAuthorshipStatement" ]
          }
          
-         let theOutline ;
-         if((!root || !root.length) && (!this.props.outlineOnly || this.state.collapse.containingOutline)) theOutline = this.renderOutline()      
+         let theOutline, showOutline = this.state.collapse.containingOutline || this.state.collapse.containingOutline === undefined && this.props.outlineKW
+         if((!root || !root.length) && (!this.props.outlineOnly || showOutline)) theOutline = this.renderOutline()      
 
          if(theOutline && !this.props.outlineOnly) theOutline = <div data-prop="tmp:outline"><h3><span>Outline:</span></h3><div class="group">{theOutline}</div></div>
 
@@ -10279,20 +10279,20 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
          let theDataExt = this.renderData(false,extProps,iiifpres,title,otherLabels,"ext-props")      
          let theDataLegal = this.renderData(false,[adm+"metadataLegal"],iiifpres,title,otherLabels,"legal-props")      
          
-         if(this.props.outlineOnly) {
+         if(this.props.outlineOnly) {            
             return (
                <>
                   <a class="ulink prefLabel containing-outline" href="#" 
                      onClick={(ev) => { 
-                        this.setState({collapse:{...this.state.collapse, containingOutline:!this.state.collapse.containingOutline}})
+                        this.setState({collapse:{...this.state.collapse, containingOutline:!(this.state.collapse.containingOutline ?? showOutline)}})
                         ev.preventDefault()
                         ev.stopPropagation()
                      }}  
                   >
-                     { !this.state.collapse.containingOutline ? I18n.t("resource.seeIn",{txt: ilabel?.value ?? I18n.t("index.outline")}) : I18n.t("resource.closeO") }
+                     { showOutline ? I18n.t("resource.closeO") : I18n.t("resource.seeIn",{txt: ilabel?.value ?? I18n.t("index.outline")}) }
                   </a>     
                   { this.props.part && <Link {...this.props.preview?{ target:"_blank" }:{}} to={"/show/"+this.props.IRI} class="ulink prefLabel containing-outline" >{I18n.t("resource.openR")}</Link> }         
-                  { this.state.collapse.containingOutline && theOutline }
+                  { showOutline && theOutline }
                </>
             ) 
          }
