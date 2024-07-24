@@ -522,11 +522,15 @@ export async function miradorConfig(data, manifest, canvasID, useCredentials, la
       if(!keepAll) {
 
          if(typeof labels == "string") return labels
-         else if(labels.length && typeof labels[0] === "string")  return labels[0] 
+         else { 
+            if(!Array.isArray(labels)) labels = [ labels ]
+            if(labels.length && typeof labels[0] === "string")  return labels[0] 
+         }
 
          label = _getMainLabel(labels,useEtextLang?langsEtext:forceUIlg?langsUI:langs)
          if(labelArray) labelArray.push(label);
-         return label["value"]
+         if(label) return label["value"]
+         else return ""
          
       } else {
          if(typeof labels == "string") return ({ values: [ labels ] })
