@@ -166,6 +166,7 @@
    position: relative;
    background-color:#efefef;
    padding:0 100px;
+   overflow: hidden;
 }
 
 .AppSK .content .filter {
@@ -469,6 +470,7 @@
   color:black;
   font-weight: 400;
   text-align: center;
+  padding:0 15px;
 }
 .AppSK:not(#a) .result .thumb a .RID ~ span span{
   font-weight:700;
@@ -627,4 +629,21 @@
 
 .resource [data-prop="tmp:outline"] #outline:not(#a) {
   padding:0;
+}
+
+.resource h2 .newT {
+  display:block;
+  font-size:14px;
+  font-weight: 500;
+  color:black;
+  margin-top:10px;
+}
+
+.resource h2 .newT > span {
+  background:#dddddd;
+  padding:1px 4px;
+}
+
+.resource .title + .data + .data.top-props {
+  padding-bottom:20px;
 }

@@ -501,6 +501,9 @@ propOrder["Instance"] = propOrder["Work"]
 propOrder["Images"] = propOrder["Work"]
 
 const topProperties = {
+   "Product":[
+      rdfs+"comment"
+   ],
    "Topic": [ 
       skos+"prefLabel", 
       skos+"altLabel",
@@ -515,8 +518,13 @@ const topProperties = {
    "Place": [ 
       skos+"prefLabel", 
       skos+"altLabel",
-      bdo+"placeType",
+      _tmp+"findText",
+      //bdo+"placeType",
       bdo+"placeLocatedIn",
+      bdo+"placeContains",
+      bdo+"placeEvent",
+      _tmp+"map",
+      _tmp+"GISCoordinates"
    ],
    "Work": [ 
       bdo+"hasTitle", 
@@ -5208,10 +5216,10 @@ class ResourceViewer extends Component<Props,State>
       //loggergen.log("setT:", rootC, other)
 
       let title,titlElem,otherLabels = [], T_ = _T ;
-      _T = [<span class={"T "+_T.toLowerCase()}>
+      _T = [<span class={"newT "+_T.toLowerCase()}>
          <span class="space-fix">
             <span>{I18n.t("types."+_T.toLowerCase())}</span>
-            <span class="RID">{shortUri(other?other:this.props.IRI)}</span>
+            {/* <span class="RID">{shortUri(other?other:this.props.IRI)}</span> */}
          </span>
       </span>]
 
@@ -9484,7 +9492,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
 
                let loca = { ...this.props.history.location }
 
-               loca.search = loca.search.replace(/&*osearch=[^&]+/, "") 
+               loca.search = loca.search.replace(/((&?root)|(&?osearch))=[^&]+/g, "") 
 
                if(!loca.search) loca.search = "?"
                else if(loca.search !== "?") loca.search += "&"
@@ -10260,13 +10268,20 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
          if(!tmpElem?.length && this.props.outlines && this.props.outlines[this.props.IRI]) {
             listWithAS = [ tmp+"outlineAuthorshipStatement" ]
          }
+
+         let hasMap = kZprop.filter(k => mapProps.includes(k))
+         let header = this.renderHeader(hasMap, _T, etextUT, root)
          
          let theOutline, showOutline = this.state.collapse.containingOutline || this.state.collapse.containingOutline === undefined && this.props.outlineKW
          if((!root || !root.length) && (!this.props.outlineOnly || showOutline)) theOutline = this.renderOutline()      
 
          if(theOutline && !this.props.outlineOnly) theOutline = <div data-prop="tmp:outline"><h3><span>Outline:</span></h3><div class="group">{theOutline}</div></div>
 
-         let theDataTop = this.renderData(false, topProps,iiifpres,title,otherLabels,"top-props","main-info",versionTitle?[this.renderGenericProp(versionTitle, _tmp+"versionTitle", this.format("h4",_tmp+"versionTitle","",false,"sub",[{...versionTitle, type:"literal"}]))]:[],[], { [_tmp+"outline"]: theOutline })      
+         let findText
+         if(!["Work", "Instance", "Scan", "Etext"].includes(_T)) {
+            findText = <InnerSearchPageContainer history={this.props.history} auth={this.props.auth} isOsearch={true} RID={this.props.IRI} T={_T}/>          
+         }
+         let theDataTop = this.renderData(false, topProps,iiifpres,title,otherLabels,"top-props","main-info",versionTitle?[this.renderGenericProp(versionTitle, _tmp+"versionTitle", this.format("h4",_tmp+"versionTitle","",false,"sub",[{...versionTitle, type:"literal"}]))]:[],[], { [_tmp+"outline"]: theOutline, [_tmp+"map"]: hasMap.length ? header : undefined, [_tmp+"findText"]: hasMap.length ? findText : undefined})      
          let { html: theDataMid, nbChildren: midPropsLen }= this.renderData(true, midProps,iiifpres,title,otherLabels,"mid-props", undefined, otherResourcesData) ?? {}
          let theDataBot = this.renderData(false, kZprop.filter(k => !topProps.includes(k) && !midProps.includes(k) && !extProps.includes(k)).concat(listWithAS),iiifpres,title,otherLabels,"bot-props", undefined)      
 
@@ -10623,7 +10638,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                   {/* { this.renderAnnoPanel() } */}
                   { this.renderWithdrawn() }             
                   <div class="title">{ wTitle }{ iTitle }{ rTitle }</div>
-                  { this.renderHeader(kZprop.filter(k => mapProps.includes(k)), _T, etextUT, root) }
+                  { /* header */ }
                   { (etext && !orig) && <div class={"data open-etext"+(etextAccessError?" disable":"")}><div><Link to={etextUT+(etextUT.includes("?")?"&":"?")+"backToEtext="+backToET+"#open-viewer"}>{etextLoca}</Link></div></div> }
                   { (etext && orig) && <div class="data open-etext"><div><a target="_blank" href={orig}>{I18n.t("resource.openO",{src:prov})}<img src="/icons/link-out_.svg"/></a></div></div> }
                   <div class={"data" + (_T === "Etext"?" etext-title":"")+(_T === "Images"?" images-title":"")}>
@@ -10649,17 +10664,17 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
 
                   { theDataTop }
                   
-                  { !["Work", "Instance", "Scans", "Etext"].includes(_T) && <>
+                  { !["Work", "Instance", "Scan", "Etext"].includes(_T) && <>
                      {/* // DONE: inner search results */}
                      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/instantsearch.css@7/themes/satellite-min.css" /
                      >                           
-                     <InnerSearchPageContainer history={this.props.history} auth={this.props.auth} isOsearch={true} RID={this.props.IRI} T={_T}/> 
+                     { findText }
                    </>}
 
                   <div class="data" id="perma">{ this.perma_menu(pdfLink,monoVol,fairUse,kZprop.filter(k => k.startsWith(adm+"seeOther")), accessET && !etextAccessError)  }</div>
                   { theDataMid }
                   { theDataBot }
-                  { ( /*hasRel &&*/ !this.props.preview && this.props.assocResources && !["Instance","Images","Etext"].includes(_T)) &&
+                  { ( /*hasRel &&*/ false && !this.props.preview && this.props.assocResources && !["Instance","Images","Etext"].includes(_T)) &&
                      <div class="data related" id="resources" data-all={all}>
                         <MySwipeable scrollRel={scrollRel}>
                            <div><h2>{I18n.t(true || _T=== "Place"||_T==="Corporation"?"index.relatedR":(_T==="Product"?"index.relatedM":(_T==="Work"&&serial?"index.relatedS":"index.related")))}</h2>{/* ( ( (this.state.relatedTabAll||!related.length&&!createdBy.length)&&t1) || related && related.length > 4 || createdBy && createdBy.length > 4) && <Link to={(this.state.relatedTabAll||!related.length&&!createdBy.length)&&t1?t1:("/search?t="+(_T==="Corporation"&&(this.state.relatedTab||!related.length)?"Person":(_T==="Place"&&this.state.relatedTab?"Instance":(_T==="Product"?"Scan":"Work")))+"&r="+this.props.IRI)}>{I18n.t("misc.seeA")}</Link> */}</div>
