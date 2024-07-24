@@ -880,10 +880,13 @@ body > #pop-login { z-index:1000000 ;}
    white-space: nowrap;
 }
 
+#suggestions .search-result-item-lang,
 .inner-search-bar .search-result-item-lang {
    display:none;
 }
 
+
+#suggestions suggested,
 .inner-search-bar  suggested {
    font-weight:700;
    display: inline;

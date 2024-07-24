@@ -919,7 +919,7 @@ class OutlineSearchBar extends Component<Props,State>
 
       this.state = { 
          value: props.that.state.outlineKW?props.that.state.outlineKW:"", 
-         language: props.that.state.outlineKWlang?props.that.state.outlineKWlang:"", 
+         language: props.that.state.outlineKWlang?props.that.state.outlineKWlang:"bo-x-ewts", 
          dataSource:[] 
       }
 
@@ -930,12 +930,9 @@ class OutlineSearchBar extends Component<Props,State>
             this.setState({ autocomplete: <SuggestsList
                  items={requests}
                  onClick={(item) => {
-                  /*
-                   const newQuery = formatResponseForURLSearchParams(item.res);
-                   setQuery(newQuery);
-                   setIsFocused(false);
-                   refine(newQuery);
-                   */
+                  const value = item.res.replace(/<[^>]*>/g,"")
+                  const language = (item.lang ?? this.state.language).replace(/_/g,"-")
+                  this.search(item,language,value)
                  }}
                  isVisible={true}
                /> })
@@ -945,6 +942,23 @@ class OutlineSearchBar extends Component<Props,State>
    }
    
 
+
+
+   cleanOutlineCollapse() {
+      let collapse = this.props.that.state.collapse
+      for(let k of Object.keys(collapse)) {
+         if(k.startsWith("outline-")) delete collapse[k]
+      }
+      return collapse
+   }
+
+   search(e, lang = this.state.language, val = this.state.value) {
+      let collapse = this.cleanOutlineCollapse()
+      this.setState({dataSource:[], autocomplete: undefined, value: val, language: lang});
+      this.props.that.setState({collapse});
+      this.props.outlineSearch(e,lang,val)
+   }
+
    changeOutlineKW(e, value) {
 
       loggergen.log("osb:change:",this,this.props.that)
@@ -953,13 +967,14 @@ class OutlineSearchBar extends Component<Props,State>
 
       if(!value && e) value = e.target.value
 
-      // TODO: handle different language?
-      const lang = "bo-x-ewts"
+      // TODO: handle different language without autocomplete?
+      const language = "bo-x-ewts"
 
-      this.setState({ value })
+      this.setState({ value, language })
 
       this.handleChangeKW(value)
-      return
+
+      /* // with old query:
 
       //loggergen.log("value:",value)
 
@@ -984,7 +999,7 @@ class OutlineSearchBar extends Component<Props,State>
          
          return [...acc, ...presets]
       }, [] ).concat(value.match(/[a-zA-Z]/)?["en"]:[]).map(p => '"'+value+'"@'+(p == "sa-x-iast"?"sa-x-ndia":p)) } ) 
-
+      */
    }
 
 
@@ -992,37 +1007,25 @@ class OutlineSearchBar extends Component<Props,State>
 
       loggergen.log("osb:",this,this.props,this.state)
 
-
-      let cleanOutlineCollapse = () => {
-         let collapse = this.props.that.state.collapse
-         for(let k of Object.keys(collapse)) {
-            if(k.startsWith("outline-")) delete collapse[k]
-         }
-         return collapse
-      }
-
-      let search = (e,val) => {
-         let collapse = cleanOutlineCollapse()
-         this.setState({dataSource:[]});
-         this.props.that.setState({collapse});
-         this.props.outlineSearch(e,val,this.state.value)
-      }
-
       return (
          <div class="search">
             <div>
                <input type="text" placeholder={I18n.t("resource.searchO")} value={this.state.value} //onChange={(e) => this.setState({value:e.target.value})}
+                  onFocus={this.changeOutlineKW.bind(this)} //onBlur={() => this.setState({autocomplete: undefined})}
                   /*value={this.props.that.state.outlineKW} */ onChange={this.changeOutlineKW.bind(this)} 
                onKeyPress={ (e) => { 
                   if(e.key === 'Enter' && this.state.value) { 
+                     this.search(e)
+                     /*
                      if(this.state.dataSource?.length) { search(e, this.state.dataSource[0].split("@")[1]) }
                      else this.changeOutlineKW(null,this.state.value)
+                     */
                   }
                }}/>
-               <span class="button" onClick={(e) => { if(this.state.dataSource?.length) { search(e,this.state.dataSource[0].split("@")[1]) } }}  title={I18n.t("resource.start")}></span>
+               <span class="button" onClick={(e) => { if(this.state.value) { this.search(e) } }}  title={I18n.t("resource.start")}></span>
                { (this.props.that.props.outlineKW || this.props.that.state.outlineKW) && <span class="button" title={I18n.t("resource.reset")} onClick={(e) => { 
-                  let collapse = cleanOutlineCollapse()
-                  this.setState({value:""})
+                  let collapse = this.cleanOutlineCollapse()
+                  this.setState({value:"", autocomplete: undefined})
                   this.props.that.setState({outlineKW:"",collapse})
                   if(this.props.that.props.outlineKW) {
                      this.props.that.props.onResetOutlineKW()

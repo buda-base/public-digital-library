@@ -479,7 +479,7 @@ async function initiateApp(params,iri,myprops,route,isAuthCallback) {
 }
 
 
-if(params && params.osearch) {
+if(params && params.osearch && !iri.match(/^([^:]+:)?UT/)) {
    let p = params.osearch.split("@")
    let r = iri
    if(params.root) r = params.root
