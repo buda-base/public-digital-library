@@ -5208,19 +5208,24 @@ class ResourceViewer extends Component<Props,State>
       //loggergen.log("H2?",title, rootC, other)
 
       if(other) return <h2 title={title.value} lang={title.lang || this.props.locale}><Link {...this.props.preview?{ target:"_blank" }:{}}   {... rootC?{onClick:rootC}:{onClick:() => setTimeout(()=>window.scrollTo(0,0),10)}}  to={"/show/"+shortUri(other)+this.getTabs(T_,other)}>{_T}<span>{_befo}{title.value}</span>{this.tooltip(title.lang)}</Link></h2>
-      else return <h2 title={title.value} lang={title.lang || this.props.locale} class="on">{_T}<span>{_befo}{title.value}</span>{this.tooltip(title.lang)}</h2>
+      else return <><h2 title={title.value} lang={title.lang || this.props.locale} class="on">{_T}<span>{_befo}<span class="placeType">{title.value}</span></span>{this.tooltip(title.lang)}</h2>{ title.placeT && <span class="date">{this.fullname(title.placeT, false, false, true)}</span>}</>
    }
 
    setTitle = (kZprop,_T,other,rootC,noSame:boolean=false) => {
 
       //loggergen.log("setT:", rootC, other)
 
+      let placeT ;
+      if(_T === "Place") {
+         placeT = this.getResourceElem(bdo+"placeType",other,this.props.assocResources);         
+      }
+
       let title,titlElem,otherLabels = [], T_ = _T ;
       _T = [<span class={"newT "+_T.toLowerCase()}>
          <span class="space-fix">
             <span>{I18n.t("types."+_T.toLowerCase())}</span>
             {/* <span class="RID">{shortUri(other?other:this.props.IRI)}</span> */}
-         </span>
+         </span>         
       </span>]
 
       if(kZprop.indexOf(skos+"prefLabel") !== -1)       {
@@ -5262,6 +5267,7 @@ class ResourceViewer extends Component<Props,State>
             }
          }
          if(!title || title.value == "") title = { value: I18n.t("resource.noT"), lang: this.props.locale } // #825
+         if(placeT?.length) title.placeT = placeT[0].value
          title = this.getH2(title,_befo,_T,other,T_,rootC)         
 
       }
@@ -5744,12 +5750,23 @@ class ResourceViewer extends Component<Props,State>
             let work = this.getResourceElem(bdo+"instanceOf")
             if(work?.length) wrid = shortUri(work[0].value)
          }
-         linkToVersions = <span class="expand linkToVersions"><Link {...this.props.preview?{ target:"_blank" }:{}} to={"/search?i="+wrid+"&t=Work"}>{I18n.t("misc.browseA",{count: ret.length})}</Link></span>
+         linkToVersions = <span class="expand linkToVersions">
+            <Link {...this.props.preview?{ target:"_blank" }:{}} 
+               to={/*"/search?i="+wrid+"&t=Work"*/"/osearch/associated/"+wrid?.split(":")[1]+"/search"}>
+                  {I18n.t("misc.browseA",{count: ret.length})}
+            </Link>
+         </span>
       }
       
       let linkToPlaces, maxPlaces = 20
       if(k === bdo+"placeContains" && ret.length >= 2) {
-         linkToPlaces = <span class="expand linkToPlaces"><Link {...this.props.preview?{ target:"_blank" }:{}} to={"/search?r="+this.props.IRI+"&t=Place&f=relation,inc,bdo:placeLocatedIn"}>{I18n.t("misc.browseA",{count: ret.length})}</Link></span>
+         linkToPlaces = <span class="expand linkToPlaces">
+            <Link {...this.props.preview?{ target:"_blank" }:{}} 
+               to={ //"/search?r="+this.props.IRI+"&t=Place&f=relation,inc,bdo:placeLocatedIn"
+                    "/osearch/associated/"+this.props.IRI.split(":")[1]+"/search?type%5B0%5D=Place"}> 
+                  {I18n.t("misc.browseA",{count: ret.length})}
+            </Link>
+         </span>
       }
 
       if(!isSub && n > maxDisplay) {      
@@ -9690,7 +9707,14 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
             title = getLangLabel(this,"",titleRaw.label)
             ilabel = getLangLabel(this,"",titlElem)
             if(ilabel?.value != title.value) versionTitle = ilabel
-            title = <h2 class="on" title={title.value} lang={title.lang} ><span>{title.value}</span></h2> 
+            title = <h2 class="on" title={title.value} lang={title.lang} >
+               <span class={"newT "+_T.toLowerCase()}>
+                  <span class="space-fix">
+                     <span>{I18n.t("types."+_T.toLowerCase())}</span>
+                  </span>
+               </span>
+               <span>{title.value}</span>
+            </h2> 
          }
 
          if(this.state.catalogOnly  && this.state.catalogOnly[this.props.IRI]) {
@@ -10282,6 +10306,9 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
             findText = <InnerSearchPageContainer history={this.props.history} auth={this.props.auth} isOsearch={true} RID={this.props.IRI} T={_T}/>          
          }
          let theDataTop = this.renderData(false, topProps,iiifpres,title,otherLabels,"top-props","main-info",versionTitle?[this.renderGenericProp(versionTitle, _tmp+"versionTitle", this.format("h4",_tmp+"versionTitle","",false,"sub",[{...versionTitle, type:"literal"}]))]:[],[], { [_tmp+"outline"]: theOutline, [_tmp+"map"]: hasMap.length ? header : undefined, [_tmp+"findText"]: hasMap.length ? findText : undefined})      
+
+         if(hasMap.length) findText = undefined
+
          let { html: theDataMid, nbChildren: midPropsLen }= this.renderData(true, midProps,iiifpres,title,otherLabels,"mid-props", undefined, otherResourcesData) ?? {}
          let theDataBot = this.renderData(false, kZprop.filter(k => !topProps.includes(k) && !midProps.includes(k) && !extProps.includes(k)).concat(listWithAS),iiifpres,title,otherLabels,"bot-props", undefined)      
 

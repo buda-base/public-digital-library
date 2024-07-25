@@ -154,7 +154,7 @@ export function HitsWithLabels(props) {
   }, [fetching])
 
   const prepItemsPage = (items) => {    
-    const attrs = ["author", "translator", "inRootInstance", "pagination"]
+    const attrs = ["author", "translator", "inRootInstance", "locatedIn", "placeType", "pagination"]
     const itemIds = {}
     const newStorage = { ...storage }
     

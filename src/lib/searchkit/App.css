@@ -639,6 +639,10 @@
   margin-top:10px;
 }
 
+.resource #outline h2 .newT {
+  display:none;
+}
+
 .resource h2 .newT > span {
   background:#dddddd;
   padding:1px 4px;
@@ -646,4 +650,32 @@
 
 .resource .title + .data + .data.top-props {
   padding-bottom:20px;
+}
+
+.resource .data#map:not(#a) { 
+  padding:0;
+}
+
+/* :not(#a) > .resource:not(#a) [data-prop="bdo:placeEvent"]::after, */
+:not(#a) > .resource:not(#a) .data#map::after{
+  height:0;
+  margin:10px 0;
+}
+
+.top-props .InnerSearchPage.data {
+  padding:0;
+}
+
+:not(#a) .top-props .InnerSearchPage .loadedContent:not(#a) {
+  display: none !important;
+}
+
+.capitalize::first-letter {
+  text-transform: uppercase;
+}
+
+.resource h2 + .date {
+  color:#777;
+  font-weight:500;
+  text-transform: capitalize;
 }

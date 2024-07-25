@@ -229,8 +229,8 @@ const CustomHit = ({ hit, that, sortItems, storage }) => {
       <div class="data">      
           <Link to={link}>
             <span class="T">
-              {getPropLabel(that, fullUri("bdr:"+hit.type), true, false, "types."+(hit.type+"").toLowerCase())}
-              {hit.script && hit.script.map(s => <span title={getPropLabel(that,fullUri('bdo:script'),false)+I18n.t("punc.colon")+" "+getPropLabel(that, fullUri("bdr:"+s), false)} data-lang={s.replace(/.*Script/)}>{s.replace(/^.*Script/,"")}</span>)}
+              { hit.placeType ? getPropLabel(that,fullUri("bdr:"+hit.placeType), true, false) : getPropLabel(that,fullUri("bdr:"+hit.type), true, false, "types."+(hit.type+"").toLowerCase())}
+              { hit.script && hit.script.map(s => <span title={getPropLabel(that,fullUri('bdo:script'),false)+I18n.t("punc.colon")+" "+getPropLabel(that, fullUri("bdr:"+s), false)} data-lang={s.replace(/.*Script/)}>{s.replace(/^.*Script/,"")}</span>)}
             </span>
             {/* {{ hit.author && <Link to={"/show/bdr:"+hit.author}>{hit.author}</Link> } */} 
             { title }
@@ -284,6 +284,14 @@ const CustomHit = ({ hit, that, sortItems, storage }) => {
               <span>{publisher}</span>
             </span>
           </>
+        }
+        { 
+          hit.locatedIn?.length > 0 && <span class="names locatedIn noNL">
+            <span class="label capitalize">{getPropLabel(that, fullUri("bdo:placeLocatedIn"), true, true)}<span class="colon">:</span></span>
+            <span>{hit.locatedIn?.map(a => <span data-id={a}><Link to={"/show/bdr:"+a}>{
+              getPropLabel(that, fullUri("bdr:"+a), true, true, "", 1, storage, true) ?? a
+            }</Link></span>)}</span>
+          </span> 
         }
         {
           note.length > 0 && <>
