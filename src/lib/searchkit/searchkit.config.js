@@ -175,13 +175,13 @@ const routingConfig = {
     createURL({ qsModule, location, routeState }) {
       
       let { origin, pathname, hash } = location, url;
-      if(!pathname.endsWith("/search")) pathname = "/osearch/search"
+      if(!pathname.endsWith("/search") && !pathname.startsWith("/show/")) pathname = "/osearch/search"
       const indexState = routeState['instant_search'] || {};
       const queryString = qsModule.stringify(routeState);
 
       url = `${origin}${pathname}?${queryString}${hash}`;      
       
-      console.log("cURL:", url, location, routeState, indexState)
+      //console.log("cURL:", url, location, routeState, indexState)
 
       return url
   
