@@ -862,6 +862,7 @@ body > #pop-login { z-index:1000000 ;}
    max-width:100%;
    overflow: hidden;
    box-sizing: border-box;   
+   text-align: left;
 }
 
 .inner-search-bar .suggestions > li,

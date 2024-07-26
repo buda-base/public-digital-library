@@ -93,7 +93,10 @@ class MyTransporter extends ESTransporter {
 
       console.log("responses:",responses)
 
-      return responses.responses  
+      const nonEmpty = responses.responses.filter(r => r.status === 200 && r.hits?.hits?.length)
+      if(nonEmpty.length) return nonEmpty
+      return responses.responses
+
     } catch (error) {
       throw error
     }
@@ -168,7 +171,21 @@ const formatFirstScanSyncDateRangeFromUiState = (uiState) => {
 
 const routingConfig = {
   router: history({
-    cleanUrlOnDispose: false,
+    cleanUrlOnDispose: false,    
+    createURL({ qsModule, location, routeState }) {
+      
+      let { origin, pathname, hash } = location, url;
+      if(!pathname.endsWith("/search")) pathname = "/osearch/search"
+      const indexState = routeState['instant_search'] || {};
+      const queryString = qsModule.stringify(routeState);
+
+      url = `${origin}${pathname}?${queryString}${hash}`;      
+      
+      console.log("cURL:", url, location, routeState, indexState)
+
+      return url
+  
+    }
   }),
   stateMapping: {
     stateToRoute(uiState) {

@@ -639,6 +639,10 @@
   margin-top:10px;
 }
 
+.resource .on.intro + h2 .newT {
+  display:none;
+}
+
 .resource #outline h2 .newT {
   display:none;
 }

@@ -5,14 +5,25 @@ import { useSearchBox, useInstantSearch } from "react-instantsearch";
 
 // utils
 import { debounce } from "../helpers/utils";
+import history from "../../../history"
 
 // api
 import { getAutocompleteRequest } from "../api/AutosuggestAPI";
 
-const SearchBoxAction = ({ inputValue, isSearchStalled, refine }) => {
+
+const redirect = (refine, query, pageFilters) => {
+  const loca = history.location
+  if(!loca.pathname.endsWith("/search") && !pageFilters){
+    history.push("/osearch/search?q="+encodeURIComponent(query))
+  } else {
+    refine(query)
+  }
+}
+
+const SearchBoxAction = ({ inputValue, isSearchStalled, refine, pageFilters }) => {
   return (
     <>
-      <button type="submit" className="ais-SearchBox-submit" onClick={()=> refine(inputValue)}>
+      <button type="submit" className="ais-SearchBox-submit" onClick={()=> redirect(refine, inputValue, pageFilters)}>
         Submit
       </button>
       <button
@@ -128,7 +139,7 @@ const SearchBoxAutocomplete = (props) => {
         setSuggestions(requests);
       });
     }, 350),
-    []
+    [ pageFilters ]
   );
 
   return (
@@ -203,7 +214,7 @@ const SearchBoxAutocomplete = (props) => {
           const newQuery = formatResponseForURLSearchParams(item.res);
           setQuery(newQuery);
           setIsFocused(false);
-          refine(newQuery);
+          redirect(refine, newQuery, pageFilters);
         }}
         isVisible={isFocused}
       />

@@ -29,7 +29,7 @@ const fetchLabels = (ids, attribute, lang = "bo-x-ewts") => {
               acc[item.replace(/bdr:/,"")] = { id: item.replace(/bdr:/,""), label:Object.keys(data[item]).map(lang => ({lang, value:data[item][lang]})) }
               return acc;
             }, {});
-            console.log("lm:",data)
+            //console.log("lm:",data)
             resolve(labelsMap);
           })
           .catch((error) => {

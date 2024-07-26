@@ -28,6 +28,12 @@ export default function AutocompleteKeywordInput(props) {
     if(keyword != kw) setKeyword(kw)
    }, [ that?.props.keyword, that?.state.keyword ])
 
+   const setKeywordParent = (ev) => {
+
+    that.setState({keyword:ev.target.value})
+
+   }
+
    const getAutocomplete = async (e)  => {
 
     const searchString = e.target.value, server = that.props.config.autocomplete;  
@@ -75,7 +81,7 @@ export default function AutocompleteKeywordInput(props) {
       //console.log("change:", ev)
 
       // #884 don't overwrite user input
-      that.setState({keyword:ev.target.value})
+      debounce(setKeywordParent)(ev)
 
       setKeyword(ev.target.value)            
       debounce(getAutocomplete)(ev)

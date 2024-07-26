@@ -102,7 +102,11 @@ import store from "../index"
 import {closePortraitPopup} from "../state/ui/actions"
 import analytics from "./Analytics"
 
+import { InstantSearch } from "react-instantsearch";
 import AutocompleteKeywordInput from "./AutocompleteKeywordInput"
+import { searchClient } from '../lib/searchkit/pages/Search';
+import SearchBoxAutocomplete from "../lib/searchkit/components/SearchBoxAutocomplete";
+import { routingConfig } from "../lib/searchkit/searchkit.config";
 
 import LatestSyncs from "./LatestSyncs"
 
@@ -1078,6 +1082,24 @@ export function getGDPRconsent(that) {
    )
 }
 
+function InstantSearchBox() {
+
+   return <>
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/instantsearch.css@7/themes/satellite-min.css" />
+      <InstantSearch
+         indexName={process.env.REACT_APP_ELASTICSEARCH_INDEX}
+         routing={routingConfig}
+         searchClient={searchClient}
+      >
+         <div className="search inner-search-bar">
+            <div>
+               <SearchBoxAutocomplete searchAsYouType={false} />
+            </div>
+         </div>
+      </InstantSearch>
+   </>
+}
+
 export function top_right_menu(that,etextTitle,backUrl,etextres)
 {
    let onZhMirror = (that.props.config && that.props.config.chineseMirror)
@@ -1172,17 +1194,21 @@ export function top_right_menu(that,etextTitle,backUrl,etextres)
       innerSearch = (
          that?.state.filters && !that?.props.keyword || that?.state.filters && that.props.advancedSearch || that.props.isOsearch
          ? null 
+         : <InstantSearchBox that={this} />
+                  /* 
          : <div class={'inner-search-bar in-search-'+(that.state.filters?"true":"false")}>
             <div>
                <span>Search</span>
                <span>
-                  <AutocompleteKeywordInput { ...{ that } }/>
+                  
+                  <AutocompleteKeywordInput { ...{ that } }/> 
                   <IconButton>
                      <SearchIcon />
                   </IconButton>
-               </span>
-            </div>
-         </div>
+                  </span>
+                  </div>
+                  </div>
+                  */
       )
 
    if(etextTitle)
@@ -7545,14 +7571,20 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                {/* <h2>BUDA Platform</h2> */}
                {/* <h3>Buddhist Digital Resource Center</h3> */}
                { (this.props.language && this.props.language != "-" || !this.props.keyword && !this.props.loading) && <>               
-               { !this.props.keyword && !this.props.advancedSearch && <div class='inner-search-bar in-search-true'>
+               { !this.props.keyword && !this.props.advancedSearch && 
+                  <InstantSearchBox that={this} />
+               }
+                        {/* 
+               <div class='inner-search-bar in-search-true'>
                   <div>
                      <span>Search</span>
                      <span>
-                        <AutocompleteKeywordInput { ...{ that: this } }/>
-                     </span>
-                  </div>
-               </div> }
+                        <InstantSearchBox that={this} />
+                        <AutocompleteKeywordInput { ...{ that: this } }/> 
+                        </span>
+                        </div>
+                        </div> }
+                        */}
                { this.props.advancedSearch && <div id="search-bar">
                { this.props.config.khmerServer && !this.props.keyword &&  !this.props.loading && 
                   <span class="links">

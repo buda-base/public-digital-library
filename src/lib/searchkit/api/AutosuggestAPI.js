@@ -1,4 +1,4 @@
-const getAutocompleteRequest = async (query, filters) => {
+const getAutocompleteRequest = async (query, filters = "") => {
   console.log("auto:", query, filters)
   let scope = filters.split(":")
   if(scope[0] === "associated_res" && scope[1]) scope = [ scope[1] ]
