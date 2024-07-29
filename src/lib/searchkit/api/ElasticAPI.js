@@ -219,7 +219,9 @@ const getCustomizedBdrcIndexRequest = (request) => {
     size: userHitsPerPage,
     aggs: userAggregates,
     highlight: {
-      fields: HIGHLIGHT_FIELDS.reduce((acc,f) => ({...acc, [f.label]:{}}), {}),
+      fields: HIGHLIGHT_FIELDS.reduce((acc,f) => ({...acc, [f.label]:{
+        ...["prefLabel", "altLabel"].some(l => f.label.startsWith(l))?{ fragment_size: 500 } : {}
+      }}), {}),
     },
     query:
       userInput !== ""
