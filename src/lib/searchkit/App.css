@@ -120,6 +120,12 @@
    /* padding:1px 5px; */
 }
 
+.AppSK .result a .highlight,
+.AppSK a .ais-Highlight-highlighted, 
+.AppSK a .ais-Snippet-highlighted {
+  color:#d73449;
+}
+
 .AppSK .ais-RefinementList-checkbox {
    color:#444;
    min-width:14px;
@@ -424,6 +430,17 @@
 .AppSK .result .data .names .ais-Highlight {
   display:inline;
 }
+
+.AppSK .result .data .names.etext-hits > .label + span {
+  display: flex;
+  flex-direction: column;
+}
+
+.AppSK .result .data .names.etext-hits > .label + span > span::before,
+.AppSK .result .data .names.etext-hits > .label + span > span::after {
+  content:'...'
+} 
+
 
 .AppSK .result .data .names > .label {
   display: block;

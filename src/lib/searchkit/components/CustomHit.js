@@ -4,6 +4,7 @@ import { Highlight, useInstantSearch } from "react-instantsearch";
 import I18n from 'i18next';
 import {decode} from 'html-entities';
 import qs from 'query-string'
+import HTMLparse from 'html-react-parser';
 
 import { RANGE_FIELDS } from "../api/ElasticAPI";
 import { RESULT_FIELDS } from "../constants/fields";
@@ -38,6 +39,8 @@ const CustomHit = ({ hit, that, sortItems, storage }) => {
   const [publisher, setPublisher] = useState([])
   const [note, setNote] = useState("")
   const [authorshipStatement, setAuthorshipStatement] = useState("")
+  const [etextHits, setEtextHits] = useState([])
+  const [seriesName, setSeriesName] = useState("")
 
   const [showMore, setShowMore] = useState({})
   const [expand, setExpand] = useState({})
@@ -53,14 +56,14 @@ const CustomHit = ({ hit, that, sortItems, storage }) => {
     langs = extendedPresets(langs)
 
     if(hit) { 
-      for(const name of ["prefLabel", "altLabel", "publisherName", "publisherLocation", "summary", "authorshipStatement", "comment"]) {
+      for(const name of ["prefLabel", "altLabel", "publisherName", "publisherLocation", "summary", "authorshipStatement", "comment", "seriesName"]) {
         if(!labels[name]) labels[name] = []
         for(const k of Object.keys(hit)) {
-          if(k.startsWith(name)) { 
+          if(k.startsWith(name) && !k.endsWith("_res")) { 
             //console.log("k:",k,hit[k],lang,hit)
             const lang = k.replace(new RegExp(name+"_"),"").replace(/_/g,"-")
             hit[k].map((h,i) => name != "altLabel" || hit._highlightResult[k] && hit._highlightResult[k][i]?.matchedWords?.length 
-              ? labels[name].push({
+              ? labels[name!="altLabel"?name:"prefLabel"].push({
                   value: hit._highlightResult && hit._highlightResult[k] && hit._highlightResult[k][i]
                     ? decode((hit._highlightResult[k][i]?.value ?? "").replace(/<mark>/g,"↦").replace(/<\/mark>/g,"↤").replace(/↤ ↦/g, " "))
                     : h, 
@@ -114,7 +117,7 @@ const CustomHit = ({ hit, that, sortItems, storage }) => {
     const newShow = {}
     out = []
     let tag = "note"
-    for(const name of ["summary", "comment", "authorshipStatement"]) {      
+    for(const name of ["seriesName", "summary", "comment", "authorshipStatement"]) {      
       if(labels[name].length) {
         const byLang = labels[name].reduce((acc,l) => ({
           ...acc,
@@ -131,16 +134,18 @@ const CustomHit = ({ hit, that, sortItems, storage }) => {
 
           const newLabel = label
                   
-          if(!newLabel?.includes("↦")) {
-            newLabel = newLabel.replace(/[\n\r]/gm," ").replace(/^ *(([^ ]+ +){35})(.*)/, (m,g1,g2,g3)=>g1+(g3?" (...)":""))
-          } else {             
-            if((newLabel.match(/ /g) || []).length > 35) {
-              newLabel = newLabel.replace(/[\n\r]/gm," ").replace(/^ *(.*?)(([^ ]+ +){,17} *↦)/,(m,g1,g2,g3)=>(g1?"(...) ":"")+g2)
-              newLabel = newLabel.replace(new RegExp("(↤ *([^ ]+ +){"+Math.max(1,(35-(newLabel.replace(/^(.*?↦).*$/,"$1").match(/ /g) || []).length))+"})(.*?)$"),(m,g1,g2,g3)=>g1+(g3?" (...)":""))
+          if(name != "seriesName") {
+            if(!newLabel?.includes("↦")) {
+              newLabel = newLabel.replace(/[\n\r]/gm," ").replace(/^ *(([^ ]+ +){35})(.*)/, (m,g1,g2,g3)=>g1+(g3?" (...)":""))
+            } else {             
+              if((newLabel.match(/ /g) || []).length > 35) {
+                newLabel = newLabel.replace(/[\n\r]/gm," ").replace(/^ *(.*?)(([^ ]+ +){,17} *↦)/,(m,g1,g2,g3)=>(g1?"(...) ":"")+g2)
+                newLabel = newLabel.replace(new RegExp("(↤ *([^ ]+ +){"+Math.max(1,(35-(newLabel.replace(/^(.*?↦).*$/,"$1").match(/ /g) || []).length))+"})(.*?)$"),(m,g1,g2,g3)=>g1+(g3?" (...)":""))
+              }
             }
+            if(newLabel.startsWith("(...)") || newLabel.endsWith("(...)")) newShow[tag] = true                  
+            if(!expand[tag]) label = newLabel        
           }
-          if(newLabel.startsWith("(...)") || newLabel.endsWith("(...)")) newShow[tag] = true                  
-          if(!expand[tag]) label = newLabel        
 
           out.push(<span lang={sortLabels[0].lang}>{highlight(label)}</span>)
           
@@ -157,11 +162,29 @@ const CustomHit = ({ hit, that, sortItems, storage }) => {
         tag = "authorshipStatement"
       } else if(name === "authorshipStatement") {
         setAuthorshipStatement(out)
+      } else if(name === "seriesName") {
+        setSeriesName(out)
+        out = []
       }
     }
     setShowMore(newShow)
 
     //console.log("labels:", labels, newShow)
+
+    const newEtextHits = []
+    if(hit.inner_hits?.etext?.hits?.hits?.length > 0) {
+      for(const h of hit.inner_hits?.etext?.hits?.hits.map(h => Object.values(h.highlight??{}))) {
+        for(const v of h) {
+          for(const c of v ) {
+            //console.log("c:",c)
+            const label = getLangLabel(that, fullUri("tmp:textMatch"), [{lang:"bo", value:(c ?? "").replace(/<em>/g,"↦").replace(/<\/em>/g,"↤")}])
+            newEtextHits.push(highlight(label.value))
+          } 
+        }
+      }
+    }
+    setEtextHits(newEtextHits)
+
 
   }, [hit, that.props.langPreset, expand, refinementList, sortBy, that.props.history?.location])
  
@@ -206,7 +229,7 @@ const CustomHit = ({ hit, that, sortItems, storage }) => {
   const backLink = "?s="+encodeURIComponent(window.location.href.replace(/^https?:[/][/][^?]+[?]?/gi,"")),
     link = "/show/bdr:"+hit.objectID+backLink
 
-  //console.log("hit:", hit, link, that.props.history?.location?.search, sortBy, refinementList, uiState, publisher, storage)
+  console.log("hit:", hit, link, that.props.history?.location?.search, sortBy, refinementList, uiState, publisher, storage)
 
   return (<div class={"result "+hit.type}>        
     <div class="main">
@@ -286,6 +309,15 @@ const CustomHit = ({ hit, that, sortItems, storage }) => {
           </>
         }
         { 
+          seriesName && <span class="names inRoot noNL">
+            <span class="label">{I18n.t("types.serial")}<span class="colon">:</span></span>
+            <span>{hit.seriesName_res?.length > 0
+              ? hit.seriesName_res.map(a => <span data-id={a}><Link to={"/show/bdr:"+a+backLink}>{seriesName}</Link></span>)
+              : seriesName
+              }</span>
+          </span> 
+        }
+        { 
           hit.locatedIn?.length > 0 && <span class="names locatedIn noNL">
             <span class="label capitalize">{getPropLabel(that, fullUri("bdo:placeLocatedIn"), true, true)}<span class="colon">:</span></span>
             <span>{hit.locatedIn?.map(a => <span data-id={a}><Link to={"/show/bdr:"+a}>{
@@ -303,6 +335,14 @@ const CustomHit = ({ hit, that, sortItems, storage }) => {
               </span>
             </span>
           </>
+        }
+        {
+          etextHits.length > 0 && <span class="names etext-hits">
+            <span class="label">{I18n.t("types.etext")}<span class="colon">:</span></span>
+            <span>
+              {etextHits.map(h => <span>{h}</span>)}
+             </span>
+          </span>
         }
         {
           hit.firstScanSyncDate && sortBy?.startsWith("firstScanSyncDate") && <>
