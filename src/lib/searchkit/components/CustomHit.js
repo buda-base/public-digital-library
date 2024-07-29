@@ -163,7 +163,7 @@ const CustomHit = ({ hit, that, sortItems, storage }) => {
       } else if(name === "authorshipStatement") {
         setAuthorshipStatement(out)
       } else if(name === "seriesName") {
-        setSeriesName(out)
+        if(out.length) setSeriesName(out)
         out = []
       }
     }
