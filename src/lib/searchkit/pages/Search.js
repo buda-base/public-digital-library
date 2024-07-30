@@ -41,6 +41,17 @@ import { initiateApp } from '../../../state/actions';
 
 
 export const filters = [{
+    attribute:"etext_search", I18n_prefix: "search.etext_search", prefix:"tmp", 
+    transformItems:(items) => 
+      items.length 
+      ? items 
+      : [{ 
+        isRefined:false, 
+        label:"true", 
+        value:"true", 
+        highlighted:"true" 
+      }]
+  },{
     attribute:"scans_access", sort:true, I18n_prefix: "access.scans", prefix:"tmp"
   },{ // #881 not yet
   //  attribute:"scans_quality", sort:true, I18n_prefix: "access.scans.quality", prefix:"tmp"
@@ -246,13 +257,15 @@ export class SearchPage extends Component<State, Props>
                   initialIndex={process.env.REACT_APP_ELASTICSEARCH_INDEX}
                   items={sortItems}
                 />
+
+                <RefinementListWithLocalLabels that={this} {...filters[0]} />
                 
                 <RefinementListWithLocalLabels I18n_prefix={"types"} that={this} attribute="type" showMore={true} title={I18n.t("Lsidebar.datatypes.title")}/>
 
                 <div className="filter-title MT"><p>{getPropLabel(this,fullUri("tmp:firstScanSyncDate"))}</p></div>
                 <CustomDateRange attribute="firstScanSyncDate" />
 
-                { filters.map((filter) => <RefinementListWithLocalLabels that={this} {...filter} showMore={true} />) }
+                { filters.slice(1).map((filter) => <RefinementListWithLocalLabels that={this} {...filter} showMore={true} />) }
 
               </div>
               <div className="main-content">

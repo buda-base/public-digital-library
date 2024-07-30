@@ -20,7 +20,7 @@ const getItem = (collection, id) => {
 };
 
 function CustomRefinementList(props) {
-  const { attribute, that, I18n_prefix, prefix, iri, sort, sortFunc } = props;
+  const { attribute, that, I18n_prefix, prefix, iri, sort, sortFunc, transformItems } = props;
 
   const [title, setTitle] = useState("")
 
@@ -39,10 +39,12 @@ function CustomRefinementList(props) {
     toggleShowMore,
   } = useRefinementList(props);
 
-  useEffect(() => {    
+  const tItems = transformItems ? transformItems(items) : items
+
+  useEffect(() => {        
 
     const updateItems = async () => {
-
+      
       const itemIds = items.map((_item) => _item.value);
       
       if (!sessionStorage.getItem(attribute)) {
@@ -66,7 +68,7 @@ function CustomRefinementList(props) {
 
       });
       
-      let newItems = renderItems(items)
+      let newItems = renderItems(tItems)
 
       const missingIds = newItems.filter((item) => item.label === false).map(item => item.id)
       
@@ -94,11 +96,11 @@ function CustomRefinementList(props) {
     
     updateItems()
 
-  }, [attribute, items, that.props.dictionary, that.props.locale, that.props.langPreset, searchClient.cache, isShowingMore]);
+  }, [attribute, tItems, that.props.dictionary, that.props.locale, that.props.langPreset, searchClient.cache, isShowingMore]);
 
   //console.log("render:", attribute, props, currentItems, items)
   
-  if(items.length === 0 || items.filter((item) => item.count > 0).length === 0) return null
+  if(items.length === 0 || !transformItems && items.filter((item) => item.count > 0).length === 0) return null
 
   const useItems = sort ? _.orderBy(items,sortFunc??["value"],["desc"]) : items
 
@@ -116,7 +118,7 @@ function CustomRefinementList(props) {
       /> */}
       <ul className="ais-RefinementList-list">
         {useItems.map((item) => (
-          item.count > 0 && <li
+          (item.count > 0 || transformItems) && <li
             key={item.label}
             className={`ais-RefinementList-item ${
               item.isRefined && "ais-RefinementList-item--selected"
@@ -132,12 +134,12 @@ function CustomRefinementList(props) {
               <span className="ais-RefinementList-labelText">
                 {currentItems.find((_item) => _item.id === item.value)?.label || item.label}
               </span>
-              <span className="ais-RefinementList-count">{item.count}</span>
+              { !transformItems && <span className="ais-RefinementList-count">{item.count}</span> }
             </label>
           </li>
         ))}
       </ul>
-      { items.length >= 10 &&
+      { tItems.length >= 10 &&
         <button
           className="ais-RefinementList-showMore"
           onClick={toggleShowMore}

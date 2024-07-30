@@ -110,12 +110,14 @@ export class InnerSearchPage extends Component<State, Props>
                     items={sortItems}
                   />
                   
+                  <RefinementListWithLocalLabels that={this} {...filters[0]} />
+
                   <RefinementListWithLocalLabels I18n_prefix={"types"} that={this} attribute="type" showMore={true} title={I18n.t("Lsidebar.datatypes.title")}/>
 
                   <div className="filter-title MT"><p>{getPropLabel(this,fullUri("tmp:firstScanSyncDate"))}</p></div>
                   <CustomDateRange attribute="firstScanSyncDate" />
 
-                  { filters.map((filter) => <RefinementListWithLocalLabels that={this} {...filter} showMore={true} />) }
+                  { filters.slice(1).map((filter) => <RefinementListWithLocalLabels that={this} {...filter} showMore={true} />) }
 
                 </SimpleBar>
                 <div className="main-content">

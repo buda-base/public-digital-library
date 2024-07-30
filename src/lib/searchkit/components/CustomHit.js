@@ -229,7 +229,7 @@ const CustomHit = ({ hit, that, sortItems, storage }) => {
   const backLink = "?s="+encodeURIComponent(window.location.href.replace(/^https?:[/][/][^?]+[?]?/gi,"")),
     link = "/show/bdr:"+hit.objectID+backLink
 
-  console.log("hit:", hit, link, that.props.history?.location?.search, sortBy, refinementList, uiState, publisher, storage)
+  //console.log("hit:", hit, link, that.props.history?.location?.search, sortBy, refinementList, uiState, publisher, storage)
 
   return (<div class={"result "+hit.type}>        
     <div class="main">

@@ -71,6 +71,11 @@ const FACET_ATTRIBUTES = [
     attribute: "associated_res",
     field: "associated_res",
     type: "string"
+  },
+  {
+    attribute: "etext_search",
+    field: "etext_search",
+    type: "string"
   }
 ];
 
