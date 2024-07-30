@@ -82,8 +82,10 @@ export class InnerSearchPage extends Component<State, Props>
       */
     }
 
-    console.log("iSsC:", searchClient, routingConfig, this.props, pageFilters)    
+    const storageRef = React.createRef() 
 
+    console.log("iSsC:", searchClient, routingConfig, this.props, pageFilters, storageRef)    
+    
     return (<>
       { pageFilters && <div className="AppSK InnerSearchPage data">
           <InstantSearch
@@ -104,6 +106,9 @@ export class InnerSearchPage extends Component<State, Props>
               <div className="content">
 
                 <SimpleBar className="filter">
+
+                  <h3>{I18n.t("result.filter")}</h3>
+
                   <div className="filter-title"><p>Sort by</p></div>
 
                   <SortBy
@@ -122,10 +127,10 @@ export class InnerSearchPage extends Component<State, Props>
 
                 </SimpleBar>
                 <div className="main-content">
-                  <SearchResultsHeader that={this} />
+                  <SearchResultsHeader that={this} {...{ storageRef }} />
                   <div className="hits">
                     <Configure hitsPerPage={5} filters={pageFilters} />
-                    <HitsWithLabels that={this}  />
+                    <HitsWithLabels that={this} {...{ storageRef }} />
                     <div className="pagination">
                       <Pagination />
                     </div>

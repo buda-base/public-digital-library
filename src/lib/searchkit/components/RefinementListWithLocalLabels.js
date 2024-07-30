@@ -102,7 +102,7 @@ function CustomRefinementList(props) {
   
   if(items.length === 0 || !transformItems && items.filter((item) => item.count > 0).length === 0) return null
 
-  const useItems = sort ? _.orderBy(items,sortFunc??["value"],["desc"]) : items
+  const useItems = sort ? _.orderBy(tItems,sortFunc??["value"],["desc"]) : tItems
 
   return (
     <div className="ais-RefinementList">

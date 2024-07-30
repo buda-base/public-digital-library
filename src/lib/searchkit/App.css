@@ -280,6 +280,8 @@
    margin-bottom:20px;
 }
 
+header[data-status="error"] + .hits,
+header[data-hits="0"] ~ .hits .pagination,
 .ais-Hits--empty + .pagination {
    display:none;
 }
@@ -656,10 +658,8 @@
   margin-top:10px;
 }
 
-.resource .on.intro + h2 .newT {
-  display:none;
-}
-
+:not(#a) #back .newT,
+.resource .on.intro + h2 .newT,
 .resource #outline h2 .newT {
   display:none;
 }
@@ -699,4 +699,8 @@
   color:#777;
   font-weight:500;
   text-transform: capitalize;
+}
+
+.content .main-content header h1 {
+  margin-top:32px;
 }

@@ -342,7 +342,10 @@
       "bDateCentury":"b. {{num}}",
       "dDate":"d. {{num}}",
       "fDate":"fl. {{num}}",
-      "assocNoT": "Associated with: <res to='/show/{{- rid}}'>{{- name}}<\/res>"
+      "assocNoT": "Associated with: <res to='/show/{{- rid}}'>{{- name}}<\/res>",
+      "hit":"{{count}} hit",
+      "hit_plural":"{{count}} hits",
+      "filter":"Filter Results"
    },
    "map": {
       "touch": "Use two fingers to move the map",

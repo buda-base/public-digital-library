@@ -47,6 +47,7 @@ export const filters = [{
       items.length 
       ? items 
       : [{ 
+        count:0,
         isRefined:false, 
         label:"true", 
         value:"true", 
@@ -133,7 +134,7 @@ export const searchClient = Client(
 
 export function HitsWithLabels(props) {
 
-  const {that, sortItems} = props
+  const {that, sortItems, storageRef} = props
 
   const [currentItems, setCurrentItems] = useState([]);
   
@@ -196,14 +197,20 @@ export function HitsWithLabels(props) {
     if(!_.isEqual(newFetching, fetching)) setFetching(newFetching)
 
     //console.log("prep:", items, itemIds, newStorage, missingIds, newFetching)
-    if(!_.isEqual(newStorage, storage)) setStorage(newStorage)
+    if(!_.isEqual(newStorage, storage)) { 
+      setStorage(newStorage)      
+    }
 
-    return items
+    return items.map(it => ({...it, etext_search: "true" }))
   }
+
+  useEffect(() => {
+    if(storageRef) storageRef.current = Object.values(storage).reduce((acc,v) => ({...acc,...v}),{})
+  }, [storage, storageRef])
 
   return <Hits 
     transformItems={prepItemsPage}
-    hitComponent={({hit}) => <CustomHit {...{ hit, that, sortItems, storage: Object.values(storage).reduce((acc,v) => ({...acc,...v}),{}) }}/>} 
+    hitComponent={({hit}) => <CustomHit {...{ hit, that, sortItems, storage: storageRef?.current }}/>} 
   />
 }
 
@@ -233,7 +240,9 @@ export class SearchPage extends Component<State, Props>
     
     const pageFilters = this.props.pageFilters ?? ""
 
-    console.log("sC:", searchClient, routingConfig, pageFilters)    
+    const storageRef = React.createRef() 
+
+    console.log("sC:", searchClient, routingConfig, pageFilters, storageRef)    
 
 
     return (
@@ -252,6 +261,9 @@ export class SearchPage extends Component<State, Props>
             </div>
             <div className="content">
               <div className="filter">
+
+                <h3>{I18n.t("result.filter")}</h3>
+
                 <div className="filter-title"><p>Sort by</p></div>
 
                 <SortBy
@@ -270,13 +282,13 @@ export class SearchPage extends Component<State, Props>
 
               </div>
               <div className="main-content">
-                <SearchResultsHeader that={this}/>
+                <SearchResultsHeader that={this} {...{ storageRef }}/>
                 <div className="hits">
                   <div className="pagination">
                     <Pagination />
                   </div>
                   <Configure hitsPerPage={20} filters={pageFilters} />
-                  <HitsWithLabels that={this} {...{ sortItems }} />
+                  <HitsWithLabels that={this} {...{ sortItems, storageRef }} />
                   <div className="pagination">
                     <Pagination />
                   </div>
