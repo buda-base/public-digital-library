@@ -30,6 +30,7 @@ import CustomHit from "../components/CustomHit";
 import CustomDateRange from "../components/CustomDateRange";
 import SearchBoxAutocomplete from "../components/SearchBoxAutocomplete";
 import RefinementListWithLocalLabels from "../components/RefinementListWithLocalLabels";
+import SearchResultsHeader from "../components/SearchResultsHeader"
 
 // PDL
 import { top_right_menu, getPropLabel, fullUri, highlight } from '../../../components/App'
@@ -165,7 +166,7 @@ export function HitsWithLabels(props) {
   }, [fetching])
 
   const prepItemsPage = (items) => {    
-    const attrs = ["author", "translator", "inRootInstance", "locatedIn", "placeType", "pagination"]
+    const attrs = ["author", "translator", "inRootInstance", "locatedIn", "placeType", "associated_res", "pagination"]
     const itemIds = {}
     const newStorage = { ...storage }
     
@@ -269,6 +270,7 @@ export class SearchPage extends Component<State, Props>
 
               </div>
               <div className="main-content">
+                <SearchResultsHeader that={this}/>
                 <div className="hits">
                   <div className="pagination">
                     <Pagination />

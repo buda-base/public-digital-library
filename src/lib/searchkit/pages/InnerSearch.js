@@ -32,6 +32,7 @@ import SearchBoxAutocomplete from "../components/SearchBoxAutocomplete";
 import { searchClient, HitsWithLabels, sortItems, filters } from "./Search";
 import RefinementListWithLocalLabels from "../components/RefinementListWithLocalLabels";
 import CustomDateRange from "../components/CustomDateRange";
+import SearchResultsHeader from "../components/SearchResultsHeader"
 
 // PDL
 import qs from 'query-string'
@@ -121,6 +122,7 @@ export class InnerSearchPage extends Component<State, Props>
 
                 </SimpleBar>
                 <div className="main-content">
+                  <SearchResultsHeader that={this} />
                   <div className="hits">
                     <Configure hitsPerPage={5} filters={pageFilters} />
                     <HitsWithLabels that={this}  />
