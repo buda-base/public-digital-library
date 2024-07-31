@@ -14,14 +14,18 @@ function SearchResultsHeader(props) {
 
   const searchStatus = useInstantSearch();
   const { indexUiState, status, error, results } = searchStatus
+
   console.log("status:", status, searchStatus)
 
   const config = (indexUiState?.configure?.filters??"").split(":")  
+
+  const label = getPropLabel(that, fullUri("bdo:"+config[1]), false, true, undefined, undefined, storageRef?.current)
   
-   return <header data-hits={results?.nbHits} data-status={status}>
-    <h1>Search Results</h1>
-    { config.length > 1 && config[0] === "associated_res" && <h2><Trans i18nKey="result.assocNoT" values={{ name: getPropLabel(that, fullUri("bdo:"+config[1]), false, false, undefined, undefined, storageRef?.current), rid: "bdr:"+config[1] }} components={{ res: <Link /> }}/></h2>}
-    { status != "error" && (results?.nbHits || status === "idle")&& <h3>{I18n.t("result.hit",{count:results?.nbHits})}</h3> }
+  return <header data-hits={results?.nbHits} data-status={status}>    
+    { config.length > 1 && config[0] === "associated_res" 
+      ? <h1 class={that.props.locale === "bo" || label?.lang === "bo" ? "has-bo" : ""}><Trans i18nKey="result.assocNoT" values={{ name: label?.value || config[1], rid: "bdr:"+config[1] }} components={{ res: <Link /> }}/></h1>
+    : <h1 lang={that.props.locale}>{I18n.t("result.search")}</h1> }
+    { status != "error" && (results?.nbHits || status === "idle")&& <h3>{I18n.t("result.hit"+(results.query?"KW":""),{count:results?.nbHits, ...results.query?{kw:results.query}:{}})}</h3> }
     { status == "error" && <h3>Server error</h3> }
   </header> 
 }

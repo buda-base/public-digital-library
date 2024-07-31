@@ -342,10 +342,13 @@
       "bDateCentury":"b. {{num}}",
       "dDate":"d. {{num}}",
       "fDate":"fl. {{num}}",
-      "assocNoT": "Associated with: <res to='/show/{{- rid}}'>{{- name}}<\/res>",
+      "assocNoT": "Search Results Related to: <res to='/show/{{- rid}}'>{{- name}}<\/res>",
       "hit":"{{count}} hit",
       "hit_plural":"{{count}} hits",
-      "filter":"Filter Results"
+      "filter":"Filter Results",
+      "search":"Search Results",
+      "hitKW":"{{count}} hit for \"{{kw}}\"",
+      "hitKW_plural":"{{count}} hits for \"{{kw}}\""
    },
    "map": {
       "touch": "Use two fingers to move the map",

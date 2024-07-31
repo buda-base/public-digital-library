@@ -12,7 +12,7 @@ import { getAutocompleteRequest } from "../api/AutosuggestAPI";
 
 
 const redirect = (refine, query, pageFilters) => {
-  const loca = history.location
+  const loca = history.location  
   if(!loca.pathname.endsWith("/search") && !pageFilters){
     history.push("/osearch/search?q="+encodeURIComponent(query))
   } else {
@@ -114,6 +114,8 @@ const SearchBoxAutocomplete = (props) => {
 
   const isSearchStalled = status === "stalled";
 
+  console.log("pF:", pageFilters)
+
   useEffect(() => {
     if (query !== "") {
       getAutocompleteRequest(query, pageFilters).then((requests) => {
@@ -207,6 +209,7 @@ const SearchBoxAutocomplete = (props) => {
         inputValue={inputValue}
         isSearchStalled={isSearchStalled || loading}
         refine={refine}
+        pageFilters={pageFilters}
       />
       <SuggestsList
         items={suggestions}

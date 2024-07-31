@@ -704,3 +704,44 @@ header[data-hits="0"] ~ .hits .pagination,
 .content .main-content header h1 {
   margin-top:32px;
 }
+
+.content .main-content header h1 a {
+  color:#d73449;
+  text-decoration: none;
+  font-weight:500;
+}
+
+.content .main-content header h1 a:hover {
+  text-decoration:underline;
+  text-decoration-thickness: 2px;
+}
+
+.AppSK.InnerSearchPage.data .content .main-content h1 {
+  margin-top:-6px;
+  font-size:24px;
+  font-weight: 600;
+  margin-bottom:0;
+}
+
+.AppSK.InnerSearchPage.data .content .filter h3 {
+  font-weight:600;
+}
+
+.content .main-content header h1 + h3 {
+  font-weight:400;
+  font-size:14px;
+  margin-top:18px;
+  margin-bottom:24px;
+}
+
+.hits > .pagination:first-child {
+  display:none;
+}
+
+.content .main-content header h1.has-bo + h3 {
+  margin-top:0
+}
+
+.content .main-content header h1:not(.has-bo) {
+  margin-bottom:12px;
+}

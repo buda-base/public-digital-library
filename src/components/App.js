@@ -1082,7 +1082,7 @@ export function getGDPRconsent(that) {
    )
 }
 
-function InstantSearchBox() {
+function InstantSearchBox(props) {
 
    return <>
       <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/instantsearch.css@7/themes/satellite-min.css" />
@@ -1093,7 +1093,7 @@ function InstantSearchBox() {
       >
          <div className="search inner-search-bar">
             <div>
-               <SearchBoxAutocomplete searchAsYouType={false} />
+               <SearchBoxAutocomplete searchAsYouType={false} {...props}/>
             </div>
          </div>
       </InstantSearch>
