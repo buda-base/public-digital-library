@@ -5531,7 +5531,7 @@ feedbucket-app:not(.on)  { display:none !important; }
 
    .resource > .ariane { margin-left:0; padding-left:16.7%; }
 
-   #root > div > :is(.App.home:not(.guidedsearch),.resource) { overflow:hidden ; width:100%; box-sizing: border-box;}
+   #root > div > :is(.App.home:not(.guidedsearch),.resource) { overflow:visible ; width:100%; box-sizing: border-box;}
    
    /*
    #root .App .SearchPane,
