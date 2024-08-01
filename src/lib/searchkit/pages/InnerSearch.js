@@ -29,7 +29,7 @@ import I18n from 'i18next';
 import { getPropLabel, fullUri } from '../../../components/App'
 import CustomHit from "../components/CustomHit";
 import SearchBoxAutocomplete from "../components/SearchBoxAutocomplete";
-import { searchClient, HitsWithLabels, sortItems, filters } from "./Search";
+import { searchClient, HitsWithLabels, sortItems, filters, FiltersSidebar } from "./Search";
 import RefinementListWithLocalLabels from "../components/RefinementListWithLocalLabels";
 import CustomDateRange from "../components/CustomDateRange";
 import SearchResultsHeader from "../components/SearchResultsHeader"
@@ -104,27 +104,8 @@ export class InnerSearchPage extends Component<State, Props>
                 </div>
               </div>
               <div className="content">
-
                 <SimpleBar className="filter">
-
-                  <h3>{I18n.t("result.filter")}</h3>
-
-                  <div className="filter-title"><p>Sort by</p></div>
-
-                  <SortBy
-                    initialIndex={process.env.REACT_APP_ELASTICSEARCH_INDEX}
-                    items={sortItems}
-                  />
-                  
-                  <RefinementListWithLocalLabels that={this} {...filters[0]} />
-
-                  <RefinementListWithLocalLabels I18n_prefix={"types"} that={this} attribute="type" showMore={true} title={I18n.t("Lsidebar.datatypes.title")}/>
-
-                  <div className="filter-title MT"><p>{getPropLabel(this,fullUri("tmp:firstScanSyncDate"))}</p></div>
-                  <CustomDateRange attribute="firstScanSyncDate" />
-
-                  { filters.slice(1).map((filter) => <RefinementListWithLocalLabels that={this} {...filter} showMore={true} />) }
-
+                  <FiltersSidebar that={this} />
                 </SimpleBar>
                 <div className="main-content">
                   <SearchResultsHeader that={this} inner={true} {...{ storageRef }} />

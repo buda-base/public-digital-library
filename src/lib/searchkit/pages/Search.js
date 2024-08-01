@@ -20,10 +20,13 @@ import {
   RefinementList,
   Pagination,
   Configure,
-  SortBy,
+  SortBy
 } from "react-instantsearch";
 
 import I18n from 'i18next';
+
+// hooks
+import { useInstantSearch } from "react-instantsearch";
 
 // Custom
 import CustomHit from "../components/CustomHit";
@@ -42,17 +45,7 @@ import { initiateApp } from '../../../state/actions';
 
 
 export const filters = [{
-    attribute:"etext_search", I18n_prefix: "search.etext_search", prefix:"tmp", 
-    transformItems:(items) => 
-      items.length 
-      ? items 
-      : [{ 
-        count:0,
-        isRefined:false, 
-        label:"true", 
-        value:"true", 
-        highlighted:"true" 
-      }]
+    attribute:"etext_search", I18n_prefix: "search.etext_search", prefix:"tmp", defaultItems:[{ value: "true" }]
   },{
     attribute:"scans_access", sort:true, I18n_prefix: "access.scans", prefix:"tmp"
   },{ // #881 not yet
@@ -110,7 +103,6 @@ export const sortItems = [
   },
 ]
 
-
 export const searchClient = Client(
   SearchkitConfig,
   {
@@ -131,6 +123,33 @@ export const searchClient = Client(
   { debug: process.env.NODE_ENV === "development" }
 );
 
+
+export function FiltersSidebar(props) {
+
+  const { that } = props
+
+  const searchStatus = useInstantSearch();
+  const { indexUiState } = searchStatus
+
+  return <>
+    <h3>{I18n.t("result.filter")}</h3>
+
+    <RefinementListWithLocalLabels that={that} {...filters[0] } className={"MT0"}  />
+
+    <div className="filter-title MT"><p>Sort by</p></div>
+    <SortBy
+      initialIndex={process.env.REACT_APP_ELASTICSEARCH_INDEX}
+      items={sortItems}
+    />
+
+    <RefinementListWithLocalLabels I18n_prefix={"types"} that={that} attribute="type" showMore={true} title={I18n.t("Lsidebar.datatypes.title")}/>
+
+    <div className="filter-title MT"><p>{getPropLabel(that,fullUri("tmp:firstScanSyncDate"))}</p></div>
+    <CustomDateRange attribute="firstScanSyncDate" />
+
+    { filters.slice(1).map((filter) => <RefinementListWithLocalLabels that={that} {...filter} showMore={true} />) }
+  </>
+}
 
 export function HitsWithLabels(props) {
 
@@ -261,25 +280,7 @@ export class SearchPage extends Component<State, Props>
             </div>
             <div className="content">
               <div className="filter">
-
-                <h3>{I18n.t("result.filter")}</h3>
-
-                <div className="filter-title"><p>Sort by</p></div>
-
-                <SortBy
-                  initialIndex={process.env.REACT_APP_ELASTICSEARCH_INDEX}
-                  items={sortItems}
-                />
-
-                <RefinementListWithLocalLabels that={this} {...filters[0]} />
-                
-                <RefinementListWithLocalLabels I18n_prefix={"types"} that={this} attribute="type" showMore={true} title={I18n.t("Lsidebar.datatypes.title")}/>
-
-                <div className="filter-title MT"><p>{getPropLabel(this,fullUri("tmp:firstScanSyncDate"))}</p></div>
-                <CustomDateRange attribute="firstScanSyncDate" />
-
-                { filters.slice(1).map((filter) => <RefinementListWithLocalLabels that={this} {...filter} showMore={true} />) }
-
+                <FiltersSidebar that={this} />
               </div>
               <div className="main-content">
                 <SearchResultsHeader that={this} {...{ storageRef }}/>

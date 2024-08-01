@@ -760,3 +760,11 @@ header[data-hits="0"] ~ .hits .pagination,
 .AppSK.InnerSearchPage.data .content .main-content h1.has-bo {
   margin-top:-12px;
 }
+
+.resource:not(#a) > div > .title:first-child + .data + link + .AppSK > div:first-child::after {
+  content:none;
+}
+
+.AppSK .ais-RefinementList.MT0 {
+  margin-top:0;
+}

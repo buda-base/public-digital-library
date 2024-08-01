@@ -4,7 +4,7 @@ import I18n from 'i18next';
 import _ from "lodash"
 
 // hooks
-import { useRefinementList } from "react-instantsearch";
+import { useRefinementList, useInstantSearch } from "react-instantsearch";
 
 // API
 import { fetchLabels } from "../api/LabelAPI";
@@ -20,9 +20,12 @@ const getItem = (collection, id) => {
 };
 
 function CustomRefinementList(props) {
-  const { attribute, that, I18n_prefix, prefix, iri, sort, sortFunc, transformItems } = props;
+  const { attribute, that, I18n_prefix, prefix, iri, sort, sortFunc, defaultItems, className } = props;
 
   const [title, setTitle] = useState("")
+
+  const searchStatus = useInstantSearch();
+  const { indexUiState } = searchStatus
 
   useEffect(() => {
     setTitle(getPropLabel(that, fullUri(iri ?? (prefix ?? "bdo")+":"+attribute)))
@@ -39,13 +42,11 @@ function CustomRefinementList(props) {
     toggleShowMore,
   } = useRefinementList(props);
 
-  const tItems = transformItems ? transformItems(items) : items
+  const tItems = items.concat(!items.length ? defaultItems ?? [] : [])
 
   useEffect(() => {        
 
     const updateItems = async () => {
-      
-      const itemIds = items.map((_item) => _item.value);
       
       if (!sessionStorage.getItem(attribute)) {
         sessionStorage.setItem(attribute, JSON.stringify({}));
@@ -55,9 +56,9 @@ function CustomRefinementList(props) {
 
       const renderItems = (items) => items.map((_item) => { 
 
-        //console.log("item:", _item)
+        //console.log("item:", attribute, _item)
 
-        const val = getPropLabel(that, fullUri("bdr:"+_item.value), true, false, I18n_prefix ? I18n_prefix+"."+_item.value.toLowerCase() : "", 1, storage)
+        const val = getPropLabel(that, fullUri("bdr:"+_item.value), true, false, I18n_prefix ? I18n_prefix+"."+_item.value?.toLowerCase() : "", 1, storage)
 
         return ({
           id: _item.value,
@@ -96,16 +97,16 @@ function CustomRefinementList(props) {
     
     updateItems()
 
-  }, [attribute, tItems, that.props.dictionary, that.props.locale, that.props.langPreset, searchClient.cache, isShowingMore]);
+  }, [attribute, items, that.props.dictionary, that.props.locale, that.props.langPreset, searchClient.cache, isShowingMore]);
 
   //console.log("render:", attribute, props, currentItems, items)
   
-  if(items.length === 0 || !transformItems && items.filter((item) => item.count > 0).length === 0) return null
+  if(!defaultItems && (items.length === 0 || items.filter((item) => item.count > 0).length === 0)) return null
 
   const useItems = sort ? _.orderBy(tItems,sortFunc??["value"],["desc"]) : tItems
 
   return (
-    <div className="ais-RefinementList">
+    <div className={"ais-RefinementList "+(className??"")}>
       <div className="filter-title"><p>{title}</p></div>
       {/* <input
         type="search"
@@ -118,26 +119,51 @@ function CustomRefinementList(props) {
       /> */}
       <ul className="ais-RefinementList-list">
         {useItems.map((item) => (
-          (item.count > 0 || transformItems) && <li
-            key={item.label}
-            className={`ais-RefinementList-item ${
-              item.isRefined && "ais-RefinementList-item--selected"
-            }`}
-          >
-            <label className="ais-RefinementList-label">
-              <input
-                type="checkbox"
-                className="ais-RefinementList-checkbox"
-                checked={item.isRefined}
-                onChange={() => refine(item.value)}
-              />
-              <span className="ais-RefinementList-labelText">
-                {currentItems.find((_item) => _item.id === item.value)?.label || item.label}
-              </span>
-              { !transformItems && <span className="ais-RefinementList-count">{item.count}</span> }
-            </label>
-          </li>
-        ))}
+
+          (item.count > 0) 
+          ? 
+            <li
+              key={item.label}
+              className={`ais-RefinementList-item ${
+                item.isRefined && "ais-RefinementList-item--selected"
+              }`}
+            >
+              <label className="ais-RefinementList-label">
+                <input
+                  type="checkbox"
+                  className="ais-RefinementList-checkbox"
+                  checked={item.isRefined}
+                  onChange={() => refine(item.value)}
+                />
+                <span className="ais-RefinementList-labelText">
+                  {currentItems.find((_item) => _item.id === item.value)?.label || item.label}
+                </span>
+                <span className="ais-RefinementList-count">{item.count}</span> 
+              </label>
+            </li>
+          : defaultItems 
+            ? 
+            <li
+              key={item.label}
+              className={`ais-RefinementList-item ${
+                indexUiState?.refinementList?.[attribute]?.includes(item.value) && "ais-RefinementList-item--selected"
+              }`}
+            >
+              <label className="ais-RefinementList-label">
+                <input
+                  type="checkbox"
+                  className="ais-RefinementList-checkbox"
+                  checked={indexUiState?.refinementList?.[attribute]?.includes(item.value) ?? false}
+                  onChange={() => refine("true") } 
+                />
+                <span className="ais-RefinementList-labelText">
+                  {currentItems.find((_item) => _item.id === item.value)?.label || item.label}
+                </span>
+              </label>
+            </li>
+
+            : null)
+        )}
       </ul>
       { tItems.length >= 10 &&
         <button
