@@ -205,7 +205,8 @@
 }
 
 .AppSK.InnerSearchPage .searchbox h3 {
-  flex-shrink: 0;
+  flex-shrink: 10000;
+  padding-right:0px;
 }
 .AppSK.InnerSearchPage .searchbox > .inner-search-bar:not(#a) {
   width:calc(100% - 190px);
@@ -703,6 +704,7 @@ header[data-hits="0"] ~ .hits .pagination,
 
 .content .main-content header h1 {
   margin-top:32px;
+  line-height:36px;
 }
 
 .content .main-content header h1 a {
@@ -725,6 +727,7 @@ header[data-hits="0"] ~ .hits .pagination,
 
 .AppSK.InnerSearchPage.data .content .filter h3 {
   font-weight:600;
+  margin-bottom:15px;
 }
 
 .content .main-content header h1 + h3 {
@@ -732,16 +735,28 @@ header[data-hits="0"] ~ .hits .pagination,
   font-size:14px;
   margin-top:18px;
   margin-bottom:24px;
+  line-height:24px;
+}
+
+.AppSK.InnerSearchPage.data .content .main-content h3 {
+  margin-top:10px;
 }
 
 .hits > .pagination:first-child {
   display:none;
 }
 
+/*
 .content .main-content header h1.has-bo + h3 {
   margin-top:0
 }
+*/
+.content .main-content header h1.has-bo {
+  line-height:48px;
+  margin-top:26px;
+}
 
-.content .main-content header h1:not(.has-bo) {
-  margin-bottom:12px;
+
+.AppSK.InnerSearchPage.data .content .main-content h1.has-bo {
+  margin-top:-12px;
 }

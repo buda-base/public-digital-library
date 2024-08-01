@@ -342,7 +342,7 @@
       "bDateCentury":"b. {{num}}",
       "dDate":"d. {{num}}",
       "fDate":"fl. {{num}}",
-      "assocNoT": "Search Results Related to: <res to='/show/{{- rid}}'>{{- name}}<\/res>",
+      "assocNoT": "Search Results Related To: <res>{{- name}}<\/res>",
       "hit":"{{count}} hit",
       "hit_plural":"{{count}} hits",
       "filter":"Filter Results",
@@ -719,7 +719,7 @@
       "seeIn":"See this text in {{- txt}}",
       "closeO":"Close outline",
       "downloadFU": "Download Preview",
-      "findT":"Find Texts",
+      "findT":"Find Texts Related to this {{type}}",
       "findTbyP":"Find texts created by this person",
       "findTaboutT":"Find texts about this topic"
    },

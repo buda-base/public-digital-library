@@ -96,7 +96,7 @@ export class InnerSearchPage extends Component<State, Props>
             <Loader loaded={!this.props.loading}/>
             <div data-props="tmp:search">
               <div className="searchbox">
-                <h3><span><a class="propref"><span>{I18n.t("resource.findT")}{I18n.t("punc.colon")}</span></a></span></h3>
+                <h3><span><a class="propref"><span>{I18n.t("resource.findT",{type:T})}{I18n.t("punc.colon")}</span></a></span></h3>
                 <div className="search inner-search-bar group">
                   <div>
                     <SearchBoxAutocomplete searchAsYouType={false} loading={this.props.loading} {...{ pageFilters, placeholder }}/>
@@ -127,7 +127,7 @@ export class InnerSearchPage extends Component<State, Props>
 
                 </SimpleBar>
                 <div className="main-content">
-                  <SearchResultsHeader that={this} {...{ storageRef }} />
+                  <SearchResultsHeader that={this} inner={true} {...{ storageRef }} />
                   <div className="hits">
                     <Configure hitsPerPage={5} filters={pageFilters} />
                     <HitsWithLabels that={this} {...{ storageRef }} />
