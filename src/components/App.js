@@ -1246,7 +1246,7 @@ export function top_right_menu(that,etextTitle,backUrl,etextres)
                      setTimeout(() => { 
                         
                         if(backUrl) {
-                           that.props.history.push({pathname:"/search",search:"?"+backUrl}) ; 
+                           that.props.history.push({pathname:"/osearch/search",search:"?"+backUrl}) ; 
                         }
 
                         that.props.onLoading("search",false)

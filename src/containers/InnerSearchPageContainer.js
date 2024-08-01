@@ -31,12 +31,14 @@ const mapStateToProps = (state,ownProps) => {
    let langIndex = state.ui.langIndex
    let langExt = state.ui.langExt
 
+   let etextLang = state.ui.etextLang
+
    let dictionary = state.data.dictionary ;
 
    let loading = state.ui.loading  ;
    
    let props = { config, locale, profileName, portraitPopupClosed, isNewUser, feedbucket, 
-      langPreset,langIndex,langExt,
+      langPreset,langIndex,langExt,etextLang,
       dictionary,
       loading
    }

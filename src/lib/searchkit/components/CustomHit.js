@@ -9,6 +9,7 @@ import HTMLparse from 'html-react-parser';
 import { RANGE_FIELDS } from "../api/ElasticAPI";
 import { RESULT_FIELDS } from "../constants/fields";
 import { routingConfig } from "../searchkit.config";
+import {narrowWithString} from "../../langdetect"
 
 import history from "../../../history"
 
@@ -176,8 +177,10 @@ const CustomHit = ({ hit, that, sortItems, storage }) => {
       for(const h of hit.inner_hits?.etext?.hits?.hits.map(h => Object.values(h.highlight??{}))) {
         for(const v of h) {
           for(const c of v ) {
-            //console.log("c:",c)
-            const label = getLangLabel(that, fullUri("tmp:textMatch"), [{lang:"bo", value:(c ?? "").replace(/<em>/g,"↦").replace(/<\/em>/g,"↤")}])
+            // TODO: better handling of etext languages other than Tibetan
+            let detec = narrowWithString(c)      
+            //console.log("c:",c,detec)
+            const label = getLangLabel(that, fullUri("tmp:textMatch"), [{lang:detec[0]==="tibt"?"bo":"bo-x-ewts", value:(c ?? "").replace(/<em>/g,"↦").replace(/<\/em>/g,"↤")}])          
             newEtextHits.push(highlight(label.value))
           } 
         }
