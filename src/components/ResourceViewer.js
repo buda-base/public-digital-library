@@ -10622,7 +10622,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
          <Helmet>
             <link rel="canonical" href={"https://library.bdrc.io"+this.props.history.location.pathname} />
          </Helmet>,
-         top_right_menu(this),
+         top_right_menu(this, null, null, null, isMirador),
          // <Loader className="resource-viewer-loader" loaded={false}  options={{position:"fixed",left:"50%",top:"50%"}} />,
          <div class={isMirador?"H100vh OF0":""}>
             { ["Images","Instance"].includes(_T) && <abbr class="unapi-id" title={this.props.IRI}></abbr> }

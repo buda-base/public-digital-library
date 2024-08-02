@@ -1084,6 +1084,8 @@ export function getGDPRconsent(that) {
 
 function InstantSearchBox(props) {
 
+   const { isMirador } = props
+
    return <>
       <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/instantsearch.css@7/themes/satellite-min.css" />
       <InstantSearch
@@ -1091,7 +1093,7 @@ function InstantSearchBox(props) {
          routing={routingConfig}
          searchClient={searchClient}
       >
-         <div className="search inner-search-bar">
+         <div className="search inner-search-bar" style={{ ...isMirador?{position:"absolute"}:{} }}>
             <div>
                <SearchBoxAutocomplete searchAsYouType={false} {...props}/>
             </div>
@@ -1100,7 +1102,7 @@ function InstantSearchBox(props) {
    </>
 }
 
-export function top_right_menu(that,etextTitle,backUrl,etextres)
+export function top_right_menu(that,etextTitle,backUrl,etextres,isMirador)
 {
    let onZhMirror = (that.props.config && that.props.config.chineseMirror)
    let onKhmerServer = (that.props.config && that.props.config.khmerServer)
@@ -1175,7 +1177,7 @@ export function top_right_menu(that,etextTitle,backUrl,etextres)
       && that.props.config?.msg?.some((m,i) => m.popup && (!m.condition || eval(m.condition)) && !that.state.collapse["msgPopup"+(m.id?"-"+m.id:"")])
 
    const overNav = (
-         <div class="over-nav">
+         <div class="over-nav" style={{ ...isMirador?{position:"absolute"}:{} }}>
             <div>
                <div><i>Preserving buddhist literature for the world</i></div>
                <div>
@@ -1194,7 +1196,7 @@ export function top_right_menu(that,etextTitle,backUrl,etextres)
       innerSearch = (
          that?.state.filters && !that?.props.keyword || that?.state.filters && that.props.advancedSearch || that.props.isOsearch
          ? null 
-         : <InstantSearchBox that={this} />
+         : <InstantSearchBox that={this} {...{isMirador}}/>
                   /* 
          : <div class={'inner-search-bar in-search-'+(that.state.filters?"true":"false")}>
             <div>
@@ -1420,7 +1422,7 @@ export function top_right_menu(that,etextTitle,backUrl,etextres)
       overNav,
       <div class={"nav"+(onZhMirror?" zhMirror":"")+ (that.state.collapse.navMenu?" on":"")+(onKhmerServer||onKhmerUrl?" khmerServer":"")
                +(msgPopupOn?" msgPopupOn":"")
-         }>
+         } style={{ ...isMirador?{position:"absolute"}:{} }} >
          {uiLangPopup}
           <div>
          {logo}
