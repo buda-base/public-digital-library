@@ -229,7 +229,10 @@ const CustomHit = ({ hit, that, sortItems, storage }) => {
   }, [expand])
 
 
-  const backLink = "?s="+encodeURIComponent(window.location.href.replace(/^https?:[/][/][^?]+[?]?/gi,"")),
+  const 
+    page = history.location.pathname,
+    uri = qs.stringify(routingConfig.stateMapping.stateToRoute(uiState,true), { arrayFormat: 'index' }),
+    backLink = "?s="+encodeURIComponent(page+(uri ? "?"+uri : "")),
     link = "/show/bdr:"+hit.objectID+backLink
 
   //console.log("hit:", hit, link, that.props.history?.location?.search, sortBy, refinementList, uiState, publisher, storage)

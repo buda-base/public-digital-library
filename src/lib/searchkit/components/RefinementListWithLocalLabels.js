@@ -42,7 +42,11 @@ function CustomRefinementList(props) {
     toggleShowMore,
   } = useRefinementList(props);
 
-  const tItems = items.concat(!items.length ? defaultItems ?? [] : [])
+  const current = indexUiState?.refinementList?.[attribute]
+
+  const tItems = items.concat(!items.length ? defaultItems ?? [] : []).concat(current?.filter(c => !items.find(i => i.value === c)).map(c => ({ 
+    value:c, label:c, highlighted:c, isRefined:true, count:-1
+  })) ?? [])
 
   useEffect(() => {        
 
@@ -97,9 +101,9 @@ function CustomRefinementList(props) {
     
     updateItems()
 
-  }, [attribute, items, that.props.dictionary, that.props.locale, that.props.langPreset, searchClient.cache, isShowingMore]);
+  }, [attribute, items, indexUiState?.refinementList, that.props.dictionary, that.props.locale, that.props.langPreset, searchClient.cache, isShowingMore]);
 
-  //console.log("render:", attribute, props, currentItems, items)
+  //console.log("render:", attribute, props, currentItems, items, tItems, indexUiState)
   
   if(!defaultItems && (items.length === 0 || items.filter((item) => item.count > 0).length === 0)) return null
 
@@ -120,7 +124,7 @@ function CustomRefinementList(props) {
       <ul className="ais-RefinementList-list">
         {useItems.map((item) => (
 
-          (item.count > 0) 
+          (item.count > 0 || item.count === -1) 
           ? 
             <li
               key={item.label}
@@ -138,7 +142,7 @@ function CustomRefinementList(props) {
                 <span className="ais-RefinementList-labelText">
                   {currentItems.find((_item) => _item.id === item.value)?.label || item.label}
                 </span>
-                <span className="ais-RefinementList-count">{item.count}</span> 
+                {item.count > 0 && <span className="ais-RefinementList-count">{item.count}</span>}
               </label>
             </li>
           : defaultItems 

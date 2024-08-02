@@ -768,3 +768,17 @@ header[data-hits="0"] ~ .hits .pagination,
 .AppSK .ais-RefinementList.MT0 {
   margin-top:0;
 }
+
+.content .main-content header h1 .close-link svg {
+  font-size:36px;
+  position: absolute;
+  margin-top:3px;
+  margin-left:5px;
+  display:none;
+  color:#4a4a4a;
+}
+
+.content .main-content header h1:hover .close-link svg {
+  display:inline-block;
+}
+

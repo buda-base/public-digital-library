@@ -10061,7 +10061,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
          } catch(e) {
             console.error("pb:",oldUrl)
          }
-         if(decoded && !decoded.startsWith("/show/")) {
+         if(decoded && (!decoded.startsWith("/show/") || decoded.includes("?")) && !decoded.startsWith(this.props.history.location.pathname)) {
             let withW = backTo.replace(/^.*[?&](w=[^&]+)&?.*$/,"$1")
             //loggergen.log("fromS",this.state.fromSearch,backTo,withW)
             if(backTo === withW) { 
@@ -10629,24 +10629,25 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
             { infoPanelR }
             <div {...searchUrl?{"data-searchUrl":searchUrl}:{}} className={"resource "+hasTabs+getEntiType(this.props.IRI).toLowerCase() + (this.props.simple?" simple":"") + (this.props.preview?" preview":"") /*+(!this.props.portraitPopupClosed?" portrait-warn-on":"")*/} {...this.props.simple?{onClick:sendMsg}:{}}>                                             
                {searchUrl && <div class="ariane">
-                  <Link to={fromStaticRoute?searchUrl:"/osearch/search?"+searchUrl} onClick={(ev) => {
+                  <Link to={searchUrl} /*onClick={(ev) => {
                      this.props.onLoading("search",true)                     
-
+                     
                      let pathname = "/osearch/search"
                      if(fromStaticRoute){
                         pathname = "/"+fromStaticRoute
                         searchUrl = searchUrl.replace(new RegExp(fromStaticRoute+"[?]"),"")
-                     }
+                     }                     
 
                      setTimeout(() => { 
-                           this.props.history.push({pathname,search:"?"+searchUrl}) ; 
+                           //this.props.history.push({pathname,search:"?"+searchUrl}) ; 
+                           this.props.history.push(searchUrl) ; 
                      }, 100)
 
                      ev.preventDefault()
                      ev.stopPropagation();
                      return false
-                  }}
-                  ><img src="/icons/FILARIANE.svg" /><span>{searchUrl.startsWith("latest")?I18n.t("home.new").toLowerCase():I18n.t("topbar.results")} <span>{searchTerm}</span></span></Link>
+                  }}*/
+                  ><img src="/icons/FILARIANE.svg" /><span>{searchUrl.startsWith("latest")?I18n.t("home.new").toLowerCase():I18n.t("topbar."+(searchTerm?"results":"resultsNoKW"))} <span>{searchTerm}</span></span></Link>
                   {this.state.ready && <Loader loaded={!this.props.loading} options={{position:"fixed",left:"50%",top:"50%"}} /> }
                </div> }
                <div class="index">                  

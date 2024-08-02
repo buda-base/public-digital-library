@@ -114,7 +114,7 @@ const SearchBoxAutocomplete = (props) => {
 
   const isSearchStalled = status === "stalled";
 
-  console.log("pF:", pageFilters)
+  //console.log("pF:", pageFilters)
 
   useEffect(() => {
     if (query !== "") {
