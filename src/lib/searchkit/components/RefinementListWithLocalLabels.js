@@ -25,7 +25,7 @@ function CustomRefinementList(props) {
   const [title, setTitle] = useState("")
 
   const searchStatus = useInstantSearch();
-  const { indexUiState } = searchStatus
+  const { indexUiState, status } = searchStatus
 
   useEffect(() => {
     setTitle(getPropLabel(that, fullUri(iri ?? (prefix ?? "bdo")+":"+attribute)))
@@ -42,11 +42,13 @@ function CustomRefinementList(props) {
     toggleShowMore,
   } = useRefinementList(props);
 
-  const current = indexUiState?.refinementList?.[attribute]
-
-  const tItems = items.concat(!items.length ? defaultItems ?? [] : []).concat(current?.filter(c => !items.find(i => i.value === c)).map(c => ({ 
+  const current = (indexUiState?.refinementList?.[attribute] ?? []).filter(c => !items.find(i => i.value === c)).map(c => ({ 
     value:c, label:c, highlighted:c, isRefined:true, count:-1
-  })) ?? [])
+  }))
+  const tItems = items?.concat(!items.length 
+      ? (defaultItems??[]).filter(i => !current.some(j => i.value === j.value)&&!items.some(j => i.value === j.value)) ?? [] 
+      : [])
+    .concat(current) ?? []
 
   useEffect(() => {        
 

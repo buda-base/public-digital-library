@@ -74,13 +74,14 @@ const SearchBoxAction = ({ inputValue, isSearchStalled, refine, pageFilters }) =
   );
 };
 
-export const SuggestsList = ({ items, onClick, isVisible, setIsVisible }) => {
+export const SuggestsList = ({ items, onClick, isVisible, selected, setIsVisible }) => {
+
   return (
     <ul className="search-result-wrapper suggestions" hidden={!isVisible}>
       {items.map((_suggest, _index) => (
         <li
           key={_index}
-          className="search-result-item"
+          className={"search-result-item "+(selected === _index ? "selected":"")}
           onClick={() => onClick(_suggest)}
         >
           <span className="search-result-item-lang">{_suggest.lang}</span>
@@ -109,6 +110,8 @@ const SearchBoxAutocomplete = (props) => {
   const [inputValue, setInputValue] = useState(query);
   const [isFocused, setIsFocused] = useState(false);
   const [suggestions, setSuggestions] = useState([]);
+
+  const [selected, setSelected] = useState(-1)
 
   const inputRef = useRef(null);
 
@@ -143,6 +146,13 @@ const SearchBoxAutocomplete = (props) => {
     }, 350),
     [ pageFilters ]
   );
+
+  const handleClick = useCallback((item) => {
+    const newQuery = formatResponseForURLSearchParams(item.res);
+    setQuery(newQuery);
+    setIsFocused(false);
+    redirect(refine, newQuery, pageFilters);
+  }, [refine, pageFilters])
 
   return (
     <form
@@ -194,9 +204,20 @@ const SearchBoxAutocomplete = (props) => {
             /* // no need (submit button already triggered by default when hitting enter)
             refine(inputValue);
             */
-          }
+            // case when selection with keyboard
+            if(selected != -1) {
+              handleClick(suggestions[selected])
+            }
+          } else if(e.key === "ArrowDown") {
+            const newSel = (selected === -1 ? 0 : selected + 1) % suggestions.length
+            setSelected(newSel)
+          } else if(e.key === "ArrowUp") {
+            const newSel = (selected === -1 ? suggestions.length - 1 : selected - 1 + suggestions.length) % suggestions.length
+            setSelected(newSel)
+          } 
         }}
         onChange={(event) => {
+          setSelected(-1)
           setIsFocused(true);
           const newQuery = event.currentTarget.value;
           setQuery(newQuery);
@@ -212,13 +233,9 @@ const SearchBoxAutocomplete = (props) => {
         pageFilters={pageFilters}
       />
       <SuggestsList
+        {...{ selected }}
         items={suggestions}
-        onClick={(item) => {
-          const newQuery = formatResponseForURLSearchParams(item.res);
-          setQuery(newQuery);
-          setIsFocused(false);
-          redirect(refine, newQuery, pageFilters);
-        }}
+        onClick={handleClick}
         isVisible={isFocused}
       />
     </form>

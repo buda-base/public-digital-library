@@ -893,6 +893,7 @@ body > #pop-login { z-index:1000000 ;}
    display: inline;
 }
 
+.inner-search-bar .suggestions > li.selected,
 .inner-search-bar .suggestions > li:hover,
 .inner-search-bar .suggestions > span:hover {
    background-color:rgba(0,0,0,0.05);
