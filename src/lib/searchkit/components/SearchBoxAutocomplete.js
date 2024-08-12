@@ -207,6 +207,8 @@ const SearchBoxAutocomplete = (props) => {
             // case when selection with keyboard
             if(selected != -1) {
               handleClick(suggestions[selected])
+              e.preventDefault()
+              e.stopPropagation()
             }
           } else if(e.key === "ArrowDown") {
             const newSel = (selected === -1 ? 0 : selected + 1) % suggestions.length

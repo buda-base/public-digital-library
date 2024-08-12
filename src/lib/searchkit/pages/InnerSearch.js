@@ -63,7 +63,8 @@ export class InnerSearchPage extends Component<State, Props>
   
   render() {
     
-    
+    if(!this.props.config) return <div><Loader /></div>
+
     let { RID, T } = this.props
     if(RID) RID = RID.split(":")[1]
 
@@ -84,7 +85,7 @@ export class InnerSearchPage extends Component<State, Props>
 
     const storageRef = React.createRef() 
 
-    console.log("iSsC:", searchClient, routingConfig, this.props, pageFilters, storageRef)    
+    console.log("iSsC:", searchClient, routingConfig, this.props, pageFilters, storageRef)        
     
     return (<>
       { pageFilters && <div className="AppSK InnerSearchPage data">

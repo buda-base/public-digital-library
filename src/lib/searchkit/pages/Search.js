@@ -1,6 +1,7 @@
 // Core
 import React, { useState, useEffect, useCallback } from "react";
 import _ from "lodash"
+import Loader from 'react-loader';
 
 // Utils
 import Client from "@searchkit/instantsearch-client";
@@ -257,13 +258,14 @@ export class SearchPage extends Component<State, Props>
   
   render() {
     
+    if(!this.props.config) return <div><Loader /></div>
+
     const pageFilters = this.props.pageFilters ?? ""
 
     const storageRef = React.createRef() 
 
     console.log("sC:", searchClient, routingConfig, pageFilters, storageRef)    
-
-
+    
     return (
       <>
         { top_right_menu(this) }
