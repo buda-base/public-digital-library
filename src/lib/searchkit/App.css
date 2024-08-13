@@ -739,7 +739,8 @@ header[data-hits="0"] ~ .hits .pagination,
 }
 
 .AppSK.InnerSearchPage.data .content .main-content h3 {
-  margin-top:10px;
+  margin-top:0px;
+  margin-bottom:20px;
 }
 
 .hits > .pagination:first-child {

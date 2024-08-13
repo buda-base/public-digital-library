@@ -29,7 +29,7 @@ function SearchResultsHeader(props) {
   console.log("status:", status, searchStatus)
 
   return <header data-hits={results?.nbHits} data-status={status}>    
-    { config.length > 1 && config[0] === "associated_res" 
+    { !inner && <>{ config.length > 1 && config[0] === "associated_res" 
       ? <h1 class={that.props.locale === "bo" || label?.lang === "bo" ? "has-bo" : ""}>
         <Trans i18nKey="result.assocNoT" values={{ name: label?.value || config[1] }} components={{ res: <Link to={inner?"/osearch/associated/"+config[1]+"/search":"/show/bdr:"+config[1]} /> }}/>
         {!inner && 
@@ -44,7 +44,7 @@ function SearchResultsHeader(props) {
               <Close />
             </Link>
           }</h1>
-    : <h1 lang={that.props.locale}>{I18n.t("result.search")}</h1> }
+    : <h1 lang={that.props.locale}>{I18n.t("result.search")}</h1> }</> }
     { status != "error" && (results?.nbHits || status === "idle")&& <h3>{I18n.t("result.hit"+(results.query?"KW":""),{count:results?.nbHits, interpolation: {escapeValue: false}, ...results.query?{kw:results.query}:{}})}</h3> }
     { status == "error" && <h3>Server error</h3> }
   </header> 
