@@ -46,7 +46,7 @@ const CustomHit = ({ hit, that, sortItems, storage }) => {
   const [showMore, setShowMore] = useState({})
   const [expand, setExpand] = useState({})
 
-  const { uiState } = useInstantSearch()
+  const { uiState, indexUiState } = useInstantSearch()
   const { sortBy, refinementList } = uiState?.[process.env.REACT_APP_ELASTICSEARCH_INDEX]
 
   useEffect(() => {
@@ -173,16 +173,46 @@ const CustomHit = ({ hit, that, sortItems, storage }) => {
     //console.log("labels:", labels, newShow)
 
     const newEtextHits = []
+    let n = 0
     if(hit.inner_hits?.etext?.hits?.hits?.length > 0) {
-      for(const h of hit.inner_hits?.etext?.hits?.hits.map(h => Object.values(h.highlight??{}))) {
-        for(const v of h) {
-          for(const c of v ) {
-            // TODO: better handling of etext languages other than Tibetan
-            let detec = narrowWithString(c)      
-            //console.log("c:",c,detec)
-            const label = getLangLabel(that, fullUri("tmp:textMatch"), [{lang:detec[0]==="tibt"?"bo":"bo-x-ewts", value:(c ?? "").replace(/<em>/g,"↦").replace(/<\/em>/g,"↤")}])          
-            newEtextHits.push(highlight(label.value))
-          } 
+      for(const vol of hit.inner_hits?.etext?.hits?.hits) {
+        //console.log("vol:",vol)
+        for(const ch of vol.inner_hits.chunks.hits.hits) {
+          //console.log("ch:",ch)
+          for(const h of Object.values(ch.highlight??{})) {
+            for(let c of [h.join(" ") ] ) {
+              newShow.etext = true                  
+              if(n > 0) { 
+                if(!expand.etext || n >= 5) continue
+              }
+
+              // TODO: better handling of etext languages other than Tibetan
+              
+              if(expand.etext && ch._source.text_bo) { 
+                const idx = ch._source.text_bo.indexOf(h[0].replace(/<[^>]+>/g,""))
+                if(idx >= 0) {
+                  let n = Math.max(300, c.replace(/<[^>]+>/g,"").length)
+                  let start = idx - Math.ceil(n/2), end = idx + n + Math.floor(n / 2)
+                  for(; start>=0 ; start--) if(ch._source.text_bo[start].match(/[་ ]/)) { start++; break; }
+                  for(; end < ch._source.text_bo.length ; end ++) if(ch._source.text_bo[end].match(/[་ ]/)) { break; }
+                  c = ch._source.text_bo.substring(start, end)
+                } else {
+                  c = ch._source.text_bo //.replace(/[\n\r]/gmu," ").replace(/^ *(([^་ ]+[་ ]+){40})(.*)/mu, "$1")
+                }
+              }
+
+              let detec = narrowWithString(c)      
+              //console.log("c:",c,detec)
+              const label = getLangLabel(that, fullUri("tmp:textMatch"), [{lang:detec[0]==="tibt"?"bo":"bo-x-ewts", value:(c ?? "").replace(/<em>/g,"↦").replace(/<\/em>/g,"↤").replace(/↤ ↦/g, " ")}])          
+
+              detec = narrowWithString(indexUiState.query)      
+              let kw = '"'+indexUiState.query+'"@'+(detec[0]==="tibt"?"bo":"bo-x-ewts")
+
+              newEtextHits.push(<Link to={"/show/bdr:"+vol._source.etext_instance+"?openEtext=bdr:"+vol._id+"&startChar="+(ch._source.cstart-1000)+"&keyword="+kw+"#open-viewer"}>{highlight(label.value, expand.etext && ch._source.text_bo ? indexUiState.query : undefined, undefined, expand.etext && ch._source.text_bo)}</Link>)
+
+              n++
+            } 
+          }
         }
       }
     }
@@ -235,7 +265,7 @@ const CustomHit = ({ hit, that, sortItems, storage }) => {
     backLink = "?s="+encodeURIComponent(page+(uri ? "?"+uri : "")),
     link = "/show/bdr:"+hit.objectID+backLink
 
-  //console.log("hit:", hit, link, that.props.history?.location?.search, sortBy, refinementList, uiState, publisher, storage)
+  console.log("hit:", hit, link, that.props.history?.location?.search, sortBy, refinementList, uiState, publisher, storage)
 
   return (<div class={"result "+hit.type}>        
     <div class="main">
@@ -347,6 +377,7 @@ const CustomHit = ({ hit, that, sortItems, storage }) => {
             <span class="label">{I18n.t("types.etext")}<span class="colon">:</span></span>
             <span>
               {etextHits.map(h => <span>{h}</span>)}
+              { showMore.etext && <span className="toggle" onClick={() => toggleExpand("etext")}>{I18n.t(expand.etext ?"misc.hide":"Rsidebar.priority.more")}</span>}
              </span>
           </span>
         }

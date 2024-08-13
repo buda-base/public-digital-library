@@ -439,11 +439,28 @@ header[data-hits="0"] ~ .hits .pagination,
   flex-direction: column;
 }
 
-.AppSK .result .data .names.etext-hits > .label + span > span::before,
-.AppSK .result .data .names.etext-hits > .label + span > span::after {
+.AppSK .result .data .names.etext-hits > .label + span > span:not(.toggle)::before,
+.AppSK .result .data .names.etext-hits > .label + span > span:not(.toggle)::after {
   content:'...'
 } 
 
+.AppSK .result .data .names.etext-hits > .label + span > span + span:not(:nth-child(2):last-child) {
+  border-top:1px solid rgba(0,0,0,0.25);
+  padding-top:5px;
+  margin-top:5px;
+}
+
+.AppSK .result .data .names.etext-hits > .label + span > span a {
+  color:black;
+  text-decoration: none;
+}
+.AppSK .result .data .names.etext-hits > .label + span > span a span {
+  color:black;
+}
+
+.AppSK .result .data .names.etext-hits > .label + span > span a:hover {
+  text-decoration: underline;
+}
 
 .AppSK .result .data .names > .label {
   display: block;

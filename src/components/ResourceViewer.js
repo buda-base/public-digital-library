@@ -6960,7 +6960,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                let parent = selection.anchorNode?.parentElement
                if(!parent?.getAttribute("lang")) parent = parent?.parentElement
 
-               loggergen.log("parent:",langElem,ev.currentTarget,parent,selection.toString(),selection,parent.children,selection.anchorNode)
+               //loggergen.log("parent:",langElem,ev.currentTarget,parent,selection.toString(),selection,parent.children,selection.anchorNode)
                
                const getAbsOffset = (node, nodeOffset) => {
 
