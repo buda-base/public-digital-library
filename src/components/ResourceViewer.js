@@ -6888,7 +6888,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
             <h3 style={{marginBottom:"20px",textAlign:"right"}}>{ lastPageUrl && <Link to={lastPageUrl} onClick={(e) => this.props.onGetPages(this.props.IRI,(this.getResourceElem(tmp+"lastChunk")??[])[0]?.value,true)} >{I18n.t("resource.lastP")}</Link>}</h3>
          </div> }
          {/* {this.hasSub(k)?this.subProps(k):tags.map((e)=> [e," "] )} */}
-         { elem.filter((e,i) => !this.props.disableInfiniteScroll || i > 0 || !e.chunks?.some(c => c["@value"].includes("Text Scan Input Form - Title Page"))).filter((e,i) => !this.props.disableInfiniteScroll || i < 2).map( (e,_i) => { 
+         { elem.filter((e,i) => !this.props.disableInfiniteScroll || i > 0 || !e.chunks?.some(c => c["@value"].includes("Text Scan Input Form" /*" - Title Page"*/))).filter((e,i) => !this.props.disableInfiniteScroll || i < 2).map( (e,_i) => { 
 
             console.log("e:",_i,e)
 
@@ -10256,7 +10256,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                      { this.props.loading && <Loader className="etext-viewer-loader"  loaded={!this.props.loading}  
                            {...!this.props.disableInfiniteScroll ? {options:{position:"fixed",left:"calc(50% + 200px)",top:"50%"}}:{}}
                         />  }
-                     { this.unpaginated() && <h4 style={{fontSize:"16px",fontWeight:600,textAlign:"center", marginBottom:"50px",top:"20px"}}>{I18n.t("resource.unpag")}</h4>}
+                     { this.unpaginated() && !this.props.disableInfiniteScroll && <h4 style={{fontSize:"16px",fontWeight:600,textAlign:"center", marginBottom:"50px",top:"20px"}}>{I18n.t("resource.unpag")}</h4>}
                      { !this.props.disableInfiniteScroll && etextAccessError && <h4 style={{fontSize:"16px",fontWeight:600,textAlign:"center",marginTop:"80px"}}>
                         <><img style={{height:"50px", verticalAlign:"middle", marginRight:"10px"}} src="/icons/unknown.svg"/><Trans i18nKey="access.fairuseEtext" components={{ bold: <u /> }} /></>
                      </h4> }
