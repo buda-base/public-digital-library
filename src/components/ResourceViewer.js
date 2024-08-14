@@ -6888,7 +6888,9 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
             <h3 style={{marginBottom:"20px",textAlign:"right"}}>{ lastPageUrl && <Link to={lastPageUrl} onClick={(e) => this.props.onGetPages(this.props.IRI,(this.getResourceElem(tmp+"lastChunk")??[])[0]?.value,true)} >{I18n.t("resource.lastP")}</Link>}</h3>
          </div> }
          {/* {this.hasSub(k)?this.subProps(k):tags.map((e)=> [e," "] )} */}
-         { elem.filter((e,i) => !this.props.disableInfiniteScroll || i < 2).map( e => { 
+         { elem.filter((e,i) => !this.props.disableInfiniteScroll || i > 0 || !e.chunks?.some(c => c["@value"].includes("Text Scan Input Form - Title Page"))).filter((e,i) => !this.props.disableInfiniteScroll || i < 2).map( (e,_i) => { 
+
+            console.log("e:",_i,e)
 
             let pageVal ="", pageLang = "", current = []
 
