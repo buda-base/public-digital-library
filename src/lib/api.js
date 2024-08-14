@@ -749,8 +749,8 @@ export default class API {
          {
             logError(e)
             //throw(e)
-            console.error("ERROR etextrefs",e)
-            return true
+            console.error("ERROR etextrefs",e)            
+            return false
          }
 
    }

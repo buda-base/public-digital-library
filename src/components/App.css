@@ -5405,6 +5405,8 @@ html[lang="en"] .resource .data > [data-prop="bdo:creator"] h4[data-prop="bdo:ro
 .scans-viewer-loader,
 .preview-etext .etext-viewer-loader { transform:scale(0.5); transform-origin: 20px 20px; }
 
+.preview-etext  .loader .etext-viewer-loader { left:-30px !important; }
+
 .images-thumb-links .loader .scans-viewer-loader { left:-30px !important; top:-20px !important;}
 
 .images-thumb-links .loader,

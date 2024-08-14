@@ -7884,7 +7884,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
       }
    }
 
-   renderOCR = () => {
+   renderOCR = (extra) => {
       // #817
       let elem = this.getResourceElem(bdo+"OPFOCRWordMedianConfidenceIndex")
       /*
@@ -7896,7 +7896,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
       //loggergen.log("OCR:",elem)
 
       if(elem) {
-         return <div class="data access"><h3><span style={{textTransform:"none"}}>{I18n.t("access.OCR")}</span></h3></div>
+         return <div class="data access"><h3><span style={{textTransform:"none"}}>{extra ?? I18n.t("access.OCR")}</span></h3></div>
       }
    }
 
@@ -10216,7 +10216,9 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                   ? <>
                      <ResourceViewerContainer  auth={this.props.auth} history={this.props.history} IRI={this.state.currentText} openEtext={true} openEtextRefs={false} disableInfiniteScroll={this.props.previewEtext}/> 
                   </>
-                  : <Loader className="etext-viewer-loader preview" loaded={false}  //options={{position:"fixed",left:"calc(200px)",top:"50%"}} 
+                  : this.props.etextErrors?.[this.props.IRI] 
+                     ? <h4><div class="images-thumb-links" style={{ marginLeft:0 }}><a class="urilink nolink"><BlockIcon style={{width:"18px",verticalAlign:"top"}}/>&nbsp;{I18n.t("access.errorE")}</a></div></h4>
+                     : <Loader className="etext-viewer-loader preview" loaded={false}  //options={{position:"fixed",left:"calc(200px)",top:"50%"}} 
                   />      
                }
             </>) 
@@ -10239,19 +10241,30 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                { monlamResults && <link rel="stylesheet" href="https://monlamdictionary.com/files/css/basic.css" /> }               
                { this.renderMirador(isMirador) }           
                <div class="resource etext-view" >                                    
-                  { this.props.disableInfiniteScroll && <div class="etext-top-links">
-                     <Link to={"/show/"+etextRes}>{I18n.t("resource.openViewer")}</Link>
-                     { this.renderEtextDLlink(etextAccessError, true) }
-                  </div> }
+                  { this.props.disableInfiniteScroll && !etextAccessError && <>
+                     <div style={{ lineHeight:"23px"}}>
+                      { this.renderOCR(<Trans i18nKey="access.OCRnew" components={{ bold: <b style={{ fontWeight:600 }}/>, nl: <br /> }} />) }
+                     </div>
+                     <div class="etext-top-links">
+                        <Link to={"/show/"+etextRes}>{I18n.t("resource.openViewer")}</Link>
+                        { this.renderEtextDLlink(etextAccessError, true) }
+                     </div> 
+                  </>}
                   <div class="">
-                     { this.props.loading && <Loader className="etext-viewer-loader" loaded={!this.props.loading}  
+                     { this.props.loading && <Loader className="etext-viewer-loader"  loaded={!this.props.loading}  
                            {...!this.props.disableInfiniteScroll ? {options:{position:"fixed",left:"calc(50% + 200px)",top:"50%"}}:{}}
                         />  }
                      { this.unpaginated() && <h4 style={{fontSize:"16px",fontWeight:600,textAlign:"center", marginBottom:"50px",top:"20px"}}>{I18n.t("resource.unpag")}</h4>}
-                     { etextAccessError && <h4 style={{fontSize:"16px",fontWeight:600,textAlign:"center",marginTop:"80px"}}>
+                     { !this.props.disableInfiniteScroll && etextAccessError && <h4 style={{fontSize:"16px",fontWeight:600,textAlign:"center",marginTop:"80px"}}>
                         <><img style={{height:"50px", verticalAlign:"middle", marginRight:"10px"}} src="/icons/unknown.svg"/><Trans i18nKey="access.fairuseEtext" components={{ bold: <u /> }} /></>
                      </h4> }
                      { !etextAccessError && etext_data }
+                     { this.props.disableInfiniteScroll && etextAccessError && <h4  style={{ lineHeight:"23px" }}>
+                        <div class="images-thumb-links" style={{ marginLeft:0 }}>
+                           <a class="urilink nolink noIA"><BlockIcon style={{width:"18px",verticalAlign:"top"}}/>{I18n.t("access.restrictedC")}</a>
+                           <div class="data access generic"><h3><span style={{ textTransform: "none", width: "100%" }}><Trans i18nKey="access.fairuseEtext" components={{ bold: <span style={{ textTransform: "none"}} /> }}/></span></h3></div>
+                        </div>
+                     </h4> } 
                   </div>                     
                </div>
                { this.renderEtextNav(etextAccessError) } 

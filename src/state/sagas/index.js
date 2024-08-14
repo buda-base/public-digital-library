@@ -3434,7 +3434,12 @@ async function getETextRefs(iri) {
    
    loggergen.log("ETextRefs",res)
 
-   store.dispatch(dataActions.gotETextRefs(iri,res))
+   if(res) {
+      store.dispatch(dataActions.gotETextRefs(iri,res))
+   } else {
+      store.dispatch(dataActions.etextError(404,iri))
+   }
+
 
 }
 
