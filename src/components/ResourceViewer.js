@@ -8329,16 +8329,16 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
 
                      let subparts = [], sorted = _.orderBy(node[0].hasPart.map(n => {
                         const e = mapElem(n)
+                        let hasPart = e?.[0]?.hasPart
+                        if(hasPart && !Array.isArray(hasPart)) hasPart = [ hasPart ]
                         if(e && e.length && (e[0].partIndex !== undefined  || e[0].volumeNumber !== undefined)) 
-                           return { id:n, partIndex: ( e[0].partIndex != undefined ? e[0].partIndex : e[0].volumeNumber ) }
+                           return { id:n, partIndex: ( e[0].partIndex != undefined ? e[0].partIndex : e[0].volumeNumber ), hasPart }
                         else 
-                           return { id:n, partIndex:999999 }
+                           return { id:n, partIndex:999999, hasPart }
                      }),["partIndex"],["asc"])
 
-                     
                      //subparts = sorted.map(n => n.id)
-                     
-                     
+                                          
                      // keep only ~50 children and everything inside
                      const ShowNbChildren = 40
 
@@ -8346,7 +8346,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
 
                      // use opartInVol only when corresponding with page node 
                      const parentIsVol = nodes.filter(m => m.hasPart && (m.hasPart === opart || m.hasPart.includes(opart))).map(m => m["@id"]).some(o => o && o.startsWith("bdr:I"))
-                     let isParent = sorted.filter(n => n.id === opart || !osearch && parentIsVol && opartInVol.includes(n.partIndex) || osearchIds.includes(n.id) ), start = 0, end = start + ShowNbChildren
+                     let isParent = sorted.filter(n => n.id === opart || n.hasPart?.includes(opart) || !osearch && parentIsVol && opartInVol.includes(n.partIndex) || osearchIds.includes(n.id) ), start = 0, end = start + ShowNbChildren
                      if(isParent.length) {                                             
                         //loggergen.log("opIv:",opartInVol,opart_node,parentIsVol)
                         let mustBe = sorted.map( (n,i) => {
@@ -8360,6 +8360,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
                            start = Math.max(0, mustBe[0] - Math.floor(ShowNbChildren / 2))
                            end = Math.max(start + ShowNbChildren + 1, mustBe[mustBe.length - 1] + Math.floor(ShowNbChildren / 2))
                         }                        
+                        
                         //loggergen.log("mB:",isParent,mustBe,start,end)
                      }
 
@@ -9015,9 +9016,15 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
                   clearInterval(timinter)
                   if(_this.state.opartinview != opart) {
                      el.scrollIntoView()      
-                     _this.setState({opartinview: opart})
+                     _this.setState({opartinview: opart})               
                   }
+               } 
+               /* // quickfix for #538 but there might be a better way
+               else {
+                  const next = document.querySelector("span.node-nav:last-child")
+                  if(next) next.click()
                }
+               */
             }, 250)
          } 
 
