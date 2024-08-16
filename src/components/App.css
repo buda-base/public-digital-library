@@ -214,7 +214,7 @@ body { overflow:auto !important;padding-right:0 !important; /*font-family:"Robot
    line-height: 53px;margin-top:0; margin-bottom:14px;text-align: left;;
 }
 
-.SearchPane #logo h1[lang="bo"] {  font-size:61px; margin-bottom:32px; font-weight:500; }
+.SearchPane #logo h1[lang="bo"] {  font-size:61px; margin-bottom:32px; font-weight:500; line-height: 105px; }
 
 .SearchPane #logo h1 + div {
    font-weight:500;
@@ -228,6 +228,10 @@ body { overflow:auto !important;padding-right:0 !important; /*font-family:"Robot
    font-weight: 400;
    text-align: left;
    /* letter-spacing: 0.31px; */
+}
+
+.SearchPane #logo h1[lang="bo"]~span {
+   line-height:200%;
 }
 
 .infoPanel {
@@ -298,7 +302,7 @@ body { overflow:auto !important;padding-right:0 !important; /*font-family:"Robot
 .msg-popup { position: fixed; top:0 ;left:0;right:0;bottom:0; display:flex; align-items: center; justify-content: center; z-index:100100;}
 .msg-popup .back { width: 100%; height:100%; background:rgba(0,0,0,0.5); position: absolute;}
 .msg-popup .front { background:white; padding:20px 40px;box-shadow: 0 0 10px 3px rgba(0,0,0,0.5); border-radius: 0px; z-index:1; max-width:80%; width:540px; position: relative;
-   box-sizing: border-box  ;
+   box-sizing: border-box  ; max-height:80%; overflow: auto;
 }
 .msg-popup .front p { color:#555; text-align: center; font-weight: 500; font-size: 15px;}
 .msg-popup .front p a { color:#d73449; font-weight:600; text-decoration: none; }
@@ -6621,7 +6625,7 @@ feedbucket-app:not(.on)  { display:none !important; }
 
    .resource > .ariane { margin-left:0; padding-left:16.7%; }
 
-   #root > div > :is(.App.home:not(.guidedsearch),.resource) { overflow:hidden ; width:100%; box-sizing: border-box;}
+   #root > div > :is(.App.home:not(.guidedsearch),.resource) { overflow:visible ; width:100%; box-sizing: border-box;}
    
    /*
    #root .App .SearchPane,

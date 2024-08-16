@@ -4044,7 +4044,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                if(val === exclude) continue
                
                let langval = getLangLabel(this,prop,[ i ])
-               if(langval.value?.replace(/[↦↤]/g,"") === exclude) continue
+               if(langval?.value?.replace(/[↦↤]/g,"") === exclude) continue
 
                const translit = getLangLabel(this, "", [i])
 

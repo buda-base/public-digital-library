@@ -851,6 +851,7 @@
       "new":"new!",
       "no": "No",
       "noIndex": "No index available",
+      "noT": "[no title]",
       "noLabel": "No Label",
       "notInList1":"This PDF is not part of a collection subscribed to by your institution. {{lnk}} and log in for access.",
       "notInList2":"Visit the BDRC platform",
