@@ -897,6 +897,40 @@ body > #pop-login { z-index:1000000 ;}
    display: inline;
 }
 
+ul.suggestions .fromHisto > span > svg:first-child {
+   font-size:16px;
+   margin-right:12px;
+   margin-left:2px;
+}
+
+ul.suggestions li > span > svg:first-child {
+   font-size:22px;
+   margin-right:8px;
+}
+
+ul.suggestions .fromHisto svg ~ span {
+   color:#52188c;
+}
+
+ul.suggestions li {
+   align-items: center;
+}
+
+ul.suggestions li > span:first-child {
+   width:100%;
+   align-items: center;
+   display: flex;
+}
+
+ul.suggestions li > span:first-child + * {
+   position:absolute;
+   right:0;
+}
+
+ul.suggestions li > span > svg:first-child {
+   opacity:0.5;
+}
+
 .inner-search-bar .suggestions > li.selected,
 .inner-search-bar .suggestions > li:hover,
 .inner-search-bar .suggestions > span:hover {

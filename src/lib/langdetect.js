@@ -71,7 +71,7 @@ function narrowWithChar(char, wordlen, lttotest) {
 	return lttotest.filter(lt => okforlt(char, wordlen, lt));
 }
 
-export function narrowWithString(strtoguess, transtotest = ['ewts', 'iast', 'pinyin']) {
+export function narrowWithString(strtoguess = "", transtotest = ['ewts', 'iast', 'pinyin']) {
 
 	
 	strtoguess = strtoguess

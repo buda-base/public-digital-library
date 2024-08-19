@@ -1,4 +1,9 @@
 import React, { useState, useRef, useCallback, useEffect } from "react";
+import _ from "lodash"
+import SearchIcon from '@material-ui/icons/Search';
+import AccessTimeIcon from '@material-ui/icons/AccessTime';
+import CloseIcon from '@material-ui/icons/Close';
+import IconButton from '@material-ui/core/IconButton';
 
 // hooks
 import { useSearchBox, useInstantSearch } from "react-instantsearch";
@@ -12,6 +17,13 @@ import { getAutocompleteRequest } from "../api/AutosuggestAPI";
 
 
 const redirect = (refine, query, pageFilters) => {
+
+  // #895
+  const latest = JSON.parse(localStorage.getItem('latest_searches') ?? "{}")
+  const date = Date.now()
+  latest[query] = { query, pageFilters, date }
+  localStorage.setItem('latest_searches', JSON.stringify(latest))
+
   const loca = history.location  
   if(!loca.pathname.endsWith("/search") && !pageFilters){
     history.push("/osearch/search?q="+encodeURIComponent(query))
@@ -74,24 +86,61 @@ const SearchBoxAction = ({ inputValue, isSearchStalled, refine, pageFilters }) =
   );
 };
 
-export const SuggestsList = ({ items, onClick, isVisible, selected, setIsVisible }) => {
+export const SuggestsList = ({ items, onClick, isVisible, selected, query, setIsFocused }) => {
+
+  const [histo, setHisto] = useState([])
+
+  useEffect(() => {
+    const latest = _.orderBy(
+      (Object.values(JSON.parse(localStorage.getItem('latest_searches') ?? "{}"))??[])
+        .filter(t => !query || t.query.startsWith(query)),
+        [ "date" ],
+        [ "desc" ]
+      )
+      
+    const newHisto = latest.slice(0,10-items.length+5).map(t => ({ fromHisto:true, res:query+"<suggested>"+t.query.substring(query.length)+"</suggested>"}))
+    setHisto(newHisto)
+
+    //console.log("histo:", latest, query, newHisto)
+    
+
+  }, [items, query, isVisible])
+
+  const removeHisto = useCallback((ev,idx) => {  
+    const latest = JSON.parse(localStorage.getItem('latest_searches') ?? "{}")    
+    delete latest[histo[idx].res.replace(/<[^>]+>/g,"")]
+    localStorage.setItem('latest_searches', JSON.stringify(latest))
+    
+    setIsFocused(false)
+    setHisto([...histo].filter((h,i) => i != idx))
+
+    setTimeout(() => setIsFocused(true), 350)
+  }, [histo])
 
   return (
     <ul className="search-result-wrapper suggestions" hidden={!isVisible}>
-      {items.map((_suggest, _index) => (
+      {histo.concat(items).map((_suggest, _index) => (
         <li
           key={_index}
-          className={"search-result-item "+(selected === _index ? "selected":"")}
-          onClick={() => onClick(_suggest)}
+          className={"search-result-item "+(selected === _index ? "selected":"")+(_suggest.fromHisto ? "fromHisto":"")}          
         >
-          <span className="search-result-item-lang">{_suggest.lang}</span>
-          <span
-            className="search-result-item-res"
-            dangerouslySetInnerHTML={{ __html: _suggest.res }}
-          ></span>
-          <span className="search-result-item-category">
-            {_suggest.category}
-          </span>
+          <span  onClick={() => onClick(_suggest)}>
+            { _suggest.fromHisto 
+            ? <AccessTimeIcon /> 
+            : <SearchIcon /> }
+            <span className="search-result-item-lang" >{_suggest.lang}</span>
+            <span
+              onClick={() => onClick(_suggest)}
+              className="search-result-item-res"
+              dangerouslySetInnerHTML={{ __html: _suggest.res }}
+              ></span>
+            <span className="search-result-item-category">
+              {_suggest.category}
+            </span>
+            </span>
+          { _suggest.fromHisto  && <IconButton onClick={(ev) => removeHisto(ev, _index)}>
+              <CloseIcon />
+            </IconButton> }
         </li>
       ))}
     </ul>
@@ -235,7 +284,8 @@ const SearchBoxAutocomplete = (props) => {
         pageFilters={pageFilters}
       />
       <SuggestsList
-        {...{ selected }}
+        {...{ selected, setIsFocused }}
+        query={inputValue}
         items={suggestions}
         onClick={handleClick}
         isVisible={isFocused}
