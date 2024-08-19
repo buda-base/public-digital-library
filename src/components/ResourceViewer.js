@@ -3181,6 +3181,7 @@ class ResourceViewer extends Component<Props,State>
                else {
                   let thumbUrl = thumb[0].value
                   if(!thumbUrl.match(/[/]default[.][^.]+$/)) thumbUrl += "/full/"+(thumb[0].value.includes(".bdrc.io/")?"!2000,145":",145")+"/0/default.jpg"
+                  else if(thumbUrl.match(/bdrc.io.*\/2000,\//)) thumbUrl = thumbUrl.replace(/\/2000,\//,"/!2000,145/")
                   else thumbUrl = thumbUrl.replace(/[/]max[/]/,"/"+(thumbUrl.includes(".bdrc.io/")?"!2000,145":",145")+"/")
                   ret = [  <Link {...this.props.preview?{ target:"_blank" }:{}} to={"/show/"+sUri+"#open-viewer"} class={"images-thumb"} style={{"background-image":"url("+thumbUrl+")"}}><img src={thumbUrl}/></Link> ]
                }
@@ -3203,6 +3204,7 @@ class ResourceViewer extends Component<Props,State>
                else {
                   let thumbUrl = thumbV[0].value
                   if(!thumbUrl.match(/[/]default[.][^.]+$/)) thumbUrl += "/full/"+(thumbV[0].value.includes(".bdrc.io/")?"!2000,145":",145")+"/0/default.jpg"
+                  else if(thumbUrl.match(/bdrc.io.*\/2000,\//)) thumbUrl = thumbUrl.replace(/\/2000,\//,"/!2000,145/")
                   else thumbUrl = thumbUrl.replace(/[/]max[/]/,"/"+(thumbUrl.includes(".bdrc.io/")?"!2000,145":",145")+"/")
                   ret = [  <Link {...this.props.preview?{ target:"_blank" }:{}} to={"/show/"+sUri} class={"images-thumb"} style={{"background-image":"url("+thumbUrl+")"}}><img src={thumbUrl}/></Link> ]
                }
@@ -3493,6 +3495,7 @@ class ResourceViewer extends Component<Props,State>
             else if(thumb && thumb.length) {
                let thumbUrl = thumb[0].value
                if(!thumbUrl.match(/[/]default[.][^.]+$/)) thumbUrl += "/full/"+(thumb[0].value.includes(".bdrc.io/")?"!2000,145":",145")+"/0/default.jpg"
+               else if(thumbUrl.match(/bdrc.io.*\/2000,\//)) thumbUrl = thumbUrl.replace(/\/2000,\//,"/!2000,145/")
                else thumbUrl = thumbUrl.replace(/[/](max|(,600))[/]/,"/"+(thumbUrl.includes(".bdrc.io/")?"!2000,145":",145")+"/")
                let vlink = "/"+show+"/"+prefix+":"+pretty+"?s="+encodeURIComponent(this.props.history.location.pathname+this.props.history.location.search)+"#open-viewer"                
                thumb = <div class="images-thumb" style={{"background-image":"url("+thumbUrl+")"}}><img src={thumbUrl}/></div>;               
