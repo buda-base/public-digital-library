@@ -806,6 +806,7 @@ body > #pop-login { z-index:1000000 ;}
 
 .ais-SearchBox-form input {
    padding-left:48px;
+   padding-right:48px;
 }
 
 .inner-search-bar:not(#a) > div > span:last-child input::placeholder {
@@ -920,6 +921,13 @@ ul.suggestions li > span:first-child {
    width:100%;
    align-items: center;
    display: flex;
+}
+
+ul.suggestions li .search-result-item-res {
+   max-width:calc(100% - 64px);
+   text-overflow: ellipsis;
+   overflow: hidden;
+   flex-grow:1000;
 }
 
 ul.suggestions li > span:first-child + * {
