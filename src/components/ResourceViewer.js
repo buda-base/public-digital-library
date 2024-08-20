@@ -121,6 +121,8 @@ import logdown from 'logdown'
 import SimpleBar from 'simplebar-react';
 import 'simplebar/dist/simplebar.min.css';
 
+import EtextPage from "./EtextPage"
+
 
 //import edtf, { parse } from "edtf/dist/../index.js" // finally got it to work!! not in prod...
 import edtf, { parse } from "edtf" // see https://github.com/inukshuk/edtf.js/issues/36#issuecomment-1073778277
@@ -6721,7 +6723,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
             
                //loggergen.log("next?",this.props.nextChunk,next,JSON.stringify(elem,null,3))
 
-               if(!this.props.disbleScroll && next && this.props.nextChunk !== next) {                               
+               if(!this.props.disableInfiniteScroll && next && this.props.nextChunk !== next) {                               
                   this.props.onGetChunks(this.props.IRI,next); 
                } 
             }
@@ -6854,7 +6856,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
       let firstPageUrl 
       let loca = { ...this.props.history.location }
       //if(prev!==-1) {
-         loca.search = loca.search.replace(/(^[?])|(&*startChar=[^&]+)&*/g,"")
+         loca.search = loca.search.replace(/(^[?])|(&*startChar=[^&]+)(&&+)?/g,"")
          firstPageUrl = "?startChar=0"+(loca.search?"&"+loca.search:"") + "#open-viewer"
       //}
 
@@ -6862,11 +6864,208 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
       let lastPageUrl 
       loca = { ...this.props.history.location }
       if(last?.length) { //} && next <= Number(last[0].value)) {
-         loca.search = loca.search.replace(/(^[?])|(&*startChar=[^&]+)&*/g,"")
+         loca.search = loca.search.replace(/(^[?])|(&*startChar=[^&]+)(&&+)?/g,"")
          lastPageUrl = "?startChar="+last[0].value+(loca.search?"&"+loca.search:"") + "#open-viewer"
       }
 
+      const monlamPopup = (ev, seq, pageVal) => {
 
+         ev.persist()
+
+         const MAX_SELECTION_LENGTH = 120
+         const MIN_CONTEXT_LENGTH = 40
+         const selection = window.getSelection();
+         
+         //loggergen.log("closest:",ev.target.closest(".popper"),ev.currentTarget,ev.target)
+
+         if(!this.props.config.useMonlam || !this.state.enableDicoSearch || this.props.disableInfiniteScroll || ev.target.closest(".popper")) return
+         
+         let langElem = selection.anchorNode?.parentElement?.getAttribute("lang")
+         if(!langElem) langElem = selection.anchorNode?.parentElement?.parentElement?.getAttribute("lang")
+         
+         // #818
+         if(langElem && !langElem.startsWith("bo")) return
+
+         let parent = selection.anchorNode?.parentElement
+         if(!parent?.getAttribute("lang")) parent = parent?.parentElement
+
+         //loggergen.log("parent:",langElem,ev.currentTarget,parent,selection.toString(),selection,parent.children,selection.anchorNode)
+         
+         const getAbsOffset = (node, nodeOffset) => {
+
+            // case when multiple bo-x-ewts span in a row inside page (bdr:UT3JT13384_014_0001)                             
+            let rootPage = ev.currentTarget, startFromRoot = 0                  
+            for(let n of rootPage.children) {
+               if(n == parent) break ;
+               startFromRoot += n.textContent?.length || 0
+            }
+
+            // case when there are already some highlighted keyword from search
+            let start = startFromRoot, nodes = parent?.children ? Array.from(parent?.children) : []
+            if(nodes?.length) for(let i in nodes) {
+               if(nodes[i] == node.parentElement) break ;
+               start += nodes[i].textContent?.length || 0
+               //loggergen.log("i:",i,start)
+            }
+            
+            // case when there are <br/>, must count inner nodes as well 
+            let previousElement = node?.previousSibling
+            while (previousElement) {
+               //loggergen.log("prev:",previousElement)
+               if (previousElement.nodeType === Node.TEXT_NODE) {
+                  start += previousElement.nodeValue.length;
+               } 
+               if (previousElement.nodeName === "BR") {
+                  start += 1
+               }
+               previousElement = previousElement.previousSibling;
+            }
+            start += nodeOffset
+
+            return start
+         }
+
+         let start = getAbsOffset(selection.anchorNode, selection.anchorOffset)
+         let end = getAbsOffset(selection.focusNode, selection.focusOffset)                
+
+         // DONE: check case when selection is made backwards? right to left 
+         let invert = false
+         if(start > end) {
+
+            invert = true
+
+            let tmp = start
+            start = end
+            end = tmp
+
+            if(start + selection.toString().length != end) console.warn(start,end,start + selection.toString().length)
+
+         } 
+         else if(start === end) {
+
+            
+            // #800 keep open until closed with cross
+            /*  
+            if(this.state.monlam && this.state.collapse.monlamPopup) { 
+               this.setState({ noHilight:false, monlam:null })
+               this.props.onCloseMonlam()
+            }
+            */                 
+            if(this.state.monlam) {
+               this.setState({ monlam:null, ...this.state.noHilight && seq != this.state.noHilight?{noHilight:false}:{} })
+            }
+
+            return
+         } 
+
+         let range = selection.getRangeAt(0);
+
+         if(end > start + MAX_SELECTION_LENGTH) { 
+            try {
+               let sameElem = range.startContainer === range.endContainer || range.startContainer.parentElement === range.endContainer.parentElement
+               loggergen.log("range:", sameElem, range, start, end, range.startOffset + MAX_SELECTION_LENGTH)
+               if(!invert) {
+                  end = start + MAX_SELECTION_LENGTH
+                  
+                  /*
+                  // use rangy in every case 
+                  if(sameElem) range.setEnd(range.startContainer, range.startOffset + MAX_SELECTION_LENGTH);
+                  else {
+                  */
+
+                     let mutRange = rangy.createRange();
+                     mutRange.setStart(range.startContainer, range.startOffset) 
+                     mutRange.setEnd(range.endContainer, range.endOffset)                      
+                     mutRange.moveEnd("character", MAX_SELECTION_LENGTH - range.toString().length)
+                     range.setEnd(mutRange.endContainer, mutRange.endOffset)
+                     //loggergen.log(mutRange, mutRange.toString(), mutRange.toString().length, range, range.toString(), range.toString().length)     
+                  //}
+               } else {
+                  start = end - MAX_SELECTION_LENGTH
+                  //if(sameElem) range.setStart(range.endContainer, range.endOffset - MAX_SELECTION_LENGTH);
+                  //else {
+                     let mutRange = rangy.createRange();
+                     mutRange.setStart(range.startContainer, range.startOffset) 
+                     mutRange.setEnd(range.endContainer, range.endOffset)                      
+                     mutRange.moveStart("character", range.toString().length - MAX_SELECTION_LENGTH)
+                     range.setStart(mutRange.startContainer, mutRange.startOffset)
+                  //}
+               }
+            } catch(err) {                  
+               console.warn("can't update range", err, start, end, range, selection)     
+               if(this.state.enableDicoSearch) selection.removeAllRanges()
+               if(this.state.monlam) {
+                  this.setState({ monlam:null, ...this.state.noHilight && seq != this.state.noHilight?{noHilight:false}:{} })
+               }
+               return
+            }
+         }
+
+         
+         const startOff = Math.max(0, start - MIN_CONTEXT_LENGTH)
+         const endOff = Math.min(pageVal.length, end + MIN_CONTEXT_LENGTH)
+
+         // let's use indexOf to get exact coordinates of selection in page
+         const chunk =  pageVal.substring(startOff, endOff).replace(/[\r\n]/g," ");
+         let cursor_start = chunk.indexOf(selection.toString())
+         if(cursor_start < 0) cursor_start = start - startOff 
+         let cursor_end =  cursor_start + selection.toString().length
+
+         const updateHilightCoords = (target = this.state.monlam?.target, _range = this.state.monlam?.range) => {
+
+            const { top, left } = target.getBoundingClientRect()
+            let coords = Array.from(_range.getClientRects()).map(r => ({ 
+               ...r, 
+               px:{
+                  top:(r.top - top)+"px",
+                  left:(r.left - left)+"px",
+                  height:r.height+"px",
+                  width:r.width+"px"
+               }
+            }))
+         
+            let ref = React.createRef()
+            coords = coords.map( (c,i) => { 
+               if(i > 0) ref = null
+               return <div {...ref?{ref}:{}} style={{...c.px, scrollMargin:"50vh 50px 50vh 50px", pointerEvents:"none", position:"absolute", background: "rgba(252,224,141,0.65)", display:"block", zIndex: 1, mixBlendMode: "darken" }}></div>
+            })
+
+            loggergen.log("coords:",coords,ev.currentTarget,start,end,startOff,endOff,pageVal.substring(startOff, endOff))
+            
+            return { hilight:coords, ref, popupCoords:Array.from(_range.getClientRects()) }
+         }
+     
+         
+         if (selection.rangeCount > 0) {
+            range = range.cloneRange();
+         }
+
+         const data = { 
+            target: ev.currentTarget,
+            seq,
+            range,
+            ...updateHilightCoords(ev.currentTarget, selection.getRangeAt(0)),
+            updateHilightCoords,
+            api: {chunk, lang: langElem, cursor_start, cursor_end },
+         }
+
+         this.setState({ 
+            collapse:{...this.state.collapse, monlamPopup: false},
+            monlamTab:null, 
+            monlam: data,
+            ...this.state.monlam && this.state.noHilight && seq != this.state.noHilight?{noHilight:false}:{} 
+         })               
+
+         if(this.state.enableDicoSearch) selection.removeAllRanges()
+
+         if(this.props.monlamResults) this.callMonlam(data)
+      }
+
+      const thatGetLangLabel = (...args) => getLangLabel(this, ...args)
+      const thatSetState = (arg) => this.setState(arg)
+      const uriformat = (...args) => this.uriformat(...args) 
+      const hoverMenu = (...args) => this.hoverMenu(...args)
+      const onGetContext = this.props.onGetContext      
 
       return (
          
@@ -6892,387 +7091,34 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
          </div> }
          {/* {this.hasSub(k)?this.subProps(k):tags.map((e)=> [e," "] )} */}
          { elem.filter((e,i) => !this.props.disableInfiniteScroll || i > 0 || !e.chunks?.some(c => c["@value"].includes("Text Scan Input Form" /*" - Title Page"*/))).filter((e,i) => !this.props.disableInfiniteScroll || i < 2).map( (e,_i) => { 
+            
+            const state_monlam_hilight = e.seq == this.state.monlam?.seq && this.state.enableDicoSearch ? this.state.monlam?.hilight : null
 
-            //console.log("e:",_i,e)
-
-            let pageVal ="", pageLang = "", current = []
-
-            let showIm = ((this.state.showEtextImages && !(this.state.collapse["image-"+this.props.IRI+"-"+e.seq] === false)) || this.state.collapse["image-"+this.props.IRI+"-"+e.seq])
-
-            const that = this
-            const handleImageError = (evt, src, num) => {
-               //loggergen.log("Image URL '" + src + "' is invalid.");
-               $.ajax({
-                  type: 'GET',
-                  url: src,
-                  data: null,
-                  error:function (xhr, ajaxOptions, thrownError){
-                     //loggergen.log("code:",xhr.status)
-                     switch (xhr.status) {
-                        case 401:
-                        case 403:
-                           let errors = that.state.errors[that.props.IRI]
-                           if(!errors) errors = {}
-                           if(!errors[num]) errors[num] = {} 
-                           errors[num][src] = xhr.status
-                           that.setState({errors:{...that.state.errors, [that.props.IRI]:errors}})
-                           // Take action, referencing xhr.responseText as needed.
-                           break;
-                        case 404:
-                           // Take action, referencing xhr.responseText as needed.
-                           break;
-
-                        case 500:
-                           // Take action, referencing xhr.responseText as needed.
-                           break;
-                        default:
-                           break;
-                     }
-                  }
-               });
-            }
-
-            let imgErr = that.state.errors[that.props.IRI]
-            if(imgErr) imgErr = imgErr[e.seq]
-
-            //loggergen.log("links:",imageLinks,e)
-
-            const imgElem = !unpag && !imgErr && <h5><a title={I18n.t("misc."+(!showIm?"show":"hide"))+" "+I18n.t("available scans for this page")} onClick={(eve) => {
-               let id = "image-"+this.props.IRI+"-"+e.seq
-               this.setState({...this.state, collapse:{...this.state.collapse, [id]:!showIm}}) 
-            }}>{I18n.t("resource.page",{num:e.seq})}</a>                                             
-            </h5>
-
-
-            const monlamPopup = (ev, seq) => {
-
-               ev.persist()
-
-               const MAX_SELECTION_LENGTH = 120
-               const MIN_CONTEXT_LENGTH = 40
-               const selection = window.getSelection();
-               
-               //loggergen.log("closest:",ev.target.closest(".popper"),ev.currentTarget,ev.target)
-
-               if(!this.props.config.useMonlam || !this.state.enableDicoSearch || this.props.disableInfiniteScroll || ev.target.closest(".popper")) return
-               
-               let langElem = selection.anchorNode?.parentElement?.getAttribute("lang")
-               if(!langElem) langElem = selection.anchorNode?.parentElement?.parentElement?.getAttribute("lang")
-               
-               // #818
-               if(langElem && !langElem.startsWith("bo")) return
-
-               let parent = selection.anchorNode?.parentElement
-               if(!parent?.getAttribute("lang")) parent = parent?.parentElement
-
-               //loggergen.log("parent:",langElem,ev.currentTarget,parent,selection.toString(),selection,parent.children,selection.anchorNode)
-               
-               const getAbsOffset = (node, nodeOffset) => {
-
-                  // case when multiple bo-x-ewts span in a row inside page (bdr:UT3JT13384_014_0001)                             
-                  let rootPage = ev.currentTarget, startFromRoot = 0                  
-                  for(let n of rootPage.children) {
-                     if(n == parent) break ;
-                     startFromRoot += n.textContent?.length || 0
-                  }
-
-                  // case when there are already some highlighted keyword from search
-                  let start = startFromRoot, nodes = parent?.children ? Array.from(parent?.children) : []
-                  if(nodes?.length) for(let i in nodes) {
-                     if(nodes[i] == node.parentElement) break ;
-                     start += nodes[i].textContent?.length || 0
-                     //loggergen.log("i:",i,start)
-                  }
+            return <EtextPage 
+                  { ...{ e, _i, unpag, imageLinks, kw, monlamPopup } } 
                   
-                  // case when there are <br/>, must count inner nodes as well 
-                  let previousElement = node?.previousSibling
-                  while (previousElement) {
-                     //loggergen.log("prev:",previousElement)
-                     if (previousElement.nodeType === Node.TEXT_NODE) {
-                        start += previousElement.nodeValue.length;
-                     } 
-                     if (previousElement.nodeName === "BR") {
-                        start += 1
-                     }
-                     previousElement = previousElement.previousSibling;
-                  }
-                  start += nodeOffset
+                  state_showEtextImages={this.state.showEtextImages}
+                  //state_monlam={this.state.monlam}
+                  state_monlam_hilight={state_monlam_hilight}
+                  //state_noHilight={this.state.noHilight}
+                  state_enableDicoSearch={this.state.enableDicoSearch} 
+                  state_etextHasBo={this.state.etextHasBo}
+                  state_etextSize={this.state.etextSize}
+                  //state_collapse={this.state.collapse}
 
-                  return start
-               }
+                  props_IRI={this.props.IRI} 
+                  props_history={this.props.history} 
+                  props_config={this.props.config} 
+                  props_highlight={this.props.highlight}
+                  props_monlamResults={this.props.monlamResults}
+                  props_disableInfiniteScroll={this.props.disableInfiniteScroll}
+                  props_manifestError={this.props.manifestError} 
+                  props_assocResources={this.props.assocResources}
 
-               let start = getAbsOffset(selection.anchorNode, selection.anchorOffset)
-               let end = getAbsOffset(selection.focusNode, selection.focusOffset)                
+                  { ...{ thatGetLangLabel, thatSetState, uriformat, hoverMenu, onGetContext } }
 
-               // DONE: check case when selection is made backwards? right to left 
-               let invert = false
-               if(start > end) {
-
-                  invert = true
-
-                  let tmp = start
-                  start = end
-                  end = tmp
-
-                  if(start + selection.toString().length != end) console.warn(start,end,start + selection.toString().length)
-
-               } 
-               else if(start === end) {
-
-                  
-                  // #800 keep open until closed with cross
-                  /*  
-                  if(this.state.monlam && this.state.collapse.monlamPopup) { 
-                     this.setState({ noHilight:false, monlam:null })
-                     this.props.onCloseMonlam()
-                  }
-                  */                 
-                  if(this.state.monlam) {
-                     this.setState({ monlam:null, ...this.state.noHilight && seq != this.state.noHilight?{noHilight:false}:{} })
-                  }
-
-                  return
-               } 
-
-               let range = selection.getRangeAt(0);
-
-               if(end > start + MAX_SELECTION_LENGTH) { 
-                  try {
-                     let sameElem = range.startContainer === range.endContainer || range.startContainer.parentElement === range.endContainer.parentElement
-                     loggergen.log("range:", sameElem, range, start, end, range.startOffset + MAX_SELECTION_LENGTH)
-                     if(!invert) {
-                        end = start + MAX_SELECTION_LENGTH
-                        
-                        /*
-                        // use rangy in every case 
-                        if(sameElem) range.setEnd(range.startContainer, range.startOffset + MAX_SELECTION_LENGTH);
-                        else {
-                        */
-
-                           let mutRange = rangy.createRange();
-                           mutRange.setStart(range.startContainer, range.startOffset) 
-                           mutRange.setEnd(range.endContainer, range.endOffset)                      
-                           mutRange.moveEnd("character", MAX_SELECTION_LENGTH - range.toString().length)
-                           range.setEnd(mutRange.endContainer, mutRange.endOffset)
-                           //loggergen.log(mutRange, mutRange.toString(), mutRange.toString().length, range, range.toString(), range.toString().length)     
-                        //}
-                     } else {
-                        start = end - MAX_SELECTION_LENGTH
-                        //if(sameElem) range.setStart(range.endContainer, range.endOffset - MAX_SELECTION_LENGTH);
-                        //else {
-                           let mutRange = rangy.createRange();
-                           mutRange.setStart(range.startContainer, range.startOffset) 
-                           mutRange.setEnd(range.endContainer, range.endOffset)                      
-                           mutRange.moveStart("character", range.toString().length - MAX_SELECTION_LENGTH)
-                           range.setStart(mutRange.startContainer, mutRange.startOffset)
-                        //}
-                     }
-                  } catch(err) {                  
-                     console.warn("can't update range", err, start, end, range, selection)     
-                     if(this.state.enableDicoSearch) selection.removeAllRanges()
-                     if(this.state.monlam) {
-                        this.setState({ monlam:null, ...this.state.noHilight && seq != this.state.noHilight?{noHilight:false}:{} })
-                     }
-                     return
-                  }
-               }
-
-               
-               const startOff = Math.max(0, start - MIN_CONTEXT_LENGTH)
-               const endOff = Math.min(pageVal.length, end + MIN_CONTEXT_LENGTH)
-
-               // let's use indexOf to get exact coordinates of selection in page
-               const chunk =  pageVal.substring(startOff, endOff).replace(/[\r\n]/g," ");
-               let cursor_start = chunk.indexOf(selection.toString())
-               if(cursor_start < 0) cursor_start = start - startOff 
-               let cursor_end =  cursor_start + selection.toString().length
-
-               const updateHilightCoords = (target = this.state.monlam?.target, _range = this.state.monlam?.range) => {
-
-                  const { top, left } = target.getBoundingClientRect()
-                  let coords = Array.from(_range.getClientRects()).map(r => ({ 
-                     ...r, 
-                     px:{
-                        top:(r.top - top)+"px",
-                        left:(r.left - left)+"px",
-                        height:r.height+"px",
-                        width:r.width+"px"
-                     }
-                  }))
-               
-                  let ref = React.createRef()
-                  coords = coords.map( (c,i) => { 
-                     if(i > 0) ref = null
-                     return <div {...ref?{ref}:{}} style={{...c.px, scrollMargin:"50vh 50px 50vh 50px", pointerEvents:"none", position:"absolute", background: "rgba(252,224,141,0.65)", display:"block", zIndex: 1, mixBlendMode: "darken" }}></div>
-                  })
-
-                  loggergen.log("coords:",coords,ev.currentTarget,start,end,startOff,endOff,pageVal.substring(startOff, endOff))
-                  
-                  return { hilight:coords, ref, popupCoords:Array.from(_range.getClientRects()) }
-               }
-           
-               
-               if (selection.rangeCount > 0) {
-                  range = range.cloneRange();
-               }
-
-               const data = { 
-                  target: ev.currentTarget,
-                  seq,
-                  range,
-                  ...updateHilightCoords(ev.currentTarget, selection.getRangeAt(0)),
-                  updateHilightCoords,
-                  api: {chunk, lang: langElem, cursor_start, cursor_end },
-               }
-
-               this.setState({ 
-                  collapse:{...this.state.collapse, monlamPopup: false},
-                  monlamTab:null, 
-                  monlam: data,
-                  ...this.state.monlam && this.state.noHilight && seq != this.state.noHilight?{noHilight:false}:{} 
-               })               
-
-               if(this.state.enableDicoSearch) selection.removeAllRanges()
-
-               if(this.props.monlamResults) this.callMonlam(data)
-            }
-
-            // #807 debug mode
-            let get = qs.parse(this.props.history.location.search)
-
-            // #818 etext in sa-deva --> disable Monlam
-            let hasBo = this.state.etextHasBo
-
-            return (
-            <div class={"etextPage"+(this.props.manifestError&&!imageLinks?" manifest-error":"")+ (!e.value.match(/[\n\r]/)?" unformated":"") + (e.seq?" hasSeq":"")/*+(e.language === "bo"?" lang-bo":"")*/ }>
-               {/*                                          
-                  e.seq && this.state.collapse["image-"+this.props.IRI+"-"+e.seq] && imageLinks[e.seq] &&
-                  <img title="Open image+text view in Mirador" onClick={eve => { openMiradorAtPage(imageLinks[e.seq].id) }} style={{maxWidth:"100%"}} src={imageLinks[e.seq].image} />
-               */}
-               {
-                  e.seq && showIm && Object.keys(imageLinks).sort().map(id => {
-                     if(!this.state.collapse["imageVolume-"+id] && imageLinks[id][e.seq]) 
-                        if(!imgErr || !imgErr[imageLinks[id][e.seq].image]) { 
-                           const ref = React.createRef()
-                           return (
-                              <div class="imagePage">
-                                 {/* // TODO: use openseadragon 
-                                    <img class="page" title="Open image+text reading view" src={imageLinks[id][e.seq].image} onError={(ev)=> handleImageError(ev,imageLinks[id][e.seq].image,e.seq)} onClick={eve => { 
-                                    let manif = this.props.imageVolumeManifests[id]
-                                    window.MiradorUseEtext = "open" ;                                 
-                                    this.showMirador(imageLinks[id][e.seq].id,manif["@id"]);
-                                 }}/>     */}
-                                 <a href={imageLinks[id][e.seq].image} target="_blank" rel="noopener noreferrer">
-                                    <img class="page" ref={ref} src={imageLinks[id][e.seq].image} onLoad={(ev) => { if(ref.current) {
-                                       if(ref.current.naturalWidth < ref.current.naturalHeight) {
-                                          const elem = ref.current.closest(".imagePage")
-                                          elem.classList.add("portrait")
-                                          if(get.right) elem.classList.add("right")
-                                       }
-                                    }}} onError={(ev)=> handleImageError(ev,imageLinks[id][e.seq].image,e.seq)} />
-                                 </a>
-
-                                 {/*}
-                                 <div class="small"><a title="Open image+text reading view" onClick={eve => { 
-                                    let manif = this.props.imageVolumeManifests[id]
-                                    openMiradorAtPage(imageLinks[id][e.seq].id,manif["@id"])
-                                 }}>p.{e.seq}</a> from {this.uriformat(null,{value:id.replace(/bdr:/,bdr).replace(/[/]V([^_]+)_I.+$/,"/W$1")})}                                                      
-                                 { imageLinks && Object.keys(imageLinks).length > 1 && <span class="button hide" title={"Hide this image volume"} 
-                                    onClick={(eve) => {
-                                       this.setState({...this.state, collapse:{...this.state.collapse, ["imageVolume-"+id]:true}}) 
-                                    }}> 
-                                    <VisibilityOff/>
-                                 </span>  }
-                                 <br/>
-                                 </div>
-                                 */}        
-                              </div>
-                           )
-                        }
-                        //else return <p class="copyrighted">copyrighted</p>
-                  })
-               }
-               { e.seq && <div> 
-                  { !unpag && !imgErr && <span class="button" title={I18n.t("misc."+(!showIm?"show":"hide"))+" "+I18n.t("available scans for this page")} 
-                  onClick={(eve) => {
-                        let id = "image-"+this.props.IRI+"-"+e.seq
-                        this.setState({...this.state, collapse:{...this.state.collapse, [id]:!showIm}}) 
-                     }}> 
-                     <img src="/icons/image.svg"/>
-                  </span> }
-                  {/* { <h5><a title="Open image+text view in Mirador" onClick={eve => { openMiradorAtPage(imageLinks[e.seq].id) }}>p.{e.seq}</a></h5> } */}
-                  {   !unpag && !imgErr && imgElem }
-                     { (unpag || imgErr ) && <h5><a class="unpag" title={I18n.t("resource.unpag")}>{I18n.t("resource.pageN",{num:e.seq})}</a></h5>}
-                     &nbsp;
-                     { Object.keys(imageLinks).sort().map(id => {
-                        //loggergen.log("id:",id,e)
-                        let iIp = this.props.assocResources[e.id]
-                        const withHoverM = <>{I18n.t("misc.from")} {this.uriformat(null,{noid:true,value:id.replace(/bdr:/,bdr).replace(/[/]V([^_]+)_I.+$/,"/W$1")})} </>
-                        if( /* !this.state.collapse["imageVolume-"+id] &&*/ imageLinks[id][e.seq]) 
-                           return (
-                                 <h5 className="withHoverM">
-                                    {withHoverM}
-                                    <span onClick={() => { 
-                                       //loggergen.log("elem:",e,iIp)
-                                       if(!iIp) this.props.onGetContext(this.props.IRI,e.start,e.end, 1650)	
-                                    }}>
-                                       {this.hoverMenu(" "+e.id,{ value:"etextMoreInfo", elem: e },[ imgElem, <>&nbsp;</>, withHoverM ])}
-                                    </span>
-                                 </h5>
-                           )
-                     })}
-                     {imgErr &&  Object.values(imgErr).some(v => [401,403].includes(v)) && <span class="copyrighted">{I18n.t("access.imageN")}</span>}
-                     { imageLinks && Object.keys(imageLinks).length > 1 && <span class="button close" data-seq={"image-"+this.props.IRI+"-"+e.seq} title="Configure which image volumes to display" 
-                        onClick={e => { 
-                           $(e.target).closest(".button").addClass("show");
-                           this.setState({...this.state,
-                              collapse:{...this.state.collapse, imageVolumeDisplay:!this.state.collapse.imageVolumeDisplay},
-                              anchorElemImaVol:e.target
-                           })} }
-                        >
-                        <SettingsApp/>
-                     </span> }
-
-               </div> }
-               <div class="overpage">
-                  <h4 class="page"  
-                        onMouseEnter={ev => { if(!this.state.monlam && this.state.enableDicoSearch && !this.props.disableInfiniteScroll && this.state.noHilight != e.seq) this.setState({ noHilight: e.seq})}} 
-                        onMouseDown={ev => { if((!this.state.monlam || this.state.monlam.seq != e.seq) && this.state.enableDicoSearch && !this.props.disableInfiniteScroll && this.state.noHilight != e.seq) this.setState({ noHilight: e.seq})}} 
-                        onMouseUp={(ev) => monlamPopup(ev, e.seq)} 
-                        onCopy={(ev) => monlamPopup(ev, e.seq)} >
-                     {e.seq == this.state.monlam?.seq && this.state.enableDicoSearch ? this.state.monlam?.hilight : null}
-                     {!e.value.match(/[\n\r]/) && !e.seq ?[<span class="startChar"><span>[&nbsp;<Link to={"/show/"+this.props.IRI+"?startChar="+e.start+"#open-viewer"}>@{e.start}</Link>&nbsp;]</span></span>]:null}{(e.chunks?.length?e.chunks:[e.value]).map(f => {
-
-                        // #771 multiple language in one page
-                        let lang = e.language
-                        if(f["@language"]) lang = f["@language"]                        
-                        if(f["@value"] != undefined) f = f["@value"];
-
-                        let label = getLangLabel(this,bdo+"eTextHasPage",[{"lang":lang,"value":f}]), chunkVal
-
-                        if(label) { lang = label["lang"] ; if(!pageLang) pageLang = lang; 
-                           // #818
-                           if(!hasBo && lang?.startsWith("bo") && label.value.match(/[^0-9\n \[\]]/)) this.setState({etextHasBo: label}) ; 
-                        }
-                        if(label) { label = label["value"]; pageVal += " "+label ; chunkVal = label }
-                        if(label && this.props.highlight && this.props.highlight.key /*&& this.state.noHilight != e.seq*/) { 
-                           label = highlight(label,kw.map(k => k.replace(/(.)/g,"$1\\n?")),null,false,true); 
-                           current.push(label); }
-                        else if(label) { 
-                           label = [ label.startsWith("\n") ? <br/>:""].concat(label.split(/[\n\r]/))                           
-                           label = label.map( (e,i) =>(e?[e,i > 0 && i < label.length-1?<br/>:null]:[])).filter(e => e)
-                        } 
-                        //label = f
-                        let size = this.state.etextSize
-
-                        //loggergen.log("page:",e.seq,pageVal,e,current)
-                        
-                        if(lang === "bo") { size += 0.4 ; }
-                        return ([<span lang={lang} {...this.state.etextSize?{style:{ fontSize:size+"em", lineHeight:(size * 1.0)+"em" }}:{}}>{label}</span>])})}
-                        {this.hoverMenu(bdo+"EtextHasPage",{value:pageVal,lang:pageLang,start:e.start,end:e.end},current)}
-                  </h4>
-               </div>
-            </div>)})  }
+               />
+         })  }
             {/* // import make test fail...
                <div class="sub">
                <AnnotatedEtextContainer dontSelect={true} chunks={elem}/>
