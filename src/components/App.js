@@ -1179,11 +1179,11 @@ export function top_right_menu(that,etextTitle,backUrl,etextres,isMirador)
    const overNav = (
          <div class="over-nav" style={{ ...isMirador?{position:"absolute"}:{} }}>
             <div>
-               <div><i>Preserving buddhist literature for the world</i></div>
-               <div>
-                  <a href="https://www.bdrc.io/about-us" target="_blank" rel="nofollow">About Us</a>
-                  <Link to="/buda-user-guide">User Guide</Link>
-                  <a href="https://bdrc.io/donation" target="_blank" rel="nofollow">Donate</a>
+               <div><i>{I18n.t("topbar.preserving")}</i></div>
+               <div style={{ textTransform: "capitalize" }}>
+                  <a href="https://www.bdrc.io/about-us" target="_blank" rel="nofollow">{I18n.t("topbar.about")}</a>
+                  <Link to="/buda-user-guide">{I18n.t("topbar.guide")}</Link>
+                  <a href="https://bdrc.io/donation" target="_blank" rel="nofollow">{I18n.t("topbar.donate")}</a>
                </div>
             </div>
          </div>
