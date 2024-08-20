@@ -6893,7 +6893,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
          {/* {this.hasSub(k)?this.subProps(k):tags.map((e)=> [e," "] )} */}
          { elem.filter((e,i) => !this.props.disableInfiniteScroll || i > 0 || !e.chunks?.some(c => c["@value"].includes("Text Scan Input Form" /*" - Title Page"*/))).filter((e,i) => !this.props.disableInfiniteScroll || i < 2).map( (e,_i) => { 
 
-            console.log("e:",_i,e)
+            //console.log("e:",_i,e)
 
             let pageVal ="", pageLang = "", current = []
 
