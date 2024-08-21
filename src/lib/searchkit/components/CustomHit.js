@@ -275,11 +275,13 @@ const CustomHit = ({ hit, that, sortItems, storage }) => {
         <Link to={link}>
           { !imgError && img && <span class="img"><img src={img} onError={() => setImgError(true)}/></span> }
           <span class="RID">{hit.objectID}</span>
-          { (hit.scans_access < 4 || hit.scans_quality) && <span>
+          { (hit.scans_access <= 5 || hit.scans_quality) && <span>
               <span>{I18n.t("types.images", {count:2})}{I18n.t("misc.colon")}</span>&nbsp;
-              {hit.scans_access < 4 ? I18n.t("access.scans.hit."+hit.scans_access) : getQuality("scans",hit.scans_quality)}
+              { hit.scans_access <= 5 
+                ? I18n.t("access.scans.hit."+hit.scans_access) 
+                : getQuality("scans",hit.scans_quality) /* not there yet */ } 
             </span>}
-          { hit.etext_access > 1 && <span>
+          { hit.etext_access >= 1 && <span>
               <span>{I18n.t("types.etext" )}{I18n.t("misc.colon")}</span>&nbsp;
               {hit.etext_access < 3 ? I18n.t("access.etext.hit."+hit.etext_access) : getQuality("etext",hit.etext_quality)}
             </span>} 

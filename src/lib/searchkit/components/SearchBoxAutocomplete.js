@@ -243,7 +243,7 @@ const SearchBoxAutocomplete = (props) => {
         maxLength={512}
         type="search"
         value={inputValue}
-        {...{ placeholder }}
+        {...placeholder ? { placeholder} : { placeholder: "Search the website" } }
         onFocus={() => {
           setIsFocused(true);
         }}

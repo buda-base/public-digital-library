@@ -230,7 +230,7 @@
   width:100%;
 }
 
-.AppSK.InnerSearchPage .searchbox input::placeholder {
+.inner-search-bar input::placeholder {
   color:#00000077;
 }
 
@@ -506,8 +506,10 @@ header[data-hits="0"] ~ .hits .pagination,
   line-height:14px;
   color:black;
   font-weight: 400;
-  text-align: center;
+  text-align: left;
   padding:0 15px;
+  box-sizing: border-box;
+  width:100%;
 }
 .AppSK:not(#a) .result .thumb a .RID ~ span span{
   font-weight:700;
