@@ -723,7 +723,8 @@
       "downloadFU": "Download Preview",
       "findT":"Find Texts Related to this {{type}}",
       "findTbyP":"Find texts created by this person",
-      "findTaboutT":"Find texts about this topic"
+      "findTaboutT":"Find texts about this topic",
+      "searchT":"Search this {{type}}"
    },
    "tradition":{
       "boT":"Tibetan Tradition",

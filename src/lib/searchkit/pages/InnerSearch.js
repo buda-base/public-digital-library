@@ -68,7 +68,7 @@ export class InnerSearchPage extends Component<State, Props>
     let { RID, T } = this.props
     if(RID) RID = RID.split(":")[1]
 
-    let pageFilters = "associated_res:"+RID, placeholder = ""
+    let pageFilters = "associated_res:"+RID, placeholder = I18n.t("resource.searchT",{ type: I18n.t("types."+T.toLowerCase()).toLowerCase() } )
     if(RID) {
       /*
       // DONE: handle OR in ElasticAPI (use associated_res field instead)

@@ -1355,7 +1355,7 @@ ul.suggestions li > span > svg:first-child {
 .resource.etext-outline {
    position:sticky;
    left:0;
-   top:80px;
+   top:140px;
    width:400px;
    height:100vh;
    margin-left:0;
@@ -1450,10 +1450,11 @@ ul.suggestions li > span > svg:first-child {
    width:40px;
    height:40px;
    box-shadow: 0 2px 4px rgba(187, 187, 187, 0.5);
-   top:95px;
+   top:155px;
    left:15px;
-   margin-bottom:-40px;
+   margin-bottom:-60px;
    z-index:1;
+   margin-top:20px;
 }
 
 .download-etext-confirmation {

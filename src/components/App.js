@@ -1213,7 +1213,7 @@ export function top_right_menu(that,etextTitle,backUrl,etextres,isMirador)
                   */
       )
 
-   if(etextTitle)
+   if(false && etextTitle)
       return (<>
       {!that.props.portraitPopupClosed && portrait}
       <div class={"mobile-button top"+(!that.state.collapse.navMenu?" off":" on")} onClick={()=>that.setState({collapse:{...that.state.collapse,navMenu:!that.state.collapse.navMenu}})}><img src="/icons/burger.svg" /></div>      
