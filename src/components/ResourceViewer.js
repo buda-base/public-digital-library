@@ -8253,6 +8253,8 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
             */
 
             const parts = {
+               "bdr:PartTypeFragment":"frg",
+               "bdr:PartTypeFascicle":"fas",
                "bdr:PartTypeEditorial":"ed",
                "bdr:PartTypeSection":"sec",
                "bdr:PartTypeVolume":"vol",
