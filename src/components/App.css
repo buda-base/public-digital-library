@@ -1355,9 +1355,10 @@ ul.suggestions li > span > svg:first-child {
 .resource.etext-outline {
    position:sticky;
    left:0;
-   top:140px;
+   top:120px;
    width:400px;
-   height:100vh;
+   /* height:100vh; */
+   height:calc(100vh - 120px);
    margin-left:0;
    overflow: auto;
    z-index:1000;
@@ -1371,7 +1372,7 @@ ul.suggestions li > span > svg:first-child {
 }
 
 .resource.etext-outline.withOutline-true+* {
-   margin-top:-100vh;
+   margin-top:calc(-100vh + 120px);
 }
 .resource.etext-outline  .etextrefs:not(#a) {
    margin-left:0;
@@ -1384,9 +1385,9 @@ ul.suggestions li > span > svg:first-child {
 }
 
 .resource ~ .monlamResults > div:not(#a) {
-   height: 100vh;
    position: sticky;
-   top: 80px;
+   top: 120px;
+   height: calc(100vh - 120px);
 }
 
 #root > div > .resource.etext-view:not(#a) {
@@ -4811,6 +4812,7 @@ h4:hover a.no-bdrc img { opacity:1; }
 
 .resource .data.etext-title { padding-right:270px; display:flex; align-items: flex-start;position:relative;}
 
+.etext-header h2,
 .resource .data h2.intro,
 .resource .data h2.intro + h2 span,
 .resource .title + .data + .data h2.on .T + span { font-size:32px; font-family:'Noto Sans SemCond', "Noto Sans", "Noto Serif Tibetan", "Noto Serif Khmer", "Noto Sans Mongolian", "Roboto", "Helvetica", "Arial", sans-serif !important;font-weight:bold; }
@@ -5599,20 +5601,123 @@ html[lang="en"] .resource .data > [data-prop="bdo:creator"] h4[data-prop="bdo:ro
 
 .etextPage .overpage + div { margin:20px 0 5px 0; }
 
+.etext-nav-parent {
+   position:sticky;
+   top:0px;
+   z-index:100;
+   background:transparent;
+   height:120px;
+   box-sizing: border-box;
+   margin-bottom:20px;
+}
+
+.etext-header.sticky > div,
+.etext-header {
+   width:1440px;
+   max-width:97%;
+   margin:auto;
+   height:60px;
+   background:#efefef;
+}
+
+
+.etext-header.sticky {
+   height: 40px;
+   background:#dddddd;
+   width:100%;
+   max-width:100%;
+}
+
+.etext-header:not(.sticky) {
+
+   height:auto;
+   padding-top:40px;
+}
+
+.etext-nav-parent.someClass .etext-header.sticky,
+.etext-nav-parent.someClass .etext-header.sticky > div {
+   background: white;
+}
+
+.etext-nav-parent:not(.someClass) .etext-header.sticky > div > * {
+   visibility: hidden;
+}
+
+.etext-nav-parent .etext-header.sticky > div  h2 {
+   margin:0;
+   font-size: 18px;
+}
+
+.etext-nav-parent.someClass .etext-header.sticky > div {
+   width: 1280px;
+   margin:auto;
+
+   display: flex;
+   align-items: center;
+}
+
+.etext-header:not(.sticky) > div {
+   width: 1280px;
+   margin:auto;
+   background:white;
+   padding:15px 100px;
+   box-sizing: border-box;
+}
+.etext-header:not(.sticky) > div h2 {
+   margin:0;
+   font-size:32px;
+}
+
+
+.etext-header .urilink {
+   color:#d73449;
+   position: absolute;
+   right:calc(100% + 20px);
+   display: flex;
+   text-decoration: none;
+   font-weight:500;
+   align-items: center;
+   margin-top:-3px;
+}
+
+.etext-header > div > span {
+   position:relative;
+}
 
 #etext-nav { 
-   position: fixed;
+   /* position: fixed; */
    left: 0;
    bottom: 0;
-   width: 100%;
+   width: 1440px; 
+   max-width:97%;
+   margin:auto;   
    height: 80px;
    background: #172832;
    z-index: 100001;
-   box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.5);
+   /* box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.5); */
    display: flex;
    align-items: center;
    justify-content: center;
+   /* transition:all 0.2s ease-in-out; */
+   
 }
+
+.etext-nav-parent.someClass {
+   background:white;
+}
+
+.etext-nav-parent.someClass #etext-nav {
+   height:60px;
+   width:100%;
+   max-width:100%;   
+}  
+
+
+.etext-nav-parent.someClass .etext-header {
+   height:60px;
+}
+
+
 #etext-nav > div { justify-content: flex-start; align-items: center; }
 #etext-nav #control { margin-left:auto; margin-right:65px; display:flex; }
 #etext-nav #control img {   height:22px; display:inline-block;  }

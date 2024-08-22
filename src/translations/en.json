@@ -724,7 +724,8 @@
       "findT":"Find Texts Related to this {{type}}",
       "findTbyP":"Find texts created by this person",
       "findTaboutT":"Find texts about this topic",
-      "searchT":"Search this {{type}}"
+      "searchT":"Search this {{type}}",
+      "goB":"Back"
    },
    "tradition":{
       "boT":"Tibetan Tradition",

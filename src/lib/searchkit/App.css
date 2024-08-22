@@ -670,7 +670,10 @@ header[data-hits="0"] ~ .hits .pagination,
   padding:0;
 }
 
+.etext-header > div  h2 .newT:not(#a),
+.etext-nav-parent .etext-header.sticky > div  h2 .newT:not(#a),
 .resource h2 .newT {
+  font-family:Noto Sans;
   display:block;
   font-size:14px;
   font-weight: 500;
@@ -684,9 +687,21 @@ header[data-hits="0"] ~ .hits .pagination,
   display:none;
 }
 
+.etext-header > div  h2 .newT > span,
+.etext-nav-parent .etext-header.sticky > div  h2 .newT > span,
 .resource h2 .newT > span {
   background:#dddddd;
-  padding:1px 4px;
+  padding:1px 4px;  
+}
+
+.etext-header > div  h2 .newT:not(#a) {
+  margin-top: 0;
+}
+
+.etext-nav-parent .etext-header.sticky > div  h2 .newT:not(#a) {
+  font-size:12px;
+  margin-top: 0;
+  font-weight: 500;
 }
 
 .resource .title + .data + .data.top-props {

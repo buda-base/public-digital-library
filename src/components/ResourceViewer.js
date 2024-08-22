@@ -39,6 +39,7 @@ import ExpandMore from '@material-ui/icons/ExpandMore';
 import MailIcon from '@material-ui/icons/MailOutline';
 import PrintIcon from '@material-ui/icons/LocalPrintshop';
 import CheckCircle from '@material-ui/icons/CheckCircle';
+import ChevronLeft from '@material-ui/icons/ChevronLeft';
 import PanoramaFishEye from '@material-ui/icons/PanoramaFishEye';
 import Paper from '@material-ui/core/Paper';
 import InfiniteScroll from 'react-infinite-scroller';
@@ -123,6 +124,7 @@ import 'simplebar/dist/simplebar.min.css';
 
 import EtextPage from "./EtextPage"
 
+import StickyElement from "./StickyElement"
 
 //import edtf, { parse } from "edtf/dist/../index.js" // finally got it to work!! not in prod...
 import edtf, { parse } from "edtf" // see https://github.com/inukshuk/edtf.js/issues/36#issuecomment-1073778277
@@ -7832,7 +7834,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
       <a id="DL" class={!accessError?"on":""} onClick={(e) => this.setState({...this.state,anchorLangDL:e.currentTarget, collapse: {...this.state.collapse, langDL:!this.state.collapse.langDL } } ) }>{etext_lang_selec(this,true,<>{I18n.t("mirador.downloadE")}{!noIcon && <img src="/icons/DLw.png"/>}</>,this.props.IRI?fullUri(this.props.IRI).replace(/^http:/,"https:")+".txt":"")}</a>
    )
 
-   renderEtextNav = (accessError) => {
+   renderEtextNav = (accessError, title) => {
     
       let etextSize = (inc:boolean=true) => {
          let size = this.state.etextSize ;
@@ -7890,7 +7892,24 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
       return (!this.props.disableInfiniteScroll && <>
          { monlamPop }
          <div id="settings" onClick={() => this.setState({collapse:{...this.state.collapse, etextNav:!this.state.collapse.etextNav}})}><img src="/icons/settings.svg"/></div>
-          <GenericSwipeable onSwipedRight={() => this.setState({ collapse:{ ...this.state.collapse, etextNav:!this.state.collapse.etextNav }})}>
+          {/* <GenericSwipeable onSwipedRight={() => this.setState({ collapse:{ ...this.state.collapse, etextNav:!this.state.collapse.etextNav }})}> */}
+         <div class="etext-header">
+            <div>
+               <span>
+                  <Link className="urilink"  to=""><ChevronLeft />{I18n.t("resource.goB")}</Link>
+                  {title}
+               </span>
+            </div>
+         </div>
+         <StickyElement className="etext-nav-parent">
+            <div class="etext-header sticky">
+               <div>
+                  <span>
+                     <Link className="urilink" to=""><ChevronLeft />{I18n.t("resource.goB")}</Link>
+                     {title}
+                  </span>
+               </div>
+            </div>
             <div id="etext-nav" class={this.state.collapse.etextNav?"on":""}>
                <div>
                   { this.renderEtextDLlink(accessError) }
@@ -7908,7 +7927,8 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                   <span class="X" onClick={() => this.setState({ collapse:{ ...this.state.collapse, etextNav:!this.state.collapse.etextNav }})}></span>
                </div>
             </div>
-         </GenericSwipeable> 
+         </StickyElement>
+         {/* </GenericSwipeable>  */}
       </>)
    }
 
@@ -10009,7 +10029,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                let kw = getLangLabel(this,bdo+"eTextHasPage",[ { ...this.props.monlamKeyword }])
                if(kw?.value) kw = kw.value 
                else kw = this.props.monlamKeyword?.value                  
-               kw = kw.replace(/(^[ ་།/]+)|([ ་།/]+$)/g, "")
+               kw = kw?.replace(/(^[ ་།/]+)|([ ་།/]+$)/g, "") 
 
                //loggergen.log("kw:",kw,word?.value)
 
@@ -10082,21 +10102,30 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                   />      
                }
             </>) 
-         else if(topLevel) return (<>            
-            {getGDPRconsent(this)}
-            {top_right_menu(this,title,searchUrl,etextRes)}     
+         else if(topLevel) { 
+            const outline = <>
                <SimpleBar class={"resource etext-outline "+(this.state.collapse.etextRefs ? "withOutline-false":"withOutline-true")}>
                { etRefs }          
                </SimpleBar>
                {this.state.collapse.etextRefs && <IconButton width="32" className="show-outline-etext" onClick={() => this.setState({collapse:{...this.state.collapse,etextRefs:false}})}><img src="/icons/collecN.svg" /></IconButton>}
-               { this.state.currentText 
-                  ? <ResourceViewerContainer  auth={this.props.auth} history={this.props.history} IRI={this.state.currentText} openEtext={true} openEtextRefs={!this.state.collapse.etextRefs} youpi={"?"}/> 
-                  : <Loader className="etext-viewer-loader" loaded={!this.props.loading} 
-                        {...!this.props.disableInfiniteScroll ? {options:{position:"fixed",left:"calc(50% + 200px)",top:"50%"}}:{}}
-                     />      
-               }
-            </>) 
+            </>
+            return (<>            
+               {getGDPRconsent(this)}
+               {top_right_menu(this,title,searchUrl,etextRes)}                       
+                  { this.state.currentText 
+                     ? <ResourceViewerContainer auth={this.props.auth} history={this.props.history} IRI={this.state.currentText} openEtext={true} openEtextRefs={!this.state.collapse.etextRefs} topEtextRefs={outline} /> 
+                     : <>
+                        { outline }
+                        <Loader className="etext-viewer-loader" loaded={!this.props.loading} 
+                           {...!this.props.disableInfiniteScroll ? {options:{position:"fixed",left:"calc(50% + 200px)",top:"50%"}}:{}}
+                        />      
+                     </>
+                  }
+               </>) 
+         }
          else return ([            
+            this.renderEtextNav(etextAccessError, title),
+            this.props.topEtextRefs,
             <div class={(monlamResults ? "withMonlam " : "")+(this.props.openEtextRefs ? "withOutline ":"")}>               
                { monlamResults && <link rel="stylesheet" href="https://monlamdictionary.com/files/css/basic.css" /> }               
                { this.renderMirador(isMirador) }           
@@ -10127,7 +10156,6 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                      </h4> } 
                   </div>                     
                </div>
-               { this.renderEtextNav(etextAccessError) } 
                {!this.props.disableInfiniteScroll && <GenericSwipeable classN={"monlamResults "+(this.state.enableDicoSearch && (this.state.monlam && this.state.collapse.monlamPopup || monlamResults) ? "visible" : "")} onSwipedRight={() => { 
                      this.setState({noHilight:false, monlam:null, collapse:{ ...this.state.collapse, monlamPopup: true }})
                      this.props.onCloseMonlam()
