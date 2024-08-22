@@ -5649,7 +5649,7 @@ html[lang="en"] .resource .data > [data-prop="bdo:creator"] h4[data-prop="bdo:ro
 }
 
 .etext-nav-parent.someClass .etext-header.sticky > div {
-   width: 1280px;
+   width: 1224px;
    margin:auto;
 
    display: flex;
@@ -5682,6 +5682,10 @@ html[lang="en"] .resource .data > [data-prop="bdo:creator"] h4[data-prop="bdo:ro
 
 .etext-header > div > span {
    position:relative;
+}
+
+.etext-header.sticky .urilink {
+   margin-top:7px;
 }
 
 #etext-nav { 
