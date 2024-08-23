@@ -84,7 +84,7 @@ function EtextPage(props) {
   */
   let imgErr = errors[e.seq]
 
-  //loggergen.log("links:",imageLinks,e)
+  loggergen.log("links:",imageLinks,e)
 
   const imgElem = !unpag && !imgErr && <h5><a title={I18n.t("misc."+(!showIm?"show":"hide"))+" "+I18n.t("available scans for that page")} onClick={(eve) => {
       /*

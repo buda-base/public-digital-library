@@ -3724,7 +3724,7 @@ class ResourceViewer extends Component<Props,State>
 
       }
 
-      //loggergen.log("gR",prop,IRI,elem)
+      loggergen.log("gR",prop,IRI,elem,useAssoc)
 
       return elem
    }
@@ -6773,6 +6773,17 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
             for(let e of elem) {
                this.props.onImageVolumeManifest(iiifpres+"/v:"+ e.value.replace(new RegExp(bdr), "bdr:") + "/manifest",this.props.IRI);
             }
+         } else {
+            elem = this.getResourceElem(bdo+"eTextInVolume")
+            console.log("eiv:1",elem)
+            if(elem?.length) elem = this.getResourceElem(bdo+"eTextVolumeForImageGroup", shortUri(elem[0].value), this.props.assocResources)
+            console.log("eiv:2",elem)
+            if(elem && elem.length) {
+               //loggergen.log("elem",elem)
+               for(let e of elem) {
+                  this.props.onImageVolumeManifest(iiifpres+"/v:"+ e.value.replace(new RegExp(bdr), "bdr:") + "/manifest",this.props.IRI);
+               }
+            }
          }
       }
       else if(this.props.imageVolumeManifests !== true) for(let id of Object.keys(this.props.imageVolumeManifests)) {
@@ -6783,7 +6794,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
             let imageList = this.props.imageLists, iiifpres = "//iiifpres.bdrc.io", iiif = "//iiif.bdrc.io"            
             if(imageList) imageList = imageList[id]
             
-            //loggergen.log("k:",id,manif,imageList)
+            loggergen.log("k:",id,manif,imageList)
 
             if(this.props.config && this.props.config.iiifpres) iiifpres = this.props.config.iiifpres.endpoints[this.props.config.iiifpres.index]      
             if(this.props.config && this.props.config.iiif) iiif = this.props.config.iiif.endpoints[this.props.config.iiif.index]      
@@ -7854,9 +7865,9 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
       let size = this.state.etextSize
 
       // DONE remove "show images" when not needed
-      let showToggleScan = this.getResourceElem(bdo+"eTextHasPage")
-      if(showToggleScan && showToggleScan.length && !this.unpaginated()) showToggleScan = (showToggleScan[0].seq !== undefined)
-      else showToggleScan = false
+      let showToggleScan = this.getResourceElem(_tmp+"etextIsPaginated")?.length // (bdo+"eTextHasPage")
+      //if(showToggleScan && showToggleScan.length && !this.unpaginated()) showToggleScan = (showToggleScan[0].seq !== undefined)
+      //else showToggleScan = false
 
       let monlamPop
       if(this.state.monlam?.popupCoords) {
@@ -8030,7 +8041,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                      if(g.volumeHasEtext) {
                         if(!Array.isArray(g.volumeHasEtext)) {
                            let txt = elem.filter(e => e["@id"] === g.volumeHasEtext)                           
-                           const ETres = txt[0]?.eTextResource || txt[0]?.etextResource["@id"]
+                           const ETres = txt[0]?.["@id"] //txt[0]?.eTextResource || txt[0]?.etextResource["@id"]
                            if(ETres) {                                                            
 
                               g.link = useRoot+"?openEtext="+ETres /*this.props.IRI*/ + "#open-viewer"
@@ -8099,7 +8110,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                if(g.volumeHasEtext) {
                   if(!Array.isArray(g.volumeHasEtext)) {
                      let txt = elem.filter(e => e["@id"] === g.volumeHasEtext)                           
-                     ETres = txt[0]?.eTextResource || txt[0]?.etextResource["@id"]
+                     ETres = txt[0]?.["@id"] //txt[0]?.eTextResource || txt[0]?.etextResource["@id"]
                   } else if(!this.state.collapse[tag]){
                      this.setState({collapse: { ...this.state.collapse, [tag]:true }})
                      return      

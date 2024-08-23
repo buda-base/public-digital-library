@@ -457,7 +457,9 @@ async function initiateApp(params,iri,myprops,route,isAuthCallback) {
          let useIri = iri
          if(iri.startsWith("bdr:IE") && params.openEtext?.startsWith("bdr:UT")) useIri = params.openEtext
          
-         if(!res[bdrIRI][bdo+"eTextHasPage"]) store.dispatch(dataActions.getChunks(useIri,next));
+         console.log("res:", res[bdrIRI])
+
+         if(!res[bdrIRI][_tmp+"etextIsPaginated"]) store.dispatch(dataActions.getChunks(useIri,next));
          else {
             res[bdrIRI][bdo+"eTextHasPage"] = []
             store.dispatch(dataActions.getPages(useIri,next,true)); 
@@ -672,6 +674,8 @@ function* watchInitiateApp() {
 
 function extractAssoRes(iri,res) {
 
+   console.log("ear:", iri, JSON.stringify(res, null, 3))
+
    let longIri = fullUri(iri);
 
    let assocRes = {}, _res = {}
@@ -682,7 +686,7 @@ function extractAssoRes(iri,res) {
                   // #562 there must be something weird in the data here... but can't apply same fix as usual because it removes data (from ToL)
                   //bdo+"personGender", bdo+"personName", bdo+"personStudentOf", bdo+"personTeacherOf", tmp+"hasAdminData", owl+"sameAs"
                    ]
-   let allowR = [ skos+"prefLabel", bdo+"partIndex", bdo+"volumeNumber",  tmp+"thumbnailIIIFService" ]
+   let allowR = [ skos+"prefLabel", bdo+"partIndex", bdo+"volumeNumber",  tmp+"thumbnailIIIFService", bdo+"eTextVolumeForImageGroup" ]
 
    for(let k of Object.keys(res)) {                  
       _res[k] = { ...res[k], ..._res[k] }
@@ -1061,8 +1065,9 @@ async function getChunks(iri,next,nb = 10000,useContext = false) {
 
       let data = await api.loadEtextChunks(iri,next,nb,useContext);
 
+      
+      /*
       let sav = data["@graph"]
-
       data = _.sortBy(data["@graph"],'sliceStartChar')
       .filter(e => e.chunkContents)
       .map(e => { 
@@ -1081,8 +1086,30 @@ async function getChunks(iri,next,nb = 10000,useContext = false) {
 
          return ({ value:cval, lang:clang, start:e.sliceStartChar, end:e.sliceEndChar, id:fullUri(e.id)}) 
       }); //+ " ("+e.seqNum+")" }))
+      */
+     
+      let sav = data
+      data = data?.[0].innerHits?.chunks?.hits ?? []
+      data = _.sortBy(data,'cstart').map(e => {
+         
+         let k = Object.keys(e.sourceAsMap ?? {}).filter(t => t.startsWith("text_")).[0]
+         let cval = e.sourceAsMap[k] //e.chunkContents["@value"]
+         let clang = k.split("_")[1] //e.chunkContents["@language"]
 
-      //loggergen.log("dataC",iri,next,data)
+         //loggergen.log("hi?",cval,clang,hilight,e)
+
+         if(hilight && hilight.lang !== clang) { 
+            let langs = extendedPresets([clang])
+            hilight = sortLangScriptLabels([hilight],langs.flat,langs.translit)
+            if(hilight && hilight[0]) hilight = hilight[0]
+         }
+
+         if(hilight && hilight.lang === clang && cval) cval = cval.replace(new RegExp("("+hilight.value+")","g"),"↦$1↤")
+
+         return ({ value:cval, lang:clang, start:e.sourceAsMap.cstart, end:e.sourceAsMap.cend, id:fullUri("bdr:"+e.id)}) 
+      }); 
+
+      loggergen.log("dataC", iri, next, data, sav)
 
       if(!useContext) store.dispatch(dataActions.gotNextChunks(iri,data,next < 0))
       else { 
@@ -1123,19 +1150,24 @@ async function getPages(iri,next) {
 
 
       data = await api.loadEtextChunks(iri,next);
-      chunk = _.sortBy(data["@graph"].filter(e => e.chunkContents),'sliceStartChar')                  
-      pages = _.sortBy(data["@graph"].filter(e => e.type && e.type === "EtextPage"),'sliceStartChar')
+      
+      //chunk = _.sortBy(data["@graph"].filter(e => e.chunkContents),'sliceStartChar')        
+      chunk = _.sortBy(data?.[0].innerHits?.chunks?.hits ?? [], 'cstart')
 
-      let lang = chunk[0].chunkContents["@language"]
+      //pages = _.sortBy(data["@graph"].filter(e => e.type && e.type === "EtextPage"),'sliceStartChar')   
+      pages = _.sortBy(data?.[0].innerHits?.etext_pages?.hits ?? [], 'cstart')
+
+      loggergen.log("pages:",pages,chunk)
+
+      let lang //= chunk[0].chunkContents["@language"]
 
       //let start = chunk[0].sliceStartChar
       //chunk = chunk.map(e => e.chunkContents["@value"]).join() //.replace(/..$/,"--")).join()      
       //loggergen.log("chunk@"+start,chunk)
 
-
-      loggergen.log("pages",pages)
-
       data = pages.map(e => {
+
+         console.log("p:e", e, e.sourceAsMap.cstart, e.sourceAsMap.cend)
 
          let cval
          let clang 
@@ -1143,29 +1175,38 @@ async function getPages(iri,next) {
          
          let value = chunk.reduce( (acc,c) => { 
             
-            if(!cval && c.chunkContents["@value"]) cval = c.chunkContents["@value"]
-            if(!clang && c.chunkContents["@language"]) clang = c.chunkContents["@language"]
+            let k = Object.keys(c.sourceAsMap ?? {}).filter(t => t.startsWith("text_")).[0]
+            let _cval = c.sourceAsMap[k] //e.chunkContents["@value"]
+            let _clang = k.split("_")[1] //e.chunkContents["@language"]
+
+            if(!cval && _cval) cval = _cval     //c.chunkContents["@value"]) cval = c.chunkContents["@value"]
+            if(!clang && _clang) clang = _clang //c.chunkContents["@language"]) clang = c.chunkContents["@language"]
          
-            let content = c["chunkContents"], start = -1, end = -1
+            // TODO: case when multiple languages?
+            if(!lang && clang) lang = clang
+
+            console.log("p:c", c, c.sourceAsMap.cstart, c.sourceAsMap.cend, cval, clang)
+
+            let start = -1, end = -1
                   
-            if( e.sliceStartChar >= c.sliceStartChar && e.sliceStartChar <= c.sliceEndChar 
-            || e.sliceEndChar >= c.sliceStartChar   && e.sliceEndChar <= c.sliceEndChar  ) {
+            if( e.sourceAsMap.cstart >= c.sourceAsMap.cstart && e.sourceAsMap.cstart <= c.sourceAsMap.cend 
+            || e.sourceAsMap.cend >= c.sourceAsMap.cstart   && e.sourceAsMap.cend <= c.sourceAsMap.cend  ) {
 
-               if(e.sliceStartChar < c.sliceStartChar) start = 0
-               else start = e.sliceStartChar - c.sliceStartChar
+               if(e.sourceAsMap.cstart < c.sourceAsMap.cstart) start = 0
+               else start = e.sourceAsMap.cstart - c.sourceAsMap.cstart
 
-               if(e.sliceEndChar > c.sliceEndChar) end = c.sliceEndChar - c.sliceStartChar
-               else end = e.sliceEndChar - c.sliceStartChar
+               if(e.sourceAsMap.cend > c.sourceAsMap.cend) end = c.sourceAsMap.cend - c.sourceAsMap.cstart
+               else end = e.sourceAsMap.cend - c.sourceAsMap.cstart
             }
-            else if( e.sliceStartChar <= c.sliceStartChar && e.sliceEndChar >= c.sliceEndChar )
+            else if( e.sourceAsMap.cstart <= c.sourceAsMap.cstart && e.sourceAsMap.cend >= c.sourceAsMap.cend )
             {
                start = 0
-               end = c.sliceEndChar - c.sliceStartChar
+               end = c.sourceAsMap.cend - c.sourceAsMap.cstart
             }
 
             if(start >= 0 && end >= 0) {
-               acc += content["@value"].substring(start,end+1) ;
-               chunks.push({"@value":content["@value"].substring(start,end+1),"@language":c.chunkContents["@language"]})
+               acc += _cval.substring(start,end+1) ;
+               chunks.push({"@value":_cval.substring(start,end+1),"@language":_clang})
             }
 
             return acc ; 
@@ -1180,16 +1221,17 @@ async function getPages(iri,next) {
          
          if(hilight && hilight.lang === clang && value) value = value.replace(new RegExp("("+hilight.value+")","g"),"↦$1↤")
 
-         //loggergen.log("page?",e,e.sliceStartChar,e.sliceEndChar,start)
-         if(e.sliceEndChar <= chunk[chunk.length - 1].sliceEndChar) 
+         //loggergen.log("page?",e,e.cstart,e.cend,start)
+
+         if(e.sourceAsMap.cend <= chunk[chunk.length - 1].sourceAsMap.cend) 
             return {
-               //value:(chunk.substring(e.sliceStartChar - start,e.sliceEndChar - start - 1)).replace(/[\n\r]+/,"\n").replace(/(^\n)|(\n$)/,""),
+               //value:(chunk.substring(e.cstart - start,e.cend - start - 1)).replace(/[\n\r]+/,"\n").replace(/(^\n)|(\n$)/,""),
                value,
                language:lang,
                seq:e.seqNum,
-               start:e.sliceStartChar,
-               end:e.sliceEndChar,
-               id: fullUri(e.id),
+               start:e.sourceAsMap.cstart,
+               end:e.sourceAsMap.cend,
+               id: fullUri("bdr:"+e.id),
                chunks
             }
          

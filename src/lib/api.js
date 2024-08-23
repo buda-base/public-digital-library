@@ -693,8 +693,10 @@ export default class API {
 
       try {
          let config = store.getState().data.config.ldspdi
-         let url = config.endpoints[config.index]+(!useContext?"/lib":"/query/graph") ;
-         let param = {"searchType":useContext?"chunkContext":"Chunks",...(useContext?{"R_UT":IRI}:{"R_RES":IRI}),"I_START":next,"I_END":next+nb*1,"L_NAME":"","LG_NAME":"", "I_LIM":"" }
+         let url = config.endpoints[config.index]+ "/osearch" //(!useContext?"/lib":"/query/graph") ;
+         //let param = {"searchType":useContext?"chunkContext":Chunks",...(useContext?{"R_UT":IRI}:{"R_RES":IRI}),"I_START":next,"I_END":next+nb*1,"L_NAME":"","LG_NAME":"", "I_LIM":"" }
+         let param = {"searchType": "etextchunks","cstart": next,"cend": next+nb*1, "id": IRI, osearch: true }
+         
          let data = await this.getQueryResults(url, IRI, param,"GET","application/ld+json");
 
          //loggergen.log("etextchunks",JSON.stringify(data,null,3))
@@ -823,28 +825,38 @@ export default class API {
       //loggergen.log("key",key, param)
 
       let res = {}
-      param = { "searchType":"Res_withType","LG_NAME":"bo-x-ewts","I_LIM":500, ...param }
 
-      if(key.indexOf("\"") === -1 && !param["NO_QUOTES"]) key = "\""+key+"\""
-      if(param["L_NAME"] != "") param["L_NAME"] = key ;
-      else { delete param["L_NAME"] ; delete param["LG_NAME"] ;  }
+      if(!param.osearch) {
 
-      if(param["I_LIM"] === "") delete param["I_LIM"]
+         param = { "searchType":"Res_withType","LG_NAME":"bo-x-ewts","I_LIM":500, ...param }
+         
+         if(key.indexOf("\"") === -1 && !param["NO_QUOTES"]) key = "\""+key+"\""
+         if(param["L_NAME"] != "") param["L_NAME"] = key ;
+         else { delete param["L_NAME"] ; delete param["LG_NAME"] ;  }
 
-      if(param["searchType"] != "") url += "/"+param["searchType"];
-      else delete param["I_LIM"] ;
-
-      if(param["I_LIM"] === "") delete param["I_LIM"]
-
-      if(param["NO_QUOTES"]) delete param["NO_QUOTES"]
-
-      if(param["GY_RES"] || param["L_ID"]) {
-         delete param["LG_NAME"]
-         delete param["L_NAME"]
-         //delete param["I_LIM"]
+         if(param["I_LIM"] === "") delete param["I_LIM"]
+         
+         if(param["searchType"] != "") url += "/"+param["searchType"];
+         else delete param["I_LIM"] ;
+         
+         if(param["I_LIM"] === "") delete param["I_LIM"]
+         
+         if(param["NO_QUOTES"]) delete param["NO_QUOTES"]
+         
+         if(param["GY_RES"] || param["L_ID"]) {
+            delete param["LG_NAME"]
+            delete param["L_NAME"]
+            //delete param["I_LIM"]
+         }
+         
+      } else {
+         url += "/"+param["searchType"];
+         delete param.osearch
       }
 
       delete param["searchType"]
+
+
 
       if(accept === "application/json") param["format"] = "json"
 
