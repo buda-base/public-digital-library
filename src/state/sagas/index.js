@@ -342,9 +342,10 @@ async function initiateApp(params,iri,myprops,route,isAuthCallback) {
          */
 
 
+         let {assocRes, _res } = extractAssoRes(iri,res) //= await api.loadAssocResources(iri)
+
          if(!Etext)
          {
-            let {assocRes, _res } = extractAssoRes(iri,res) //= await api.loadAssocResources(iri)
             store.dispatch(dataActions.gotResource(iri,_res))
             store.dispatch(dataActions.gotAssocResources(iri,{ data: assocRes }))
             sameAsR[iri] = true ;
@@ -378,7 +379,8 @@ async function initiateApp(params,iri,myprops,route,isAuthCallback) {
          }
          else {
 
-
+            store.dispatch(dataActions.gotAssocResources(iri,{ data: assocRes }))
+            
             /*
             let res0 = { [ bdr+iri] : {...res["@graph"].reduce(
             (acc,e) => {
@@ -438,7 +440,7 @@ async function initiateApp(params,iri,myprops,route,isAuthCallback) {
          },{})})*/
       },{}) }
 
-      //loggergen.log("res:etext",res,bdrIRI,iri,params)
+      loggergen.log("res:etext",res,bdrIRI,iri,params)
 
       if(res[bdrIRI]) {
          
@@ -674,7 +676,7 @@ function* watchInitiateApp() {
 
 function extractAssoRes(iri,res) {
 
-   console.log("ear:", iri, JSON.stringify(res, null, 3))
+   //console.log("ear:", iri, JSON.stringify(res, null, 3))
 
    let longIri = fullUri(iri);
 
@@ -1167,7 +1169,7 @@ async function getPages(iri,next) {
 
       data = pages.map(e => {
 
-         console.log("p:e", e, e.sourceAsMap.cstart, e.sourceAsMap.cend)
+         //console.log("p:e", e, e.sourceAsMap.cstart, e.sourceAsMap.cend)
 
          let cval
          let clang 
@@ -1185,7 +1187,7 @@ async function getPages(iri,next) {
             // TODO: case when multiple languages?
             if(!lang && clang) lang = clang
 
-            console.log("p:c", c, c.sourceAsMap.cstart, c.sourceAsMap.cend, cval, clang)
+            //console.log("p:c", c, c.sourceAsMap.cstart, c.sourceAsMap.cend, cval, clang)
 
             let start = -1, end = -1
                   
@@ -1228,7 +1230,7 @@ async function getPages(iri,next) {
                //value:(chunk.substring(e.cstart - start,e.cend - start - 1)).replace(/[\n\r]+/,"\n").replace(/(^\n)|(\n$)/,""),
                value,
                language:lang,
-               seq:e.seqNum,
+               seq:e.sourceAsMap.pnum,
                start:e.sourceAsMap.cstart,
                end:e.sourceAsMap.cend,
                id: fullUri("bdr:"+e.id),

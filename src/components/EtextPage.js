@@ -26,7 +26,7 @@ function EtextPage(props) {
     uriformat, hoverMenu, monlamPopup, onGetContext
   } = props
 
-  console.log("page:", _i)
+  //console.log("page:", _i, imageLinks)
 
   let pageVal ="", pageLang = "", current = []
 
@@ -34,9 +34,7 @@ function EtextPage(props) {
   const [showIm, setShowIm] = useState()
 
   useEffect(() => {
-    if(showIm != false) {
-      setShowIm(state_showEtextImages)
-    } 
+    setShowIm(state_showEtextImages)
   }, [state_showEtextImages])
 
   const handleImageError = (evt, src, num) => {
@@ -84,7 +82,7 @@ function EtextPage(props) {
   */
   let imgErr = errors[e.seq]
 
-  loggergen.log("links:",imageLinks,e)
+  //loggergen.log("links:",imageLinks,e,errors, imgErr)
 
   const imgElem = !unpag && !imgErr && <h5><a title={I18n.t("misc."+(!showIm?"show":"hide"))+" "+I18n.t("available scans for that page")} onClick={(eve) => {
       /*

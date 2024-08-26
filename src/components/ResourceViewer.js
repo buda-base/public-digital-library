@@ -3724,7 +3724,7 @@ class ResourceViewer extends Component<Props,State>
 
       }
 
-      loggergen.log("gR",prop,IRI,elem,useAssoc)
+      //loggergen.log("gR",prop,IRI,elem,useAssoc)
 
       return elem
    }
@@ -8174,10 +8174,10 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
             }          
             
             let open = this.state.collapse[tag] || this.state.collapse[tag]  === undefined && ut // #821
-                        || e.link.includes("openEtext="+this.state.currentText + "#") //&& this.state.collapse[tag] != false
+                        || e.link?.includes("openEtext="+this.state.currentText + "#") //&& this.state.collapse[tag] != false
             let mono = etextrefs.length === 1
             let openD = this.state.collapse[tag+"-details"] || this.state.collapse[tag+"-details"]  === undefined && (mono || ut) // #821                           
-                        || e.link.includes("openEtext="+this.state.currentText + "#") //&& this.state.collapse[tag+"-details"] != false
+                        || e.link?.includes("openEtext="+this.state.currentText + "#") //&& this.state.collapse[tag+"-details"] != false
             ret.push(<span {...ref} class={'top'+ (this.state.collapse[tag]?" on":"") }>
                   {(e.hasPart && !open) && <img src="/icons/triangle.png" onClick={(ev) => toggle(null,root,e["@id"],!e.hasPart?"details":"",!e.hasPart && mono)} className="xpd right"/>}
                   {(e.hasPart && open) && <img src="/icons/triangle_.png" onClick={(ev) => toggle(null,root,e["@id"],!e.hasPart?"details":"",!e.hasPart && mono)} className="xpd"/>}
