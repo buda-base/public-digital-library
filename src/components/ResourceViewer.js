@@ -7972,6 +7972,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
          "bdo:EtextVolume":"vol",
          "bdo:VolumeEtextAsset":"vol",
          "bdo:EtextRef":"txt",
+         "bdo:Etext":"txt",
          "?":"unk",
       }
 
@@ -8081,8 +8082,25 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                      //nav.push(<a href={fullUri(g.eTextResource).replace(/^http:/,"https:")+".txt"} class="ulink" download type="text" target="_blank">{I18n.t("mirador.downloadE")}</a>)                     
                      nav.push(etextDL(ETres))
 
-                  } else {
+                  } else if(g.eTextInVolume){
+                     loggergen.log("default link:", g)
+
+                     const ETres = g["@id"]
+                     g.link = useRoot+"?openEtext="+ETres /*this.props.IRI*/ + "#open-viewer"
+                     
+                     nav.push(<Link {...!access?{disabled:true}:{}} to={"/show/"+useRoot+"?openEtext="+ETres /*this.props.IRI*/+"#open-viewer"} class="ulink" onClick={(ev) => {                                                         
+                        this.props.onLoading("etext", true)
+                        this.props.onReinitEtext(ETres)                        
+                        this.setState({currentText: ETres})
+                     }}>{I18n.t("result.openE")}</Link>)
+                     nav.push(<span>|</span>)
+                     //nav.push(<a href={fullUri(g.eTextResource).replace(/^http:/,"https:")+".txt"} class="ulink" download type="text" target="_blank">{I18n.t("mirador.downloadE")}</a>)                     
+                     nav.push(etextDL(ETres))
+         
+                     
+                  }else {
                      loggergen.log("no link:", g)
+
                   }
 
 
