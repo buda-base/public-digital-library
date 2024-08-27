@@ -291,7 +291,7 @@ async function initiateApp(params,iri,myprops,route,isAuthCallback) {
          let res,Etext ;
          if(!iri) iri = params.r
 
-         Etext = iri.match(/^([^:]+:)?UT/)
+         Etext = iri.match(/^([^:]+:)?(UT|VL)/)
 
          if(Etext) {
             let get = qs.parse(history.location.search), currentText
@@ -346,9 +346,11 @@ async function initiateApp(params,iri,myprops,route,isAuthCallback) {
 
          if(!Etext)
          {
-            store.dispatch(dataActions.gotResource(iri,_res))
-            store.dispatch(dataActions.gotAssocResources(iri,{ data: assocRes }))
-            sameAsR[iri] = true ;
+            if(!state.data.resources?.[iri]) { 
+               store.dispatch(dataActions.gotResource(iri,_res))
+               store.dispatch(dataActions.gotAssocResources(iri,{ data: assocRes }))
+               sameAsR[iri] = true ;
+            }
 
             /* //deprecated
             let url = fullUri(iri)
@@ -379,7 +381,7 @@ async function initiateApp(params,iri,myprops,route,isAuthCallback) {
          }
          else {
 
-            store.dispatch(dataActions.gotAssocResources(iri,{ data: assocRes }))
+            if(!state.data.resources[iri]) store.dispatch(dataActions.gotAssocResources(iri,{ data: assocRes }))
             
             /*
             let res0 = { [ bdr+iri] : {...res["@graph"].reduce(
@@ -459,7 +461,7 @@ async function initiateApp(params,iri,myprops,route,isAuthCallback) {
          let useIri = iri
          if(iri.startsWith("bdr:IE") && params.openEtext?.startsWith("bdr:UT")) useIri = params.openEtext
          
-         console.log("res:", res[bdrIRI])
+         console.log("res:", res[bdrIRI], params, next)
 
          if(!res[bdrIRI][_tmp+"etextIsPaginated"]) store.dispatch(dataActions.getChunks(useIri,next));
          else {
@@ -472,7 +474,7 @@ async function initiateApp(params,iri,myprops,route,isAuthCallback) {
 
       //loggergen.log("res::",iri,JSON.stringify(res[Object.keys(res)[0]][skos+"prefLabel"],null,3))
 
-      store.dispatch(dataActions.gotResource(iri,res));
+      if(!state.data.resources[iri]) store.dispatch(dataActions.gotResource(iri,res));
 
    }
 

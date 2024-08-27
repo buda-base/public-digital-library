@@ -3617,7 +3617,7 @@ class ResourceViewer extends Component<Props,State>
                            <div class="data access generic"><h3><span style={{textTransform:"none"}}><Trans i18nKey="access.generic" components={{ policies: <a /> }} /></span></h3></div>
                         </>
                         
-                  else if ( this.props.IIIFerrors && this.props.IIIFerrors[prefix+":"+pretty] && this.props.IIIFerrors[prefix+":"+pretty]?.error.code === 500 && this.props.IRI && !this.props.IRI.match(/^bdr:(IE|UT)/))
+                  else if ( this.props.IIIFerrors && this.props.IIIFerrors[prefix+":"+pretty] && this.props.IIIFerrors[prefix+":"+pretty]?.error.code === 500 && this.props.IRI && !this.props.IRI.match(/^bdr:(IE|UT|VL)/))
                      restrict =  <>
                         <div class="data access error"><h3><span style={{textTransform:"none"}}>{I18n.t("access.error")}</span></h3></div>
                      </>
@@ -6777,6 +6777,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
             elem = this.getResourceElem(bdo+"eTextInVolume")
             console.log("eiv:1",elem)
             if(elem?.length) elem = this.getResourceElem(bdo+"eTextVolumeForImageGroup", shortUri(elem[0].value), this.props.assocResources)
+            else elem = this.getResourceElem(bdo+"eTextVolumeForImageGroup")
             console.log("eiv:2",elem)
             if(elem && elem.length) {
                //loggergen.log("elem",elem)
@@ -7097,7 +7098,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
          }
          //loader={<Loader loaded={false} />}
          >
-         { !this.props.disableInfiniteScroll && <div style={{display:"flex", justifyContent:"space-between", width:"100%" }}>
+         { !this.props.disableInfiniteScroll && <div style={{display:"flex", justifyContent:"space-between", width:"100%", scrollMargin:"160px" }}>
             <h3 style={{marginBottom:"20px",textAlign:"right"}}>{ firstPageUrl && <Link onClick={(e) => this.props.onGetPages(this.props.IRI,0,true)} to={firstPageUrl}>{I18n.t("resource.firstP")}</Link>}</h3>
             <h3 style={{marginBottom:"20px",textAlign:"right"}}>{ prev!==-1 && <a onClick={(e) => this.props.onGetPages(this.props.IRI,prev)} class="download" style={{fontWeight:700,border:"none",textAlign:"right"}}>{I18n.t("resource.loadP")}</a>}</h3>
             <h3 style={{marginBottom:"20px",textAlign:"right"}}>{ lastPageUrl && <Link to={lastPageUrl} onClick={(e) => this.props.onGetPages(this.props.IRI,(this.getResourceElem(tmp+"lastChunk")??[])[0]?.value,true)} >{I18n.t("resource.lastP")}</Link>}</h3>
@@ -7786,7 +7787,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
             //return  <div class="data access"><h3><span style={{textTransform:"none"}}>{I18n.t("misc.please")} <a class="login" {...(this.props.auth?{onClick:this.props.auth.login.bind(this,this.props.history.location)}:{})}>{I18n.t("topbar.login")}</a> {I18n.t("access.credentials")}</span></h3></div>
             return  <div class="data access generic"><h3><span style={{textTransform:"none"}}><Trans i18nKey="access.generic" components={{ policies: <a /> }} /></span></h3></div>
             
-      else if ( this.props.manifestError && this.props.manifestError.error.code === 500 && this.props.IRI && !this.props.IRI.match(/^bdr:(IE|UT)/))
+      else if ( this.props.manifestError && this.props.manifestError.error.code === 500 && this.props.IRI && !this.props.IRI.match(/^bdr:(IE|UT|VL)/))
          return  <div class="data access error"><h3><span style={{textTransform:"none"}}>{I18n.t("access.error")}</span></h3></div>
       
    }
@@ -8083,15 +8084,20 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                      nav.push(etextDL(ETres))
 
                   } else if(g.eTextInVolume){
+                     g.index = g.seqNum
+
                      loggergen.log("default link:", g)
 
-                     const ETres = g["@id"]
-                     g.link = useRoot+"?openEtext="+ETres /*this.props.IRI*/ + "#open-viewer"
+                     const ETres = g.eTextInVolume
+                     g.link = useRoot+"?openEtext="+ETres /*this.props.IRI*/ 
+                     g.link += "&startChar="+(g.sliceStartChar ?? 0)
+                     //if(g.sliceEndChar) g.link += "&endChar="+g.sliceEndChar
+                     g.link += "#open-viewer"
                      
-                     nav.push(<Link {...!access?{disabled:true}:{}} to={"/show/"+useRoot+"?openEtext="+ETres /*this.props.IRI*/+"#open-viewer"} class="ulink" onClick={(ev) => {                                                         
+                     nav.push(<Link {...!access?{disabled:true}:{}} to={"/show/" + g.link} class="ulink" onClick={(ev) => {                                                         
                         this.props.onLoading("etext", true)
-                        this.props.onReinitEtext(ETres)                        
-                        this.setState({currentText: ETres})
+                        setTimeout(() => this.props.onReinitEtext(ETres), 150)                        
+                        this.setState({ currentText: ETres })
                      }}>{I18n.t("result.openE")}</Link>)
                      nav.push(<span>|</span>)
                      //nav.push(<a href={fullUri(g.eTextResource).replace(/^http:/,"https:")+".txt"} class="ulink" download type="text" target="_blank">{I18n.t("mirador.downloadE")}</a>)                     
@@ -8136,6 +8142,8 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                }
             } else if(g.seqNum && (g.eTextResource || g.etextResource && g.etextResource["@id"])) {
                ETres = g.eTextResource || g.etextResource["@id"]
+            } else if(g.eTextInVolume){
+               ETres = g.eTextInVolume
             }
             if(ETres) {
                this.props.onLoading("etext", true)            

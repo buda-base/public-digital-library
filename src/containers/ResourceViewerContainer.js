@@ -350,7 +350,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
          dispatch(ui.advancedSearch(s))
       },
       onReinitEtext(id:string) {
-         const nav = document.querySelector(".over-nav")
+         const nav = document.querySelector("#etext-scroll > div:first-child")//(".over-nav")
          const get = qs.parse(ownProps.history.location.search)
          if(nav && !get.part) nav.scrollIntoView()
          setTimeout(() => {             
