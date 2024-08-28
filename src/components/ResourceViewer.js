@@ -7842,9 +7842,24 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
    // to be redefined in subclass
    renderPostData = () => {}
 
-   renderEtextDLlink = (accessError, noIcon = false) => (
-      <a id="DL" class={!accessError?"on":""} onClick={(e) => this.setState({...this.state,anchorLangDL:e.currentTarget, collapse: {...this.state.collapse, langDL:!this.state.collapse.langDL } } ) }>{etext_lang_selec(this,true,<>{I18n.t("mirador.downloadE")}{!noIcon && <img src="/icons/DLw.png"/>}</>,this.props.IRI?fullUri(this.props.IRI).replace(/^http:/,"https:")+".txt":"")}</a>
-   )
+   renderEtextDLlink = (accessError, noIcon = false) => { 
+      let ldspdi = this.props.config.ldspdi, base 
+      if(ldspdi) base = ldspdi.endpoints[ldspdi.index]
+      let url = ""
+      if(this.props.IRI) { 
+         if(base.includes("-dev")) url = base + "/resource/" + this.props.IRI.split(":")[1] +".txt"
+         else url = fullUri(this.props.IRI).replace(/^http:/,"https:")+".txt"
+         url = url.replace(/^\/\//,"https://")
+      }
+      return (
+         <a id="DL" class={!accessError?"on":""} onClick={(e) => this.setState({...this.state,anchorLangDL:e.currentTarget, collapse: {...this.state.collapse, langDL:!this.state.collapse.langDL } } ) }>
+            {etext_lang_selec(this,true,<>
+                  {I18n.t("mirador.downloadE")}
+                  {!noIcon && <img src="/icons/DLw.png"/>}
+               </>, url)}
+            </a>
+      )
+   }
 
    renderEtextNav = (accessError, title) => {
     
@@ -8059,6 +8074,8 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                               //nav.push(<a href={fullUri(txt[0].eTextResource).replace(/^http:/,"https:")+".txt"} class="ulink"  download type="text" target="_blank">{I18n.t("mirador.downloadE")}</a>)
                               nav.push(etextDL(ETres))
 
+                           } else {
+                              console.log("not ETres",g)
                            }
                         }
                         else {
@@ -8086,7 +8103,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                   } else if(g.eTextInVolume){
                      g.index = g.seqNum
 
-                     loggergen.log("default link:", g)
+                     //loggergen.log("default link:", g)
 
                      const ETres = g.eTextInVolume
                      g.link = useRoot+"?openEtext="+ETres /*this.props.IRI*/ 
@@ -9722,7 +9739,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
       // - use '...' to tell it's just an overview
       // - use prefLabel in tabs title 
 
-      let related = [], createdBy = [], wUrl = fullUri(this.props.IRI), serial
+      let related = [], createdBy = [], wUrl = fullUri(this.props.IRI), serial, isSerialWork
       if(this.state.title.work && this.state.title.work[0].value) wUrl = this.state.title.work[0].value
 
       if(this.props.assocResources) {
@@ -9755,6 +9772,9 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
          serial = this.getResourceElem(bdo+"serialHasInstance");
          if(!serial) serial = this.getResourceElem(bdo+"collectionMember");
          if(!serial) serial = this.getResourceElem(bdo+"corporationHasMember");
+
+         const resType = this.getResourceElem(rdf+"type")
+         isSerialWork = resType && resType.some(e=> e.value?.endsWith("SerialWork"))
          
          // #871 
          const isEtextCollection = serial && serial.some(k => k.value?.includes("/resource/IE")) ;
@@ -10035,7 +10055,8 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
       if(this.props.previewEtext || this.props.disableInfiniteScroll || topLevel || this.props.openEtext || hasChunks && hasChunks.length && this.state.openEtext) {
          
          let hasPages = this.getResourceElem(bdo+"eTextHasPage")
-         let etextRes = this.getResourceElem(bdo+"eTextInInstance")
+         let etextRes = this.getResourceElem(bdo+"eTextInInstance")         
+         if(!etextRes?.length) etextRes = this.getResourceElem(bdo+"volumeOf")         
          if(etextRes && etextRes.length) etextRes = shortUri(etextRes[0].value)
          else etextRes = null
          let etext_data = this.renderData(false, [!hasPages?bdo+"eTextHasChunk":bdo+"eTextHasPage"],iiifpres,title,otherLabels,"etext-data",undefined,undefined,
@@ -10167,11 +10188,11 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                { monlamResults && <link rel="stylesheet" href="https://monlamdictionary.com/files/css/basic.css" /> }               
                { this.renderMirador(isMirador) }           
                <div class="resource etext-view" >                                    
-                  { this.props.disableInfiniteScroll && !etextAccessError && <>
+                  { this.props.disableInfiniteScroll && etextRes && !etextAccessError && <>
                      <div style={{ lineHeight:"23px"}}>
                       { this.renderOCR(<Trans i18nKey="access.OCRnew" components={{ bold: <b style={{ fontWeight:600 }}/>, nl: <br /> }} />) }
                      </div>
-                     <div class="etext-top-links">
+                     <div class={"etext-top-links"}>
                         <Link to={"/show/"+etextRes}>{I18n.t("resource.openViewer")}</Link>
                         { this.renderEtextDLlink(etextAccessError, true) }
                      </div> 
@@ -10240,10 +10261,12 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
          if(theOutline && !this.props.outlineOnly) theOutline = <div data-prop="tmp:outline"><h3><span>Outline:</span></h3><div class="group">{theOutline}</div></div>
 
          let findText
-         if(!["Instance", "Images", "Etext"].includes(_T) && (_T != "Work" || serial?.length) ) {
+         if(!["Instance", "Images", "Etext"].includes(_T) && (_T != "Work" || serial?.length || isSerialWork) ) {            
             findText = <InnerSearchPageContainer history={this.props.history} auth={this.props.auth} isOsearch={true} RID={this.props.IRI} T={_T} />          
          }
          let theDataTop = this.renderData(false, topProps,iiifpres,title,otherLabels,"top-props","main-info",versionTitle?[this.renderGenericProp(versionTitle, _tmp+"versionTitle", this.format("h4",_tmp+"versionTitle","",false,"sub",[{...versionTitle, type:"literal"}]))]:[],[], { [_tmp+"outline"]: theOutline, [_tmp+"map"]: hasMap.length ? header : undefined, [_tmp+"findText"]: hasMap.length ? findText : undefined})      
+
+         console.log("serial:", serial)
 
          if(hasMap.length) findText = undefined
 

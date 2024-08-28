@@ -1094,7 +1094,7 @@ async function getChunks(iri,next,nb = 10000,useContext = false) {
      
       let sav = data
       data = data?.[0].innerHits?.chunks?.hits ?? []
-      data = _.sortBy(data,'cstart').map(e => {
+      data = _.sortBy(data,(d) => d.sourceAsMap.cstart).map(e => {
          
          let k = Object.keys(e.sourceAsMap ?? {}).filter(t => t.startsWith("text_")).[0]
          let cval = e.sourceAsMap[k] //e.chunkContents["@value"]
@@ -1155,11 +1155,18 @@ async function getPages(iri,next) {
 
       data = await api.loadEtextChunks(iri,next);
       
-      //chunk = _.sortBy(data["@graph"].filter(e => e.chunkContents),'sliceStartChar')        
-      chunk = _.sortBy(data?.[0].innerHits?.chunks?.hits ?? [], 'cstart')
-
-      //pages = _.sortBy(data["@graph"].filter(e => e.type && e.type === "EtextPage"),'sliceStartChar')   
-      pages = _.sortBy(data?.[0].innerHits?.etext_pages?.hits ?? [], 'cstart')
+      pages = []
+      chunk = []
+      for(const j of data) {
+         for(const p of j.innerHits.etext_pages.hits) {
+            pages.push(p)
+         }
+         for(const c of j.innerHits.chunks.hits) {
+            chunk.push(c)
+         }
+      }
+      pages = _.orderBy(pages, (val) => val.sourceAsMap.cstart, ['asc'])            
+      chunk = _.orderBy(chunk, (val) => val.sourceAsMap.cstart, ['asc'])
 
       loggergen.log("pages:",pages,chunk)
 
