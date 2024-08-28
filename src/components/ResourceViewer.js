@@ -8044,12 +8044,24 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                   }
                   */
 
-                  const etextDL = (qname) => (
-                     <a  {...!access?{disabled:true}:{}} onClick={(e) => this.setState({...this.state,anchorLangDL:e.currentTarget, collapse: {...this.state.collapse, langDL:!this.state.collapse.langDL } } ) } 
-                        class="ulink" style={{cursor:"pointer"}}>
-                           {etext_lang_selec(this,true,<>{I18n.t("mirador.downloadE")}</>,fullUri(qname).replace(/^http:/,"https:")+".txt")}
-                     </a>
-                  )
+                  const etextDL = (qname) => { 
+
+                     let ldspdi = this.props.config.ldspdi, base 
+                     if(ldspdi) base = ldspdi.endpoints[ldspdi.index]
+                     let url = ""
+                     if(qname) { 
+                        if(base.includes("-dev")) url = base + "/resource/" + qname.split(":")[1] +".txt"
+                        else url = fullUri(qname).replace(/^http:/,"https:")+".txt"
+                        url = url.replace(/^\/\//,"https://")
+                     }
+
+                     return (
+                        <a  {...!access?{disabled:true}:{}} onClick={(e) => this.setState({...this.state,anchorLangDL:e.currentTarget, collapse: {...this.state.collapse, langDL:!this.state.collapse.langDL } } ) } 
+                           class="ulink" style={{cursor:"pointer"}}>
+                              {etext_lang_selec(this,true,<>{I18n.t("mirador.downloadE")}</>,url)}
+                        </a>
+                     )
+                  }
 
 
                   if(g.volumeNumber) { 

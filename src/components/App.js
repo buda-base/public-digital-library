@@ -974,7 +974,7 @@ export function etext_lang_selec(that,black:boolean = false, elem, DL)
                                        ...token?{headers: {Authorization: `Bearer ${token}`}}:{},
                                     })
                                     .then(function (response) {
-                                    //loggergen.log("loaded:", response.data)
+                                       //loggergen.log("et loaded:", response.data)
                            
                                        // download file
                                        const temp = window.URL.createObjectURL(new Blob([response.data]))
@@ -998,8 +998,10 @@ export function etext_lang_selec(that,black:boolean = false, elem, DL)
                                        close.setAttribute("class","close")
                                                                           
                                        link.addEventListener("click", (event) => {
-                                          window.URL.revokeObjectURL(link)
                                           linkContainer.remove()
+                                          setTimeout(() => { 
+                                             window.URL.revokeObjectURL(link)
+                                          }, 1000)
                                        })
                                        
                                        close.addEventListener("click", (event) => {
@@ -1019,7 +1021,7 @@ export function etext_lang_selec(that,black:boolean = false, elem, DL)
                                     })
                                     .catch(function (error) {
                                        logError(error)
-                                       //console.error("error:", error.message)
+                                       //console.error("et error:", error.message)
                                     })
 
                                  that.props.onLoading("etext DL",false)
