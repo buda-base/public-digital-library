@@ -7665,7 +7665,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
                      if(g.volumeHasEtext) {
                         if(!Array.isArray(g.volumeHasEtext)) {
                            let txt = elem.filter(e => e["@id"] === g.volumeHasEtext)                           
-                           const ETres = txt[0]?.eTextResource || txt[0]?.etextResource["@id"]
+                           const ETres = txt[0]?.eTextResource?.["@id"] ?? txt[0]?.eTextResource;
                            if(ETres) {
 
                               if(txt.length) g.link = ETres + "?backToEtext="+this.props.IRI + "#open-viewer"
@@ -7686,7 +7686,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
                      }
                   } else if(g.seqNum && (g.eTextResource || g.etextResource && g.etextResource["@id"])) {
                      g.index = g.seqNum
-                     const ETres = g.eTextResource || g.etextResource["@id"]
+                     const ETres = g.etextResource?.["@id"] ?? g.eTextResource 
                      g.link = ETres + "?backToEtext="+this.props.IRI + "#open-viewer"
 
                      //nav.push(<Link to={"/show/"+g.eTextResource} class="ulink">{I18n.t("resource.openR")}</Link>)
