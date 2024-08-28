@@ -443,10 +443,10 @@ async function hasEtextPage(manifest, resID) {
             let pages = [], chunks = []
             for(const j of json) {
                for(const p of j.innerHits.etext_pages.hits) {
-                  pages.push(p)
+                  if(!pages.some(q => q.sourceAsMap.pnum === p.sourceAsMap.pnum)) pages.push(p)
                }
                for(const c of j.innerHits.chunks.hits) {
-                  chunks.push(c)
+                  if(!chunks.some(d => c.sourceAsMap.cstart === d.sourceAsMap.cstart)) chunks.push(c)
                }
             }
             pages = __.orderBy(pages, (val) => val.sourceAsMap.cstart, ['asc'])            

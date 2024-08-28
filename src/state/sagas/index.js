@@ -1093,8 +1093,17 @@ async function getChunks(iri,next,nb = 10000,useContext = false) {
       */
      
       let sav = data
-      data = data?.[0].innerHits?.chunks?.hits ?? []
-      data = _.sortBy(data,(d) => d.sourceAsMap.cstart).map(e => {
+      //data = data?.[0].innerHits?.chunks?.hits ?? []
+
+      let chunk = []
+      for(const j of data) {
+         for(const c of j.innerHits.chunks.hits) {
+            if(!chunk.some(d => c.sourceAsMap.cstart === d.sourceAsMap.cstart)) chunk.push(c)
+         }
+      }
+      chunk = _.orderBy(chunk, (val) => val.sourceAsMap.cstart, ['asc'])
+
+      data = chunk.map(e => {
          
          let k = Object.keys(e.sourceAsMap ?? {}).filter(t => t.startsWith("text_")).[0]
          let cval = e.sourceAsMap[k] //e.chunkContents["@value"]
@@ -1159,10 +1168,10 @@ async function getPages(iri,next) {
       chunk = []
       for(const j of data) {
          for(const p of j.innerHits.etext_pages.hits) {
-            pages.push(p)
+            if(!pages.some(q => q.sourceAsMap.pnum === p.sourceAsMap.pnum)) pages.push(p)
          }
          for(const c of j.innerHits.chunks.hits) {
-            chunk.push(c)
+            if(!chunk.some(d => c.sourceAsMap.cstart === d.sourceAsMap.cstart)) chunk.push(c)
          }
       }
       pages = _.orderBy(pages, (val) => val.sourceAsMap.cstart, ['asc'])            

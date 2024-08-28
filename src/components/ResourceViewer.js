@@ -6797,6 +6797,8 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
             
             loggergen.log("k:",id,manif,imageList)
 
+            if(!this.props.previewEtext && this.props.resources && !this.props.resources[id]) this.props.onGetResource(id);
+
             if(this.props.config && this.props.config.iiifpres) iiifpres = this.props.config.iiifpres.endpoints[this.props.config.iiifpres.index]      
             if(this.props.config && this.props.config.iiif) iiif = this.props.config.iiif.endpoints[this.props.config.iiif.index]      
             // DONE prepare all images at once, not just according to etext pages that are already loaded
@@ -9566,6 +9568,12 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
       let unpag = this.getResourceElem(rdf+"type")
       if(unpag && unpag.length && unpag.filter(u => u.value === bdo+"EtextNonPaginated").length) unpag = true
       else unpag = false
+
+      if(!unpag) {
+         unpag = this.getResourceElem(bdo+"eTextVolumeForImageGroup")
+         if(!unpag?.length) unpag = this.props.resources?.[this.props.IRI] && this.props.resources?.[this.props.IRI] != true
+         else unpag = false
+      }
 
       return unpag
    }

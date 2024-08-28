@@ -26,7 +26,7 @@ function EtextPage(props) {
     uriformat, hoverMenu, monlamPopup, onGetContext
   } = props
 
-  //console.log("page:", _i, imageLinks)
+  //console.log("page:", _i, imageLinks, unpag)
 
   let pageVal ="", pageLang = "", current = []
 
@@ -170,7 +170,7 @@ function EtextPage(props) {
             { Object.keys(imageLinks).sort().map(id => {
               //loggergen.log("id:",id,e)
               let iIp = props_assocResources[e.id]
-              const withHoverM = <>{I18n.t("misc.from")} { uriformat(null,{noid:true,value:id.replace(/bdr:/,bdr).replace(/[/]V([^_]+)_I.+$/,"/W$1")})} </>
+              const withHoverM = <>{I18n.t("misc.from")} { uriformat(null,{noid:true,value:id.replace(/bdr:/,bdr) .replace(/[/]V([^_]+)_I.+$/,"/W$1")})} </>
               if( /* !state_collapse["imageVolume-"+id] &&*/ imageLinks[id][e.seq]) 
                   return (
                         <h5 className="withHoverM">
