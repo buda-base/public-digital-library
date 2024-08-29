@@ -7863,7 +7863,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
       )
    }
 
-   renderEtextNav = (accessError, title) => {
+   renderEtextNav = (accessError) => {
     
       let etextSize = (inc:boolean=true) => {
          let size = this.state.etextSize ;
@@ -7918,26 +7918,49 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
             </Popover>
       }
 
+      const inst = this.getResourceElem(bdo+"eTextInInstance") ?? this.getResourceElem(bdo+"volumeOf") // ?? this.getResourceElem(bdo+"eTextForInstance") 
+      let repro = this.getResourceElem(bdo+"instanceReproductionOf")
+      if(!repro?.length && inst?.length) repro = this.getResourceElem(bdo+"instanceReproductionOf", shortUri(inst[0].value), this.props.assocResources)
+            
+      let label, back = "", t
+      if(repro?.length) { 
+         label = repro.map(r => this.getResourceElem(skos+"prefLabel", shortUri(r.value), this.props.assocResources) ?? []).flatten() 
+         back = repro.filter(r => (t=(this.getResourceElem(rdf+"type", shortUri(r.value), this.props.assocResources) ?? [])).some(s => s.value === bdo+"Instance") && !t.some(s => s.value === bdo+"ImageInstance" )  )
+         if(back?.length) back = "/show/"+shortUri(back[0].value)
+      }
+      if(label?.length) label = getLangLabel(this, skos+"prefLabel", label) ?? {}
+      else label = { value: inst?.[0].value ? shortUri(inst?.[0].value) : "" , lang: "" }
+      
+      //console.log("rEtN:",this.props.resources[this.props.IRI], repro, this.props.assocResources, label, back)
+      
+      let { value: text, lang } = label
+
+      const title = <h2 title={text} lang={lang} class="on">
+         <span class="newT etext">
+            <span class="space-fix">
+               <span>{I18n.t("types.etext")}</span>
+            </span>
+         </span>
+         <span><span class="placeType">{text}</span></span>
+      </h2>
+   
+      const header = <div>
+         <span>
+            <Link className="urilink" to={back}><ChevronLeft />{I18n.t("resource.goB")}</Link>
+            {title}
+         </span>
+      </div>
+
       return (!this.props.disableInfiniteScroll && <>
          { monlamPop }
          <div id="settings" onClick={() => this.setState({collapse:{...this.state.collapse, etextNav:!this.state.collapse.etextNav}})}><img src="/icons/settings.svg"/></div>
           {/* <GenericSwipeable onSwipedRight={() => this.setState({ collapse:{ ...this.state.collapse, etextNav:!this.state.collapse.etextNav }})}> */}
          <div class="etext-header">
-            <div>
-               <span>
-                  <Link className="urilink"  to=""><ChevronLeft />{I18n.t("resource.goB")}</Link>
-                  {title}
-               </span>
-            </div>
+            {header}
          </div>
          <StickyElement className="etext-nav-parent">
             <div class="etext-header sticky">
-               <div>
-                  <span>
-                     <Link className="urilink" to=""><ChevronLeft />{I18n.t("resource.goB")}</Link>
-                     {title}
-                  </span>
-               </div>
+               {header}
             </div>
             <div id="etext-nav" class={this.state.collapse.etextNav?"on":""}>
                <div>
@@ -10202,7 +10225,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                </>) 
          }
          else return ([            
-            this.renderEtextNav(etextAccessError, title),
+            this.renderEtextNav(etextAccessError),
             this.props.topEtextRefs,
             <div class={(monlamResults ? "withMonlam " : "")+(this.props.openEtextRefs ? "withOutline ":"")}>               
                { monlamResults && <link rel="stylesheet" href="https://monlamdictionary.com/files/css/basic.css" /> }               
