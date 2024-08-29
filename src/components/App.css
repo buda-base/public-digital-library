@@ -1366,6 +1366,19 @@ ul.suggestions li > span > svg:first-child {
    background:white;
 }
 
+.resource.etext-outline .data#outline .root + div {
+   width: calc(100% - 25px - 50px - 35px + 30px);
+}
+
+.resource.etext-outline .data#outline .root + div .top.on + .details .sub > .ulink:first-child + span,
+.resource.etext-outline .data#outline .root + div .top.on + .details .sub > .ulink:first-child {
+   display:none;
+}
+
+.resource.etext-outline  .data#outline .top.is-root .ulink a,
+.resource.etext-outline  .data#outline .on h2 span,
+.resource.etext-outline  .data#outline .on > span:not(.pType) span { font-weight:700 !important;  }
+
 .resource.etext-outline+* {
    display: flex;
    justify-content: flex-end;

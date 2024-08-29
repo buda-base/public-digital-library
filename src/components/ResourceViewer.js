@@ -7882,10 +7882,24 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
 
       let size = this.state.etextSize
 
+      let showToggleScan = this.getResourceElem(bdo+"eTextVolumeForImageGroup") //(_tmp+"etextIsPaginated")
+      if(showToggleScan?.length) showToggleScan = true
+      else showToggleScan = false
+
+      /*
       // DONE remove "show images" when not needed
-      let showToggleScan = this.getResourceElem(_tmp+"etextIsPaginated")?.length // (bdo+"eTextHasPage")
-      //if(showToggleScan && showToggleScan.length && !this.unpaginated()) showToggleScan = (showToggleScan[0].seq !== undefined)
-      //else showToggleScan = false
+      if(!showToggleScan?.length) {
+         const inst = this.getResourceElem(bdo+"eTextInInstance") ?? this.getResourceElem(bdo+"volumeOf")          
+         if(inst?.length) showToggleScan = this.getResourceElem(_tmp+"etextIsPaginated", shortUri(inst[0].value), this.props.assocResources)
+      }
+         if(showToggleScan?.length && showToggleScan[0].value == "true" ) showToggleScan = true // (bdo+"eTextHasPage")
+         else showToggleScan = false
+
+         //if(showToggleScan && showToggleScan.length && !this.unpaginated()) showToggleScan = (showToggleScan[0].seq !== undefined)
+         //else showToggleScan = false
+      */
+
+
 
       let monlamPop
       if(this.state.monlam?.popupCoords) {
@@ -7918,7 +7932,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
             </Popover>
       }
 
-      const inst = this.getResourceElem(bdo+"eTextInInstance") ?? this.getResourceElem(bdo+"volumeOf") // ?? this.getResourceElem(bdo+"eTextForInstance") 
+      const inst = this.getResourceElem(bdo+"eTextInInstance") ?? this.getResourceElem(bdo+"volumeOf") 
       let repro = this.getResourceElem(bdo+"instanceReproductionOf")
       if(!repro?.length && inst?.length) repro = this.getResourceElem(bdo+"instanceReproductionOf", shortUri(inst[0].value), this.props.assocResources)
             
@@ -7934,6 +7948,8 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
       //console.log("rEtN:",this.props.resources[this.props.IRI], repro, this.props.assocResources, label, back)
       
       let { value: text, lang } = label
+      
+      document.title = text + " - " + (this.props.config?.khmerServer?"Khmer Manuscript Heritage Project":"Buddhist Digital Archives")
 
       const title = <h2 title={text} lang={lang} class="on">
          <span class="newT etext">
@@ -8255,25 +8271,37 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
             
             let open = this.state.collapse[tag] || this.state.collapse[tag]  === undefined && ut // #821
                         || e.link?.includes("openEtext="+this.state.currentText + "#") //&& this.state.collapse[tag] != false
+                        || e.link.endsWith(this.state.currentText)
             let mono = etextrefs.length === 1
             let openD = this.state.collapse[tag+"-details"] || this.state.collapse[tag+"-details"]  === undefined && (mono || ut) // #821                           
                         || e.link?.includes("openEtext="+this.state.currentText + "#") //&& this.state.collapse[tag+"-details"] != false
-            ret.push(<span {...ref} class={'top'+ (this.state.collapse[tag]?" on":"") }>
+            
+            let isCurrent = e.link?.includes("openEtext="+this.state.currentText + "#") 
+               //e.link.endsWith(this.state.currentText)
+                     
+            let openText = () => {
+               let ETres = e.link.replace(/^.*openEtext=([^#]+)#.*$/,"$1")
+               this.props.onLoading("etext", true)
+               setTimeout(() => this.props.onReinitEtext(ETres), 150)                        
+               this.setState({ currentText: ETres })
+            }
+
+            ret.push(<span {...ref} class={'top' + (/*this.state.collapse[tag]*/ isCurrent?" on":"") }>
                   {(e.hasPart && !open) && <img src="/icons/triangle.png" onClick={(ev) => toggle(null,root,e["@id"],!e.hasPart?"details":"",!e.hasPart && mono)} className="xpd right"/>}
                   {(e.hasPart && open) && <img src="/icons/triangle_.png" onClick={(ev) => toggle(null,root,e["@id"],!e.hasPart?"details":"",!e.hasPart && mono)} className="xpd"/>}
-                  <span class={"parTy "+(e.details?"on":"")} {...e.details?{title: I18n.t("resource."+(openD?"hideD":"showD")), onClick:(ev) => toggle(ev,root,e["@id"],"details",!e.hasPart && mono)}:{title:tLabel}} >
+                  <span class={"parTy "+(/*e.details*/isCurrent?"on":"") } {...e.details?{title: I18n.t("resource."+(openD?"hideD":"showD")), onClick:(ev) => toggle(ev,root,e["@id"],"details",!e.hasPart && mono) /*openText()*/ }:{title:tLabel}} >
                      {pType && parts[pType] ? <div>{parts[pType]}</div> : <div>{parts["?"]}</div> }
                   </span>
-                  <span>{this.uriformat(_tmp+"withEtextPrefLang",{type:'uri', value:gUri, volume:fUri, inOutline: (!e.hasPart?tag+"-details":tag), url:"/show/"+e.link, debug:false, toggle:() => toggle(null,root,e["@id"],!e.hasPart?"details":"",!e.hasPart && (mono || ut)) })}</span>
+                  <span>{this.uriformat(_tmp+"withEtextPrefLang",{type:'uri', value:gUri, volume:fUri, inOutline: (!e.hasPart?tag+"-details":tag), url:"/show/"+e.link, debug:false, toggle:() => /*toggle(null,root,e["@id"],!e.hasPart?"details":"",!e.hasPart && (mono || ut))*/ openText() })}</span>
                   <div class="abs">                  
                      { !e.hasPart && (
                            access 
-                           ?  <Link className="hasImg hasTxt" title={I18n.t("result.openE")}  to={"/show/"+e.link} onClick={(ev) => {                                                         
+                           ?  <Link className="hasImg hasTxt" title={I18n.t("result.openE")}  to={"/show/"+e.link} onClick={(ev) => openText() /*{                                                         
                               const ETres = e.link.replace(/^.*openEtext=([^#]+)#.*$/, "$1")
                               this.props.onLoading("etext", true)
                               this.props.onReinitEtext(ETres)
                               this.setState({currentText: ETres})
-                           }}>
+                           }*/}>
                                  <img src="/icons/search/etext.svg"/><img src="/icons/search/etext_r.svg"/>
                               </Link> 
                            :  <a disabled="true" className="hasImg hasTxt" title={I18n.t("access.fairuseEtext").replace(/<[^>]+>/g,"")}>
@@ -8296,7 +8324,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                ret.push(<div class="details">
                      {e.details}
                   </div>)
-            if(e.hasPart && open) ret.push(<div style={{paddingLeft:"33px"}}>{makeNodes(e["@id"],top)}</div>)
+            if(e.hasPart && open) ret.push(<div style={{paddingLeft:"26px"}}>{makeNodes(e["@id"],top)}</div>)
             return ret
          })
 
@@ -8364,9 +8392,9 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
             <div>
                <div class={"root is-root"} onClick={(e) => toggle(e,root,root)} >                     
                   { !open && [<img src="/icons/triangle.png" className="xpd right" />,colT,<span >{title}</span>]}
-                  {  open && [<img src="/icons/triangle_.png" className="xpd"  />,colT,<span class='on'>{title}</span>]}
+                  {  open && [<img src="/icons/triangle_.png" className="xpd"  />,colT,<span /* class='on' */>{title}</span>]}
                </div>
-               { open && <div style={{paddingLeft:"50px"}}>{etextRefs}</div> }
+               { open && <div style={{paddingLeft:"43px"}}>{etextRefs}</div> }
             </div>
          </div> 
          )
