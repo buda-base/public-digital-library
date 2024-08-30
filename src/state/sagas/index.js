@@ -1139,7 +1139,7 @@ async function getChunks(iri,next,nb = 10000,useContext = false) {
 
 }
 
-async function getPages(iri,next) {
+async function getPages(iri,next,meta) {
    
    store.dispatch(uiActions.loading("etext pages", true));
 
@@ -1255,9 +1255,10 @@ async function getPages(iri,next) {
                chunks
             }
          
-      }).filter(e => e); //+ " ("+e.seqNum+")" }))
+      }).filter(e => e) //+ " ("+e.seqNum+")" }))
+      .filter(p => (meta?.firstC === undefined || p.start >= meta.firstC) && (meta?.lastC === undefined || p.start < meta?.lastC) )
 
-      loggergen.log("dataP",iri,next,data)
+      loggergen.log("dataP",iri,next,data,meta)
 
       store.dispatch(dataActions.gotNextPages(iri,data,next < 0))
 
@@ -3869,7 +3870,7 @@ export function* watchGetPages() {
 
    yield takeLatest(
       dataActions.TYPES.getPages,
-      (action) => getPages(action.payload,action.meta.next)
+      (action) => getPages(action.payload,action.meta.next,action.meta.bounds)
    );
 }
 

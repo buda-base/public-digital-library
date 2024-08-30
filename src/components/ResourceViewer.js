@@ -1988,8 +1988,18 @@ class ResourceViewer extends Component<Props,State>
    onBackButtonEvent(event) {      
       // DONE fix back button to page with open mirador not working
       if(window.location.hash !== "#open-viewer") window.closeMirador = true ;
-      // quickfix for etext viewer
-      else if(window.location.search.includes("openEtext")) window.location.reload()
+      else if(window.location.search.includes("openEtext")) { 
+         // quickfix for etext viewer
+         window.location.reload()
+
+         /*
+         // better fix? this.props looks undefined...
+         let ETres = window.location.search.replace(/^.*openEtext=([^#&]+)[#&].*$/,"$1")
+         this.props.onLoading("etext", true)
+         this.props.onReinitEtext(ETres)
+         this.setState({ currentText: ETres })
+         */
+      }
    }
 
    expand(str:string, useCfg:boolean = false) //,stripuri:boolean=true)
@@ -6766,9 +6776,8 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
          firstC = info[0].sliceStartChar
          lastC = info[0].sliceEndChar - 1
       }
-      
-      //loggergen.log("epage:", elem, kZprop, iiifpres, this.props.IRI, inst, info, get, text)
 
+      
       let next, prev;
       if(elem && elem.length) { 
          elem = elem.filter(e => e.value && e.start !== undefined && e.start >= firstC && e.start < lastC)
@@ -6777,9 +6786,13 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
       }
       if(next && next.length) next = next[next.length - 1].end + 1
       else next = 0
-
+      
       if(prev && prev.length) prev = -prev[0].start
       if(!prev) prev = -1
+      
+      //loggergen.log("epage:", elem, kZprop, iiifpres, this.props.IRI, inst, info, get, text, prev, next, firstC, lastC)
+
+      if(prev === -firstC) prev = - 1
       
       let imageLinks ;
       if(this.state.imageLinks) imageLinks = this.state.imageLinks[this.props.IRI]
@@ -7116,16 +7129,16 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                //loggergen.log("next?",this.props.nextChunk,next,JSON.stringify(elem,null,3))
 
                if(!this.props.disableInfiniteScroll && next && this.props.nextPage !== next) {                               
-                  this.props.onGetPages(this.props.IRI,next); 
+                  this.props.onGetPages(this.props.IRI,next,undefined,{firstC, lastC}); 
                } 
             }
          }
          //loader={<Loader loaded={false} />}
          >
          { !this.props.disableInfiniteScroll && <div style={{display:"flex", justifyContent:"space-between", width:"100%", scrollMargin:"160px" }}>
-            <h3 style={{marginBottom:"20px",textAlign:"right"}}>{ firstPageUrl && <Link onClick={(e) => this.props.onGetPages(this.props.IRI,firstC,true)} to={firstPageUrl}>{I18n.t("resource.firstP")}</Link>}</h3>
-            <h3 style={{marginBottom:"20px",textAlign:"right"}}>{ prev!==-1 && <a onClick={(e) => this.props.onGetPages(this.props.IRI,prev)} class="download" style={{fontWeight:700,border:"none",textAlign:"right"}}>{I18n.t("resource.loadP")}</a>}</h3>
-            <h3 style={{marginBottom:"20px",textAlign:"right"}}>{ lastPageUrl && <Link to={lastPageUrl} onClick={(e) => this.props.onGetPages(this.props.IRI,lastC,true)} >{I18n.t("resource.lastP")}</Link>}</h3>
+            <h3 style={{marginBottom:"20px",textAlign:"right"}}>{ firstPageUrl && <Link onClick={(e) => this.props.onGetPages(this.props.IRI,firstC,true,{firstC, lastC})} to={firstPageUrl}>{I18n.t("resource.firstP")}</Link>}</h3>
+            <h3 style={{marginBottom:"20px",textAlign:"right"}}>{ prev!==-1 && <a onClick={(e) => this.props.onGetPages(this.props.IRI,Math.max(prev, -firstC), undefined,{firstC, lastC})} class="download" style={{fontWeight:700,border:"none",textAlign:"right"}}>{I18n.t("resource.loadP")}</a>}</h3>
+            <h3 style={{marginBottom:"20px",textAlign:"right"}}>{ lastPageUrl && <Link to={lastPageUrl} onClick={(e) => this.props.onGetPages(this.props.IRI,lastC,true,{firstC, lastC})} >{I18n.t("resource.lastP")}</Link>}</h3>
          </div> }
          {/* {this.hasSub(k)?this.subProps(k):tags.map((e)=> [e," "] )} */}
          { elem.filter((e,i) => !this.props.disableInfiniteScroll || i > 0 || !e.chunks?.some(c => c["@value"].includes("Text Scan Input Form" /*" - Title Page"*/))).filter((e,i) => !this.props.disableInfiniteScroll || i < 2).map( (e,_i) => { 

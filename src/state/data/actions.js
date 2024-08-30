@@ -564,14 +564,14 @@ export const getChunks = (iri: string,next:number=0): Action => {
 }
 
 TYPES.getPages = 'GET_PAGES';
-export const getPages = (iri: string,next:number=0,reset?:boolean): Action => {
+export const getPages = (iri: string,next:number=0,reset?:boolean,bounds): Action => {
 
    loggergen.log("getP",iri,next,reset)
 
     return {
         type: TYPES.getPages,
         payload: iri,
-        meta: { next, reset }
+        meta: { next, reset, bounds }
     }
 }
 
