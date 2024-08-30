@@ -459,9 +459,9 @@ async function initiateApp(params,iri,myprops,route,isAuthCallback) {
          }
 
          let useIri = iri
-         if(iri.startsWith("bdr:IE") && params.openEtext?.startsWith("bdr:UT")) useIri = params.openEtext
+         if(iri.startsWith("bdr:IE") && (params.openEtext?.startsWith("bdr:UT")||params.openEtext?.startsWith("bdr:VL"))) useIri = params.openEtext
          
-         console.log("res:", res[bdrIRI], params, next)
+         //console.log("res:", res[bdrIRI], params, next)
 
          if(!res[bdrIRI][_tmp+"etextIsPaginated"]) store.dispatch(dataActions.getChunks(useIri,next));
          else {

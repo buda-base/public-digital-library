@@ -174,7 +174,7 @@ const mapStateToProps = (state,ownProps) => {
    }
    else outline = false
 
-   let eTextRefs = state.data.eTextRefs
+   let eTextRefs = state.data.eTextRefs, allETrefs
    if(eTextRefs) { 
       eTextRefs = eTextRefs[ownProps.IRI]     
       /* // to fetch outline from a UT record as well
@@ -186,7 +186,8 @@ const mapStateToProps = (state,ownProps) => {
          if(inst?.length) inst = shortUri(inst[0].value)
          if(inst) eTextRefs = eTextRefs = state.data.eTextRefs[inst]
       } 
-      */     
+      */  
+      if(!eTextRefs) allETrefs = state.data.eTextRefs   
    }
 
    let loading = state.ui.loading  ;
@@ -228,7 +229,7 @@ const mapStateToProps = (state,ownProps) => {
       imageAsset,firstImage,canvasID,collecManif,manifests,manifestError,pdfVolumes,createPdf,pdfUrl, manifestWpdf, monovolume,
       annoCollec,rightPanel,locale,langPreset,langIndex,langExt,imgData, nextChunk, nextPage, resourceManifest, imageVolumeManifests, imageLists, userEditPolicies, highlight,
       outline,outlines,outlineKW,      
-      eTextRefs,
+      eTextRefs, allETrefs,
       assocTypes,
       IIIFerrors,
       citationData,

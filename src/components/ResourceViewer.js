@@ -1988,6 +1988,8 @@ class ResourceViewer extends Component<Props,State>
    onBackButtonEvent(event) {      
       // DONE fix back button to page with open mirador not working
       if(window.location.hash !== "#open-viewer") window.closeMirador = true ;
+      // quickfix for etext viewer
+      else if(window.location.search.includes("openEtext")) window.location.reload()
    }
 
    expand(str:string, useCfg:boolean = false) //,stripuri:boolean=true)
@@ -6745,10 +6747,31 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
 
    renderEtextHasPage = (elem, kZprop, iiifpres) => {
 
-      //loggergen.log("epage:", elem, kZprop, iiifpres)
+      const inst = this.getResourceElem(bdo+"eTextInInstance") ?? this.getResourceElem(bdo+"volumeOf") 
+      let info = this.props.allETrefs?.[shortUri(inst?.[0]?.value)]?.["@graph"]?.filter(n => n["@id"] === this.props.IRI) ?? []
+      const get = qs.parse(this.props.history.location.search)
+      let firstC = 0, lastC = 10000000, text
+      if(info?.[0]?.type === "EtextVolume") {
+         if(info[0].volumeHasEtext) {
+            if(!Array.isArray(info[0].volumeHasEtext)) info[0].volumeHasEtext = [ info[0].volumeHasEtext ]
+            text = this.props.allETrefs?.[shortUri(inst?.[0]?.value)]?.["@graph"]?.filter(n => info[0].volumeHasEtext.includes(n["@id"])) ?? []
+            const sc = Number(get.startChar) ?? 0
+            text = text.filter(t => t.sliceStartChar <= sc && sc < t.sliceEndChar)
+            if(text.length) {
+               firstC = text[0].sliceStartChar
+               lastC =  text[0].sliceEndChar - 1
+            }
+         }
+      } else if(info?.[0]?.type === "Etext" || Array.isArray(info?.[0]?.type) && info[0].type.includes("Etext")) {
+         firstC = info[0].sliceStartChar
+         lastC = info[0].sliceEndChar - 1
+      }
+      
+      //loggergen.log("epage:", elem, kZprop, iiifpres, this.props.IRI, inst, info, get, text)
 
       let next, prev;
       if(elem && elem.length) { 
+         elem = elem.filter(e => e.value && e.start !== undefined && e.start >= firstC && e.start < lastC)
          prev = elem.filter(e => e.value && e.start !== undefined)
          next = elem.filter(e => e.value && e.end)
       }
@@ -6757,7 +6780,6 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
 
       if(prev && prev.length) prev = -prev[0].start
       if(!prev) prev = -1
-
       
       let imageLinks ;
       if(this.state.imageLinks) imageLinks = this.state.imageLinks[this.props.IRI]
@@ -6873,15 +6895,15 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
       let loca = { ...this.props.history.location }
       //if(prev!==-1) {
          loca.search = loca.search.replace(/(^[?])|(&*startChar=[^&]+)(&&+)?/g,"")
-         firstPageUrl = "?startChar=0"+(loca.search?"&"+loca.search:"") + "#open-viewer"
+         firstPageUrl = "?startChar="+(firstC ?? 0)+(loca.search?"&"+loca.search:"") + "#open-viewer"
       //}
 
-      let last = this.getResourceElem(tmp+"lastChunk");
+      //let last = this.getResourceElem(tmp+"lastChunk");
       let lastPageUrl 
       loca = { ...this.props.history.location }
-      if(last?.length) { //} && next <= Number(last[0].value)) {
+      if(lastC) {//(last?.length) { //} && next <= Number(last[0].value)) {
          loca.search = loca.search.replace(/(^[?])|(&*startChar=[^&]+)(&&+)?/g,"")
-         lastPageUrl = "?startChar="+last[0].value+(loca.search?"&"+loca.search:"") + "#open-viewer"
+         lastPageUrl = "?startChar="+lastC+(loca.search?"&"+loca.search:"") + "#open-viewer"
       }
 
       const monlamPopup = (ev, seq, pageVal) => {
@@ -7101,9 +7123,9 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
          //loader={<Loader loaded={false} />}
          >
          { !this.props.disableInfiniteScroll && <div style={{display:"flex", justifyContent:"space-between", width:"100%", scrollMargin:"160px" }}>
-            <h3 style={{marginBottom:"20px",textAlign:"right"}}>{ firstPageUrl && <Link onClick={(e) => this.props.onGetPages(this.props.IRI,0,true)} to={firstPageUrl}>{I18n.t("resource.firstP")}</Link>}</h3>
+            <h3 style={{marginBottom:"20px",textAlign:"right"}}>{ firstPageUrl && <Link onClick={(e) => this.props.onGetPages(this.props.IRI,firstC,true)} to={firstPageUrl}>{I18n.t("resource.firstP")}</Link>}</h3>
             <h3 style={{marginBottom:"20px",textAlign:"right"}}>{ prev!==-1 && <a onClick={(e) => this.props.onGetPages(this.props.IRI,prev)} class="download" style={{fontWeight:700,border:"none",textAlign:"right"}}>{I18n.t("resource.loadP")}</a>}</h3>
-            <h3 style={{marginBottom:"20px",textAlign:"right"}}>{ lastPageUrl && <Link to={lastPageUrl} onClick={(e) => this.props.onGetPages(this.props.IRI,(this.getResourceElem(tmp+"lastChunk")??[])[0]?.value,true)} >{I18n.t("resource.lastP")}</Link>}</h3>
+            <h3 style={{marginBottom:"20px",textAlign:"right"}}>{ lastPageUrl && <Link to={lastPageUrl} onClick={(e) => this.props.onGetPages(this.props.IRI,lastC,true)} >{I18n.t("resource.lastP")}</Link>}</h3>
          </div> }
          {/* {this.hasSub(k)?this.subProps(k):tags.map((e)=> [e," "] )} */}
          { elem.filter((e,i) => !this.props.disableInfiniteScroll || i > 0 || !e.chunks?.some(c => c["@value"].includes("Text Scan Input Form" /*" - Title Page"*/))).filter((e,i) => !this.props.disableInfiniteScroll || i < 2).map( (e,_i) => { 
@@ -8040,7 +8062,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
          if(elem) node = elem.filter(e => e["@id"] === top) 
          let etextrefs = []
 
-         //loggergen.log("node:",this.props.eTextRefs,node,top)
+         loggergen.log("node:",this.props.eTextRefs,node,top)
 
          if(node.length && (node[0].instanceHasVolume || node[0].volumeHasEtext))
          {
@@ -8270,20 +8292,28 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
             }          
             
             let open = this.state.collapse[tag] || this.state.collapse[tag]  === undefined && ut // #821
-                        || e.link?.includes("openEtext="+this.state.currentText + "#") //&& this.state.collapse[tag] != false
-                        || e.link.endsWith(this.state.currentText)
+                        || e.link?.includes("openEtext="+this.state.currentText + "#") && this.state.collapse[tag] != false
+                        || e.link.endsWith(this.state.currentText) && this.state.collapse[tag] != false
             let mono = etextrefs.length === 1
             let openD = this.state.collapse[tag+"-details"] || this.state.collapse[tag+"-details"]  === undefined && (mono || ut) // #821                           
-                        || e.link?.includes("openEtext="+this.state.currentText + "#") //&& this.state.collapse[tag+"-details"] != false
+                        //|| e.link?.includes("openEtext="+this.state.currentText + "#") && this.state.collapse[tag+"-details"] != false
             
-            let isCurrent = e.link?.includes("openEtext="+this.state.currentText + "#") 
-               //e.link.endsWith(this.state.currentText)
-                     
-            let openText = () => {
-               let ETres = e.link.replace(/^.*openEtext=([^#]+)#.*$/,"$1")
+            let terminal = e.type === "Etext" || !Array.isArray(e.volumeHasEtext) ||  e.volumeHasEtext.length === 1
+
+            let isCurrent = e.link?.includes("openEtext="+this.state.currentText + "#") //e.link.endsWith(this.state.currentText)
+            
+            if(e.link?.includes("openEtext="+this.state.currentText + "&")) {
+               let nextP = this.getResourceElem(bdo+"eTextHasPage", this.state.currentText)?.[0]?.start 
+               //console.log("nxp:",nextP)
+               if(nextP != undefined) isCurrent = isCurrent || e.link?.includes("openEtext="+this.state.currentText + "&") && nextP >= e.sliceStartChar && nextP < e.sliceEndChar
+            }
+
+            let openText = (redirect) => {
+               let ETres = e.link.replace(/^.*openEtext=([^#&]+)[#&].*$/,"$1")
                this.props.onLoading("etext", true)
                setTimeout(() => this.props.onReinitEtext(ETres), 150)                        
                this.setState({ currentText: ETres })
+               if(redirect) this.props.history.push(e.link)
             }
 
             ret.push(<span {...ref} class={'top' + (/*this.state.collapse[tag]*/ isCurrent?" on":"") }>
@@ -8292,7 +8322,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                   <span class={"parTy "+(/*e.details*/isCurrent?"on":"") } {...e.details?{title: I18n.t("resource."+(openD?"hideD":"showD")), onClick:(ev) => toggle(ev,root,e["@id"],"details",!e.hasPart && mono) /*openText()*/ }:{title:tLabel}} >
                      {pType && parts[pType] ? <div>{parts[pType]}</div> : <div>{parts["?"]}</div> }
                   </span>
-                  <span>{this.uriformat(_tmp+"withEtextPrefLang",{type:'uri', value:gUri, volume:fUri, inOutline: (!e.hasPart?tag+"-details":tag), url:"/show/"+e.link, debug:false, toggle:() => /*toggle(null,root,e["@id"],!e.hasPart?"details":"",!e.hasPart && (mono || ut))*/ openText() })}</span>
+                  <span>{this.uriformat(_tmp+"withEtextPrefLang",{type:'uri', value:gUri, volume:fUri, inOutline: (!e.hasPart?tag+"-details":tag), url:"/show/"+e.link, debug:false, toggle:() => terminal ? openText(true) : toggle(null,root,e["@id"],!e.hasPart?"details":"",!e.hasPart && (mono || ut)) })}</span>
                   <div class="abs">                  
                      { !e.hasPart && (
                            access 
