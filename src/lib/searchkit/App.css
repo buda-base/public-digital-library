@@ -816,3 +816,8 @@ header[data-hits="0"] ~ .hits .pagination,
 .content .main-content header h1:hover .close-link svg {
   display:inline-block;
 }
+
+
+#root > .inner-search-bar + div {
+  position: relative;
+}

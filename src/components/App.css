@@ -876,6 +876,7 @@ body > #pop-login { z-index:1000000 ;}
    height:44px;
    display:block;
    padding:0 10px;   
+   position: relative;
 }
 
 .inner-search-bar .suggestions > li,
