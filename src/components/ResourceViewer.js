@@ -940,6 +940,7 @@ class OutlineSearchBar extends Component<Props,State>
          getAutocompleteRequest(newValue, "associated_res:"+props.that.props.IRI.split(":")[1]).then((requests) => {
             console.log("requests:", requests)
             this.setState({ autocomplete: <SuggestsList
+                 query={newValue}
                  items={requests}
                  onClick={(item) => {
                   const value = item.res.replace(/<[^>]*>/g,"")
