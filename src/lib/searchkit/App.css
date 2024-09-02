@@ -820,4 +820,5 @@ header[data-hits="0"] ~ .hits .pagination,
 
 #root > .inner-search-bar + div {
   position: relative;
+  z-index:0;
 }
