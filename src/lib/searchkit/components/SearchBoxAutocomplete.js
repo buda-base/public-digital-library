@@ -98,7 +98,7 @@ export const SuggestsList = ({ items, onClick, isVisible, selected, query, setIs
         [ "desc" ]
       )
       
-    const newHisto = latest.slice(0,10-items.length+5).map(t => ({ fromHisto:true, res:query+"<suggested>"+t.query.substring(query.length)+"</suggested>"}))
+    const newHisto = latest.slice(0,10-items.length+5).map(t => ({ fromHisto:true, res:query+"<suggested>"+t.query?.substring(query?.length)+"</suggested>"}))
     setHisto(newHisto)
 
     //console.log("histo:", latest, query, newHisto)
