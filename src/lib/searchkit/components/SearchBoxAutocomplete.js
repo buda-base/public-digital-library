@@ -98,7 +98,7 @@ export const SuggestsList = ({ items, onClick, isVisible, selected, query, pageF
   useEffect(() => {
     const latest = _.orderBy(
       (Object.values(JSON.parse(localStorage.getItem('latest_searches') ?? "{}"))??[])
-        .filter(t => (!pageFilters || pageFilters === t.pageFilters) && (!query || t.query.startsWith(query))),
+        .filter(t => (/*!pageFilters ||*/ pageFilters === t.pageFilters) && (!query || t.query.startsWith(query))),
         [ "date" ],
         [ "desc" ]
       )
