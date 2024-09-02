@@ -113,7 +113,7 @@ import ResourceViewerContainer from '../containers/ResourceViewerContainer'
 import InnerSearchPageContainer from '../containers/InnerSearchPageContainer'
 
 import { getAutocompleteRequest } from "../lib/searchkit/api/AutosuggestAPI";
-import { SuggestsList } from "../lib/searchkit/components/SearchBoxAutocomplete";
+import { SuggestsList, updateHistory } from "../lib/searchkit/components/SearchBoxAutocomplete";
 import { debounce } from "../lib/searchkit/helpers/utils";
 
 
@@ -936,8 +936,9 @@ class OutlineSearchBar extends Component<Props,State>
       }
 
       this.handleChangeKW = debounce((newValue) => {
+         const pageFilters =  "associated_res:"+props.that.props.IRI.split(":")[1]
          console.log("debounce!",props.that.props.IRI)
-         getAutocompleteRequest(newValue, "associated_res:"+props.that.props.IRI.split(":")[1]).then((requests) => {
+         getAutocompleteRequest(newValue,pageFilters).then((requests) => {
             console.log("requests:", requests)
             this.setState({ autocomplete: <SuggestsList
                  query={newValue}
@@ -948,6 +949,7 @@ class OutlineSearchBar extends Component<Props,State>
                   this.search(item,language,value)
                  }}
                  isVisible={true}
+                 {...{ pageFilters }}
                /> })
          });
       }, 350)
@@ -966,6 +968,9 @@ class OutlineSearchBar extends Component<Props,State>
    }
 
    search(e, lang = this.state.language, val = this.state.value) {
+
+      updateHistory(val, "associated_res:"+this.props.that.props.IRI.split(":")[1])
+      
       let collapse = this.cleanOutlineCollapse()
       this.setState({dataSource:[], autocomplete: undefined, value: val, language: lang});
       this.props.that.setState({collapse});

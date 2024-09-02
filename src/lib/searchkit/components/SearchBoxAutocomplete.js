@@ -16,13 +16,18 @@ import history from "../../../history"
 import { getAutocompleteRequest } from "../api/AutosuggestAPI";
 
 
-const redirect = (refine, query, pageFilters) => {
-
+export function updateHistory(query, pageFilters) {
   // #895
   const latest = JSON.parse(localStorage.getItem('latest_searches') ?? "{}")
   const date = Date.now()
   latest[query] = { query, pageFilters, date }
   localStorage.setItem('latest_searches', JSON.stringify(latest))
+}
+  
+
+const redirect = (refine, query, pageFilters) => {
+
+  updateHistory(query, pageFilters)
 
   const loca = history.location  
   if(!loca.pathname.endsWith("/search") && !pageFilters){
@@ -86,14 +91,14 @@ const SearchBoxAction = ({ inputValue, isSearchStalled, refine, pageFilters }) =
   );
 };
 
-export const SuggestsList = ({ items, onClick, isVisible, selected, query, setIsFocused }) => {
+export const SuggestsList = ({ items, onClick, isVisible, selected, query, pageFilters, setIsFocused }) => {
 
   const [histo, setHisto] = useState([])
 
   useEffect(() => {
     const latest = _.orderBy(
       (Object.values(JSON.parse(localStorage.getItem('latest_searches') ?? "{}"))??[])
-        .filter(t => !query || t.query.startsWith(query)),
+        .filter(t => (!pageFilters || pageFilters === t.pageFilters) && (!query || t.query.startsWith(query))),
         [ "date" ],
         [ "desc" ]
       )
@@ -284,7 +289,7 @@ const SearchBoxAutocomplete = (props) => {
         pageFilters={pageFilters}
       />
       <SuggestsList
-        {...{ selected, setIsFocused }}
+        {...{ selected, setIsFocused, pageFilters }}
         query={inputValue}
         items={suggestions}
         onClick={handleClick}

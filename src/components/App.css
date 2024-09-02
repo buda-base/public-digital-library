@@ -933,6 +933,7 @@ ul.suggestions li .search-result-item-res {
 ul.suggestions li > span:first-child + * {
    position:absolute;
    right:0;
+   top:-2px;
 }
 
 ul.suggestions li > span > svg:first-child {
