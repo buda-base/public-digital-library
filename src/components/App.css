@@ -152,7 +152,7 @@ footer#site-footer.no-syncs > div.head::before { background-color:#efefef; }
 .App:not(.home) .SearchPane { min-height:calc(100vh - 80px - 50px * 0);  }
 
 
-.AppSK *,
+.AppSK *,#etext-nav .etext-search input,
 #more-pages-menu a,[role='tooltip'] *, .App *,.nav *,.App *::before,.App *::after, .react-tabs *, .resource *:not(.fa):not(.material-icons), .resource + * *,
 .inRes *, #popDL.cite *, #menu-citationLang *, #pop-login li { 
    font-family:"Noto Sans", "Noto Serif Tibetan", "Noto Serif Khmer", "Noto Sans Mongolian", "Roboto", "Helvetica", "Arial", sans-serif !important;

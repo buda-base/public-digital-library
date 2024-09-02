@@ -125,6 +125,7 @@ import 'simplebar/dist/simplebar.min.css';
 import EtextPage from "./EtextPage"
 
 import StickyElement from "./StickyElement"
+import EtextSearchBox from "./EtextSearchBox"
 
 //import edtf, { parse } from "edtf/dist/../index.js" // finally got it to work!! not in prod...
 import edtf, { parse } from "edtf" // see https://github.com/inukshuk/edtf.js/issues/36#issuecomment-1073778277
@@ -8026,13 +8027,16 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                   { this.props.config.useMonlam && this.state.etextHasBo && <a id="dico" class="on" onClick={(e) => { 
                      if(this.state.enableDicoSearch) this.props.onCloseMonlam()
                      this.setState({noHilight:false, enableDicoSearch:!this.state.enableDicoSearch, ...this.state.enableDicoSearch?{monlam:null}:{}})
-                  }}><div class="new">{I18n.t("viewer.new")}</div>{this.state.enableDicoSearch?<img id="check" src="/icons/check.svg"/>:<span id="check"></span>}{I18n.t("viewer.monlam")}<span><img class="ico" src="/icons/monlam.png"/></span></a> }
+                  }}>
+                     {/* <div class="new">{I18n.t("viewer.new")}</div> */}
+                     {this.state.enableDicoSearch?<img id="check" src="/icons/check.svg"/>:<span id="check"></span>}{I18n.t("viewer.monlam")}<span><img class="ico" src="/icons/monlam.png"/></span></a> }
                   <div id="control">
                      <span title={I18n.t("mirador.decreaseFont")} class={!size||size > 0.6?"on":""} onClick={(e)=>etextSize(false)}><img src="/icons/Zm.svg"/></span>
                      <span title={I18n.t("mirador.increaseFont")} class={!size||size < 2.4?"on":""} onClick={(e)=>etextSize(true)}><img src="/icons/Zp.svg"/></span>
                      {etext_lang_selec(this,true)}
                   </div>
                   <a class={showToggleScan?"on":""} onClick={(e) => this.setState({showEtextImages:!this.state.showEtextImages})}>{this.state.showEtextImages?<img id="check" src="/icons/check.svg"/>:<span id="check"></span>}{I18n.t("mirador.showI")}<img width="42" src="/icons/search/images_b.svg"/></a>
+                  <EtextSearchBox that={this} />
                   <span class="X" onClick={() => this.setState({ collapse:{ ...this.state.collapse, etextNav:!this.state.collapse.etextNav }})}></span>
                </div>
             </div>
