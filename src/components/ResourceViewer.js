@@ -7987,7 +7987,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
       if(label?.length) label = getLangLabel(this, skos+"prefLabel", label) ?? {}
       else label = { value: inst?.[0].value ? shortUri(inst?.[0].value) : "" , lang: "" }
       
-      //console.log("rEtN:",this.props.resources[this.props.IRI], repro, this.props.assocResources, label, back)
+      console.log("rEtN:",this.props.resources[this.props.IRI], repro, this.props.assocResources, label, back)
       
       let { value: text, lang } = label
       
@@ -8050,10 +8050,10 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
 
       let toggle = (e,r,i,x = "",force) => {         
          let tag = "etextrefs-"+r+"-"+i+(x?"-"+x:"")
-         let val = this.state.collapse[tag];
+         let val = this.state.collapse[tag];         
          //loggergen.log("tog:",e,force,val,tag,JSON.stringify(this.state.collapse),this.state.collapse[tag]);
-         if((r === i || force) && val === undefined) val = true ;
-         this.setState( { collapse:{...this.state.collapse, [tag]:!val } })         
+         if((r === i || force) && val === undefined ) val = true ;
+         this.setState( { collapse:{...this.state.collapse, [tag]:!val }, scope:i })         
       }
       
       let title = this.state.title.instance
@@ -8084,8 +8084,9 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
          let node = []
          if(elem) node = elem.filter(e => e["@id"] === top) 
          let etextrefs = []
+         let loadETres
 
-         loggergen.log("node:",this.props.eTextRefs,node,top)
+         loggergen.log("node:",this.props.IRI,this.props.eTextRefs,node,top)
 
          if(node.length && (node[0].instanceHasVolume || node[0].volumeHasEtext))
          {
@@ -8244,26 +8245,29 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
          etextrefs = _.orderBy(etextrefs,["index"],["asc"])
 
          if(!this.state.currentText && etextrefs.length) {
-            let ETres, g = etextrefs[0], tag = "etextrefs-"+root+"-"+g['@id']
-            if(g.volumeNumber) { 
-               if(g.volumeHasEtext) {
-                  if(!Array.isArray(g.volumeHasEtext)) {
-                     let txt = elem.filter(e => e["@id"] === g.volumeHasEtext)                           
-                     ETres = txt[0]?.["@id"] //txt[0]?.eTextResource || txt[0]?.etextResource["@id"]
-                  } else if(!this.state.collapse[tag]){
-                     this.setState({collapse: { ...this.state.collapse, [tag]:true }})
-                     return      
+            let g = etextrefs[0], tag = "etextrefs-"+root+"-"+g['@id']
+            if(!loadETres) { 
+               if(g.volumeNumber) { 
+                  if(g.volumeHasEtext) {
+                     if(!Array.isArray(g.volumeHasEtext)) {
+                        let txt = elem.filter(e => e["@id"] === g.volumeHasEtext)                           
+                        loadETres = txt[0]?.["@id"] //txt[0]?.eTextResource || txt[0]?.etextResource["@id"]
+                     } else if(etextrefs.length === 1 && !this.state.collapse[tag]){
+                        console.log("RETURN:", tag)
+                        this.setState({collapse: { ...this.state.collapse, [tag]:true }})                     
+                        return      
+                     }
                   }
+               } else if(g.seqNum && (g.eTextResource || g.etextResource && g.etextResource["@id"])) {
+                  loadETres = g.eTextResource || g.etextResource["@id"]
+               } else if(g.eTextInVolume){
+                  loadETres = g.eTextInVolume
                }
-            } else if(g.seqNum && (g.eTextResource || g.etextResource && g.etextResource["@id"])) {
-               ETres = g.eTextResource || g.etextResource["@id"]
-            } else if(g.eTextInVolume){
-               ETres = g.eTextInVolume
             }
-            if(ETres) {
+            if(loadETres) {
                this.props.onLoading("etext", true)            
-               this.props.onReinitEtext(ETres)
-               this.setState({currentText: ETres})
+               this.props.onReinitEtext(loadETres)
+               this.setState({currentText: loadETres})
                return
             }
          }
@@ -8323,19 +8327,21 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
             
             let terminal = e.type === "Etext" || !Array.isArray(e.volumeHasEtext) ||  e.volumeHasEtext.length === 1
 
-            let isCurrent = e.link?.includes("openEtext="+this.state.currentText + "#") //e.link.endsWith(this.state.currentText)
+            let isCurrent = e.link?.includes("openEtext="+this.state.scope + "#") || e["@id"] === this.state.scope  // e.link?.includes("openEtext="+this.state.currentText + "#") //e.link.endsWith(this.state.currentText)
             
+            /*
             if(e.link?.includes("openEtext="+this.state.currentText + "&")) {
                let nextP = this.getResourceElem(bdo+"eTextHasPage", this.state.currentText)?.[0]?.start 
                //console.log("nxp:",nextP)
                if(nextP != undefined) isCurrent = isCurrent || e.link?.includes("openEtext="+this.state.currentText + "&") && nextP >= e.sliceStartChar && nextP < e.sliceEndChar
             }
+            */
 
             let openText = (redirect) => {
                let ETres = e.link.replace(/^.*openEtext=([^#&]+)[#&].*$/,"$1")
                this.props.onLoading("etext", true)
                setTimeout(() => this.props.onReinitEtext(ETres), 150)                        
-               this.setState({ currentText: ETres })
+               this.setState({ currentText: ETres, scope:e["@id"] })
                if(redirect) this.props.history.push(e.link)
             }
 
@@ -8386,8 +8392,9 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
 
       let etextRefs = makeNodes(root,root)
 
-      let colT = <span class={"parTy"} title={I18n.t("types.etext")}><div>TXT</div></span>
-      if(!this.props.eTextRefs.mono) colT = <span class={"parTy"} title={I18n.t("Lsidebar.collection.title")}><div>COL</div></span>
+      let isCurrent = this.state.scope == this.props.IRI
+      let colT = <span class={"parTy " + (isCurrent?"on":"")} title={I18n.t("types.etext")}><div>TXT</div></span>
+      if(!this.props.eTextRefs.mono) colT = <span class={"parTy "} title={I18n.t("Lsidebar.collection.title")}><div>COL</div></span>
       let open = this.state.collapse["etextrefs-"+root+"-"+root] === undefined || this.state.collapse["etextrefs-"+root+"-"+root];
 
             
@@ -8443,7 +8450,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
             <Close width="24" className="close-etext-outline" onClick={() => this.setState({collapse:{...this.state.collapse, etextRefs:true}})}/>
             {/* <Loader  options={{position:"fixed",left:"calc(50% + 100px)",top:"calc(50% - 20px)"}} loaded={!this.props.loading === "etext"}/> */}
             <div>
-               <div class={"root is-root"} onClick={(e) => toggle(e,root,root)} >                     
+               <div class={"root is-root "+ (isCurrent?"on":"")} onClick={(e) => toggle(e,root,root)} >                     
                   { !open && [<img src="/icons/triangle.png" className="xpd right" />,colT,<span >{title}</span>]}
                   {  open && [<img src="/icons/triangle_.png" className="xpd"  />,colT,<span /* class='on' */>{title}</span>]}
                </div>
@@ -10165,9 +10172,12 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
       if(resType && resType.some(e=> e.value?.endsWith("EtextInstance"))) {
          topLevel = true
          if(!this.state.openEtext) {
-            let get = qs.parse(this.props.history.location.search), currentText
-            if(get.openEtext && get.openEtext != this.props.IRI) currentText = get.openEtext
-            this.setState({openEtext:true,currentText})
+            let get = qs.parse(this.props.history.location.search), currentText, scope = this.props.IRI
+            if(get.openEtext && get.openEtext != this.props.IRI) { 
+               currentText = get.openEtext
+               scope = currentText
+            }
+            this.setState({openEtext:true,currentText,scope})
             if(currentText) {
                this.props.onLoading("etext", true)
                this.props.onReinitEtext(currentText)
@@ -10276,7 +10286,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
          if(this.props.previewEtext) return (<>            
                { this.state.currentText 
                   ? <>
-                     <ResourceViewerContainer  auth={this.props.auth} history={this.props.history} IRI={this.state.currentText} openEtext={true} openEtextRefs={false} disableInfiniteScroll={this.props.previewEtext}/> 
+                     <ResourceViewerContainer  auth={this.props.auth} history={this.props.history} IRI={this.state.currentText} openEtext={true} openEtextRefs={false} disableInfiniteScroll={this.props.previewEtext} that={this}/> 
                   </>
                   : this.props.etextErrors?.[this.props.IRI] 
                      ? <h4><div class="images-thumb-links" style={{ marginLeft:0 }}><a class="urilink nolink"><BlockIcon style={{width:"18px",verticalAlign:"top"}}/>&nbsp;{I18n.t("access.errorE")}</a></div></h4>
@@ -10295,7 +10305,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                {getGDPRconsent(this)}
                {top_right_menu(this,title,searchUrl,etextRes)}                       
                   { this.state.currentText 
-                     ? <ResourceViewerContainer auth={this.props.auth} history={this.props.history} IRI={this.state.currentText} openEtext={true} openEtextRefs={!this.state.collapse.etextRefs} topEtextRefs={outline} /> 
+                     ? <ResourceViewerContainer auth={this.props.auth} history={this.props.history} IRI={this.state.currentText} openEtext={true} openEtextRefs={!this.state.collapse.etextRefs} topEtextRefs={outline} that={this}/> 
                      : <>
                         { outline }
                         <Loader className="etext-viewer-loader" loaded={!this.props.loading} 

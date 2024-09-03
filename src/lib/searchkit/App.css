@@ -828,10 +828,10 @@ header[data-hits="0"] ~ .hits .pagination,
 }
 
 .etext-nav-parent .etext-search {
-  margin-left:60px;
+  margin-left:40px;
 }
 
-.etext-nav-parent .etext-search > input {
+.etext-nav-parent .etext-search > span input {
   line-height:28px;
   margin-right:10px;
   padding:0 5px;
