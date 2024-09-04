@@ -352,14 +352,18 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       },
       onReinitEtext(id:string) {
          const nav = document.querySelector("#etext-scroll > div:first-child")//(".over-nav")
-         const get = qs.parse(ownProps.history.location.search)
-         if(nav && !get.part && document.querySelector(".etext-nav-parent.someClass")) nav.scrollIntoView()
+         const get = qs.parse(ownProps.history.location.search)                  
          setTimeout(() => {             
             if(get.part && get.part !== id) {
                get.root = id   
             }
             store.dispatch(initiateApp(get,id)) 
-         }, 150);
+         
+            setTimeout(() => {             
+               if(nav && !get.part && document.querySelector(".etext-nav-parent.someClass")) nav.scrollIntoView()
+            }, 1000)
+
+         }, 150);         
       }
    }
 }

@@ -6780,6 +6780,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                firstC = _text[0].sliceStartChar
                lastC =  _text[0].sliceEndChar - 1
             } else {
+               text = _.orderBy(text, "sliceStartChar", "asc")
                firstC = text[0].sliceStartChar
                lastC =  text[text.length - 1].sliceEndChar - 1
             }
@@ -8010,7 +8011,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
       const title =({value: text, lang}) => <h2 title={text} lang={lang} class="on">
          <span class="newT etext">
             <span class="space-fix">
-               <span>{I18n.t("types.ET."+ETtype)}</span>
+               <span>{ETtype ? I18n.t("types.ET."+ETtype) : I18n.t("types.etext")}</span>
             </span>
          </span>
          <span><span class="placeType">{text}</span></span>
@@ -8062,8 +8063,8 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
 
    renderEtextRefs(access = true, useRoot = this.props.IRI) {
 
-      let openText = (e, redirect) => {
-         let ETres = e.link.replace(/^.*openEtext=([^#&]+)[#&].*$/,"$1")
+      let openText = (e, redirect, id) => {
+         let ETres = id ?? e.link.replace(/^.*openEtext=([^#&]+)[#&].*$/,"$1")
          this.props.onLoading("etext", true)
          setTimeout(() => this.props.onReinitEtext(ETres), 150)                        
          this.setState({ currentText: ETres, scope:e["@id"] })
@@ -8073,7 +8074,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
 
       let toggle = (e,r,i,x = "",force,el) => {                 
 
-         console.log("el:",el,e,r,i,x,force)
+         console.log("el:",el,e,r,i,x,force,this.props.eTextRefs)
 
          let tag = "etextrefs-"+r+"-"+i+(x?"-"+x:"")
          let val = this.state.collapse[tag];         
@@ -8085,11 +8086,25 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
          } else {            
             if(this.state.scope === i) val = !val
             else val = true
-            this.setState( { scope:i , ...(val != this.state.collapse[tag] ? { collapse: { ...this.state.collapse, [tag]:val }}:{}) })         
+            let firstVol = null
+            if(i == r) {
+               firstVol = this.props.eTextRefs?.["@graph"]?.filter(n => n["@id"] === r)
+               if(firstVol?.[0]?.instanceHasVolume) {
+                  firstVol = firstVol?.[0]?.instanceHasVolume
+                  if(!Array.isArray(firstVol)) firstVol = [ firstVol ]
+                  firstVol = this.props.eTextRefs?.["@graph"]?.filter(n => firstVol.includes(n["@id"]) )
+                  firstVol = _.orderBy(firstVol, ["volumeNumber","sliceStartChar"])
+                  firstVol = firstVol[0]["@id"]
+                  //console.log("fV:",firstVol)
+               } else {
+                  firstVol = null
+               }
+            }
+            this.setState( { scope:i, ...(val != this.state.collapse[tag] ? { collapse: { ...this.state.collapse, [tag]:val }}:{}) })         
             if(i != r) { 
                if(this.state.scope != i) openText(el, true)
             } else {
-               this.props.history.push("/show/"+r)
+               openText({ link:"/show/"+r, "@id":r }, true, firstVol)               
             }
 
          }

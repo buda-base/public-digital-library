@@ -732,7 +732,9 @@
       "searchT":"Search this {{type}}",
       "goB":"Back",
       "prev":"Prev",
-      "text":"text"
+      "text":"text",
+      "pagesN":"{{i}} / {{n}} pages",
+      "noR":"No results"
    },
    "tradition":{
       "boT":"Tibetan Tradition",

@@ -1,6 +1,7 @@
 import React, { useState, useCallback, useEffect, useMemo } from "react"
 import I18n from 'i18next';
 
+import Loader from "react-loader"
 import InputLabel from '@material-ui/core/InputLabel';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import FormControl from '@material-ui/core/FormControl';
@@ -22,16 +23,19 @@ export default function EtextSearchBox(props) {
   
   const [results, setResults] = useState(false)
   const [index, setIndex] = useState(-1)
+  const [loading, setLoading] = useState(false)
 
   useEffect(() => {
     if(results) setResults(false)
   }, [query])
 
   const startSearch = useCallback(async () => {
+    setLoading(true)
     const res = await getEtextSearchRequest({ query, lang: "bo", etext_vol: that.props.IRI.split(":")[1] })
     console.log("res:",res)  
     setResults(res)
     if(res.length) setIndex(0)
+    setLoading(false)
   }, [query, that])
 
 
@@ -60,18 +64,29 @@ export default function EtextSearchBox(props) {
 
   return <div class="etext-search">
     <span>
+      <Loader className="etext-search-loader"  loaded={!loading} />
       <input value={query} 
         placeholder={I18n.t("resource.searchT",{type:I18n.t("types.ET."+(scope?.type??"Etext")).toLowerCase() })}
         onChange={(event) => {
           const newQuery = event.currentTarget.value;
           setQuery(newQuery);
-        }}    
+        }}  
+        onKeyDown={(ev) => {
+          if (ev.key === "Enter") {
+            handleNext()
+          }
+        }} 
+        autoComplete="off"
+        autoCorrect="off"
+        autoCapitalize="off"
+        spellCheck={false}
+        maxLength={512} 
       />
       {/* <span>{that.props.that?.state?.scope}</span> */}
       { results && (
           results.length > 0 
-          ? <span>{index + 1} / {results.length}</span> 
-          : <span>no results</span>
+          ? <span>{I18n.t("resource.pagesN", {i:index + 1, n:results.length})}</span> 
+          : <span>{I18n.t("resource.noR")}</span>
         )}
     </span>
     <IconButton disabled={!query} onClick={handlePrev}><ChevronUp />{I18n.t("resource.prev")}</IconButton>
