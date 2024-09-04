@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from "react"
+import React, { useState, useCallback, useEffect, useMemo } from "react"
 import I18n from 'i18next';
 
 import InputLabel from '@material-ui/core/InputLabel';
@@ -54,18 +54,20 @@ export default function EtextSearchBox(props) {
     }
   }, [query, that, results])
 
+  const scope = that.props.that?.props.eTextRefs?.["@graph"]?.filter(t => t["@id"] === that.props.that.state.scope)?.[0]
 
-  console.log("scope:", that.props.that, that.props.that?.props.eTextRefs?.["@graph"]?.filter(t => t["@id"] === that.props.that.state.scope))
+  console.log("scope:", scope)
 
   return <div class="etext-search">
     <span>
       <input value={query} 
-        placeholder={I18n.t("resource.searchT",{type:I18n.t("resource.text")})}
+        placeholder={I18n.t("resource.searchT",{type:I18n.t("types.ET."+(scope?.type??"Etext")).toLowerCase() })}
         onChange={(event) => {
           const newQuery = event.currentTarget.value;
           setQuery(newQuery);
         }}    
       />
+      {/* <span>{that.props.that?.state?.scope}</span> */}
       { results && (
           results.length > 0 
           ? <span>{index + 1} / {results.length}</span> 

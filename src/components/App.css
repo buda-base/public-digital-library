@@ -1368,6 +1368,11 @@ ul.suggestions li > span > svg:first-child {
    background:white;
 }
 
+
+.resource.etext-outline a {
+   cursor:pointer;
+}
+
 .resource.etext-outline .data#outline .root + div {
    width: calc(100% - 25px - 50px - 35px + 30px);
 }

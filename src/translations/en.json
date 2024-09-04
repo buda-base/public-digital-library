@@ -90,7 +90,12 @@
       "scan": "Scan",
       "scan_plural": "Scans",
       "serial": "Series",
-      "match": "match"
+      "match": "match",
+      "ET":{
+         "Etext":"Text",
+         "EtextInstance":"Collection",
+         "EtextVolume":"Volume"
+      }
    },
    "topbar": {
       "about": "about us",
