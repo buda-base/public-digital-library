@@ -8,6 +8,7 @@ import logdown from 'logdown'
 import $ from 'jquery' ;
 import SettingsApp from '@material-ui/icons/SettingsApplications';
 import { Link } from 'react-router-dom';
+import _ from "lodash"
 
 import { getLangLabel, highlight } from './App';
 
@@ -23,10 +24,11 @@ function EtextPage(props) {
     state_showEtextImages, /*state_monlam,*/ state_monlam_hilight, /*state_noHilight,*/ state_enableDicoSearch, state_etextHasBo, state_etextSize, /*state_collapse,*/
     props_IRI, props_history, props_config, props_highlight, props_monlamResults, props_disableInfiniteScroll, props_manifestError, props_assocResources,
     thatGetLangLabel, thatSetState, 
-    uriformat, hoverMenu, monlamPopup, onGetContext
+    uriformat, hoverMenu, monlamPopup, onGetContext,
+    ETSBresults
   } = props
 
-  //console.log("page:", _i, imageLinks, unpag)
+  console.log("page:", _i, imageLinks, unpag, ETSBresults, e)
 
   let pageVal ="", pageLang = "", current = []
 
@@ -100,6 +102,8 @@ function EtextPage(props) {
 
   // #818 etext in sa-deva --> disable Monlam
   let hasBo = state_etextHasBo
+
+  let shift = 0
 
   return (
   <div class={"etextPage"+(props_manifestError&&!imageLinks?" manifest-error":"")+ (!e.value.match(/[\n\r]/)?" unformated":"") + (e.seq?" hasSeq":"")/*+(e.language === "bo"?" lang-bo":"")*/ }>
@@ -210,11 +214,32 @@ function EtextPage(props) {
               onCopy={(ev) => monlamPopup(ev, e.seq, pageVal)} >
             { state_monlam_hilight}
             {!e.value.match(/[\n\r]/) && !e.seq ?[<span class="startChar"><span>[&nbsp;<Link to={"/show/"+props_IRI+"?startChar="+e.start+"#open-viewer"}>@{e.start}</Link>&nbsp;]</span></span>]:null}{(e.chunks?.length?e.chunks:[e.value]).map(f => {
+              let h = f["@value"] ?? f              
+              
+
+              if (ETSBresults?.length > 0) {
+                _.orderBy(ETSBresults, "highlightStart" , "desc").forEach(result => {
+                    const highlightStart = result.highlightStart - result.startPageCstart - shift; 
+                    const highlightEnd = result.highlightEnd - result.startPageCstart - shift;
+
+                    if(highlightStart >= 0 && highlightEnd >=0 && highlightStart <= (f["@value"] ?? f).length && highlightEnd <= (f["@value"] ?? f).length) {
+                      h = h.slice(0, highlightStart) + '↦' +
+                          h.slice(highlightStart, highlightEnd) + '↤' +
+                          h.slice(highlightEnd);
+                    } else {
+                      // TODO? case when match in two part
+                    }
+
+               
+                });
+              }
+
+              shift += (f["@value"] ?? f).length
 
               // #771 multiple language in one page
               let lang = e.language
               if(f["@language"]) lang = f["@language"]                        
-              if(f["@value"] != undefined) f = f["@value"];
+              if(h != undefined) f = h;
 
               let label = thatGetLangLabel(bdo+"eTextHasPage",[{"lang":lang,"value":f}]), chunkVal
 
@@ -226,6 +251,9 @@ function EtextPage(props) {
               if(label && props_highlight && props_highlight.key /*&& state_noHilight != e.seq*/) { 
                   label = highlight(label,kw.map(k => k.replace(/(.)/g,"$1\\n?")),null,false,true); 
                   current.push(label); }
+              else if(ETSBresults?.length) {
+                label = highlight(label,null,null,false,true)
+              }
               else if(label) { 
                   label = [ label.startsWith("\n") ? <br/>:""].concat(label.split(/[\n\r]/))                           
                   label = label.map( (e,i) =>(e?[e,i > 0 && i < label.length-1?<br/>:null]:[])).filter(e => e)

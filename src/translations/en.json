@@ -733,7 +733,8 @@
       "goB":"Back",
       "prev":"Prev",
       "text":"text",
-      "pagesN":"{{i}} / {{n}} pages",
+      "pagesN":"{{i}} / {{count}} page",
+      "pagesN_plural":"{{i}} / {{count}} pages",
       "noR":"No results"
    },
    "tradition":{
