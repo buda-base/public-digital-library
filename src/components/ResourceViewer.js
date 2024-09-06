@@ -8239,7 +8239,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                      }
                   } else if(g.seqNum && (g.eTextResource || g.etextResource && g.etextResource["@id"])) {
                      g.index = g.seqNum
-                     const ETres = g.eTextResource || g.etextResource["@id"]
+                     const ETres = g.etextResource["@id"] ?? g.eTextResource  
                      g.link = useRoot+"?openEtext="+ETres /*this.props.IRI*/ + "#open-viewer"
                               
          
@@ -8885,6 +8885,9 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
             */
 
             const parts = {
+               "bdr:PartTypeFragment":"frg",
+               "bdr:PartTypeFascicle":"fas",
+               "bdr:PartTypeEditorial":"ed",
                "bdr:PartTypeSection":"sec",
                "bdr:PartTypeVolume":"vol",
                "bdr:PartTypeChapter":"cha",
