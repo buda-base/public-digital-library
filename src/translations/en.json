@@ -829,14 +829,14 @@
       "snippetV":"View a small snippet at BDRC",
       "snippetH":"Hide snippet",
       "scans":{
-         "5":"Open Access / BDRC",
-         "4":"Open Access / IIIF",
+         "5":"Open Access",
+         "4":"Open Access",
          "3":"Internet Archive only",
          "2":"40p. extract",
          "1":"Not Available",
          "hit":{
-            "5":"open access / BDRC",
-            "4":"open access / IIIF",
+            "5":"open access",
+            "4":"open access",
             "3":"archive.org",
             "2":"40p. extract",
             "1":"not available"
@@ -858,11 +858,11 @@
             "1":"not available"
          },
          "quality":{
-            "3":{"99-4":{"01":"manual input / aligned with images"}},
-            "2":{"99-3":{"01":"manual input / not aligned with images"}},
+            "3":{"99-4":{"01":"manual transcription"}},
+            "2":{"99-3":{"01":"manual transcription (not aligned with images)"}},
             "1":{"99-2":{"01":"reviewed OCR"}},
             "0":{
-               "95-1":{"01":"very good OCR"},
+               "95-1":{"01":"good quality OCR"},
                "8-0":{"95":"usable OCR"},
                "0-0":{"8":"poor quality OCR"}
             }
