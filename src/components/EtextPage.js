@@ -28,7 +28,7 @@ function EtextPage(props) {
     ETSBresults
   } = props
 
-  console.log("page:", _i, imageLinks, unpag, ETSBresults, e)
+  //console.log("page:", _i, imageLinks, unpag, ETSBresults, e)
 
   let pageVal ="", pageLang = "", current = []
 

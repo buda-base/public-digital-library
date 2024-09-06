@@ -350,13 +350,14 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       onAdvancedSearch(s:boolean) {
          dispatch(ui.advancedSearch(s))
       },
-      onReinitEtext(id:string) {
+      onReinitEtext(id:string, params?:{}) {
          const nav = document.querySelector("#etext-scroll > div:first-child")//(".over-nav")
-         const get = qs.parse(ownProps.history.location.search)                  
+         let get = qs.parse(ownProps.history.location.search)                  
          setTimeout(() => {             
             if(get.part && get.part !== id) {
                get.root = id   
             }
+            if(params) get = { ...get, ...params }
             store.dispatch(initiateApp(get,id)) 
          
             setTimeout(() => {             

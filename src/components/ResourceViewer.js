@@ -945,6 +945,7 @@ class OutlineSearchBar extends Component<Props,State>
                  query={newValue}
                  items={requests}
                  onClick={(item) => {
+                  console.log("item!",item)
                   const value = item.res.replace(/<[^>]*>/g,"")
                   const language = (item.lang ?? this.state.language).replace(/_/g,"-")
                   this.search(item,language,value)
@@ -1030,7 +1031,7 @@ class OutlineSearchBar extends Component<Props,State>
          <div class="search">
             <div>
                <input type="text" placeholder={I18n.t("resource.searchO")} value={this.state.value} //onChange={(e) => this.setState({value:e.target.value})}
-                  onFocus={this.changeOutlineKW.bind(this)} onBlur={() => setTimeout(() => this.setState({autocomplete: undefined}), 150)}
+                  onFocus={this.changeOutlineKW.bind(this)} onBlur={() => setTimeout(() => this.setState({autocomplete: undefined}), 350)}
                   /*value={this.props.that.state.outlineKW} */ onChange={this.changeOutlineKW.bind(this)} 
                onKeyPress={ (e) => { 
                   if(e.key === 'Enter' && this.state.value) { 
@@ -1710,6 +1711,18 @@ class ResourceViewer extends Component<Props,State>
          s.ready = true
       }
 
+      let loadETres = props.disableInfiniteScroll?.outETvol
+      if(loadETres?.length) {
+         loadETres = shortUri(loadETres?.[0]?.value ?? "")
+         if(state.currentText != loadETres) {
+            let startChar =  Number(props.disableInfiniteScroll?.outETstart?.[0].value ?? 0)
+            props.onLoading("etext", true)            
+            props.onReinitEtext(loadETres, { startChar })
+            if(!s) s = { ...state }
+            s.currentText = loadETres
+         }
+      }
+
       if(s) return s
       else return null
    }
@@ -2152,7 +2165,11 @@ class ResourceViewer extends Component<Props,State>
 
          prop[tmp+"propHasScans"] = [{ type: "uri", value: this.props.IRI }]
       }
-         
+      
+      // #918
+      if(!prop[tmp+"propHasEtext"] && prop[tmp+"hasEtextInOutline"]) {
+         prop[tmp+"propHasEtext"] = prop[tmp+"hasEtextInOutline"]
+      }
 
       if(sorted)
       {
@@ -5856,16 +5873,28 @@ class ResourceViewer extends Component<Props,State>
          )
       }
       else if(k === _tmp+"propHasEtext") {
-         return ( elem.map((e,i) => (
-            <div  data-prop={shortUri(k)} >               
+
+         let outlineEtext = this.getResourceElem(tmp+"hasEtextInOutline")
+         return ( elem.map((e,i) => { 
+            
+            let outETvol, outETinst, outETstart, outETscope 
+            if(outlineEtext?.length){
+               outETscope = shortUri(outlineEtext[i].value)
+               outETinst = this.getResourceElem(bdo+"eTextInInstance", outETscope, this.props.assocResources)
+               outETvol = this.getResourceElem(bdo+"eTextInVolume", outETscope, this.props.assocResources)
+               outETstart= this.getResourceElem(bdo+"sliceStartChar", outETscope, this.props.assocResources)              
+               console.log("oEiv:", outETinst, outETvol, outETstart, outETscope)
+            }   
+            
+            return ( <div  data-prop={shortUri(k)} >               
                <h3><span>{this.proplink(k,null,n)}{ret.length > 1 ? " "+I18n.t("punc.num",{num:i+1}) : ""}{I18n.t("punc.colon")}</span> </h3>
                {this.preprop(k,0,n)}
                <div class="group preview-etext">
                   {/* <Link to={"/show/"+shortUri(e.value)}>{shortUri(e.value)}</Link> */}
-                  <ResourceViewerContainer  auth={this.props.auth} history={this.props.history} IRI={shortUri(e.value)} previewEtext={true} /> 
+                  <ResourceViewerContainer  auth={this.props.auth} history={this.props.history} IRI={shortUri(outETvol?.[0]?.value ?? e.value)} previewEtext={{ outETvol, outETstart, outETscope }}/>  
                </div>
             </div>
-         )))
+         )}))
       } else if(k === _tmp+"propHasScans") {
          console.log("pHs")
          return ( ret.map((r,i) => (
@@ -7279,7 +7308,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
             //if(!k.match(new RegExp("Revision|Entry|prefLabel|"+rdf+"|toberemoved"))) {
                if(elem && 
                (![bdo+"placeLong",bdo+"placeLat"].includes(k) || !kZprop.includes(tmp+"GISCoordinates")) &&
-               (!k.match(new RegExp(adm+"|adm:|isRoot$|SourcePath|"+rdf+"|toberemoved|entityScore|associatedCentury|lastSync|dateCreated|qualityGrade|digitalLendingPossible|inRootInstance|workPagination|partIndex|partTreeIndex|legacyOutlineNodeRID|sameAs|thumbnailIIIFSe|instanceOf|instanceReproductionOf|instanceHasReproduction|seeOther|(Has|ction)Member$|serialHasInstance|withSameAs|hasNonVolumeParts|hasPartB|addIALink|lastChunk|hasOutline|first(Text|Vol)N?"+(this._dontMatchProp?"|"+this._dontMatchProp:"")))
+               (!k.match(new RegExp(adm+"|adm:|isRoot$|SourcePath|"+rdf+"|toberemoved|entityScore|associatedCentury|lastSync|dateCreated|qualityGrade|digitalLendingPossible|inRootInstance|workPagination|partIndex|partTreeIndex|legacyOutlineNodeRID|sameAs|thumbnailIIIFSe|instanceOf|instanceReproductionOf|instanceHasReproduction|seeOther|(Has|ction)Member$|serialHasInstance|withSameAs|hasNonVolumeParts|hasPartB|hasEtextInOutline|addIALink|lastChunk|hasOutline|first(Text|Vol)N?"+(this._dontMatchProp?"|"+this._dontMatchProp:"")))
                ||k.match(/(metadataLegal|contentProvider)$/) // |replaceWith
                //||k.match(/([/]see|[/]sameAs)[^/]*$/) // quickfix [TODO] test property ancestors
                || (this.props.IRI.match(/^bda:/) && (k.match(new RegExp(adm+"|adm:"))) && !k.match(/\/(git[RP]|adminAbout|logEntry|graphId|facetIndex)/)))
@@ -7893,13 +7922,25 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
    // to be redefined in subclass
    renderPostData = () => {}
 
+   renderEtextLink = (etextRes) => {
+      let base = etextRes
+      if(this.props.disableInfiniteScroll?.outETscope) {
+         let coords = this.props.disableInfiniteScroll
+         base = base + "?scope="+coords.outETscope
+                     + "&openEtext="+shortUri(coords.outETvol?.[0]?.value ?? "")
+                     + "&startChar="+coords.outETstart?.[0]?.value
+         
+      }
+      return "/show/"  + base
+   }
+
    renderEtextDLlink = (accessError, noIcon = false) => { 
       let ldspdi = this.props.config.ldspdi, base 
       if(ldspdi) base = ldspdi.endpoints[ldspdi.index]
-      let url = ""
-      if(this.props.IRI) { 
-         if(base.includes("-dev")) url = base + "/resource/" + this.props.IRI.split(":")[1] +".txt"
-         else url = fullUri(this.props.IRI).replace(/^http:/,"https:")+".txt"
+      let url = "", id = this.props.that?.state?.scope ?? this.props.disableInfiniteScroll?.outETscope ?? this.props.IRI
+      if(id) { 
+         if(base.includes("-dev")) url = base + "/resource/" + id.split(":")[1] +".txt"
+         else url = fullUri(id).replace(/^http:/,"https:")+".txt"
          url = url.replace(/^\/\//,"https://")
       }
       return (
@@ -7995,7 +8036,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
          back = repro.filter(r => (t=(this.getResourceElem(rdf+"type", shortUri(r.value), this.props.assocResources) ?? [])).some(s => s.value === bdo+"Instance") && !t.some(s => s.value === bdo+"ImageInstance" )  )
          if(back?.length) back = "/show/"+shortUri(back[0].value)
          labelSticky = repro.map(r => this.getResourceElem(skos+"prefLabel", shortUri(r.value), this.props.assocResources) ?? []).flatten() 
-         if(inst[0].value.endsWith(this.props.that?.state?.scope.split(":")[1])) {
+         if(inst[0].value.endsWith(this.props.that?.state?.scope?.split(":")[1])) {
             label = labelSticky
          } else {            
             label = refs?.[0]?.["skos:prefLabel"] ?? label
@@ -8326,7 +8367,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                return
             }
          }
-         
+
          etextrefs = etextrefs.map(e => {            
 
             let tag = "etextrefs-"+root+"-"+e['@id']
@@ -10245,12 +10286,12 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
          if(etextRes && etextRes.length) etextRes = shortUri(etextRes[0].value)
          else etextRes = null
          let etext_data = this.renderData(false, [!hasPages?bdo+"eTextHasChunk":bdo+"eTextHasPage"],iiifpres,title,otherLabels,"etext-data",undefined,undefined,
-            this.props.disableInfiniteScroll&&etextRes?[<div class="etext-continue"><Link to={"/show/"+etextRes}>{I18n.t("resource.continue")}</Link></div>]:[])
+            this.props.disableInfiniteScroll&&etextRes?[<div class="etext-continue"><Link to={this.renderEtextLink(etextRes)}>{I18n.t("resource.continue")}</Link></div>]:[])
 
          if(topLevel || this.props.previewEtext) etextRes = this.props.IRI
 
          let etRefs 
-         if(!this.props.eTextRefs && etextRes && topLevel) {
+         if(!this.props.eTextRefs && etextRes && topLevel ) {
             this.props.onGetETextRefs(etextRes);
          } else if(this.props.eTextRefs && this.props.eTextRefs !== true) { 
             //extProps = extProps.filter(p => p !== bdo+"instanceHasVolume")
@@ -10335,9 +10376,9 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
 
 
          if(this.props.previewEtext) return (<>            
-               { this.state.currentText 
+               { this.state.currentText || this.props.previewEtext?.outETvol
                   ? <>
-                     <ResourceViewerContainer  auth={this.props.auth} history={this.props.history} IRI={this.state.currentText} openEtext={true} openEtextRefs={false} disableInfiniteScroll={this.props.previewEtext} that={this}/> 
+                     <ResourceViewerContainer  auth={this.props.auth} history={this.props.history} IRI={this.state.currentText || shortUri(this.props.previewEtext?.outETvol?.[0].value ?? "")} openEtext={true} openEtextRefs={false} disableInfiniteScroll={this.props.previewEtext} that={this}/> 
                   </>
                   : this.props.etextErrors?.[this.props.IRI] 
                      ? <h4><div class="images-thumb-links" style={{ marginLeft:0 }}><a class="urilink nolink"><BlockIcon style={{width:"18px",verticalAlign:"top"}}/>&nbsp;{I18n.t("access.errorE")}</a></div></h4>
@@ -10378,7 +10419,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                       { this.renderOCR(<Trans i18nKey="access.OCRnew" components={{ bold: <b style={{ fontWeight:600 }}/>, nl: <br /> }} />) }
                      </div>
                      <div class={"etext-top-links"}>
-                        <Link to={"/show/"+etextRes}>{I18n.t("resource.openViewer")}</Link>
+                        <Link to={this.renderEtextLink(etextRes)}>{I18n.t("resource.openViewer")}</Link>
                         { this.renderEtextDLlink(etextAccessError, true) }
                      </div> 
                   </>}
