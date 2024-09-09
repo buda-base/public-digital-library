@@ -1404,6 +1404,11 @@ ul.suggestions li > span > svg:first-child {
    height:100%;
 }
 
+.resource ~ .ETSBresults > div:not(#a) {
+   white-space: pre;
+}
+
+.resource ~ .ETSBresults > div:not(#a),
 .resource ~ .monlamResults > div:not(#a) {
    position: sticky;
    top: 120px;
@@ -1425,20 +1430,21 @@ ul.suggestions li > span > svg:first-child {
    padding:15px 15px 10px 10px;
 }
 
+#root > .withETSBresults.withOutline > .resource.etext-view:not(#a),
 #root > .withMonlam.withOutline > .resource.etext-view:not(#a) {
 
    width: calc(100% - 400px - 400px);
 
 }
 
-#root > .withOutline:not(.withMonlam) > .resource.etext-view:not(#a),
+#root > .withOutline:not(.withMonlam,.withETSBresults) > .resource.etext-view:not(#a),
 #root > .withMonlam:not(.withOutline) > .resource.etext-view:not(#a) {
 
    width: calc(100% - 400px);
 
 }
 
-#root > :not(.withMonlam):not(.withOutline) > .resource.etext-view:not(#a) {
+#root > :not(.withMonlam,.withOutline,.withETSBresults) > .resource.etext-view:not(#a) {
    width: 1440px;
    max-width: 97%;
    margin: auto;
@@ -3654,7 +3660,11 @@ div:has(.resource.preview) .infoPanel.inRes { margin:0 !important; }
 
 /* @import "https://monlamdictionary.com/files/css/basic.css"; */
 
+
+.resource ~ .ETSBresults,
 .resource ~ .monlamResults { width:0px; position:relative; flex-shrink: 0; } 
+
+.resource ~ .ETSBresults > div,
 .resource ~ .monlamResults > div { width:0px; height:calc(100% - 2 * 80px); position:fixed; right:0; top:80px; background:white; overflow:auto; 
    box-shadow:-2px 0 3px rgba(0,0,0,0.15);
    /* background-image:url(/icons/monlam.png); background-repeat: no-repeat; background-size:100px; background-position: center; */
@@ -3666,6 +3676,8 @@ div:has(.resource.preview) .infoPanel.inRes { margin:0 !important; }
 .resource ~ .monlamResults > div .monlam-no-result { display:flex; align-items: baseline; padding:0 15px;} 
 .resource ~ .monlamResults > div .monlam-no-result > span { white-space: nowrap; max-width:200px; text-overflow: ellipsis; overflow: hidden;  }
 
+.resource ~ .ETSBresults.visible,
+.resource ~ .ETSBresults.visible > div,
 .resource ~ .monlamResults.visible,
 .resource ~ .monlamResults.visible > div { width:400px; }
 
@@ -3735,9 +3747,12 @@ div:has(.resource.preview) .infoPanel.inRes { margin:0 !important; }
 .resource ~ .monlamResults div .def .numbers,
 .resource ~ .monlamResults div .def .numbers2 { width:18px; height:18px; padding:0; display:inline-flex; justify-content: center; align-items: center; top:0; vertical-align: middle;}
 
-#root > .withMonlam { display: flex; }
-#root > .withMonlam > .resource.etext-view { width:calc(100% - 400px - 30px * 2); }
 
+#root > .withETSBresults,
+#root > .withMonlam { display: flex; }
+
+#root > .withETSBresults > .resource.etext-view,
+#root > .withMonlam > .resource.etext-view { width:calc(100% - 400px - 30px * 2); }
 
 #etext-nav #dico { margin-left:auto; position:relative; }
 #etext-nav #dico img.ico { width:42px; display: inline-block; vertical-align: -15px;}
@@ -4845,6 +4860,7 @@ h4:hover a.no-bdrc img { opacity:1; }
 .resource .data h2.intro + h2[lang=bo],
 .resource .data h2[lang=bo] { line-height:64px; }
 
+.ETSBresults,
 .monlamResults,
 .resource .data h2.intro + h2[lang=bo] > a > span:not(.T,.lang),
 .resource .data h2[lang=bo] > span:not(.T,.lang) { font-family: "Noto Sans", "Noto Serif Tibetan", "Noto Serif Khmer", "Noto Sans Mongolian", "Roboto", "Helvetica", "Arial", sans-serif !important; }
@@ -6942,6 +6958,7 @@ feedbucket-app:not(.on)  { display:none !important; }
 
    #root > div:not(.withMonlam) > .resource { min-width:100%; }
    .resource ~ .monlamResults > div { top:0; height:100%; }
+   
    .resource ~ .monlamResults.visible, .resource ~ .monlamResults.visible > div { width:min(400px,100vw - 75px); }
 
    #etext-nav #DL, 

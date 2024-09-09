@@ -37,11 +37,16 @@ export default function EtextSearchBox(props) {
       setIndex(undefined)
       setPage(undefined)
       setTotal(undefined)
+      that.setState({ 
+        ETSBresults: undefined,
+        collapse:{ ...that.state.collapse, ETSBresults: true }
+      })
     }
   }, [query, scopeId, ETrefs])
 
   const startSearch = useCallback(async () => {
     setLoading(true)
+
     const params = { 
       "EtextInstance": "etext_instance",
       "EtextVolume": "etext_vol",
@@ -89,6 +94,12 @@ export default function EtextSearchBox(props) {
       }
       setIndex(idx)
     }
+
+    if(that.state.monlam) { 
+      that.setState({noHilight:false, monlam:null, collapse:{ ...that.state.collapse, monlamPopup: true, ETSBresults: false }})
+      that.props.onCloseMonlam()
+    }
+
     if(p != page) reloadPage(res,idx,p)    
   }, [query, that, results, index, page, scopeId, total])
 
@@ -110,6 +121,12 @@ export default function EtextSearchBox(props) {
       }
       setIndex(idx)
     }
+
+    if(that.state.monlam) { 
+      that.setState({noHilight:false, monlam:null, collapse:{ ...that.state.collapse, monlamPopup: true, ETSBresults: false }})
+      that.props.onCloseMonlam()
+    }
+    
     if(p != page) reloadPage(res,idx,p)    
   }, [query, that, results, index, page, scopeId, total])
 

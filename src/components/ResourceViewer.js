@@ -7181,12 +7181,14 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
          { !this.props.disableInfiniteScroll && <div style={{display:"flex", justifyContent:"space-between", width:"100%", scrollMargin:"160px" }}>
             <h3 style={{marginBottom:"20px",textAlign:"right"}}>{ firstPageUrl && <Link onClick={(e) => this.props.onGetPages(this.props.IRI,firstC,true,{firstC, lastC})} to={firstPageUrl}>{I18n.t("resource.firstP")}</Link>}</h3>
             <h3 style={{marginBottom:"20px",textAlign:"right"}}>{ prev!==-1 && <a onClick={(e) => this.props.onGetPages(this.props.IRI, prev, true, {firstC, lastC} )} class="download" style={{fontWeight:700,border:"none",textAlign:"right"}}>{I18n.t("resource.loadP")}</a>}</h3>
-            <h3 style={{marginBottom:"20px",textAlign:"right"}}>{ lastPageUrl && <Link to={lastPageUrl} onClick={(e) => this.props.onGetPages(this.props.IRI,lastC-999,true,{firstC, lastC})} >{I18n.t("resource.lastP")}</Link>}</h3>
+            <h3 style={{marginBottom:"20px",textAlign:"right"}}>{ lastPageUrl && <Link to={lastPageUrl} onClick={(e) => this.props.onGetPages(this.props.IRI,lastC-999 /* TODO: use the other query here (mirador/num page)*/,true,{firstC, lastC})} >{I18n.t("resource.lastP")}</Link>}</h3>
          </div> }
          {/* {this.hasSub(k)?this.subProps(k):tags.map((e)=> [e," "] )} */}
          { elem.filter((e,i) => !this.props.disableInfiniteScroll || i > 0 || !e.chunks?.some(c => c["@value"].includes("Text Scan Input Form" /*" - Title Page"*/))).filter((e,i) => !this.props.disableInfiniteScroll || i < 2).map( (e,_i) => { 
             
             const state_monlam_hilight = e.seq == this.state.monlam?.seq && this.state.enableDicoSearch ? this.state.monlam?.hilight : null
+
+            //console.log("this:",this)
 
             return <EtextPage 
                   { ...{ e, _i, unpag, imageLinks, kw, monlamPopup } } 
@@ -7209,7 +7211,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                   props_manifestError={this.props.manifestError} 
                   props_assocResources={this.props.assocResources}
 
-                  { ...{ thatGetLangLabel, thatSetState, uriformat, hoverMenu, onGetContext, ETSBresults:ETSBresults?.filter(r => r.startPnum <= e.seq && e.seq <= r.endPnum) } }
+                  { ...{ thatGetLangLabel, thatSetState, uriformat, hoverMenu, onGetContext, ETSBresults:ETSBresults?.filter(r => "bdr:"+r.volumeId === this.props.that?.state?.currentText && r.startPnum <= e.seq && e.seq <= r.endPnum) } }
 
                />
          })  }
@@ -8010,7 +8012,10 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                   if(!this.props.monlamResults) {
                      setTimeout( () => {
                         const { ref, hilight } = this.state.monlam.updateHilightCoords()
-                        this.setState({ monlam: { ...this.state.monlam, ref, hilight } })
+                        this.setState({ 
+                           monlam: { ...this.state.monlam, ref, hilight },
+                           ...this.state.ETSBresults ? { collapse: { ...this.state.collapse, ETSBresults: true }}:{}
+                        })
                         setTimeout(() => {
                            if(ref?.current && window.innerWidth > 800) ref.current.scrollIntoView(({behavior:"smooth",block:"nearest",inline:"start"}))
                         }, 10)
@@ -8031,6 +8036,14 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
       
       const refs = this.props.that?.props?.eTextRefs?.["@graph"]?.filter(n => n["@id"] === label[0].value)
       let ETtype = refs?.[0]?.type
+      if(Array.isArray(ETtype)) {
+         const possibleET = { 
+            "EtextInstance": "etext_instance",
+            "EtextVolume": "etext_vol",
+            "Etext":"id"
+         } 
+         ETtype = ETtype.find(t => possibleET[t])
+      }
 
       if(repro?.length) { 
          back = repro.filter(r => (t=(this.getResourceElem(rdf+"type", shortUri(r.value), this.props.assocResources) ?? [])).some(s => s.value === bdo+"Instance") && !t.some(s => s.value === bdo+"ImageInstance" )  )
@@ -8352,6 +8365,8 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                         console.log("RETURN:", tag)
                         this.setState({collapse: { ...this.state.collapse, [tag]:true }})                     
                         return      
+                     } else {
+                        loadETres = g["@id"]
                      }
                   }
                } else if(g.seqNum && (g.eTextResource || g.etextResource && g.etextResource["@id"])) {
@@ -8417,8 +8432,8 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
             let isCurrent = e.link?.includes("openEtext="+this.state.scope + "#") || e["@id"] === this.state.scope  // e.link?.includes("openEtext="+this.state.currentText + "#") //e.link.endsWith(this.state.currentText)            
             
             let open = this.state.collapse[tag] || this.state.collapse[tag]  === undefined && ut // #821
-                        || e.link?.includes("openEtext="+this.state.currentText + "#") && this.state.collapse[tag] != false
-                        || e.link.endsWith(this.state.currentText) && this.state.collapse[tag] != false
+                        || e.link?.includes("openEtext="+this.state.currentText + "#") && this.state.scope != root && this.state.collapse[tag] != false
+                        || e.link.endsWith(this.state.currentText)  && this.state.scope != root && this.state.collapse[tag] != false
             let mono = etextrefs.length === 1
             let openD = this.state.collapse[tag+"-details"] || this.state.collapse[tag+"-details"]  === undefined && (mono || ut) // #821          
                         //|| isCurrent                 
@@ -10300,6 +10315,11 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
 
          loggergen.log("eR:", topLevel, etextRes, this.state.currentText, hasPages, etext_data, this.props.eTextRefs, etRefs, this.props, this.state)
 
+         let ETSBresults 
+         if(this.state.ETSBresults) {
+            ETSBresults = <div>{this.state.ETSBresults.map(r => <div>{JSON.stringify(r,null,3)}</div>)}</div>
+         }
+
          let monlamResults 
          if(!this.state.enableDicoSearch || this.props.disableInfiniteScroll) { 
 
@@ -10374,6 +10394,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
       
          // TODO fix loader not hiding when closing then opening again
 
+         const monlamVisible = this.state.enableDicoSearch && (this.state.monlam && this.state.collapse.monlamPopup || monlamResults)
 
          if(this.props.previewEtext) return (<>            
                { this.state.currentText || this.props.previewEtext?.outETvol
@@ -10410,7 +10431,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
          else return ([            
             this.renderEtextNav(etextAccessError),
             this.props.topEtextRefs,
-            <div class={(monlamResults ? "withMonlam " : "")+(this.props.openEtextRefs ? "withOutline ":"")}>               
+            <div class={(monlamResults ? "withMonlam " : "")+(this.props.openEtextRefs ? "withOutline ":"")+(this.state.ETSBresults && this.state.collapse.ETSBresults != true ? "withETSBresults ":"")}>               
                { monlamResults && <link rel="stylesheet" href="https://monlamdictionary.com/files/css/basic.css" /> }               
                { this.renderMirador(isMirador) }           
                <div class="resource etext-view" >                                    
@@ -10440,7 +10461,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                      </h4> } 
                   </div>                     
                </div>
-               {!this.props.disableInfiniteScroll && <GenericSwipeable classN={"monlamResults "+(this.state.enableDicoSearch && (this.state.monlam && this.state.collapse.monlamPopup || monlamResults) ? "visible" : "")} onSwipedRight={() => { 
+               {!this.props.disableInfiniteScroll && <GenericSwipeable classN={"monlamResults "+(monlamVisible ? "visible" : "")} onSwipedRight={() => { 
                      this.setState({noHilight:false, monlam:null, collapse:{ ...this.state.collapse, monlamPopup: true }})
                      this.props.onCloseMonlam()
                   }}>                  
@@ -10458,6 +10479,10 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                      { monlamResults }
                   </SimpleBar>
                </GenericSwipeable> }
+               { !this.props.disableInfiniteScroll && <div class={"ETSBresults "+(!monlamVisible && this.state.ETSBresults? "visible" : "")}>
+                  { ETSBresults }
+                  </div>
+               }
             </div>,
          ])
       }
