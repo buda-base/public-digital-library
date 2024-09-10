@@ -125,7 +125,7 @@ import 'simplebar/dist/simplebar.min.css';
 import EtextPage from "./EtextPage"
 
 import StickyElement from "./StickyElement"
-import EtextSearchBox from "./EtextSearchBox"
+import {EtextSearchBox, EtextSearchResult } from "./EtextSearchBox"
 
 //import edtf, { parse } from "edtf/dist/../index.js" // finally got it to work!! not in prod...
 import edtf, { parse } from "edtf" // see https://github.com/inukshuk/edtf.js/issues/36#issuecomment-1073778277
@@ -6799,9 +6799,10 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
       let firstC = 0, lastC = 10000000, text
       if(info?.[0]?.type === "EtextVolume") {
          console.log("info:",info)
-         if(info[0].volumeHasEtext) {
-            if(!Array.isArray(info[0].volumeHasEtext)) info[0].volumeHasEtext = [ info[0].volumeHasEtext ]
-            text = this.props.allETrefs?.[shortUri(inst?.[0]?.value)]?.["@graph"]?.filter(n => info[0].volumeHasEtext.includes(n["@id"])) ?? []
+         let vhet = info[0].volumeHasEtext
+         if(vhet) {
+            if(!Array.isArray(vhet)) vhet = [ vhet ]
+            text = this.props.allETrefs?.[shortUri(inst?.[0]?.value)]?.["@graph"]?.filter(n => vhet.includes(n["@id"])) ?? []
             //const sc = this.props.that.state.scope === text[@id] ? Number(get.startChar) ?? 0 : 0
             //text = text.filter(t => t.sliceStartChar <= sc && sc < t.sliceEndChar)
             let _text = text?.filter(t => t["@id"] === this.props.that?.state?.scope)            
@@ -8059,7 +8060,16 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
       label = getLangLabel(this, skos+"prefLabel", label) ?? {}    
       labelSticky = getLangLabel(this, skos+"prefLabel", labelSticky) ?? {}    
       
-      //console.log("rEtN:",this.props,this.props.resources[this.props.IRI], repro, this.props.assocResources, label, back)
+      if(label.value?.startsWith("bdr:")) {
+         if(refs?.[0]?.eTextInVolume) {
+            const volN = this.props.that?.props?.eTextRefs?.["@graph"]?.filter(n => n["@id"] === refs?.[0]?.eTextInVolume)?.[0].volumeNumber
+            label.value = I18n.t("types.volume_num_noid",{num:volN})
+            label.lang = this.props.locale
+         }
+
+      }
+
+      //console.log("rEtN:",this.props.that?.state?.scope,this.props,this.props.resources[this.props.IRI], repro, this.props.assocResources, label, back)
             
       document.title = label.value + " - " + (this.props.config?.khmerServer?"Khmer Manuscript Heritage Project":"Buddhist Digital Archives")
 
@@ -8122,24 +8132,28 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
          let ETres = id ?? e.link.replace(/^.*openEtext=([^#&]+)[#&].*$/,"$1")
          this.props.onLoading("etext", true)
          setTimeout(() => this.props.onReinitEtext(ETres), 150)                        
-         this.setState({ currentText: ETres, scope:e["@id"] })
+         this.setState({ currentText: ETres, scope:e.scope ?? e["@id"] })
          if(redirect) this.props.history.push(e.link)
          
       }
 
       let toggle = (e,r,i,x = "",force,el) => {                 
 
-         console.log("el:",el,e,r,i,x,force,this.props.eTextRefs)
+         console.log("el:",el,e,r,i,x,force,this.props.eTextRefs,this.state.scope)
 
          let tag = "etextrefs-"+r+"-"+i+(x?"-"+x:"")
          let val = this.state.collapse[tag];         
 
          //loggergen.log("tog:",e,force,val,tag,JSON.stringify(this.state.collapse),this.state.collapse[tag]);
+         
          if(x.endsWith("details")) {
             if((r === i || force) && val === undefined ) val = true ;
             this.setState( { collapse:{...this.state.collapse, [tag]:!val }})                     
          } else {            
-            if(this.state.scope === i) val = !val
+            if(this.state.scope === i) { 
+               if(val === undefined) val = true
+               val = !val
+            }
             else val = true
             let firstVol = null
             if(i == r) {
@@ -8270,13 +8284,14 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                            if(ETres) {                                                            
 
                               g.link = useRoot+"?openEtext="+ETres /*this.props.IRI*/ + "#open-viewer"
+                              g.scope = ETres
                               
                               //nav.push(<Link to={"/show/"+txt[0].eTextResource} class="ulink">{I18n.t("resource.openR")}</Link>)
                               //nav.push(<span>|</span>)
-                              nav.push(<Link  {...!access?{disabled:true}:{}} to={"/show/"+useRoot+"?openEtext="+ETres /*this.props.IRI*/+"#open-viewer"} class="ulink" onClick={(ev) => {                                 
+                              nav.push(<Link  {...!access?{disabled:true}:{}} to={"/show/"+g.link} class="ulink" onClick={(ev) => {                                 
                                  this.props.onLoading("etext", true)
                                  this.props.onReinitEtext(ETres)
-                                 this.setState({currentText: ETres, scope:g["@id"]})
+                                 this.setState({currentText: ETres, scope:ETres})
                               }}>{I18n.t("result.openE")}</Link>)
                               nav.push(<span>|</span>)
                               //nav.push(<a href={fullUri(txt[0].eTextResource).replace(/^http:/,"https:")+".txt"} class="ulink"  download type="text" target="_blank">{I18n.t("mirador.downloadE")}</a>)
@@ -8299,7 +8314,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
          
                      //nav.push(<Link to={"/show/"+g.eTextResource} class="ulink">{I18n.t("resource.openR")}</Link>)
                      //nav.push(<span>|</span>)
-                     nav.push(<Link {...!access?{disabled:true}:{}} to={"/show/"+useRoot+"?openEtext="+ETres /*this.props.IRI*/+"#open-viewer"} class="ulink" onClick={(ev) => {                                                         
+                     nav.push(<Link {...!access?{disabled:true}:{}} to={"/show/"+g.link} class="ulink" onClick={(ev) => {                                                         
                         this.props.onLoading("etext", true)
                         this.props.onReinitEtext(ETres)                        
                         this.setState({currentText: ETres, scope:g["@id"]})
@@ -8455,7 +8470,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                   <span class={"parTy "+(/*e.details*/isCurrent?"on":"") } {...e.details?{title: I18n.t("resource."+(openD?"hideD":"showD")), onClick:(ev) => toggle(ev,root,e["@id"],"details",!e.hasPart && mono,e) /*openText()*/ }:{title:tLabel}} >
                      {pType && parts[pType] ? <div>{parts[pType]}</div> : <div>{parts["?"]}</div> }
                   </span>
-                  <span>{this.uriformat(_tmp+"withEtextPrefLang",{type:'uri', value:gUri, volume:fUri, inOutline: (!e.hasPart?tag+"-details":tag), /*url:"/show/"+e.link,*/ debug:false, toggle:(ev) => toggle(null,root,e["@id"],/*!e.hasPart?"details":*/"",!e.hasPart && (mono || ut), e)  })}</span>
+                  <span>{this.uriformat(_tmp+"withEtextPrefLang",{type:'uri', value:gUri, volume:fUri, inOutline: (!e.hasPart?tag+"-details":tag), /*url:"/show/"+e.link,*/ debug:false, noid:true, toggle:(ev) => toggle(null,root,e["@id"],/*!e.hasPart?"details":*/"",!e.hasPart && (mono || ut), e)  })}</span>
                   <div class="abs">                  
                      { !e.hasPart && (
                            access 
@@ -10317,7 +10332,13 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
 
          let ETSBresults 
          if(this.state.ETSBresults) {
-            ETSBresults = <div>{this.state.ETSBresults.map(r => <div>{JSON.stringify(r,null,3)}</div>)}</div>
+            ETSBresults = <div>{this.state.ETSBresults.map((r,i) => (
+               <EtextSearchResult page={this.state.ETSBpage} res={r} n={i}
+                  setETSBpage={(p) => { if(this.state.ETSBpage != p) this.setState({ ETSBpage:p }) }}
+                  getLabel={(l) => getLangLabel(this,bdo+"eTextHasPage",l)}
+                  etextLang={this.props.etextLang}
+               />
+            ))}</div>
          }
 
          let monlamResults 
@@ -10431,7 +10452,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
          else return ([            
             this.renderEtextNav(etextAccessError),
             this.props.topEtextRefs,
-            <div class={(monlamResults ? "withMonlam " : "")+(this.props.openEtextRefs ? "withOutline ":"")+(this.state.ETSBresults && this.state.collapse.ETSBresults != true ? "withETSBresults ":"")}>               
+            <div class={(monlamResults ? "withMonlam " : "")+(this.props.openEtextRefs ? "withOutline ":"")+(this.state.ETSBresults && !this.state.collapse.ETSBresults ? "withETSBresults ":"")}>               
                { monlamResults && <link rel="stylesheet" href="https://monlamdictionary.com/files/css/basic.css" /> }               
                { this.renderMirador(isMirador) }           
                <div class="resource etext-view" >                                    
@@ -10479,10 +10500,13 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                      { monlamResults }
                   </SimpleBar>
                </GenericSwipeable> }
-               { !this.props.disableInfiniteScroll && <div class={"ETSBresults "+(!monlamVisible && this.state.ETSBresults? "visible" : "")}>
-                  { ETSBresults }
-                  </div>
-               }
+               { !this.props.disableInfiniteScroll && <GenericSwipeable classN={"ETSBresults "+(!monlamVisible && this.state.ETSBresults&&!this.state.collapse.ETSBresults? "visible" : "")} onSwipedRight={() => { 
+                     this.setState({ collapse:{ ...this.state.collapse, ETSBresults: true }})
+                  }}>
+                  <SimpleBar>
+                     { ETSBresults }
+                  </SimpleBar>
+               </GenericSwipeable> }
             </div>,
          ])
       }

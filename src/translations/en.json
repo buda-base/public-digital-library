@@ -5,7 +5,8 @@
       "num": "{{num}}",
       "lpar": "(",
       "rpar": ")",
-      "semic": "; "
+      "semic": "; ",
+      "nth": "{{num}}."
    },
    "cookies":{
       "message":"This website uses a third party cookie to collect anonymous usage statistics and enhance the user experience (Google Analytics).",
@@ -735,7 +736,8 @@
       "text":"text",
       "pagesN":"{{i}} / {{count}} page",
       "pagesN_plural":"{{i}} / {{count}} pages",
-      "noR":"No results"
+      "noR":"No results",
+      "pageRvol":"Page {{p}} from Volume {{v}}"
    },
    "tradition":{
       "boT":"Tibetan Tradition",
