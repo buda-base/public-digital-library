@@ -10333,8 +10333,8 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
          let ETSBresults 
          if(this.state.ETSBresults) {
             ETSBresults = <div>{this.state.ETSBresults.map((r,i) => (
-               <EtextSearchResult page={this.state.ETSBpage} res={r} n={i}
-                  setETSBpage={(p) => { if(this.state.ETSBpage != p) this.setState({ ETSBpage:p }) }}
+               <EtextSearchResult page={this.state.ETSBpage.page} vol={this.state.ETSBpage.vol} res={r} n={i} 
+                  setETSBpage={(p,v) => { if(!this.state.ETSBpage || this.state.ETSBpage?.page != p || this.state.ETSBpage?.vol != v) this.setState({ ETSBpage:{page:p, vol:v} }) }}
                   getLabel={(l) => getLangLabel(this,bdo+"eTextHasPage",l)}
                   etextLang={this.props.etextLang}
                />

@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect, useMemo } from "react"
+import React, { useState, useCallback, useEffect, useMemo, useRef } from "react"
 import I18n from 'i18next';
 import _ from "lodash"
 import HTMLparse from 'html-react-parser';
@@ -55,42 +55,58 @@ export function EtextSearchBox(props) {
     }
   }, [query, scopeId, ETrefs])
 
-  useEffect(() => {
+  const onIndexUpdated = useCallback(() => {
     const p = results?.[index]?.startPnum ?? 0
-    if(that.state.ETSBpage != p) that.setState({ ETSBpage: p })
+    const v = results?.[index]?.volumeId ?? ""
+    if(!that.state.ETSBpage || that.state.ETSBpage.page != p || that.state.ETSBpage.vol != v) that.setState({ ETSBpage:{ page: p, vol: v} })
   }, [that.state.ETSBpage, index])
 
-  /*
   useEffect(() => {
+    onIndexUpdated()
+  }, [index])
+
+  const onUpdatedPage = useCallback(() => {
     const q = results?.[index]?.startPnum ?? 0
-    if(that.state.ETSBpage != q) {
-      let p = 1, oldP, i
+    const v = results?.[index]?.volumeId ?? ""
+    //console.log("q?",q,page)
+    if(that.state.ETSBpage && (that.state.ETSBpage?.page != q || that.state.ETSBpage?.vol != v)) {
+      let p = 0, oldP, i
       for(i = 0 ; i < results.length ; i ++) {
         const r = results[i]
-        if(r.startPnum === that.state.ETSBpage) {
+        //console.log("r?",i,r)
+        if(r.startPnum === that.state.ETSBpage.page && r.volumeId === that.state.ETSBpage.vol) {
           break;
         }
-        if(oldP) {
+        //if(oldP) {
           if(oldP != r.startPnum) p++
-        }
+        //}
         oldP = r.startPnum
       }
+      //console.log("p?",i,p)
       setIndex(i)
       setPage(p)
+
+      if(p != page) reloadPage(results,i,p)    
     }
-  }, [that.state.ETSBpage, results, page])
-  */
+  }, [that.state.ETSBpage, results, page, index, results])
+
+  
+  useEffect(() => {
+    onUpdatedPage()
+  }, [that.state.ETSBpage])
+  
 
   const startSearch = useCallback(async () => {
     setLoading(true)
 
-    const res = _.orderBy(await getEtextSearchRequest({ query, lang: "bo", [params[ETtype]]: scopeId.split(":")[1] }), ["volumeNumber","startPnum"], ["asc","asc"])
+    let res = _.orderBy(await getEtextSearchRequest({ query, lang: "bo", [params[ETtype]]: scopeId.split(":")[1] }), ["volumeNumber","startPnum"], ["asc","asc"])
     console.log("gEsR:",res, scopeId, scope)  
+    if(res?.length > 1000) res = res?.slice(0,1000) ?? []
     setResults(res)
     if(res.length){
       setIndex(0)
       setPage(0)
-      setTotal(new Set(res.map(r => r.startPnum)).size)
+      setTotal(new Set(res.map(r => r.volumeId+"_"+r.startPnum)).size)
       that.setState({ ETSBresults :res, collapse:  { ...that.state.collapse, ETSBresults:false } })
     } else {
       that.setState({ ETSBresults :res, collapse:  { ...that.state.collapse, ETSBresults:true } })
@@ -118,7 +134,7 @@ export function EtextSearchBox(props) {
     } else do {
       idx = (idx + 1) % res.length
       if(idx > index) {
-        if(res[index].startPnum != res[idx].startPnum) { 
+        if(res[index].startPnum != res[idx].startPnum || res[index].volumeId != res[idx].volumeId) { 
           p = (p + 1) % total
         }
       } else {
@@ -144,7 +160,7 @@ export function EtextSearchBox(props) {
     } else do {
       idx = (idx - 1 + res.length) % res.length
       if(idx < index) {
-        if(res[index].startPnum != res[idx].startPnum) { 
+        if(res[index].startPnum != res[idx].startPnum || res[index].volumeId != res[idx].volumeId) { 
           p = (p - 1 + total) % total
         }
       } else {
@@ -162,7 +178,7 @@ export function EtextSearchBox(props) {
     if(p != page) reloadPage(res,idx,p)    
   }, [query, that, results, index, page, scopeId, total])
 
-  //console.log("scope:", scope, index, page, total)
+  //console.log("scope:", scope, index, page, total, that.state.ETSBpage)
 
   return <div class="etext-search">
     <span>
@@ -198,17 +214,29 @@ export function EtextSearchBox(props) {
 
 
 export function EtextSearchResult(props) {
-  const { setETSBpage, getLabel, res, n, page, etextLang } = props
+  const { setETSBpage, getLabel, res, n, page, vol, etextLang } = props
+
+  const ref = useRef()
 
   const label = useMemo(() => {
     // TODO: handle language
     if(res.snippet) return highlight(getLabel([{ value:res.snippet?.replace(/<em>/g,"↦").replace(/<\/em>/g,"↤")??"", lang:"bo" }])?.value)
   }, [res, etextLang])
 
-  //console.log("res:n",n,page,res,label,res.snippet)
+  //console.log("res:n",n,page,vol,res,label,res.snippet)
 
-  return <div class={"ETSBresult "+(res.startPnum <= page && page <= res.endPnum ? "on" : "")} 
-    //onClick={() => setETSBpage(res.startPnum)}
+  const [on,setOn] = useState("")
+  useEffect(() => {
+    if(res.volumeId === vol && res.startPnum <= page && page <= res.endPnum && !on) {
+      setOn("on")
+      if(ref.current) ref.current.scrollIntoView({behavior:"auto",block:"nearest",inline:"start"})
+    } else if(on) {
+      setOn("")
+    }
+  },[res, vol, page])
+
+  return <div ref={ref} class={"ETSBresult "+on} 
+      onClick={() => setETSBpage(res.startPnum, res.volumeId)}
     >
       <div class="ETSBheader">
         <span>{I18n.t("punc.nth",{num: n+1})}</span><span>{I18n.t("resource.pageRvol",{p:res.startPnum,v:res.volumeNumber})}</span>

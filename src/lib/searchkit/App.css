@@ -905,7 +905,8 @@ header[data-hits="0"] ~ .hits .pagination,
 
 .resource ~ .ETSBresults > div:not(#a) .ETSBresult {
   padding:5px 7px;
-  /* cursor:pointer; */
+  cursor:pointer;
+  scroll-margin:200px;
 }
 
 
