@@ -291,7 +291,7 @@ async function initiateApp(params,iri,myprops,route,isAuthCallback) {
          let res,Etext ;
          if(!iri) iri = params.r
 
-         Etext = iri.match(/^([^:]+:)?(UT|VL)/)
+         Etext = iri.match(/^([^:]+:)?(UT|V)/)
 
          if(Etext) {
             let get = qs.parse(history.location.search), currentText
@@ -459,7 +459,7 @@ async function initiateApp(params,iri,myprops,route,isAuthCallback) {
          }
 
          let useIri = iri
-         if(iri.startsWith("bdr:IE") && (params.openEtext?.startsWith("bdr:UT")||params.openEtext?.startsWith("bdr:VL"))) useIri = params.openEtext
+         if(iri.startsWith("bdr:IE") && (params.openEtext?.startsWith("bdr:UT")||params.openEtext?.startsWith("bdr:V"))) useIri = params.openEtext
          
          //console.log("res:", res[bdrIRI], params, next)
 

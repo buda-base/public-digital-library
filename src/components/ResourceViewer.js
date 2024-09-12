@@ -3653,7 +3653,7 @@ class ResourceViewer extends Component<Props,State>
                            <div class="data access generic"><h3><span style={{textTransform:"none"}}><Trans i18nKey="access.generic" components={{ policies: <a /> }} /></span></h3></div>
                         </>
                         
-                  else if ( this.props.IIIFerrors && this.props.IIIFerrors[prefix+":"+pretty] && this.props.IIIFerrors[prefix+":"+pretty]?.error.code === 500 && this.props.IRI && !this.props.IRI.match(/^bdr:(IE|UT|VL)/))
+                  else if ( this.props.IIIFerrors && this.props.IIIFerrors[prefix+":"+pretty] && this.props.IIIFerrors[prefix+":"+pretty]?.error.code === 500 && this.props.IRI && !this.props.IRI.match(/^bdr:(IE|UT|V)/))
                      restrict =  <>
                         <div class="data access error"><h3><span style={{textTransform:"none"}}>{I18n.t("access.error")}</span></h3></div>
                      </>
@@ -7870,7 +7870,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
             //return  <div class="data access"><h3><span style={{textTransform:"none"}}>{I18n.t("misc.please")} <a class="login" {...(this.props.auth?{onClick:this.props.auth.login.bind(this,this.props.history.location)}:{})}>{I18n.t("topbar.login")}</a> {I18n.t("access.credentials")}</span></h3></div>
             return  <div class="data access generic"><h3><span style={{textTransform:"none"}}><Trans i18nKey="access.generic" components={{ policies: <a /> }} /></span></h3></div>
             
-      else if ( this.props.manifestError && this.props.manifestError.error.code === 500 && this.props.IRI && !this.props.IRI.match(/^bdr:(IE|UT|VL)/))
+      else if ( this.props.manifestError && this.props.manifestError.error.code === 500 && this.props.IRI && !this.props.IRI.match(/^bdr:(IE|UT|V)/))
          return  <div class="data access error"><h3><span style={{textTransform:"none"}}>{I18n.t("access.error")}</span></h3></div>
       
    }
@@ -8449,8 +8449,8 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
             let open = this.state.collapse[tag] || this.state.collapse[tag]  === undefined && ut // #821
                         || e.link?.includes("openEtext="+this.state.currentText + "#") && this.state.scope != root && this.state.collapse[tag] != false
                         || e.link.endsWith(this.state.currentText)  && this.state.scope != root && this.state.collapse[tag] != false
-            let mono = etextrefs.length === 1
-            let openD = this.state.collapse[tag+"-details"] || this.state.collapse[tag+"-details"]  === undefined && (mono || ut) // #821          
+            let mono = false // etextrefs.length === 1
+            let openD = this.state.collapse[tag+"-details"] // || this.state.collapse[tag+"-details"]  === undefined && (mono || ut) // #821          
                         //|| isCurrent                 
                         //|| e.link?.includes("openEtext="+this.state.currentText + "#") && this.state.collapse[tag+"-details"] != false
             
@@ -10334,7 +10334,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
          if(this.state.ETSBresults) {
             ETSBresults = <div>{this.state.ETSBresults.map((r,i) => (
                <EtextSearchResult page={this.state.ETSBpage.page} vol={this.state.ETSBpage.vol} res={r} n={i} 
-                  setETSBpage={(p,v) => { if(!this.state.ETSBpage || this.state.ETSBpage?.page != p || this.state.ETSBpage?.vol != v) this.setState({ ETSBpage:{page:p, vol:v} }) }}
+                  setETSBpage={(p,v,i) => { if(!this.state.ETSBpage || this.state.ETSBpage?.page != p || this.state.ETSBpage?.vol != v || this.state.ETSBpage?.idx != i) this.setState({ ETSBpage:{page:p, vol:v, idx:i } }) }}
                   getLabel={(l) => getLangLabel(this,bdo+"eTextHasPage",l)}
                   etextLang={this.props.etextLang}
                />

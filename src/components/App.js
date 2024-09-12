@@ -554,6 +554,8 @@ export function highlight(val,k,expand,newline,force)
 
    if(expand && expand.value) val = expand.value.replace(/([^\n])[\n]([^\n])/g,"$1$2")
 
+   if(!val) val = ""
+
    if(!val.match(/↤/) && k ) { 
 
       //val = /*val.replace(/@.* /,"")*/ val.split(new RegExp(k.replace(/[ -'ʾ_]/g,"[ -'ʾ_]+"))).map((l) => ([<span>{l}</span>,<span className="highlight">{k}</span>])) ;

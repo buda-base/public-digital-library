@@ -46,6 +46,7 @@ export const dPrefix = {
       "C" : "Corporation",
       "E" : "Etext",
       "IE" : "Etext",
+      "VE": "Volume",
       "VL": "Volume",
       "I" : "Volume", // = image group
       "L" : "Lineage",
