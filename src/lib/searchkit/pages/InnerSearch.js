@@ -68,7 +68,12 @@ export class InnerSearchPage extends Component<State, Props>
     let { RID, T } = this.props
     if(RID) RID = RID.split(":")[1]
 
-    let pageFilters = "associated_res:"+RID, placeholder = I18n.t("resource.searchT",{ type: I18n.t("types."+T.toLowerCase()).toLowerCase() } )
+    let pageFilters = "associated_res:"+RID, 
+      placeholder = I18n.t("resource.searchT",{ type: I18n.t("types."+T.toLowerCase()).toLowerCase() } ),
+      leftTitle = I18n.t("resource.findT",{type:I18n.t("types."+T.toLowerCase())})
+
+    if(["Person","Topic","Place","Product"].includes(T)) placeholder = I18n.t("resource.searchTn."+T.toLowerCase())
+      
     if(RID) {
       /*
       // DONE: handle OR in ElasticAPI (use associated_res field instead)
@@ -85,6 +90,7 @@ export class InnerSearchPage extends Component<State, Props>
 
     const storageRef = React.createRef() 
 
+
     console.log("iSsC:", searchClient, routingConfig, this.props, pageFilters, storageRef)        
     
     return (<>
@@ -97,7 +103,7 @@ export class InnerSearchPage extends Component<State, Props>
             <Loader loaded={!this.props.loading}/>
             <div data-props="tmp:search">
               <div className="searchbox">
-                <h3><span><a class="propref"><span>{I18n.t("resource.findT",{type:T})}{I18n.t("punc.colon")}</span></a></span></h3>
+                <h3><span><a class="propref"><span>{leftTitle}{I18n.t("punc.colon")}</span></a></span></h3>
                 <div className="search inner-search-bar group">
                   <div>
                     <SearchBoxAutocomplete searchAsYouType={false} loading={this.props.loading} {...{ pageFilters, placeholder }}/>

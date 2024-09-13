@@ -654,7 +654,7 @@
       "extended": "Extended Properties",
       "showD": "Show Details",
       "hideD": "Hide Details",
-      "searchO": "Search in outline",
+      "searchO": "Search these texts",
       "start": "Start search",
       "reset": "Reset search",
       "otherN": "Load non-matching subparts",
@@ -739,7 +739,13 @@
       "pagesN_plural":"{{i}} / {{count}} pages",
       "noR":"No results",
       "pageRvol":"Page {{p}} from Volume {{v}}",
-      "explain":"Showing the most popular items. Make a new search or use the filters on the left to find what you are looking for."
+      "explain":"Showing the most popular items. Make a new search or use the filters on the left to find what you are looking for.",
+      "searchTn":{
+         "topic": "Search texts about this topic",
+         "person": "Search texts by this person or about this person",
+         "place": "Search material related to this place",
+         "product": "Search texts in this collection"
+      }
    },
    "tradition":{
       "boT":"Tibetan Tradition",
