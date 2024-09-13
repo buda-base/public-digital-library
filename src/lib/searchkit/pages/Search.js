@@ -47,6 +47,10 @@ import { initiateApp } from '../../../state/actions';
 
 export const filters = [{
     attribute:"etext_search", I18n_prefix: "search.etext_search", prefix:"tmp", defaultItems:[{ value: "true" }]
+  },{ 
+    attribute:"author", prefix:"tmp" 
+  },{ 
+    attribute:"printMethod" 
   },{
     attribute:"scans_access", sort:true, I18n_prefix: "access.scans", prefix:"tmp"
   },{ // #881 not yet
@@ -55,51 +59,47 @@ export const filters = [{
     attribute:"etext_access", sort:true, I18n_prefix: "access.etext", prefix:"tmp"
   },{
     attribute:"etext_quality", sort:true, I18n_prefix: "access.etext.quality", prefix:"tmp"
-  },{
-    attribute:"inCollection"
-  },{ 
-    attribute:"language" 
-  },{
-    attribute:"placeType", prefix:"tmp"
   },{ 
     attribute:"associatedTradition"  
   },{ 
-    attribute:"personGender" 
-  },{ 
-    attribute:"printMethod" 
-  },{ 
-    attribute:"script" 
+    attribute:"workGenre" 
   },{ 
     attribute:"workIsAbout" 
   },{ 
-    attribute:"workGenre" 
+    attribute:"script" 
   },{ 
-    attribute:"author", prefix:"tmp" 
+    attribute:"language" 
+  },{
+    attribute:"associatedCentury", sort:true, sortFunc:(elem) => Number(elem.value.replace(/[^0-9]/g,"")), prefix:"tmp"
+  },{ 
+    attribute:"placeType", prefix:"tmp"
+  },{
+    attribute:"personGender" 
   },{ 
     attribute:"translator", iri:"bdr:R0ER0026" 
   },{ 
-    attribute:"associatedCentury", sort:true, sortFunc:(elem) => Number(elem.value.replace(/[^0-9]/g,"")), prefix:"tmp"
+    attribute:"inCollection"
   }
 ]
 
 
 export const sortItems = [
   {
-    label: "default",
+    label: "Default",
     value: process.env.REACT_APP_ELASTICSEARCH_INDEX,
   },
   {
-    label: "sync scan date",
+    label: "Newest scans", //"sync scan date",
     value: "firstScanSyncDate_desc",
   },
 
   {
-    label: "publication date (most recent) ",
+    label: "Publication date (most recent) ",
     value: "publicationDate_desc",
   },
 
   {
-    label: "publication date (oldest)",
+    label: "Publication date (oldest)",
     value: "publicationDate_asc",
   },
 ]
@@ -137,18 +137,20 @@ export function FiltersSidebar(props) {
 
     <RefinementListWithLocalLabels that={that} {...filters[0] } className={"MT0"}  />
 
+    { filters.slice(1).map((filter) => <RefinementListWithLocalLabels that={that} {...filter} showMore={true} />) }
+
+    <RefinementListWithLocalLabels I18n_prefix={"types"} that={that} attribute="type" showMore={true} title={I18n.t("Lsidebar.datatypes.title")}/>
+
+    <div className="filter-title MT"><p>{getPropLabel(that,fullUri("tmp:firstScanSyncDate"))}</p></div>
+    <CustomDateRange attribute="firstScanSyncDate" />
+    
     <div className="filter-title MT"><p>Sort by</p></div>
     <SortBy
       initialIndex={process.env.REACT_APP_ELASTICSEARCH_INDEX}
       items={sortItems}
     />
 
-    <RefinementListWithLocalLabels I18n_prefix={"types"} that={that} attribute="type" showMore={true} title={I18n.t("Lsidebar.datatypes.title")}/>
 
-    <div className="filter-title MT"><p>{getPropLabel(that,fullUri("tmp:firstScanSyncDate"))}</p></div>
-    <CustomDateRange attribute="firstScanSyncDate" />
-
-    { filters.slice(1).map((filter) => <RefinementListWithLocalLabels that={that} {...filter} showMore={true} />) }
   </>
 }
 

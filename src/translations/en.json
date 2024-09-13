@@ -299,7 +299,8 @@
       "tmp:scans_quality":"Scans Quality",
       "tmp:etext_quality":"Etext Quality",
       "tmp:placeType":"Place Type",
-      "tmp:etext_search":"Etext"
+      "tmp:etext_search":"Etext",
+      "tmp:firstScanSyncDate":"First scan date"
    },
    "guided":{
       "keyword":"keyword",
