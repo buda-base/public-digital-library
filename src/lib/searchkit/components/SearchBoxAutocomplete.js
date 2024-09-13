@@ -6,7 +6,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import IconButton from '@material-ui/core/IconButton';
 
 // hooks
-import { useSearchBox, useInstantSearch } from "react-instantsearch";
+import { useSearchBox, useInstantSearch, useClearRefinements } from "react-instantsearch";
 
 // utils
 import { debounce } from "../helpers/utils";
@@ -173,6 +173,8 @@ const SearchBoxAutocomplete = (props) => {
 
   //console.log("pF:", pageFilters)
 
+  const { refine: clearRefine } = useClearRefinements(props);
+
   useEffect(() => {
     if (query !== "") {
       getAutocompleteRequest(query, pageFilters).then((requests) => {
@@ -202,6 +204,7 @@ const SearchBoxAutocomplete = (props) => {
   );
 
   const handleClick = useCallback((item) => {
+    clearRefine([])
     const newQuery = formatResponseForURLSearchParams(item.res);
     setQuery(newQuery);
     setIsFocused(false);

@@ -21,7 +21,8 @@ import {
   RefinementList,
   Pagination,
   Configure,
-  SortBy
+  SortBy,
+  ClearRefinements
 } from "react-instantsearch";
 
 import I18n from 'i18next';
@@ -134,6 +135,13 @@ export function FiltersSidebar(props) {
 
   return <>
     <h3>{I18n.t("result.filter")}</h3>
+
+    <ClearRefinements   
+      translations={{
+        resetButtonText: 'Clear all filters',
+      }}
+    />
+    <br/>
 
     <RefinementListWithLocalLabels that={that} {...filters[0] } className={"MT0"}  />
 
