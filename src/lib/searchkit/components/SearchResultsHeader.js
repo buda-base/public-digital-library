@@ -45,8 +45,15 @@ function SearchResultsHeader(props) {
             </Link>
           }</h1>
     : <h1 lang={that.props.locale}>{I18n.t("result.search")}</h1> }</> }
-    { status != "error" && (results?.nbHits || status === "idle")&& <h3>{I18n.t("result.hit"+(results.query?"KW":""),{count:results?.nbHits, interpolation: {escapeValue: false}, ...results.query?{kw:results.query}:{}})}</h3> }
-    { status == "error" && <h3>Server error</h3> }
+    { status != "error" && (results?.nbHits || status === "idle")&& 
+        ( inner && !indexUiState.query 
+          ? <h3>{I18n.t("resource.explain")}</h3>
+          : <h3>{I18n.t("result.hit"+(results.query?"KW":""),{count:results?.nbHits, interpolation: {escapeValue: false}, ...results.query?{kw:results.query}:{}})}</h3> 
+        )
+      }
+    { status == "error" && 
+        <h3>Server error, please retry later.</h3> 
+    }
   </header> 
 }
 
