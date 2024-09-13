@@ -162,7 +162,7 @@ export function EtextSearchBox(props) {
             
             parent.scrollTo({ 
               left:position.left - parent.getBoundingClientRect().left + parent.scrollLeft - 200, 
-              behavior:"smooth" 
+              behavior:"auto" 
             });
 
           }, 350)

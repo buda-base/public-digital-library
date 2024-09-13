@@ -258,6 +258,10 @@ const CustomHit = ({ hit, that, sortItems, storage }) => {
     setExpand({ ...expand, [tag]: !expand[tag] })
   }, [expand])
 
+  const getPlaceTypeLabels = (t) => {
+    if(!Array.isArray(t)) t = [t]
+    return t.map(s => getPropLabel(that,fullUri("bdr:"+s), true, false)).map((s,i) => i > 0 ? ([<span style={{whiteSpace:"pre"}} lang={that.props.locale}>{I18n.t("punc.comma")}</span>,s]):s)
+  }
 
   const 
     page = history.location.pathname,
@@ -290,7 +294,7 @@ const CustomHit = ({ hit, that, sortItems, storage }) => {
       <div class="data">      
           <Link to={link}>
             <span class="T">
-              { hit.placeType ? getPropLabel(that,fullUri("bdr:"+hit.placeType), true, false) : getPropLabel(that,fullUri("bdr:"+hit.type), true, false, "types."+(hit.type+"").toLowerCase())}
+              { hit.placeType ? getPlaceTypeLabels(hit.placeType) : getPropLabel(that,fullUri("bdr:"+hit.type), true, false, "types."+(hit.type+"").toLowerCase())}
               { hit.script && hit.script.map(s => <span title={getPropLabel(that,fullUri('bdo:script'),false)+I18n.t("punc.colon")+" "+getPropLabel(that, fullUri("bdr:"+s), false)} data-lang={s.replace(/.*Script/)}>{s.replace(/^.*Script/,"")}</span>)}
             </span>
             {/* {{ hit.author && <Link to={"/show/bdr:"+hit.author}>{hit.author}</Link> } */} 

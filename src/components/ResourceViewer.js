@@ -5251,7 +5251,7 @@ class ResourceViewer extends Component<Props,State>
       //loggergen.log("H2?",title, rootC, other)
 
       if(other) return <h2 title={title.value} lang={title.lang || this.props.locale}><Link {...this.props.preview?{ target:"_blank" }:{}}   {... rootC?{onClick:rootC}:{onClick:() => setTimeout(()=>window.scrollTo(0,0),10)}}  to={"/show/"+shortUri(other)+this.getTabs(T_,other)}>{_T}<span>{_befo}{title.value}</span>{this.tooltip(title.lang)}</Link></h2>
-      else return <><h2 title={title.value} lang={title.lang || this.props.locale} class="on">{_T}<span>{_befo}<span class="placeType">{title.value}</span></span>{this.tooltip(title.lang)}</h2>{ title.placeT && <span class="date">{this.fullname(title.placeT, false, false, true)}</span>}</>
+      else return <><h2 title={title.value} lang={title.lang || this.props.locale} class="on">{_T}<span>{_befo}<span class="placeType">{title.value}</span></span>{this.tooltip(title.lang)}</h2>{ title.placeT?.length && <span class="date">{title.placeT.map(t => this.fullname(t.value, false, false, true)).map((s,i) => i > 0 ? ([I18n.t("punc.comma"), s]):s)}</span>}</>
    }
 
    setTitle = (kZprop,_T,other,rootC,noSame:boolean=false) => {
@@ -5310,7 +5310,7 @@ class ResourceViewer extends Component<Props,State>
             }
          }
          if(!title || title.value == "") title = { value: I18n.t("resource.noT"), lang: this.props.locale } // #825
-         if(placeT?.length) title.placeT = placeT[0].value
+         if(placeT?.length) title.placeT = placeT //T[0].value
          title = this.getH2(title,_befo,_T,other,T_,rootC)         
 
       }
