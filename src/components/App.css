@@ -943,6 +943,7 @@ ul.suggestions li > span > svg:first-child {
    opacity:0.5;
 }
 
+#outline .suggestions > li.selected,
 .inner-search-bar .suggestions > li.selected,
 .inner-search-bar .suggestions > li:hover,
 .inner-search-bar .suggestions > span:hover {

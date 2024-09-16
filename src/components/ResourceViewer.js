@@ -113,7 +113,7 @@ import ResourceViewerContainer from '../containers/ResourceViewerContainer'
 import InnerSearchPageContainer from '../containers/InnerSearchPageContainer'
 
 import { getAutocompleteRequest } from "../lib/searchkit/api/AutosuggestAPI";
-import { SuggestsList, updateHistory } from "../lib/searchkit/components/SearchBoxAutocomplete";
+import { SuggestsList, updateHistory, formatResponseForURLSearchParams } from "../lib/searchkit/components/SearchBoxAutocomplete";
 import { debounce } from "../lib/searchkit/helpers/utils";
 
 
@@ -933,7 +933,10 @@ class OutlineSearchBar extends Component<Props,State>
       this.state = { 
          value: props.that.state.outlineKW?props.that.state.outlineKW:"", 
          language: props.that.state.outlineKWlang?props.that.state.outlineKWlang:"bo-x-ewts", 
-         dataSource:[] 
+         dataSource:[],
+         suggestionSel: -1,
+         suggestionList: []
+
       }
 
       this.handleChangeKW = debounce((newValue) => {
@@ -941,18 +944,7 @@ class OutlineSearchBar extends Component<Props,State>
          console.log("debounce!",props.that.props.IRI)
          getAutocompleteRequest(newValue,pageFilters).then((requests) => {
             console.log("requests:", requests)
-            this.setState({ autocomplete: <SuggestsList
-                 query={newValue}
-                 items={requests}
-                 onClick={(item) => {
-                  console.log("item!",item)
-                  const value = item.res.replace(/<[^>]*>/g,"")
-                  const language = (item.lang ?? this.state.language).replace(/_/g,"-")
-                  this.search(item,language,value)
-                 }}
-                 isVisible={true}
-                 {...{ pageFilters }}
-               /> })
+            this.setState({ autocomplete: { newValue, requests, pageFilters } })
          });
       }, 350)
    
@@ -1033,14 +1025,36 @@ class OutlineSearchBar extends Component<Props,State>
                <input type="text" placeholder={I18n.t("resource.searchO")} value={this.state.value} //onChange={(e) => this.setState({value:e.target.value})}
                   onFocus={this.changeOutlineKW.bind(this)} onBlur={() => setTimeout(() => this.setState({autocomplete: undefined}), 350)}
                   /*value={this.props.that.state.outlineKW} */ onChange={this.changeOutlineKW.bind(this)} 
-               onKeyPress={ (e) => { 
-                  if(e.key === 'Enter' && this.state.value) { 
-                     this.search(e)
+               onKeyDown={ (e) => { 
+                  if(e.key === 'Enter' && this.state.value) {
+                     
+                     
+                     if(this.state.autocomplete.suggestionSel != -1) {
+                        if(! this.state.suggestionList?.length ) {
+                           this.search(e)
+                        } else {
+                           //console.log("acp:",this.state.autocomplete)
+                           this.search(e,this.state.language, formatResponseForURLSearchParams(this.state.suggestionList[this.state.suggestionSel]?.res))
+                        }
+                      } else {
+                        this.search(e)
+                      }
                      /*
                      if(this.state.dataSource?.length) { search(e, this.state.dataSource[0].split("@")[1]) }
                      else this.changeOutlineKW(null,this.state.value)
                      */
-                  }
+
+
+                  }  else if(e.key === "ArrowDown") {
+                     if(! this.state.suggestionList?.length ) return
+                     const newSel = (this.state.suggestionSel === -1 ? 0 : this.state.suggestionSel + 1) % this.state.suggestionList.length
+                     this.setState({suggestionSel:newSel})
+                   } else if(e.key === "ArrowUp") {
+                     if(! this.state.suggestionList?.length ) return
+                     const newSel = (this.state.suggestionSel === -1 ? this.state.suggestionList.length - 1 : this.state.suggestionSel - 1 + this.state.suggestionList.length) % this.state.suggestionList.length
+                     this.setState({suggestionSel:newSel})
+                   } 
+
                }}/>
                <span class="button" onClick={(e) => { if(this.state.value) { this.search(e) } }}  title={I18n.t("resource.start")}></span>
                { (this.props.that.props.outlineKW || this.props.that.state.outlineKW) && <span class="button" title={I18n.t("resource.reset")} onClick={(e) => { 
@@ -1057,7 +1071,20 @@ class OutlineSearchBar extends Component<Props,State>
                }}><Close/></span> }            
                { this.state.autocomplete && <div>
                      <Paper id="suggestions">
-                        { this.state.autocomplete }
+                        { this.state.autocomplete && <SuggestsList
+                           query={this.state.autocomplete.newValue}
+                           items={this.state.autocomplete.requests}
+                           onClick={(item) => {
+                              console.log("item!",item)
+                              const value = item.res.replace(/<[^>]*>/g,"")
+                              const language = (item.lang ?? this.state.language).replace(/_/g,"-")
+                              this.search(item,language,value)
+                           }}
+                           isVisible={true}
+                           setActualList={(n) => this.setState({suggestionList: n})}
+                           selected={this.state.suggestionSel}
+                           {...{ pageFilters: this.state.autocomplete.pageFilters }}
+                           />}
                      </Paper>
                   </div> }
                {/* (this.state.value && this.state.dataSource && this.state.dataSource.length > 0) &&   
@@ -9668,7 +9695,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
          let tag = "outline-"+root+"-"+root
 
          let outlineSearch = (e, lg = "bo-x-ewts", val = this.state.outlineKW) => {
-            loggergen.log("outlineS",val)
+            loggergen.log("outlineS:",val)
 
             // NOTO
             // x search either from root or current node
@@ -9687,7 +9714,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                if(!loca.search) loca.search = "?"
                else if(loca.search !== "?") loca.search += "&"
 
-               loca.search += "root="+root+"&osearch="+keywordtolucenequery(val.trim(), lg)+"@"+lg
+               loca.search += "root="+root+"&osearch="+encodeURIComponent(keywordtolucenequery(val.trim(), lg))+"@"+lg
 
                loggergen.log("loca!",loca)
 

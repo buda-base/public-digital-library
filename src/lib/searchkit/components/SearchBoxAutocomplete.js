@@ -91,7 +91,7 @@ const SearchBoxAction = ({ inputValue, isSearchStalled, refine, pageFilters }) =
   );
 };
 
-export const SuggestsList = ({ items, onClick, isVisible, selected, query, pageFilters, setIsFocused }) => {
+export const SuggestsList = ({ items, onClick, isVisible, selected, query, pageFilters, setIsFocused, setActualLength, setActualList }) => {
 
   const [histo, setHisto] = useState([])
 
@@ -103,8 +103,12 @@ export const SuggestsList = ({ items, onClick, isVisible, selected, query, pageF
         [ "desc" ]
       )
       
-    const newHisto = latest.slice(0,10-items.length+5).map(t => ({ fromHisto:true, res:query+"<suggested>"+t.query?.substring(query?.length)+"</suggested>"}))
+    const newHisto = latest.slice(0,10-items.length+4).map(t => ({ fromHisto:true, res:query+"<suggested>"+t.query?.substring(query?.length)+"</suggested>"}))
     setHisto(newHisto)
+
+    const list = newHisto.concat(items).slice(0,10)
+    if(setActualLength) setActualLength(list.length) //Math.min(10, newHisto.length + items.length))
+    if(setActualList) setActualList(list)
 
     //console.log("histo:", latest, query, newHisto)
     
@@ -124,10 +128,10 @@ export const SuggestsList = ({ items, onClick, isVisible, selected, query, pageF
 
   return (
     <ul className="search-result-wrapper suggestions" hidden={!isVisible}>
-      {histo.concat(items).map((_suggest, _index) => (
+      {histo.concat(items).slice(0,10).map((_suggest, _index) => (
         <li
           key={_index}
-          className={"search-result-item "+(selected === _index ? "selected":"")+(_suggest.fromHisto ? "fromHisto":"")}          
+          className={"search-result-item "+(selected === _index ? "selected ":"")+(_suggest.fromHisto ? "fromHisto ":"")}          
         >
           <span  onClick={() => onClick(_suggest)}>
             { _suggest.fromHisto 
@@ -152,7 +156,7 @@ export const SuggestsList = ({ items, onClick, isVisible, selected, query, pageF
   );
 };
 
-const formatResponseForURLSearchParams = (query) => {
+export const formatResponseForURLSearchParams = (query) => {
   return query.split("<suggested>").join("").split("</suggested>").join("");
 };
 
@@ -170,6 +174,8 @@ const SearchBoxAutocomplete = (props) => {
   const inputRef = useRef(null);
 
   const isSearchStalled = status === "stalled";
+
+  const [suggestionLen, setSuggestionLen] = useState(0)
 
   //console.log("pF:", pageFilters)
 
@@ -210,6 +216,10 @@ const SearchBoxAutocomplete = (props) => {
     setIsFocused(false);
     redirect(refine, newQuery, pageFilters);
   }, [refine, pageFilters])
+
+  const suggLen = (suggestionLen ?? suggestions.length)
+
+  //console.log("sL:",suggLen, selected)
 
   return (
     <form
@@ -269,10 +279,10 @@ const SearchBoxAutocomplete = (props) => {
               e.stopPropagation()
             }
           } else if(e.key === "ArrowDown") {
-            const newSel = (selected === -1 ? 0 : selected + 1) % suggestions.length
+            const newSel = (selected === -1 ? 0 : selected + 1) % suggLen
             setSelected(newSel)
           } else if(e.key === "ArrowUp") {
-            const newSel = (selected === -1 ? suggestions.length - 1 : selected - 1 + suggestions.length) % suggestions.length
+            const newSel = (selected === -1 ? suggLen - 1 : selected - 1 + suggLen) % suggLen
             setSelected(newSel)
           } 
         }}
@@ -298,6 +308,7 @@ const SearchBoxAutocomplete = (props) => {
         items={suggestions}
         onClick={handleClick}
         isVisible={isFocused}
+        setActualLength={setSuggestionLen}
       />
     </form>
   );
