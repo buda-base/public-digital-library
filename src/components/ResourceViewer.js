@@ -1026,17 +1026,19 @@ class OutlineSearchBar extends Component<Props,State>
                   onFocus={this.changeOutlineKW.bind(this)} onBlur={() => setTimeout(() => this.setState({autocomplete: undefined}), 350)}
                   /*value={this.props.that.state.outlineKW} */ onChange={this.changeOutlineKW.bind(this)} 
                onKeyDown={ (e) => { 
-                  if(e.key === 'Enter' && this.state.value) {
+                  if(e.key === 'Enter') {
                      
                      
                      if(this.state.autocomplete.suggestionSel != -1) {
                         if(! this.state.suggestionList?.length ) {
-                           this.search(e)
+                           if(this.state.value) { 
+                              this.search(e)
+                           }
                         } else {
                            //console.log("acp:",this.state.autocomplete)
                            this.search(e,this.state.language, formatResponseForURLSearchParams(this.state.suggestionList[this.state.suggestionSel]?.res))
                         }
-                      } else {
+                      } else if(this.state.value){
                         this.search(e)
                       }
                      /*
@@ -1080,6 +1082,7 @@ class OutlineSearchBar extends Component<Props,State>
                               const language = (item.lang ?? this.state.language).replace(/_/g,"-")
                               this.search(item,language,value)
                            }}
+                           setIsFocused={(f) => { if(!f) this.setState({autocomplete: undefined}) } }
                            isVisible={true}
                            setActualList={(n) => this.setState({suggestionList: n})}
                            selected={this.state.suggestionSel}

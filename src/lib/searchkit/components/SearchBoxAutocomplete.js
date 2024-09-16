@@ -175,7 +175,8 @@ const SearchBoxAutocomplete = (props) => {
 
   const isSearchStalled = status === "stalled";
 
-  const [suggestionLen, setSuggestionLen] = useState(0)
+  //const [suggestionLen, setSuggestionLen] = useState(0)
+  const [actualList, setActualList] = useState([])
 
   //console.log("pF:", pageFilters)
 
@@ -217,7 +218,7 @@ const SearchBoxAutocomplete = (props) => {
     redirect(refine, newQuery, pageFilters);
   }, [refine, pageFilters])
 
-  const suggLen = (suggestionLen ?? suggestions.length)
+  const suggLen = (actualList?.length ?? suggestions.length)
 
   //console.log("sL:",suggLen, selected)
 
@@ -273,15 +274,17 @@ const SearchBoxAutocomplete = (props) => {
             refine(inputValue);
             */
             // case when selection with keyboard
-            if(selected != -1) {
-              handleClick(suggestions[selected])
+            if(selected != -1 && actualList?.[selected]) {
+              handleClick(actualList?.[selected])
               e.preventDefault()
               e.stopPropagation()
             }
           } else if(e.key === "ArrowDown") {
+            if(!suggLen) return
             const newSel = (selected === -1 ? 0 : selected + 1) % suggLen
             setSelected(newSel)
           } else if(e.key === "ArrowUp") {
+            if(!suggLen) return
             const newSel = (selected === -1 ? suggLen - 1 : selected - 1 + suggLen) % suggLen
             setSelected(newSel)
           } 
@@ -308,7 +311,8 @@ const SearchBoxAutocomplete = (props) => {
         items={suggestions}
         onClick={handleClick}
         isVisible={isFocused}
-        setActualLength={setSuggestionLen}
+        //setActualLength={setSuggestionLen}
+        setActualList={setActualList}
       />
     </form>
   );
