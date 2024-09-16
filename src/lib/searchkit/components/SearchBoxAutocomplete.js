@@ -223,6 +223,7 @@ const SearchBoxAutocomplete = (props) => {
         }, 200);
       }}
       onSubmit={(event) => {
+        clearRefine([])
         event.preventDefault();
         event.stopPropagation();
 
