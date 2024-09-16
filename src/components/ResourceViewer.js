@@ -1029,7 +1029,7 @@ class OutlineSearchBar extends Component<Props,State>
                   if(e.key === 'Enter') {
                      
                      
-                     if(this.state.autocomplete.suggestionSel != -1) {
+                     if(this.state.autocomplete?.suggestionSel != -1) {
                         if(! this.state.suggestionList?.length ) {
                            if(this.state.value) { 
                               this.search(e)
@@ -1074,8 +1074,8 @@ class OutlineSearchBar extends Component<Props,State>
                { this.state.autocomplete && <div>
                      <Paper id="suggestions">
                         { this.state.autocomplete && <SuggestsList
-                           query={this.state.autocomplete.newValue}
-                           items={this.state.autocomplete.requests}
+                           query={this.state.autocomplete?.newValue}
+                           items={this.state.autocomplete?.requests}
                            onClick={(item) => {
                               console.log("item!",item)
                               const value = item.res.replace(/<[^>]*>/g,"")
@@ -1086,7 +1086,7 @@ class OutlineSearchBar extends Component<Props,State>
                            isVisible={true}
                            setActualList={(n) => this.setState({suggestionList: n})}
                            selected={this.state.suggestionSel}
-                           {...{ pageFilters: this.state.autocomplete.pageFilters }}
+                           {...{ pageFilters: this.state.autocomplete?.pageFilters }}
                            />}
                      </Paper>
                   </div> }
@@ -2197,8 +2197,8 @@ class ResourceViewer extends Component<Props,State>
       }
       
       // #918
-      if(!prop[tmp+"propHasEtext"] && prop[tmp+"hasEtextInOutline"]) {
-         prop[tmp+"propHasEtext"] = prop[tmp+"hasEtextInOutline"]
+      if(!prop[tmp+"propHasEtext"] && prop[tmp+"hasEtextInOutline"]?.length >= 1) {
+         prop[tmp+"propHasEtext"] = [ prop[tmp+"hasEtextInOutline"][0] ]
       }
 
       if(sorted)
