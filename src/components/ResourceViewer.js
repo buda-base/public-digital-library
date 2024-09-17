@@ -2197,14 +2197,14 @@ class ResourceViewer extends Component<Props,State>
       }
       
       // #918
-      if(!prop[tmp+"propHasEtext"] && prop[tmp+"hasEtextInOutline"]?.length >= 1) {
-         prop[tmp+"propHasEtext"] = [ prop[tmp+"hasEtextInOutline"][0] ]
+      if(!prop[tmp+"propHasEtext"] && prop[tmp+"hasEtextInOutline"]?.length == 1) {
+         prop[tmp+"propHasEtext"] = prop[tmp+"hasEtextInOutline"]
       }
 
       if(sorted)
       {
 
-         let customSort = [ bdo+"hasPart", bdo+"instanceHasVolume", bdo+"workHasInstance", tmp+"siblingInstances", bdo+"hasTitle", bdo+"personName", bdo+"volumeHasEtext",
+         let customSort = [ bdo+"hasPart", bdo+"instanceHasVolume", bdo+"workHasInstance", tmp+"siblingInstances", bdo+"hasTitle", bdo+"personName", bdo+"volumeHasEtext", prop[tmp+"hasEtextInOutline"],
                             bdo+"personEvent", bdo+"placeEvent", bdo+"workEvent", bdo+"instanceEvent", bf+"identifiedBy", bdo+"lineageHolder", bdo+"creator" ]
 
          let sortLineageHolder = () => {
@@ -2280,23 +2280,32 @@ class ResourceViewer extends Component<Props,State>
 
 
 
-         let sortBySubPropNumber = (tag:string,idx:string) => {
+         let sortBySubPropNumber = (tag:string,idx:string,idx2?:string) => {
             let parts = prop[tag]
             if(parts) {
+
+               //console.log("sBspN:", tag, idx, parts, this.props.assocResources)
 
                let assoR = this.props.assocResources
                if (assoR) {
                   parts = parts.map((e) => {
 
-                     let index = assoR[e.value]
+                     let index = assoR[e.value], index2 = null
 
                      if(index) index = index.filter(e => e.type === idx || e.fromKey === idx)
                      if(index && index[0] && index[0].value) index = Number(index[0].value)
                      else index = null
 
-                     return ({ ...e, index })
+                     if(idx2) {
+                        index2 = assoR[e.value]
+                        if(index2) index2 = index2.filter(e => e.type === idx || e.fromKey === idx)
+                        if(index2 && index2[0] && index2[0].value) index2 = Number(index2[0].value)
+                        else index2 = null
+                     }
+
+                     return ({ ...e, index, index2 })
                   })
-                  parts = _.orderBy(parts,['index'],['asc'])
+                  parts = _.orderBy(parts,['index','index2'],['asc','asc'])
                }
                return parts ;
             }
@@ -2319,6 +2328,11 @@ class ResourceViewer extends Component<Props,State>
          }
 
          if(prop[bdo+"volumeHasEtext"]) prop[bdo+"volumeHasEtext"] = sortBySubPropNumber(bdo+"volumeHasEtext",bdo+"seqNum");
+
+         // #918
+         if(!prop[tmp+"propHasEtext"] && prop[tmp+"hasEtextInOutline"]?.length > 1 && this.props.assocResources) {
+            prop[tmp+"propHasEtext"] = [ sortBySubPropNumber(tmp+"hasEtextInOutline",tmp+"eTextInVolumeNumber",bdo+"sliceStartChar")[0] ];
+         }
 
          // TODO add partIndex in query
          if(prop[bdo+"hasPart"]) prop[bdo+"hasPart"] = sortBySubPropNumber(bdo+"hasPart",bdo+"partIndex");
