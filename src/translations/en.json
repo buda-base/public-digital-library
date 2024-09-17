@@ -80,8 +80,8 @@
       "topic_plural": "Topics",
       "work": "Work",
       "work_plural": "Works",
-      "instance": "Version",
-      "instance_plural": "Versions",
+      "instance": "Text",
+      "instance_plural": "Texts",
       "images": "Scans",
       "volume": "Volume",
       "volume_num": "Volume {{num}} [{{id}}]",
@@ -300,7 +300,8 @@
       "tmp:etext_quality":"Etext Quality",
       "tmp:placeType":"Place Type",
       "tmp:etext_search":"Etext",
-      "tmp:firstScanSyncDate":"First scan date"
+      "tmp:firstScanSyncDate":"First scan date",
+      "bdr:PartTypeText": "Text"
    },
    "guided":{
       "keyword":"keyword",

@@ -341,7 +341,15 @@ const CustomHit = ({ hit, that, sortItems, storage }) => {
               </span> }
             </span>
           </span> 
-        }        
+        }
+        
+        { hit.extent && <>
+          <span class="names noNL">
+            <span class="label capitalize">{getPropLabel(that, fullUri("bdo:extentStatement"), true, true)}<span class="colon">:</span></span>
+            <span>{hit.extent}</span>
+          </span>
+        </> }
+
         {
           publisher.length > 0 && <>
           <span class="names publisher noNL">
