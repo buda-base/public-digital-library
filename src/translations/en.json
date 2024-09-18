@@ -97,7 +97,8 @@
          "Etext":"Text",
          "EtextInstance":"Collection",
          "EtextVolume":"Volume"
-      }
+      },
+      "parttypetext":"text"
    },
    "topbar": {
       "about": "about us",
@@ -301,7 +302,7 @@
       "tmp:placeType":"Place Type",
       "tmp:etext_search":"Etext",
       "tmp:firstScanSyncDate":"First scan date",
-      "bdr:PartTypeText": "Text"
+      "bdr:PartTypeText": "Text In Outline"
    },
    "guided":{
       "keyword":"keyword",
