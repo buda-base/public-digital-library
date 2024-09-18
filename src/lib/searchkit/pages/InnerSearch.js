@@ -20,7 +20,7 @@ import {
   RefinementList,
   Pagination,
   Configure,
-  SortBy,
+  SortBy, useSortBy
 } from "react-instantsearch";
 
 import I18n from 'i18next';
@@ -29,7 +29,7 @@ import I18n from 'i18next';
 import { getPropLabel, fullUri } from '../../../components/App'
 import CustomHit from "../components/CustomHit";
 import SearchBoxAutocomplete from "../components/SearchBoxAutocomplete";
-import { searchClient, HitsWithLabels, sortItems, filters, FiltersSidebar } from "./Search";
+import { searchClient, HitsWithLabels, filters, FiltersSidebar, sortItems } from "./Search";
 import RefinementListWithLocalLabels from "../components/RefinementListWithLocalLabels";
 import CustomDateRange from "../components/CustomDateRange";
 import SearchResultsHeader from "../components/SearchResultsHeader"
@@ -65,16 +65,28 @@ export class InnerSearchPage extends Component<State, Props>
     
     if(!this.props.config) return <div><Loader /></div>
 
-    let { RID, T } = this.props
+    let pageFilters = "", placeholder = "", leftTitle = ""
+
+
+    const storageRef = React.createRef() 
+
+    let { RID, T, recent } = this.props
+
+    /* // debug sortBy
+    if(recent) {
+      pageFilters = "associated_res:P1583"
+    }
+    */
+   
     if(RID) RID = RID.split(":")[1]
-
-    let pageFilters = "associated_res:"+RID, 
-      placeholder = I18n.t("resource.searchT",{ type: I18n.t("types."+T.toLowerCase()).toLowerCase() } ),
-      leftTitle = I18n.t("resource.findT",{type:I18n.t("types."+T.toLowerCase())})
-
-    if(["Person","Topic","Place","Product"].includes(T)) placeholder = I18n.t("resource.searchTn."+T.toLowerCase())
+    if(RID && T) {
       
-    if(RID) {
+      pageFilters = "associated_res:"+RID 
+      placeholder = I18n.t("resource.searchT",{ type: I18n.t("types."+T.toLowerCase()).toLowerCase() } )
+      leftTitle = I18n.t("resource.findT",{type:I18n.t("types."+T.toLowerCase())})
+  
+      if(["Person","Topic","Place","Product"].includes(T)) placeholder = I18n.t("resource.searchTn."+T.toLowerCase())
+            
       /*
       // DONE: handle OR in ElasticAPI (use associated_res field instead)
       if(T === "Person") { 
@@ -88,13 +100,10 @@ export class InnerSearchPage extends Component<State, Props>
       */
     }
 
-    const storageRef = React.createRef() 
-
-
     console.log("iSsC:", searchClient, routingConfig, this.props, pageFilters, storageRef)        
     
     return (<>
-      { pageFilters && <div className="AppSK InnerSearchPage data">
+      { (pageFilters || !RID) && <div className="AppSK InnerSearchPage data">
           <InstantSearch
             indexName={process.env.REACT_APP_ELASTICSEARCH_INDEX}
             routing={routingConfig}
@@ -102,20 +111,20 @@ export class InnerSearchPage extends Component<State, Props>
           >
             <Loader loaded={!this.props.loading}/>
             <div data-props="tmp:search">
-              <div className="searchbox">
+              { !recent && <div className="searchbox">
                 <h3><span><a class="propref"><span>{leftTitle}{I18n.t("punc.colon")}</span></a></span></h3>
                 <div className="search inner-search-bar group">
                   <div>
                     <SearchBoxAutocomplete searchAsYouType={false} loading={this.props.loading} {...{ pageFilters, placeholder }}/>
                   </div>
                 </div>
-              </div>
+              </div> }
               <div className="content">
                 <SimpleBar className="filter">
-                  <FiltersSidebar that={this} />
+                  <FiltersSidebar that={this} recent={recent}/> 
                 </SimpleBar>
                 <div className="main-content">
-                  <SearchResultsHeader that={this} inner={true} {...{ storageRef }} />
+                  <SearchResultsHeader that={this} inner={true} recent={recent} {...{ storageRef }} />
                   <div className="hits">
                     <Configure hitsPerPage={5} filters={pageFilters} />
                     <HitsWithLabels that={this} {...{ storageRef }} />

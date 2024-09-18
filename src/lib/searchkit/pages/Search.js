@@ -28,7 +28,7 @@ import {
 import I18n from 'i18next';
 
 // hooks
-import { useInstantSearch } from "react-instantsearch";
+import { useInstantSearch, useSortBy } from "react-instantsearch";
 
 // Custom
 import CustomHit from "../components/CustomHit";
@@ -126,12 +126,51 @@ export const searchClient = Client(
 );
 
 
+const MySortBy = (recent) => {
+  const { currentRefinement, options, refine, initialIndex } = useSortBy({
+    items:sortItems,
+    initialIndex: recent ? "firstScanSyncDate_desc" : process.env.REACT_APP_ELASTICSEARCH_INDEX
+  });
+
+  console.log("iidx:",initialIndex)
+
+  return (
+    <select
+      value={currentRefinement}
+      onChange={(event) => refine(event.target.value)}
+      style={{ width:"100%" }}
+    >
+      {options.map((option) => (
+        <option key={option.value} value={option.value}>
+          {option.label}
+        </option>
+      ))}
+    </select>
+  );
+};
+
+
 export function FiltersSidebar(props) {
 
-  const { that } = props
+  const { that, recent } = props
 
   const searchStatus = useInstantSearch();
   const { indexUiState } = searchStatus
+
+  console.log("sB?", that, indexUiState, sortItems, recent)
+
+  const sortby = <>
+    <div className="filter-title MT"><p>{getPropLabel(that,fullUri("tmp:firstScanSyncDate"))}</p></div>
+    <CustomDateRange attribute="firstScanSyncDate" />
+    
+    <div className="filter-title MT"><p>Sort by</p></div>
+    { recent && <MySortBy recent={true} /> }
+      <SortBy
+        initialIndex={process.env.REACT_APP_ELASTICSEARCH_INDEX}
+        items={sortItems}
+      />    
+
+  </>
 
   return <>
     <h3>{I18n.t("result.filter")}</h3>
@@ -143,20 +182,15 @@ export function FiltersSidebar(props) {
     />
     <br/>
 
-    <RefinementListWithLocalLabels that={that} {...filters[0] } className={"MT0"}  />
+    { recent && sortby }
+
+    <RefinementListWithLocalLabels that={that} {...filters[0] } className={recent ? "": "MT0"}  />
 
     { filters.slice(1).map((filter) => <RefinementListWithLocalLabels that={that} {...filter} showMore={true} />) }
 
     <RefinementListWithLocalLabels I18n_prefix={"types"} that={that} attribute="type" showMore={true} title={I18n.t("Lsidebar.datatypes.title")}/>
 
-    <div className="filter-title MT"><p>{getPropLabel(that,fullUri("tmp:firstScanSyncDate"))}</p></div>
-    <CustomDateRange attribute="firstScanSyncDate" />
-    
-    <div className="filter-title MT"><p>Sort by</p></div>
-    <SortBy
-      initialIndex={process.env.REACT_APP_ELASTICSEARCH_INDEX}
-      items={sortItems}
-    />
+    { !recent && sortby }
 
 
   </>

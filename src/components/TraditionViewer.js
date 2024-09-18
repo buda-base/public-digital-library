@@ -12,7 +12,8 @@ import store from '../index';
 import { top_right_menu, getLangLabel, getPropLabel, fullUri } from './App'
 import { auth, Redirect404 } from '../routes'
 import { initiateApp } from '../state/actions';
-import LatestSyncs, { latestSyncsScopes } from "./LatestSyncs"
+//import LatestSyncs, { latestSyncsScopes } from "./LatestSyncs"
+import InnerSearchPageContainer from '../containers/InnerSearchPageContainer'
 
 import { topics } from "../lib/topics"
 
@@ -342,8 +343,8 @@ export class TraditionViewer extends Component<State, Props>
         </div>
       })}
       <div id="tradi-recent" className="tradi-content">
-        <h2>{I18n.t("tradition.recent")}</h2>
-        <LatestSyncs that={this} />
+        <h2>{I18n.t("tradition.recent")}</h2>        
+        <InnerSearchPageContainer history={this.props.history} auth={this.props.auth} isOsearch={true} recent={true}/>          
       </div>
     </>)
   }
@@ -356,6 +357,7 @@ export class TraditionViewer extends Component<State, Props>
       
       console.log("lsn:",this.props.latestSyncs,this.props.latestSyncsMeta,this.props.latestSyncsNb)
 
+      /*
       // TODO: control tradition/dates as well
       if(this.props.config) {
         if(!this.props.latestSyncs || this.props.latestSyncs != true && this.props.latestSyncsMeta?.tradition != this.props.tradition) {
@@ -368,6 +370,7 @@ export class TraditionViewer extends Component<State, Props>
           } 
         }
       }
+      */
 
       const tradi = this.props.config?.tradition && this.props.config?.tradition[this.props.tradition]    
       let content = [], breadcrumbs = [<Link to="/">{I18n.t("topbar.home")}</Link>]                

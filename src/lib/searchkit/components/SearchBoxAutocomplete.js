@@ -30,7 +30,7 @@ const redirect = (refine, query, pageFilters) => {
   updateHistory(query, pageFilters)
 
   const loca = history.location  
-  if(!loca.pathname.endsWith("/search") && !pageFilters){
+  if(!loca.pathname.endsWith("/search") && !loca.pathname.startsWith("/tradition/") && !pageFilters){
     history.push("/osearch/search?q="+encodeURIComponent(query))
   } else {
     refine(query)
