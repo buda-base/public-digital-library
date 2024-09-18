@@ -100,7 +100,7 @@ export class InnerSearchPage extends Component<State, Props>
       */
     }
 
-    console.log("iSsC:", searchClient, routingConfig, this.props, pageFilters, storageRef)        
+    console.log("iSsC:", searchClient, routingConfig, this.props, pageFilters, storageRef, recent)        
     
     return (<>
       { (pageFilters || !RID) && <div className="AppSK InnerSearchPage data">
@@ -127,7 +127,7 @@ export class InnerSearchPage extends Component<State, Props>
                   <SearchResultsHeader that={this} inner={true} recent={recent} {...{ storageRef }} />
                   <div className="hits">
                     <Configure hitsPerPage={5} filters={pageFilters} />
-                    <HitsWithLabels that={this} {...{ storageRef }} />
+                    <HitsWithLabels that={this} {...{ recent, storageRef }} />
                     <div className="pagination">
                       <Pagination />
                     </div>

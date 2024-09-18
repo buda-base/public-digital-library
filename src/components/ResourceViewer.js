@@ -10974,8 +10974,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                   
                   { !["Instance", "Scan", "Etext"].includes(_T) && findText != null && <>
                      {/* // DONE: inner search results */}
-                     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/instantsearch.css@7/themes/satellite-min.css" /
-                     >                           
+                     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/instantsearch.css@7/themes/satellite-min.css" />                           
                      { findText }
                    </>}
 

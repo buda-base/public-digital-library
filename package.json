@@ -21,6 +21,7 @@
       "auth0-js": "^9.6.1",
       "axios": "^0.27.2",
       "citation-js": "^0.5.1",
+      "date-fns": "2.30",
       "dms-to-decimal": "^0.0.6",
       "downloadjs": "^1.4.7",
       "edtf": "https://github.com/buda-base/edtf.js",

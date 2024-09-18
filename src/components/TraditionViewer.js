@@ -343,8 +343,8 @@ export class TraditionViewer extends Component<State, Props>
         </div>
       })}
       <div id="tradi-recent" className="tradi-content">
-        <h2>{I18n.t("tradition.recent")}</h2>        
-        <InnerSearchPageContainer history={this.props.history} auth={this.props.auth} isOsearch={true} recent={true}/>          
+        <h2>{I18n.t("tradition.recent")}</h2> 
+        <InnerSearchPageContainer history={this.props.history} auth={this.props.auth} isOsearch={true} recent={true} />          
       </div>
     </>)
   }

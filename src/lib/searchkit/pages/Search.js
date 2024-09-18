@@ -28,7 +28,7 @@ import {
 import I18n from 'i18next';
 
 // hooks
-import { useInstantSearch, useSortBy } from "react-instantsearch";
+import { useInstantSearch, useSortBy, useClearRefinements, useConfigure } from "react-instantsearch";
 
 // Custom
 import CustomHit from "../components/CustomHit";
@@ -126,22 +126,28 @@ export const searchClient = Client(
 );
 
 
-const MySortBy = (recent) => {
+const MySortBy = ({recent}) => {
   const { currentRefinement, options, refine, initialIndex } = useSortBy({
     items:sortItems,
-    initialIndex: recent ? "firstScanSyncDate_desc" : process.env.REACT_APP_ELASTICSEARCH_INDEX
+    //initialIndex: "firstScanSyncDate_desc" // this does not work
   });
 
-  console.log("iidx:",initialIndex)
+  // workaround
+  useEffect(() => {
+    if(recent) refine("firstScanSyncDate_desc")
+  }, [])
+  
+  //console.log("iidx:", recent, currentRefinement, initialIndex)
 
   return (
     <select
       value={currentRefinement}
       onChange={(event) => refine(event.target.value)}
       style={{ width:"100%" }}
+      class="ais-SortBy-select"
     >
       {options.map((option) => (
-        <option key={option.value} value={option.value}>
+        <option key={option.value} value={option.value} class="ais-SortBy-option">
           {option.label}
         </option>
       ))}
@@ -149,56 +155,76 @@ const MySortBy = (recent) => {
   );
 };
 
+const MyClearRefinements = (props) => {
+  
+  const { request, setRequest } = props
+
+  const { canRefine, refine } = useClearRefinements();
+
+  return (
+    <button
+      class="ais-ClearRefinements-button" 
+      onClick={() => { refine(); setRequest(""); }} 
+      disabled={!canRefine && !request}
+    >
+      Clear All Filters
+    </button>
+  );
+};
+  
+
+
 
 export function FiltersSidebar(props) {
 
   const { that, recent } = props
+  
+  const [request, setRequest] = useState()
 
   const searchStatus = useInstantSearch();
   const { indexUiState } = searchStatus
+  
+  const today = new Date(), lastMonth = new Date();
+  lastMonth.setMonth(today.getMonth() - 1);
+  const lastMonthFormatted = lastMonth.toISOString().slice(0, 10);
 
-  console.log("sB?", that, indexUiState, sortItems, recent)
-
-  const sortby = <>
-    <div className="filter-title MT"><p>{getPropLabel(that,fullUri("tmp:firstScanSyncDate"))}</p></div>
-    <CustomDateRange attribute="firstScanSyncDate" />
-    
-    <div className="filter-title MT"><p>Sort by</p></div>
-    { recent && <MySortBy recent={true} /> }
-      <SortBy
-        initialIndex={process.env.REACT_APP_ELASTICSEARCH_INDEX}
-        items={sortItems}
-      />    
-
-  </>
+  //console.log("sB?", that, indexUiState, sortItems, recent)
 
   return <>
     <h3>{I18n.t("result.filter")}</h3>
 
-    <ClearRefinements   
+    <MyClearRefinements   
       translations={{
         resetButtonText: 'Clear all filters',
       }}
+      {...{ request, setRequest } }
     />
     <br/>
 
-    { recent && sortby }
-
-    <RefinementListWithLocalLabels that={that} {...filters[0] } className={recent ? "": "MT0"}  />
+    { !recent && <RefinementListWithLocalLabels that={that} {...filters[0] } className={recent ? "": "MT0"}  /> }
 
     { filters.slice(1).map((filter) => <RefinementListWithLocalLabels that={that} {...filter} showMore={true} />) }
 
     <RefinementListWithLocalLabels I18n_prefix={"types"} that={that} attribute="type" showMore={true} title={I18n.t("Lsidebar.datatypes.title")}/>
 
-    { !recent && sortby }
-
+    <div className="filter-title MT"><p>{getPropLabel(that,fullUri("tmp:firstScanSyncDate"))}</p></div>
+    <CustomDateRange attribute="firstScanSyncDate" {...recent?{ defaultBefore: lastMonthFormatted }:{}} {...{request, setRequest}} />
+    
+    <div className="filter-title MT" ><p>Sort by</p></div>
+    <span style={{fontSize:"16px"}}>
+      <MySortBy recent={recent} />
+      {/* <SortBy
+        initialIndex={recent ? "firstScanSyncDate_desc" : process.env.REACT_APP_ELASTICSEARCH_INDEX}
+        items={recent ? [sortItems[1], sortItems[0], sortItems[2], sortItems[3]] : sortItems}
+      />     */}
+    </span>
 
   </>
 }
 
 export function HitsWithLabels(props) {
 
-  const {that, sortItems, storageRef} = props
+  const {that, sortItems, recent, storageRef} = props
 
   const [currentItems, setCurrentItems] = useState([]);
   
@@ -274,7 +300,7 @@ export function HitsWithLabels(props) {
 
   return <Hits 
     transformItems={prepItemsPage}
-    hitComponent={({hit}) => <CustomHit {...{ hit, that, sortItems, storage: storageRef?.current }}/>} 
+    hitComponent={({hit}) => <CustomHit {...{ hit, that, sortItems, recent, storage: storageRef?.current }}/>} 
   />
 }
 

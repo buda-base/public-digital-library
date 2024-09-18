@@ -5,6 +5,9 @@ import I18n from 'i18next';
 import {decode} from 'html-entities';
 import qs from 'query-string'
 import HTMLparse from 'html-react-parser';
+import { formatDistance, parseISO } from "date-fns"
+import { enUS, zhCN } from 'date-fns/locale';
+
 
 import { RANGE_FIELDS } from "../api/ElasticAPI";
 import { RESULT_FIELDS } from "../constants/fields";
@@ -28,7 +31,7 @@ const Hit = ({ hit, label, debug = true }) => {
   );
 };
 
-const CustomHit = ({ hit, that, sortItems, storage }) => {
+const CustomHit = ({ hit, that, sortItems, recent, storage }) => {
 
   const [debug, setDebug] = useState(false)
   const [checked, setChecked] = useState(false)
@@ -227,6 +230,11 @@ const CustomHit = ({ hit, that, sortItems, storage }) => {
 
   const formatDate = useCallback((val) => {
     if((""+val).match(/^[0-9-]+T[0-9:.]+(Z+|[+][0-9:]+)$/)) {
+
+      const date = parseISO(val), codes = { "en": enUS, "zh": zhCN }
+      const distance = formatDistance(date, new Date(), { addSuffix: true, locale: codes[that.props.locale] ?? enUS });
+      return distance;
+      /*
       let code = "en-US"
       let opt = { month: 'long', day: 'numeric' }
       if(that.props.locale === "bo") { 
@@ -239,8 +247,9 @@ const CustomHit = ({ hit, that, sortItems, storage }) => {
          val = new Date(val).toLocaleDateString(code, { month: 'long', day: 'numeric', year:'numeric' });  // does not work for tibetan
       }
       return val
+      */
     }
-  }, [that.props.local])
+  }, [that.props.locale])
 
   const getQuality = (field, q) => {
     for(const r of RANGE_FIELDS[field+"_quality"]) {
@@ -396,7 +405,7 @@ const CustomHit = ({ hit, that, sortItems, storage }) => {
           </span>
         }
         {
-          hit.firstScanSyncDate && sortBy?.startsWith("firstScanSyncDate") && <>
+          (recent || hit.firstScanSyncDate && sortBy?.startsWith("firstScanSyncDate")) && <>
             <span class="names">
               <span class="label">{I18n.t("sort.lastS")}<span class="colon">:</span></span>
               <span>{formatDate(hit.firstScanSyncDate)}</span>

@@ -2,17 +2,31 @@ import React, { useState, useEffect } from "react";
 import { Configure } from "react-instantsearch";
 
 const MyDateRange = (props) => {
-  const { attribute } = props;
+  const { attribute, defaultBefore, defaultAfter, request, setRequest } = props;
 
   const [beforeDate, setBeforeDate] = useState();
   const [afterDate, setAfterDate] = useState();
-  const [request, setRequest] = useState();
+  //const [request, setRequest] = useState();
+
+  useEffect(() => {
+    if(request === "") { 
+      setBeforeDate("")
+      setAfterDate("")
+    }
+  }, [request])
+ 
+  useEffect(() => {
+    if(!beforeDate && !afterDate) { 
+      setBeforeDate(defaultBefore)
+      setAfterDate(defaultAfter)
+    }
+  }, [defaultBefore, defaultAfter])
 
   useEffect(() => {
     const searchParams = new URLSearchParams(window.location.search);
 
     for (const p of searchParams) {
-      console.log("p", p);
+      //console.log("mDr:p", p);
       if (p[0] === `${attribute}_before`) {
         setBeforeDate(p[1]);
       }

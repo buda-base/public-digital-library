@@ -254,11 +254,15 @@
   position: relative;
 }
 
+.tradition .AppSK.InnerSearchPage.data .content {
+  width:calc(100% + 105px);
+}
+
 .AppSK.InnerSearchPage.data .content a:not(.ais-Pagination-link):hover {
   border:none;
 }
 
-.AppSK.InnerSearchPage.data .content a.ais-Pagination-link {
+.AppSK.InnerSearchPage.data:not(#a) .content a.ais-Pagination-link {
   color:black;
   border-color:#d6d6e7;
 }
@@ -274,6 +278,15 @@
 .AppSK.InnerSearchPage.data .content .main-content {
   padding:35px;
   width:calc(100% - 260px);
+}
+
+.tradition .AppSK.InnerSearchPage.data .content .filter {
+  width:265px;  
+}
+
+.tradition .AppSK.InnerSearchPage.data .content .main-content {
+
+  width:calc(100% - 300px);
 }
 
 .AppSK .pagination {
@@ -308,7 +321,7 @@ header[data-hits="0"] ~ .hits .pagination,
   flex-wrap: wrap;
 }
 
-.AppSK .result .thumb a {
+.AppSK:not(#a) .result .thumb a {
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
@@ -398,7 +411,7 @@ header[data-hits="0"] ~ .hits .pagination,
   margin: 3px 0 5px 0;
 }
 
-.AppSK .result .data > a {
+.AppSK:not(#a) .result .data > a {
   text-decoration: none;
   color:#d73449;
 }
@@ -768,9 +781,14 @@ header[data-hits="0"] ~ .hits .pagination,
   margin-bottom:0;
 }
 
+
+.tradition:not(#a) .AppSK.InnerSearchPage.data .content .filter h3,
 .AppSK.InnerSearchPage.data .content .filter h3 {
   font-weight:600;
   margin-bottom:15px;
+  text-transform: none;
+  font-size:16px;
+  text-align: left;
 }
 
 .content .main-content header h1 + h3 {
@@ -784,6 +802,15 @@ header[data-hits="0"] ~ .hits .pagination,
 .AppSK.InnerSearchPage.data .content .main-content h3 {
   margin-top:0px;
   margin-bottom:20px;
+}
+
+.tradition:not(#a) .AppSK.InnerSearchPage.data .content .main-content h3 {
+  margin-top:0px;
+  margin-bottom:20px;
+  font-size:16px;
+  text-transform: none;
+  text-align: left;
+  font-weight:400;
 }
 
 .hits > .pagination:first-child {
