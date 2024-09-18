@@ -1038,13 +1038,14 @@ ul.suggestions li > span > svg:first-child {
 
 
 .App.tradition .tradi-content#tradi-links {
-   padding-left:30px;
+   /* padding-left:30px; */
    box-sizing: border-box;
 }
 
 .App.tradition .tradi-content#tradi-links,
 .App.tradition .tradi-content#tradi-all {
-   width:calc(50% - 35px);
+   /* width:calc(50% - 35px); */
+   width:100%;
 }
 
 
@@ -1084,7 +1085,7 @@ ul.suggestions li > span > svg:first-child {
    display:flex;
    flex-wrap: wrap;
    margin-bottom:35px;
-   width:25%;
+   width:100%;
 }
 
 .App.tradition .tradi-content.display-block {
@@ -1112,6 +1113,7 @@ ul.suggestions li > span > svg:first-child {
 .App.tradition .tradi-content .disabled {
    opacity:0.5;
    pointer-events: none;
+   display: none !important;
 }
 
 .App.tradition .tradi-content a.has-img {
