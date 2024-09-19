@@ -429,6 +429,11 @@ const makeMainRoutes = () => {
                            store.dispatch(initiateApp(qs.parse(history.location.search), null, null, "tradition"))
                            return (<TraditionViewerContainer history={history} auth={auth} tradition={props.match.params.TRAD}/> )
                         } } />
+                        <Route exact path="/tradition/:TRAD/:SCHOOL" render={(props) => {                           
+                           console.log("trad:",props)
+                           store.dispatch(initiateApp(qs.parse(history.location.search), null, null, "tradition"))
+                           return (<TraditionViewerContainer history={history} auth={auth} tradition={props.match.params.TRAD} type={"selected"} id={props.match.params.SCHOOL} /> )
+                        } } />
                         <Route path="/view/:IRI" render={(props) =>
                            {
                               store.dispatch(initiateApp())

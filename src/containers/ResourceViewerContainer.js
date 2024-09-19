@@ -66,7 +66,7 @@ const mapStateToProps = (state,ownProps) => {
    const rdf   = "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
    const tmp   = "http://purl.bdrc.io/ontology/tmp/" ;
    if(resources && resources[ownProps.IRI] && resources[ownProps.IRI][uri] && resources[ownProps.IRI][uri][bdo+"instanceOf"]?.length 
-         && ! resources[ownProps.IRI][uri][rdf+"type"].some(t => t.value === bdo+"ImageInstance")) {      
+         && ! resources[ownProps.IRI][uri][rdf+"type"]?.some(t => t.value === bdo+"ImageInstance")) {      
       const workUri = resources[ownProps.IRI][uri][bdo+"instanceOf"][0].value
       const workRid = shortUri(workUri)
       const work = resources[workRid] ?? {}

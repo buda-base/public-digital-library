@@ -804,7 +804,8 @@
       "19th":"19th Century",
       "20th":"20th Century",
       "21st":"21st Century",
-      "nothing":"Nothing added in the {{time}}."
+      "nothing":"Nothing added in the {{time}}.",
+      "t_selected":"Selected Works by School"
    },
    "mirador": {
       "return": "return to BUDA",

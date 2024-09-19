@@ -15,6 +15,9 @@ import { initiateApp } from '../state/actions';
 //import LatestSyncs, { latestSyncsScopes } from "./LatestSyncs"
 import InnerSearchPageContainer from '../containers/InnerSearchPageContainer'
 
+
+import { fetchLabels } from "../lib/searchkit/api/LabelAPI";
+
 import { topics } from "../lib/topics"
 
 const loggergen = new logdown('gen', { markdown: false });
@@ -185,20 +188,32 @@ export class TraditionViewer extends Component<State, Props>
   }
 
 
-  renderContent(t, route){ 
-    return t.content?.map(c => {
+  renderContent(t, route, storage = this.state.storage){ 
+    return (t.content ?? t)?.map(c => {
       let label = { value: "", lang: this.props.locale }, rid = (c.id ?? "").split(":")[1] ?? ""
-      if(c.label) label = getLangLabel(this,skos+"prefLabel",c.label ?? [])
+      if(t.id && storage && storage[c.id.replace(/^bdr:/,"")]) label = getLangLabel(this,skos+"prefLabel",storage[c.id.replace(/^bdr:/,"")].label ?? [])
+      else if(c.label) label = getLangLabel(this,skos+"prefLabel",c.label ?? [])
       else if(c.id) {
         if(c.id.startsWith("bdr:")) label = getPropLabel(this, fullUri(c.id), false, true)
         else label.value = I18n.t("tradition."+c.id) 
       }
 
+      console.log("sto:", storage, label, t)
+
       let link = route ?? c.to ?? t.to
       if(!link?.startsWith("/")) link = "/tradition/"+this.props.tradition+"/"+ link
       link = link.replace(/:rid/g, rid).replace(/:id/g, c.id).replace(/:n/g, (c.id??"").replace(/[^0-9]/g,""))                  
 
-      return <Link to={link} className={(c.img ? "has-img ":"")+(c.classes??"")}>
+      if(c.content) {
+        this.goFetch(c.content.map(i => i.id.split(":")[1]),c.id)
+        return <>
+          <h5 className={(c.img ? "has-img ":"")+(c.classes??"")}>
+            { c.img && <img src={c.img}/> }
+            <span lang={label?.lang}>{label?.value}</span>
+          </h5>
+          {this.renderContent(c, route, storage)}
+        </>
+      } else return <Link to={link} className={(c.img ? "has-img ":"")+(c.classes??"")}>
           { c.img && <img src={c.img}/> }
           <span lang={label?.lang}>{label?.value}</span>
         </Link>
@@ -288,18 +303,26 @@ export class TraditionViewer extends Component<State, Props>
 
   }
 
+
   renderSubLevel(tradi, {content, breadcrumbs}) {
 
     let subContent, id, classes
          
-    id = this.getIdAsText(this.props.id) 
+    if(!this.props.type === "school") {
+      id = this.getIdAsText(this.props.id) 
+    } else if(tradi.subContent[this.props.type][this.props.id]) {
+      id = this.getIdAsText(tradi.subContent[this.props.type][this.props.id].id) 
+    }
 
     breadcrumbs.push(<Link to={"/tradition/"+this.props.tradition+"/"}>{I18n.t("tradition."+this.props.tradition+"T")}</Link>)
     
+    console.log("subl:", tradi, content, id, this.props.type, this.props.id)
+
     if(tradi.subContent && tradi.subContent[this.props.type] && tradi.subContent[this.props.type][this.props.id]) {
 
-      if(typeof tradi.subContent[this.props.type][this.props.id].content === "string") subContent = this.renderContent(tradi.content?.find(t => t.id === tradi.subContent[this.props.type][this.props.id].content), tradi.subContent[this.props.type][this.props.id].to) 
+      if(typeof tradi.subContent[this.props.type][this.props.id].content === "string") subContent = this.renderContent(tradi.content?.find(t => t.id === tradi.subContent[this.props.type][this.props.id].content), tradi.subContent[this.props.type][this.props.id].to)       
       else subContent = this.renderContent(tradi.subContent[this.props.type][this.props.id]) 
+
       classes = tradi.subContent[this.props.type][this.props.id].classes
 
       if(tradi.subContent[this.props.type][this.props.id].parent) {
@@ -349,6 +372,35 @@ export class TraditionViewer extends Component<State, Props>
     </>)
   }
 
+  async goFetch(fetching, cat) {
+
+    const attribute = "tradition-"+this.props.tradition
+
+    if (!sessionStorage.getItem(attribute)) {
+      sessionStorage.setItem(attribute, JSON.stringify({}));
+    }      
+    let storage = JSON.parse(sessionStorage.getItem(attribute));
+
+    
+    fetching = fetching.filter(i => !storage[i])
+    
+    if(fetching.length) {
+
+      console.log("fetching:", fetching)
+
+      const fetchedItems = await fetchLabels(fetching, attribute)
+      
+      console.log("fetched:", fetchedItems)
+      
+      const newStorage = { ...storage, ...fetchedItems }
+      sessionStorage.setItem(attribute, JSON.stringify(newStorage));    
+
+      storage = newStorage      
+    }
+
+    if(!_.isEqual(this.state.storage, storage)) this.setState({ storage })
+  }
+
   render(props) {         
     
     if(this.props.config?.tradition && this.props.tradition && !this.props.config?.tradition[this.props.tradition]) 
@@ -377,7 +429,10 @@ export class TraditionViewer extends Component<State, Props>
 
       if(!tradi) return <></>
       else if(this.props.type && this.props.id) this.renderSubLevel(tradi, {content, breadcrumbs})
+      else if(this.props.school) this.renderSubLevel(tradi, {content, breadcrumbs})
       else this.renderTopLevel(tradi, {content, breadcrumbs})
+
+      console.log("tv:state",this.state)
 
       return (
         <>
