@@ -225,7 +225,8 @@ const UAContextHook = () => {
 const VersionChecker = () => {
    const { latestVersion, isLatestVersion, emptyCacheStorage } = useClearCacheCtx();
    return (
-     <div {...!isLatestVersion?{style:{height:"60px"}}:{}}>
+     <div title={latestVersion} data-v={latestVersion} //{...!isLatestVersion?{style:{height:"60px"}}:{}}
+      >
        { (!isLatestVersion) && (
          <div class="infoPanel version">
             <p>
