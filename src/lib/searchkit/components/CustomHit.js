@@ -137,7 +137,7 @@ const CustomHit = ({ hit, that, sortItems, recent, storage }) => {
           [l.lang]: (acc[l.lang] ? acc[l.lang]+I18n.t("punc.semic"):"")+l.value
         }),{})
         
-        console.log("byL:", byLang, labels[name])
+        //console.log("byL:", byLang, labels[name])
 
         const sortLabels = sortLangScriptLabels(Object.keys(byLang).map(k => ({lang:k, value:byLang[k]})),langs.flat,langs.translit)
         let lang = ""
@@ -188,8 +188,10 @@ const CustomHit = ({ hit, that, sortItems, recent, storage }) => {
 
     const newEtextHits = []
     let n = 0
-    if(hit.inner_hits?.etext?.hits?.hits?.length > 0) {
-      for(const vol of hit.inner_hits?.etext?.hits?.hits) {
+    //if(hit.inner_hits?.etext?.hits?.hits?.length > 0) {
+    let ekeys = Object.keys(hit.inner_hits ?? {})
+    if(ekeys.length > 0) for(const ek of ekeys) {
+      for(const vol of hit.inner_hits?.[ek]?.hits?.hits) {
         //console.log("vol:",vol)
         for(const ch of vol.inner_hits.chunks.hits.hits) {
           //console.log("ch:",ch)
