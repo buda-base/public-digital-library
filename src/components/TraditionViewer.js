@@ -198,7 +198,7 @@ export class TraditionViewer extends Component<State, Props>
         else label.value = I18n.t("tradition."+c.id) 
       }
 
-      console.log("sto:", storage, label, t)
+      //console.log("sto:", storage, label, t)
 
       let link = route ?? c.to ?? t.to
       if(!link?.startsWith("/")) link = "/tradition/"+this.props.tradition+"/"+ link

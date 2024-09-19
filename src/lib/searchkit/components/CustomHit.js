@@ -66,6 +66,15 @@ const CustomHit = ({ hit, that, sortItems, recent, storage }) => {
           if(k.startsWith(name) && !k.endsWith("_res")) { 
             //console.log("k:",k,hit[k],lang,hit)
             const lang = k.replace(new RegExp(name+"_"),"").replace(/_/g,"-")
+
+            // TODO: display full note in that case? two matches in same field
+            if(hit._highlightResult[k]?.length && hit[k].length < hit._highlightResult[k].length) {
+              do {
+                hit[k].push(hit[k][0])
+
+              } while(hit[k].length < hit._highlightResult[k].length)
+            } 
+
             hit[k].map((h,i) => name != "altLabel" || hit._highlightResult[k] && hit._highlightResult[k][i]?.matchedWords?.length 
               ? labels[name!="altLabel"?name:"prefLabel"].push({
                   value: hit._highlightResult && hit._highlightResult[k] && hit._highlightResult[k][i]
@@ -127,7 +136,9 @@ const CustomHit = ({ hit, that, sortItems, recent, storage }) => {
           ...acc,
           [l.lang]: (acc[l.lang] ? acc[l.lang]+I18n.t("punc.semic"):"")+l.value
         }),{})
-        //console.log("byL:", byLang, labels[name])
+        
+        console.log("byL:", byLang, labels[name])
+
         const sortLabels = sortLangScriptLabels(Object.keys(byLang).map(k => ({lang:k, value:byLang[k]})),langs.flat,langs.translit)
         let lang = ""
         for(const l of sortLabels) {
