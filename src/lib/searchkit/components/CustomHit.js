@@ -404,19 +404,21 @@ const CustomHit = ({ hit, that, sortItems, recent, storage }) => {
              </span>
           </span>
         }
-        {
-          (recent || hit.firstScanSyncDate && sortBy?.startsWith("firstScanSyncDate")) && <>
-            <span class="names">
-              <span class="label">{I18n.t("sort.lastS")}<span class="colon">:</span></span>
-              <span>{formatDate(hit.firstScanSyncDate)}</span>
-            </span>
-          </>
-        }
+        
       </div>
     </div>
-    <div class="debug" >
+    {
+      (recent || hit.firstScanSyncDate && sortBy?.startsWith("firstScanSyncDate")) && <>
+        <span class="names firstScan">
+          {/* <span class="label">{I18n.t("sort.lastS")}<span class="colon">:</span></span> */}
+          <span>{I18n.t("result.added",{date:formatDate(hit.firstScanSyncDate)})}</span>
+        </span>
+      </>
+    }
+
+    {/* <div class="debug" >
       <button onClick={() => setDebug(!debug)}>{debug?"!dbg":"dbg"}</button>
-      { debug && <ul>
+      { debug && <ul> */}
         {/* {RESULT_FIELDS.map(
           (_field, _key) =>
             !!hit[_field.label] && (
@@ -431,13 +433,13 @@ const CustomHit = ({ hit, that, sortItems, recent, storage }) => {
                 )}
               </li>
             )
-        )} */}
+        )} */}{/*}
         { Object.keys(hit).filter(k => !k.startsWith("_")).map(k => <li key={k}>
             <b>{k} : </b>
             {JSON.stringify(hit[k])}
           </li>) }
       </ul> }
-    </div>
+    </div> */}
   </div>);
 };
 

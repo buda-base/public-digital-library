@@ -191,7 +191,7 @@ export function FiltersSidebar(props) {
   //console.log("sB?", that, indexUiState, sortItems, recent)
 
   return <>
-    <h3>{I18n.t("result.filter")}</h3>
+    { ! recent && <h3>{I18n.t("result.filter")}</h3> }
 
     <MyClearRefinements   
       translations={{
@@ -208,7 +208,7 @@ export function FiltersSidebar(props) {
     <RefinementListWithLocalLabels I18n_prefix={"types"} that={that} attribute="type" showMore={true} title={I18n.t("Lsidebar.datatypes.title")}/>
 
     <div className="filter-title MT"><p>{getPropLabel(that,fullUri("tmp:firstScanSyncDate"))}</p></div>
-    <CustomDateRange attribute="firstScanSyncDate" {...recent?{ defaultBefore: lastMonthFormatted }:{}} {...{request, setRequest}} />
+    <CustomDateRange attribute="firstScanSyncDate" /*{...recent?{ defaultBefore: lastMonthFormatted }:{}}*/ {...{request, setRequest}} />
     
     <div className="filter-title MT" ><p>Sort by</p></div>
     <span style={{fontSize:"16px"}}>

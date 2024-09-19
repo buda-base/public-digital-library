@@ -360,7 +360,8 @@
       "filter":"Filter Results",
       "search":"Search Results",
       "hitKW":"{{count}} hit for \"{{kw}}\"",
-      "hitKW_plural":"{{count}} hits for \"{{kw}}\""
+      "hitKW_plural":"{{count}} hits for \"{{kw}}\"",
+      "added":"Added {{date}}"
    },
    "map": {
       "touch": "Use two fingers to move the map",

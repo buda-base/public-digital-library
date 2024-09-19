@@ -158,10 +158,20 @@
    width:100%;
 }
 
+.AppSK .ais-Hits-item .names.firstScan,
 .AppSK .ais-Hits-item .debug button {
    position:absolute; 
-   right:10px;
-   top:10px;   }
+   right:24px;
+   top:24px;   
+}
+.AppSK .ais-Hits-item .names.firstScan {
+  background-color:#d73449;
+  color:white;
+  font-size:12px;
+  font-weight:600;
+  padding:0 5px;
+  border-radius: 2px; 
+}
 
 .AppSK .content {
    width:1440px;

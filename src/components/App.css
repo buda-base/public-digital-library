@@ -275,8 +275,8 @@ body { overflow:auto !important;padding-right:0 !important; /*font-family:"Robot
 .infoPanel.version { 
    z-index: 1000001;
    position: absolute;
-   width:12%;
-   left:44%;
+   width:11%;
+   left:44.5%;
    height:50px;
    top:0px;
    display: flex;
