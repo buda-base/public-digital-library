@@ -226,7 +226,7 @@ const VersionChecker = () => {
    const { latestVersion, isLatestVersion, emptyCacheStorage } = useClearCacheCtx();
    return (
      <div {...!isLatestVersion?{style:{height:"60px"}}:{}}>
-       { !isLatestVersion && (
+       { (!isLatestVersion) && (
          <div class="infoPanel version">
             <p>
                <a
