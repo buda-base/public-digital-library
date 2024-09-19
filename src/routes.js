@@ -221,7 +221,7 @@ const UAContextHook = () => {
   return []
 }
 
-// #767
+// #767 test
 const VersionChecker = () => {
    const { latestVersion, isLatestVersion, emptyCacheStorage } = useClearCacheCtx();
    return (
