@@ -193,41 +193,55 @@ const CustomHit = ({ hit, that, sortItems, recent, storage }) => {
     if(ekeys.length > 0) for(const ek of ekeys) {
       for(const vol of hit.inner_hits?.[ek]?.hits?.hits) {
         //console.log("vol:",vol)
-        for(const ch of vol.inner_hits.chunks.hits.hits) {
+        for(const ch of vol.inner_hits.chunks.hits.hits) {          
           //console.log("ch:",ch)
-          for(const h of Object.values(ch.highlight??{})) {
-            for(let c of [h.join(" ") ] ) {
-              newShow.etext = true                  
-              if(n > 0) { 
-                if(!expand.etext || n >= 5) continue
-              }
+          for(const h of Object.values(ch.highlight??{})) {            
+            //console.log("h:",h,hit.objectID)
 
-              // TODO: better handling of etext languages other than Tibetan
+            // TODO: better handling of etext languages other than Tibetan
+
+            let withHL = ch._source.text_bo
+            for(let c of h) {
+              const untagged = c.replace(/<[^>]+>/g,"")
+              const idx = withHL.indexOf(untagged)
+              let start = "", end = ""
+              if(idx > 0) start = withHL.substring(0, idx)
+              if(idx + untagged.length < ch._source.text_bo.length) end = withHL.substring(idx + untagged.length)
+              withHL = start +  c + end
+            }
+
+            newShow.etext = true                  
+            if(n > 0) { 
+              if(!expand.etext || n >= 5) continue
+            }
+            
+            let c = h.join("")
+
+            if(expand.etext && ch._source.text_bo) { 
               
-              if(expand.etext && ch._source.text_bo) { 
-                const idx = ch._source.text_bo.indexOf(h[0].replace(/<[^>]+>/g,""))
-                if(idx >= 0) {
-                  let n = Math.max(300, c.replace(/<[^>]+>/g,"").length)
-                  let start = idx - Math.ceil(n/2), end = idx + n + Math.floor(n / 2)
-                  for(; start>=0 ; start--) if(ch._source.text_bo[start].match(/[་ ]/)) { start++; break; }
-                  for(; end < ch._source.text_bo.length ; end ++) if(ch._source.text_bo[end].match(/[་ ]/)) { break; }
-                  c = ch._source.text_bo.substring(start, end)
-                } else {
-                  c = ch._source.text_bo //.replace(/[\n\r]/gmu," ").replace(/^ *(([^་ ]+[་ ]+){40})(.*)/mu, "$1")
-                }
-              }
+              let idx_start = withHL.indexOf("<em>")
+              let idx_end = withHL.lastIndexOf("</em>")
+              c = withHL.substring(idx_start, idx_end+5)
+              const N = Math.max(0, 500 - c.length) 
+              let start = idx_start - Math.ceil(N/2)
+              for(; start>=0 ; start--) if(withHL[start].match(/[་ ]/)) { start++; break; }
+              let end = idx_end + Math.floor(N/2)
+              for(; end < withHL.length ; end ++) if(withHL[end].match(/[་ ]/)) { break; }
+              c = withHL.substring(start, idx_start) + c + withHL.substring(idx_end+5, end)
 
-              let detec = narrowWithString(c)      
-              //console.log("c:",c,detec)
-              const label = getLangLabel(that, fullUri("tmp:textMatch"), [{lang:detec[0]==="tibt"?"bo":"bo-x-ewts", value:(c ?? "").replace(/<em>/g,"↦").replace(/<\/em>/g,"↤").replace(/↤ ↦/g, " ")}])          
+            }
 
-              detec = narrowWithString(indexUiState.query)      
-              let kw = '"'+indexUiState.query+'"@'+(detec[0]==="tibt"?"bo":"bo-x-ewts")
+            let detec = narrowWithString(c)      
+            //console.log("c:",c,detec)
+            const label = getLangLabel(that, fullUri("tmp:textMatch"), [{lang:detec[0]==="tibt"?"bo":"bo-x-ewts", value:(c ?? "").replace(/<em>/g,"↦").replace(/<\/em>/g,"↤").replace(/↤ ↦/g, " ")}])          
 
-              newEtextHits.push(<Link to={"/show/bdr:"+vol._source.etext_instance+"?openEtext=bdr:"+vol._id+"&startChar="+(ch._source.cstart-1000)+"&keyword="+kw+"#open-viewer"}>{highlight(label.value, expand.etext && ch._source.text_bo ? indexUiState.query : undefined, undefined, expand.etext && ch._source.text_bo)}</Link>)
+            detec = narrowWithString(indexUiState.query)      
+            let kw = '"'+indexUiState.query+'"@'+(detec[0]==="tibt"?"bo":"bo-x-ewts")
 
-              n++
-            } 
+            newEtextHits.push(<Link to={"/show/bdr:"+vol._source.etext_instance+"?openEtext=bdr:"+vol._id+"&startChar="+(ch._source.cstart-1000)+"&keyword="+kw+"#open-viewer"}>{highlight(label.value, expand.etext && ch._source.text_bo ? indexUiState.query : undefined, undefined, expand.etext && ch._source.text_bo)}</Link>)
+
+            n++
+
           }
         }
       }
