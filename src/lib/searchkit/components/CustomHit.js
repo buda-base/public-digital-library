@@ -219,9 +219,9 @@ const CustomHit = ({ hit, that, sortItems, recent, storage }) => {
       for(const vol of hit.inner_hits?.[ek]?.hits?.hits) {
         //console.log("vol:",vol)
         for(const ch of vol.inner_hits.chunks.hits.hits) {                    
-          //console.log("ch:",ch)
+          console.log("ch:",ch)
           for(const h of Object.values(ch.highlight??{})) {                        
-            //console.log("h:",h,hit.objectID)
+            console.log("h:",h,hit.objectID)
 
             // WIP: better handling of etext languages other than Tibetan
             if(!ch._source.text_bo) console.warn('nobo:',ch._source)
@@ -245,7 +245,7 @@ const CustomHit = ({ hit, that, sortItems, recent, storage }) => {
             
             let c = h.join("")
 
-            if(expand.etext && ch._source.text_bo) { 
+            if(expand.etext && text) { 
               
               let idx_start = withHL.indexOf("<em>")
               let idx_end = withHL.lastIndexOf("</em>")
@@ -266,7 +266,7 @@ const CustomHit = ({ hit, that, sortItems, recent, storage }) => {
             detec = narrowWithString(indexUiState.query)      
             let kw = '"'+indexUiState.query+'"@'+(detec[0]==="tibt"?"bo":"bo-x-ewts")
 
-            newEtextHits.push(<Link to={"/show/bdr:"+vol._source.etext_instance+"?openEtext=bdr:"+vol._id+"&startChar="+(ch._source.cstart-1000)+"&keyword="+kw+"#open-viewer"}>{highlight(label.value, expand.etext && ch._source.text_bo ? indexUiState.query : undefined, undefined, expand.etext && ch._source.text_bo)}</Link>)
+            newEtextHits.push(<Link to={"/show/bdr:"+vol._source.etext_instance+"?openEtext=bdr:"+vol._id+"&startChar="+(ch._source.cstart-1000)+"&keyword="+kw+"#open-viewer"}>{highlight(label.value, expand.etext && text ? indexUiState.query : undefined, undefined, expand.etext && text)}</Link>)
 
             n++
 
