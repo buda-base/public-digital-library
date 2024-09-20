@@ -10,7 +10,7 @@ const fetchLabels = (ids, attribute, lang = "bo-x-ewts") => {
     })
   else {
 
-    console.log("fl:",process.env.REACT_APP_LABEL_API, ids)
+    //console.log("fl:",process.env.REACT_APP_LABEL_API, ids)
 
     return new Promise((resolve, reject) => {
       try {

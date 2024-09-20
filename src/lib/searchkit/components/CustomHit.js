@@ -68,18 +68,43 @@ const CustomHit = ({ hit, that, sortItems, recent, storage }) => {
             const lang = k.replace(new RegExp(name+"_"),"").replace(/_/g,"-")
 
             // TODO: display full note in that case? two matches in same field
+
+            /*
             if(hit._highlightResult[k]?.length && hit[k].length < hit._highlightResult[k].length) {
               do {
                 hit[k].push(hit[k][0])
 
               } while(hit[k].length < hit._highlightResult[k].length)
             } 
+            */
+
+            const mergeHLinVal = (k, h, i) => {
+
+              let val = h, withHL = decode(val)
+              if(hit._highlightResult[k]?.length){ 
+                if(hit._highlightResult[k]?.length != hit[k].length) for(const c of hit._highlightResult[k]) {
+                  const untagged = decode(c.value).replace(/<[^>]+>/g,"")                
+                  const idx = withHL.indexOf(untagged)
+                  let start = "", end = ""
+                  //console.log("wHL:",k,c,h,idx)
+                  if(idx >= 0) { 
+                    start = withHL.substring(0, idx)
+                    if(idx + untagged.length <= withHL.length) end = withHL.substring(idx + untagged.length)
+                    withHL = start + decode(c.value) + end
+                  }
+                } else {
+                  withHL = hit._highlightResult[k][i]?.value ?? ""
+                }
+              }
+
+              return hit._highlightResult && hit._highlightResult[k] //&& hit._highlightResult[k][i]
+                    ? decode(withHL.replace(/<mark>/g,"↦").replace(/<\/mark>/g,"↤").replace(/↤ ↦/g, " "))
+                    : h
+            }
 
             hit[k].map((h,i) => name != "altLabel" || hit._highlightResult[k] && hit._highlightResult[k][i]?.matchedWords?.length 
               ? labels[name!="altLabel"?name:"prefLabel"].push({
-                  value: hit._highlightResult && hit._highlightResult[k] && hit._highlightResult[k][i]
-                    ? decode((hit._highlightResult[k][i]?.value ?? "").replace(/<mark>/g,"↦").replace(/<\/mark>/g,"↤").replace(/↤ ↦/g, " "))
-                    : h, 
+                  value: mergeHLinVal(k, h, i), 
                   field: k, num: i,
                   lang, hit, 
                 })
@@ -152,9 +177,9 @@ const CustomHit = ({ hit, that, sortItems, recent, storage }) => {
           if(name != "seriesName") {
             if(!newLabel?.includes("↦")) {
               newLabel = newLabel.replace(/[\n\r]/gm," ").replace(/^ *(([^ ]+ +){35})(.*)/, (m,g1,g2,g3)=>g1+(g3?" (...)":""))
-            } else {             
+            } else {      
               if((newLabel.match(/ /g) || []).length > 35) {
-                newLabel = newLabel.replace(/[\n\r]/gm," ").replace(/^ *(.*?)(([^ ]+ +){,17} *↦)/,(m,g1,g2,g3)=>(g1?"(...) ":"")+g2)
+                newLabel = newLabel.replace(/[\n\r]+/gm," ").replace(/^ *(.*?)(([^ ]+ +){1,17} *↦)/,(m,g1,g2,g3)=>(g1?"(...) ":"")+g2)
                 newLabel = newLabel.replace(new RegExp("(↤ *([^ ]+ +){"+Math.max(1,(35-(newLabel.replace(/^(.*?↦).*$/,"$1").match(/ /g) || []).length))+"})(.*?)$"),(m,g1,g2,g3)=>g1+(g3?" (...)":""))
               }
             }
@@ -193,20 +218,23 @@ const CustomHit = ({ hit, that, sortItems, recent, storage }) => {
     if(ekeys.length > 0) for(const ek of ekeys) {
       for(const vol of hit.inner_hits?.[ek]?.hits?.hits) {
         //console.log("vol:",vol)
-        for(const ch of vol.inner_hits.chunks.hits.hits) {          
+        for(const ch of vol.inner_hits.chunks.hits.hits) {                    
           //console.log("ch:",ch)
-          for(const h of Object.values(ch.highlight??{})) {            
+          for(const h of Object.values(ch.highlight??{})) {                        
             //console.log("h:",h,hit.objectID)
 
-            // TODO: better handling of etext languages other than Tibetan
+            // WIP: better handling of etext languages other than Tibetan
+            if(!ch._source.text_bo) console.warn('nobo:',ch._source)
+            const text = ch._source.text_bo ?? ch._source.text_en ?? ch._source.text_zh
+            let withHL = text
 
-            let withHL = ch._source.text_bo
             for(let c of h) {
+              //console.log("c:",c+">|<"+withHL)
               const untagged = c.replace(/<[^>]+>/g,"")
               const idx = withHL.indexOf(untagged)
               let start = "", end = ""
               if(idx > 0) start = withHL.substring(0, idx)
-              if(idx + untagged.length < ch._source.text_bo.length) end = withHL.substring(idx + untagged.length)
+              if(idx + untagged.length < text.length) end = withHL.substring(idx + untagged.length)
               withHL = start +  c + end
             }
 
