@@ -604,11 +604,12 @@ export function highlight(val,k,expand,newline,force)
       }
 
       if(e.length) {
-         let f = e.split(/↤/)
+         let f = e.split(/↤/), NLexp = newline && typeof newline === "string"? new RegExp(newline) : null
          if(f.length > 1) {
             let tail 
-            if(newline && f[1].indexOf("\n\n") !== -1) { 
-               tail = f[1].split(/\n\n/)
+            if(newline && (f[1].indexOf("\n\n") !== -1 || NLexp && f[1].match(NLexp))) { 
+               if(!NLexp) tail = f[1].split(/\n\n/)
+               else tail = f[1].split(NLexp)
                tail = tail.map((i,idx) => [<span>{i}</span>, ...(idx==tail.length - 1 ?[]:[<br data-last={_idx >= val.length - 1 && idx === tail.length - 1}/>,<br/>]) ])
             }
             else tail = [ <span>{force?prepNewL(f[1]):f[1]}</span> ]
@@ -616,8 +617,9 @@ export function highlight(val,k,expand,newline,force)
          }
          else {
             let tail 
-            if(newline && f[0].indexOf("\n\n") !== -1) { 
-               tail = f[0].split(/\n\n/)
+            if(newline && (f[0].indexOf("\n\n") !== -1 || NLexp && f[0].match(NLexp))) { 
+               if(!NLexp) tail = f[0].split(/\n\n/)
+               else tail = f[0].split(NLexp)
                tail = tail.map( (i,idx) => [<span>{i}</span>, ...(idx==tail.length - 1 ?[]:[<br data-last={_idx >= val.length - 1 && idx === tail.length - 1}/>,<br/>]) ])
             }
             else tail = [ <span>{force?prepNewL(f[0]):f[0]}</span> ]

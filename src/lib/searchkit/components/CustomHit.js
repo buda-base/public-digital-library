@@ -185,9 +185,10 @@ const CustomHit = ({ hit, that, sortItems, recent, storage }) => {
             }
             if(newLabel.startsWith("(...)") || newLabel.endsWith("(...)")) newShow[tag] = true                  
             if(!expand[tag]) label = newLabel        
+            
           }
 
-          out.push(<span lang={sortLabels[0].lang}>{highlight(label)}</span>)
+          out.push(<span lang={sortLabels[0].lang}>{highlight(label, undefined, undefined, expand[tag] ? "[\n\r]+" : undefined)}</span>)
           
 
           //out.push(<TextToggle text={<span lang={sortLabels[0].lang}>{highlight(label)}</span>} />)
@@ -219,9 +220,9 @@ const CustomHit = ({ hit, that, sortItems, recent, storage }) => {
       for(const vol of hit.inner_hits?.[ek]?.hits?.hits) {
         //console.log("vol:",vol)
         for(const ch of vol.inner_hits.chunks.hits.hits) {                    
-          console.log("ch:",ch)
+          //console.log("ch:",ch)
           for(const h of Object.values(ch.highlight??{})) {                        
-            console.log("h:",h,hit.objectID)
+            //console.log("h:",h,hit.objectID)
 
             // WIP: better handling of etext languages other than Tibetan
             if(!ch._source.text_bo) console.warn('nobo:',ch._source)
