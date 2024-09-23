@@ -359,7 +359,7 @@ const CustomHit = ({ hit, that, sortItems, recent, storage }) => {
       <div class="data">      
           <Link to={link}>
             <span class="T">
-              { hit.placeType ? getPlaceTypeLabels(hit.placeType) : getPropLabel(that,fullUri("bdr:"+hit.type+(hit.type==="PartTypeText")?"_youpi":""), true, false, "types."+(hit.type+"").toLowerCase())}
+              { hit.placeType ? getPlaceTypeLabels(hit.placeType) : getPropLabel(that,fullUri("bdr:"+hit.type), true, false, "types."+(hit.type+"").toLowerCase())}
               { hit.script && hit.script.map(s => <span title={getPropLabel(that,fullUri('bdo:script'),false)+I18n.t("punc.colon")+" "+getPropLabel(that, fullUri("bdr:"+s), false)} data-lang={s.replace(/.*Script/)}>{s.replace(/^.*Script/,"")}</span>)}
             </span>
             {/* {{ hit.author && <Link to={"/show/bdr:"+hit.author}>{hit.author}</Link> } */} 

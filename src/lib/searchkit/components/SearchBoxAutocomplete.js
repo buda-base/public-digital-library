@@ -4,6 +4,7 @@ import SearchIcon from '@material-ui/icons/Search';
 import AccessTimeIcon from '@material-ui/icons/AccessTime';
 import CloseIcon from '@material-ui/icons/Close';
 import IconButton from '@material-ui/core/IconButton';
+import qs from "query-string"
 
 // hooks
 import { useSearchBox, useInstantSearch, useClearRefinements } from "react-instantsearch";
@@ -11,6 +12,7 @@ import { useSearchBox, useInstantSearch, useClearRefinements } from "react-insta
 // utils
 import { debounce } from "../helpers/utils";
 import history from "../../../history"
+import { routingConfig } from "../searchkit.config"
 
 // api
 import { getAutocompleteRequest } from "../api/AutosuggestAPI";
@@ -162,7 +164,7 @@ export const formatResponseForURLSearchParams = (query) => {
 
 const SearchBoxAutocomplete = (props) => {
   const { query, refine } = useSearchBox(props);
-  const { status } = useInstantSearch();
+  const { status, setUiState } = useInstantSearch();
   const { loading, placeholder, pageFilters } = props
 
   const [inputValue, setInputValue] = useState(query);
@@ -188,6 +190,22 @@ const SearchBoxAutocomplete = (props) => {
         setSuggestions(requests);
       });
     }
+
+    const handlePopState = (event) => {
+      let { search } = history.location
+      const r = qs.parse(search, {arrayFormat: 'index'})
+      const s = routingConfig.stateMapping.routeToState(r)
+      console.log("r2s:", r, s)
+      setInputValue(r.q ?? "")    
+      setUiState(s)  
+    };
+
+    window.addEventListener('popstate', handlePopState);
+
+    return () => {
+      window.removeEventListener('popstate', handlePopState);
+    };
+
   }, []);
 
   const setQuery = (newQuery) => {

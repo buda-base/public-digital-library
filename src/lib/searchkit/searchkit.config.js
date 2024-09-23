@@ -214,6 +214,13 @@ const routingConfig = {
     },
     routeToState(routeState) {
       const { firstScanSyncDate_before, firstScanSyncDate_after } = routeState;
+      console.log("rst:",routeState)
+      FACET_ATTRIBUTES.reduce(
+        (obj, item) =>{
+          console.log(item, item.attribute, routeState?.[item.attribute])
+        },
+        {}
+      )
       return {
         [process.env.REACT_APP_ELASTICSEARCH_INDEX]: {
           query: routeState.q,

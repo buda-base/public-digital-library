@@ -10164,7 +10164,8 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
 
       let hasRel = ((related && related.length > 0)||(createdBy && createdBy.length > 0))
       if(!this.props.preview && (!hasRel || this.state.relatedTabAll) && !["Instance","Images","Etext"].includes(_T)) {
-         if(this.props.assocResources && this.props.config &&  !this.props.assocTypes) this.props.onGetAssocTypes(this.props.IRI, "assocTypes")
+         // deprecated
+         //if(this.props.assocResources && this.props.config &&  !this.props.assocTypes) this.props.onGetAssocTypes(this.props.IRI, "assocTypes")
       }  
       
       let onKhmerServer = (this.props.config && this.props.config.khmerServer)
@@ -10928,7 +10929,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                      return false
                   }}*/
                   ><img src="/icons/FILARIANE.svg" /><span>{searchUrl.startsWith("latest")?I18n.t("home.new").toLowerCase():I18n.t("topbar."+(searchTerm?"results":"resultsNoKW"))} <span>{searchTerm}</span></span></Link>
-                  {this.state.ready && <Loader loaded={!this.props.loading} options={{position:"fixed",left:"50%",top:"50%"}} /> }
+                  {false && this.state.ready && <Loader loaded={!this.props.loading} options={{position:"fixed",left:"50%",top:"50%"}} /> }
                </div> }
                <div class="index">                  
                   {/* { this.renderBrowseAssoRes() } */}

@@ -110,7 +110,8 @@ async function initiateApp(params,iri,myprops,route,isAuthCallback) {
          }).observe(document.querySelector('title'),{ childList: true });
       }
 
-      if(!state.data.hunspellBo) initHunspellBo()
+      // deprecated
+      //if(!state.data.hunspellBo) initHunspellBo()
 
       if(!state.data.config)
       {
