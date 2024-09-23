@@ -35,7 +35,7 @@ const redirect = (refine, query, pageFilters) => {
   if(!loca.pathname.endsWith("/search") && !loca.pathname.endsWith("/show/") && !loca.pathname.startsWith("/tradition/") && !pageFilters){
     // DONE: fix browser history skipping when starting search from home (#935)
     setTimeout(() => history.push("/osearch/search?q="+encodeURIComponent(query)), 150)
-    setTimeout(() => refine(query), 650)
+    setTimeout(() => refine(query), 1000)
   } else {
     refine(query)
   }
