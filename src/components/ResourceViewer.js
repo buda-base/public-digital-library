@@ -10929,7 +10929,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                      return false
                   }}*/
                   ><img src="/icons/FILARIANE.svg" /><span>{searchUrl.startsWith("latest")?I18n.t("home.new").toLowerCase():I18n.t("topbar."+(searchTerm?"results":"resultsNoKW"))} <span>{searchTerm}</span></span></Link>
-                  {false && this.state.ready && <Loader loaded={!this.props.loading} options={{position:"fixed",left:"50%",top:"50%"}} /> }
+                  {this.state.ready && <Loader loaded={!this.props.loading} options={{position:"fixed",left:"50%",top:"50%"}} /> }
                </div> }
                <div class="index">                  
                   {/* { this.renderBrowseAssoRes() } */}
