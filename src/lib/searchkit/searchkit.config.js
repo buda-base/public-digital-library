@@ -199,17 +199,17 @@ const routingConfig = {
     cleanUrlOnDispose: false,    
     /*
     push:(url, arg) => {
-      console.log("push:", url, arg)
+      //console.log("push:", url, arg)
       history_.push(url.replace(/^https?:\/\/[^/]+/,""))
     },
-    */    
+    */
     createURL({ qsModule, location, routeState }) {
       
       let { origin, pathname, hash, search } = location, url;
-      //if(!pathname.endsWith("/search") && !pathname.startsWith("/show/") && !pathname.startsWith("/tradition/")) pathname = "/osearch/search"
+      if(!pathname.endsWith("/search") && !pathname.startsWith("/show/") && !pathname.startsWith("/tradition/") && routeState.q) pathname = "/osearch/search"
       
       const indexState = routeState['instant_search'] || {};
-      const queryString = qsModule.stringify({...qsModule.parse(search.replace(/^\?/,""))??{}, ...routeState});
+      const queryString = qsModule.stringify({ /*...qsModule.parse(search.replace(/^\?/,""))??{},*/ ...routeState});
 
       url = `${origin}${pathname}?${queryString}${hash}`;      
       
