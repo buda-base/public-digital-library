@@ -108,6 +108,9 @@ export class InnerSearchPage extends Component<State, Props>
             indexName={process.env.REACT_APP_ELASTICSEARCH_INDEX}
             routing={routingConfig}
             searchClient={searchClient}
+            future={{
+              preserveSharedStateOnUnmount: true
+            }}
           >
             <Loader loaded={!this.props.loading}/>
             <div data-props="tmp:search">

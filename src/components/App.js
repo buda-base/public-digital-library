@@ -102,7 +102,7 @@ import store from "../index"
 import {closePortraitPopup} from "../state/ui/actions"
 import analytics from "./Analytics"
 
-import { InstantSearch } from "react-instantsearch";
+import { InstantSearch, useSearchBox } from "react-instantsearch";
 import AutocompleteKeywordInput from "./AutocompleteKeywordInput"
 import { searchClient } from '../lib/searchkit/pages/Search';
 import SearchBoxAutocomplete from "../lib/searchkit/components/SearchBoxAutocomplete";
@@ -1090,7 +1090,7 @@ export function getGDPRconsent(that) {
 
 function InstantSearchBox(props) {
 
-   const { isMirador } = props
+   const { isMirador, clearRef } = props
 
    return <>
       <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/instantsearch.css@7/themes/satellite-min.css" />
@@ -1098,20 +1098,33 @@ function InstantSearchBox(props) {
          indexName={process.env.REACT_APP_ELASTICSEARCH_INDEX}
          routing={routingConfig}
          searchClient={searchClient}
+         initialUiState={{[process.env.REACT_APP_ELASTICSEARCH_INDEX]:{ query:"youpi", page:0 }}}
+         future={{
+           preserveSharedStateOnUnmount: true
+         }}
       >
          <div className="search inner-search-bar" style={{ ...isMirador?{position:"absolute"}:{} }}>
             <div>
                <SearchBoxAutocomplete searchAsYouType={false} {...props}/>
+               <ClearSearch {...{ clearRef }}/>
             </div>
          </div>
       </InstantSearch>
    </>
 }
 
+function ClearSearch({ clearRef }) {
+   const { clear } = useSearchBox({})
+   clearRef.current = { clear }
+   return <></>
+}
+
 export function top_right_menu(that,etextTitle,backUrl,etextres,isMirador)
 {
    let onZhMirror = (that.props.config && that.props.config.chineseMirror)
    let onKhmerServer = (that.props.config && that.props.config.khmerServer)
+
+   let clearRef = React.createRef()
 
    let feedbucket = <div id="feedback" title={I18n.t("topbar.feedback")} className={that.props.feedbucket + (that.props.keyword&&!that.props.IRI?" top":"")} onClick={(ev) => {
       if(!document.querySelector('feedbucket-app')) {
@@ -1134,9 +1147,12 @@ export function top_right_menu(that,etextTitle,backUrl,etextres,isMirador)
    let logo = [
             <div id="logo">
                <Link to="/"  onClick={() => { 
+                  if(clearRef.current) { clearRef.current.clear(); }
+                  /*
                   that.props.history.push({pathname:"/",search:""}); 
                   if(that.props.keyword) { that.props.onResetSearch(); } 
                   that.setState({blurSearch:false})
+                  */
                } }><img src="/icons/BUDA-small.svg"/><span>BUDA</span></Link>                                  
                <a id="by"><span>by</span></a>
                { !onZhMirror && [
@@ -1202,7 +1218,7 @@ export function top_right_menu(that,etextTitle,backUrl,etextres,isMirador)
       innerSearch = (
          that?.state.filters && !that?.props.keyword || that?.state.filters && that.props.advancedSearch || that.props.isOsearch
          ? null 
-         : <InstantSearchBox that={this} {...{isMirador}}/>
+         : <InstantSearchBox that={this} {...{ isMirador, clearRef }}/>
                   /* 
          : <div class={'inner-search-bar in-search-'+(that.state.filters?"true":"false")}>
             <div>
@@ -7512,6 +7528,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
       if(!this._refs["barRef"]) this._refs["barRef"] = React.createRef()
 
+      const clearRef = React.createRef()
+
       const ret = (<>
 { top_right_menu(this) }
 <div className={(this.props.simple?"simpleSearch":"")}>
@@ -7580,7 +7598,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                {/* <h3>Buddhist Digital Resource Center</h3> */}
                { (this.props.language && this.props.language != "-" || !this.props.keyword && !this.props.loading) && <>               
                { !this.props.keyword && !this.props.advancedSearch && 
-                  <InstantSearchBox that={this} />
+                  <InstantSearchBox that={this} {...{ clearRef }} />
                }
                         {/* 
                <div class='inner-search-bar in-search-true'>

@@ -32,10 +32,13 @@ const redirect = (refine, query, pageFilters) => {
   updateHistory(query, pageFilters)
 
   const loca = history.location  
-  if(!loca.pathname.endsWith("/search") && !loca.pathname.endsWith("/show/") && !loca.pathname.startsWith("/tradition/") && !pageFilters){
-    // DONE: fix browser history skipping when starting search from home (#935)
-    setTimeout(() => history.push("/osearch/search?q="+encodeURIComponent(query)), 150)
-    setTimeout(() => refine(query), 1000)
+  if(!loca.pathname.endsWith("/search") && !loca.pathname.endsWith("/show/") && !loca.pathname.startsWith("/tradition/") && !pageFilters){    
+    // WIP: fix browser history skipping when starting search from home (#935)    
+    window.postRefine = () => {
+      refine(query) 
+      delete window.postRefine
+    }    
+    history.replace("/osearch/search?q="+encodeURIComponent(query))
   } else {
     refine(query)
   }
@@ -165,8 +168,8 @@ export const formatResponseForURLSearchParams = (query) => {
 };
 
 const SearchBoxAutocomplete = (props) => {
-  const { query, refine } = useSearchBox(props);
-  const { status, setUiState } = useInstantSearch();
+  const { query, refine  } = useSearchBox(props);
+  const { status, setUiState, uiState, results, refresh } = useInstantSearch();
   const { loading, placeholder, pageFilters } = props
 
   const [inputValue, setInputValue] = useState(query);
@@ -186,6 +189,21 @@ const SearchBoxAutocomplete = (props) => {
 
   const { refine: clearRefine } = useClearRefinements(props);
 
+  /*
+  useEffect(() => {
+    if(uiState && window.shouldUpdateRoute) console.log("routing:",
+      routingConfig.stateMapping.stateToRoute(uiState),
+      routingConfig.stateMapping.routeToState(qs.parse(history.location.search, {arrayFormat: 'index'}))
+    )
+  }, [status, routingConfig, uiState])
+  */
+
+  useEffect(() => {
+    if(results.processingTimeMS && ["idle"].includes(status) && window.postRefine) {
+      window.postRefine()
+    }
+  }, [status, results])
+ 
   useEffect(() => {
     if (query !== "") {
       getAutocompleteRequest(query, pageFilters).then((requests) => {
@@ -230,6 +248,12 @@ const SearchBoxAutocomplete = (props) => {
     [ pageFilters ]
   );
 
+  const debouncedHandleClick = useCallback(
+    debounce((item) => {
+      handleClick(item)
+    }, 350),
+    [ handleClick ]
+  );
   const handleClick = useCallback((item) => {
     clearRefine([])
     const newQuery = formatResponseForURLSearchParams(item.res);
@@ -295,7 +319,7 @@ const SearchBoxAutocomplete = (props) => {
             */
             // case when selection with keyboard
             if(selected != -1 && actualList?.[selected]) {
-              handleClick(actualList?.[selected])
+              debouncedHandleClick(actualList?.[selected])
               e.preventDefault()
               e.stopPropagation()
             }
@@ -329,7 +353,7 @@ const SearchBoxAutocomplete = (props) => {
         {...{ selected, setIsFocused, pageFilters }}
         query={inputValue}
         items={suggestions}
-        onClick={handleClick}
+        onClick={debouncedHandleClick}
         isVisible={isFocused}
         //setActualLength={setSuggestionLen}
         setActualList={setActualList}

@@ -1,5 +1,6 @@
 import Searchkit,{ ESTransporter } from "searchkit";
 import { history } from "instantsearch.js/es/lib/routers";
+import history_ from "../../history"
 
 // Constant
 import {
@@ -19,7 +20,7 @@ const CONNECTION = {
 };
 
 class MyTransporter extends ESTransporter {
-  async performNetworkRequest(requests) {
+  async performNetworkRequest(requests) {    
 
     let body = this.createElasticsearchQueryFromRequest(requests)      
 
@@ -47,6 +48,30 @@ class MyTransporter extends ESTransporter {
   }
 
   async msearch(requests): Promise {
+    
+    // quickfix for not triggering default query on homepage
+    if(window.location.pathname === "/" && !requests?.some(r => r.request.params.query)) return [
+      {
+          "_shards": {
+              "failed": 0,
+              "skipped": 0,
+              "successful": 1,
+              "total": 1
+          },
+          "hits": {
+              "hits": [],
+              "max_score": null,
+              "total": {
+                  "relation": "eq",
+                  "value": 0
+              }
+          },
+          "status": 200,
+          "timed_out": false,
+          "took": 66
+      }
+    ]
+    
     try {
       const response = await this.performNetworkRequest(requests)
       let responses = await response.json(), useMod = false
@@ -172,10 +197,16 @@ const formatFirstScanSyncDateRangeFromUiState = (uiState) => {
 const routingConfig = {
   router: history({
     cleanUrlOnDispose: false,    
+    /*
+    push:(url, arg) => {
+      console.log("push:", url, arg)
+      history_.push(url.replace(/^https?:\/\/[^/]+/,""))
+    },
+    */    
     createURL({ qsModule, location, routeState }) {
       
       let { origin, pathname, hash, search } = location, url;
-      if(!pathname.endsWith("/search") && !pathname.startsWith("/show/") && !pathname.startsWith("/tradition/")) pathname = "/osearch/search"
+      //if(!pathname.endsWith("/search") && !pathname.startsWith("/show/") && !pathname.startsWith("/tradition/")) pathname = "/osearch/search"
       
       const indexState = routeState['instant_search'] || {};
       const queryString = qsModule.stringify({...qsModule.parse(search.replace(/^\?/,""))??{}, ...routeState});
@@ -186,7 +217,14 @@ const routingConfig = {
 
       return url
   
-    }
+    },
+    /*
+    parseURL({ qsModule, location }) {
+      const r = qsModule.parse(location.search)
+      console.log("pURL:",r, location)
+      return r;
+    },
+    */
   }),
   stateMapping: {
     stateToRoute(uiState) {
