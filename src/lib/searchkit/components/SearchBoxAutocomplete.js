@@ -28,22 +28,30 @@ export function updateHistory(query, pageFilters) {
   
 
 const redirect = (refine, query, pageFilters) => {
-
+  //console.warn("redir:", query, pageFilters)
   updateHistory(query, pageFilters)
+  
+  //refine(query)
 
+  
   const loca = history.location  
-  if(!loca.pathname.endsWith("/search") && !loca.pathname.endsWith("/show/") && !loca.pathname.startsWith("/tradition/") && !pageFilters){    
+  if(!loca.pathname.endsWith("/search") && !loca.pathname.endsWith("/show/")  // && !loca.pathname.startsWith("/tradition/") 
+      && !pageFilters){          
+             
         
-    // WIP: fix browser history skipping when starting search from home (#935)    
     window.postRefine = () => {
-      delete window.postRefine
+      console.warn("REFINE:",query)        
       refine(query)
-    } 
-    
-    history.push("/osearch/search?q="+encodeURIComponent(query))
+    }    
+    history.replace("/osearch/search?q="+encodeURIComponent(query))
+      
+    //routingConfig.router._push("/osearch/search?q="+encodeURIComponent(query))
+
   } else {
     refine(query)
   }
+  
+  
 }
 
 const SearchBoxAction = ({ inputValue, isSearchStalled, refine, pageFilters }) => {
@@ -202,7 +210,9 @@ const SearchBoxAutocomplete = (props) => {
 
   useEffect(() => {
     if(results.processingTimeMS && ["idle"].includes(status) && window.postRefine) {
-      window.postRefine()
+      if(window.postRefine) {
+        window.postRefine() 
+      }
     }
   }, [status, results])
  
@@ -252,8 +262,9 @@ const SearchBoxAutocomplete = (props) => {
 
   const debouncedHandleClick = useCallback(
     debounce((item) => {
+      //console.log("debounced:",item)
       handleClick(item)
-    }, 350),
+    }, 150),
     [ handleClick ]
   );
   const handleClick = useCallback((item) => {

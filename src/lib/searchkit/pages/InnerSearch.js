@@ -108,9 +108,14 @@ export class InnerSearchPage extends Component<State, Props>
             indexName={process.env.REACT_APP_ELASTICSEARCH_INDEX}
             routing={routingConfig}
             searchClient={searchClient}
-            future={{
-              preserveSharedStateOnUnmount: true
+            future={{ preserveSharedStateOnUnmount: false }}
+            /*
+            initialUiState={routingConfig.stateMapping.routeToState(qs.parse(history.location.search, {arrayFormat: 'index'}))}
+            onStateChange={({uiState, setUiState}) => {
+               console.log("oScIS:",uiState)
+               setUiState(uiState)
             }}
+            */ 
           >
             <Loader loaded={!this.props.loading}/>
             <div data-props="tmp:search">

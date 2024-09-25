@@ -246,7 +246,7 @@ async function initiateApp(params,iri,myprops,route,isAuthCallback) {
       }
 
       // #765
-      if(params && params.p && params.p.includes("purl.bdrc.io/resource")) {     
+      if(false && params && params.p && params.p.includes("purl.bdrc.io/resource")) {     
          let iri = shortUri(params.p.replace(/"/g,""))
          if(iri.startsWith("bdr:")) {
             history.replace({ pathname: "/show/"+iri })
@@ -255,7 +255,7 @@ async function initiateApp(params,iri,myprops,route,isAuthCallback) {
       }
 
       // #757
-      if(params && params.s && Array.isArray(params.s)) {
+      if(false && params && params.s && Array.isArray(params.s)) {
          let { pathname, search } = { ...history.location }
          let s = params.s.filter(p => p.includes("%"))
          if(!s.length) s = params.s
@@ -265,7 +265,7 @@ async function initiateApp(params,iri,myprops,route,isAuthCallback) {
       }
 
       // #756
-      if(params && params.t === "Version") {
+      if(false && params && params.t === "Version") {
          let { pathname, search } = { ...history.location }
          search = search.replace(/t=Version/, "t=Instance") 
          history.replace({ pathname, search })
@@ -273,7 +273,7 @@ async function initiateApp(params,iri,myprops,route,isAuthCallback) {
       }
 
       // #756
-      if(params && params.q && params.q.match(/^(["(]+[^"]*)"([^"]*[")]+[~0-9]*)$/)) {
+      if(false && params && params.q && params.q.match(/^(["(]+[^"]*)"([^"]*[")]+[~0-9]*)$/)) {
          let { pathname, search } = { ...history.location }
          search = search.replace(/q=[^&]+/, "q="+params.q.replace(/^(["(]+[^"]*)"([^"]*[")~0-9]+)$/g,(m,g1,g2) => g1+(g2.includes('"')?g2:'"'+g2)))
          if(search != history.location.search) {
@@ -498,12 +498,12 @@ if(params && params.osearch && !iri.match(/^([^:]+:)?UT/)) {
 }
 
 
-if(params && params.t /*&& !params.i */) {
+if(false && params && params.t /*&& !params.i */) {
    //loggergen.log("uSb:",params)
    store.dispatch(uiActions.updateSortBy(params.s?params.s.toLowerCase():(params.i?"year of publication reverse":(params.t==="Etext"?(!params.lg?"title":"closest matches"):(params.t==="Scan"?(route ==="latest"?"release date":"popularity"):"popularity"))),params.t))
 }
 
-if(params && params.i) {
+if(false && params && params.i) {
    let t = getEntiType(params.i)
 
    if(["Work"].indexOf(t) !== -1
@@ -512,11 +512,11 @@ if(params && params.i) {
       store.dispatch(dataActions.getInstances(params.i,true));
    }
 }
-else if(params && params.p) {
+else if(false && params && params.p) {
 
    store.dispatch(dataActions.ontoSearch(params.p));
 }
-else if(params && params.q) {
+else if(false && params && params.q) {
 
    
    if(params.q == "-" && !state.data.searches["-@-"]) {
@@ -596,7 +596,7 @@ else if(params && params.q) {
    }
    */
 }
-else if(params && params.r) {
+else if(false && params && params.r) {
    let t = params.u ?? getEntiType(params.r)
    if(["Instance", "Images", "Volume", "Scan"].includes(t) || ["bdo:SerialWork"].includes(params.r) ) t = "Work"
    if(params.r === "tmp:subscriptions") t = "Product"
@@ -619,12 +619,12 @@ else if(params && params.r) {
       }
    }
 }
-else if(params && params.date && params.t) {
+else if(false && params && params.date && params.t) {
 
    store.dispatch(dataActions.getResultsByDate(params.date, params.t));
 
 }
-else if(params && params.id && params.t) {
+else if(false && params && params.id && params.t) {
 
    store.dispatch(dataActions.getResultsById(params.id, params.t));
 
@@ -648,7 +648,7 @@ else if(staticQueries[route]?.length === 2) {
    
    store.dispatch(dataActions.getStaticQueryAsResults(route,params.t));
 }
-else if(!iri) {
+else if(false && !iri) {
 
    let state = store.getState()
    

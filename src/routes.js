@@ -53,6 +53,7 @@ const loggergen = new logdown('gen', { markdown: false });
 export const auth = new Auth();
 
 
+/*
 // ignore hash changes made by UV
 // (see https://stackoverflow.com/questions/45799823/react-router-ignore-hashchange)
 let previousLocation, newLocation;
@@ -65,15 +66,15 @@ Router.prototype.setState = function(...args) {
 
     //loggergen.log("hash",JSON.stringify(previousLocation,null,3),JSON.stringify(loc,null,3),JSON.stringify(args,null,3))
 
-    /* 
-    if (loc.pathname === previousLocation.pathname &&
-        loc.search   === previousLocation.search   &&
-        loc.hash    !== previousLocation.hash // || loc.hash === previousLocation.hash )
-    ) {
-        previousLocation = {...loc};
-        return;
-    }
-    */
+    
+   //  if (loc.pathname === previousLocation.pathname &&
+   //      loc.search   === previousLocation.search   &&
+   //      loc.hash    !== previousLocation.hash // || loc.hash === previousLocation.hash )
+   //  ) {
+   //      previousLocation = {...loc};
+   //      return;
+   //  }
+    
 
    previousLocation = newLocation
    newLocation = loc.pathname + loc.search + loc.hash
@@ -92,7 +93,7 @@ Router.prototype.componentDidMount = function(...args) {
         return routerDidMount.apply(this, args);
     }
 };
-
+*/
 
 
 // Auth test: ok
@@ -139,10 +140,11 @@ class LogErrorBoundary extends React.Component {
       return { hasError: true };
     }
   
+    
     componentDidCatch(error, errorInfo) {
       // Vous pouvez aussi enregistrer l'erreur au sein d'un service de rapport.
-      loggergen.log("catch:",error,errorInfo,previousLocation)
-      logError(error, { previousLocation });
+      loggergen.log("catch:",error,errorInfo) //,previousLocation)
+      logError(error, { previousLocation: window.location.href });
     }
   
     render() {

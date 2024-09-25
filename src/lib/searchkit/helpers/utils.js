@@ -5,6 +5,7 @@ export function debounce(func, wait) {
     const context = this;
 
     const later = function () {
+      console.log("later:", context, args)
       timeout = null;
       func.apply(context, args);
     };

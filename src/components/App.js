@@ -1090,7 +1090,7 @@ export function getGDPRconsent(that) {
 
 function InstantSearchBox(props) {
 
-   const { isMirador, clearRef } = props
+   const { isMirador, that } = props
 
    return <>
       <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/instantsearch.css@7/themes/satellite-min.css" />
@@ -1098,33 +1098,28 @@ function InstantSearchBox(props) {
          indexName={process.env.REACT_APP_ELASTICSEARCH_INDEX}
          routing={routingConfig}
          searchClient={searchClient}
-         initialUiState={{[process.env.REACT_APP_ELASTICSEARCH_INDEX]:{ query:"youpi", page:0 }}}
-         future={{
-           preserveSharedStateOnUnmount: true
+         future={{ preserveSharedStateOnUnmount: false }}
+         /*
+         //initialUiState={routingConfig.stateMapping.routeToState(qs.parse(that.props.history.location.search, {arrayFormat: 'index'}))}                  
+         onStateChange={({uiState, setUiState}) => {
+            console.log("oScA:",uiState)
+            setUiState(uiState)
          }}
+         */
       >
          <div className="search inner-search-bar" style={{ ...isMirador?{position:"absolute"}:{} }}>
             <div>
                <SearchBoxAutocomplete searchAsYouType={false} {...props}/>
-               <ClearSearch {...{ clearRef }}/>
             </div>
          </div>
       </InstantSearch>
    </>
 }
 
-function ClearSearch({ clearRef }) {
-   const { clear } = useSearchBox({})
-   clearRef.current = { clear }
-   return <></>
-}
-
 export function top_right_menu(that,etextTitle,backUrl,etextres,isMirador)
 {
    let onZhMirror = (that.props.config && that.props.config.chineseMirror)
    let onKhmerServer = (that.props.config && that.props.config.khmerServer)
-
-   let clearRef = React.createRef()
 
    let feedbucket = <div id="feedback" title={I18n.t("topbar.feedback")} className={that.props.feedbucket + (that.props.keyword&&!that.props.IRI?" top":"")} onClick={(ev) => {
       if(!document.querySelector('feedbucket-app')) {
@@ -1147,7 +1142,6 @@ export function top_right_menu(that,etextTitle,backUrl,etextres,isMirador)
    let logo = [
             <div id="logo">
                <Link to="/"  onClick={() => { 
-                  if(clearRef.current) { clearRef.current.clear(); }
                   /*
                   that.props.history.push({pathname:"/",search:""}); 
                   if(that.props.keyword) { that.props.onResetSearch(); } 
@@ -1218,7 +1212,7 @@ export function top_right_menu(that,etextTitle,backUrl,etextres,isMirador)
       innerSearch = (
          that?.state.filters && !that?.props.keyword || that?.state.filters && that.props.advancedSearch || that.props.isOsearch
          ? null 
-         : <InstantSearchBox that={this} {...{ isMirador, clearRef }}/>
+         : <InstantSearchBox that={this} {...{ isMirador }}/>
                   /* 
          : <div class={'inner-search-bar in-search-'+(that.state.filters?"true":"false")}>
             <div>

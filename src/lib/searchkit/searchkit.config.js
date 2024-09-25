@@ -50,7 +50,7 @@ class MyTransporter extends ESTransporter {
   async msearch(requests): Promise {
     
     // quickfix for not triggering default query on homepage
-    if(window.location.pathname === "/" && !requests?.some(r => r.request.params.query)) return [
+    if(window.location.pathname != "/osearch/search" && !requests?.some(r => r.request.params.query || r.request.params.filters)) return [
       {
           "_shards": {
               "failed": 0,
@@ -197,19 +197,25 @@ const formatFirstScanSyncDateRangeFromUiState = (uiState) => {
 const routingConfig = {
   router: history({
     cleanUrlOnDispose: false,    
+    
     /*
-    push:(url, arg) => {
-      //console.log("push:", url, arg)
-      history_.push(url.replace(/^https?:\/\/[^/]+/,""))
+    push:(url, arg) => {      
+      console.log("push:", url, arg)
+      const u = new URL(url.startsWith('http')?url:"http://localhost"+url) 
+      let pathname = u.pathname
+      if(pathname === "/" && u.search && u.search != "?") pathname = "/osearch/search"
+      history_.push(pathname+u.search) 
     },
     */
+    
     createURL({ qsModule, location, routeState }) {
       
       let { origin, pathname, hash, search } = location, url;
-      if(!pathname.endsWith("/search") && !pathname.startsWith("/show/") && !pathname.startsWith("/tradition/") && routeState.q) pathname = "/osearch/search"
+      if(!pathname.endsWith("/search") && !pathname.startsWith("/show/") //&& !pathname.startsWith("/tradition/") 
+        && routeState.q) pathname = "/osearch/search"
       
       const indexState = routeState['instant_search'] || {};
-      const queryString = qsModule.stringify({ /*...qsModule.parse(search.replace(/^\?/,""))??{},*/ ...routeState});
+      const queryString = qsModule.stringify({ ...qsModule.parse(search.replace(/^\?/,""))??{}, ...routeState});
 
       url = `${origin}${pathname}?${queryString}${hash}`;      
       
@@ -218,6 +224,8 @@ const routingConfig = {
       return url
   
     },
+    
+
     /*
     parseURL({ qsModule, location }) {
       const r = qsModule.parse(location.search)
@@ -228,6 +236,7 @@ const routingConfig = {
   }),
   stateMapping: {
     stateToRoute(uiState) {
+      //console.log("s2r:",JSON.stringify(uiState, null, 3))
       const indexUiState = uiState[process.env.REACT_APP_ELASTICSEARCH_INDEX];
       const firstScanSyncDate =
         formatFirstScanSyncDateRangeFromUiState(indexUiState);
@@ -251,6 +260,7 @@ const routingConfig = {
       };
     },
     routeToState(routeState) {
+      //console.log("r2s:",JSON.stringify(routeState, null, 3))
       const { firstScanSyncDate_before, firstScanSyncDate_after } = routeState;
       return {
         [process.env.REACT_APP_ELASTICSEARCH_INDEX]: {
