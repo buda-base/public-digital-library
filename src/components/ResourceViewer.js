@@ -1065,10 +1065,10 @@ class OutlineSearchBar extends Component<Props,State>
                   this.props.that.setState({outlineKW:"",collapse})
                   if(this.props.that.props.outlineKW) {
                      this.props.that.props.onResetOutlineKW()
-                     let loca = { ...this.props.that.props.history.location }
+                     let loca = { ...this.props.that.props.location }
                      if(!loca.search) loca.search = ""
                      loca.search = loca.search.replace(/((&?root)|(&?osearch))=[^&]+/g, "").replace(/[?]&/,"?")
-                     this.props.that.props.history.push(loca)
+                     this.props.that.props.navigate(loca)
                   }
                }}><Close/></span> }            
                { this.state.autocomplete && <div>
@@ -1235,7 +1235,7 @@ class ResourceViewer extends Component<Props,State>
 
          loggergen.log("ev:", ev, gotoResults)
 
-         let get = qs.parse(this.props.history.location.search)
+         let get = qs.parse(this.props.location.search)
          let hasQinS, backToPart
          if(get.s && !get.part) {
             get = qs.parse(get.s.replace(/^[^?]+[?]/,""))
@@ -1260,28 +1260,28 @@ class ResourceViewer extends Component<Props,State>
 
             if(gotoResults) {
                let staticRegExp = new RegExp("^(latest|"+Object.keys(staticQueries).join("|")+")(.*)$"), m;
-               if(backTo.startsWith("latest")) this.props.history.push({pathname:"/latest",search:backTo.replace(/^latest/,"")})
-               else if(m = backTo.match(staticRegExp)) this.props.history.push({pathname:"/"+m[1],search:m[2]})
-               else if(backTo.startsWith("search")) this.props.history.push({pathname:"/search",search:backTo.replace(/^[^?]+[?]/,"")})                              
+               if(backTo.startsWith("latest")) this.props.navigate({pathname:"/latest",search:backTo.replace(/^latest/,"")})
+               else if(m = backTo.match(staticRegExp)) this.props.navigate({pathname:"/"+m[1],search:m[2]})
+               else if(backTo.startsWith("search")) this.props.navigate({pathname:"/search",search:backTo.replace(/^[^?]+[?]/,"")})                              
                else {
                   get = qs.parse(backTo.replace(/^[^?]+[?]/,""))
-                  this.props.history.push({pathname:"/search",search:get.s?get.s:backTo.replace(/^[^?]+[?]/,"")})   
+                  this.props.navigate({pathname:"/search",search:get.s?get.s:backTo.replace(/^[^?]+[?]/,"")})   
                }
             } else {
                if(backTo.startsWith("/show") && backTo.includes("backToOutline=true")) { 
                   const part = backTo.split("?")
-                  this.props.history.push({pathname:part[0],search:part[1].replace(/.backToOutline=true/,"")})
+                  this.props.navigate({pathname:part[0],search:part[1].replace(/.backToOutline=true/,"")})
                }
                
             }
 
             /*
-            if(backTo.startsWith("latest") && gotoResults) this.props.history.push({pathname:"/latest",search:backTo.replace(/^latest/,"")})
-            else if(!backTo.startsWith("/show") && hasQinS && gotoResults ) this.props.history.push({pathname:"/search",search:backTo})
+            if(backTo.startsWith("latest") && gotoResults) this.props.navigate({pathname:"/latest",search:backTo.replace(/^latest/,"")})
+            else if(!backTo.startsWith("/show") && hasQinS && gotoResults ) this.props.navigate({pathname:"/search",search:backTo})
             else if(hasQinS) {
                fromSearch = this.state.fromSearch
                let path = backTo.split("?")
-               this.props.history.push({pathname:hasQinS&& gotoResults?"/search":path[0],search:path[1]})
+               this.props.navigate({pathname:hasQinS&& gotoResults?"/search":path[0],search:path[1]})
             }
             else {
                fromSearch = backTo               
@@ -1293,16 +1293,16 @@ class ResourceViewer extends Component<Props,State>
          if(window.MiradorUseEtext) delete window.MiradorUseEtext ;
          if(window.currentZoom) delete window.currentZoom ;
 
-         let loca = { ...this.props.history.location }
+         let loca = { ...this.props.location }
          if(loca.hash == "#open-viewer") { 
             
             loca.hash = ""            
             window.closeMirador = true;
             
-            let get = qs.parse(this.props.history.location.search)          
+            let get = qs.parse(this.props.location.search)          
             let s = get.s ? decodeURIComponent(get.s) : ""
-            if(s?.includes("/show/")) this.props.history.push(s)
-            else this.props.history.push(loca)
+            if(s?.includes("/show/")) this.props.navigate(s)
+            else this.props.navigate(loca)
          }
 
          if(this.props.feedbucket && window.innerWidth <= 800) {
@@ -1816,16 +1816,16 @@ class ResourceViewer extends Component<Props,State>
       return etext
    }
 
-   scrollToHashID(history) {
+   scrollToHashID(location) {
 
       // TODO scroll to top when IRI changed (and not on collapse open/close)
       // window.scrollTo(0, 0)
 
       //loggergen.log("histo?",JSON.stringify(history.location),this.state.openEtext)
 
-      if(!history) return
+      if(!location) return
 
-      let loca = { ...history.location }
+      let loca = { ...location }
       const hash = loca.hash.substring(1)
       
       if (hash && hash.length) {
@@ -1863,7 +1863,7 @@ class ResourceViewer extends Component<Props,State>
                   if(el) { 
                      el.scrollIntoView()      
                      delete loca.hash      
-                     history.replace(loca)
+                     this.props.navigate(loca, {replace: true})
                   }
                }), 
                3000 
@@ -1893,7 +1893,7 @@ class ResourceViewer extends Component<Props,State>
       }
 
 
-      report_GA(this.props.config,this.props.history.location);
+      report_GA(this.props.config,this.props.location);
       
       if(window.closeMirador) { 
          delete window.closeMirador
@@ -1902,7 +1902,7 @@ class ResourceViewer extends Component<Props,State>
          }
       }
 
-      let get = qs.parse(this.props.history.location.search)
+      let get = qs.parse(this.props.location.search)
       if(!get.osearch && this.props.outlineKW) {          
          //this.setState({outlineKW:"",dataSource:[]})
          this.props.onResetOutlineKW()
@@ -1949,7 +1949,7 @@ class ResourceViewer extends Component<Props,State>
       //loggergen.log("update!!",s)
       
 
-      let loca = { ...this.props.history.location }
+      let loca = { ...this.props.location }
       const hash = loca.hash.substring(1)
       
       if (hash && hash.length && hash === "open-viewer" && !this.props.pdfDownloadOnly && !this.props.outlineOnly) {
@@ -1986,7 +1986,7 @@ class ResourceViewer extends Component<Props,State>
          })
       }
       
-      this.scrollToHashID(this.props.history)
+      this.scrollToHashID(this.props.location)
 
       if(window.initFeedbucket) window.initFeedbucket()
    }
@@ -2002,8 +2002,10 @@ class ResourceViewer extends Component<Props,State>
       
       window.addEventListener('popstate', this.onBackButtonEvent);  
 
+      //console.log("props:", this.props)
+
       let s, timerScr
-      let get = qs.parse(this.props.history.location.search)
+      let get = qs.parse(this.props.location.search)
       if(get.tabs && get.tabs.length) {         
          s = ResourceViewer.setTitleFromTabs(this.props,{...this.state, tabs:get.tabs.split(",")})
       }
@@ -2032,7 +2034,7 @@ class ResourceViewer extends Component<Props,State>
 
       if(s) this.setState(s);
 
-      this.scrollToHashID(this.props.history)
+      this.scrollToHashID(this.props.location)
    }
 
    onBackButtonEvent(event) {      
@@ -3241,7 +3243,7 @@ class ResourceViewer extends Component<Props,State>
             if(enti === "Etext") {
                //ret = [<span class="svg">{svgEtextS}</span>]
                
-               //let vlink = "/"+show+"/"+prefix+":"+pretty+"?s="+encodeURIComponent(this.props.history.location.pathname+this.props.history.location.search)+"#open-viewer"    
+               //let vlink = "/"+show+"/"+prefix+":"+pretty+"?s="+encodeURIComponent(this.props.location.pathname+this.props.location.search)+"#open-viewer"    
                let vlink = "/"+show+"/"+prefix+":"+pretty+"?backToEtext="+this.props.IRI+"#open-reader"    
                ret = [  <Link {...this.props.preview?{ target:"_blank" }:{}} to={"/show/"+sUri} class={"images-thumb no-thumb 1"} style={{"background-image":"url(/icons/etext.png)"}}></Link> ,
                      <div class="images-thumb-links">
@@ -3446,14 +3448,14 @@ class ResourceViewer extends Component<Props,State>
                         else collapse[elem.inOutline] = !collapse[elem.inOutline]
                         this.setState({ collapse }) // ,outlineKW:"" })
                         
-                        let loca = {...this.props.history.location}
+                        let loca = {...this.props.location}
 
                         loca.search = loca.search.replace(/((&part|part)=[^&]+)/,"") //|(&*osearch=[^&]+))/g,"")  ;
                         loca.search += "&part="+part
                         loca.search = loca.search.replace(/[?]&/,"?")
                         
                         loca.pathname = root
-                        this.props.history.push(loca)
+                        this.props.navigate(loca)
 
                         e.preventDefault();
                         e.stopPropagation();
@@ -3581,7 +3583,7 @@ class ResourceViewer extends Component<Props,State>
                if(!thumbUrl.match(/[/]default[.][^.]+$/)) thumbUrl += "/full/"+(thumb[0].value.includes(".bdrc.io/")?"!2000,145":",145")+"/0/default.jpg"
                else if(thumbUrl.match(/bdrc.io.*\/2000,\//)) thumbUrl = thumbUrl.replace(/\/2000,\//,"/!2000,145/")
                else thumbUrl = thumbUrl.replace(/[/](max|(,600))[/]/,"/"+(thumbUrl.includes(".bdrc.io/")?"!2000,145":",145")+"/")
-               let vlink = "/"+show+"/"+prefix+":"+pretty+"?s="+encodeURIComponent(this.props.history.location.pathname+this.props.history.location.search)+"#open-viewer"                
+               let vlink = "/"+show+"/"+prefix+":"+pretty+"?s="+encodeURIComponent(this.props.location.pathname+this.props.location.search)+"#open-viewer"                
                thumb = <div class="images-thumb" style={{"background-image":"url("+thumbUrl+")"}}><img src={thumbUrl}/></div>;               
 
                const checkDLD = (ev) => {
@@ -3674,8 +3676,8 @@ class ResourceViewer extends Component<Props,State>
                            <span style={{textTransform:"none"}}>
                            {/* {I18n.t("access.limited20")}<br/> */}
                            {fairTxt}
-                           { /*this.props.locale !== "bo" && [ I18n.t("misc.please"), " ", <a class="login" onClick={this.props.auth.login.bind(this,this.props.history.location)}>{I18n.t("topbar.login")}</a>, " ", I18n.t("access.credentials") ] }
-                           { this.props.locale === "bo" && [ I18n.t("access.credentials"), " ", <a class="login" onClick={this.props.auth.login.bind(this,this.props.history.location)}>{I18n.t("topbar.login")}</a> ] */ }
+                           { /*this.props.locale !== "bo" && [ I18n.t("misc.please"), " ", <a class="login" onClick={this.props.auth.login.bind(this,this.props.location)}>{I18n.t("topbar.login")}</a>, " ", I18n.t("access.credentials") ] }
+                           { this.props.locale === "bo" && [ I18n.t("access.credentials"), " ", <a class="login" onClick={this.props.auth.login.bind(this,this.props.location)}>{I18n.t("topbar.login")}</a> ] */ }
                         </span>
                         </h3>
                      </div>
@@ -3691,7 +3693,7 @@ class ResourceViewer extends Component<Props,State>
                            <div class="data access sealed"><h3><span style={{textTransform:"none"}}><Trans i18nKey="access.sealed" components={{ bold: <u /> }} /> <a href="mailto:help@bdrc.io">help@bdrc.io</a>{I18n.t("punc.point")}</span></h3></div>
                         </>
                      else 
-                        //return  <div class="data access"><h3><span style={{textTransform:"none"}}>{I18n.t("misc.please")} <a class="login" {...(this.props.auth?{onClick:this.props.auth.login.bind(this,this.props.history.location)}:{})}>{I18n.t("topbar.login")}</a> {I18n.t("access.credentials")}</span></h3></div>
+                        //return  <div class="data access"><h3><span style={{textTransform:"none"}}>{I18n.t("misc.please")} <a class="login" {...(this.props.auth?{onClick:this.props.auth.login.bind(this,this.props.location)}:{})}>{I18n.t("topbar.login")}</a> {I18n.t("access.credentials")}</span></h3></div>
                         restrict =  <>
                            <a class="urilink nolink noIA"><BlockIcon style={{width:"18px",verticalAlign:"top"}}/>{accessLabel}</a>
                            <div class="data access generic"><h3><span style={{textTransform:"none"}}><Trans i18nKey="access.generic" components={{ policies: <a /> }} /></span></h3></div>
@@ -3716,7 +3718,7 @@ class ResourceViewer extends Component<Props,State>
                               :  !this.props.IIIFerrors||!this.props.IIIFerrors[prefix+":"+pretty]                            
                                  ?  <>
                                        <Link {...this.props.preview?{ target:"_blank" }:{}} className={"urilink "+ prefix} to={vlink} onClick={checkDLD.bind(this)}>{I18n.t("index.openViewer"+(fairUse?"FU":""))}</Link>
-                                       <ResourceViewerContainer auth={this.props.auth} history={this.props.history} IRI={prefix+":"+pretty} pdfDownloadOnly={true} />
+                                       <ResourceViewerContainer auth={this.props.auth} /*history={this.props.history}*/ location={this.props.location} navigate={this.props.navigate} IRI={prefix+":"+pretty} pdfDownloadOnly={true} />
                                     </>
                                  :  this.props.IIIFerrors[prefix+":"+pretty].error.code === 401 && (!this.props.auth || !this.props.auth.isAuthenticated())
                                     ? <a class="urilink nolink"><BlockIcon style={{width:"18px",verticalAlign:"top"}}/>&nbsp;{I18n.t("viewer.dlError401")}</a>                              
@@ -3738,7 +3740,7 @@ class ResourceViewer extends Component<Props,State>
                   else img = img.replace(/[/]max[/]/,"/"+(img.includes(".bdrc.io/")?"!2000,145":",145")+"/")
                }
                else hasT = false
-               let vlink = "/"+show+"/"+repro+"?s="+encodeURIComponent(this.props.history.location.pathname+this.props.history.location.search)+"#open-viewer"                
+               let vlink = "/"+show+"/"+repro+"?s="+encodeURIComponent(this.props.location.pathname+this.props.location.search)+"#open-viewer"                
                thumbV = <div class={"images-thumb"+(!hasT?" no-thumb 3":"")} style={{"background-image":"url("+img+")"}}/>;               
 
                ret = [<Link {...this.props.preview?{ target:"_blank" }:{}} className={"urilink "+ prefix} to={hasT?vlink:"/"+show+"/"+prefix+":"+pretty}>{thumbV}</Link>,
@@ -4004,7 +4006,7 @@ class ResourceViewer extends Component<Props,State>
 
       //loggergen.log("data",lang,data,other)                  
 
-      let loca = { ...this.props.history.location }
+      let loca = { ...this.props.location }
       if(e.start !== undefined) { 
          loca.search = loca.search.replace(/(^[?])|(&*startChar=[^&]+)/g,"")
          loca.search = "?startChar="+e.start+(loca.search?"&"+loca.search:"")
@@ -5076,11 +5078,11 @@ class ResourceViewer extends Component<Props,State>
          document.getElementsByName("viewport")[0].content = "width=device-width, initial-scale=1.0, maximum-scale=1.0" ;
 
          if(click && state.fromSearch && (state.fromSearch.startsWith("latest") || state.fromSearch.includes("t=Scan"))) {
-            let loca = {... this.props.history.location}
+            let loca = {... this.props.location}
             if(loca.search.match(/[?&]s=/)) loca.search = loca.search.replace(/[?&]s=[^&]+/,"")
             if(loca.search && !loca.search.endsWith("?")) loca.search += "&"            
             loca.search += "s="+encodeURIComponent(window.location.href.replace(/.*(\/show\/)/,"$1"))
-            this.props.history.push(loca)
+            this.props.navigate(loca)
          } else if(click) {
             state.fromClick = true ;
          } else {
@@ -5284,7 +5286,7 @@ class ResourceViewer extends Component<Props,State>
       }
 
       //loggergen.log("tabs?",_T,other,tabs)
-      let get = qs.parse(this.props.history.location.search)
+      let get = qs.parse(this.props.location.search)
 
       if(tabs.length) return "?tabs="+tabs.join(",")+(get.v?"&v="+get.v:"")
       else return ""
@@ -5935,7 +5937,7 @@ class ResourceViewer extends Component<Props,State>
                {this.preprop(k,0,n)}
                <div class="group preview-etext">
                   {/* <Link to={"/show/"+shortUri(e.value)}>{shortUri(e.value)}</Link> */}
-                  <ResourceViewerContainer  auth={this.props.auth} history={this.props.history} IRI={shortUri(outETvol?.[0]?.value ?? e.value)} previewEtext={{ outETvol, outETstart, outETscope }}/>  
+                  <ResourceViewerContainer  auth={this.props.auth} /*history={this.props.history}*/ location={this.props.location} navigate={this.props.navigate} IRI={shortUri(outETvol?.[0]?.value ?? e.value)} previewEtext={{ outETvol, outETstart, outETscope }}/>  
                </div>
             </div>
          )}))
@@ -5962,7 +5964,7 @@ class ResourceViewer extends Component<Props,State>
                <h3><span>{this.proplink(k,null,n)}{I18n.t("punc.colon")}</span> </h3>
                {this.preprop(k,0,n)}
                <div class="group">
-                  <ResourceViewerContainer auth={this.props.auth} history={this.props.history} IRI={shortUri(elem[0]?.value)} outlineOnly={true} part={this.props.IRI}/> 
+                  <ResourceViewerContainer auth={this.props.auth} /*history={this.props.history}*/ location={this.props.location} navigate={this.props.navigate} IRI={shortUri(elem[0]?.value)} outlineOnly={true} part={this.props.IRI}/> 
                </div>
             </div>
          )
@@ -6512,7 +6514,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
             { !this.props.useDLD && authError && (
             isProxied(that)
                ? <ListItem><div className="mustLogin"><Trans i18nKey="resource.notInList" components={{lk:<a class='uri-link' target='_blank' href={"https://library"+"."+"bdrc"+"."+"io/show/"+that.props.IRI} />, nl:<br/>}}/></div></ListItem>
-               : <ListItem><a className="mustLogin" onClick={() => that.props.auth.login(that.props.history.location)}>{I18n.t("resource.mustLogin")}</a></ListItem>
+               : <ListItem><a className="mustLogin" onClick={() => that.props.auth.login(that.props.location)}>{I18n.t("resource.mustLogin")}</a></ListItem>
             )}
             {
             (!authError || this.props.useDLD) && that.props.pdfVolumes.map(e => {
@@ -6839,7 +6841,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
 
       const inst = this.getResourceElem(bdo+"eTextInInstance") ?? this.getResourceElem(bdo+"volumeOf") 
       let info = this.props.allETrefs?.[shortUri(inst?.[0]?.value)]?.["@graph"]?.filter(n => n["@id"] === this.props.IRI) ?? []
-      const get = qs.parse(this.props.history.location.search)
+      const get = qs.parse(this.props.location.search)
       let firstC = 0, lastC = 10000000, text
       if(info?.[0]?.type === "EtextVolume") {
          console.log("info:",info)
@@ -6992,7 +6994,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
       let unpag = this.unpaginated()
 
       let firstPageUrl 
-      let loca = { ...this.props.history.location }
+      let loca = { ...this.props.location }
       //if(prev!==-1) {
          loca.search = loca.search.replace(/(^[?])|(&*startChar=[^&]+)(&&+)?/g,"")
          firstPageUrl = "?startChar="+(firstC ?? 0)+(loca.search?"&"+loca.search:"") + "#open-viewer"
@@ -7000,7 +7002,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
 
       //let last = this.getResourceElem(tmp+"lastChunk");
       let lastPageUrl 
-      loca = { ...this.props.history.location }
+      loca = { ...this.props.location }
       if(lastC) {//(last?.length) { //} && next <= Number(last[0].value)) {
          loca.search = loca.search.replace(/(^[?])|(&*startChar=[^&]+)(&&+)?/g,"")
          lastPageUrl = "?startChar="+lastC+(loca.search?"&"+loca.search:"") + "#open-viewer"
@@ -7248,7 +7250,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                   //state_collapse={this.state.collapse}
 
                   props_IRI={this.props.IRI} 
-                  props_history={this.props.history} 
+                  props_location={this.props.location} 
                   props_config={this.props.config} 
                   props_highlight={this.props.highlight}
                   props_monlamResults={this.props.monlamResults}
@@ -7685,8 +7687,8 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                }
             } 
             
-            let location = { ...this.props.history.location, hash:"open-viewer" }
-            this.props.history.push(location)
+            let location = { ...this.props.location, hash:"open-viewer" }
+            this.props.navigate(location)
             //this.showMirador(null,null,true)
             ev.preventDefault();
             ev.stopPropagation();
@@ -7695,7 +7697,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
       }
 
 
-      let viewUrl = { ...this.props.history.location }
+      let viewUrl = { ...this.props.location }
       viewUrl.pathname = viewUrl.pathname.replace(/\/show\//,"/view/")
       viewUrl.search = "" 
       // DONE do we really need this now? no we don't
@@ -7807,7 +7809,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
       else if(!this.props.preview && kZprop.length && (!this.props.config || !this.props.config.chineseMirror))
          return <div class="data" id="map">{this.renderData(false, kZprop,null,null,null,"header")}</div>
       else if(etext && !(prov !== "BDRC" && prov && orig)) {
-         let loca = this.props.history.location
+         let loca = this.props.location
          let view = loca.pathname+loca.search+"#open-viewer"
          if(etextUT) view = etextUT+"#open-viewer"
          return <div class="data" id="head"><Link title='View Etext' to={view}><div class={"header "+(!this.state.ready?"loading":"")}>{ !this.state.ready && <Loader loaded={false} /> }{src}{copyRicon}</div></Link></div>
@@ -7856,8 +7858,8 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                      <span style={{textTransform:"none"}}>
                      {/* {I18n.t("access.limited20")}<br/> */}
                      {fairTxt}
-                     { /*this.props.locale !== "bo" && [ I18n.t("misc.please"), " ", <a class="login" onClick={this.props.auth.login.bind(this,this.props.history.location)}>{I18n.t("topbar.login")}</a>, " ", I18n.t("access.credentials") ] }
-                     { this.props.locale === "bo" && [ I18n.t("access.credentials"), " ", <a class="login" onClick={this.props.auth.login.bind(this,this.props.history.location)}>{I18n.t("topbar.login")}</a> ] */ }
+                     { /*this.props.locale !== "bo" && [ I18n.t("misc.please"), " ", <a class="login" onClick={this.props.auth.login.bind(this,this.props.location)}>{I18n.t("topbar.login")}</a>, " ", I18n.t("access.credentials") ] }
+                     { this.props.locale === "bo" && [ I18n.t("access.credentials"), " ", <a class="login" onClick={this.props.auth.login.bind(this,this.props.location)}>{I18n.t("topbar.login")}</a> ] */ }
                    </span>
                   </h3>
                </div>
@@ -7911,7 +7913,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
          if(elem && elem.includes("RestrictedSealed"))
             return  <div class="data access sealed"><h3><span style={{textTransform:"none"}}><Trans i18nKey="access.sealed" components={{ bold: <u /> }} /> <a href="mailto:help@bdrc.io">help@bdrc.io</a>{I18n.t("punc.point")}</span></h3></div>
          else 
-            //return  <div class="data access"><h3><span style={{textTransform:"none"}}>{I18n.t("misc.please")} <a class="login" {...(this.props.auth?{onClick:this.props.auth.login.bind(this,this.props.history.location)}:{})}>{I18n.t("topbar.login")}</a> {I18n.t("access.credentials")}</span></h3></div>
+            //return  <div class="data access"><h3><span style={{textTransform:"none"}}>{I18n.t("misc.please")} <a class="login" {...(this.props.auth?{onClick:this.props.auth.login.bind(this,this.props.location)}:{})}>{I18n.t("topbar.login")}</a> {I18n.t("access.credentials")}</span></h3></div>
             return  <div class="data access generic"><h3><span style={{textTransform:"none"}}><Trans i18nKey="access.generic" components={{ policies: <a /> }} /></span></h3></div>
             
       else if ( this.props.manifestError && this.props.manifestError.error.code === 500 && this.props.IRI && !this.props.IRI.match(/^bdr:(IE|UT|V)/))
@@ -8177,7 +8179,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
          this.props.onLoading("etext", true)
          setTimeout(() => this.props.onReinitEtext(ETres), 150)                        
          this.setState({ currentText: ETres, scope:e.scope ?? e["@id"] })
-         if(redirect) this.props.history.push(e.link)
+         if(redirect) this.props.navigate(e.link)
          
       }
 
@@ -8288,12 +8290,12 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                   /*
                   if(g.contentLocation) {
                      if(!g.details) g.details = []
-                     g.hasImg = "/show/"+g["@id"].replace(/^((bdr:MW[^_]+)_[^_]+)$/,"$1")+"?s="+encodeURIComponent(this.props.history.location.pathname+this.props.history.location.search)+"#open-viewer"
+                     g.hasImg = "/show/"+g["@id"].replace(/^((bdr:MW[^_]+)_[^_]+)$/,"$1")+"?s="+encodeURIComponent(this.props.location.pathname+this.props.location.search)+"#open-viewer"
                      nav.push(<Link to={g.hasImg} class="ulink">{I18n.t("copyright.view")}</Link>)
                   }
                   else if (g.instanceHasReproduction) {
                      if(!g.details) g.details = []
-                     g.hasImg = "/show/"+g.instanceHasReproduction+"?s="+encodeURIComponent(this.props.history.location.pathname+this.props.history.location.search)+"#open-viewer"
+                     g.hasImg = "/show/"+g.instanceHasReproduction+"?s="+encodeURIComponent(this.props.location.pathname+this.props.location.search)+"#open-viewer"
                      nav.push(<Link to={g.hasImg} class="ulink">{I18n.t("copyright.view")}</Link>)  
                   }
                   */
@@ -8408,7 +8410,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
             }         
          } 
          
-         let get = qs.parse(this.props.history.location.search)
+         let get = qs.parse(this.props.location.search)
 
          etextrefs = _.orderBy(etextrefs,["index"],["asc"])
 
@@ -8569,7 +8571,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
             //             if(this.state.dataSource&&this.state.dataSource.length) { 
             //                let param = this.state.dataSource[0].split("@")
             //                let loca = { pathname:"/search", search:"?q="+keywordtolucenequery(param[0])+"&lg="+param[1]+"&r="+this.props.IRI+"&t=Etext" }
-            //                this.props.history.push(loca)
+            //                this.props.navigate(loca)
             //             }
             //             else this.changeOutlineKW(null,this.state.outlineKW)
             //          }
@@ -8579,10 +8581,10 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
             //          this.setState({outlineKW:"",dataSource:[]})
             //          if(this.props.outlineKW) {
             //             this.props.onResetOutlineKW()
-            //             let loca = { ...this.props.history.location }
+            //             let loca = { ...this.props.location }
             //             if(!loca.search) loca.search = ""
             //             loca.search = loca.search.replace(/(&osearch|osearch)=[^&]+/, "").replace(/[?]&/,"?")
-            //             this.props.history.push(loca)
+            //             this.props.navigate(loca)
             //          }
             //       }}><Close/></span> }                  
             //       { (this.state.outlineKW && this.state.dataSource && this.state.dataSource.length > 0) &&   
@@ -8594,7 +8596,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
             //                      this.setState({dataSource:[]});
             //                      let param = this.state.dataSource[i].split("@")
             //                      let loca = { pathname:"/search", search:"?q="+keywordtolucenequery(param[0])+"&lg="+param[1]+"&r="+useRoot /*this.props.IRI*/+"&t=Etext" }
-            //                      this.props.history.push(loca)
+            //                      this.props.navigate(loca)
             //                   }}>{ tab[0].replace(/["]/g,"")} <SearchIcon style={{padding:"0 10px"}}/><span class="lang">{(I18n.t(""+(searchLangSelec[tab[1]]?searchLangSelec[tab[1]]:languages[tab[1]]))) }</span></MenuItem> ) 
             //                } ) }
             //          </Paper></div> }
@@ -8745,10 +8747,10 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
             
             //this.props.onResetOutlineKW()
 
-            let loca = { ...this.props.history.location }
+            let loca = { ...this.props.location }
             loca.search = loca.search.replace(/(&part|part)=[^&]+/g, "") 
             loca.search = loca.search.replace(/[?]&/,"?")
-            this.props.history.push(loca)
+            this.props.navigate(loca)
             */
 
             e.preventDefault();
@@ -8772,7 +8774,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
 
          //loggergen.log("renderO?",osearch,opart,title)
          
-         let get = qs.parse(this.props.history.location.search)
+         let get = qs.parse(this.props.location.search)
 
          if(opart && opart !== root && this.state.collapse["outline-"+root+"-"+root] === undefined) toggle(null,root,root)         
 
@@ -9240,7 +9242,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
 
                               let warn
                               if(g.contentLocation && (!this.state.catalogOnly || !this.state.catalogOnly[this.props.IRI])) {
-                                 g.hasImg = "/show/"+g["@id"].split(";")[0].replace(/^((bdr:MW[^_]+)_[^_]+)$/,"$1")+"?s="+encodeURIComponent(this.props.history.location.pathname+this.props.history.location.search)+"#open-viewer"
+                                 g.hasImg = "/show/"+g["@id"].split(";")[0].replace(/^((bdr:MW[^_]+)_[^_]+)$/,"$1")+"?s="+encodeURIComponent(this.props.location.pathname+this.props.location.search)+"#open-viewer"
                                  g.hasDetails = true
                                  if(showDetails) {
                                     if(!g.details) g.details = []
@@ -9249,7 +9251,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                                  }
                               }
                               else if(g.instanceHasReproduction) {
-                                 g.hasImg = "/show/"+g.instanceHasReproduction.split(";")[0]+"?s="+encodeURIComponent(this.props.history.location.pathname+this.props.history.location.search)+"#open-viewer"
+                                 g.hasImg = "/show/"+g.instanceHasReproduction.split(";")[0]+"?s="+encodeURIComponent(this.props.location.pathname+this.props.location.search)+"#open-viewer"
                                  g.hasDetails = true
                                  if(showDetails) {
                                     if(!g.details) g.details = []
@@ -9260,13 +9262,13 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                               else if(!g.contentLocation) {
                                  let repro = this.getResourceElem(bdo+"instanceHasReproduction")
                                  if(repro?.length && repro[0].value) {
-                                    let backToUrl = this.props.history.location.search.replace(/([?&])(part|backToOutline)=[^&]+/,"$1")
+                                    let backToUrl = this.props.location.search.replace(/([?&])(part|backToOutline)=[^&]+/,"$1")
                                     if(!backToUrl.endsWith("&")) {
                                        if(backToUrl && backToUrl.includes("?")) backToUrl += "&"
                                        else backToUrl += "?"
                                     }
                                     backToUrl += "part="+g["@id"]+"&backToOutline=true"
-                                    backToUrl = this.props.history.location.pathname+backToUrl
+                                    backToUrl = this.props.location.pathname+backToUrl
                                     g.hasImg = "/show/"+shortUri(repro[0].value)+"?s="+encodeURIComponent(backToUrl)+"#open-viewer"
                                     g.hasDetails = true
                                     if(showDetails) {
@@ -9724,7 +9726,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
             if(val) { 
 
 
-               let loca = { ...this.props.history.location }
+               let loca = { ...this.props.location }
 
                loca.search = loca.search.replace(/((&?root)|(&?osearch))=[^&]+/g, "") 
 
@@ -9736,7 +9738,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                loggergen.log("loca!",loca)
 
                this.setState({dataSource:[], outlineKW:val.trim()});
-               this.props.history.push(loca)
+               this.props.navigate(loca)
                
                //this.props.onOutlineSearch(root, this.state.outlineKW,lg)
             }
@@ -9872,7 +9874,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
          let msg = "IRI undefined" ;
          if(this.props.IRI) msg = "Resource "+this.props.IRI+" does not exist."
          return (
-            <Redirect404 propid={this.props.propid} from={this.props.IRI} simple={this.props.simple} history={this.props.history} message={msg}/>
+            <Redirect404 propid={this.props.propid} from={this.props.IRI} simple={this.props.simple} /*history={this.props.history}*/ message={msg}/>
          )
       }
 
@@ -9889,7 +9891,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
 
             if(redir != this.props.IRI) {
                return (               
-                  <Redirect404 history={this.props.history} message={"Record withdrawn in favor of "+redir} to={path+redir+this.props.history.location.search+this.props.history.location.hash} />
+                  <Redirect404 /*history={this.props.history}*/ message={"Record withdrawn in favor of "+redir} to={path+redir+this.props.location.search+this.props.location.hash} />
                )
             }
          }
@@ -10223,7 +10225,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
 
       let sideMenu = (rid,tag,rel,ext,outL,openV,etextUT) => {
          let sRid = shortUri(rid)
-         let loca = this.props.history.location
+         let loca = this.props.location
          let url = "/show/"+sRid+this.getTabs(tag)
          //if(sRid === this.props.IRI) url = ""
          let view = "/show/"+sRid+loca.search+"#open-viewer"
@@ -10296,7 +10298,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
          } catch(e) {
             console.error("pb:",oldUrl)
          }
-         if(decoded && (!decoded.startsWith("/show/") || decoded.includes("?")) && !decoded.startsWith(this.props.history.location.pathname)) {
+         if(decoded && (!decoded.startsWith("/show/") || decoded.includes("?")) && !decoded.startsWith(this.props.location.pathname)) {
             let withW = backTo.replace(/^.*[?&](w=[^&]+)&?.*$/,"$1")
             //loggergen.log("fromS",this.state.fromSearch,backTo,withW)
             if(backTo === withW) { 
@@ -10339,7 +10341,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
       if(resType && resType.some(e=> e.value?.endsWith("EtextInstance"))) {
          topLevel = true
          if(!this.state.openEtext) {
-            let get = qs.parse(this.props.history.location.search), currentText, scope = this.props.IRI
+            let get = qs.parse(this.props.location.search), currentText, scope = this.props.IRI
             if(get.openEtext && get.openEtext != this.props.IRI) { 
                currentText = get.openEtext
                scope = get.scope || currentText                
@@ -10465,7 +10467,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
          if(this.props.previewEtext) return (<>            
                { this.state.currentText || this.props.previewEtext?.outETvol
                   ? <>
-                     <ResourceViewerContainer  auth={this.props.auth} history={this.props.history} IRI={this.state.currentText || shortUri(this.props.previewEtext?.outETvol?.[0].value ?? "")} openEtext={true} openEtextRefs={false} disableInfiniteScroll={this.props.previewEtext} that={this}/> 
+                     <ResourceViewerContainer  auth={this.props.auth} location={this.props.location} navigate={this.props.navigate} /*history={this.props.history}*/ IRI={this.state.currentText || shortUri(this.props.previewEtext?.outETvol?.[0].value ?? "")} openEtext={true} openEtextRefs={false} disableInfiniteScroll={this.props.previewEtext} that={this}/> 
                   </>
                   : this.props.etextErrors?.[this.props.IRI] 
                      ? <h4><div class="images-thumb-links" style={{ marginLeft:0 }}><a class="urilink nolink"><BlockIcon style={{width:"18px",verticalAlign:"top"}}/>&nbsp;{I18n.t("access.errorE")}</a></div></h4>
@@ -10482,9 +10484,9 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
             </>
             return (<>            
                {getGDPRconsent(this)}
-               {top_right_menu(this,title,searchUrl,etextRes)}                       
+               {top_right_menu(this,title,searchUrl,etextRes,null,this.props.location)}                       
                   { this.state.currentText 
-                     ? <ResourceViewerContainer auth={this.props.auth} history={this.props.history} IRI={this.state.currentText} openEtext={true} openEtextRefs={!this.state.collapse.etextRefs} topEtextRefs={outline} that={this}/> 
+                     ? <ResourceViewerContainer auth={this.props.auth} /*history={this.props.history}*/ location={this.props.location} navigate={this.props.navigate} IRI={this.state.currentText} openEtext={true} openEtextRefs={!this.state.collapse.etextRefs} topEtextRefs={outline} that={this}/> 
                      : <>
                         { outline }
                         <Loader className="etext-viewer-loader" loaded={!this.props.loading} 
@@ -10582,7 +10584,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
 
          let findText
          if(!["Instance", "Images", "Etext"].includes(_T) && (_T != "Work" || serial?.length || isSerialWork) ) {            
-            findText = <InnerSearchPageContainer history={this.props.history} auth={this.props.auth} isOsearch={true} RID={this.props.IRI} T={_T} />          
+            findText = <InnerSearchPageContainer location={this.props.location} /*history={this.props.history}*/ auth={this.props.auth} isOsearch={true} RID={this.props.IRI} T={_T} />          
          }
          let theDataTop = this.renderData(false, topProps,iiifpres,title,otherLabels,"top-props","main-info",versionTitle?[this.renderGenericProp(versionTitle, _tmp+"versionTitle", this.format("h4",_tmp+"versionTitle","",false,"sub",[{...versionTitle, type:"literal"}]))]:[],[], { [_tmp+"outline"]: theOutline, [_tmp+"map"]: hasMap.length ? header : undefined, [_tmp+"findText"]: hasMap.length ? findText : undefined})      
 
@@ -10626,7 +10628,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
             if(!etextRes || !etextRes.length) this.props.onGetETextRefs(this.props.IRI);
          }
 
-         let loca = this.props.history.location            
+         let loca = this.props.location            
 
          let rView = true, iOutline, wDataExt, iDataExt, rDataExt, checkDataExt = (rid) => {            
             let sRid = shortUri(rid)
@@ -10692,10 +10694,10 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                etextAccessError = etextAccessError || this.props.etextErrors && this.props.etextErrors[shUri] && [401, 403].includes(this.props.etextErrors[shUri])
             }
             if(fVol && fTxt && (this.props.eTextRefs && this.props.eTextRefs !== true && !this.props.eTextRefs.mono)) etextLoca = I18n.t("resource.openVolViewer", {VolN:etextVolN}) // not sure we need this:  TxtN:etextTxtN
-            if(this.props.history.location.hash == "#open-reader") { //} && this.state.fromSearch) {
+            if(this.props.location.hash == "#open-reader") { //} && this.state.fromSearch) {
 
-               let loca = { ...this.props.history.location, hash:"#open-viewer", pathname: etextUT } //, search:"?backToEtext="+encodeURIComponent(this.state.fromSearch) }
-               this.props.history.replace(loca)
+               let loca = { ...this.props.location, hash:"#open-viewer", pathname: etextUT } //, search:"?backToEtext="+encodeURIComponent(this.state.fromSearch) }
+               this.props.navigate(loca, {replace: true})
 
             }
          }
@@ -10901,9 +10903,9 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
          return (
          [getGDPRconsent(this),   
          <Helmet>
-            <link rel="canonical" href={"https://library.bdrc.io"+this.props.history.location.pathname} />
+            <link rel="canonical" href={"https://library.bdrc.io"+this.props.location.pathname} />
          </Helmet>,
-         top_right_menu(this, null, null, null, isMirador),
+         top_right_menu(this, null, null, null, isMirador, this.props.location),
          // <Loader className="resource-viewer-loader" loaded={false}  options={{position:"fixed",left:"50%",top:"50%"}} />,
          <div class={isMirador?"H100vh OF0":""}>
             { ["Images","Instance"].includes(_T) && <abbr class="unapi-id" title={this.props.IRI}></abbr> }
@@ -10920,8 +10922,8 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                      }                     
 
                      setTimeout(() => { 
-                           //this.props.history.push({pathname,search:"?"+searchUrl}) ; 
-                           this.props.history.push(searchUrl) ; 
+                           //this.props.navigate({pathname,search:"?"+searchUrl}) ; 
+                           this.props.navigate(searchUrl) ; 
                      }, 100)
 
                      ev.preventDefault()

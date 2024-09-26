@@ -104,7 +104,7 @@ import analytics from "./Analytics"
 
 import { InstantSearch, useSearchBox } from "react-instantsearch";
 import AutocompleteKeywordInput from "./AutocompleteKeywordInput"
-import { searchClient } from '../lib/searchkit/pages/Search';
+import { searchClient, FiltersSidebar } from '../lib/searchkit/pages/Search';
 import SearchBoxAutocomplete from "../lib/searchkit/components/SearchBoxAutocomplete";
 import { routingConfig } from "../lib/searchkit/searchkit.config";
 
@@ -852,7 +852,7 @@ export function lang_selec(that,black:boolean = false,inPopup:false, useCheckbox
                               }
                            }
 
-                           let loca = { ...that.props.history.location }
+                           let loca = { ...that.props.location }
                            if(loca.search.includes("uilang")) loca.search = loca.search.replace(/uilang=[^&]+/,"uilang="+i)
                            else loca.search += (loca.search&&loca.search.match(/[?]./)?"&":"?")+"uilang="+i
                            that.props.history.push(loca)
@@ -1051,7 +1051,7 @@ export function etext_lang_selec(that,black:boolean = false, elem, DL)
 
                                        /*
                                        // not sure we need a url param
-                                       let loca = { ...that.props.history.location }
+                                       let loca = { ...that.props.location }
                                        if(loca.search.includes("etextlang")) loca.search = loca.search.replace(/etextlang=[^&]+/,"etextlang="+i)
                                        else loca.search += (loca.search&&loca.search.match(/[?]./)?"&":"?")+"etextlang="+i
                                        that.props.history.push(loca)
@@ -1072,7 +1072,7 @@ export function getGDPRconsent(that) {
    if(that.props.config && that.props.config.GA && !that.props.simple && !that.props.preview && !isProxied(that)) return (
       <CookieConsent
          location="bottom"
-         onAccept={() => { loggergen.log("accept!"); if(that) { report_GA(that.props.config,that.props.history.location); that.forceUpdate(); } } }
+         onAccept={() => { loggergen.log("accept!"); if(that) { report_GA(that.props.config,that.props.location); that.forceUpdate(); } } }
          cookieName="BDRC-GDPR-consent"
          style={{ background: "#2B373B",zIndex:100000,  }}
          buttonText={I18n.t("cookies.yes")}
@@ -1092,6 +1092,8 @@ function InstantSearchBox(props) {
 
    const { isMirador, that } = props
 
+   //return <div>youpi</div>
+
    return <>
       <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/instantsearch.css@7/themes/satellite-min.css" />
       <InstantSearch
@@ -1100,11 +1102,20 @@ function InstantSearchBox(props) {
          searchClient={searchClient}
          future={{ preserveSharedStateOnUnmount: false }}
          /*
-         //initialUiState={routingConfig.stateMapping.routeToState(qs.parse(that.props.history.location.search, {arrayFormat: 'index'}))}                  
-         onStateChange={({uiState, setUiState}) => {
-            console.log("oScA:",uiState)
-            setUiState(uiState)
-         }}
+         initialUiState={routingConfig.stateMapping.routeToState(qs.parse(that.props.location.search, {arrayFormat: 'index'}))}                           
+         onStateChange={(_ref) => {
+            console.log("oScA:",window.lastRouteState,_ref)
+            const uiState = _ref.uiState;
+            var routeState = routingConfig.stateMapping.stateToRoute(uiState);
+            if (window.lastRouteState === undefined || !_.isEqual(window.lastRouteState, routeState)) {
+               console.log("writing:", JSON.stringify(routeState, null, 3))
+               //routingConfig.router.write(routeState)
+               //that.props.navigate(that.props.location,{state:routeState})
+               window.lastRouteState = routeState;
+               _ref.setUiState(uiState)
+            }
+          }
+         }
          */
       >
          <div className="search inner-search-bar" style={{ ...isMirador?{position:"absolute"}:{} }}>
@@ -1116,7 +1127,7 @@ function InstantSearchBox(props) {
    </>
 }
 
-export function top_right_menu(that,etextTitle,backUrl,etextres,isMirador)
+export function top_right_menu(that,etextTitle,backUrl,etextres,isMirador,location)
 {
    let onZhMirror = (that.props.config && that.props.config.chineseMirror)
    let onKhmerServer = (that.props.config && that.props.config.khmerServer)
@@ -1134,7 +1145,7 @@ export function top_right_menu(that,etextTitle,backUrl,etextres,isMirador)
             e.stopPropagation()
          }}></div>
          <a onClick={(e) => { 
-            that.props.auth.login(that.props.history.location)            
+            that.props.auth.login(location)            
             e.stopPropagation()
          }}>{I18n.t("viewer.mustLoginFeedback")}</a>
       </div></div>
@@ -1188,8 +1199,8 @@ export function top_right_menu(that,etextTitle,backUrl,etextres,isMirador)
    // no need anymore
    const portrait = null //<div class="portrait-warn" onClick={()=>store.dispatch(closePortraitPopup())}><div><span></span><p data-tilt1={I18n.t("misc.tilt1")} data-tilt2={I18n.t("misc.tilt2")}></p></div></div>
 
-   let msgPopupOn = !that.props.history.location.pathname.includes("/static/") 
-      && !that.props.history.location.pathname.includes("/buda-user-guide") 
+   let msgPopupOn = !location.pathname.includes("/static/") 
+      && !location.pathname.includes("/buda-user-guide") 
       && that.props.config?.msg?.some((m,i) => m.popup && (!m.condition || eval(m.condition)) && !that.state.collapse["msgPopup"+(m.id?"-"+m.id:"")])
 
    const overNav = (
@@ -1212,7 +1223,7 @@ export function top_right_menu(that,etextTitle,backUrl,etextres,isMirador)
       innerSearch = (
          that?.state.filters && !that?.props.keyword || that?.state.filters && that.props.advancedSearch || that.props.isOsearch
          ? null 
-         : <InstantSearchBox that={this} {...{ isMirador }}/>
+         : <InstantSearchBox {...{ that, isMirador }}/>
                   /* 
          : <div class={'inner-search-bar in-search-'+(that.state.filters?"true":"false")}>
             <div>
@@ -1289,7 +1300,7 @@ export function top_right_menu(that,etextTitle,backUrl,etextres,isMirador)
                   //if(!etextres) 
                   setTimeout(() => { 
                      
-                     let loca = { ...that.props.history.location }, rid                  
+                     let loca = { ...location }, rid                  
                      const urlParams = new URLSearchParams(loca.search)
                      if(rid = urlParams.get("backToEtext")) {
                         loca.pathname = "/show/"+rid
@@ -1357,11 +1368,11 @@ export function top_right_menu(that,etextTitle,backUrl,etextres,isMirador)
          > {
             !that.props.auth.isAuthenticated() && // TODO check redirection
                <div class="not-logged">
-                  <MenuItem onClick={() => that.props.auth.login(that.props.history.location,true)} >
+                  <MenuItem onClick={() => that.props.auth.login(location,true)} >
                      {I18n.t("topbar.register")}
                      <svg style={{fill:"#d73449", width:"22px", padding:"1px", border: "2px solid #d73449", borderRadius:"50%"}} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" ><path d="M0 0h24v24H0z" fill="none"/><path d="M15 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm-9-2V7H4v3H1v2h3v3h2v-3h3v-2H6zm9 4c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
                   </MenuItem>
-                  <MenuItem onClick={() => that.props.auth.login(that.props.history.location)} >
+                  <MenuItem onClick={() => that.props.auth.login(location)} >
                      {I18n.t("topbar.login")}
                      <svg style={{fill:"#d73449", width:"28px"}} xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 24 24" viewBox="0 0 24 24"><g><rect fill="none" height="24" width="24"/></g><g><path d="M11,7L9.6,8.4l2.6,2.6H2v2h10.2l-2.6,2.6L11,17l5-5L11,7z M20,19h-8v2h8c1.1,0,2-0.9,2-2V5c0-1.1-0.9-2-2-2h-8v2h8V19z"/></g></svg>
                   </MenuItem>
@@ -1370,11 +1381,11 @@ export function top_right_menu(that,etextTitle,backUrl,etextres,isMirador)
          {
             that.props.auth.isAuthenticated() && 
                <div class="logged">
-                  <MenuItem onClick={(e) => { that.props.onUserProfile(that.props.history.location); that.props.history.push("/user");    }}>
+                  <MenuItem onClick={(e) => { that.props.onUserProfile(location); that.props.history.push("/user");    }}>
                      {profileName}
                      <AccountCircleIcon style={{ fontSize:"28px" }}/>
                   </MenuItem>
-                  <MenuItem onClick={(e) => { that.props.auth.logout(that.props.history.location.pathname!=="/user"?window.location.href:window.location.origin) }} >
+                  <MenuItem onClick={(e) => { that.props.auth.logout(location.pathname!=="/user"?window.location.href:window.location.origin) }} >
                      {I18n.t("topbar.logout")}
                      <svg style={{fill:"#d73449", width:"28px"}} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M0 0h24v24H0z" fill="none"/><path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/></svg>
                   </MenuItem>
@@ -1801,7 +1812,7 @@ class App extends Component<Props,State> {
       this.makeResult.bind(this);
       this.render_filters.bind(this);
 
-      if(!this._get) this._get = qs.parse(this.props.history.location.search)
+      if(!this._get) this._get = qs.parse(this.props.location.search)
       let get = this._get 
 
       let lg = "bo-x-ewts"
@@ -1964,10 +1975,10 @@ class App extends Component<Props,State> {
       } 
       
 
-      report_GA(this.props.config,this.props.history.location);
+      report_GA(this.props.config,this.props.location);
 
 
-      this._get = qs.parse(this.props.history.location.search)
+      this._get = qs.parse(this.props.location.search)
       let get = this._get 
 
       let n, scrolled
@@ -2944,7 +2955,7 @@ class App extends Component<Props,State> {
 
          this.setState({collapse:{...this.state.collapse, sortBy:false}})
 
-         let {pathname,search} = this.props.history.location
+         let {pathname,search} = this.props.location
          search = search.replace(/((&|[?])s=[^&#]+)/g,"")      
          search += (search === ""?"?":"&")+"s="+i.toLowerCase()
          search = search.replace(/(\?&)|(^&)/,"?")
@@ -3090,7 +3101,7 @@ class App extends Component<Props,State> {
 
          state.filters.preload = true
 
-         let {pathname,search} = this.props.history.location
+         let {pathname,search} = this.props.location
          search = search.replace(/([&?]([nf]|pg)=[^&]+)/g,"")+"&pg=1"+getFacetUrl(state.filters,this.props.config.facets[state.filters.datatype[0]])+(this.props.latest&&!(""+search).match(/t=/)?"&t=Scan":"")
          search = search.replace(/(\?&)|(^&)/,"?")
          this.props.history.push({pathname,search })
@@ -3283,11 +3294,11 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
 
    login() {
-      this.props.auth.login(this.props.history.location);
+      this.props.auth.login(this.props.location);
    }
 
    logout() {
-      this.props.auth.logout(this.props.history.location);
+      this.props.auth.logout(this.props.location);
    }
 
    handleLanguage = event => {
@@ -3508,7 +3519,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             ...this.state, uriPage:false, results:{...this.state.results[id], message:[] }, paginate:{...state, index:state.index - 1}
          }) 
 
-         let {pathname,search} = this.props.history.location
+         let {pathname,search} = this.props.location
          search = search.replace(/(([&?])(n|pg)=[^&]+)/g,"")
          if(search) search += "&"
          this.props.history.push({pathname,search:search+"pg="+(state.index - 1 + 1)+"&n="+(state.n[state.index - 1]+1)})
@@ -3525,7 +3536,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             ...this.state, uriPage:false, results:{...this.state.results[id], message:[] }, paginate:{...state, index:i-1}
          }) 
 
-         let {pathname,search} = this.props.history.location
+         let {pathname,search} = this.props.location
          search = search.replace(/(([&?])(n|pg)=[^&]+)/g,"")
          if(search) search += "&"
          this.props.history.push({pathname,search:search+"pg="+(i)+"&n="+(state.n[i-1]+1)})
@@ -3541,7 +3552,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             ...this.state, uriPage:false, results:{...this.state.results[id], message:[] }, paginate:{...state, index:state.index + 1}
          }) 
 
-         let {pathname,search} = this.props.history.location
+         let {pathname,search} = this.props.location
          search = search.replace(/(([&?])(n|pg)=[^&]+)/g,"")
          if(search) search += "&"
          this.props.history.push({pathname,search:search+"pg="+(state.index + 1 + 1)+"&n="+(state.n[state.index + 1]+1)})
@@ -5531,10 +5542,10 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                               onChange={(ev) => { 
                                  this.setState({ repage:true, paginate: undefined, results: { message:[] }})
                                  this.props.history.push({
-                                    ...this.props.history.location, 
+                                    ...this.props.location, 
                                     search:
                                        "?tf="+ev.target.value.replace(/past/,"")
-                                       + this.props.history.location.search
+                                       + this.props.location.search
                                           .replace(/\?tf=[^&]+/,"")
                                           .replace(/&(n|pg)=[^&]+/g,"")
                                  })
@@ -6288,7 +6299,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
    resetFilters(e) {
       
-      let {pathname,search} = this.props.history.location
+      let {pathname,search} = this.props.location
       
       if(!this.props.isInstance) {
          search = (search.replace(/((&|(\?))([tfin]|pg)=[^&]+)/g,"$3")+"&t="+this.state.filters.datatype[0])            
@@ -7124,7 +7135,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
       //loggergen.log(JSON.stringify(allSortByLists,null,3),JSON.stringify(tmpSort,null,3))
          
-      this._get = qs.parse(this.props.history.location.search)
+      this._get = qs.parse(this.props.location.search)
       let get = this._get 
       if(sortByList && tmpSort && get.s && get.s.includes("forced"))  {
 
@@ -7154,7 +7165,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       let reverseSort = false
       if(this.props.sortBy && this.props.sortBy.endsWith("reverse")) reverseSort = true
 
-      let {pathname,search} = this.props.history.location      
+      let {pathname,search} = this.props.location      
 
       this._refs["logo"] = React.createRef();
 
@@ -7525,7 +7536,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       const clearRef = React.createRef()
 
       const ret = (<>
-{ top_right_menu(this) }
+{ top_right_menu(this,null,null,null,null,this.props.location) }
 <div className={(this.props.simple?"simpleSearch":"")}>
    {getGDPRconsent(this)}
    {/* <Link to="/about">About</Link> */}
@@ -7915,9 +7926,9 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                         { ((!this.props.config || !this.props.config.chineseMirror) && !this.props.auth?.isAuthenticated() && !isProxied(this)) && <h4 class="subsubtitleFront">
                            { I18n.t("home.subsubmessage_account1")}
                            {this.props.locale==="bo"?<span> </span>:""}
-                           <span class="uri-link" onClick={() => this.props.auth.login(this.props.history.location,true)} >{I18n.t("home.subsubmessage_account4")}</span>
+                           <span class="uri-link" onClick={() => this.props.auth.login(this.props.location,true)} >{I18n.t("home.subsubmessage_account4")}</span>
                            { I18n.t("home.subsubmessage_account2")}
-                           <span class="uri-link" style={{textTransform:"capitalize"}} onClick={() => this.props.auth.login(this.props.history.location,true)} >{I18n.t("home.subsubmessage_account5")}</span>
+                           <span class="uri-link" style={{textTransform:"capitalize"}} onClick={() => this.props.auth.login(this.props.location,true)} >{I18n.t("home.subsubmessage_account5")}</span>
                            { I18n.t("home.subsubmessage_account3")}</h4> }
                         <h4 class="subsubtitleFront feedB">{ I18n.t("home.subsubmessage") }<a title="email us" href="mailto:help@bdrc.io" lang={this.props.locale}>help@bdrc.io</a>{ I18n.t("home.subsubmessage_afteremail") }</h4>
                         <h4 class="subsubtitleFront"><Trans i18nKey="home.help" components={{bold:<b/>, lk:<a class='uri-link' target='_blank' />}}/></h4>

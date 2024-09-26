@@ -22,7 +22,7 @@ function EtextPage(props) {
   let { 
     e, _i, unpag, imageLinks, kw, 
     state_showEtextImages, /*state_monlam,*/ state_monlam_hilight, /*state_noHilight,*/ state_enableDicoSearch, state_etextHasBo, state_etextSize, /*state_collapse,*/
-    props_IRI, props_history, props_config, props_highlight, props_monlamResults, props_disableInfiniteScroll, props_manifestError, props_assocResources,
+    props_IRI, props_location, props_config, props_highlight, props_monlamResults, props_disableInfiniteScroll, props_manifestError, props_assocResources,
     thatGetLangLabel, thatSetState, 
     uriformat, hoverMenu, monlamPopup, onGetContext,
     ETSBresults
@@ -98,7 +98,7 @@ function EtextPage(props) {
 
 
   // #807 debug mode
-  let get = qs.parse(props_history.location.search)
+  let get = qs.parse(props_location.search)
 
   // #818 etext in sa-deva --> disable Monlam
   let hasBo = state_etextHasBo

@@ -36,7 +36,7 @@ import SearchResultsHeader from "../components/SearchResultsHeader"
 
 // PDL
 import qs from 'query-string'
-import history from "../../../history"
+//import history from "../../../history"
 import store from '../../../index';
 import { initiateApp } from '../../../state/actions';
 
@@ -47,7 +47,7 @@ export class InnerSearchPage extends Component<State, Props>
   constructor(props) {
       super(props);
       
-      this._urlParams = qs.parse(history.location.search) 
+      this._urlParams = qs.parse(props.location.search) 
       
       this.state = { collapse:{} } 
 
@@ -108,14 +108,27 @@ export class InnerSearchPage extends Component<State, Props>
             indexName={process.env.REACT_APP_ELASTICSEARCH_INDEX}
             routing={routingConfig}
             searchClient={searchClient}
-            future={{ preserveSharedStateOnUnmount: false }}
+            future={{ preserveSharedStateOnUnmount: true }}
             /*
-            initialUiState={routingConfig.stateMapping.routeToState(qs.parse(history.location.search, {arrayFormat: 'index'}))}
+            initialUiState={routingConfig.stateMapping.routeToState(qs.parse(this.props.location.search, {arrayFormat: 'index'}))}
             onStateChange={({uiState, setUiState}) => {
                console.log("oScIS:",uiState)
                setUiState(uiState)
             }}
-            */ 
+            */
+           /*
+            onStateChange={(_ref) => {
+              console.log("oScS:",window.lastRouteState,_ref)
+              const uiState = _ref.uiState;
+              var routeState = routingConfig.stateMapping.stateToRoute(uiState);
+              if (window.lastRouteState === undefined || !_.isEqual(window.lastRouteState, routeState)) {
+                routingConfig.router.write(routeState)
+                console.log("writing:", JSON.stringify(routeState, null, 3))
+                window.lastRouteState = routeState;
+                _ref.setUiState(uiState)
+              }
+            }} 
+              */
           >
             <Loader loaded={!this.props.loading}/>
             <div data-props="tmp:search">

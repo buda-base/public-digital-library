@@ -8,10 +8,11 @@ import qs from "query-string"
 
 // hooks
 import { useSearchBox, useInstantSearch, useClearRefinements } from "react-instantsearch";
+import { useNavigate, useLocation } from "react-router-dom"
 
 // utils
 import { debounce } from "../helpers/utils";
-import history from "../../../history"
+//import history from "../../../history"
 import { routingConfig } from "../searchkit.config"
 
 // api
@@ -27,25 +28,31 @@ export function updateHistory(query, pageFilters) {
 }
   
 
-const redirect = (refine, query, pageFilters) => {
+const redirect = (refine, query, pageFilters, navigate, location) => {
   //console.warn("redir:", query, pageFilters)
   updateHistory(query, pageFilters)
   
   //refine(query)
 
   
-  const loca = history.location  
+  const loca = location  
   if(!loca.pathname.endsWith("/search") && !loca.pathname.endsWith("/show/")  // && !loca.pathname.startsWith("/tradition/") 
       && !pageFilters){          
              
-        
+      
+    /*
     window.postRefine = () => {
       console.warn("REFINE:",query)        
+      delete window.postRefine
       refine(query)
-    }    
-    history.replace("/osearch/search?q="+encodeURIComponent(query))
+    } 
+    */   
       
+    //refine(query)
+    navigate("/osearch/search?q="+encodeURIComponent(query))
     //routingConfig.router._push("/osearch/search?q="+encodeURIComponent(query))
+
+    console.log("NAV:","/osearch/search?q="+encodeURIComponent(query))
 
   } else {
     refine(query)
@@ -55,9 +62,13 @@ const redirect = (refine, query, pageFilters) => {
 }
 
 const SearchBoxAction = ({ inputValue, isSearchStalled, refine, pageFilters }) => {
+
+  const navigate = useNavigate()
+  const location = useLocation()
+
   return (
     <>
-      <button type="submit" className="ais-SearchBox-submit" onClick={()=> redirect(refine, inputValue, pageFilters)}>
+      <button type="submit" className="ais-SearchBox-submit" onClick={()=> redirect(refine, inputValue, pageFilters, navigate, location)}>
         Submit
       </button>
       <button
@@ -199,6 +210,9 @@ const SearchBoxAutocomplete = (props) => {
 
   const { refine: clearRefine } = useClearRefinements(props);
 
+  const navigate = useNavigate()
+  const location = useLocation()
+
   /*
   useEffect(() => {
     if(uiState && window.shouldUpdateRoute) console.log("routing:",
@@ -224,7 +238,7 @@ const SearchBoxAutocomplete = (props) => {
     }
 
     const handlePopState = (event) => {
-      let { search } = history.location
+      let { search } = location
       const r = qs.parse(search, {arrayFormat: 'index'})
       const s = routingConfig.stateMapping.routeToState(r)
       console.log("r2s:", r, s)
@@ -272,7 +286,7 @@ const SearchBoxAutocomplete = (props) => {
     const newQuery = formatResponseForURLSearchParams(item.res);
     setQuery(newQuery);
     setIsFocused(false);
-    redirect(refine, newQuery, pageFilters);
+    redirect(refine, newQuery, pageFilters, navigate, location);
   }, [refine, pageFilters])
 
   const suggLen = (actualList?.length ?? suggestions.length)

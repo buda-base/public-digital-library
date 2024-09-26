@@ -1,5 +1,5 @@
 import auth0 from 'auth0-js';
-import history from "./history"
+//import history from "./history"
 import store from "./index"
 import * as data  from "./state/data/actions"
 import * as ui from "./state/ui/actions"
@@ -212,12 +212,12 @@ export default class Auth {
           if(!redirect) redirect = '/'
           store.dispatch(ui.logEvent(true))
           if(redirect && redirect.startsWith && redirect.startsWith("http")) window.location.href = redirect
-          else history.replace(redirect);
+          else window.history.replace(redirect);
           //store.dispatch(ui.loggedIn())
         } else { 
           store.dispatch(ui.logEvent(false))
           if (err) {
-            history.replace('/');
+            window.history.replace('/');
             loggergen.log(err);
           }
         }
@@ -280,7 +280,7 @@ export default class Auth {
          localStorage.removeItem('expires_at');
          // navigate to previous route if any
 
-         // history.replace(redirect); // must be after auth0 logout call
+         // window.history.replace(redirect); // must be after auth0 logout call
          store.dispatch(ui.logEvent(false))
 
         clearTimeout(tokenRenewalTimeout);
@@ -324,9 +324,9 @@ export default class Auth {
         if (authResult && authResult.accessToken && authResult.idToken) {
            loggergen.log("authRes",authResult)
          this.setSession(authResult);
-         history.replace('/');
+         window.history.replace('/');
         } else if (err) {
-         history.replace('/');
+         window.history.replace('/');
          loggergen.log(err);
         }
      });
@@ -339,7 +339,7 @@ export default class Auth {
      localStorage.setItem('id_token', authResult.idToken);
      localStorage.setItem('expires_at', expiresAt);
      // navigate to the home route
-     history.replace('/');
+     window.history.replace('/');
    }
 
    logout() {
@@ -348,7 +348,7 @@ export default class Auth {
      localStorage.removeItem('id_token');
      localStorage.removeItem('expires_at');
      // navigate to the home route
-     history.replace('/');
+     window.history.replace('/');
      store.dispatch(ui.logEvent(false))
    }
 
@@ -407,10 +407,10 @@ export class TestToken extends Component<TTState> {
     }
 
     return  <div id="TestToken">
-        {!isAuth && <IconButton onClick={(e) => { auth.login(history.location) }} title="Log in">
+        {!isAuth && <IconButton onClick={(e) => { auth.login(window.history.location) }} title="Log in">
             <FontAwesomeIcon style={{fontSize:"28px"}} icon={faUserCircle} />
         </IconButton> }
-        {isAuth && <IconButton onClick={(e) => { auth.logout(history.location) }} title="Log out">
+        {isAuth && <IconButton onClick={(e) => { auth.logout(window.history.location) }} title="Log out">
             <FontAwesomeIcon style={{fontSize:"28px"}} icon={faSignOutAlt} />
         </IconButton>  }
         

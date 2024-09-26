@@ -352,7 +352,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       },
       onReinitEtext(id:string, params?:{}) {
          const nav = document.querySelector("#etext-scroll > div:first-child")//(".over-nav")
-         let get = qs.parse(ownProps.history.location.search)                  
+         let get = qs.parse(ownProps.location.search)                  
          setTimeout(() => {             
             if(get.part && get.part !== id) {
                get.root = id   

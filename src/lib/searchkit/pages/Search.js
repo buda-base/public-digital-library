@@ -41,7 +41,7 @@ import SearchResultsHeader from "../components/SearchResultsHeader"
 import { top_right_menu, getPropLabel, fullUri, highlight } from '../../../components/App'
 import { Component } from 'react';
 import qs from 'query-string'
-import history from "../../../history"
+//import history from "../../../history"
 import store from '../../../index';
 import { initiateApp } from '../../../state/actions';
 
@@ -312,7 +312,7 @@ export class SearchPage extends Component<State, Props>
   constructor(props) {
       super(props);
       
-      this._urlParams = qs.parse(history.location.search) 
+      this._urlParams = qs.parse(this.props.location.search) 
       
       this.state = { collapse:{} } 
 
@@ -338,20 +338,29 @@ export class SearchPage extends Component<State, Props>
     
     return (
       <>
-        { top_right_menu(this) }
+        { top_right_menu(this,null,null,null,null,this.props.location) }
         <div className="AppSK">
           <InstantSearch
             indexName={process.env.REACT_APP_ELASTICSEARCH_INDEX}
             routing={routingConfig}
             searchClient={searchClient}
-            future={{ preserveSharedStateOnUnmount: false }}
+            future={{ preserveSharedStateOnUnmount: true }}
+            initialUiState={routingConfig.stateMapping.routeToState(qs.parse(this.props.location.search, {arrayFormat: 'index'}))}            
             /*
-            initialUiState={routingConfig.stateMapping.routeToState(qs.parse(history.location.search, {arrayFormat: 'index'}))}
-            onStateChange={({uiState, setUiState}) => {
-               console.log("oSc:",uiState)
-               setUiState(uiState)
+            onStateChange={(_ref) => {
+              console.log("oScS:",window.lastRouteState,_ref)
+              const uiState = _ref.uiState;
+              var routeState = routingConfig.stateMapping.stateToRoute(uiState);
+              if (window.lastRouteState === undefined || !_.isEqual(window.lastRouteState, routeState)) {
+                console.log("writing:", JSON.stringify(routeState, null, 3))
+                //routingConfig.router.write(routeState)
+                //this.props.navigate({...this.props.location, state:routeState })
+                window.lastRouteState = routeState;
+                _ref.setUiState(uiState)
+
+              }
             }}
-            */ 
+            */
           >
             <div className="search inner-search-bar">
               <div>

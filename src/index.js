@@ -39,7 +39,7 @@ import dataReducer from './state/data/reducers';
 import * as data from './state/data/actions' ;
 
 
-import history from './history'
+//import history from './history'
 import qs from 'query-string'
 
 import makeMainRoutes from './routes'

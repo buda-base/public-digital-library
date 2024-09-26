@@ -15,7 +15,7 @@ import {auth} from '../../routes';
 import {shortUri,fullUri,isGroup,sublabels,subtime,isProxied} from '../../components/App'
 import {getQueryParam, GUIDED_LIMIT} from '../../components/GuidedSearch'
 import qs from 'query-string'
-import history from '../../history.js'
+//import history from '../../history.js'
 import {locales} from '../../components/ResourceViewer';
 
 
@@ -102,7 +102,7 @@ async function initiateApp(params,iri,myprops,route,isAuthCallback) {
       } 
 
       if(useDLD) {
-         window.top.postMessage(JSON.stringify({"url":{"path":history.location.pathname,"search":history.location.search}}),"*")
+         window.top.postMessage(JSON.stringify({"url":{"path":window.location.pathname,"search":window.location.search}}),"*")
          
          new MutationObserver(function() {
             //loggergen.log("newT:",document.title);
@@ -249,35 +249,35 @@ async function initiateApp(params,iri,myprops,route,isAuthCallback) {
       if(false && params && params.p && params.p.includes("purl.bdrc.io/resource")) {     
          let iri = shortUri(params.p.replace(/"/g,""))
          if(iri.startsWith("bdr:")) {
-            history.replace({ pathname: "/show/"+iri })
+            window.history.replace({ pathname: "/show/"+iri })
             return
          }
       }
 
       // #757
       if(false && params && params.s && Array.isArray(params.s)) {
-         let { pathname, search } = { ...history.location }
+         let { pathname, search } = { ...window.location }
          let s = params.s.filter(p => p.includes("%"))
          if(!s.length) s = params.s
          search = search.replace(/([&?])s=[^&]+/g, "") + "s=" + encodeURIComponent(s[0])
-         history.replace({ pathname, search })
+         window.history.replace({ pathname, search })
          return
       }
 
       // #756
       if(false && params && params.t === "Version") {
-         let { pathname, search } = { ...history.location }
+         let { pathname, search } = { ...window.location }
          search = search.replace(/t=Version/, "t=Instance") 
-         history.replace({ pathname, search })
+         window.history.replace({ pathname, search })
          return
       }
 
       // #756
       if(false && params && params.q && params.q.match(/^(["(]+[^"]*)"([^"]*[")]+[~0-9]*)$/)) {
-         let { pathname, search } = { ...history.location }
+         let { pathname, search } = { ...window.location }
          search = search.replace(/q=[^&]+/, "q="+params.q.replace(/^(["(]+[^"]*)"([^"]*[")~0-9]+)$/g,(m,g1,g2) => g1+(g2.includes('"')?g2:'"'+g2)))
-         if(search != history.location.search) {
-            history.replace({ pathname, search })
+         if(search != window.location.search) {
+            window.history.replace({ pathname, search })
             return
          }
       }
@@ -295,12 +295,12 @@ async function initiateApp(params,iri,myprops,route,isAuthCallback) {
          Etext = iri.match(/^([^:]+:)?(UT|V)/)
 
          if(Etext) {
-            let get = qs.parse(history.location.search), currentText
+            let get = qs.parse(window.location.search), currentText
             if(params.backToEtext && !get.openEtext) {
-               const loc = history.location;
+               const loc = window.location;
                loc.search = loc.search?.replace(/(openEtext|backToEtext)=[^&]+/g,"") ?? ""
                console.log("loc:",loc)
-               history.replace({ ...loc,
+               window.history.replace({ ...loc,
                   pathname:"/show/"+params.backToEtext, 
                   search: (loc.search!="?"?loc.search+"&":"?")+"openEtext="+loc.pathname.replace(/\/show\//,"")
                })
@@ -533,10 +533,10 @@ else if(false && params && params.q) {
             if(p) url += "&"+p+"="+facets[k].join(",")
          }
          loggergen.log("facets:",url,params.f, facets)
-         store.dispatch(dataActions.checkResults({init:true,url,route:history.location.pathname+history.location.search}))
+         store.dispatch(dataActions.checkResults({init:true,url,route:window.location.pathname+window.location.search}))
          return
       } else {
-         history.push("/guidedsearch")
+         window.history.push("/guidedsearch")
          return
       }
    }
@@ -640,8 +640,8 @@ else if(staticQueries[route]?.length === 2) {
    let sortBy = "popularity" 
    if(params && params.s) sortBy = params.s
    if(!params.t) {
-      let {pathname,search} = history.location         
-      history.replace({pathname,search:(search?"&":"")+"t="+staticQueries[route][1]})
+      let {pathname,search} = window.location         
+      window.history.replace({pathname,search:(search?"&":"")+"t="+staticQueries[route][1]})
       return
    }
    store.dispatch(uiActions.updateSortBy(sortBy,params.t))
@@ -787,7 +787,7 @@ function jsonld2turtle( jsonldString, rdfStore, uri ){
 
   
 export async function updateConfigFromProfile() {
-   if(/*history.location.pathname === "/user" ||*/ store.getState().data.profile) return 
+   if(/*window.location.pathname === "/user" ||*/ store.getState().data.profile) return 
    const { userProfile, getProfile } = auth;
 
    const toArray = (allNodes, node) => {
@@ -2686,8 +2686,8 @@ function rewriteAuxMain(result,keyword,datatype,sortBy,language)
          //loggergen.log("dWa:",language,t,dataWithAsset,sortBy,reverse,canPopuSort)
 
          if(!canPopuSort && sortBy.startsWith("popularity")) {            
-            let {pathname,search} = history.location         
-            history.push({pathname,search:search.replace(/(([&?])s=[^&]+)/g,"$2")+(!search.match(/[?&]s=/)?"&":"")+"s="+(sortBy=(language?"closest matches":"title")+" forced")})   
+            let {pathname,search} = window.location         
+            window.history.push({pathname,search:search.replace(/(([&?])s=[^&]+)/g,"$2")+(!search.match(/[?&]s=/)?"&":"")+"s="+(sortBy=(language?"closest matches":"title")+" forced")})   
          }
 
          if(language !== undefined) { 
@@ -3044,7 +3044,7 @@ async function checkResults(params, route) {
 
             if(!params.init && store.getState().data.checkResults !== false) {
                store.dispatch(dataActions.checkResults({count, loading:false, route: route+"&q=-&lg=-"}));                     
-               if(route) history.push(route+"&q=-&lg=-")
+               if(route) window.history.push(route+"&q=-&lg=-")
             } else {
                if(params.init) store.dispatch(dataActions.checkResults({init:true, route:params.route}));         
                else store.dispatch(dataActions.checkResults(false));         

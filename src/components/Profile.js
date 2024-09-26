@@ -1,6 +1,6 @@
 
 import React, { Component } from 'react';
-import history from "../history"
+//import history from "../history"
 import store from "../index"
 import * as data  from "../state/data/actions"
 import * as ui from "../state/ui/actions"
@@ -69,7 +69,7 @@ class Profile extends Component<Props,State> {
         let user = this.props.userID
         if(!user) user = " "
 
-        return ( <UserViewerContainer auth={auth} history={history} IRI={user} authUser={userProfile}/> ) 
+        return ( <UserViewerContainer auth={auth} /*history={history}*/ IRI={user} authUser={userProfile}/> ) 
 
         // ResoruceViewer
 

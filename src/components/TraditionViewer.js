@@ -7,7 +7,7 @@ import _ from "lodash";
 import $ from 'jquery' ;
 import logdown from 'logdown'
 
-import history from "../history"
+//import history from "../history"
 import store from '../index';
 import { top_right_menu, getLangLabel, getPropLabel, fullUri } from './App'
 import { auth, Redirect404 } from '../routes'
@@ -173,7 +173,7 @@ export class TraditionViewer extends Component<State, Props>
   constructor(props) {
       super(props);
       
-      this._urlParams = qs.parse(history.location.search) 
+      this._urlParams = qs.parse(props.location.search) 
       
       this.state = { content: "", collapse:{}, hash:"" } 
 
@@ -367,7 +367,7 @@ export class TraditionViewer extends Component<State, Props>
       })}
       <div id="tradi-recent" className="tradi-content">
         <h2>{I18n.t("tradition.recent")}</h2> 
-        <InnerSearchPageContainer history={this.props.history} auth={this.props.auth} isOsearch={true} recent={true} />          
+        <InnerSearchPageContainer /*history={this.props.history} */  location={this.props.location} auth={this.props.auth} isOsearch={true} recent={true} />          
       </div>
     </>)
   }
@@ -404,7 +404,7 @@ export class TraditionViewer extends Component<State, Props>
   render(props) {         
     
     if(this.props.config?.tradition && this.props.tradition && !this.props.config?.tradition[this.props.tradition]) 
-      return <Redirect404  history={history}  auth={auth}/>
+      return <Redirect404  /*history={history}*/  auth={auth}/>
     else  {
       
       console.log("lsn:",this.props.latestSyncs,this.props.latestSyncsMeta,this.props.latestSyncsNb)
@@ -436,7 +436,7 @@ export class TraditionViewer extends Component<State, Props>
 
       return (
         <>
-          { top_right_menu(this) }
+          { top_right_menu(this, null, null, null, null, this.props.location) }
           <div>
             <div class={"App tradition tradition-"+(this.props.tradition)}>
               <div class="SearchPane">

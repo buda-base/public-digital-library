@@ -14,7 +14,7 @@ import { RESULT_FIELDS } from "../constants/fields";
 import { routingConfig } from "../searchkit.config";
 import {narrowWithString} from "../../langdetect"
 
-import history from "../../../history"
+//import history from "../../../history"
 
 import { getPropLabel, fullUri, getLangLabel, highlight } from '../../../components/App'
 import TextToggle from '../../../components/TextToggle'
@@ -278,7 +278,7 @@ const CustomHit = ({ hit, that, sortItems, recent, storage }) => {
     setEtextHits(newEtextHits)
 
 
-  }, [hit, that.props.langPreset, expand, refinementList, sortBy, that.props.history?.location])
+  }, [hit, that.props.langPreset, expand, refinementList, sortBy, that.props.location])
  
   const prop = ["Person","Topic","Place"].includes(hit.type[0])
     ? "prop.tmp:otherName"
@@ -329,7 +329,7 @@ const CustomHit = ({ hit, that, sortItems, recent, storage }) => {
   }
 
   const 
-    page = history.location.pathname,
+    page = that.props.location.pathname,
     uri = qs.stringify(routingConfig.stateMapping.stateToRoute(uiState,true), { arrayFormat: 'index' }),
     backLink = "?s="+encodeURIComponent(page+(uri ? "?"+uri : "")),
     link = "/show/bdr:"+hit.objectID+backLink

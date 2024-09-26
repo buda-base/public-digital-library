@@ -1,6 +1,6 @@
 import Searchkit,{ ESTransporter } from "searchkit";
 import { history } from "instantsearch.js/es/lib/routers";
-import history_ from "../../history"
+//import history_ from "../../history"
 
 // Constant
 import {
@@ -50,7 +50,7 @@ class MyTransporter extends ESTransporter {
   async msearch(requests): Promise {
     
     // quickfix for not triggering default query on homepage
-    if(window.location.pathname != "/osearch/search" && !requests?.some(r => r.request.params.query || r.request.params.filters)) return [
+    if(window.location.pathname != "/osearch/search" && !window.location.pathname.startsWith("/tradition") && !requests?.some(r => r.request.params.query || r.request.params.filters)) return [
       {
           "_shards": {
               "failed": 0,
@@ -196,6 +196,7 @@ const formatFirstScanSyncDateRangeFromUiState = (uiState) => {
 
 const routingConfig = {
   router: history({
+
     cleanUrlOnDispose: false,    
     
     /*
@@ -207,6 +208,7 @@ const routingConfig = {
       history_.push(pathname+u.search) 
     },
     */
+    
     
     createURL({ qsModule, location, routeState }) {
       
@@ -236,28 +238,31 @@ const routingConfig = {
   }),
   stateMapping: {
     stateToRoute(uiState) {
-      //console.log("s2r:",JSON.stringify(uiState, null, 3))
       const indexUiState = uiState[process.env.REACT_APP_ELASTICSEARCH_INDEX];
       const firstScanSyncDate =
-        formatFirstScanSyncDateRangeFromUiState(indexUiState);
-
+      formatFirstScanSyncDateRangeFromUiState(indexUiState);
+      
       const { firstScanSyncDate_before, firstScanSyncDate_after } =
         firstScanSyncDate;
 
-      return {
-        q: indexUiState.query,
+      const r =  {
+          q: indexUiState.query,
         ...FACET_ATTRIBUTES.reduce(
           (obj, item) =>
             Object.assign(obj, {
               [item.attribute]: indexUiState.refinementList?.[item.attribute],
             }),
-          {}
+            {}
         ),
         sortBy: indexUiState.sortBy,
         firstScanSyncDate_before,
         firstScanSyncDate_after,
         page: indexUiState.page,
       };
+
+      //console.log("s2r:",JSON.stringify(uiState, null, 3), JSON.stringify(r, null, 3))
+    
+      return r
     },
     routeToState(routeState) {
       //console.log("r2s:",JSON.stringify(routeState, null, 3))

@@ -1,6 +1,6 @@
 
 import React, { Component } from 'react';
-import history from "../history"
+//import history from "../history"
 import store from "../index"
 import * as data  from "../state/data/actions"
 import * as ui from "../state/ui/actions"

@@ -2,7 +2,7 @@
 import store from '../index';
 import {auth} from '../routes'
 import qs from 'query-string'
-import history from '../history';
+//import history from '../history';
 import {shortUri,isAdmin} from '../components/App';
 
 import * as rdflib from "rdflib"
@@ -11,7 +11,7 @@ import logdown from 'logdown'
 
 const loggergen = new logdown('gen', { markdown: false });
 
-const urlParams = qs.parse(history.location.search)
+const urlParams = qs.parse(window.location.search)
 
 const onKhmerUrl = (
       window.location.host.startsWith("khmer-manuscripts")

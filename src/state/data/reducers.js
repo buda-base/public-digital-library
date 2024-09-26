@@ -6,7 +6,7 @@ import * as actions from './actions';
 import _ from 'lodash';
 import {fullUri} from '../../components/App'
 import qs from 'query-string'
-import history from '../../history';
+//import history from '../../history';
 import { narrowWithString } from "../../lib/langdetect"
 
 import logdown from 'logdown'
@@ -402,7 +402,7 @@ export const gotResource = (state: DataState, action: Action) => {
       
       mergeAdminData(uri);
 
-      let get = qs.parse(history.location.search)            
+      let get = qs.parse(window.location.search)            
 
       // preventing from displaying sameAs resource as subproperties
       let keys 
