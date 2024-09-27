@@ -427,7 +427,7 @@ export class Profile extends Component<Props,State> {
             </div>
             <div>
           {[top_left_menu(this),
-           top_right_menu(this),
+           top_right_menu(this,null,null,null,null,this.props.location),
            getGDPRconsent(this),
           <div className="profile-container">
             <div class="title"></div>
