@@ -49,8 +49,15 @@ class MyTransporter extends ESTransporter {
 
   async msearch(requests): Promise {
     
-    // quickfix for not triggering default query on homepage
-    if(window.location.pathname != "/osearch/search" && !window.location.pathname.startsWith("/tradition") && !requests?.some(r => r.request.params.query || r.request.params.filters)) return [
+    if( 
+        // quickfix for not triggering default query on homepage
+        window.location.pathname != "/osearch/search" 
+        && !window.location.pathname.startsWith("/tradition") 
+        && !requests?.some(r => r.request.params.query || r.request.params.filters)
+        || 
+        window.location.pathname.startsWith("/show")
+        && !requests?.some(r => r.request.params.filters)         
+      ) return [
       {
           "_shards": {
               "failed": 0,

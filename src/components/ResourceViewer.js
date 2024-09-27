@@ -8179,7 +8179,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
          this.props.onLoading("etext", true)
          setTimeout(() => this.props.onReinitEtext(ETres), 150)                        
          this.setState({ currentText: ETres, scope:e.scope ?? e["@id"] })
-         if(redirect) this.props.navigate(e.link)
+         if(redirect) this.props.navigate((!e.link.startsWith("/show/")?"/show/":"")+e.link)
          
       }
 
