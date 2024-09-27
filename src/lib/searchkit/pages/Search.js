@@ -305,6 +305,8 @@ export function HitsWithLabels(props) {
 }
 
 
+const routing = routingConfig()
+
 export class SearchPage extends Component<State, Props>
 {
   _urlParams = {}
@@ -336,7 +338,6 @@ export class SearchPage extends Component<State, Props>
 
     console.log("sC:", searchClient, routingConfig, pageFilters, storageRef)    
     
-    const routing = routingConfig()
 
     return (
       <>
@@ -348,8 +349,9 @@ export class SearchPage extends Component<State, Props>
             routing={routing}
             searchClient={searchClient}
             future={{ preserveSharedStateOnUnmount: true }}
+
             /*
-            initialUiState={routingConfig.stateMapping.routeToState(qs.parse(this.props.location.search, {arrayFormat: 'index'}))}            
+            initialUiState={routing.stateMapping.routeToState(qs.parse(this.props.location.search, {arrayFormat: 'index'}))}            
             onStateChange={(_ref) => {
               console.log("oScS:",window.lastRouteState,_ref)
               const uiState = _ref.uiState;
@@ -367,7 +369,7 @@ export class SearchPage extends Component<State, Props>
           >
             <div className="search inner-search-bar">
               <div>
-                <SearchBoxAutocomplete searchAsYouType={false} {...{ pageFilters }}/>
+                <SearchBoxAutocomplete searchAsYouType={false} {...{ pageFilters, routing }} />
               </div>
             </div>
             <div className="content">

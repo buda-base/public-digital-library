@@ -265,7 +265,9 @@ const routingConfig = () => ({
       return r
     },
     routeToState(routeState) {
+      
       //console.log("r2s:",JSON.stringify(routeState, null, 3))
+
       const { firstScanSyncDate_before, firstScanSyncDate_after } = routeState;
       return {
         [process.env.REACT_APP_ELASTICSEARCH_INDEX]: {

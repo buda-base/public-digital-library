@@ -40,6 +40,8 @@ import qs from 'query-string'
 import store from '../../../index';
 import { initiateApp } from '../../../state/actions';
 
+const routing = routingConfig()
+
 export class InnerSearchPage extends Component<State, Props>
 {
   _urlParams = {}
@@ -102,8 +104,6 @@ export class InnerSearchPage extends Component<State, Props>
 
     console.log("iSsC:", searchClient, routingConfig, this.props, pageFilters, storageRef, recent)        
     
-    const routing = routingConfig()
-
     return (<>
       { (pageFilters || !RID) && <div className="AppSK InnerSearchPage data">
           <InstantSearch
@@ -112,8 +112,8 @@ export class InnerSearchPage extends Component<State, Props>
             routing={routing}
             searchClient={searchClient}
             future={{ preserveSharedStateOnUnmount: true }}
-            initialUiState={routing.stateMapping.routeToState(qs.parse(this.props.location.search, {arrayFormat: 'index'}))}
             /*
+            initialUiState={routing.stateMapping.routeToState(qs.parse(this.props.location.search, {arrayFormat: 'index'}))}
             onStateChange={({uiState, setUiState}) => {
                console.log("oScIS:",uiState)
                setUiState(uiState)
@@ -139,7 +139,7 @@ export class InnerSearchPage extends Component<State, Props>
                 <h3><span><a class="propref"><span>{leftTitle}{I18n.t("punc.colon")}</span></a></span></h3>
                 <div className="search inner-search-bar group">
                   <div>
-                    <SearchBoxAutocomplete searchAsYouType={false} loading={this.props.loading} {...{ pageFilters, placeholder }}/>
+                    <SearchBoxAutocomplete searchAsYouType={false} loading={this.props.loading} {...{ pageFilters, placeholder, routing }}/>
                   </div>
                 </div>
               </div> }

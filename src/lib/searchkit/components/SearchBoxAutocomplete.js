@@ -13,7 +13,7 @@ import { useNavigate, useLocation } from "react-router-dom"
 // utils
 import { debounce } from "../helpers/utils";
 //import history from "../../../history"
-import { routingConfig } from "../searchkit.config"
+//import { routingConfig } from "../searchkit.config"
 
 // api
 import { getAutocompleteRequest } from "../api/AutosuggestAPI";
@@ -191,7 +191,7 @@ export const formatResponseForURLSearchParams = (query) => {
 const SearchBoxAutocomplete = (props) => {
   const { query, refine  } = useSearchBox(props);
   const { status, setUiState, uiState, results, refresh } = useInstantSearch();
-  const { loading, placeholder, pageFilters } = props
+  const { loading, placeholder, pageFilters, routing } = props
 
   const [inputValue, setInputValue] = useState(query);
   const [isFocused, setIsFocused] = useState(false);
@@ -235,22 +235,21 @@ const SearchBoxAutocomplete = (props) => {
       getAutocompleteRequest(query, pageFilters).then((requests) => {
         setSuggestions(requests);
       });
-    }
+    }    
 
     const handlePopState = (event) => {
-      let { search } = location
+      let { search } = routing.router.getLocation()
       const r = qs.parse(search, {arrayFormat: 'index'})
-      const s = routingConfig.stateMapping.routeToState(r)
-      console.log("r2s:", r, s)
+      const s = routing.stateMapping.routeToState(r)
       setInputValue(r.q ?? "")    
-      setUiState(s)  
-    };
-
+    }
+    
     window.addEventListener('popstate', handlePopState);
 
     return () => {
       window.removeEventListener('popstate', handlePopState);
     };
+    
 
   }, []);
 

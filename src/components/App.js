@@ -1088,6 +1088,8 @@ export function getGDPRconsent(that) {
    )
 }
 
+const routing = routingConfig()
+
 function InstantSearchBox(props) {
 
    const { isMirador, that } = props
@@ -1099,11 +1101,11 @@ function InstantSearchBox(props) {
       <InstantSearch         
          key={that.props.IRI ?? that.props.tradition ?? window.location.pathname}
          indexName={process.env.REACT_APP_ELASTICSEARCH_INDEX}
-         routing={routingConfig()}
+         routing={routing}
          searchClient={searchClient}
          future={{ preserveSharedStateOnUnmount: true }}
          /*
-         initialUiState={routingConfig.stateMapping.routeToState(qs.parse(that.props.location.search, {arrayFormat: 'index'}))}                           
+         initialUiState={routing.stateMapping.routeToState(qs.parse(that.props.location.search, {arrayFormat: 'index'}))}                           
          onStateChange={(_ref) => {
             console.log("oScA:",window.lastRouteState,_ref)
             const uiState = _ref.uiState;
@@ -1121,7 +1123,7 @@ function InstantSearchBox(props) {
       >
          <div className="search inner-search-bar" style={{ ...isMirador?{position:"absolute"}:{} }}>
             <div>
-               <SearchBoxAutocomplete searchAsYouType={false} {...props}/>
+               <SearchBoxAutocomplete searchAsYouType={false} {...props} {...{routing}} />
             </div>
          </div>
       </InstantSearch>
