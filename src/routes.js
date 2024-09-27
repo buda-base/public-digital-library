@@ -184,7 +184,7 @@ export class Redirect404 extends Component<Props>
             }
             window.top.postMessage(JSON.stringify(msg), "*")
          } else {            
-            that.props.history.push(to)             
+            that.props.navigate(to)             
          }
       } })(this), delay) ;
    }
@@ -261,8 +261,7 @@ function HomeCompo() {
    useEffect(() => {
      loggergen.log("refresh?");
      store.dispatch(initiateApp(qs.parse(location.search)));
-   }, [location]);
- 
+   }, [location]); 
 
    return <AppContainer { ...{ location, navigate, auth } }/> 
 }
@@ -296,7 +295,7 @@ function ResourceCompo() {
             IRI = IRI.split(":")
             if(IRI[1] != IRI[1].toUpperCase()) {
                IRI = IRI[0]+":"+IRI[1].toUpperCase()
-               return <Redirect404 /*history={history}*/ redirecting={" "} message={" "} delay={150} to={"/show/"+IRI+location.search+location.hash} />
+               return <Redirect404 {...{ navigate }} redirecting={" "} message={" "} delay={150} to={"/show/"+IRI+location.search+location.hash} />
             } else {
                IRI = _IRI
             }
@@ -332,6 +331,109 @@ function TradiCompo(props) {
       
 }
 
+function StaticCompo() {
+   const location = useLocation();
+   const navigate = useNavigate();
+   
+   useEffect(() => {
+      store.dispatch(initiateApp(qs.parse(location.search),null,null,"static"))
+    }, [location]);   
+
+   return <StaticRouteContainer dir={"user-guide"} page={"index"} observer={true} {...{location, navigate, auth } } />
+}
+
+function AuthCompo(props) {
+   const location = useLocation();
+
+   useEffect(() => {
+      if(location.pathname === "/logout") {
+         auth.logout(location,1000);
+      } else if(location.pathname === "/login") {
+         const get = qs.parse(location.search)
+         store.dispatch(initiateApp(get, undefined, undefined, get.backToViewer?"mirador":"static"));
+      } else if(location.pathname === "/auth/callback") {
+         store.dispatch(initiateApp(null,null,{...props, location},null,true));
+         store.dispatch(ui.logEvent(true));
+      }
+   }, [location])
+
+
+   if(location.pathname === "/logout") {
+      return (
+         <div style={{textAlign:"center",marginTop:"100px",fontSize:"22px"}}>
+            You have been logged out <br/>
+            Redirecting...
+         </div>
+      )
+   } else if(location.pathname === "/login") {
+      return ( 
+         <div style={{textAlign:"center",marginTop:"100px",fontSize:"22px"}}>                              
+            Redirecting...
+         </div>
+      )
+   } else if(location.pathname === "/auth/callback") {
+      return (
+         <div style={{textAlign:"center",marginTop:"100px",fontSize:"22px"}}>
+            Successfully logged, redirecting...
+         </div>
+      )
+   }
+}
+
+function ProfileCompo() {   
+   const location = useLocation();
+
+   useEffect(() => {
+      store.dispatch(initiateApp(qs.parse(location.search)));
+   }, [location])
+
+   return (<ProfileContainer {...{ location, auth }} />)
+}
+
+function IIIFCookieCompo(){
+   const location = useLocation();
+   return (<IIIFCookieLogin  {...{ location, auth }} get={qs.parse(location.search)}/>)
+}
+
+function IIIFTokenCompo(){
+   const location = useLocation();
+   
+   useEffect(() => {
+      let get = qs.parse(location.search), messageId = get["messageId"], origin = get["origin"],
+      isAuth = auth.isAuthenticated()
+      
+      if(isAuth && messageId && origin)
+      {
+         window.parent.postMessage(
+            {
+               messageId,
+               "accessToken": localStorage.getItem('id_token'),
+               "expiresIn": 3600
+            },
+            origin
+         );
+      }
+      else {
+         //console.error(window.location.href)
+         let error, description
+         if(!origin || !messageId) {
+            error = "invalidRequest"
+            description = "argument missing:"
+            if(!origin) description += "origin"
+            if(!messageId) description += (description.match(/:$/)?'':', ')+"messageId"
+            if(!origin) origin = window.location.href
+         }
+         else if(!isAuth) {
+            error = "unavailable"
+            description = "no valid token available"
+         }
+         window.parent.postMessage( { error, description }, origin );
+      }
+   },[location])
+
+   return (<div/>)
+}
+
 const makeMainRoutes = () => {
 
    // #767
@@ -349,15 +451,26 @@ const makeMainRoutes = () => {
                      <Route path="/show/:IRI" element={<ResourceCompo />} />
                      <Route path="/osearch/search" element={<BaseOSCompo /> } />
 
-                     <Route exact path="/osearch/associated/:RID/search" element={<BaseOSCompo /> }/>                  
+                     <Route path="/osearch/associated/:RID/search" element={<BaseOSCompo /> }/>                  
 
                      <Route path="/tradition/:TRAD/:TYPE/:ID/:ROOT/" element={<TradiCompo/>} />
-                     <Route exact path="/tradition/:TRAD/:TYPE/:ID"  element={<TradiCompo/>} />                           
-                     <Route exact path="/tradition/:TRAD/:SCHOOL" element={<TradiCompo/>} />                        
+                     <Route path="/tradition/:TRAD/:TYPE/:ID"  element={<TradiCompo/>} />                           
+                     <Route path="/tradition/:TRAD/:SCHOOL" element={<TradiCompo/>} />                        
                      <Route path="/tradition/:TRAD" element={<TradiCompo/>} />
 
+                     <Route path="/buda-user-guide" element={<StaticCompo />}/>
 
-                        {/* 
+                     <Route path="/logout" element={<AuthCompo />} />
+                     <Route path="/login" element={<AuthCompo />} />
+                     <Route path="/auth/callback" element={<AuthCompo />} />
+
+                     <Route path="/user" element={<ProfileCompo /> } />
+
+                     <Route exact path="/iiifcookielogin" element={<IIIFCookieCompo />}/>
+                     <Route exact path="/iiiftoken" element={<IIIFTokenCompo />}/>
+
+{/* 
+
                         <Route exact path="/static/:DIR1/:DIR2/:DIR3/:PAGE" render={(props) => {
                            return <StaticRouteContainer dir={props.match.params.DIR1+"/"+props.match.params.DIR2+"/"+props.match.params.DIR3} page={props.match.params.PAGE} history={history} auth={auth}/>
                         }}/>
@@ -367,9 +480,6 @@ const makeMainRoutes = () => {
                         <Route exact path="/static/:DIR/:PAGE" render={(props) => {
                            return <StaticRouteContainer dir={props.match.params.DIR} page={props.match.params.PAGE} history={history} auth={auth}/>
                         }}/>
-                        <Route exact path="/buda-user-guide" render={(props) => {
-                           return <StaticRouteContainer dir={"user-guide"} page={"index"} history={history} auth={auth} observer={true}/>
-                        }}/>
                         <Route exact path="/static/:PAGE" render={(props) => {
                            return <StaticRouteContainer dir={""} page={props.match.params.PAGE} history={history}  auth={auth}/>
                         }}/>                                                
@@ -377,82 +487,14 @@ const makeMainRoutes = () => {
                            store.dispatch(initiateApp());
                            return (<TestToken auth={auth} history={history} />)
                         } }/>
-                        <Route path="/auth/callback" render={(props) => {
-                           store.dispatch(initiateApp(null,null,props,null,true));
-                           store.dispatch(ui.logEvent(true));
-                           return (
-                              <div style={{textAlign:"center",marginTop:"100px",fontSize:"22px"}}>
-                                 Successfully logged, redirecting...
-                              </div>
-                           )
-                        }}/>
-                        { 
-                           <Route exact path="/user" render={(props) => {
-                              store.dispatch(initiateApp(qs.parse(history.location.search)));
-                              return (<ProfileContainer auth={auth} history={history} />)
-                           } } />
-                        }
+                        
                         { 
                            <Route exact path="/testUser" render={(props) => {
                               store.dispatch(initiateApp(qs.parse(history.location.search)));
                               return (<UserViewerContainer auth={auth} history={history} />)
                            } } />
-                        }
+                        }                        
                         
-                        <Route exact path="/iiifcookielogin" render={(props) => {
-                           return (<IIIFCookieLogin auth={auth} history={history} get={qs.parse(history.location.search)}/>)
-                        } } />
-                        <Route exact path="/iiiftoken" render={(props) => {
-                           let get = qs.parse(history.location.search), messageId = get["messageId"], origin = get["origin"],
-                              isAuth = auth.isAuthenticated()
-
-                           if(isAuth && messageId && origin)
-                           {
-                              window.parent.postMessage(
-                              {
-                              messageId,
-                              "accessToken": localStorage.getItem('id_token'),
-                              "expiresIn": 3600
-                              },
-                                 origin
-                              );
-                           }
-                           else {
-                              //console.error(window.location.href)
-                              let error, description
-                              if(!origin || !messageId) {
-                                 error = "invalidRequest"
-                                 description = "argument missing:"
-                                 if(!origin) description += "origin"
-                                 if(!messageId) description += (description.match(/:$/)?'':', ')+"messageId"
-                                 if(!origin) origin = window.location.href
-                              }
-                              else if(!isAuth) {
-                                 error = "unavailable"
-                                 description = "no valid token available"
-                              }
-                              window.parent.postMessage( { error, description }, origin );
-                           }
-                           return (<div/>)
-                        }}/>
-                        <Route exact path="/logout" render={(props) => {
-                           auth.logout(this.props.history.location,1000);
-                           return (
-                              <div style={{textAlign:"center",marginTop:"100px",fontSize:"22px"}}>
-                                 You have been logged out <br/>
-                                 Redirecting...
-                              </div>
-                           )
-                        }}/>>
-                        <Route exact path="/login" render={(props) => {
-                           const get = qs.parse(history.location.search)
-                           store.dispatch(initiateApp(get, undefined, undefined, get.backToViewer?"mirador":"static"));
-                           return (
-                              <div style={{textAlign:"center",marginTop:"100px",fontSize:"22px"}}>                              
-                                 Redirecting...
-                              </div>
-                           )
-                        }}/>
                         <Route exact path="/guidedsearch" render={(props) => {                        
                            return (<GuidedSearchContainer history={history} auth={auth}/> )
                         }} />

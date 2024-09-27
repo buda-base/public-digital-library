@@ -117,7 +117,7 @@ export class Profile extends Component<Props,State> {
   componentDidUpdate() {
 
       loggergen.log("didU",this.props)
-      report_GA(this.props.config,this.props.history.location);
+      report_GA(this.props.config,this.props.location);
   }
 
   static getDerivedStateFromProps(props,state) {

@@ -11,7 +11,6 @@ import { enUS, zhCN } from 'date-fns/locale';
 
 import { RANGE_FIELDS } from "../api/ElasticAPI";
 import { RESULT_FIELDS } from "../constants/fields";
-import { routingConfig } from "../searchkit.config";
 import {narrowWithString} from "../../langdetect"
 
 //import history from "../../../history"
@@ -31,7 +30,7 @@ const Hit = ({ hit, label, debug = true }) => {
   );
 };
 
-const CustomHit = ({ hit, that, sortItems, recent, storage }) => {
+const CustomHit = ({ hit, routing, that, sortItems, recent, storage }) => {
 
   const [debug, setDebug] = useState(false)
   const [checked, setChecked] = useState(false)
@@ -330,11 +329,11 @@ const CustomHit = ({ hit, that, sortItems, recent, storage }) => {
 
   const 
     page = that.props.location.pathname,
-    uri = qs.stringify(routingConfig.stateMapping.stateToRoute(uiState,true), { arrayFormat: 'index' }),
+    uri = qs.stringify(routing.stateMapping.stateToRoute(uiState,true), { arrayFormat: 'index' }),
     backLink = "?s="+encodeURIComponent(page+(uri ? "?"+uri : "")),
     link = "/show/bdr:"+hit.objectID+backLink
 
-  //console.log("hit:", hit, link, that.props.history?.location?.search, sortBy, refinementList, uiState, publisher, storage)
+  //console.log("hit:", hit, link, that.props.location?.search, sortBy, refinementList, uiState, publisher, storage)
 
   return (<div class={"result "+hit.type}>        
     <div class="main">

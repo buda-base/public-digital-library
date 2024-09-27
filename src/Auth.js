@@ -211,13 +211,14 @@ export default class Auth {
           let redirect = JSON.parse(localStorage.getItem('auth0_redirect'))
           if(!redirect) redirect = '/'
           store.dispatch(ui.logEvent(true))
+          console.log("redirect?",redirect,window.location)
           if(redirect && redirect.startsWith && redirect.startsWith("http")) window.location.href = redirect
-          else window.history.replace(redirect);
+          else window.location.href = (redirect.pathname ?? "/") + (redirect.search ?? "")
           //store.dispatch(ui.loggedIn())
         } else { 
           store.dispatch(ui.logEvent(false))
           if (err) {
-            window.history.replace('/');
+            window.history.replaceState({},"",'/');
             loggergen.log(err);
           }
         }

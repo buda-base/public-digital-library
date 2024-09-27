@@ -194,7 +194,7 @@ const formatFirstScanSyncDateRangeFromUiState = (uiState) => {
   return result;
 };
 
-const routingConfig = {
+const routingConfig = () => ({
   router: history({
 
     cleanUrlOnDispose: false,    
@@ -290,7 +290,7 @@ const routingConfig = {
       };
     },
   },
-};
+});
 
 export default SearchkitConfig;
 export { routingConfig };

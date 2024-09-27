@@ -855,7 +855,7 @@ export function lang_selec(that,black:boolean = false,inPopup:false, useCheckbox
                            let loca = { ...that.props.location }
                            if(loca.search.includes("uilang")) loca.search = loca.search.replace(/uilang=[^&]+/,"uilang="+i)
                            else loca.search += (loca.search&&loca.search.match(/[?]./)?"&":"?")+"uilang="+i
-                           that.props.history.push(loca)
+                           that.props.navigate(loca)
 
                            if(callback) callback()
                         }
@@ -1054,7 +1054,7 @@ export function etext_lang_selec(that,black:boolean = false, elem, DL)
                                        let loca = { ...that.props.location }
                                        if(loca.search.includes("etextlang")) loca.search = loca.search.replace(/etextlang=[^&]+/,"etextlang="+i)
                                        else loca.search += (loca.search&&loca.search.match(/[?]./)?"&":"?")+"etextlang="+i
-                                       that.props.history.push(loca)
+                                       that.props.navigate(loca)
                                        */
                                     }} >{label}</MenuItem> ) 
                   } ) } 
@@ -1096,11 +1096,12 @@ function InstantSearchBox(props) {
 
    return <>
       <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/instantsearch.css@7/themes/satellite-min.css" />
-      <InstantSearch
+      <InstantSearch         
+         key={that.props.IRI ?? that.props.tradition ?? window.location.pathname}
          indexName={process.env.REACT_APP_ELASTICSEARCH_INDEX}
-         routing={routingConfig}
+         routing={routingConfig()}
          searchClient={searchClient}
-         future={{ preserveSharedStateOnUnmount: false }}
+         future={{ preserveSharedStateOnUnmount: true }}
          /*
          initialUiState={routingConfig.stateMapping.routeToState(qs.parse(that.props.location.search, {arrayFormat: 'index'}))}                           
          onStateChange={(_ref) => {
@@ -1154,7 +1155,7 @@ export function top_right_menu(that,etextTitle,backUrl,etextres,isMirador,locati
             <div id="logo">
                <Link to="/"  onClick={() => { 
                   /*
-                  that.props.history.push({pathname:"/",search:""}); 
+                  that.props.navigate({pathname:"/",search:""}); 
                   if(that.props.keyword) { that.props.onResetSearch(); } 
                   that.setState({blurSearch:false})
                   */
@@ -1275,7 +1276,7 @@ export function top_right_menu(that,etextTitle,backUrl,etextres,isMirador,locati
                      setTimeout(() => { 
                         
                         if(backUrl) {
-                           that.props.history.push({pathname:"/osearch/search",search:"?"+backUrl}) ; 
+                           that.props.navigate({pathname:"/osearch/search",search:"?"+backUrl}) ; 
                         }
 
                         that.props.onLoading("search",false)
@@ -1311,11 +1312,11 @@ export function top_right_menu(that,etextTitle,backUrl,etextres,isMirador,locati
                            loca.search = "?fromText="+that.props.IRI
                         }
                         loggergen.log("loca:",loca)
-                        that.props.history.push(loca) ; 
+                        that.props.navigate(loca) ; 
                      }
                      else {
                         delete loca.hash
-                        that.props.history.push(loca) ; 
+                        that.props.navigate(loca) ; 
                      }                        
                      
 
@@ -1327,7 +1328,7 @@ export function top_right_menu(that,etextTitle,backUrl,etextres,isMirador,locati
                         let reprOf = that.getResourceElem(bdo+"instanceReproductionOf")
                         console.log("reprof:",reprOf)
                         if(reprOf?.length) {
-                           that.props.history.push("/show/"+shortUri(reprOf[0].value)) ; 
+                           that.props.navigate("/show/"+shortUri(reprOf[0].value)) ; 
                         }
                      }
                   
@@ -1381,7 +1382,7 @@ export function top_right_menu(that,etextTitle,backUrl,etextres,isMirador,locati
          {
             that.props.auth.isAuthenticated() && 
                <div class="logged">
-                  <MenuItem onClick={(e) => { that.props.onUserProfile(location); that.props.history.push("/user");    }}>
+                  <MenuItem onClick={(e) => { that.props.onUserProfile(location); that.props.navigate("/user");    }}>
                      {profileName}
                      <AccountCircleIcon style={{ fontSize:"28px" }}/>
                   </MenuItem>
@@ -1415,7 +1416,7 @@ export function top_right_menu(that,etextTitle,backUrl,etextres,isMirador,locati
       }
 
       const newSearchFunc = (ev) => { 
-         that.props.history.push({pathname:"/",search:""}); 
+         that.props.navigate({pathname:"/",search:""}); 
          if(that.props.keyword) { that.props.onResetSearch();}
          if(window.innerWidth > 0)  setTimeout(() => {
             $("#search-bar input").click()

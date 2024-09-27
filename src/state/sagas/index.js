@@ -58,6 +58,7 @@ const _tmp = tmp ;
 let IIIFurl = "//iiif.bdrc.io" ;
 
 const handleAuthentication = (nextState, isAuthCallback) => {
+   console.log("hA:",nextState)
    if (nextState && /access_token|id_token|error/.test(nextState.location.hash)) {
       auth.handleAuthentication();      
    } else if(auth && !isAuthCallback && !auth.isAuthenticated()) { 
@@ -220,7 +221,7 @@ async function initiateApp(params,iri,myprops,route,isAuthCallback) {
             if(!auth.isAuthenticated()) auth.login(decodeURIComponent(params.backToViewer))
          }
 
-         if(["guidedsearch","tradition"].includes(route)) {
+         if(["guidedsearch","tradition","static"].includes(route)) {
             if(!state.data.dictionary) {
                const dico = await api.loadDictionary()
                store.dispatch(dataActions.loadedDictionary(dico));                       

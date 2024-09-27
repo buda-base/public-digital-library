@@ -191,7 +191,7 @@ export class TraditionViewer extends Component<State, Props>
   renderContent(t, route, storage = this.state.storage){ 
     return (t.content ?? t)?.map(c => {
       let label = { value: "", lang: this.props.locale }, rid = (c.id ?? "").split(":")[1] ?? ""
-      if(t.id && storage && storage[c.id.replace(/^bdr:/,"")]) label = getLangLabel(this,skos+"prefLabel",storage[c.id.replace(/^bdr:/,"")].label ?? [])
+      if(t.id && c.id && storage && storage[c.id.replace(/^bdr:/,"")]) label = getLangLabel(this,skos+"prefLabel",storage[c.id.replace(/^bdr:/,"")].label ?? [])
       else if(c.label) label = getLangLabel(this,skos+"prefLabel",c.label ?? [])
       else if(c.id) {
         if(c.id.startsWith("bdr:")) label = getPropLabel(this, fullUri(c.id), false, true)

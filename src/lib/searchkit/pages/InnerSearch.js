@@ -102,15 +102,18 @@ export class InnerSearchPage extends Component<State, Props>
 
     console.log("iSsC:", searchClient, routingConfig, this.props, pageFilters, storageRef, recent)        
     
+    const routing = routingConfig()
+
     return (<>
       { (pageFilters || !RID) && <div className="AppSK InnerSearchPage data">
           <InstantSearch
+            key={pageFilters+"-"+RID}            
             indexName={process.env.REACT_APP_ELASTICSEARCH_INDEX}
-            routing={routingConfig}
+            routing={routing}
             searchClient={searchClient}
             future={{ preserveSharedStateOnUnmount: true }}
+            initialUiState={routing.stateMapping.routeToState(qs.parse(this.props.location.search, {arrayFormat: 'index'}))}
             /*
-            initialUiState={routingConfig.stateMapping.routeToState(qs.parse(this.props.location.search, {arrayFormat: 'index'}))}
             onStateChange={({uiState, setUiState}) => {
                console.log("oScIS:",uiState)
                setUiState(uiState)
@@ -148,7 +151,7 @@ export class InnerSearchPage extends Component<State, Props>
                   <SearchResultsHeader that={this} inner={true} recent={recent} {...{ storageRef }} />
                   <div className="hits">
                     <Configure hitsPerPage={5} filters={pageFilters} />
-                    <HitsWithLabels that={this} {...{ recent, storageRef }} />
+                    <HitsWithLabels that={this} {...{ routing, recent, storageRef }} />
                     <div className="pagination">
                       <Pagination />
                     </div>

@@ -43,7 +43,7 @@ export class StaticRouteNoExt extends Component<State, Props>
         super(props);
         this._urlParams = qs.parse(props.location.search) 
         this.state = { content: "", collapse:{}, hash:"" } //"loading..."+props.dir+"/"+props.page }
-        if(!this.props.config) store.dispatch(initiateApp(this._urlParams,null,null,"static"))
+        //if(!this.props.config) store.dispatch(initiateApp(this._urlParams,null,null,"static"))
 
         let i18nLoaded = setInterval(() => {
             loggergen.log("i18n",I18n,I18n.language,I18n.languages);
@@ -225,7 +225,7 @@ export class StaticRouteNoExt extends Component<State, Props>
         if(I18n.language && this.props.locale && this.state.error) return <Redirect404  /*history={history}*/  auth={auth}/>
         else return (
             <>
-                { top_right_menu(this) }
+                { top_right_menu(this, null,null,null,null, this.props.location) }
                 <div>
                     { (!I18n.language || !this.props.locale || !this.state.content) && <Loader loaded={false} /> }
                     <div class={"App home static"+(this.props.config && this.props.config.khmerServer ? " khmer":"")}>

@@ -35,7 +35,7 @@ class IIIFCookieLogin extends Component
        else
        {
           error = false
-          this.props.auth.login(this.props.history.location)
+          this.props.auth.login(this.props.location)
        }
        if(error != false) {
           window.parent.postMessage( { error, description }, origin );

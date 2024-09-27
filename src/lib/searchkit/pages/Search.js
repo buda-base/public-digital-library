@@ -224,7 +224,7 @@ export function FiltersSidebar(props) {
 
 export function HitsWithLabels(props) {
 
-  const {that, sortItems, recent, storageRef} = props
+  const {that, sortItems, routing, recent, storageRef} = props
 
   const [currentItems, setCurrentItems] = useState([]);
   
@@ -300,7 +300,7 @@ export function HitsWithLabels(props) {
 
   return <Hits 
     transformItems={prepItemsPage}
-    hitComponent={({hit}) => <CustomHit {...{ hit, that, sortItems, recent, storage: storageRef?.current }}/>} 
+    hitComponent={({hit}) => <CustomHit {...{ routing, hit, that, sortItems, recent, storage: storageRef?.current }}/>} 
   />
 }
 
@@ -336,17 +336,20 @@ export class SearchPage extends Component<State, Props>
 
     console.log("sC:", searchClient, routingConfig, pageFilters, storageRef)    
     
+    const routing = routingConfig()
+
     return (
       <>
         { top_right_menu(this,null,null,null,null,this.props.location) }
         <div className="AppSK">
           <InstantSearch
+            key={pageFilters ?? "main"}
             indexName={process.env.REACT_APP_ELASTICSEARCH_INDEX}
-            routing={routingConfig}
+            routing={routing}
             searchClient={searchClient}
             future={{ preserveSharedStateOnUnmount: true }}
-            initialUiState={routingConfig.stateMapping.routeToState(qs.parse(this.props.location.search, {arrayFormat: 'index'}))}            
             /*
+            initialUiState={routingConfig.stateMapping.routeToState(qs.parse(this.props.location.search, {arrayFormat: 'index'}))}            
             onStateChange={(_ref) => {
               console.log("oScS:",window.lastRouteState,_ref)
               const uiState = _ref.uiState;
@@ -378,7 +381,7 @@ export class SearchPage extends Component<State, Props>
                     <Pagination />
                   </div>
                   <Configure hitsPerPage={20} filters={pageFilters} />
-                  <HitsWithLabels that={this} {...{ sortItems, storageRef }} />
+                  <HitsWithLabels that={this} {...{ routing, sortItems, storageRef }} />
                   <div className="pagination">
                     <Pagination />
                   </div>

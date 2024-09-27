@@ -26,7 +26,7 @@ class Profile extends Component<Props,State> {
     this.state = { gender:"", region:"",affiliation:"",interest:"" }
   }
   
-  componentWillMount() {
+  componentDidMount() {
     this.setState({ profile: {} });
     const { userProfile, getProfile } = this.props.auth;
     if (!userProfile) {
@@ -41,7 +41,7 @@ class Profile extends Component<Props,State> {
   }
   render() {
     const { profile } = this.state;
-    console.log("profile",profile)
+    console.log("profile:",profile,this)
     let message = "Getting user info..."
     if(!profile || !Object.keys(profile).length) {
       if(!auth.isAuthenticated()) { 
