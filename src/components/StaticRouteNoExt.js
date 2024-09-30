@@ -222,7 +222,7 @@ export class StaticRouteNoExt extends Component<State, Props>
     }
 
     render(props) {         
-        if(I18n.language && this.props.locale && this.state.error) return <Redirect404  /*history={history}*/  auth={auth}/>
+        if(I18n.language && this.props.locale && this.state.error) return <Redirect404  navigate={this.props.navigate} location={this.props.location} auth={auth}/>
         else return (
             <>
                 { top_right_menu(this, null,null,null,null, this.props.location) }

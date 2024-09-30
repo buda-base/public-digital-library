@@ -5932,7 +5932,7 @@ class ResourceViewer extends Component<Props,State>
                console.log("oEiv:", outETinst, outETvol, outETstart, outETscope)
             }   
             
-            return ( <div  data-prop={shortUri(k)} >               
+            return  this.state.openMirador?<></>:( <div  data-prop={shortUri(k)} >               
                <h3><span>{this.proplink(k,null,n)}{ret.length > 1 ? " "+I18n.t("punc.num",{num:i+1}) : ""}{I18n.t("punc.colon")}</span> </h3>
                {this.preprop(k,0,n)}
                <div class="group preview-etext">
@@ -5943,7 +5943,7 @@ class ResourceViewer extends Component<Props,State>
          )}))
       } else if(k === _tmp+"propHasScans") {
          console.log("pHs")
-         return ( ret.map((r,i) => (
+         return  this.state.openMirador?<></>:( ret.map((r,i) => (
             <div  data-prop={shortUri(k)} >               
                <h3><span>{this.proplink(k,null,n)}{ret.length > 1 ? " "+I18n.t("punc.num",{num:i+1}) : ""}{I18n.t("punc.colon")}</span> </h3>
                {this.preprop(k,0,n)}
@@ -9874,7 +9874,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
          let msg = "IRI undefined" ;
          if(this.props.IRI) msg = "Resource "+this.props.IRI+" does not exist."
          return (
-            <Redirect404 propid={this.props.propid} from={this.props.IRI} simple={this.props.simple} /*history={this.props.history}*/ message={msg}/>
+            <Redirect404 propid={this.props.propid} from={this.props.IRI} simple={this.props.simple} navigate={this.props.navigate} location={this.props.location}  message={msg}/>
          )
       }
 
@@ -9891,7 +9891,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
 
             if(redir != this.props.IRI) {
                return (               
-                  <Redirect404 /*history={this.props.history}*/ message={"Record withdrawn in favor of "+redir} to={path+redir+this.props.location.search+this.props.location.hash} />
+                  <Redirect404 navigate={this.props.navigate} location={this.props.location} message={"Record withdrawn in favor of "+redir} to={path+redir+this.props.location.search+this.props.location.hash} />
                )
             }
          }
@@ -10465,9 +10465,9 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
          const monlamVisible = this.state.enableDicoSearch && (this.state.monlam && this.state.collapse.monlamPopup || monlamResults)
 
          if(this.props.previewEtext) return (<>            
-               { this.state.currentText || this.props.previewEtext?.outETvol
+               { this.state.currentText || this.props.previewEtext?.outETvol?.length
                   ? <>
-                     <ResourceViewerContainer  auth={this.props.auth} location={this.props.location} navigate={this.props.navigate} /*history={this.props.history}*/ IRI={this.state.currentText || shortUri(this.props.previewEtext?.outETvol?.[0].value ?? "")} openEtext={true} openEtextRefs={false} disableInfiniteScroll={this.props.previewEtext} that={this}/> 
+                     <ResourceViewerContainer  auth={this.props.auth} location={this.props.location} navigate={this.props.navigate} /*history={this.props.history}*/ IRI={this.state.currentText || shortUri(this.props.previewEtext?.outETvol?.[0]?.value ?? "")} openEtext={true} openEtextRefs={false} disableInfiniteScroll={this.props.previewEtext} that={this}/> 
                   </>
                   : this.props.etextErrors?.[this.props.IRI] 
                      ? <h4><div class="images-thumb-links" style={{ marginLeft:0 }}><a class="urilink nolink"><BlockIcon style={{width:"18px",verticalAlign:"top"}}/>&nbsp;{I18n.t("access.errorE")}</a></div></h4>

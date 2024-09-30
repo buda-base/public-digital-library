@@ -192,7 +192,7 @@ export class Redirect404 extends Component<Props>
    render()
    {
       let message = this.props.message ;
-      if(!message) message = "Page not found: "+this.props.history.location.pathname ;
+      if(!message) message = "Page not found: "+this.props.location.pathname ;
 
       let redirecting = this.props.redirecting ;
       if(!redirecting) redirecting = I18n.t("resource.redirecting")
@@ -295,7 +295,7 @@ function ResourceCompo() {
             IRI = IRI.split(":")
             if(IRI[1] != IRI[1].toUpperCase()) {
                IRI = IRI[0]+":"+IRI[1].toUpperCase()
-               return <Redirect404 {...{ navigate }} redirecting={" "} message={" "} delay={150} to={"/show/"+IRI+location.search+location.hash} />
+               return <Redirect404 {...{ navigate, location }} redirecting={" "} message={" "} delay={150} to={"/show/"+IRI+location.search+location.hash} />
             } else {
                IRI = _IRI
             }
