@@ -1224,7 +1224,7 @@ class ResourceViewer extends Component<Props,State>
       //loggergen.log("tmp",tmp)
       propOrder = tmp
 
-      if(!props.pdfDownloadOnly && !props.outlineOnly) window.closeViewer = (ev, gotoResults = false) => {
+      const oldClose = (ev, gotoResults = false) => {
          //delete window.mirador
 
          if(window.myAnalytics.unloadMirador) window.myAnalytics.unloadMirador()
@@ -1881,6 +1881,42 @@ class ResourceViewer extends Component<Props,State>
 
    componentDidUpdate()  {
 
+      if(!this.props.pdfDownloadOnly && !this.props.outlineOnly) window.closeViewer = (ev, gotoResults = false) => {
+
+         loggergen.log("ev:", ev, gotoResults, this.props.location)
+
+         if(window.myAnalytics.unloadMirador) window.myAnalytics.unloadMirador()
+         if(window.mirador) delete window.mirador
+         if(window.MiradorUseEtext) delete window.MiradorUseEtext ;
+         if(window.currentZoom) delete window.currentZoom ;
+
+         let loca = { ...this.props.location }
+         if(loca.hash == "#open-viewer") { 
+            
+            loca.hash = ""            
+            window.closeMirador = true;
+            
+            let get = qs.parse(this.props.location.search)          
+            let s = get.s ? decodeURIComponent(get.s) : ""
+            if(s?.includes("/show/")) this.props.navigate(s)
+            else this.props.navigate(loca)
+         }
+
+         if(this.props.feedbucket && window.innerWidth <= 800) {
+            if(window.initFeedbucketInMirador) delete window.initFeedbucketInMirador;
+            $(".nav+#feedback").css("display","flex");
+            if(!$("#feedbucket.X").length) {
+               $("feedbucket-app").removeClass("on");
+               this.props.onFeedbucketClick("on");
+            } else {
+               this.props.onFeedbucketClick("on X");
+            }
+         }
+
+         this.setState({ ...this.state, openMirador:false }); 
+
+      }
+      
       //console.log("cdp:openMirador", this.props.IRI, this.props.pdfDownloadOnly, this.state.openMirador)
 
       if(this.state.openMirador) { 
@@ -3246,7 +3282,7 @@ class ResourceViewer extends Component<Props,State>
                //let vlink = "/"+show+"/"+prefix+":"+pretty+"?s="+encodeURIComponent(this.props.location.pathname+this.props.location.search)+"#open-viewer"    
                let vlink = "/"+show+"/"+prefix+":"+pretty+"?backToEtext="+this.props.IRI+"#open-reader"    
                ret = [  <Link {...this.props.preview?{ target:"_blank" }:{}} to={"/show/"+sUri} class={"images-thumb no-thumb 1"} style={{"background-image":"url(/icons/etext.png)"}}></Link> ,
-                     <div class="images-thumb-links">
+                     <div class="images-thumb-links"  data-n={1}>
                         <Link {...this.props.preview?{ target:"_blank" }:{}} className={"urilink "+ prefix} to={vlink}>{I18n.t("resource.openViewer")}</Link>
                         {/* <Link {...this.props.preview?{ target:"_blank" }:{}} className={"urilink "+ prefix} to={"/"+show+"/"+prefix+":"+pretty}>{I18n.t("resource.openR")}</Link> */}                        
                      </div> ]
@@ -3712,7 +3748,7 @@ class ResourceViewer extends Component<Props,State>
                         (!fairUse || this.state.collapse.snippet || true) &&(!this.props.IIIFerrors||!this.props.IIIFerrors[prefix+":"+pretty]|| this.props.IIIFerrors[prefix+":"+pretty].error?.code != 403)
                         ? <Link {...this.props.preview?{ target:"_blank" }:{}} className={"urilink " + prefix + (this.props.IIIFerrors&&this.props.IIIFerrors[prefix+":"+pretty]?.error.code ? " error-"+this.props.IIIFerrors[prefix+":"+pretty]?.error?.code : "")} onClick={checkDLD.bind(this)} to={vlink}>{thumb}</Link>
                         : null,
-                        (!fairUse || this.state.collapse.snippet || true || restrict) && <div class="images-thumb-links">
+                        (!fairUse || this.state.collapse.snippet || true || restrict) && <div class="images-thumb-links"  data-n={2}>
                            { restrict 
                               ? restrict 
                               :  !this.props.IIIFerrors||!this.props.IIIFerrors[prefix+":"+pretty]                            
@@ -3744,7 +3780,7 @@ class ResourceViewer extends Component<Props,State>
                thumbV = <div class={"images-thumb"+(!hasT?" no-thumb 3":"")} style={{"background-image":"url("+img+")"}}/>;               
 
                ret = [<Link {...this.props.preview?{ target:"_blank" }:{}} className={"urilink "+ prefix} to={hasT?vlink:"/"+show+"/"+prefix+":"+pretty}>{thumbV}</Link>,
-                     <div class="images-thumb-links">
+                     <div class="images-thumb-links" data-n={3}>
                         <Link {...this.props.preview?{ target:"_blank" }:{}} className={"urilink "+ prefix + (!hasT?" disable":"")} to={vlink}>{I18n.t("index.openViewer")}</Link>
                         <Link {...this.props.preview?{ target:"_blank" }:{}} className={"urilink "+ prefix} to={"/"+show+"/"+prefix+":"+pretty}>{I18n.t("resource.openR")}</Link>
                      </div>]
@@ -10470,7 +10506,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                      <ResourceViewerContainer  auth={this.props.auth} location={this.props.location} navigate={this.props.navigate} /*history={this.props.history}*/ IRI={this.state.currentText || shortUri(this.props.previewEtext?.outETvol?.[0]?.value ?? "")} openEtext={true} openEtextRefs={false} disableInfiniteScroll={this.props.previewEtext} that={this}/> 
                   </>
                   : this.props.etextErrors?.[this.props.IRI] 
-                     ? <h4><div class="images-thumb-links" style={{ marginLeft:0 }}><a class="urilink nolink"><BlockIcon style={{width:"18px",verticalAlign:"top"}}/>&nbsp;{I18n.t("access.errorE")}</a></div></h4>
+                     ? <h4><div class="images-thumb-links"  data-n={4} style={{ marginLeft:0 }}><a class="urilink nolink"><BlockIcon style={{width:"18px",verticalAlign:"top"}}/>&nbsp;{I18n.t("access.errorE")}</a></div></h4>
                      : <Loader className="etext-viewer-loader preview" loaded={false}  //options={{position:"fixed",left:"calc(200px)",top:"50%"}} 
                   />      
                }
@@ -10522,7 +10558,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                      </h4> }
                      { !etextAccessError && etext_data }
                      { this.props.disableInfiniteScroll && etextAccessError && <h4  style={{ lineHeight:"23px" }}>
-                        <div class="images-thumb-links" style={{ marginLeft:0 }}>
+                        <div class="images-thumb-links"  data-n={5} style={{ marginLeft:0 }}>
                            <a class="urilink nolink noIA"><BlockIcon style={{width:"18px",verticalAlign:"top"}}/>{I18n.t("access.restrictedC")}</a>
                            <div class="data access generic"><h3><span style={{ textTransform: "none", width: "100%" }}><Trans i18nKey="access.fairuseEtext" components={{ bold: <span style={{ textTransform: "none"}} /> }}/></span></h3></div>
                         </div>

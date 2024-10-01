@@ -130,7 +130,7 @@ export function EtextSearchBox(props) {
         setTimeout(() => that.props.that.props.onReinitEtext(currentText), 150)                        
         that.props.that.setState({ currentText })
       }  
-      that.props.history.push({ ...that.props.history.location, search})      
+      that.props.navigate({ ...that.props.location, search})      
 
       let timeout = setInterval(() => {
         const page = document.querySelector("[data-iri='bdr:"+res[idx].volumeId+"'][data-seq='"+res[idx].startPnum+"']");
