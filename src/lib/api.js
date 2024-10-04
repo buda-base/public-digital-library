@@ -606,7 +606,7 @@ export default class API {
          //let resource =  JSON.parse(await this.getURLContents(this._resourcePath(IRI),false));try {
          try {
             
-            let query = preview ? "ResInfo-preview":"ResInfo-SameAs"            
+            let query = preview ? "ResInfo-preview":(IRI.startsWith("bdr:MW")?"ResInfo-SameAs_MW":"ResInfo-SameAs")
             //let get = qs.parse(history.location.search)
             //if(get["cw"] === "none") query = "ResInfo"
 

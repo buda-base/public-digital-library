@@ -4273,7 +4273,8 @@ class ResourceViewer extends Component<Props,State>
          //loggergen.log("e",e,pretty,value)
 
          //if(this.props.assocResources && this.props.assocResources[value] && this.props.assocResources[value][0] && this.props.assocResources[value][0].fromKey && !prop.match(/[/#]sameAs/) ) 
-         if(this.props.resources && this.props.resources[this.props.IRI] && this.props.resources[this.props.IRI][value] && !prop.match(/[/#]sameAs/) ) 
+         if(this.props.resources && this.props.resources[this.props.IRI] && this.props.resources[this.props.IRI][value] && !prop.match(/[/#]sameAs/) 
+            && prop != _tmp+"propHasScans") 
          { 
             e.type = "bnode" 
 
@@ -9842,7 +9843,8 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
    getWtitle(baseW,rootC,titleRaw) {
       if(baseW && baseW.length && baseW[0].value) {
          let wUri = shortUri(baseW[0].value);
-         if(this.props.resources && !this.props.resources[wUri]) this.props.onGetResource(wUri);
+         // DONE: work loaded with instance
+         //if(this.props.resources && !this.props.resources[wUri]) this.props.onGetResource(wUri);
          
          //loggergen.log("is?",baseW[0].value,this.props.assocResources?this.props.assocResources[baseW[0].value]:null)
 
@@ -10037,7 +10039,8 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
 
       if(this.props.pdfDownloadOnly) {
          console.log("render perma", this.props.feedbucket)
-         if(this.props.resources && !this.props.resources[this.props.IRI]) this.props.onGetResource(this.props.IRI);
+         // DONE: scans loaded with instance
+         //if(this.props.resources && !this.props.resources[this.props.IRI]) this.props.onGetResource(this.props.IRI);
          return this.perma_menu(pdfLink,monoVol,fairUse,kZprop.filter(k => k.startsWith(adm+"seeOther")), accessET && !etextAccessError, true)
       }
 

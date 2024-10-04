@@ -344,14 +344,24 @@ async function initiateApp(params,iri,myprops,route,isAuthCallback) {
          */
 
 
-         let {assocRes, _res } = extractAssoRes(iri,res) //= await api.loadAssocResources(iri)
+         let {assocRes, _res, multi } = extractAssoRes(iri,res) //= await api.loadAssocResources(iri)
+
+         //console.log("multi?",assocRes, _res, multi)
 
          if(!Etext)
          {
             if(!state.data.resources?.[iri]) { 
-               store.dispatch(dataActions.gotResource(iri,_res))
-               store.dispatch(dataActions.gotAssocResources(iri,{ data: assocRes }))
-               sameAsR[iri] = true ;
+               if(!multi) {
+                  store.dispatch(dataActions.gotResource(iri,_res))
+                  store.dispatch(dataActions.gotAssocResources(iri,{ data: assocRes }))
+                  sameAsR[iri] = true ;
+               } else {
+                  for(let { iri:i , res:r, assoc:a} of multi) {
+                     store.dispatch(dataActions.gotResource(i,r))
+                     store.dispatch(dataActions.gotAssocResources(i,{ data: a }))
+                     sameAsR[i] = true ; // ??
+                  }
+               }
             }
 
             /* //deprecated
@@ -682,19 +692,35 @@ function extractAssoRes(iri,res) {
 
    //console.log("ear:", iri, JSON.stringify(res, null, 3))
 
-   let longIri = fullUri(iri);
+   let longIri = fullUri(iri), multi;
 
    let assocRes = {}, _res = {}
    let allowK = [ skos+"prefLabel", skos+"altLabel", tmp+"withSameAs", bdo+"inRootInstance", bdo+"language", adm+"canonicalHtml", bdo+"partIndex", bdo+"volumeNumber", tmp+"thumbnailIIIFService", bdo+"instanceHasReproduction",
                   tmp+"nbTranslations", tmp+"provider", rdfs+"comment", rdf+"type", bdo+"note", bdo+"script", bdo+"partOf", bdo+"partType", bdo+"isComplete", bdo+"instanceOf", bdo+"instanceEvent", bdo+"instanceHasItem",
                   bdo+"material", bdo+"biblioNote", bdo+"sponsoshipStatement", bdo+"sponsorshipStatement", bdo+"ownershipStatement", rdfs+"seeAlso",
-                  bdo+"creator", 
+                  bdo+"creator",
                   // #562 there must be something weird in the data here... but can't apply same fix as usual because it removes data (from ToL)
                   //bdo+"personGender", bdo+"personName", bdo+"personStudentOf", bdo+"personTeacherOf", tmp+"hasAdminData", owl+"sameAs"
                    ]
    let allowR = [ skos+"prefLabel", bdo+"partIndex", bdo+"volumeNumber",  tmp+"thumbnailIIIFService", bdo+"eTextVolumeForImageGroup" ]
 
-   for(let k of Object.keys(res)) {                  
+   if(iri.startsWith("bdr:MW")) { 
+      multi = [{ iri }]
+      if(res[longIri]?.[bdo+"instanceHasReproduction"]) {
+         for(const r of res[longIri][bdo+"instanceHasReproduction"]) {
+            if(r.value?.includes("/resource/W")) multi.push({ iri: shortUri(r.value)})
+         }
+      }
+      if(res[longIri]?.[bdo+"instanceOf"]) {
+         for(const r of res[longIri][bdo+"instanceOf"]) {
+            if(r.value?.includes("/resource/W")) multi.push({ iri: shortUri(r.value)})
+         }
+      }
+   }
+
+   for(let k of Object.keys(res)) {  
+      const shortK = shortUri(k)
+      //console.log("res:k",k,res[k],multi)                
       _res[k] = { ...res[k], ..._res[k] }
       if(_res[k][bdo+"instanceEvent"]) {
          _res[k][bdo+"instanceEvent"] = _res[k][bdo+"instanceEvent"].reduce( (acc,e) => {             
@@ -718,8 +744,8 @@ function extractAssoRes(iri,res) {
          })
          */
          loggergen.log("preformat",_res[k][bdo+"instanceEvent"])
-      }
-      if(k !== longIri) {
+      }      
+      if(k !== longIri && (!multi || !multi.some(m => m.iri === shortK))) {
          let resK = Object.keys(res[k])
          if(allowR.filter(e => resK.includes(e)).length) assocRes[k] = Object.keys(res[k]).reduce( (acc,f) => ([ ...acc, ...res[k][f].map(e => ({...e,type:f}))]), [])
          if(!resK.filter(k => !allowK.includes(k)).length) delete _res[k]
@@ -730,7 +756,7 @@ function extractAssoRes(iri,res) {
       }
    }
 
-   return { assocRes, _res} ;
+   return { assocRes, _res, multi: multi?.map(m => ({ iri: m.iri, assoc:assocRes, res: _res }) )  } ;
 }
 
 async function getResetLink(id,user,profile)
@@ -3714,9 +3740,16 @@ async function getResource(iri:string) {
    try {
       let res = await api.loadResource(iri) //.replace(/bdr:/,""));
 
-      let {assocRes, _res } = extractAssoRes(iri,res) //= await api.loadAssocResources(iri)
-      store.dispatch(dataActions.gotResource(iri,_res))
-      store.dispatch(dataActions.gotAssocResources(iri,{ data: assocRes }))
+      let {assocRes, _res, multi } = extractAssoRes(iri,res) //= await api.loadAssocResources(iri)
+      if(!multi) {
+         store.dispatch(dataActions.gotResource(iri,_res))
+         store.dispatch(dataActions.gotAssocResources(iri,{ data: assocRes }))
+      } else {
+         for(let { iri:i , res:r, assoc:a} of multi) {
+            store.dispatch(dataActions.gotResource(i,r))
+            store.dispatch(dataActions.gotAssocResources(i,{ data: a }))
+         }
+      }
 
       //store.dispatch(dataActions.gotResource(iri, res));
    }
