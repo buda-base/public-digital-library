@@ -10060,7 +10060,8 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
       if(this.props.resources && this.props.resources[this.props.IRI] && _T !== "Etext") this.setManifest(kZprop,iiifpres)    
 
       if(this.props.previewEtext) {
-         if(this.props.resources && !this.props.resources[this.props.IRI]) this.props.onGetResource(this.props.IRI);
+         // DONE: should be already loaded with the MW query
+         //if(this.props.resources && !this.props.resources[this.props.IRI]) this.props.onGetResource(this.props.IRI);
       }
 
       if(this.props.outlineOnly) {

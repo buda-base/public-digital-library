@@ -708,12 +708,12 @@ function extractAssoRes(iri,res) {
       multi = [{ iri }]
       if(res[longIri]?.[bdo+"instanceHasReproduction"]) {
          for(const r of res[longIri][bdo+"instanceHasReproduction"]) {
-            if(r.value?.includes("/resource/W")) multi.push({ iri: shortUri(r.value)})
+            multi.push({ iri: shortUri(r.value)})            
          }
       }
       if(res[longIri]?.[bdo+"instanceOf"]) {
          for(const r of res[longIri][bdo+"instanceOf"]) {
-            if(r.value?.includes("/resource/W")) multi.push({ iri: shortUri(r.value)})
+            multi.push({ iri: shortUri(r.value)})
          }
       }
    }
