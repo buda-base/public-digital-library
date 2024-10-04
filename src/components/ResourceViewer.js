@@ -1889,19 +1889,34 @@ class ResourceViewer extends Component<Props,State>
          if(window.mirador) delete window.mirador
          if(window.MiradorUseEtext) delete window.MiradorUseEtext ;
          if(window.currentZoom) delete window.currentZoom ;
+         
+         this.setState({ ...this.state, openMirador:false }); 
 
-         let loca = { ...this.props.location }
-         if(loca.hash == "#open-viewer") { 
-            
-            loca.hash = ""            
-            window.closeMirador = true;
-            
-            let get = qs.parse(this.props.location.search)          
-            let s = get.s ? decodeURIComponent(get.s) : ""
-            if(s?.includes("/show/")) this.props.navigate(s)
-            else this.props.navigate(loca)
-         }
+         setTimeout( () => {
 
+            let loca = { ...this.props.location }
+            if(loca.hash == "#open-viewer") { 
+            
+               loca.hash = ""            
+               window.closeMirador = true;
+               
+               let get = qs.parse(this.props.location.search)
+               if(gotoResults) {
+                  let _get = qs.parse(get.s.split("?")[1])
+                  console.log("bTr:1",_get)
+                  if(_get.s?.includes("/search")) {
+                     this.props.navigate(decodeURIComponent(_get.s))         
+                     return
+                  }
+               } 
+               //console.log("bTr:2",this.props.location.search,get)
+               if(get.s?.includes("/show/")) this.props.navigate(get.s)
+               else this.props.navigate(loca)
+            }
+
+         }, 10)
+
+         
          if(this.props.feedbucket && window.innerWidth <= 800) {
             if(window.initFeedbucketInMirador) delete window.initFeedbucketInMirador;
             $(".nav+#feedback").css("display","flex");
@@ -1911,10 +1926,8 @@ class ResourceViewer extends Component<Props,State>
             } else {
                this.props.onFeedbucketClick("on X");
             }
+         
          }
-
-         this.setState({ ...this.state, openMirador:false }); 
-
       }
       
       //console.log("cdp:openMirador", this.props.IRI, this.props.pdfDownloadOnly, this.state.openMirador)
@@ -7394,7 +7407,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
             //if(!k.match(new RegExp("Revision|Entry|prefLabel|"+rdf+"|toberemoved"))) {
                if(elem && 
                (![bdo+"placeLong",bdo+"placeLat"].includes(k) || !kZprop.includes(tmp+"GISCoordinates")) &&
-               (!k.match(new RegExp(adm+"|adm:|isRoot$|SourcePath|"+rdf+"|toberemoved|entityScore|associatedCentury|lastSync|dateCreated|qualityGrade|digitalLendingPossible|inRootInstance|workPagination|partIndex|partTreeIndex|legacyOutlineNodeRID|sameAs|thumbnailIIIFSe|instanceOf|instanceReproductionOf|instanceHasReproduction|seeOther|(Has|ction)Member$|serialHasInstance|withSameAs|hasNonVolumeParts|hasPartB|hasEtextInOutline|addIALink|lastChunk|hasOutline|first(Text|Vol)N?"+(this._dontMatchProp?"|"+this._dontMatchProp:"")))
+               (!k.match(new RegExp(adm+"|adm:|isRoot$|SourcePath|"+rdf+"|toberemoved|entityScore|associatedCentury|lastSync|dateCreated|qualityGrade|digitalLendingPossible|inRootInstance|workPagination|partIndex|partTreeIndex|legacyOutlineNodeRID|sameAs|thumbnailIIIFSe|instanceOf|instanceReproductionOf|instanceHasReproduction|seeOther|(Has|ction)Member$|serialHasInstance|withSameAs|hasNonVolumeParts|hasPartB|hasEtextInOutline|addIALink|lastChunk|provider|hasOutline|first(Text|Vol)N?"+(this._dontMatchProp?"|"+this._dontMatchProp:"")))
                ||k.match(/(metadataLegal|contentProvider)$/) // |replaceWith
                //||k.match(/([/]see|[/]sameAs)[^/]*$/) // quickfix [TODO] test property ancestors
                || (this.props.IRI.match(/^bda:/) && (k.match(new RegExp(adm+"|adm:"))) && !k.match(/\/(git[RP]|adminAbout|logEntry|graphId|facetIndex)/)))
@@ -8114,6 +8127,12 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
       const inst = this.getResourceElem(bdo+"eTextInInstance") ?? this.getResourceElem(bdo+"volumeOf") 
       let repro = this.getResourceElem(bdo+"instanceReproductionOf")
       if(!repro?.length && inst?.length) repro = this.getResourceElem(bdo+"instanceReproductionOf", shortUri(inst[0].value), this.props.assocResources)
+
+      if(repro?.length) {
+         const mwUri = shortUri(repro[0].value)
+         if(this.props.resources && !this.props.resources[mwUri]) this.props.onGetResource(mwUri);
+      }
+
             
       let label = [{ value: this.props.that?.state?.scope, lang:"" }], back = "", t,
          labelSticky = [{ value: shortUri(inst?.[0]?.value ?? ""), lang:"" }]
@@ -8139,6 +8158,9 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
             label = refs?.[0]?.["skos:prefLabel"] ?? label
          }
       }
+
+      let get = qs.parse(this.props.location.search)          
+      if(get.s) back = decodeURIComponent(get.s)
       
       label = getLangLabel(this, skos+"prefLabel", label) ?? {}    
       labelSticky = getLangLabel(this, skos+"prefLabel", labelSticky) ?? {}    
@@ -8167,7 +8189,15 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
    
       const header = (l) => <div>
          <span>
-            <Link className="urilink" to={back}><ChevronLeft />{I18n.t("resource.goB")}</Link>
+            <Link className="urilink" to={back} onClick={(e) => {
+               this.props.onLoading("etext", true)
+               setTimeout(() => {
+                  this.props.navigate(back)                  
+               }, 10)
+               e.preventDefault()
+               e.stopPropagation()
+               return false
+            }} ><ChevronLeft />{I18n.t("resource.goB")}</Link>
             {title(l)}
          </span>
       </div>

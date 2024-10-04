@@ -1585,10 +1585,13 @@ ul.suggestions li > span > svg:first-child {
    width:auto; 
    background-image:none !important;
    background:none;   
-   display: inline-block;
    height:auto;
    border:none;
    line-height: 0;   
+   /* display: inline-block; */   
+   display:inline-flex;
+   justify-content: center;
+   max-width:100%;
 }
 
 [data-prop="bdo:workHasInstance"] h4:not(#a) .images-thumb img { 

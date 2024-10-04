@@ -51,6 +51,12 @@ const CustomHit = ({ hit, routing, that, sortItems, recent, storage }) => {
   const { uiState, indexUiState } = useInstantSearch()
   const { sortBy, refinementList } = uiState?.[process.env.REACT_APP_ELASTICSEARCH_INDEX]
 
+  const 
+    page = that.props.location.pathname,
+    uri = qs.stringify(routing.stateMapping.stateToRoute(uiState,true), { arrayFormat: 'index' }),
+    backLink = "?s="+encodeURIComponent(page+(uri ? "?"+encodeURIComponent(uri) : "")),
+    link = "/show/bdr:"+hit.objectID+backLink
+
   useEffect(() => {
     const labels = {}
 
@@ -266,7 +272,7 @@ const CustomHit = ({ hit, routing, that, sortItems, recent, storage }) => {
             detec = narrowWithString(indexUiState.query)      
             let kw = '"'+indexUiState.query+'"@'+(detec[0]==="tibt"?"bo":"bo-x-ewts")
 
-            newEtextHits.push(<Link to={"/show/bdr:"+vol._source.etext_instance+"?openEtext=bdr:"+vol._id+"&startChar="+(ch._source.cstart-1000)+"&keyword="+kw+"#open-viewer"}>{highlight(label.value, expand.etext && text ? indexUiState.query : undefined, undefined, expand.etext && text)}</Link>)
+            newEtextHits.push(<Link to={"/show/bdr:"+vol._source.etext_instance+backLink+"&openEtext=bdr:"+vol._id+"&startChar="+(ch._source.cstart-1000)+"&keyword="+kw+"#open-viewer"}>{highlight(label.value, expand.etext && text ? indexUiState.query : undefined, undefined, expand.etext && text)}</Link>)
 
             n++
 
@@ -326,12 +332,6 @@ const CustomHit = ({ hit, routing, that, sortItems, recent, storage }) => {
     if(!Array.isArray(t)) t = [t]
     return t.map(s => getPropLabel(that,fullUri("bdr:"+s), true, false)).map((s,i) => i > 0 ? ([<span style={{whiteSpace:"pre"}} lang={that.props.locale}>{I18n.t("punc.comma")}</span>,s]):s)
   }
-
-  const 
-    page = that.props.location.pathname,
-    uri = qs.stringify(routing.stateMapping.stateToRoute(uiState,true), { arrayFormat: 'index' }),
-    backLink = "?s="+encodeURIComponent(page+(uri ? "?"+uri : "")),
-    link = "/show/bdr:"+hit.objectID+backLink
 
   //console.log("hit:", hit, link, that.props.location?.search, sortBy, refinementList, uiState, publisher, storage)
 
