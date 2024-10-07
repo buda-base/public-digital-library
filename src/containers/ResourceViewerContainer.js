@@ -350,7 +350,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       onAdvancedSearch(s:boolean) {
          dispatch(ui.advancedSearch(s))
       },
-      onReinitEtext(id:string, params?:{}) {
+      onReinitEtext(id:string, params?:{}, preview) {
          const nav = document.querySelector("#etext-scroll > div:first-child")//(".over-nav")
          let get = qs.parse(ownProps.location.search)                  
          setTimeout(() => {             
@@ -358,7 +358,12 @@ const mapDispatchToProps = (dispatch, ownProps) => {
                get.root = id   
             }
             if(params) get = { ...get, ...params }
-            store.dispatch(initiateApp(get,id)) 
+            if(!preview) {
+               store.dispatch(initiateApp(get,id)) 
+            } else { 
+               // TODO: handle unpaginated etexts
+               store.dispatch(data.getPages(id,params?.startChar ?? 0,true));  
+            }
          
             setTimeout(() => {             
                if(nav && !get.part && document.querySelector(".etext-nav-parent.someClass")) nav.scrollIntoView()

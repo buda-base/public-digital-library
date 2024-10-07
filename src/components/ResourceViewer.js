@@ -1747,7 +1747,7 @@ class ResourceViewer extends Component<Props,State>
          if(state.currentText != loadETres) {
             let startChar =  Number(props.disableInfiniteScroll?.outETstart?.[0].value ?? 0)
             props.onLoading("etext", true)            
-            props.onReinitEtext(loadETres, { startChar })
+            props.onReinitEtext(loadETres, { startChar }, true)
             if(!s) s = { ...state }
             s.currentText = loadETres
          }
@@ -1890,7 +1890,9 @@ class ResourceViewer extends Component<Props,State>
          if(window.MiradorUseEtext) delete window.MiradorUseEtext ;
          if(window.currentZoom) delete window.currentZoom ;
          
-         this.setState({ ...this.state, openMirador:false }); 
+         setTimeout( () => {
+            this.setState({ ...this.state, openMirador:false }); 
+         }, 15)
 
          setTimeout( () => {
 
@@ -10375,7 +10377,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                backTo = decodeURIComponent(backTo)
                searchUrl = backTo
                if(searchUrl.match(/q=/))               
-                  searchTerm = lucenequerytokeyword(searchUrl.replace(/.*q=([^&]+).*/,"$1")) 
+                  searchTerm = decodeURIComponent(searchUrl.replace(/.*q=([^&]+).*/,"$1")) //lucenequerytokeyword(searchUrl.replace(/.*q=([^&]+).*/,"$1")) 
                else if(searchUrl.match(/r=/))               
                   searchTerm = lucenequerytokeyword(searchUrl.replace(/.*r=([^&]+).*/,"$1")) 
                else if(searchUrl.match(/i=/))               
@@ -10438,7 +10440,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
          if(topLevel || this.props.previewEtext) etextRes = this.props.IRI
 
          let etRefs 
-         if(!this.props.eTextRefs && etextRes && topLevel ) {
+         if(!this.props.eTextRefs && etextRes && topLevel && !this.props.previewEtext) {
             this.props.onGetETextRefs(etextRes);
          } else if(this.props.eTextRefs && this.props.eTextRefs !== true) { 
             //extProps = extProps.filter(p => p !== bdo+"instanceHasVolume")
@@ -10534,10 +10536,22 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
 
          const monlamVisible = this.state.enableDicoSearch && (this.state.monlam && this.state.collapse.monlamPopup || monlamResults)
 
-         if(this.props.previewEtext) return (<>            
-               { this.state.currentText || this.props.previewEtext?.outETvol?.length
+         if(this.props.previewEtext) { 
+            let vols
+            if(!this.state.currentText && !this.props.previewEtext?.outETvol?.length) {
+               // just get the first volume
+               vols = this.getResourceElem(bdo+"instanceHasVolume")
+               if(vols?.length){
+                  vols = _.orderBy(vols.map(v => {
+                     return ({ v, n:this.getResourceElem(bdo+"volumeNumber", shortUri(v.value), this.props.assocResources)?.[0]})
+                  }).filter(f => f.n != undefined).map(f => ({f, n:Number(f.n.value)})), ["n"], ["asc"])
+                  console.log("vols:",vols)
+               }
+            }
+            return (<>            
+               { this.state.currentText || this.props.previewEtext?.outETvol?.length || vols?.length
                   ? <>
-                     <ResourceViewerContainer  auth={this.props.auth} location={this.props.location} navigate={this.props.navigate} /*history={this.props.history}*/ IRI={this.state.currentText || shortUri(this.props.previewEtext?.outETvol?.[0]?.value ?? "")} openEtext={true} openEtextRefs={false} disableInfiniteScroll={this.props.previewEtext} that={this}/> 
+                     <ResourceViewerContainer  auth={this.props.auth} location={this.props.location} navigate={this.props.navigate} /*history={this.props.history}*/ IRI={this.state.currentText ?? (vols?.length ? shortUri(vols[0].f.v.value) : shortUri(this.props.previewEtext?.outETvol?.[0]?.value ?? ""))} openEtext={true} openEtextRefs={false} disableInfiniteScroll={vols?.length ? {outETscope:[vols[0].f.v], outETvol:[vols[0].f.v], outETstart:[{value:1}] } : this.props.previewEtext} that={this}/> 
                   </>
                   : this.props.etextErrors?.[this.props.IRI] 
                      ? <h4><div class="images-thumb-links"  data-n={4} style={{ marginLeft:0 }}><a class="urilink nolink"><BlockIcon style={{width:"18px",verticalAlign:"top"}}/>&nbsp;{I18n.t("access.errorE")}</a></div></h4>
@@ -10545,7 +10559,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                   />      
                }
             </>) 
-         else if(topLevel) { 
+         } else if(topLevel) { 
             const outline = <>
                <SimpleBar class={"resource etext-outline "+(this.state.collapse.etextRefs ? "withOutline-false":"withOutline-true")}>
                { etRefs }          

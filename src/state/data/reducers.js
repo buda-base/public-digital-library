@@ -971,6 +971,13 @@ reducers[actions.TYPES.gotNextChunks] = gotNextChunks;
 export const gotNextPages = (state: DataState, action: Action) => {
 
    let res ;
+
+
+   if(state && state.resources && state.resources[action.payload]
+      && !state.resources[action.payload]["http://purl.bdrc.io/resource/"+action.payload.replace(/bdr:/,"")]) {
+         state.resources[action.payload]["http://purl.bdrc.io/resource/"+action.payload.replace(/bdr:/,"")] = {}
+      } 
+
    if(state && state.resources && state.resources[action.payload]
       && state.resources[action.payload]["http://purl.bdrc.io/resource/"+action.payload.replace(/bdr:/,"")])
       {
