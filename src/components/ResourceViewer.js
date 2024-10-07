@@ -6892,7 +6892,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
    renderEtextHasPage = (elem, kZprop, iiifpres) => {
 
       const inst = this.getResourceElem(bdo+"eTextInInstance") ?? this.getResourceElem(bdo+"volumeOf") 
-      let info = this.props.allETrefs?.[shortUri(inst?.[0]?.value)]?.["@graph"]?.filter(n => n["@id"] === this.props.IRI) ?? []
+      let info = this.props.allETrefs?.[shortUri(inst?.[0]?.value ?? "")]?.["@graph"]?.filter(n => n["@id"] === this.props.IRI) ?? []
       const get = qs.parse(this.props.location.search)
       let firstC = 0, lastC = 10000000, text
       if(info?.[0]?.type === "EtextVolume") {
@@ -10431,8 +10431,9 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
          
          let hasPages = this.getResourceElem(bdo+"eTextHasPage")
          let etextRes = this.getResourceElem(bdo+"eTextInInstance")         
-         if(!etextRes?.length) etextRes = this.getResourceElem(bdo+"volumeOf")         
-         if(etextRes && etextRes.length) etextRes = shortUri(etextRes[0].value)
+         if(!etextRes?.length) etextRes = this.getResourceElem(bdo+"volumeOf") 
+         if(etextRes && etextRes.length) etextRes = shortUri(etextRes[0].value)               
+         else if(this.props.disableInfiniteScroll?.etextRes) etextRes = this.props.disableInfiniteScroll.etextRes  
          else etextRes = null
          let etext_data = this.renderData(false, [!hasPages?bdo+"eTextHasChunk":bdo+"eTextHasPage"],iiifpres,title,otherLabels,"etext-data",undefined,undefined,
             this.props.disableInfiniteScroll&&etextRes?[<div class="etext-continue"><Link to={this.renderEtextLink(etextRes)}>{I18n.t("resource.continue")}</Link></div>]:[])
@@ -10551,7 +10552,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
             return (<>            
                { this.state.currentText || this.props.previewEtext?.outETvol?.length || vols?.length
                   ? <>
-                     <ResourceViewerContainer  auth={this.props.auth} location={this.props.location} navigate={this.props.navigate} /*history={this.props.history}*/ IRI={this.state.currentText ?? (vols?.length ? shortUri(vols[0].f.v.value) : shortUri(this.props.previewEtext?.outETvol?.[0]?.value ?? ""))} openEtext={true} openEtextRefs={false} disableInfiniteScroll={vols?.length ? {outETscope:[vols[0].f.v], outETvol:[vols[0].f.v], outETstart:[{value:1}] } : this.props.previewEtext} that={this}/> 
+                     <ResourceViewerContainer  auth={this.props.auth} location={this.props.location} navigate={this.props.navigate} /*history={this.props.history}*/ IRI={this.state.currentText ?? (vols?.length ? shortUri(vols[0].f.v.value) : shortUri(this.props.previewEtext?.outETvol?.[0]?.value ?? ""))} openEtext={true} openEtextRefs={false} disableInfiniteScroll={vols?.length ? {etextRes:this.props.IRI,outETscope:this.props.IRI, outETvol:[vols[0].f.v], outETstart:[{value:1}] } : this.props.previewEtext} that={this}/> 
                   </>
                   : this.props.etextErrors?.[this.props.IRI] 
                      ? <h4><div class="images-thumb-links"  data-n={4} style={{ marginLeft:0 }}><a class="urilink nolink"><BlockIcon style={{width:"18px",verticalAlign:"top"}}/>&nbsp;{I18n.t("access.errorE")}</a></div></h4>
