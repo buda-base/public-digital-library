@@ -1744,7 +1744,7 @@ class ResourceViewer extends Component<Props,State>
       let loadETres = props.disableInfiniteScroll?.outETvol
       if(loadETres?.length) {
          loadETres = shortUri(loadETres?.[0]?.value ?? "")
-         if(state.currentText != loadETres) {
+         if(state.currentText != loadETres && !props.resources[props.IRI]) {
             let startChar =  Number(props.disableInfiniteScroll?.outETstart?.[0].value ?? 0)
             props.onLoading("etext", true)            
             props.onReinitEtext(loadETres, { startChar }, true)
@@ -5989,7 +5989,7 @@ class ResourceViewer extends Component<Props,State>
                {this.preprop(k,0,n)}
                <div class="group preview-etext">
                   {/* <Link to={"/show/"+shortUri(e.value)}>{shortUri(e.value)}</Link> */}
-                  <ResourceViewerContainer  auth={this.props.auth} /*history={this.props.history}*/ location={this.props.location} navigate={this.props.navigate} IRI={shortUri(outETvol?.[0]?.value ?? e.value)} previewEtext={{ outETvol, outETstart, outETscope }}/>  
+                  <ResourceViewerContainer  auth={this.props.auth} /*history={this.props.history}*/ location={this.props.location} navigate={this.props.navigate} IRI={shortUri(outETvol?.[0]?.value ?? e.value)} previewEtext={{ outETvol, outETstart, outETscope, outETinst }}/>  
                </div>
             </div>
          )}))
@@ -7290,7 +7290,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
             //console.log("this:",this)
 
             return <EtextPage 
-                  { ...{ e, _i, unpag, imageLinks, kw, monlamPopup } } 
+                  { ...{ e, _i, unpag, imageLinks, kw, monlamPopup, preview:this.props.disableInfiniteScroll?true:false } } 
                   
                   state_showEtextImages={this.state.showEtextImages}
                   //state_monlam={this.state.monlam}
@@ -7933,6 +7933,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
    renderOCR = (extra) => {
       // #817
       let elem = this.getResourceElem(bdo+"OPFOCRWordMedianConfidenceIndex")
+      if(!elem?.length) elem = this.getResourceElem(bdo+"OPFOCRWordMedianConfidenceIndex", this.props.IRI, this.props.assocResources)
       /*
       let elem = this.getResourceElem(bdo+"contentMethod");            
       if(elem && elem.length) elem = elem[0].value ;
@@ -8505,7 +8506,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                   loadETres = g.eTextInVolume
                }
             }
-            if(loadETres) {
+            if(loadETres && this.state.currentText != loadETres) {
                this.props.onLoading("etext", true)            
                this.props.onReinitEtext(loadETres)
                this.setState({currentText: loadETres})
@@ -10067,7 +10068,8 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
       }
 
       if(this.props.outlineOnly) {
-         if(this.props.resources && !this.props.resources[this.props.IRI] /*&& this.state.collapse.containingOutline*/) this.props.onGetResource(this.props.IRI);
+         // delayed until outline is toggled
+         //if(this.props.resources && !this.props.resources[this.props.IRI] /*&& this.state.collapse.containingOutline*/) this.props.onGetResource(this.props.IRI);
       }
 
       if(this.props.pdfDownloadOnly) {
@@ -10433,11 +10435,15 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
          let etextRes = this.getResourceElem(bdo+"eTextInInstance")         
          if(!etextRes?.length) etextRes = this.getResourceElem(bdo+"volumeOf") 
          if(etextRes && etextRes.length) etextRes = shortUri(etextRes[0].value)               
-         else if(this.props.disableInfiniteScroll?.etextRes) etextRes = this.props.disableInfiniteScroll.etextRes  
+         else if(this.props.disableInfiniteScroll?.etextRes) etextRes = this.props.disableInfiniteScroll.etextRes    
+         else if(this.props.disableInfiniteScroll?.outETinst?.length) etextRes = shortUri(this.props.disableInfiniteScroll.outETinst[0].value)
          else etextRes = null
+         
          let etext_data = this.renderData(false, [!hasPages?bdo+"eTextHasChunk":bdo+"eTextHasPage"],iiifpres,title,otherLabels,"etext-data",undefined,undefined,
-            this.props.disableInfiniteScroll&&etextRes?[<div class="etext-continue"><Link to={this.renderEtextLink(etextRes)}>{I18n.t("resource.continue")}</Link></div>]:[])
-
+            this.props.disableInfiniteScroll&&etextRes?[<div class="etext-continue"><Link onClick={() => { 
+               if(this.props.disableInfiniteScroll?.outETvol?.length) this.props.onGetResource(shortUri(this.props.disableInfiniteScroll.outETvol[0].value))
+            }} to={this.renderEtextLink(etextRes)}>{I18n.t("resource.continue")}</Link></div>]:[])
+            
          if(topLevel || this.props.previewEtext) etextRes = this.props.IRI
 
          let etRefs 
@@ -10593,19 +10599,24 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                       { this.renderOCR(<Trans i18nKey="access.OCRnew" components={{ bold: <b style={{ fontWeight:600 }}/>, nl: <br /> }} />) }
                      </div>
                      <div class={"etext-top-links"}>
-                        <Link to={this.renderEtextLink(etextRes)}>{I18n.t("resource.openViewer")}</Link>
+                        <Link to={this.renderEtextLink(etextRes)} onClick={() => { 
+                           if(this.props.disableInfiniteScroll?.outETvol?.length) this.props.onGetResource(shortUri(this.props.disableInfiniteScroll.outETvol[0].value))
+                        }}>{I18n.t("resource.openViewer")}</Link>
                         { this.renderEtextDLlink(etextAccessError, true) }
                      </div> 
                   </>}
                   <div class="">
-                     { this.props.loading && <Loader className="etext-viewer-loader"  loaded={!this.props.loading}  
+                     { this.props.loading?.startsWith && this.props.loading?.startsWith("etext") && <Loader className="etext-viewer-loader"  loaded={!this.props.loading}  
                            {...!this.props.disableInfiniteScroll ? {options:{position:"fixed",left:"calc(50% + 200px)",top:"50%"}}:{}}
                         />  }
                      { this.unpaginated() && !this.props.disableInfiniteScroll && <h4 style={{fontSize:"16px",fontWeight:600,textAlign:"center", marginBottom:"50px",top:"20px"}}>{I18n.t("resource.unpag")}</h4>}
                      { !this.props.disableInfiniteScroll && etextAccessError && <h4 style={{fontSize:"16px",fontWeight:600,textAlign:"center",marginTop:"80px"}}>
                         <><img style={{height:"50px", verticalAlign:"middle", marginRight:"10px"}} src="/icons/unknown.svg"/><Trans i18nKey="access.fairuseEtext" components={{ bold: <u /> }} /></>
                      </h4> }
-                     { !etextAccessError && etext_data }
+                     { !etextAccessError && (!this.props.disableInfiniteScroll?.outETvol?.length ? etext_data : <div onClick={() => {
+                        this.props.onGetResource(shortUri(this.props.disableInfiniteScroll.outETvol[0].value))
+                        this.props.navigate(this.renderEtextLink(etextRes))
+                     }}>{etext_data}</div>)}
                      { this.props.disableInfiniteScroll && etextAccessError && <h4  style={{ lineHeight:"23px" }}>
                         <div class="images-thumb-links"  data-n={5} style={{ marginLeft:0 }}>
                            <a class="urilink nolink noIA"><BlockIcon style={{width:"18px",verticalAlign:"top"}}/>{I18n.t("access.restrictedC")}</a>
@@ -10695,6 +10706,11 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                   <a class="ulink prefLabel containing-outline" href="#" 
                      onClick={(ev) => { 
                         this.setState({collapse:{...this.state.collapse, containingOutline:!(this.state.collapse.containingOutline ?? showOutline)}})
+
+                        if(!(this.state.collapse.containingOutline ?? showOutline)) {
+                           if(this.props.resources && !this.props.resources[this.props.IRI] /*&& this.state.collapse.containingOutline*/) this.props.onGetResource(this.props.IRI);
+                        }
+
                         ev.preventDefault()
                         ev.stopPropagation()
                      }}  

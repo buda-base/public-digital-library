@@ -20,7 +20,7 @@ const bdr   = "http://purl.bdrc.io/resource/";
 function EtextPage(props) {  
 
   let { 
-    e, _i, unpag, imageLinks, kw, 
+    e, _i, unpag, preview, imageLinks, kw, 
     state_showEtextImages, /*state_monlam,*/ state_monlam_hilight, /*state_noHilight,*/ state_enableDicoSearch, state_etextHasBo, state_etextSize, /*state_collapse,*/
     props_IRI, props_location, props_config, props_highlight, props_monlamResults, props_disableInfiniteScroll, props_manifestError, props_assocResources,
     thatGetLangLabel, thatSetState, 
@@ -157,7 +157,7 @@ function EtextPage(props) {
         })
       }
       { e.seq && <div> 
-        { !unpag && !imgErr && <span class="button" title={I18n.t("misc."+(!showIm?"show":"hide"))+" "+I18n.t("available scans for that page")} 
+        { !unpag && !preview && !imgErr && <span class="button" title={I18n.t("misc."+(!showIm?"show":"hide"))+" "+I18n.t("available scans for that page")} 
         onClick={(eve) => {
               /*
               let id = "image-"+props_IRI+"-"+e.seq
@@ -168,10 +168,10 @@ function EtextPage(props) {
             <img src="/icons/image.svg"/>
         </span> }
         {/* { <h5><a title="Open image+text view in Mirador" onClick={eve => { openMiradorAtPage(imageLinks[e.seq].id) }}>p.{e.seq}</a></h5> } */}
-        {   !unpag && !imgErr && imgElem }
-            { (unpag || imgErr ) && <h5><a class="unpag" title={I18n.t("resource.unpag")}>{I18n.t("resource.pageN",{num:e.seq})}</a></h5>}
+        {   !unpag && !preview && !imgErr && imgElem }        
+            { (unpag || preview || imgErr ) && <h5><a class="unpag" title={I18n.t("resource.unpag")}>{I18n.t("resource.pageN",{num:e.seq})}</a></h5>}
             &nbsp;
-            { Object.keys(imageLinks).sort().map(id => {
+            { !preview && Object.keys(imageLinks).sort().map(id => {
               //loggergen.log("id:",id,e)
               let iIp = props_assocResources[e.id]
               const withHoverM = <>{I18n.t("misc.from")} { uriformat(null,{noid:true,value:id.replace(/bdr:/,bdr) .replace(/[/]V([^_]+)_I.+$/,"/W$1")})} </>

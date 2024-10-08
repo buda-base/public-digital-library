@@ -3678,6 +3678,10 @@ div:has(.resource.preview) .infoPanel.inRes { margin:0 !important; }
 .resource ~ .ETSBresults,
 .resource ~ .monlamResults { width:0px; position:relative; flex-shrink: 0; } 
 
+
+.resource ~ .ETSBresults:not(.visible),
+.resource ~ .monlamResults:not(.visible) { overflow: hidden;}
+
 .resource ~ .ETSBresults > div,
 .resource ~ .monlamResults > div { width:0px; height:calc(100% - 2 * 80px); position:fixed; right:0; top:80px; background:white; overflow:auto; 
    box-shadow:-2px 0 3px rgba(0,0,0,0.15);
@@ -5489,7 +5493,15 @@ html[lang="en"] .resource .data > [data-prop="bdo:creator"] h4[data-prop="bdo:ro
 .preview-etext .resource.etext-view .data,
 #root > div > .resource.etext-view .data { width:100%; padding:30px; box-sizing: border-box; position:relative; }
 
-.preview-etext .resource.etext-view .data { padding:10px; background:#f5f5f5;}
+.preview-etext .resource.etext-view .data { padding:10px; background:#f5f5f5;
+   max-height:230px; padding-bottom:50px;
+}
+
+.preview-etext .resource.etext-view .data #etext-scroll { 
+   overflow: hidden; max-height: 130px; cursor:pointer;  padding-bottom:50px;
+}
+
+.preview-etext .resource.etext-view .data #etext-scroll > * { pointer-events: none; } 
 
 .resource.etext-view > :not(.index) { width:100%; padding:0; }
 
@@ -5516,6 +5528,8 @@ html[lang="en"] .resource .data > [data-prop="bdo:creator"] h4[data-prop="bdo:ro
 .preview-etext .resource.etext-view .data .etext-continue::after,
 .preview-etext .resource.etext-view .data #etext-scroll::after,
 .preview-etext .resource.etext-view .data .etextPage:not(#a) h4::before { content:none !important; }
+
+.preview-etext .resource.etext-view .data .etext-continue:not(#a) { position: absolute; bottom:5px; right:5px; }
 
 .preview-etext .resource.etext-view .data .etext-continue { justify-content: flex-end; width:100%; margin-top:10px; }
 
