@@ -8026,11 +8026,14 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
 
    renderEtextLink = (etextRes) => {
       let base = etextRes
+      let back = this.props.location?.pathname?.split("/")?.[2]
+
       if(this.props.disableInfiniteScroll?.outETscope) {
          let coords = this.props.disableInfiniteScroll
          base = base + "?scope="+coords.outETscope
                      + "&openEtext="+shortUri(coords.outETvol?.[0]?.value ?? "")
                      + "&startChar="+coords.outETstart?.[0]?.value
+                     + (back?"&back="+encodeURIComponent(back):"")
          
       }
       return "/show/"  + base
@@ -8164,6 +8167,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
 
       let get = qs.parse(this.props.location.search)          
       if(get.s) back = decodeURIComponent(get.s)
+      else if(get.back) back = "/show/" + decodeURIComponent(get.back)
       
       label = getLangLabel(this, skos+"prefLabel", label) ?? {}    
       labelSticky = getLangLabel(this, skos+"prefLabel", labelSticky) ?? {}    
@@ -10440,8 +10444,12 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
          else etextRes = null
          
          let etext_data = this.renderData(false, [!hasPages?bdo+"eTextHasChunk":bdo+"eTextHasPage"],iiifpres,title,otherLabels,"etext-data",undefined,undefined,
-            this.props.disableInfiniteScroll&&etextRes?[<div class="etext-continue"><Link onClick={() => { 
-               if(this.props.disableInfiniteScroll?.outETvol?.length) this.props.onGetResource(shortUri(this.props.disableInfiniteScroll.outETvol[0].value))
+            this.props.disableInfiniteScroll&&etextRes?[<div class="etext-continue"><Link onClick={() => {                
+               if(this.props.disableInfiniteScroll?.outETvol?.length) { 
+                  const loadETres = shortUri(this.props.disableInfiniteScroll.outETvol[0].value)
+                  this.props.onGetResource(loadETres)
+                  this.props.onReinitEtext(loadETres, { startChar: this.props.disableInfiniteScroll.outETstart[0].value})                  
+               }
             }} to={this.renderEtextLink(etextRes)}>{I18n.t("resource.continue")}</Link></div>]:[])
             
          if(topLevel || this.props.previewEtext) etextRes = this.props.IRI
@@ -10600,13 +10608,18 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                      </div>
                      <div class={"etext-top-links"}>
                         <Link to={this.renderEtextLink(etextRes)} onClick={() => { 
-                           if(this.props.disableInfiniteScroll?.outETvol?.length) this.props.onGetResource(shortUri(this.props.disableInfiniteScroll.outETvol[0].value))
+                           if(this.props.disableInfiniteScroll?.outETvol?.length) {
+                              const loadETres = shortUri(this.props.disableInfiniteScroll.outETvol[0].value)
+                              this.props.onGetResource(loadETres)
+                              this.props.onReinitEtext(loadETres, { startChar: this.props.disableInfiniteScroll.outETstart[0].value})                  
+                           }
                         }}>{I18n.t("resource.openViewer")}</Link>
                         { this.renderEtextDLlink(etextAccessError, true) }
                      </div> 
                   </>}
                   <div class="">
-                     { this.props.loading?.startsWith && this.props.loading?.startsWith("etext") && <Loader className="etext-viewer-loader"  loaded={!this.props.loading}  
+                     { //(this.props.disableInfiniteScroll ? this.props.loading?.startsWith && this.props.loading?.startsWith("etext") : this.props.loading ) 
+                         this.props.loading && <Loader className="etext-viewer-loader"  loaded={!this.props.loading}  
                            {...!this.props.disableInfiniteScroll ? {options:{position:"fixed",left:"calc(50% + 200px)",top:"50%"}}:{}}
                         />  }
                      { this.unpaginated() && !this.props.disableInfiniteScroll && <h4 style={{fontSize:"16px",fontWeight:600,textAlign:"center", marginBottom:"50px",top:"20px"}}>{I18n.t("resource.unpag")}</h4>}
@@ -10614,7 +10627,9 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                         <><img style={{height:"50px", verticalAlign:"middle", marginRight:"10px"}} src="/icons/unknown.svg"/><Trans i18nKey="access.fairuseEtext" components={{ bold: <u /> }} /></>
                      </h4> }
                      { !etextAccessError && (!this.props.disableInfiniteScroll?.outETvol?.length ? etext_data : <div onClick={() => {
-                        this.props.onGetResource(shortUri(this.props.disableInfiniteScroll.outETvol[0].value))
+                        const loadETres = shortUri(this.props.disableInfiniteScroll.outETvol[0].value)
+                        this.props.onGetResource(loadETres)
+                        this.props.onReinitEtext(loadETres, { startChar: this.props.disableInfiniteScroll.outETstart[0].value})                  
                         this.props.navigate(this.renderEtextLink(etextRes))
                      }}>{etext_data}</div>)}
                      { this.props.disableInfiniteScroll && etextAccessError && <h4  style={{ lineHeight:"23px" }}>
