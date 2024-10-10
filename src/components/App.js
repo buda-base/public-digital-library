@@ -550,7 +550,7 @@ export function highlight(val,k,expand,newline,force)
 {
    if(k == "-") return val
 
-   //loggergen.log("hi:",val,k,expand)
+   loggergen.log("hi:",val,k,expand)
 
    if(expand && expand.value) val = expand.value.replace(/([^\n])[\n]([^\n])/g,"$1$2")
 

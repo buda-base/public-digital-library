@@ -272,7 +272,7 @@ const CustomHit = ({ hit, routing, that, sortItems, recent, storage }) => {
             detec = narrowWithString(indexUiState.query)      
             let kw = '"'+indexUiState.query+'"@'+(detec[0]==="tibt"?"bo":"bo-x-ewts")
 
-            newEtextHits.push(<Link to={"/show/bdr:"+vol._source.etext_instance+backLink+"&openEtext=bdr:"+vol._id+"&startChar="+(ch._source.cstart-1000)+"&keyword="+kw+"#open-viewer"}>{highlight(label.value, expand.etext && text ? indexUiState.query : undefined, undefined, expand.etext && text)}</Link>)
+            newEtextHits.push(<Link to={"/show/bdr:"+vol._source.etext_instance+backLink+"&scope=bdr:"+vol._id+"&openEtext=bdr:"+vol._source.etext_vol+"&startChar="+(ch._source.cstart-1000)+"&keyword="+kw+"#open-viewer"}>{highlight(label.value, expand.etext && text ? indexUiState.query : undefined, undefined, expand.etext && text)}</Link>)
 
             n++
 

@@ -7942,7 +7942,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
 
       //loggergen.log("OCR:",elem)
 
-      if(elem) {
+      if(elem?.length) {
          return <div class="data access"><h3><span style={{textTransform:"none"}}>{extra ?? I18n.t("access.OCR")}</span></h3></div>
       }
    }
@@ -8321,6 +8321,8 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
          "?":"unk",
       }
 
+      let get = qs.parse(this.props.location.search,{decode:false})
+      const back = (get.s ? "s="+get.s+"&" : "") + (get.back ? "back="+get.back+"&" : "")
 
       let makeNodes = (top,parent) => {               
          let elem = this.props.eTextRefs["@graph"]
@@ -8396,14 +8398,14 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
 
                   if(g.volumeNumber) { 
                      g.index = g.volumeNumber
-                     g.link =  useRoot+"?openEtext="+ g["@id"] + "#open-viewer"
+                     g.link =  useRoot+"?"+back+"openEtext="+ g["@id"] + "#open-viewer"
                      if(g.volumeHasEtext) {
                         if(!Array.isArray(g.volumeHasEtext)) {
                            let txt = elem.filter(e => e["@id"] === g.volumeHasEtext)                           
                            const ETres = txt[0]?.["@id"] //txt[0]?.eTextResource || txt[0]?.etextResource["@id"]
                            if(ETres) {                                                            
 
-                              g.link = useRoot+"?openEtext="+ETres /*this.props.IRI*/ + "#open-viewer"
+                              g.link = useRoot+"?"+back+"openEtext="+ETres /*this.props.IRI*/ + "#open-viewer"
                               g.scope = ETres
                               
                               //nav.push(<Link to={"/show/"+txt[0].eTextResource} class="ulink">{I18n.t("resource.openR")}</Link>)
@@ -8429,7 +8431,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                   } else if(g.seqNum && (g.eTextResource || g.etextResource && g.etextResource["@id"])) {
                      g.index = g.seqNum
                      const ETres = g.etextResource["@id"] ?? g.eTextResource  
-                     g.link = useRoot+"?openEtext="+ETres /*this.props.IRI*/ + "#open-viewer"
+                     g.link = useRoot+"?"+back+"openEtext="+ETres /*this.props.IRI*/ + "#open-viewer"
                               
          
                      //nav.push(<Link to={"/show/"+g.eTextResource} class="ulink">{I18n.t("resource.openR")}</Link>)
@@ -8449,7 +8451,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                      //loggergen.log("default link:", g)
 
                      const ETres = g.eTextInVolume
-                     g.link = useRoot+"?scope="+g["@id"]+"&openEtext="+ETres /*this.props.IRI*/ 
+                     g.link = useRoot+"?"+back+"scope="+g["@id"]+"&openEtext="+ETres /*this.props.IRI*/ 
                      g.link += "&startChar="+(g.sliceStartChar ?? 0)
                      //if(g.sliceEndChar) g.link += "&endChar="+g.sliceEndChar
                      g.link += "#open-viewer"
@@ -8482,9 +8484,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                   etextrefs.push(g)
                }
             }         
-         } 
-         
-         let get = qs.parse(this.props.location.search)
+         }                   
 
          etextrefs = _.orderBy(etextrefs,["index"],["asc"])
 
@@ -10455,9 +10455,9 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
          if(topLevel || this.props.previewEtext) etextRes = this.props.IRI
 
          let etRefs 
-         if(!this.props.eTextRefs && etextRes && topLevel && !this.props.previewEtext) {
+         if(!this.props.eTextRefs && etextRes && topLevel && !this.props.previewEtext && !this.props.disableInfiniteScroll) {
             this.props.onGetETextRefs(etextRes);
-         } else if(this.props.eTextRefs && this.props.eTextRefs !== true) { 
+         } else if(this.props.eTextRefs && this.props.eTextRefs !== true && !this.props.previewEtext && !this.props.disableInfiniteScroll) { 
             //extProps = extProps.filter(p => p !== bdo+"instanceHasVolume")
             etRefs = this.renderEtextRefs(accessET, etextRes)      
          }
