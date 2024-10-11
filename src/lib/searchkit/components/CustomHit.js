@@ -30,7 +30,7 @@ const Hit = ({ hit, label, debug = true }) => {
   );
 };
 
-const CustomHit = ({ hit, routing, that, sortItems, recent, storage }) => {
+const CustomHit = ({ hit, routing, that, sortItems, recent, storage, advanced /*= true*/ }) => {
 
   const [debug, setDebug] = useState(false)
   const [checked, setChecked] = useState(false)
@@ -64,6 +64,8 @@ const CustomHit = ({ hit, routing, that, sortItems, recent, storage }) => {
     if(!langs) return
     langs = extendedPresets(langs)
 
+    const hidden = [ "publisherName", "publisherLocation", "summary", "authorshipStatement", "comment" ]
+
     if(hit) { 
       for(const name of ["prefLabel", "altLabel", "publisherName", "publisherLocation", "summary", "authorshipStatement", "comment", "seriesName"]) {
         if(!labels[name]) labels[name] = []
@@ -85,10 +87,17 @@ const CustomHit = ({ hit, routing, that, sortItems, recent, storage }) => {
 
             const mergeHLinVal = (k, h, i) => {
 
-              let val = h, withHL = decode(val)
+              let val = h, withHL = decode(val), num = i
               if(hit._highlightResult[k]?.length){ 
                 if(hit._highlightResult[k]?.length != hit[k].length) for(const c of hit._highlightResult[k]) {
-                  const untagged = decode(c.value).replace(/<[^>]+>/g,"")                
+                  const untagged = decode(c.value).replace(/<[^>]+>/g,"")          
+                  let num = hit[k].findIndex(u => u.includes(untagged))      
+                  if(num != -1) {
+                    h = hit[k][num]
+                    withHL = decode(h)
+                  } else {
+                    num = i
+                  }
                   const idx = withHL.indexOf(untagged)
                   let start = "", end = ""
                   //console.log("wHL:",k,c,h,idx)
@@ -102,15 +111,18 @@ const CustomHit = ({ hit, routing, that, sortItems, recent, storage }) => {
                 }
               }
 
-              return hit._highlightResult && hit._highlightResult[k] //&& hit._highlightResult[k][i]
+              return ({
+                value: hit._highlightResult && hit._highlightResult[k] //&& hit._highlightResult[k][i]
                     ? decode(withHL.replace(/<mark>/g,"↦").replace(/<\/mark>/g,"↤").replace(/↤ ↦/g, " "))
-                    : h
+                    : h, 
+                num
+              })
             }
 
-            hit[k].map((h,i) => name != "altLabel" || hit._highlightResult[k] && hit._highlightResult[k][i]?.matchedWords?.length 
+            hit[k].map((h,i) => name != "altLabel" && (advanced || !hidden.includes(name)) || hit._highlightResult[k] && hit._highlightResult[k][i]?.matchedWords?.length 
               ? labels[name!="altLabel"?name:"prefLabel"].push({
-                  value: mergeHLinVal(k, h, i), 
-                  field: k, num: i,
+                  ...mergeHLinVal(k, h, i), 
+                  field: k, 
                   lang, hit, 
                 })
               : null
@@ -152,7 +164,7 @@ const CustomHit = ({ hit, routing, that, sortItems, recent, storage }) => {
         }
       }
     }
-    if(hit.publicationDate) {
+    if(hit.publicationDate && (advanced || out.length)) {
       out.push(<span>{I18n.t("punc.num",{num:hit.publicationDate, interpolation: {escapeValue: false}})}</span>)      
     }
     setPublisher(out)
@@ -272,7 +284,12 @@ const CustomHit = ({ hit, routing, that, sortItems, recent, storage }) => {
             detec = narrowWithString(indexUiState.query)      
             let kw = '"'+indexUiState.query+'"@'+(detec[0]==="tibt"?"bo":"bo-x-ewts")
 
-            newEtextHits.push(<Link to={"/show/bdr:"+vol._source.etext_instance+backLink+"&scope=bdr:"+vol._id+"&openEtext=bdr:"+vol._source.etext_vol+"&startChar="+(ch._source.cstart-1000)+"&keyword="+kw+"#open-viewer"}>{highlight(label.value, expand.etext && text ? indexUiState.query : undefined, undefined, expand.etext && text)}</Link>)
+            newEtextHits.push(<Link to={"/show/bdr:"+vol._source.etext_instance+backLink+"&scope=bdr:"+vol._id+"&openEtext=bdr:"+vol._source.etext_vol+"&startChar="+(ch._source.cstart-1000)+"&keyword="+kw+"#open-viewer"}>{highlight(label.value, expand.etext && text ? indexUiState.query : undefined, undefined 
+              /* // fixes crash when expand result on /osearch/search?author%5B0%5D=P1583&etext_quality%5B0%5D=0.95-1.01&q=klong%20chen%20rab%20%27byams%20pa%20dri%20med%20%27od%20zer&etext_search%5B0%5D=true
+               // (uncomment to get pagination in etext results)
+              , undefined, expand.etext && text
+              */
+            )}</Link>)
 
             n++
 
