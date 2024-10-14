@@ -616,9 +616,15 @@ html[lang="bo"] .msg-popup .front p { font-size:18px;}
 /* ------------------------ new UX ------------------------- */
 
 
+.resource #outline:not(#a),
 .resource [data-prop="tmp:containingOutline"] #outline:not(#a) {
    padding:0;
-   margin-top:10px;
+   margin-top:0px;
+   width:100%;
+}
+
+.resource .data#outline > div {
+   box-sizing: border-box;
 }
 
 .resource [data-prop="tmp:containingOutline"] #outline:not(#a) > h2 {

@@ -6012,13 +6012,7 @@ class ResourceViewer extends Component<Props,State>
             console.log('ctnO:', data, elem)
          }
          return ( 
-            <div  data-prop={shortUri(k)} >               
-               <h3><span>{this.proplink(k,null,n)}{I18n.t("punc.colon")}</span> </h3>
-               {this.preprop(k,0,n)}
-               <div class="group">
-                  <ResourceViewerContainer auth={this.props.auth} /*history={this.props.history}*/ location={this.props.location} navigate={this.props.navigate} IRI={shortUri(elem[0]?.value)} outlineOnly={true} part={this.props.IRI}/> 
-               </div>
-            </div>
+            <ResourceViewerContainer auth={this.props.auth} /*history={this.props.history}*/ location={this.props.location} navigate={this.props.navigate} IRI={shortUri(elem[0]?.value)} outlineOnly={true} part={this.props.IRI}/> 
          )
          
       } else {
@@ -9855,11 +9849,16 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
          } 
 
 
-         return ( 
-         <div class="data" id="outline">
-            <h2>{I18n.t("index.outline")}</h2>
-               <OutlineSearchBar that={this} outlineSearch={outlineSearch}/>
-               <div>
+         return ( <>
+            <div data-prop="tmp:outlineSearch">
+               <h3><span>Search:</span></h3>
+               <div class="group">
+                  <OutlineSearchBar that={this} outlineSearch={outlineSearch}/>
+               </div>
+            </div>
+            <div class="data" id="outline" data-prop="tmp:outline">
+               <h3><span>Outline:</span></h3>
+               <div class="group">
                   <Loader  options={{
                         position:this.props.outlineOnly?"absolute":"fixed",
                         left:"calc(50% "+(this.props.outlineOnly?")":"+ 100px)"),
@@ -9872,7 +9871,8 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                   </div>
                   { open && <div style={{paddingLeft:"50px"}}>{outline}</div> }
                </div>
-         </div> )
+            </div>
+         </> )
       }
    }
 
@@ -10691,7 +10691,9 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
          let theOutline, showOutline = this.state.collapse.containingOutline || this.state.collapse.containingOutline === undefined && this.props.outlineKW
          if((!root || !root.length) && (!this.props.outlineOnly || showOutline)) theOutline = this.renderOutline()      
 
-         if(theOutline && !this.props.outlineOnly) theOutline = <div data-prop="tmp:outline"><h3><span>Outline:</span></h3><div class="group">{theOutline}</div></div>
+         if(theOutline && !this.props.outlineOnly) {
+            //theOutline = <div data-prop="tmp:outline"><h3><span>Outline:</span></h3><div class="group">{theOutline}</div></div>
+         }
 
          let findText
          if(!["Instance", "Images", "Etext"].includes(_T) && (_T != "Work" || serial?.length || isSerialWork) ) {            
@@ -10716,26 +10718,29 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
          let theDataLegal = this.renderData(false,[adm+"metadataLegal"],iiifpres,title,otherLabels,"legal-props")      
          
          if(this.props.outlineOnly) {            
-            return (
-               <>
-                  <a class="ulink prefLabel containing-outline" href="#" 
-                     onClick={(ev) => { 
-                        this.setState({collapse:{...this.state.collapse, containingOutline:!(this.state.collapse.containingOutline ?? showOutline)}})
+            return <>
+               <div  data-prop={"tmp:containingOutline"} >               
+                  <h3><span>{this.proplink(_tmp+"containingOutline",null,1)}{I18n.t("punc.colon")}</span> </h3>
+                  <div class="group">
+                     <a class="ulink prefLabel containing-outline" href="#" 
+                        onClick={(ev) => { 
+                           this.setState({collapse:{...this.state.collapse, containingOutline:!(this.state.collapse.containingOutline ?? showOutline)}})
 
-                        if(!(this.state.collapse.containingOutline ?? showOutline)) {
-                           if(this.props.resources && !this.props.resources[this.props.IRI] /*&& this.state.collapse.containingOutline*/) this.props.onGetResource(this.props.IRI);
-                        }
+                           if(!(this.state.collapse.containingOutline ?? showOutline)) {
+                              if(this.props.resources && !this.props.resources[this.props.IRI] /*&& this.state.collapse.containingOutline*/) this.props.onGetResource(this.props.IRI);
+                           }
 
-                        ev.preventDefault()
-                        ev.stopPropagation()
-                     }}  
-                  >
-                     { showOutline ? I18n.t("resource.closeO") : I18n.t("resource.seeIn",{txt: ilabel?.value ?? I18n.t("index.outline")}) }
-                  </a>     
-                  { this.props.part && <Link {...this.props.preview?{ target:"_blank" }:{}} to={"/show/"+this.props.IRI} class="ulink prefLabel containing-outline" >{I18n.t("resource.openR")}</Link> }         
-                  { showOutline && theOutline }
-               </>
-            ) 
+                           ev.preventDefault()
+                           ev.stopPropagation()
+                        }}  
+                     >
+                        { showOutline ? I18n.t("resource.closeO") : I18n.t("resource.seeIn",{txt: ilabel?.value ?? I18n.t("index.outline")}) }
+                     </a>     
+                     { this.props.part && <Link {...this.props.preview?{ target:"_blank" }:{}} to={"/show/"+this.props.IRI} class="ulink prefLabel containing-outline" >{I18n.t("resource.openR")}</Link> }         
+                  </div>
+               </div>             
+               { showOutline && theOutline }
+            </>
          }
 
 
