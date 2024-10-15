@@ -9851,7 +9851,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
 
          return ( <>
             <div data-prop="tmp:outlineSearch">
-               <h3><span>Search:</span></h3>
+               <h3><span>Outline Search:</span></h3>
                <div class="group">
                   <OutlineSearchBar that={this} outlineSearch={outlineSearch}/>
                </div>

@@ -545,8 +545,10 @@ html[lang="bo"] .msg-popup .front p { font-size:18px;}
 
 #menu-datatype > div:last-child ul li { justify-content: flex-end; }
 
+#suggestions li { padding:0; }
+
 #menu-datatype > div:last-child ul li,
-#suggestions li { padding:12px 16px; font-size:14px; color: #4c4c4c; font-weight:600; }
+#suggestions li > span { padding:12px 16px; font-size:14px; color: #4c4c4c; font-weight:600; }
 
 #suggestions li.active,
 #menu-datatype > div:last-child ul li:hover,
@@ -796,6 +798,8 @@ body > #pop-login { z-index:1000000 ;}
    box-sizing: border-box;
 }
 
+
+.resource [data-prop='tmp:outlineSearch'] .search input,
 .ais-SearchBox-form input,
 .inner-search-bar:not(#a) > div > span:last-child input {
    padding:18px 16px;
@@ -808,9 +812,31 @@ body > #pop-login { z-index:1000000 ;}
    box-shadow: rgba(187, 187, 187, 0.5) 0px 2px 4px;
    border:none;
    border-radius: 4px;
-   outline:none;
+   outline:none;   
 }
 
+
+.resource [data-prop='tmp:outline'],
+.resource [data-prop='tmp:outlineSearch'] {
+   align-items: baseline;
+}
+
+.resource [data-prop='tmp:outlineSearch'] .search  {
+   position:relative;
+}
+
+.resource [data-prop='tmp:outlineSearch'] .search input {
+   box-shadow: none;
+   border-bottom:1px solid black;
+   border-radius: 0;
+}
+
+.resource [data-prop='tmp:outlineSearch'] .search > div {
+   width:calc(100% - 190px);
+   position: relative;
+}
+
+.resource [data-prop='tmp:outlineSearch'] .search input,
 .ais-SearchBox-form input {
    /* padding-left:48px;
    padding-right:48px; */
@@ -925,6 +951,7 @@ ul.suggestions .fromHisto svg ~ span {
 
 ul.suggestions li {
    align-items: center;
+   position: relative;
 }
 
 ul.suggestions li > span:first-child {
@@ -3409,7 +3436,7 @@ div:has(.resource.preview) .infoPanel.inRes { margin:0 !important; }
 
 .resource .data#outline { background-color: #ffffff; padding: 35px; padding-bottom: 0; padding-top:45px; }
 .resource .data#outline > h2 { margin-left:35px; margin-bottom:35px; }
-.resource .data#outline > div { background-color: #fcf5e2; padding: 25px 35px; }
+.resource .data#outline > div { background-color: #fcf5e2; padding: 25px 20px; }
 .resource .data#outline > div.loader { background-color: transparent; padding: 0;  }
 
 .resource .data#outline > .search { background-color: #fce08d; justify-content:center; padding:20px; position:relative; }
@@ -3418,17 +3445,22 @@ div:has(.resource.preview) .infoPanel.inRes { margin:0 !important; }
 .resource .data#outline > .search input { display:inline-block;width:375px;height:40px;line-height:40px;font-weight:600;border:none;outline:none; 
    padding-left:20px; color:black; box-shadow: 0 2px 4px rgba(187, 187, 187, 0.5); padding-right:70px; position:relative;   
 }
+.resource [data-prop="tmp:outlineSearch"] div input ~ span,
 .resource .data#outline > .search input ~ span { display: inline-block; position:absolute; height:40px;width:40px; cursor:pointer; border-radius:50%; }
+.resource [data-prop="tmp:outlineSearch"] div input + span,
 .resource .data#outline > .search input + span { background-image:url(/icons/loupe.png); background-position:center; background-repeat:no-repeat; 
-   right:0; 
+   left:4px; top:8px; z-index:1000;  opacity:0.65;
 }
-.resource .data#outline > .search input + span + span { right:30px; display:inline-flex; align-items: center;justify-content: center; width:30px;}
+
+.resource [data-prop="tmp:outlineSearch"] div input + span + span,
+.resource .data#outline > .search input + span + span { right:0px; display:inline-flex; align-items: center;justify-content: center; width:30px; top:10px; z-index:1000;}
 
 .resource .data#outline > .search input.disabled { pointer-events: none; background:#f9f9f9; }
 .resource .data#outline > .search input.disabled ~ span { pointer-events: none; opacity:0.4; }
 
 .resource .data#outline:last-child { padding-bottom:45px; }
 .resource .data#outline div { flex-wrap:wrap; }
+.resource [data-prop="tmp:outlineSearch"] div span:not(.lang),
 .resource .data#outline div h2,
 .resource .data#outline div span:not(.lang) { font-size:14px; font-weight:400; color:#343434; }
 .resource .data#outline .root >  span { width:auto;display:inline-block;} /*{ width:calc(100% - 25px); display:block; }*/
