@@ -2,6 +2,10 @@
 import React, { useEffect, useState } from "react";
 import I18n from 'i18next';
 import _ from "lodash"
+import SimpleBar from 'simplebar-react';
+import 'simplebar/dist/simplebar.min.css';
+import InfoIcon from '@material-ui/icons/Info';
+import Tooltip from '@material-ui/core/Tooltip';
 
 // hooks
 import { useRefinementList, useInstantSearch } from "react-instantsearch";
@@ -20,7 +24,7 @@ const getItem = (collection, id) => {
 };
 
 function CustomRefinementList(props) {
-  const { attribute, that, I18n_prefix, prefix, iri, sort, sortFunc, defaultItems, className } = props;
+  const { attribute, that, I18n_prefix, prefix, iri, sort, sortFunc, defaultItems, className, tooltips } = props;
 
   const [title, setTitle] = useState("")
 
@@ -40,7 +44,7 @@ function CustomRefinementList(props) {
     canToggleShowMore,
     isShowingMore,
     toggleShowMore,
-  } = useRefinementList(props);
+  } = useRefinementList({...props, limit:8, showMoreLimit:10000});
 
   const current = (indexUiState?.refinementList?.[attribute] ?? []).filter(c => !items.find(i => i.value === c)).map(c => ({ 
     value:c, label:c, highlighted:c, isRefined:true, count:-1
@@ -112,7 +116,7 @@ function CustomRefinementList(props) {
   const useItems = sort ? _.orderBy(tItems,sortFunc??["value"],["desc"]) : tItems
 
   return (
-    <div className={"ais-RefinementList "+(className??"")}>
+    <div className={"ais-RefinementList "+(className??"")}  data-id={attribute}>
       <div className="filter-title"><p>{title}</p></div>
       {/* <input
         type="search"
@@ -123,6 +127,8 @@ function CustomRefinementList(props) {
         maxLength={512}
         onChange={(event) => searchForItems(event.currentTarget.value)}
       /> */}
+                
+      <SimpleBar>
       <ul className="ais-RefinementList-list">
         {useItems.map((item) => (
 
@@ -134,7 +140,7 @@ function CustomRefinementList(props) {
                 item.isRefined && "ais-RefinementList-item--selected"
               }`}
             >
-              <label className="ais-RefinementList-label">
+              <label className="ais-RefinementList-label" data-id={item.value}>
                 <input
                   type="checkbox"
                   className="ais-RefinementList-checkbox"
@@ -144,6 +150,7 @@ function CustomRefinementList(props) {
                 <span className="ais-RefinementList-labelText">
                   {currentItems.find((_item) => _item.id === item.value)?.label || item.label}
                 </span>
+                {tooltips && tooltips[item.value] && <Tooltip id="info-tooltip-etext-quality" title={tooltips[item.value]}><InfoIcon className="info-icon" /></Tooltip>}
                 {item.count > 0 && <span className="ais-RefinementList-count">{item.count}</span>}
               </label>
             </li>
@@ -155,7 +162,7 @@ function CustomRefinementList(props) {
                 indexUiState?.refinementList?.[attribute]?.includes(item.value) && "ais-RefinementList-item--selected"
               }`}
             >
-              <label className="ais-RefinementList-label">
+              <label className="ais-RefinementList-label" data-id={item.value}>
                 <input
                   type="checkbox"
                   className="ais-RefinementList-checkbox"
@@ -170,12 +177,13 @@ function CustomRefinementList(props) {
 
             : null)
         )}
-      </ul>
-      { tItems.length >= 10 &&
+      </ul>                
+      </SimpleBar>
+      { tItems.length >= 8 && 
         <button
           className="ais-RefinementList-showMore"
           onClick={toggleShowMore}
-          disabled={!canToggleShowMore}
+          //disabled={!canToggleShowMore}
         >
           {isShowingMore ? "Show less" : "Show more"}
         </button>

@@ -2405,7 +2405,7 @@ a.result .contenu ul > div:last-child h3:is([lang$="-khmr"],[lang="km"]) { font-
 
 .SidePane.left .widget-header svg { font-size:18px; }
 
-.AppSK .filter-title,
+/* .AppSK .filter-title, */
 .SidePane.left .widget-header {display:flex;justify-content:space-between;padding:0;border-bottom:1px solid #c1c1c1; cursor:pointer;}
 
 #settings + .widget-header { align-items: center;}

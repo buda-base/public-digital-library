@@ -301,8 +301,10 @@
       "tmp:etext_quality":"Etext Quality",
       "tmp:placeType":"Place Type",
       "tmp:etext_search":"Etext",
+      "tmp:nocomm_search":"Exclude",
       "tmp:firstScanSyncDate":"First scan date",
-      "bdr:PartTypeText": "Text In Outline"
+      "bdr:PartTypeText": "Text In Outline",
+      "tmp:associatedTradition":"Tradition"
    },
    "guided":{
       "keyword":"keyword",
@@ -608,8 +610,11 @@
       "showU":"Show non-released items",
       "toggleM": "Toggle Map",
       "kw":"(Search any)",
+      "nocomm_search":{
+         "true":"Exclude commentaries"
+      },
       "etext_search":{
-         "true":"Search in Etexts only"
+         "true":"Search inside etext, exclude titles and metadata"
       }
    },
    "Rsidebar": {
@@ -848,13 +853,13 @@
          "5":"Open Access",
          "4":"Open Access",
          "3":"Internet Archive only",
-         "2":"40p. extract",
+         "2":"40 pages extract",
          "1":"Not Available",
          "hit":{
             "5":"open access",
             "4":"open access",
             "3":"archive.org",
-            "2":"40p. extract",
+            "2":"40 pages extract",
             "1":"not available"
          },
          "quality":{
@@ -866,7 +871,7 @@
          }
       },
       "etext":{
-         "3":"Open Access",
+         "3":"Has etext of any quality",
          "2":"Search only",
          "1":"Not Available",
          "hit":{
@@ -874,13 +879,13 @@
             "1":"not available"
          },
          "quality":{
-            "3":{"99-4":{"01":"manual transcription"}},
-            "2":{"99-3":{"01":"manual transcription (not aligned with images)"}},
-            "1":{"99-2":{"01":"reviewed OCR"}},
+            "3":{"99-4":{"01":"best quality"}},
+            "2":{"99-3":{"01":"best quality, unaligned"}},
+            "1":{"99-2":{"01":"excellent quality"}},
             "0":{
-               "95-1":{"01":"good quality OCR"},
-               "8-0":{"95":"usable OCR"},
-               "0-0":{"8":"poor quality OCR"}
+               "95-1":{"01":"good quality"},
+               "8-0":{"95":"mediocre quality"},
+               "0-0":{"8":"poor quality"}
             }
          }
       },

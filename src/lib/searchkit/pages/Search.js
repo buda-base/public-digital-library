@@ -46,22 +46,34 @@ import store from '../../../index';
 import { initiateApp } from '../../../state/actions';
 
 
-export const filters = [{
-    attribute:"etext_search", I18n_prefix: "search.etext_search", prefix:"tmp", defaultItems:[{ value: "true" }]
-  },{ 
+export const filters = [{ 
     attribute:"author", prefix:"tmp" 
-  },{ 
-    attribute:"printMethod" 
-  },{
-    attribute:"scans_access", sort:true, I18n_prefix: "access.scans", prefix:"tmp"
   },{ // #881 not yet
   //  attribute:"scans_quality", sort:true, I18n_prefix: "access.scans.quality", prefix:"tmp"
   //},{
     attribute:"etext_access", sort:true, I18n_prefix: "access.etext", prefix:"tmp"
   },{
-    attribute:"etext_quality", sort:true, I18n_prefix: "access.etext.quality", prefix:"tmp"
+    attribute:"etext_quality", sort:true, I18n_prefix: "access.etext.quality", prefix:"tmp",
+    tooltips:{
+      "3.99-4.01":"Manually typed. Etext is aligned with scans.",
+      "2.99-3.01":"Manually typed. Etext is not aligned with scans.",
+      "1.99-2.01":"Etext is automatically created with OCR (Optical Character Recognition) and reviewed.",
+      "0.95-1.01":"Etext is automatically created with OCR (Optical Character Recognition) and is of good quality without many errors.",
+      "0.8-0.95":"Etext is automatically created with OCR (Optical Character Recognition) and is usable, but contains some errors.",
+      "0.0-0.8":"Etext is automatically created with OCR (Optical Character Recognition) and contains errors",
+    }    
+  },{
+    attribute:"etext_access", sort:true, I18n_prefix: "access.etext", prefix:"tmp"
+  },{
+    attribute:"scans_access", sort:true, I18n_prefix: "access.scans", prefix:"tmp"
   },{ 
-    attribute:"associatedTradition"  
+    attribute:"printMethod" 
+  },{
+    attribute:"nocomm_search", I18n_prefix: "search.nocomm_search", prefix:"tmp", defaultItems:[{ value: "true" }]
+  },{
+    attribute:"etext_search", I18n_prefix: "search.etext_search", prefix:"tmp", defaultItems:[{ value: "true" }]
+  },{ 
+    attribute:"associatedTradition", prefix:"tmp"
   },{ 
     attribute:"workGenre" 
   },{ 
@@ -203,7 +215,7 @@ export function FiltersSidebar(props) {
 
     { !recent && <RefinementListWithLocalLabels that={that} {...filters[0] } className={recent ? "": "MT0"}  /> }
 
-    { filters.slice(1).map((filter) => <RefinementListWithLocalLabels that={that} {...filter} showMore={true} />) }
+    { filters.slice(1).map((filter) => <RefinementListWithLocalLabels that={that} {...filter} showMore={true}  />) }
 
     <RefinementListWithLocalLabels I18n_prefix={"types"} that={that} attribute="type" showMore={true} title={I18n.t("Lsidebar.datatypes.title")}/>
 
@@ -219,6 +231,16 @@ export function FiltersSidebar(props) {
       />     */}
     </span>
 
+    <br />
+    <br />
+    <br />
+
+    <MyClearRefinements   
+      translations={{
+        resetButtonText: 'Clear all filters',
+      }}
+      {...{ request, setRequest } }
+    />
   </>
 }
 

@@ -15,8 +15,34 @@
 
 .filter-title {
   font-weight: 600;
-  padding: 20px 0;
+  padding: 0px 0;
   margin-bottom:6px;
+}
+
+
+.filter .simplebar-content > h3,
+.filter .simplebar-content > h3+button,
+.filter .simplebar-content > h3+button+br {
+  display: none;
+}
+
+
+.filter .simplebar-content > h3+button+br+div .filter-title > p:not(#a) {
+  margin-top: 0;
+}
+
+.filter > h3,
+.filter > h3 +button {
+  visibility: hidden;
+}
+
+
+.AppSK .filter-title p:not(#a) {
+  text-transform: capitalize;
+  display: block;
+  color:black;
+  font-size: 15px;
+  margin-top:28px;
 }
 
 .main-content {
@@ -92,8 +118,14 @@
 }
 
 .AppSK .ais-RefinementList-showMore {
-  font-size:10px;
-  margin-top:7px;
+  font-size:12px;
+  margin:7px auto;
+  display: block;
+  background:none !important;
+  border:none !important;
+  box-shadow: none !important;
+  color:black;
+  font-weight:300;
 }
 
 .AppSK .ais-RefinementList-showMore:focus {
@@ -109,7 +141,39 @@
 }
 
 
+.AppSK .ais-RefinementList[data-id='nocomm_search']+[data-id='etext_search'],
+.AppSK .ais-RefinementList[data-id='etext_access']+[data-id='etext_quality'],
+.AppSK .ais-RefinementList[data-id='etext_quality']+[data-id='etext_access'] {
+  margin-top:0;
+}
 
+.AppSK .ais-RefinementList[data-id='nocomm_search']+[data-id='etext_search'] .filter-title,
+.AppSK .ais-RefinementList[data-id='etext_access']+[data-id='etext_quality'] .filter-title,
+.AppSK .ais-RefinementList[data-id='etext_quality']+[data-id='etext_access'] .filter-title {
+  display: none;
+}
+
+.AppSK .ais-RefinementList[data-id='scans_access'] [data-id='1'],
+.AppSK .ais-RefinementList:not([data-id='etext_quality'])+[data-id='etext_access'] [data-id='2'],
+.AppSK .ais-RefinementList:not([data-id='etext_quality'])+[data-id='etext_access'] [data-id='1'], 
+.AppSK .ais-RefinementList[data-id='etext_quality']+[data-id='etext_access'] [data-id='3'],
+.AppSK .ais-RefinementList[data-id='etext_quality']+[data-id='etext_access'] [data-id='1'] {
+  display:none;
+}
+
+.AppSK .ais-RefinementList[data-id='etext_quality'] .info-icon {
+  align-self:flex-start;
+  opacity:0.55;
+  width:17px;
+  margin-top:3px;
+}
+
+
+#info-tooltip-etext-quality > div { padding:5px !important;}
+
+.AppSK .ais-RefinementList [data-simplebar] {
+  max-height:65vh;
+}
 
 .AppSK .result .highlight,
 .AppSK .ais-Highlight-highlighted, 
@@ -131,6 +195,8 @@
    min-width:14px;
    height:14px;
    width:14px;
+   position: relative;
+   top:3px;
 }
 
 .AppSK .ais-RefinementList-item--selected .ais-RefinementList-checkbox {
@@ -141,9 +207,29 @@
    box-shadow: none;
 }
 
-.AppSK .ais-RefinementList-labelText [lang="en"] {
-   text-transform: capitalize;
+.AppSK .ais-RefinementList-label{
+  display: flex; 
+  justify-content: space-between;
+  align-items: baseline;
 }
+.AppSK .ais-RefinementList-labelText {
+  margin-right:auto;
+  font-size:13px;
+}
+
+.AppSK .ais-RefinementList-count {
+  font-size:10px;
+}
+
+.AppSK .ais-RefinementList-labelText span {
+  display: block;
+  margin:5px 0;  
+}
+
+.AppSK .ais-RefinementList-labelText [lang="en"]::first-letter {
+   text-transform: uppercase; 
+}
+
 
 .AppSK .ais-Hits-item {
    position: relative;
@@ -538,8 +624,16 @@ header[data-hits="0"] ~ .hits .pagination,
   box-sizing: border-box;
   width:100%;
 }
-.AppSK:not(#a) .result .thumb a .RID ~ span span{
+.AppSK:not(#a) .result .thumb a .RID ~ span span:first-child{
   font-weight:700;
+}
+
+.AppSK:not(#a) .result .thumb a .RID ~ span span:first-child + span {
+  display: inline-block;
+}
+
+.AppSK:not(#a) .result .thumb a .RID ~ span {
+  display: flex;
 }
 
 .AppSK .result .main {

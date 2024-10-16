@@ -362,13 +362,13 @@ const CustomHit = ({ hit, routing, that, sortItems, recent, storage, advanced /*
           <span class="RID">{hit.objectID}</span>
           { (hit.scans_access <= 5 || hit.scans_quality) && <span>
               <span>{I18n.t("types.images", {count:2})}{I18n.t("misc.colon")}</span>&nbsp;
-              { hit.scans_access <= 5 
+              <span>{ hit.scans_access <= 5 
                 ? I18n.t("access.scans.hit."+hit.scans_access) 
-                : getQuality("scans",hit.scans_quality) /* not there yet */ } 
+                : getQuality("scans",hit.scans_quality) /* not there yet */ }</span>
             </span>}
           { hit.etext_access >= 1 && <span>
               <span>{I18n.t("types.etext" )}{I18n.t("misc.colon")}</span>&nbsp;
-              {hit.etext_access < 3 ? I18n.t("access.etext.hit."+hit.etext_access) : getQuality("etext",hit.etext_quality)}
+              <span>{hit.etext_access < 3 ? I18n.t("access.etext.hit."+hit.etext_access) : getQuality("etext",hit.etext_quality)}</span>
             </span>} 
         </Link>        
       </div>

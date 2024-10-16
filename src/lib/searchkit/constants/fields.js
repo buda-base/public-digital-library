@@ -78,6 +78,7 @@ const NO_KEYWORD_FIELD = [
   { label: "etext_quality", highlightable: false },
   { label: "placeType", highlightable: false },
   { label: "etext_search", highlightable: false },
+  { label: "nocomm_search", highlightable: false },
 ];
 
 const DATE_RANGE_FIELDS = ["firstScanSyncDate"];
