@@ -153,6 +153,7 @@
   display: none;
 }
 
+.AppSK .ais-RefinementList[data-id='etext_access'] [data-id='1'],
 .AppSK .ais-RefinementList[data-id='scans_access'] [data-id='1'],
 .AppSK .ais-RefinementList:not([data-id='etext_quality'])+[data-id='etext_access'] [data-id='2'],
 .AppSK .ais-RefinementList:not([data-id='etext_quality'])+[data-id='etext_access'] [data-id='1'], 

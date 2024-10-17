@@ -61,6 +61,8 @@ const redirect = (refine, query, pageFilters, navigate, location) => {
   
 }
 
+const MAX_ITEMS = 8, MAX_ITEMS_HISTO = 3 
+
 const SearchBoxAction = ({ inputValue, isSearchStalled, refine, pageFilters }) => {
 
   const navigate = useNavigate()
@@ -122,6 +124,7 @@ const SearchBoxAction = ({ inputValue, isSearchStalled, refine, pageFilters }) =
 export const SuggestsList = ({ items, onClick, isVisible, selected, query, pageFilters, setIsFocused, setActualLength, setActualList }) => {
 
   const [histo, setHisto] = useState([])
+  const [noDup, setNoDup] = useState(items)
 
   useEffect(() => {
     const latest = _.orderBy(
@@ -131,13 +134,15 @@ export const SuggestsList = ({ items, onClick, isVisible, selected, query, pageF
         [ "desc" ]
       )
       
-    const newHisto = latest.slice(0,10-items.length+4).map(t => ({ fromHisto:true, res:query+"<suggested>"+t.query?.substring(query?.length)+"</suggested>"}))
+    const newNoDup = items.filter(i => ![0,1,2,3].includes(latest.findIndex(l => l.query === i.res.replace(/<[^>]+>/g,""))))    
+    const newHisto = latest.slice(0,MAX_ITEMS-Math.min(newNoDup.length,MAX_ITEMS)+MAX_ITEMS_HISTO).map(t => ({ fromHisto:true, res:query+"<suggested>"+t.query?.substring(query?.length)+"</suggested>"}))
     setHisto(newHisto)
 
-    const list = newHisto.concat(items).slice(0,10)
+    const list = newHisto.concat(newNoDup).slice(0,MAX_ITEMS)
     if(setActualLength) setActualLength(list.length) //Math.min(10, newHisto.length + items.length))
     if(setActualList) setActualList(list)
 
+    setNoDup(newNoDup)
     //console.log("histo:", latest, query, newHisto)
     
 
@@ -156,7 +161,7 @@ export const SuggestsList = ({ items, onClick, isVisible, selected, query, pageF
 
   return (
     <ul className="search-result-wrapper suggestions" hidden={!isVisible}>
-      {histo.concat(items).slice(0,10).map((_suggest, _index) => (
+      {histo.concat(noDup).slice(0,MAX_ITEMS).map((_suggest, _index) => (
         <li
           key={_index}
           className={"search-result-item "+(selected === _index ? "selected ":"")+(_suggest.fromHisto ? "fromHisto ":"")}          

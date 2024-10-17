@@ -946,7 +946,7 @@ ul.suggestions li > span > svg:first-child {
 }
 
 ul.suggestions .fromHisto svg ~ span {
-   color:#52188c;
+   color:#52188c !important;
 }
 
 ul.suggestions li {
