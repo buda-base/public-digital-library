@@ -9126,7 +9126,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
             
             let path = "/show/" 
             if(this.props.simple) path = "/simple/"
-            if(this.props.preview) path = "/preview/"
+            else if(this.props.preview) path = "/preview/"
 
             if(redir != this.props.IRI) {
                return (               
