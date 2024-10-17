@@ -1,5 +1,5 @@
 
-import React from "react"
+import React, {useEffect} from "react"
 
 import { useInstantSearch, useConfigure } from "react-instantsearch";
 import { Link } from "react-router-dom"
@@ -27,6 +27,19 @@ function SearchResultsHeader(props) {
   const label = getPropLabel(that, fullUri("bdo:"+config[1]), false, true, undefined, undefined, storageRef?.current)
   
   console.log("status:", status, searchStatus)
+
+  useEffect(() => {
+    if(results?.nbHits === 0) {
+      console.log("remove:", searchStatus)
+
+      const latest = JSON.parse(localStorage.getItem('latest_searches') ?? "{}")          
+      if(latest[indexUiState.query] && latest[indexUiState.query].pageFilters === indexUiState.configure?.filters) {
+        delete latest[indexUiState.query]
+        localStorage.setItem('latest_searches', JSON.stringify(latest))
+      }
+      
+    }
+  }, [results])
 
   return <header data-hits={results?.nbHits} data-status={status}>    
     { !inner && <>{ config.length > 1 && config[0] === "associated_res" 
