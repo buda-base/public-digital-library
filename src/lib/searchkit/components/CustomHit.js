@@ -64,7 +64,8 @@ const CustomHit = ({ hit, routing, that, sortItems, recent, storage, advanced /*
     if(!langs) return
     langs = extendedPresets(langs)
 
-    const hidden = [ "publisherName", "publisherLocation", /*"summary",*/ "authorshipStatement", "comment" ]
+    const hidden = [ "publisherName", "publisherLocation", "authorshipStatement", "comment" ]
+    const hidden_if_no_match_and_not_locale_en = [ "summary" ]
 
     if(hit) { 
       for(const name of ["prefLabel", "altLabel", "publisherName", "publisherLocation", "summary", "authorshipStatement", "comment", "seriesName"]) {
@@ -177,11 +178,14 @@ const CustomHit = ({ hit, routing, that, sortItems, recent, storage, advanced /*
         const byLang = labels[name].reduce((acc,l) => ({
           ...acc,
           [l.lang]: (acc[l.lang] ? acc[l.lang]+I18n.t("punc.semic"):"")+l.value
-        }),{})
+        }),{})              
         
         //console.log("byL:", byLang, labels[name])
 
         const sortLabels = sortLangScriptLabels(Object.keys(byLang).map(k => ({lang:k, value:byLang[k]})),langs.flat,langs.translit)
+      
+        if(hidden_if_no_match_and_not_locale_en.includes(name) && sortLabels.length && !sortLabels[0].value?.includes("↦") && that.props.locale != "en") continue;
+          
         let lang = ""
         for(const l of sortLabels) {
           const label = l.value
@@ -194,7 +198,7 @@ const CustomHit = ({ hit, routing, that, sortItems, recent, storage, advanced /*
           if(name != "seriesName") {
             const max = lang === "bo" ? 10 : 35
             if(!newLabel?.includes("↦")) {
-              newLabel = newLabel.replace(/[\n\r]/gm," ").replace(new RegExp("^ *(([^ ]+ +){max})(.*)"), (m,g1,g2,g3)=>g1+(g3?" (...)":""))
+              newLabel = newLabel.replace(/[\n\r]/gm," ").replace(new RegExp("^ *((( +[^ ]+)|([^ ]+ +)){"+max+"})(.*)"), (m,g1,g2,g3,g4,g5)=>g1+(g5?" (...)":""))
             } else {      
               if((newLabel.match(/ /g) || []).length > max) {
                 newLabel = newLabel.replace(/[\n\r]+/gm," ").replace(new RegExp("^ *(.*?)(( +[^ ]+){1,"+Math.round(max/2)+"} *↦)"),(m,g1,g2,g3)=>(g1?"(...) ":"")+g2)
