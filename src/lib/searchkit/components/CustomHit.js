@@ -184,7 +184,7 @@ const CustomHit = ({ hit, routing, that, sortItems, recent, storage, advanced /*
 
         const sortLabels = sortLangScriptLabels(Object.keys(byLang).map(k => ({lang:k, value:byLang[k]})),langs.flat,langs.translit)
       
-        if(hidden_if_no_match_and_not_locale_en.includes(name) && sortLabels.length && !sortLabels[0].value?.includes("↦") && that.props.locale != "en") continue;
+        if(hidden_if_no_match_and_not_locale_en.includes(name) && sortLabels.length && !sortLabels[0].value?.includes("↦") && (!sortLabels[0].lang.startsWith("en") || that.props.locale != "en")) continue;
           
         let lang = ""
         for(const l of sortLabels) {
