@@ -64,7 +64,7 @@ const CustomHit = ({ hit, routing, that, sortItems, recent, storage, advanced /*
     if(!langs) return
     langs = extendedPresets(langs)
 
-    const hidden = [ "publisherName", "publisherLocation", "summary", "authorshipStatement", "comment" ]
+    const hidden = [ "publisherName", "publisherLocation", /*"summary",*/ "authorshipStatement", "comment" ]
 
     if(hit) { 
       for(const name of ["prefLabel", "altLabel", "publisherName", "publisherLocation", "summary", "authorshipStatement", "comment", "seriesName"]) {
@@ -192,12 +192,13 @@ const CustomHit = ({ hit, routing, that, sortItems, recent, storage, advanced /*
           const newLabel = label
                   
           if(name != "seriesName") {
+            const max = lang === "bo" ? 10 : 35
             if(!newLabel?.includes("↦")) {
-              newLabel = newLabel.replace(/[\n\r]/gm," ").replace(/^ *(([^ ]+ +){35})(.*)/, (m,g1,g2,g3)=>g1+(g3?" (...)":""))
+              newLabel = newLabel.replace(/[\n\r]/gm," ").replace(new RegExp("^ *(([^ ]+ +){max})(.*)"), (m,g1,g2,g3)=>g1+(g3?" (...)":""))
             } else {      
-              if((newLabel.match(/ /g) || []).length > 35) {
-                newLabel = newLabel.replace(/[\n\r]+/gm," ").replace(/^ *(.*?)(([^ ]+ +){1,17} *↦)/,(m,g1,g2,g3)=>(g1?"(...) ":"")+g2)
-                newLabel = newLabel.replace(new RegExp("(↤ *([^ ]+ +){"+Math.max(1,(35-(newLabel.replace(/^(.*?↦).*$/,"$1").match(/ /g) || []).length))+"})(.*?)$"),(m,g1,g2,g3)=>g1+(g3?" (...)":""))
+              if((newLabel.match(/ /g) || []).length > max) {
+                newLabel = newLabel.replace(/[\n\r]+/gm," ").replace(new RegExp("^ *(.*?)(( +[^ ]+){1,"+Math.round(max/2)+"} *↦)"),(m,g1,g2,g3)=>(g1?"(...) ":"")+g2)
+                newLabel = newLabel.replace(new RegExp("(↤ *([^ ]+ +){"+Math.max(1,(max-(newLabel.replace(/^(.*?↦).*$/,"$1").match(/ /g) || []).length))+"})(.*?)$"),(m,g1,g2,g3)=>g1+(g3?" (...)":""))
               }
             }
             if(newLabel.startsWith("(...)") || newLabel.endsWith("(...)")) newShow[tag] = true                  
