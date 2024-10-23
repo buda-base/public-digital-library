@@ -242,7 +242,7 @@ export class TraditionViewer extends Component<State, Props>
         listing.push({...label, rank:topic.rank ?? MAXNL, sublist, depth, hasSub:1}) 
       } else {
         //listing.push(<Link to={"../bdr:"+t+"/"}>{ getPropLabel(this, fullUri("bdr:"+t)) } [{topic?.sub?.length}]</Link>)  
-        listing.push({...label, rank:topic.rank ?? MAXNL, to:"../bdr:"+t+"/", depth, hasSub:1, length:topic?.sub?.length }) 
+        listing.push({...label, rank:topic.rank ?? MAXNL, to:"./../bdr:"+t+"/", depth, hasSub:1, length:topic?.sub?.length }) 
       }
     } else {
       //listing.push(<Link to={"/search?r=bdr:"+t+"&t=Work"}>{ getPropLabel(this, fullUri("bdr:"+t)) }</Link>)
@@ -273,7 +273,7 @@ export class TraditionViewer extends Component<State, Props>
   renderTopic({tradi, id}, {content, breadcrumbs}){
 
     breadcrumbs.pop()
-    breadcrumbs.push(<Link to={".."}>{I18n.t("tradition.t_"+this.props.type)} ({id})</Link>)                    
+    breadcrumbs.push(<Link to={"./../"}>{I18n.t("tradition.t_"+this.props.type)} ({id})</Link>)                    
     
     let t = this.props.root.split(":")
     t = t.pop()
@@ -284,7 +284,7 @@ export class TraditionViewer extends Component<State, Props>
     path.pop()
     for(const p of path) {
       const pathid = this.getIdAsText("bdr:"+p)     
-      breadcrumbs.push(<Link to={"../bdr:"+p+"/"}>{pathid}</Link>)                    
+      breadcrumbs.push(<Link to={"./../bdr:"+p+"/"}>{pathid}</Link>)                    
     }
 
     let rootid = this.getIdAsText(this.props.root)     
@@ -308,10 +308,10 @@ export class TraditionViewer extends Component<State, Props>
 
     let subContent, id, classes
          
-    if(!this.props.type === "school") {
-      id = this.getIdAsText(this.props.id) 
-    } else if(tradi.subContent[this.props.type][this.props.id]) {
+    if(this.props.type === "selected" && tradi.subContent[this.props.type][this.props.id]) {
       id = this.getIdAsText(tradi.subContent[this.props.type][this.props.id].id) 
+    } else if(!(this.props.type === "school")) {
+      id = this.getIdAsText(this.props.id) 
     }
 
     breadcrumbs.push(<Link to={"/tradition/"+this.props.tradition+"/"}>{I18n.t("tradition."+this.props.tradition+"T")}</Link>)
@@ -329,7 +329,7 @@ export class TraditionViewer extends Component<State, Props>
         
         let subid = this.getIdAsText(tradi.subContent[this.props.type][this.props.id].parent)
 
-        breadcrumbs.push(<Link to={"../"+tradi.subContent[this.props.type][this.props.id].parent}>{I18n.t("tradition.t_"+this.props.type)} ({subid})</Link>)            
+        breadcrumbs.push(<Link to={"./../"+tradi.subContent[this.props.type][this.props.id].parent}>{I18n.t("tradition.t_"+this.props.type)} ({subid})</Link>)            
         breadcrumbs.push(<span>{id}</span>)                    
         
       } else {
@@ -428,8 +428,8 @@ export class TraditionViewer extends Component<State, Props>
       let content = [], breadcrumbs = [<Link to="/">{I18n.t("topbar.home")}</Link>]                
 
       if(!tradi) return <></>
-      else if(this.props.type && this.props.id) this.renderSubLevel(tradi, {content, breadcrumbs})
       else if(this.props.school) this.renderSubLevel(tradi, {content, breadcrumbs})
+      else if(this.props.type && this.props.id) this.renderSubLevel(tradi, {content, breadcrumbs})
       else this.renderTopLevel(tradi, {content, breadcrumbs})
 
       console.log("tv:state",this.state)
