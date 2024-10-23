@@ -3672,6 +3672,9 @@ class ResourceViewer extends Component<Props,State>
                   }
                }       
 
+               let inCollec = this.getResourceElem(bdo+"inCollection")
+               if(!inCollec?.length) inCollec = this.getResourceElem(bdo+"inCollection", prefix+":"+pretty)
+
                let quality
                elem = this.getResourceElem(bdo+"qualityGrade");
                if(!elem?.length) elem = this.getResourceElem(bdo+"qualityGrade", prefix+":"+pretty)
@@ -3780,6 +3783,7 @@ class ResourceViewer extends Component<Props,State>
                            }                        
                            { scanInfo && //(!this.props.IIIFerrors||!this.props.IIIFerrors[prefix+":"+pretty]|| this.props.IIIFerrors[prefix+":"+pretty].error?.code != 403) && 
                               <div>{scanInfo.map(s => <TextToggle text={getLangLabel(this,bdo+"scanInfo",[s])?.value}/>)}</div>}
+                           { inCollec?.length && <div>{I18n.t("resource.inCollection",{count:inCollec.length})} {inCollec.map((c,i) => ([i > 0 ? " | ":null,this.uriformat("", { type:"uri", value:c.value })]))}</div>}
                            {/* <Link {...this.props.preview?{ target:"_blank" }:{}} className={"urilink "+ prefix} to={"/"+show+"/"+prefix+":"+pretty}>{I18n.t("resource.openR")}</Link> */}
                         </div>]
             } else if(thumbV && thumbV.length) {

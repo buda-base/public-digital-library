@@ -755,7 +755,9 @@
          "person": "Search texts by this person or about this person",
          "place": "Search material related to this place",
          "product": "Search texts in this collection"
-      }
+      },
+      "inCollection":"In collection",
+      "inCollection_plural":"In collections"
    },
    "tradition":{
       "boT":"Tibetan Tradition",
