@@ -883,9 +883,11 @@ body > #pop-login { z-index:1000000 ;}
 }
 
 
+/*
 :not(#search-bar) + #filters-UI ~ #res-header > div > :not(#pagine) { 
    visibility: hidden;
 }
+*/
 
 .resource > .ariane { margin-top:-10px; }
 

@@ -254,7 +254,7 @@ function Compo() {
    return <div>youpi</div>
 }
 
-function HomeCompo() {
+function HomeCompo(props = {}) {
    const location = useLocation();
    const navigate = useNavigate();
  
@@ -263,7 +263,7 @@ function HomeCompo() {
      store.dispatch(initiateApp(qs.parse(location.search)));
    }, [location]); 
 
-   return <AppContainer { ...{ location, navigate, auth } }/> 
+   return <AppContainer { ...{ ...props, location, navigate, auth } }/> 
 }
  
 function BaseOSCompo() {
@@ -469,6 +469,8 @@ const makeMainRoutes = () => {
                      <Route exact path="/iiifcookielogin" element={<IIIFCookieCompo />}/>
                      <Route exact path="/iiiftoken" element={<IIIFTokenCompo />}/>
 
+                     <Route path="/search" element={<HomeCompo advancedSearch={true} />}/>
+
 {/* 
 
                         <Route exact path="/static/:DIR1/:DIR2/:DIR3/:PAGE" render={(props) => {
@@ -501,15 +503,7 @@ const makeMainRoutes = () => {
                         <Route exact path="/browse" render={(props) => {
                            return (<BrowseContainer history={history} auth={auth}/> )
                         }} />
-                        <Route path="/search" render={(props) => {
-                           let get = qs.parse(history.location.search)
-                           //if(!store.getState().data.ontology)
-                           {
-                              loggergen.log("new route",props,store.getState())
-                              //if(!store.getState().ui.loading)
-                              store.dispatch(initiateApp(qs.parse(history.location.search)))
-                           }
-                           return (<AppContainer history={history} auth={auth}/> ) }}/>
+                        
                         <Route path="/simplesearch" render={(props) => {
                            let get = qs.parse(history.location.search)
                            store.dispatch(initiateApp(qs.parse(history.location.search)))

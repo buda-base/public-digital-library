@@ -44,7 +44,7 @@ function CustomRefinementList(props) {
     canToggleShowMore,
     isShowingMore,
     toggleShowMore,
-  } = useRefinementList({...props, limit:8, showMoreLimit:10000});
+  } = useRefinementList({...props, limit:8, showMoreLimit:1000});
 
   const current = (indexUiState?.refinementList?.[attribute] ?? []).filter(c => !items.find(i => i.value === c)).map(c => ({ 
     value:c, label:c, highlighted:c, isRefined:true, count:-1

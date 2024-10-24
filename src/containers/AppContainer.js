@@ -88,7 +88,7 @@ const mapStateToProps = (state,ownProps) => {
 
    let spellcheckerBo = state.data.spellcheckerBo
 
-   let advancedSearch = state.ui.advancedSearch
+   let advancedSearch = state.ui.advancedSearch ?? ownProps.advancedSearch
 
 
    let newState = { logged,config, hostFailure, searches, keyword, language,loading,datatypes,ontology,facets,

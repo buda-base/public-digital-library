@@ -1155,12 +1155,15 @@ export function top_right_menu(that,etextTitle,backUrl,etextres,isMirador,locati
 
    let logo = [
             <div id="logo">
-               <Link to="/"  onClick={() => { 
-                  /*
-                  that.props.navigate({pathname:"/",search:""}); 
-                  if(that.props.keyword) { that.props.onResetSearch(); } 
-                  that.setState({blurSearch:false})
-                  */
+               <Link to="/"  onClick={(ev) => { 
+                  if(this.props.advancedSearch || this.state.filters) {
+                     that.props.navigate({pathname:"/",search:""}); 
+                     if(that.props.keyword) { that.props.onResetSearch(); } 
+                     that.setState({blurSearch:false})
+                     ev.preventDefault()
+                     ev.stopPropagation()
+                     return false
+                  }
                } }><img src="/icons/BUDA-small.svg"/><span>BUDA</span></Link>                                  
                <a id="by"><span>by</span></a>
                { !onZhMirror && [
@@ -1226,21 +1229,19 @@ export function top_right_menu(that,etextTitle,backUrl,etextres,isMirador,locati
       innerSearch = (
          that?.state.filters && !that?.props.keyword || that?.state.filters && that.props.advancedSearch || that.props.isOsearch
          ? null 
-         : <InstantSearchBox {...{ that, isMirador }}/>
-                  /* 
-         : <div class={'inner-search-bar in-search-'+(that.state.filters?"true":"false")}>
-            <div>
-               <span>Search</span>
-               <span>
-                  
-                  <AutocompleteKeywordInput { ...{ that } }/> 
-                  <IconButton>
-                     <SearchIcon />
-                  </IconButton>
-                  </span>
+         : !that.props.advancedSearch
+            ? <InstantSearchBox {...{ that, isMirador }}/>            
+            : <div class={'inner-search-bar in-search-'+(that.state.filters?"true":"false")}>
+                  <div>
+                     <span>Search</span>
+                     <span>                  
+                        <AutocompleteKeywordInput { ...{ that } }/> 
+                        <IconButton>
+                           <SearchIcon />
+                        </IconButton>
+                     </span>
                   </div>
-                  </div>
-                  */
+               </div>
       )
 
    if(false && etextTitle)
@@ -2152,7 +2153,7 @@ class App extends Component<Props,State> {
       if(dataInfo) {
          loggergen.log("new route:",dataInfo)
 
-         this.props.history.push({pathname:"/search",search:"?"+(dataInfo==="date"?"date":"id")+"="+key+"&t="+label+khmerCollec+proxiedCollec})
+         this.props.navigate({pathname:"/search",search:"?"+(dataInfo==="date"?"date":"id")+"="+key+"&t="+label+khmerCollec+proxiedCollec})
       }
       else if(_key.match(RIDregexp) || prefixesMap[key.replace(/^([^:]+):.*$/,"$1")])
       {
@@ -2162,16 +2163,16 @@ class App extends Component<Props,State> {
          
          if(!forceSearch && !idx) { 
 
-            this.props.history.push({pathname:"/show/"+_key})
+            this.props.navigate({pathname:"/show/"+_key})
          }
          else {
             if(!label) label = this.state.filters.datatype.filter((f)=>["Person","Work"].indexOf(f) !== -1)[0]
-            this.props.history.push({pathname:"/search",search:"?r="+_key+(label?"&t="+label+khmerCollec+proxiedCollec+hasOpenPossibly:"")})
+            this.props.navigate({pathname:"/search",search:"?r="+_key+(label?"&t="+label+khmerCollec+proxiedCollec+hasOpenPossibly:"")})
          }
       }
       else if(key.match(/^[^:]*:[^ ]+/))
       {
-         this.props.history.push({pathname:"/search",search:"?p="+key+khmerCollec+proxiedCollec})
+         this.props.navigate({pathname:"/search",search:"?p="+key+khmerCollec+proxiedCollec})
 
       }
       else {
@@ -2187,7 +2188,7 @@ class App extends Component<Props,State> {
          }
          const newLoca = {pathname:"/search",search:"?q="+key+"&lg="+lang+"&t="+label+khmerCollec+proxiedCollec+hasOpenPossibly+(inEtext?"&r="+inEtext:"")}
          loggergen.log("newL?",newLoca)
-         this.props.history.push(newLoca)
+         this.props.navigate(newLoca)
          
          // TODO add permanent filters (here ?)
       }
@@ -2200,17 +2201,17 @@ class App extends Component<Props,State> {
       /*
       else if(label === "Any") // || ( !label)) // && ( this.state.filters.datatype.length === 0 || this.state.filters.datatype.indexOf("Any") !== -1 ) ) )
       {
-         this.props.history.push({pathname:"/search",search:"?q="+key+"&lg="+this.getLanguage()+"&t=Any"})
+         this.props.navigate({pathname:"/search",search:"?q="+key+"&lg="+this.getLanguage()+"&t=Any"})
       }
       else if (label || this.state.filters.datatype.filter((f)=>["Person","Work","Etext"].indexOf(f) !== -1).length > 0)
       {
          if(!label) label = this.state.filters.datatype.filter((f)=>["Person","Work","Etext"].indexOf(f) !== -1)[0]
 
-         this.props.history.push({pathname:"/search",search:"?q="+key+"&lg="+this.getLanguage()+"&t="+label})
+         this.props.navigate({pathname:"/search",search:"?q="+key+"&lg="+this.getLanguage()+"&t="+label})
       }
       else 
       {
-         this.props.history.push({pathname:"/search",search:"?q="+key+"&lg="+this.getLanguage()+"&t=Any"})
+         this.props.navigate({pathname:"/search",search:"?q="+key+"&lg="+this.getLanguage()+"&t=Any"})
       }
       */
 
@@ -2962,7 +2963,7 @@ class App extends Component<Props,State> {
          search = search.replace(/((&|[?])s=[^&#]+)/g,"")      
          search += (search === ""?"?":"&")+"s="+i.toLowerCase()
          search = search.replace(/(\?&)|(^&)/,"?")
-         this.props.history.push({pathname,search})         
+         this.props.navigate({pathname,search})         
          
       } 
    }
@@ -3107,7 +3108,7 @@ class App extends Component<Props,State> {
          let {pathname,search} = this.props.location
          search = search.replace(/([&?]([nf]|pg)=[^&]+)/g,"")+"&pg=1"+getFacetUrl(state.filters,this.props.config.facets[state.filters.datatype[0]])+(this.props.latest&&!(""+search).match(/t=/)?"&t=Scan":"")
          search = search.replace(/(\?&)|(^&)/,"?")
-         this.props.history.push({pathname,search })
+         this.props.navigate({pathname,search })
       }
 
       this.setState(state);
@@ -3277,13 +3278,13 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             }
             else  {
 
-               this.props.history.push("/search?q="+this.props.keyword+"&lg="+this.getLanguage()+"&t="+lab);
+               this.props.navigate("/search?q="+this.props.keyword+"&lg="+this.getLanguage()+"&t="+lab);
             }
          }
          else {
 
 
-               this.props.history.push("/search?r="+this.props.keyword+"&t="+lab);
+               this.props.navigate("/search?r="+this.props.keyword+"&t="+lab);
 
          }
 
@@ -3525,7 +3526,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          let {pathname,search} = this.props.location
          search = search.replace(/(([&?])(n|pg)=[^&]+)/g,"")
          if(search) search += "&"
-         this.props.history.push({pathname,search:search+"pg="+(state.index - 1 + 1)+"&n="+(state.n[state.index - 1]+1)})
+         this.props.navigate({pathname,search:search+"pg="+(state.index - 1 + 1)+"&n="+(state.n[state.index - 1]+1)})
       }
    }
 
@@ -3542,7 +3543,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          let {pathname,search} = this.props.location
          search = search.replace(/(([&?])(n|pg)=[^&]+)/g,"")
          if(search) search += "&"
-         this.props.history.push({pathname,search:search+"pg="+(i)+"&n="+(state.n[i-1]+1)})
+         this.props.navigate({pathname,search:search+"pg="+(i)+"&n="+(state.n[i-1]+1)})
       }
    }
 
@@ -3558,7 +3559,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          let {pathname,search} = this.props.location
          search = search.replace(/(([&?])(n|pg)=[^&]+)/g,"")
          if(search) search += "&"
-         this.props.history.push({pathname,search:search+"pg="+(state.index + 1 + 1)+"&n="+(state.n[state.index + 1]+1)})
+         this.props.navigate({pathname,search:search+"pg="+(state.index + 1 + 1)+"&n="+(state.n[state.index + 1]+1)})
       }
    }
 
@@ -5544,7 +5545,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                               value={this.props.latestSyncsMeta?.timeframe ?? "past7d"}
                               onChange={(ev) => { 
                                  this.setState({ repage:true, paginate: undefined, results: { message:[] }})
-                                 this.props.history.push({
+                                 this.props.navigate({
                                     ...this.props.location, 
                                     search:
                                        "?tf="+ev.target.value.replace(/past/,"")
@@ -6312,9 +6313,9 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             if(inEtext) search = search.replace(/((&|(\?))([r])=[^&]+)/g,"$3")
          }
          if(onKhmerUrl && this.props.keyword === "-" && this.props.checkResults?.route) search = this.props.checkResults?.route.replace(/^[^?]+[?]/,"?")
-         this.props.history.push({pathname,search:search.replace(/\?&/,"?")})
+         this.props.navigate({pathname,search:search.replace(/\?&/,"?")})
       }
-      else this.props.history.push({pathname,search:this.state.backToWorks})
+      else this.props.navigate({pathname,search:this.state.backToWorks})
       
       // TODO fix reset filters 
       //setTimeout(() => this.setState({...this.state, repage:true, uriPage:0, scrolled:1, filters:{ datatype: this.state.filters.datatype } }), 100 )
@@ -7634,7 +7635,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   <SearchBar       
                      innerRef={this._refs.barRef}           
                      placeholder={I18n.t("home.search")}                        
-                     closeIcon={<Close className="searchClose" style={ {color:"rgba(0,0,0,1.0)",opacity:1} } onClick={() => { this.props.history.push({pathname:"/",search:""}); this.props.onResetSearch();} }/>}
+                     closeIcon={<Close className="searchClose" style={ {color:"rgba(0,0,0,1.0)",opacity:1} } onClick={() => { this.props.navigate({pathname:"/",search:""}); this.props.onResetSearch();} }/>}
                      disabled={this.props.hostFailure}
                      onClick={(ev) => { changeKW(this.state.keyword?lucenequerytokeyword(this.state.keyword):""); $("#search-bar input[type=text][placeholder]").attr("placeholder",I18n.t("home.start"));  } }
                      onBlur={(ev) => { loggergen.log("BLUR"); setTimeout(() => this.setState({...this.state,dataSource:[],blurSearch:true}),100); $("#search-bar input[type=text][placeholder]").attr("placeholder", I18n.t("home.search"));  } }

@@ -220,7 +220,7 @@ const mapStateToProps = (state,ownProps) => {
 
    let isNewUser = state.ui.isNewUser
 
-   let advancedSearch = state.ui.advancedSearch
+   let advancedSearch = state.ui.advancedSearch ?? ownProps.advancedSearch
 
    let monlamResults = state.data.monlamResults
    let monlamKeyword = state.data.monlamKeyword

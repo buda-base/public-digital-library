@@ -245,9 +245,11 @@ async function initiateApp(params,iri,myprops,route,isAuthCallback) {
          store.dispatch(dataActions.loadedDictionary(dico));         
          
       }
+      
+      let { pathname, search } = { ...window.location }
 
       // #765
-      if(false && params && params.p && params.p.includes("purl.bdrc.io/resource")) {     
+      if(pathname.startsWith("/search") && params && params.p && params.p.includes("purl.bdrc.io/resource")) {     
          let iri = shortUri(params.p.replace(/"/g,""))
          if(iri.startsWith("bdr:")) {
             window.history.replace({ pathname: "/show/"+iri })
@@ -255,9 +257,8 @@ async function initiateApp(params,iri,myprops,route,isAuthCallback) {
          }
       }
 
-      // #757
-      if(false && params && params.s && Array.isArray(params.s)) {
-         let { pathname, search } = { ...window.location }
+      // #757      
+      if(pathname.startsWith("/search") && params && params.s && Array.isArray(params.s)) {
          let s = params.s.filter(p => p.includes("%"))
          if(!s.length) s = params.s
          search = search.replace(/([&?])s=[^&]+/g, "") + "s=" + encodeURIComponent(s[0])
@@ -266,16 +267,14 @@ async function initiateApp(params,iri,myprops,route,isAuthCallback) {
       }
 
       // #756
-      if(false && params && params.t === "Version") {
-         let { pathname, search } = { ...window.location }
+      if(pathname.startsWith("/search") &&  params && params.t === "Version") {
          search = search.replace(/t=Version/, "t=Instance") 
          window.history.replace({ pathname, search })
          return
       }
 
       // #756
-      if(false && params && params.q && params.q.match(/^(["(]+[^"]*)"([^"]*[")]+[~0-9]*)$/)) {
-         let { pathname, search } = { ...window.location }
+      if(pathname.startsWith("/search") && params && params.q && params.q.match(/^(["(]+[^"]*)"([^"]*[")]+[~0-9]*)$/)) {
          search = search.replace(/q=[^&]+/, "q="+params.q.replace(/^(["(]+[^"]*)"([^"]*[")~0-9]+)$/g,(m,g1,g2) => g1+(g2.includes('"')?g2:'"'+g2)))
          if(search != window.location.search) {
             window.history.replace({ pathname, search })
@@ -509,12 +508,12 @@ if(params && params.osearch && !iri.match(/^([^:]+:)?UT/)) {
 }
 
 
-if(false && params && params.t /*&& !params.i */) {
+if(pathname.startsWith("/search") && params && params.t /*&& !params.i */) {
    //loggergen.log("uSb:",params)
    store.dispatch(uiActions.updateSortBy(params.s?params.s.toLowerCase():(params.i?"year of publication reverse":(params.t==="Etext"?(!params.lg?"title":"closest matches"):(params.t==="Scan"?(route ==="latest"?"release date":"popularity"):"popularity"))),params.t))
 }
 
-if(false && params && params.i) {
+if(pathname.startsWith("/search") && params && params.i) {
    let t = getEntiType(params.i)
 
    if(["Work"].indexOf(t) !== -1
@@ -523,11 +522,11 @@ if(false && params && params.i) {
       store.dispatch(dataActions.getInstances(params.i,true));
    }
 }
-else if(false && params && params.p) {
+else if(pathname.startsWith("/search") && params && params.p) {
 
    store.dispatch(dataActions.ontoSearch(params.p));
 }
-else if(false && params && params.q) {
+else if(pathname.startsWith("/search") && params && params.q) {
 
    
    if(params.q == "-" && !state.data.searches["-@-"]) {
@@ -607,7 +606,7 @@ else if(false && params && params.q) {
    }
    */
 }
-else if(false && params && params.r) {
+else if(pathname.startsWith("/search") && params && params.r) {
    let t = params.u ?? getEntiType(params.r)
    if(["Instance", "Images", "Volume", "Scan"].includes(t) || ["bdo:SerialWork"].includes(params.r) ) t = "Work"
    if(params.r === "tmp:subscriptions") t = "Product"
@@ -630,12 +629,12 @@ else if(false && params && params.r) {
       }
    }
 }
-else if(false && params && params.date && params.t) {
+else if(pathname.startsWith("/search") && params && params.date && params.t) {
 
    store.dispatch(dataActions.getResultsByDate(params.date, params.t));
 
 }
-else if(false && params && params.id && params.t) {
+else if(pathname.startsWith("/search") && params && params.id && params.t) {
 
    store.dispatch(dataActions.getResultsById(params.id, params.t));
 
@@ -659,7 +658,7 @@ else if(staticQueries[route]?.length === 2) {
    
    store.dispatch(dataActions.getStaticQueryAsResults(route,params.t));
 }
-else if(false && !iri) {
+else if(pathname.startsWith("/search") && !iri) {
 
    let state = store.getState()
    
@@ -2714,7 +2713,7 @@ function rewriteAuxMain(result,keyword,datatype,sortBy,language)
 
          if(!canPopuSort && sortBy.startsWith("popularity")) {            
             let {pathname,search} = window.location         
-            window.history.push({pathname,search:search.replace(/(([&?])s=[^&]+)/g,"$2")+(!search.match(/[?&]s=/)?"&":"")+"s="+(sortBy=(language?"closest matches":"title")+" forced")})   
+            window.history.pushState({},"",pathname+search.replace(/(([&?])s=[^&]+)/g,"$2")+(!search.match(/[?&]s=/)?"&":"")+"s="+(sortBy=(language?"closest matches":"title")+" forced"))
          }
 
          if(language !== undefined) { 
@@ -3071,7 +3070,7 @@ async function checkResults(params, route) {
 
             if(!params.init && store.getState().data.checkResults !== false) {
                store.dispatch(dataActions.checkResults({count, loading:false, route: route+"&q=-&lg=-"}));                     
-               if(route) window.history.push(route+"&q=-&lg=-")
+               if(route) window.history.pushState({},"",route+"&q=-&lg=-")
             } else {
                if(params.init) store.dispatch(dataActions.checkResults({init:true, route:params.route}));         
                else store.dispatch(dataActions.checkResults(false));         
