@@ -220,8 +220,9 @@ const routingConfig = () => ({
     createURL({ qsModule, location, routeState }) {
       
       let { origin, pathname, hash, search } = location, url;
-      if(!pathname.endsWith("/search") && !pathname.startsWith("/show/") //&& !pathname.startsWith("/tradition/") 
-        && routeState.q) pathname = "/osearch/search"
+      if(pathname.startsWith("/search") 
+        || !pathname.endsWith("/search") && !pathname.startsWith("/show/") //&& !pathname.startsWith("/tradition/") 
+            && routeState.q) pathname = "/osearch/search"
       
       const indexState = routeState['instant_search'] || {};
       const queryString = qsModule.stringify({ ...qsModule.parse(search.replace(/^\?/,""))??{}, ...routeState});

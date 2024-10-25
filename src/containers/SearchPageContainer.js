@@ -35,9 +35,12 @@ const mapStateToProps = (state,ownProps) => {
 
    let dictionary = state.data.dictionary ;
 
+   let advancedSearch = state.ui.advancedSearch ?? ownProps.advancedSearch
+
    let props = { config, locale, profileName, portraitPopupClosed, isNewUser, feedbucket, 
       langPreset,langIndex,langExt,etextLang,
-      dictionary
+      dictionary,
+      advancedSearch
    }
 
    return props
@@ -61,6 +64,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       },
       onFeedbucketClick(cls:string) {
          dispatch(ui.feedbucket(cls))
+      },
+      onAdvancedSearch(s:boolean) {
+         dispatch(ui.advancedSearch(s))
       }
    }
 }

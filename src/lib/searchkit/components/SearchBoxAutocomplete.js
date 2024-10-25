@@ -36,8 +36,9 @@ const redirect = (refine, query, pageFilters, navigate, location) => {
 
   
   const loca = location  
-  if(!loca.pathname.endsWith("/search") && !loca.pathname.endsWith("/show/")  // && !loca.pathname.startsWith("/tradition/") 
-      && !pageFilters){          
+  if(loca.pathname.startsWith("/search") 
+    || !loca.pathname.endsWith("/search") && !loca.pathname.endsWith("/show/")  // && !loca.pathname.startsWith("/tradition/") 
+       && !pageFilters){          
              
       
     /*
@@ -196,7 +197,7 @@ export const formatResponseForURLSearchParams = (query) => {
 const SearchBoxAutocomplete = (props) => {
   const { query, refine  } = useSearchBox(props);
   const { status, setUiState, uiState, results, refresh } = useInstantSearch();
-  const { loading, placeholder, pageFilters, routing } = props
+  const { loading, placeholder, pageFilters, routing, that } = props
 
   const [inputValue, setInputValue] = useState(query);
   const [isFocused, setIsFocused] = useState(false);
@@ -389,6 +390,7 @@ const SearchBoxAutocomplete = (props) => {
         //setActualLength={setSuggestionLen}
         setActualList={setActualList}
       />
+      <a id="simple-search" onClick={() => that.props.onAdvancedSearch(true)}>Advanced search</a>
     </form>
   );
 };

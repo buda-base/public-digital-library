@@ -1123,7 +1123,7 @@ function InstantSearchBox(props) {
       >
          <div className="search inner-search-bar" style={{ ...isMirador?{position:"absolute"}:{} }}>
             <div>
-               <SearchBoxAutocomplete searchAsYouType={false} {...props} {...{routing}} />
+               <SearchBoxAutocomplete searchAsYouType={false} {...props} {...{that, routing}} />
             </div>
          </div>
       </InstantSearch>
@@ -2757,7 +2757,7 @@ class App extends Component<Props,State> {
                         shadowSize: [41, 41]
                      });
 
-                     let sUri = shortUri(o), url = "/show/"+sUri+"?s="+ encodeURIComponent(window.location.href.replace(/^https?:[/][/][^?]+[?]?/gi,"").replace(/(&n=[^&]*)/g,"")+"&n="+(1+n))
+                     let sUri = shortUri(o), url = "/show/"+sUri+"?s="+ encodeURIComponent("/search?"+window.location.href.replace(/^https?:[/][/][^?]+[?]?/gi,"").replace(/(&n=[^&]*)/g,"")+"&n="+(1+n))
                      
                      const sendMsgMap = (ev) => {
                         if(this.props.simple) {
@@ -4371,7 +4371,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      }</span>	
                   { openAccess && <>
                      <span> {I18n.t("misc.or")} </span>	
-                     <Link to={"/show/"+prettId+"?s="+ encodeURIComponent((urlBase.replace(/((([?])?&*|^)n=[^&]*)/g,"$3")+(!urlBase.match(/[\?&]$/)?"&":"")+"n="+n).replace(/\?+&?/,"?"))+(!bestM?"":"&"+bestM.replace(/^\?/,""))} class="uri-link">{I18n.t("result.openEin")}</Link>	
+                     <Link to={"/show/"+prettId+"?s="+ encodeURIComponent("/search?"+(urlBase.replace(/((([?])?&*|^)n=[^&]*)/g,"$3")+(!urlBase.match(/[\?&]$/)?"&":"")+"n="+n).replace(/\?+&?/,"?"))+(!bestM?"":"&"+bestM.replace(/^\?/,""))} class="uri-link">{I18n.t("result.openEin")}</Link>	
                   </> }
                   </> }</span>:null}</span>	                      	
             </div>)	
@@ -4483,7 +4483,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             viewUrl = allProps.filter(a => a.type === bdo+"instanceHasReproduction" && !a.value.includes("/resource/IE"))
             if(viewUrl.length) viewUrl = shortUri(viewUrl[0].value)
             else viewUrl = null
-            if(viewUrl && viewUrl.startsWith("bdr:")) viewUrl = "/show/" + viewUrl + "?s="+ encodeURIComponent(window.location.href.replace(/^https?:[/][/][^?]+[?]?/gi,"").replace(/(&n=[^&]*)/g,"")+"&n="+n)+"#open-viewer"
+            if(viewUrl && viewUrl.startsWith("bdr:")) viewUrl = "/show/" + viewUrl + "?s="+ encodeURIComponent("/show/"+viewUrl+"?s="+encodeURIComponent("/search?"+window.location.href.replace(/^https?:[/][/][^?]+[?]?/gi,"").replace(/(&n=[^&]*)/g,"")+"&n="+n))+"#open-viewer"
             else if(viewUrl) viewUrl = fullUri(viewUrl)
 
 
@@ -4589,7 +4589,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             if(window.location.href.match(staticRegExp)) urlBase = window.location.href.replace(staticRegExp,"$1?");
             else urlBase = window.location.href.replace(/^https?:[/][/][^?]+[?]?/gi,"")+"&"
             //loggergen.log("urlB",urlBase)
-            resUrl = "/show/"+urlpart+"s="+ encodeURIComponent((urlBase.replace(/((([?])?&*|^)n=[^&]*)/g,"$3")+(!urlBase.match(/[\?&]$/)?"&":"")+"n="+n).replace(/\?+&?/,"?"))+(!bestM?"":"&"+bestM.replace(/^\?/,""))
+            resUrl = "/show/"+urlpart+"s="+ encodeURIComponent("/search?"+(urlBase.replace(/((([?])?&*|^)n=[^&]*)/g,"$3")+(!urlBase.match(/[\?&]$/)?"&":"")+"n="+n).replace(/\?+&?/,"?"))+(!bestM?"":"&"+bestM.replace(/^\?/,""))
             //retList.push( <Link key={n} to={"/show/"+prettId+bestM} className="result">{ret}</Link> )
          }
          else
@@ -7675,6 +7675,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                            // this.setState({...this.state,dataSource:[]})}
                            //open={this.state.dataSource.length} 
                            id="suggestions" 
+                           class="advanced"
                            //anchorOrigin={{vertical:"bottom",horizontal:"left"}}
                            //anchorEl={() => this._refs["searchBar"].current} 
                            //onClose={()=>this.setState({...this.state,dataSource:[]})}

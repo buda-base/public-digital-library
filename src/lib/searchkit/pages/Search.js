@@ -2,6 +2,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import _ from "lodash"
 import Loader from 'react-loader';
+import { useLocation, useNavigate } from 'react-router-dom'
 
 // Utils
 import Client from "@searchkit/instantsearch-client";
@@ -39,6 +40,7 @@ import SearchResultsHeader from "../components/SearchResultsHeader"
 
 // PDL
 import { top_right_menu, getPropLabel, fullUri, highlight } from '../../../components/App'
+import AppContainer from '../../../containers/AppContainer';
 import { Component } from 'react';
 import qs from 'query-string'
 //import history from "../../../history"
@@ -329,6 +331,19 @@ export function HitsWithLabels(props) {
 
 const routing = routingConfig()
 
+function HomeCompo(props = {}) {
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  /*
+  useEffect(() => {
+    store.dispatch(initiateApp(qs.parse(location.search)));
+  }, [location]); 
+  */
+
+  return <AppContainer { ...{ ...props, location, navigate, auth:props.auth } }/> 
+}
+
 export class SearchPage extends Component<State, Props>
 {
   _urlParams = {}
@@ -364,7 +379,8 @@ export class SearchPage extends Component<State, Props>
     return (
       <>
         { top_right_menu(this,null,null,null,null,this.props.location) }
-        <div className="AppSK">
+        <div className={"AppSK"+(this.props.advancedSearch?" advanced":"")}>
+          { this.props.advancedSearch && <HomeCompo auth={this.props.auth} />}
           <InstantSearch
             key={pageFilters ?? "main"}
             indexName={process.env.REACT_APP_ELASTICSEARCH_INDEX}
@@ -391,7 +407,7 @@ export class SearchPage extends Component<State, Props>
           >
             <div className="search inner-search-bar">
               <div>
-                <SearchBoxAutocomplete searchAsYouType={false} {...{ pageFilters, routing }} />
+                <SearchBoxAutocomplete searchAsYouType={false} {...{ that:this, pageFilters, routing }} />
               </div>
             </div>
             <div className="content">
