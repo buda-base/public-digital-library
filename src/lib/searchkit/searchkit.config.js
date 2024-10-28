@@ -126,9 +126,22 @@ class MyTransporter extends ESTransporter {
       console.log("responses:",responses)
 
       const nonEmpty = responses.responses.filter(r => r.status === 200 && r.hits?.hits?.length)
-      if(nonEmpty.length) return nonEmpty
-      return responses.responses
-
+      if(nonEmpty.length) {
+        const mod = nonEmpty.map(r => ({...r, aggregations:{
+          ...r.aggregations, 
+          ...r.aggregations.etext_quality?{etext_quality:{
+            buckets:Object.keys(r.aggregations.etext_quality.buckets).reduce((acc,e,i)=>acc.concat([{
+              doc_count:r.aggregations.etext_quality.buckets[e].doc_count,
+              key:(i+1)
+            }]),[]),
+            doc_count_error_upper_bound:0,
+            sum_other_doc_count:0
+          }}:{}
+        }}))
+        console.log("mod:",mod,nonEmpty)
+        return mod
+      }
+      return responses.responses    
     } catch (error) {
       throw error
     }

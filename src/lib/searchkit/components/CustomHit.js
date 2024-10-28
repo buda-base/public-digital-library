@@ -335,6 +335,7 @@ const CustomHit = ({ hit, routing, that, sortItems, recent, storage, advanced /*
   }, [that.props.locale])
 
   const getQuality = (field, q) => {
+    /* // deprecated (#953)
     for(const r of RANGE_FIELDS[field+"_quality"]) {
       if(q >= r.from && q <= r.to) 
         return I18n.t("access."+field+".quality."
@@ -343,7 +344,8 @@ const CustomHit = ({ hit, routing, that, sortItems, recent, storage, advanced /*
             +r.to.toLocaleString('en', { minimumFractionDigits: 1 })
         )
     }
-    return "?"
+    */
+    return "?"+q+"?"
   }
 
   const toggleExpand = useCallback((tag) => {

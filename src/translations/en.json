@@ -880,7 +880,7 @@
             "2":"search only",
             "1":"not available"
          },
-         "quality":{
+         "quality_old":{
             "3":{"99-4":{"01":"best quality"}},
             "2":{"99-3":{"01":"best quality, unaligned"}},
             "1":{"99-2":{"01":"excellent quality"}},
@@ -889,6 +889,14 @@
                "8-0":{"95":"mediocre quality"},
                "0-0":{"8":"poor quality"}
             }
+         },
+         "quality":{
+            "6":"best quality",
+            "5":"best quality, unaligned",
+            "4":"excellent quality",
+            "3":"good quality",
+            "2":"mediocre quality",
+            "1":"poor quality"
          }
       },
       "restrictedC":"Restricted by Copyright",
