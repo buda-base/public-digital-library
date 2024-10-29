@@ -2374,17 +2374,15 @@ class App extends Component<Props,State> {
          }
       }
 
-
       if(!state.newKW || state.newKW !== props.keyword || props.keyword === null) { 
          if(!s) s = { ...state }
-         if(s.newKW !== props.keyword) {
+         if(s.newKW !== props.keyword ?? props.SKquery) {
             s.newKW = props.keyword
-            s.keyword = props.keyword
+            s.keyword = props.keyword  ?? props.SKquery
             if(!props.keyword) s.leftPane = false ;
          }
 
       }
-
 
       //loggergen.log("collap?",JSON.stringify(state.collapse,null,3))
 

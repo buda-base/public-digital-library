@@ -14,6 +14,7 @@ import { useNavigate, useLocation } from "react-router-dom"
 import { debounce } from "../helpers/utils";
 //import history from "../../../history"
 //import { routingConfig } from "../searchkit.config"
+import { lucenequerytokeyword } from "../../../components/App"
 
 // api
 import { getAutocompleteRequest } from "../api/AutosuggestAPI";
@@ -196,8 +197,8 @@ export const formatResponseForURLSearchParams = (query) => {
 
 const SearchBoxAutocomplete = (props) => {
   const { query, refine  } = useSearchBox(props);
-  const { status, setUiState, uiState, results, refresh } = useInstantSearch();
-  const { loading, placeholder, pageFilters, routing, that } = props
+  const { status, setUiState, indexUiState, results, refresh } = useInstantSearch();
+  const { loading, placeholder, pageFilters, routing, that, inner } = props
 
   const [inputValue, setInputValue] = useState(query);
   const [isFocused, setIsFocused] = useState(false);
@@ -218,7 +219,7 @@ const SearchBoxAutocomplete = (props) => {
 
   const navigate = useNavigate()
   const location = useLocation()
-
+  
   /*
   useEffect(() => {
     if(uiState && window.shouldUpdateRoute) console.log("routing:",
@@ -390,7 +391,10 @@ const SearchBoxAutocomplete = (props) => {
         //setActualLength={setSuggestionLen}
         setActualList={setActualList}
       />
-      <a id="simple-search" onClick={() => that.props.onAdvancedSearch(true)}>Advanced search</a>
+      { !inner && <a id="simple-search" onClick={() => {
+        that.setState({[that.state.filters?"keyword":"SKquery"]:lucenequerytokeyword(inputValue)})
+        that.props.onAdvancedSearch(true)
+      }}>Advanced search</a> }
     </form>
   );
 };

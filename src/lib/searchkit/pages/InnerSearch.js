@@ -139,7 +139,7 @@ export class InnerSearchPage extends Component<State, Props>
                 <h3><span><a class="propref"><span>{leftTitle}{I18n.t("punc.colon")}</span></a></span></h3>
                 <div className="search inner-search-bar group">
                   <div>
-                    <SearchBoxAutocomplete searchAsYouType={false} loading={this.props.loading} {...{ pageFilters, placeholder, routing }}/>
+                    <SearchBoxAutocomplete inner={true} searchAsYouType={false} loading={this.props.loading} {...{ pageFilters, placeholder, routing }}/>
                   </div>
                 </div>
               </div> }

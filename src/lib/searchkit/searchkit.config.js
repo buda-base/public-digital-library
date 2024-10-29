@@ -11,6 +11,8 @@ import {
 
 import { FACET_ATTRIBUTES } from "./constants/facets";
 
+import { lucenequerytokeyword } from "../../components/App";
+
 const CONNECTION = {
   host: process.env.REACT_APP_ELASTICSEARCH_HOST,
   headers: {
@@ -127,6 +129,8 @@ class MyTransporter extends ESTransporter {
 
       const nonEmpty = responses.responses.filter(r => r.status === 200 && r.hits?.hits?.length)
       if(nonEmpty.length) {
+        return nonEmpty
+        /* #953
         const mod = nonEmpty.map(r => ({...r, aggregations:{
           ...r.aggregations, 
           ...r.aggregations.etext_quality?{etext_quality:{
@@ -140,6 +144,7 @@ class MyTransporter extends ESTransporter {
         }}))
         console.log("mod:",mod,nonEmpty)
         return mod
+        */
       }
       return responses.responses    
     } catch (error) {
@@ -292,7 +297,7 @@ const routingConfig = () => ({
       const { firstScanSyncDate_before, firstScanSyncDate_after } = routeState;
       return {
         [process.env.REACT_APP_ELASTICSEARCH_INDEX]: {
-          query: routeState.q,
+          query: !routeState.lg ? routeState.q : lucenequerytokeyword(routeState.q),
           refinementList: {
             ...FACET_ATTRIBUTES.reduce(
               (obj, item) =>

@@ -880,7 +880,7 @@
             "2":"search only",
             "1":"not available"
          },
-         "quality_old":{
+         "quality":{
             "3":{"99-4":{"01":"best quality"}},
             "2":{"99-3":{"01":"best quality, unaligned"}},
             "1":{"99-2":{"01":"excellent quality"}},
@@ -890,7 +890,7 @@
                "0-0":{"8":"poor quality"}
             }
          },
-         "quality":{
+         "quality_new":{
             "6":"best quality",
             "5":"best quality, unaligned",
             "4":"excellent quality",

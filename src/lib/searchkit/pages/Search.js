@@ -344,6 +344,16 @@ function HomeCompo(props = {}) {
   return <AppContainer { ...{ ...props, location, navigate, auth:props.auth } }/> 
 }
 
+function QueryRefCompo({ that }) {
+  const { indexUiState } = useInstantSearch();
+  
+  useEffect(() => {
+    if(that.state.query != indexUiState.query) that.setState({query:indexUiState.query})
+  }, [indexUiState])
+
+  return <></>
+} 
+
 export class SearchPage extends Component<State, Props>
 {
   _urlParams = {}
@@ -380,7 +390,7 @@ export class SearchPage extends Component<State, Props>
       <>
         { top_right_menu(this,null,null,null,null,this.props.location) }
         <div className={"AppSK"+(this.props.advancedSearch?" advanced":"")}>
-          { this.props.advancedSearch && <HomeCompo auth={this.props.auth} />}
+          { this.props.advancedSearch && <HomeCompo auth={this.props.auth} SKquery={this.state.SKquery} />}
           <InstantSearch
             key={pageFilters ?? "main"}
             indexName={process.env.REACT_APP_ELASTICSEARCH_INDEX}
@@ -405,6 +415,7 @@ export class SearchPage extends Component<State, Props>
             }}
             */
           >
+            <QueryRefCompo that={this} />
             <div className="search inner-search-bar">
               <div>
                 <SearchBoxAutocomplete searchAsYouType={false} {...{ that:this, pageFilters, routing }} />

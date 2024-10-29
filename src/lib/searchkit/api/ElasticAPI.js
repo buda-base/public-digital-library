@@ -6,7 +6,7 @@ import {
 
 const DATE_RANGE_FIELDS = ["firstScanSyncDate"];
 
-/* // deprecated (#953)
+
 const RANGE_FIELDS = { 
   "etext_quality": [
     { "from":0,    "to":0.8  },
@@ -22,7 +22,7 @@ const RANGE_FIELDS = {
     { "from":0.66, "to":1.01 }
   ]
 };
-*/
+
 
 const forgeFacetFilters = (facetFilters, filters) => {
   let allFilters = [];
@@ -41,12 +41,9 @@ const forgeFacetFilters = (facetFilters, filters) => {
         if (DATE_RANGE_FIELDS.includes(field)) {
           return { range: { [field]: createDateRangeQuery(value) } };
         }
-        /*
         if (RANGE_FIELDS[field]) {
           return { range: { [field]: createRangeQuery(value, field) } }
-        }
-        */
-        return { term: { [field]: value } };
+        }        return { term: { [field]: value } };
       }),
     },
   }));
@@ -59,7 +56,6 @@ const forgeUserAggregateFacets = (facets, size) => {
     
   return fields.reduce((acc, field) => {
     let ranges
-    /* // deprecated (#953)
     if(RANGE_FIELDS[field]) { 
       acc[field] = { 
         "range":{
@@ -68,14 +64,13 @@ const forgeUserAggregateFacets = (facets, size) => {
         }
       }
     } else {
-     */
       acc[field] = {
         "terms": {
           field: field,
           size: size
         },
       }
-    //};
+    };
     return acc;
   }, {});
 };
@@ -311,7 +306,7 @@ const getAutocompleteElasticRequest = async (queryStr) => {
 };
 
 export {
-  //RANGE_FIELDS,
+  RANGE_FIELDS,
   getGenericRequest,
   getCustomizedBdrcIndexRequest,
   getAutocompleteElasticRequest,
