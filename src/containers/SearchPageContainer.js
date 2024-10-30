@@ -36,11 +36,12 @@ const mapStateToProps = (state,ownProps) => {
    let dictionary = state.data.dictionary ;
 
    let advancedSearch = state.ui.advancedSearch ?? ownProps.advancedSearch
+   let advKeyword = state.ui.advKeyword
 
    let props = { config, locale, profileName, portraitPopupClosed, isNewUser, feedbucket, 
       langPreset,langIndex,langExt,etextLang,
       dictionary,
-      advancedSearch
+      advancedSearch, advKeyword
    }
 
    return props

@@ -1123,7 +1123,7 @@ function InstantSearchBox(props) {
       >
          <div className="search inner-search-bar" style={{ ...isMirador?{position:"absolute"}:{} }}>
             <div>
-               <SearchBoxAutocomplete searchAsYouType={false} {...props} {...{that, routing}} />
+               <SearchBoxAutocomplete searchAsYouType={false} advKeyword={lucenequerytokeyword(that.state.keyword ?? "")} {...props} {...{that, routing}} />
             </div>
          </div>
       </InstantSearch>
@@ -7629,7 +7629,9 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   <FontAwesomeIcon style={{fontSize:"21px"}} icon={faSlidersH} title="Refine Your Search"/>
                </IconButton> */}
                <div ref={this._refs["searchBar"]} style={{display:"inline-block",position:"relative"}}>
-                  <span id="simple-search" onClick={() => this.props.onAdvancedSearch(false)}>Simple search</span>
+                  <span id="simple-search" onClick={() => { 
+                     this.props.onAdvancedSearch(false, this.state.keyword)
+                  }}>Simple search</span>
                   <SearchBar       
                      innerRef={this._refs.barRef}           
                      placeholder={I18n.t("home.search")}                        

@@ -139,7 +139,8 @@ export const advancedSearch = (state: UIState, action: Action) => {
 
     return {
     ...state,
-    advancedSearch:action.payload
+    advancedSearch:action.payload,
+    advKeyword:action.meta
  }
 }
 reducers[actions.TYPES.advancedSearch] = advancedSearch;

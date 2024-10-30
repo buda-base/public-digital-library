@@ -183,8 +183,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       onFeedbucketClick(cls:string) {
          dispatch(ui.feedbucket(cls))
       },
-      onAdvancedSearch(s:boolean) {
-         dispatch(ui.advancedSearch(s))
+      onAdvancedSearch(s:boolean,k:string) {
+         dispatch(ui.advancedSearch(s,k))
       }
    }
 }

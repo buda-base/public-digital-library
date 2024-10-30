@@ -198,7 +198,7 @@ export const formatResponseForURLSearchParams = (query) => {
 const SearchBoxAutocomplete = (props) => {
   const { query, refine  } = useSearchBox(props);
   const { status, setUiState, indexUiState, results, refresh } = useInstantSearch();
-  const { loading, placeholder, pageFilters, routing, that, inner } = props
+  const { loading, placeholder, pageFilters, routing, that, inner, advKeyword } = props
 
   const [inputValue, setInputValue] = useState(query);
   const [isFocused, setIsFocused] = useState(false);
@@ -228,6 +228,7 @@ const SearchBoxAutocomplete = (props) => {
     )
   }, [status, routingConfig, uiState])
   */
+
 
   useEffect(() => {
     if(results.processingTimeMS && ["idle"].includes(status) && window.postRefine) {
@@ -288,12 +289,31 @@ const SearchBoxAutocomplete = (props) => {
     [ handleClick ]
   );
   const handleClick = useCallback((item) => {
+    that.props.onAdvancedSearch(false, undefined)
     clearRefine([])
     const newQuery = formatResponseForURLSearchParams(item.res);
     setQuery(newQuery);
     setIsFocused(false);
-    redirect(refine, newQuery, pageFilters, navigate, location);
+    redirect(refine, newQuery, pageFilters, navigate, location);    
   }, [refine, pageFilters])
+
+  const handleChange = useCallback((newQuery) => {
+    setSelected(-1)
+    setIsFocused(true);
+    setQuery(newQuery);
+    if (newQuery.length > 0) {
+      debouncedHandleChange(newQuery);
+    }
+  }, [debouncedHandleChange])
+
+  const advToSimple = useCallback(() => {
+    //if(inputRef.current) inputRef.current.focus()
+    if(advKeyword != inputValue) setQuery(advKeyword)
+  }, [advKeyword, handleChange, inputValue])
+
+  useEffect(() => {
+    if(advKeyword != undefined) advToSimple()
+  }, [advKeyword])
 
   const suggLen = (actualList?.length ?? suggestions.length)
 
@@ -341,8 +361,9 @@ const SearchBoxAutocomplete = (props) => {
         type="search"
         value={inputValue}
         {...placeholder ? { placeholder} : { placeholder: "Search the website" } }
-        onFocus={() => {
+        onFocus={(ev) => {
           setIsFocused(true);
+          handleChange(inputValue)
         }}
         onKeyDown={(e) => {
           if (e.key === "Enter") {
@@ -366,15 +387,7 @@ const SearchBoxAutocomplete = (props) => {
             setSelected(newSel)
           } 
         }}
-        onChange={(event) => {
-          setSelected(-1)
-          setIsFocused(true);
-          const newQuery = event.currentTarget.value;
-          setQuery(newQuery);
-          if (newQuery.length > 0) {
-            debouncedHandleChange(newQuery);
-          }
-        }}
+        onChange={(event) => handleChange(event.currentTarget.value)}
       />
       <SearchBoxAction
         inputValue={inputValue}

@@ -383,7 +383,7 @@ export class SearchPage extends Component<State, Props>
 
     const storageRef = React.createRef() 
 
-    console.log("sC:", searchClient, routingConfig, pageFilters, storageRef)    
+    console.log("sC:", this.state.query, this.props.advKeyword, searchClient, routingConfig, pageFilters, storageRef)    
     
 
     return (
@@ -418,7 +418,9 @@ export class SearchPage extends Component<State, Props>
             <QueryRefCompo that={this} />
             <div className="search inner-search-bar">
               <div>
-                <SearchBoxAutocomplete searchAsYouType={false} {...{ that:this, pageFilters, routing }} />
+                <SearchBoxAutocomplete searchAsYouType={false} {...{ that:this, pageFilters, routing, 
+                    advKeyword: this.props.advKeyword != this.state.query ? this.props.advKeyword : this.state.query
+                  }} />
               </div>
             </div>
             <div className="content">

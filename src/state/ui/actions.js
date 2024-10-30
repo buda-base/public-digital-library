@@ -64,10 +64,11 @@ export const langPreset = (lang: string[],i?:number): Action => {
 }
 
 TYPES.advancedSearch = 'ADVANCED_SEARCH';
-export const advancedSearch = (s: boolean): Action => {
+export const advancedSearch = (s: boolean, k:string): Action => {
    return {
       type: TYPES.advancedSearch,
-      payload: s
+      payload: s,
+      meta:k
    }
 }
 
