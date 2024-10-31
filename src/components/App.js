@@ -104,7 +104,7 @@ import analytics from "./Analytics"
 
 import { InstantSearch, useSearchBox } from "react-instantsearch";
 import AutocompleteKeywordInput from "./AutocompleteKeywordInput"
-import { searchClient, FiltersSidebar } from '../lib/searchkit/pages/Search';
+import { searchClient, FiltersSidebar, HomeCompo, QueryRefCompo } from '../lib/searchkit/pages/Search';
 import SearchBoxAutocomplete from "../lib/searchkit/components/SearchBoxAutocomplete";
 import { routingConfig } from "../lib/searchkit/searchkit.config";
 
@@ -1094,12 +1094,14 @@ function InstantSearchBox(props) {
 
    const { isMirador, that } = props
 
-   console.log("ISB:",props)
+   console.log("ISB:",props,that)
 
-   if(that.props.advancedSearch) return <div></div>
+   //if(that.props.advancedSearch) return <div></div>
 
-   return <>      
-      <InstantSearch         
+   return <div class={"ISB "+("advanced-"+that.props.advancedSearch)}>      
+      { that.props.advancedSearch 
+      ? <HomeCompo auth={that.props.auth} /*SKquery={that.state.SKquery}*/ />
+      : <InstantSearch         
          key={that.props.IRI ?? that.props.tradition ?? window.location.pathname}
          indexName={process.env.REACT_APP_ELASTICSEARCH_INDEX}
          routing={routing}
@@ -1122,13 +1124,14 @@ function InstantSearchBox(props) {
          }
          */
       >
+         <QueryRefCompo that={that} />
          <div className="search inner-search-bar fromAdvanced" style={{ ...isMirador?{position:"absolute"}:{} }}>
             <div>
                <SearchBoxAutocomplete searchAsYouType={false} {...props} {...{that, routing}} />
             </div>
          </div>
-      </InstantSearch>
-   </>
+      </InstantSearch> }
+   </div>
 }
 
 export function top_right_menu(that,etextTitle,backUrl,etextres,isMirador,location)
@@ -1230,9 +1233,9 @@ export function top_right_menu(that,etextTitle,backUrl,etextres,isMirador,locati
       innerSearch = (
          that?.state.filters && !that?.props.keyword || that?.state.filters && that.props.advancedSearch || that.props.isOsearch
          ? null 
-         : !that.props.advancedSearch
-            ? <InstantSearchBox {...{ that, isMirador }}/>            
-            : <div class={'inner-search-bar in-search-'+(that.state.filters?"true":"false")}>
+         : <InstantSearchBox {...{ that, isMirador }}/>                       
+               /*
+               <div class={'inner-search-bar in-search-'+(that.state.filters?"true":"false")}>
                   <div>
                      <span>Search</span>
                      <span>                  
@@ -1243,6 +1246,7 @@ export function top_right_menu(that,etextTitle,backUrl,etextres,isMirador,locati
                      </span>
                   </div>
                </div>
+               */
       )
 
    if(false && etextTitle)
@@ -2382,9 +2386,11 @@ class App extends Component<Props,State> {
             s.keyword = props.keyword ?? props.SKquery
             if(!props.keyword) s.leftPane = false ;
          }
-         console.log("newKW:",s.newKW,s.keyword,props.keyword,props.SKquery)
+         console.log("newKW:",s.newKW,s.keyword,props.keyword,props.SKquery,state.SKquery)
          if(!props.loading && s.newKW !== undefined && s.newKW === props.keyword && props.SKquery !== undefined) {
             s.keyword = props.SKquery
+         } else if(props.IRI && s.newKW === undefined && state.SKquery !== undefined){
+            s.keyword = state.SKquery
          }
 
       }

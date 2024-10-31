@@ -290,7 +290,7 @@ const SearchBoxAutocomplete = (props) => {
     [ handleClick ]
   );
   const handleClick = useCallback((item) => {
-    that.props.onAdvancedSearch(false, undefined)
+    if(!inner) that.props.onAdvancedSearch(false, undefined)
     clearRefine([])
     const newQuery = formatResponseForURLSearchParams(item.res);
     setQuery(newQuery);
@@ -308,24 +308,28 @@ const SearchBoxAutocomplete = (props) => {
   }, [debouncedHandleChange])
 
   const advToSimpleFromSimple = useCallback(() => {
+    if(inner) return
     //if(inputRef.current) inputRef.current.focus()
     const k = lucenequerytokeyword(that.props.advKeyword)
     if(k != inputValue) setQuery(k)
-  }, [that.props.advKeyword, handleChange, inputValue])
+  }, [that?.props.advKeyword, handleChange, inputValue])
 
   useEffect(() => {
+    if(inner) return
     if(that.props.advKeyword != undefined) advToSimpleFromSimple()
-  }, [that.props.advKeyword])
+  }, [that?.props.advKeyword])
 
   const advToSimpleFromAdv = useCallback(() => {
+    if(inner) return
     //if(inputRef.current) inputRef.current.focus()
     const k = lucenequerytokeyword(that.state.keyword)
     if(k != inputValue) setQuery(k)
-  }, [that.state.keyword, handleChange, inputValue])
+  }, [that?.state.keyword, handleChange, inputValue])
 
   useEffect(() => {
+    if(inner) return
     if(that.state.keyword != undefined) advToSimpleFromAdv()
-  }, [that.state.keyword])
+  }, [that?.state.keyword])
 
   const suggLen = (actualList?.length ?? suggestions.length)
 

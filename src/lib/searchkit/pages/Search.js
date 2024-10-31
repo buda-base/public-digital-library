@@ -331,7 +331,7 @@ export function HitsWithLabels(props) {
 
 const routing = routingConfig()
 
-function HomeCompo(props = {}) {
+export function HomeCompo(props = {}) {
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -344,7 +344,7 @@ function HomeCompo(props = {}) {
   return <AppContainer { ...{ ...props, location, navigate, auth:props.auth } }/> 
 }
 
-function QueryRefCompo({ that }) {
+export function QueryRefCompo({ that }) {
   const { indexUiState } = useInstantSearch();
   
   useEffect(() => {

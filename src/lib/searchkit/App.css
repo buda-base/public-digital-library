@@ -1091,6 +1091,18 @@ header[data-hits="0"] ~ .hits .pagination,
   font-weight:700;
 }
 
+.ISB {
+  min-height:120px;
+}
+
+.ISB.advanced-true #data-checkbox,
+.ISB.advanced-true #res-header,
+.ISB.advanced-true #res-container,
+.ISB.advanced-true footer,
+.ISB.advanced-true .fond-logo,
+.ISB.advanced-true .inner-search-bar:not(#a),
+.ISB.advanced-true .over-nav,
+.ISB.advanced-true .nav,
 .nav ~ .AppSK.advanced #data-checkbox,
 .nav ~ .AppSK.advanced #res-header,
 .nav ~ .AppSK.advanced #res-container,
