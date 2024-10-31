@@ -1098,8 +1098,7 @@ function InstantSearchBox(props) {
 
    if(that.props.advancedSearch) return <div></div>
 
-   return <>
-      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/instantsearch.css@7/themes/satellite-min.css" />
+   return <>      
       <InstantSearch         
          key={that.props.IRI ?? that.props.tradition ?? window.location.pathname}
          indexName={process.env.REACT_APP_ELASTICSEARCH_INDEX}

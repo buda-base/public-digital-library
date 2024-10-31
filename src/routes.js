@@ -271,8 +271,7 @@ function BaseOSCompo() {
    const navigate = useNavigate();
    const { RID } = useParams()
  
-   return <>
-      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/instantsearch.css@7/themes/satellite-min.css" />
+   return <>      
       { RID 
          ? <SearchPageContainer { ...{ navigate, location, auth } } isOsearch={true} pageFilters={"associated_res:"+RID}/>         
          : <SearchPageContainer { ...{ navigate, location, auth } } isOsearch={true}/> }
@@ -441,6 +440,7 @@ const makeMainRoutes = () => {
       <UserAgentProvider ua={window.navigator.userAgent}>
          <Provider store={store}>
            <MuiThemeProvider theme={theme}>
+               <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/instantsearch.css@7/themes/satellite-min.css" />
               <UAContextHook/>
               <VersionChecker /> 
               <LogErrorBoundary>              
