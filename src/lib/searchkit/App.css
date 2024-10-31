@@ -1102,10 +1102,17 @@ header[data-hits="0"] ~ .hits .pagination,
   display:none
 }
 
+
 .nav ~ .AppSK.advanced #search-bar {
   padding-bottom:30px;
   padding-top:20px;
 }
+
+.App.home:not(#a) #search-bar {
+  padding-top:25px;
+  padding-bottom:45px;
+}
+
 
 .App #search-bar h2,
 .nav ~ .AppSK.advanced #search-bar h2 {
@@ -1113,6 +1120,7 @@ header[data-hits="0"] ~ .hits .pagination,
   text-align: left;
   margin: auto;
   margin-bottom:18px;
+  text-transform: capitalize;
 }
 
 .nav ~ .AppSK.advanced #search-bar h2 {

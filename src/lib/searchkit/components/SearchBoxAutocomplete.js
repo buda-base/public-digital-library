@@ -5,6 +5,7 @@ import AccessTimeIcon from '@material-ui/icons/AccessTime';
 import CloseIcon from '@material-ui/icons/Close';
 import IconButton from '@material-ui/core/IconButton';
 import qs from "query-string"
+import I18n from 'i18next';
 
 // hooks
 import { useSearchBox, useInstantSearch, useClearRefinements } from "react-instantsearch";
@@ -418,7 +419,7 @@ const SearchBoxAutocomplete = (props) => {
       { !inner && <a id="simple-search" onClick={() => {
         that.setState({[that.state.filters?"keyword":"SKquery"]:lucenequerytokeyword(inputValue)})
         that.props.onAdvancedSearch(true)
-      }}>Advanced search</a> }
+      }}>{I18n.t("topbar.advanced")}</a> }
     </form>
   );
 };

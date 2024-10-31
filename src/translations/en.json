@@ -123,7 +123,9 @@
       "guide":"user guide",
       "feedback":"Feedback",
       "resultsNoKW": "Search results",
-      "preserving":"Preserving Buddhist literature for the world"
+      "preserving":"Preserving Buddhist literature for the world",
+      "advanced":"Advanced search",
+      "simple":"Simple search"
    },
    "Lsidebar": {
       "sortBy": {
