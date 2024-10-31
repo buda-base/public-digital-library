@@ -7634,7 +7634,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                {/* <IconButton style={{marginRight:"15px"}} className={this.state.leftPane?"hidden":""} onClick={e => this.setState({...this.state,leftPane:!this.state.leftPane,closeLeftPane:!this.state.closeLeftPane})}>                  
                   <FontAwesomeIcon style={{fontSize:"21px"}} icon={faSlidersH} title="Refine Your Search"/>
                </IconButton> */}
-               <div ref={this._refs["searchBar"]} style={{display:"inline-block",position:"relative"}}>
+               <h2>Advanced search</h2>
+               <div ref={this._refs["searchBar"]} style={{display:"inline-block",position:"relative"}}>         
                   <span id="simple-search" onClick={() => { 
                      this.props.onAdvancedSearch(false, this.state.keyword)
                   }}>Simple search</span>

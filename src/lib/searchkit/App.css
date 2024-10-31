@@ -1104,6 +1104,19 @@ header[data-hits="0"] ~ .hits .pagination,
 
 .nav ~ .AppSK.advanced #search-bar {
   padding-bottom:30px;
+  padding-top:20px;
+}
+
+.App #search-bar h2,
+.nav ~ .AppSK.advanced #search-bar h2 {
+  width:700px;
+  text-align: left;
+  margin: auto;
+  margin-bottom:18px;
+}
+
+.nav ~ .AppSK.advanced #search-bar h2 {
+  width:600px;
 }
 
 .nav ~ .AppSK.advanced .App {
