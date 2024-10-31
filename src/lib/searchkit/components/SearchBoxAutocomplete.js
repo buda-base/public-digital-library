@@ -198,7 +198,7 @@ export const formatResponseForURLSearchParams = (query) => {
 const SearchBoxAutocomplete = (props) => {
   const { query, refine  } = useSearchBox(props);
   const { status, setUiState, indexUiState, results, refresh } = useInstantSearch();
-  const { loading, placeholder, pageFilters, routing, that, inner, advKeyword } = props
+  const { loading, placeholder, pageFilters, routing, that, inner } = props
 
   const [inputValue, setInputValue] = useState(query);
   const [isFocused, setIsFocused] = useState(false);
@@ -306,14 +306,25 @@ const SearchBoxAutocomplete = (props) => {
     }
   }, [debouncedHandleChange])
 
-  const advToSimple = useCallback(() => {
+  const advToSimpleFromSimple = useCallback(() => {
     //if(inputRef.current) inputRef.current.focus()
-    if(advKeyword != inputValue) setQuery(advKeyword)
-  }, [advKeyword, handleChange, inputValue])
+    const k = lucenequerytokeyword(that.props.advKeyword)
+    if(k != inputValue) setQuery(k)
+  }, [that.props.advKeyword, handleChange, inputValue])
 
   useEffect(() => {
-    if(advKeyword != undefined) advToSimple()
-  }, [advKeyword])
+    if(that.props.advKeyword != undefined) advToSimpleFromSimple()
+  }, [that.props.advKeyword])
+
+  const advToSimpleFromAdv = useCallback(() => {
+    //if(inputRef.current) inputRef.current.focus()
+    const k = lucenequerytokeyword(that.state.keyword)
+    if(k != inputValue) setQuery(k)
+  }, [that.state.keyword, handleChange, inputValue])
+
+  useEffect(() => {
+    if(that.state.keyword != undefined) advToSimpleFromAdv()
+  }, [that.state.keyword])
 
   const suggLen = (actualList?.length ?? suggestions.length)
 

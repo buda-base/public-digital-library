@@ -1094,7 +1094,9 @@ function InstantSearchBox(props) {
 
    const { isMirador, that } = props
 
-   //return <div>youpi</div>
+   console.log("ISB:",props)
+
+   if(that.props.advancedSearch) return <div></div>
 
    return <>
       <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/instantsearch.css@7/themes/satellite-min.css" />
@@ -1121,9 +1123,9 @@ function InstantSearchBox(props) {
          }
          */
       >
-         <div className="search inner-search-bar" style={{ ...isMirador?{position:"absolute"}:{} }}>
+         <div className="search inner-search-bar fromAdvanced" style={{ ...isMirador?{position:"absolute"}:{} }}>
             <div>
-               <SearchBoxAutocomplete searchAsYouType={false} advKeyword={lucenequerytokeyword(that.state.keyword ?? "")} {...props} {...{that, routing}} />
+               <SearchBoxAutocomplete searchAsYouType={false} {...props} {...{that, routing}} />
             </div>
          </div>
       </InstantSearch>
@@ -2378,8 +2380,12 @@ class App extends Component<Props,State> {
          if(!s) s = { ...state }
          if(s.newKW !== props.keyword ?? props.SKquery) {
             s.newKW = props.keyword
-            s.keyword = props.keyword  ?? props.SKquery
+            s.keyword = props.keyword ?? props.SKquery
             if(!props.keyword) s.leftPane = false ;
+         }
+         console.log("newKW:",s.newKW,s.keyword,props.keyword,props.SKquery)
+         if(!props.loading && s.newKW !== undefined && s.newKW === props.keyword && props.SKquery !== undefined) {
+            s.keyword = props.SKquery
          }
 
       }

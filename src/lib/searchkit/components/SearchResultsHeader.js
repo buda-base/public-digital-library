@@ -29,7 +29,7 @@ function SearchResultsHeader(props) {
   console.log("status:", status, searchStatus)
 
   useEffect(() => {
-    if(results?.nbHits === 0) {
+    if(results?.processingTimeMS && results?.nbHits === 0) {
       console.log("remove:", searchStatus)
 
       const latest = JSON.parse(localStorage.getItem('latest_searches') ?? "{}")          

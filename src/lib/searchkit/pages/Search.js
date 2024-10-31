@@ -373,6 +373,9 @@ export class SearchPage extends Component<State, Props>
 
     if(window.initFeedbucket) window.initFeedbucket()    
 
+    this._urlParams = qs.parse(this.props.location.search) 
+
+    //if(this._urlParams.q && !this.state.query) this.setState({query:this._urlParams.q})
   }
   
   render() {
@@ -397,7 +400,7 @@ export class SearchPage extends Component<State, Props>
             routing={routing}
             searchClient={searchClient}
             future={{ preserveSharedStateOnUnmount: true }}
-
+            
             /*
             initialUiState={routing.stateMapping.routeToState(qs.parse(this.props.location.search, {arrayFormat: 'index'}))}            
             onStateChange={(_ref) => {
@@ -416,10 +419,10 @@ export class SearchPage extends Component<State, Props>
             */
           >
             <QueryRefCompo that={this} />
-            <div className="search inner-search-bar">
+            <div className="search inner-search-bar fromSimple">
               <div>
                 <SearchBoxAutocomplete searchAsYouType={false} {...{ that:this, pageFilters, routing, 
-                    advKeyword: this.props.advKeyword != this.state.query ? this.props.advKeyword : this.state.query
+                    //advKeyword: this.props.advKeyword != this.state.query ? this.props.advKeyword : this.state.query
                   }} />
               </div>
             </div>

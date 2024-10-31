@@ -794,11 +794,20 @@ body > #pop-login { z-index:1000000 ;}
    visibility:hidden;
 }
 
+.AppSK.advanced #simple-search + div {
+   width:600px !important;
+}
+
 .ais-SearchBox-form:not(#a),
 .inner-search-bar:not(#a) > div > span:last-child { 
    width:calc(100% - (110px + 70px + 10px) - 190px - 70px);
-   height:auto;
+   height:60px;
    box-sizing: border-box;
+}
+
+.fromAdvanced .ais-SearchBox-form:not(#a) {
+   width:700px; 
+   height:60px;
 }
 
 
