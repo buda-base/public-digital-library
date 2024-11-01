@@ -89,6 +89,7 @@ const mapStateToProps = (state,ownProps) => {
    let spellcheckerBo = state.data.spellcheckerBo
 
    let advancedSearch = state.ui.advancedSearch ?? ownProps.advancedSearch
+   let advKeyword = state.ui.advKeyword
 
 
    let newState = { logged,config, hostFailure, searches, keyword, language,loading,datatypes,ontology,facets,
@@ -103,7 +104,7 @@ const mapStateToProps = (state,ownProps) => {
       subscribedCollections,
       feedbucket,
       spellcheckerBo,
-      advancedSearch,
+      advancedSearch, advKeyword,
       etextLang
    }
 

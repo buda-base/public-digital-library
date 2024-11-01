@@ -1100,7 +1100,7 @@ function InstantSearchBox(props) {
 
    return <div class={"ISB "+("advanced-"+that.props.advancedSearch)}>      
       { that.props.advancedSearch 
-      ? <HomeCompo auth={that.props.auth} /*SKquery={that.state.SKquery}*/ />
+      ? <HomeCompo auth={that.props.auth} SKquery={that.state.SKquery} />
       : <InstantSearch         
          key={that.props.IRI ?? that.props.tradition ?? window.location.pathname}
          indexName={process.env.REACT_APP_ELASTICSEARCH_INDEX}
@@ -2391,6 +2391,8 @@ class App extends Component<Props,State> {
             s.keyword = props.SKquery
          } else if(props.IRI && s.newKW === undefined && state.SKquery !== undefined){
             s.keyword = state.SKquery
+         } else if(/*props.IRI &&*/ s.newKW === undefined && s.keyword === undefined &&  props.SKquery !== undefined){
+            s.keyword = props.SKquery
          }
 
       }
