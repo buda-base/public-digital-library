@@ -392,7 +392,7 @@ async function initiateApp(params,iri,myprops,route,isAuthCallback) {
          }
          else {
 
-            if(!state.data.resources[iri]) store.dispatch(dataActions.gotAssocResources(iri,{ data: assocRes }))
+            if(!state.data.resources?.[iri]) store.dispatch(dataActions.gotAssocResources(iri,{ data: assocRes }))
             
             /*
             let res0 = { [ bdr+iri] : {...res["@graph"].reduce(
@@ -485,7 +485,7 @@ async function initiateApp(params,iri,myprops,route,isAuthCallback) {
 
       //loggergen.log("res::",iri,JSON.stringify(res[Object.keys(res)[0]][skos+"prefLabel"],null,3))
 
-      if(!state.data.resources[iri]) store.dispatch(dataActions.gotResource(iri,res));
+      if(!state.data.resources?.[iri]) store.dispatch(dataActions.gotResource(iri,res));
 
    }
 
