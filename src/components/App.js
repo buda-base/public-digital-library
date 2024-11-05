@@ -4230,7 +4230,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   let urilink
 
                   if(i.uri && !i.uri.includes(".bdrc.") && i.uri.startsWith("http")) urilink = <a target="_blank" href={i.uri}><span {...(i.lang?{lang:i.lang}:{})}>{i.value}</span></a> 
-                  else urilink =  <Link class="inRoot" to={"/show/"+i.uri}><span {...(i.lang?{lang:i.lang}:{})}>{i.value}</span></Link> 
+                  else urilink =  <Link class="inRoot" to={"/show/"+i.uri+"?s="+encodeURIComponent("/search?"+window.location.href.replace(/^https?:[/][/][^?]+[?]?/gi,""))}><span {...(i.lang?{lang:i.lang}:{})}>{i.value}</span></Link> 
 
                   if(outlineB !== undefined && (!T || T !== "Etext")) {
                      outlineB.push(<span class="sepa"/>)
@@ -4392,7 +4392,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
    makeResult(id,n,t,lit,lang,tip,Tag,url,rmatch = [],facet,allProps = [],preLit,isInstance)
    {
-      //loggergen.log("res:",id,facet,allProps,n,t,lit,preLit,lang,tip,Tag,rmatch,sameAsRes)
+      loggergen.log("res:",id,facet,allProps,n,t,lit,preLit,lang,tip,Tag,rmatch,sameAsRes)
 
       // DONE fix scrolling back to result (#425)
       let doRef = true, nsub = n
@@ -4557,7 +4557,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
          if(bestM.length) { 
             endC = bestM[0].endChar
-            bestM = "?"+(inRoot?"backToEtext="+shortUri(inRoot)+"&":"") +"startChar="+((startC = bestM[0].startChar) - 1000) /*+"-"+bestM[0].endChar*/ +"&keyword="+this.props.keyword+"@"+this.props.language+"#open-viewer"
+            bestM = "?"/*+(inRoot?"backToEtext="+shortUri(inRoot)+"&":"")*/ +"startChar="+((startC = bestM[0].startChar) - 1000) /*+"-"+bestM[0].endChar*/ +"&keyword="+this.props.keyword+"@"+this.props.language+"#open-viewer"
          }
          else bestM = ""
 
@@ -4596,10 +4596,18 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   urlpart = root+"?part="+prettId+"&"
                }
             }
+            let inRootE = allProps.filter(e => e.type === tmp+"inRootInstance")
+            if (inRootE.length > 0) {
+               let root = inRootE[0].value
+               if (root.startsWith(bdr)) {
+                  root = "bdr:"+root.substring(bdr_len)
+                  urlpart = root+"?scope="+prettId+"&"
+               }
+            }
             let urlBase, staticRegExp = new RegExp(".*?[/](latest|"+Object.keys(staticQueries).join("|")+")[/]?")  ;
             if(window.location.href.match(staticRegExp)) urlBase = window.location.href.replace(staticRegExp,"$1?");
             else urlBase = window.location.href.replace(/^https?:[/][/][^?]+[?]?/gi,"")+"&"
-            //loggergen.log("urlB",urlBase)
+            //loggergen.log("urlB",urlBase,urlpart,inRoot)
             resUrl = "/show/"+urlpart+"s="+ encodeURIComponent("/search?"+(urlBase.replace(/((([?])?&*|^)n=[^&]*)/g,"$3")+(!urlBase.match(/[\?&]$/)?"&":"")+"n="+n).replace(/\?+&?/,"?"))+(!bestM?"":"&"+bestM.replace(/^\?/,""))
             //retList.push( <Link key={n} to={"/show/"+prettId+bestM} className="result">{ret}</Link> )
          }

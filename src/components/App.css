@@ -493,7 +493,7 @@ html[lang="bo"] .msg-popup .front p { font-size:18px;}
 
 #filters-UI > div { width:960px; margin-left: calc(960px - 700px); }
 #filters-UI [data-simplebar] { height:100%; }
-#filters-UI > div:empty { padding:15px 0 0 0; }
+#filters-UI > div:empty { padding:35px 0 0 0; }
 
 
 .SearchPane:not(.resultPage) #filters-UI { display:none; }

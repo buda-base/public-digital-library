@@ -1095,6 +1095,16 @@ header[data-hits="0"] ~ .hits .pagination,
   min-height:120px;
 }
 
+
+.ISB.advanced-true .App .SearchPane:not(#a) #search-bar {
+  padding-bottom:45px;
+}
+
+.ISB.advanced-true .App .SearchPane:not(#a),
+.ISB.advanced-true .App {
+  min-height:0;
+}
+
 .ISB.advanced-true #data-checkbox,
 .ISB.advanced-true #res-header,
 .ISB.advanced-true #res-container,

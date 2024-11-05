@@ -8501,6 +8501,8 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                      } else {
                         loadETres = g["@id"]
                      }
+                  } else {
+                     loadETres = g["@id"]
                   }
                } else if(g.seqNum && (g.eTextResource || g.etextResource && g.etextResource["@id"])) {
                   loadETres = g.eTextResource || g.etextResource["@id"]
@@ -10386,8 +10388,10 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
             if(backTo === withW) { 
                backTo = decodeURIComponent(backTo)
                searchUrl = backTo
-               if(searchUrl.match(/q=/))               
-                  searchTerm = decodeURIComponent(searchUrl.replace(/.*q=([^&]+).*/,"$1")) //lucenequerytokeyword(searchUrl.replace(/.*q=([^&]+).*/,"$1")) 
+               if(searchUrl.match(/q=/)) {
+                  if(searchUrl?.startsWith("/search")) searchTerm = lucenequerytokeyword(decodeURIComponent(searchUrl.replace(/.*q=([^&]+).*/,"$1"))) 
+                  else searchTerm = decodeURIComponent(searchUrl.replace(/.*q=([^&]+).*/,"$1")) 
+               }    
                else if(searchUrl.match(/r=/))               
                   searchTerm = lucenequerytokeyword(searchUrl.replace(/.*r=([^&]+).*/,"$1")) 
                else if(searchUrl.match(/i=/))               
@@ -11036,7 +11040,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
             { ["Images","Instance"].includes(_T) && <abbr class="unapi-id" title={this.props.IRI}></abbr> }
             { infoPanelR }
             <div {...searchUrl?{"data-searchUrl":searchUrl}:{}} className={"resource "+hasTabs+getEntiType(this.props.IRI).toLowerCase() + (this.props.simple?" simple":"") + (this.props.preview?" preview":"") /*+(!this.props.portraitPopupClosed?" portrait-warn-on":"")*/} {...this.props.simple?{onClick:sendMsg}:{}}>                                             
-               {searchUrl && <div class="ariane">
+               {searchUrl && <div class="ariane" >
                   <Link to={searchUrl} /*onClick={(ev) => {
                      this.props.onLoading("search",true)                     
                      

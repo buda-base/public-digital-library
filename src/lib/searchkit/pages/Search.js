@@ -119,6 +119,24 @@ export const sortItems = [
   },
 ]
 
+export const emptySearchClient = {
+  search: () =>
+    Promise.resolve({
+      results: [
+        {
+          hits: [],
+          nbHits: 0,
+          page: 0,
+          nbPages: 0,
+          hitsPerPage: 20,
+          exhaustiveNbHits: true,
+          query: "",
+          params: "",
+        },
+      ],
+    }),
+};
+
 export const searchClient = Client(
   SearchkitConfig,
   {
