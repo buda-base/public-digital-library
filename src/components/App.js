@@ -2191,7 +2191,9 @@ class App extends Component<Props,State> {
          if(this.props.searches && this.props.searches[this.state.filters.datatype[0]] && this.props.searches[this.state.filters.datatype[0]][this.props.keyword+"@"+this.props.language] && this.props.searches[this.state.filters.datatype[0]][this.props.keyword+"@"+this.props.language].inEtext) {
             inEtext = this.props.searches[this.state.filters.datatype[0]][this.props.keyword+"@"+this.props.language].inEtext
          }
-         const newLoca = {pathname:"/search",search:"?q="+key+"&lg="+lang+"&t="+label+khmerCollec+proxiedCollec+hasOpenPossibly+(inEtext?"&r="+inEtext:"")}
+         const newLoca = label === "Etext" 
+            ? {pathname:"/osearch/search",search:"?q="+_key.replace(/(^\")|(\"$)/g,"")+"&etext_search[0]=true"+khmerCollec+proxiedCollec}
+            : {pathname:"/search",search:"?q="+key+"&lg="+lang+"&t="+label+khmerCollec+proxiedCollec+hasOpenPossibly+(inEtext?"&r="+inEtext:"")}
          loggergen.log("newL?",newLoca)
          this.props.navigate(newLoca)
          
