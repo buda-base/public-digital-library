@@ -47,6 +47,15 @@ import qs from 'query-string'
 import store from '../../../index';
 import { initiateApp } from '../../../state/actions';
 
+export const etext_tooltips = {
+  "3.99-4.01":"Manually typed. Etext is aligned with scans.",
+  "2.99-3.01":"Manually typed. Etext is not aligned with scans.",
+  "1.99-2.01":"Etext is automatically created with OCR (Optical Character Recognition) and reviewed.",
+  "0.95-1.01":"Etext is automatically created with OCR (Optical Character Recognition) and is of good quality without many errors.",
+  "0.8-0.95":"Etext is automatically created with OCR (Optical Character Recognition) and is usable, but contains some errors.",
+  "0.0-0.8":"Etext is automatically created with OCR (Optical Character Recognition) and contains errors",
+  "0-0.8":  "Etext is automatically created with OCR (Optical Character Recognition) and contains errors",
+}
 
 export const filters = [{ 
     attribute:"author", prefix:"tmp" 
@@ -56,14 +65,7 @@ export const filters = [{
     attribute:"etext_access", sort:true, I18n_prefix: "access.etext", prefix:"tmp"
   },{
     attribute:"etext_quality", sort:true, I18n_prefix: "access.etext.quality", prefix:"tmp",
-    tooltips:{
-      "6":"Manually typed. Etext is aligned with scans.",
-      "5":"Manually typed. Etext is not aligned with scans.",
-      "4":"Etext is automatically created with OCR (Optical Character Recognition) and reviewed.",
-      "3":"Etext is automatically created with OCR (Optical Character Recognition) and is of good quality without many errors.",
-      "2":"Etext is automatically created with OCR (Optical Character Recognition) and is usable, but contains some errors.",
-      "1":"Etext is automatically created with OCR (Optical Character Recognition) and contains errors",
-    }    
+    tooltips: etext_tooltips    
   },{
     attribute:"etext_access", sort:true, I18n_prefix: "access.etext", prefix:"tmp"
   },{

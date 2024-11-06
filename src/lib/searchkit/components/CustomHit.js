@@ -7,17 +7,21 @@ import qs from 'query-string'
 import HTMLparse from 'html-react-parser';
 import { formatDistance, parseISO } from "date-fns"
 import { enUS, zhCN } from 'date-fns/locale';
+import InfoIcon from '@material-ui/icons/Info';
+import Tooltip from '@material-ui/core/Tooltip';
 
 
 import { RANGE_FIELDS } from "../api/ElasticAPI";
 import { RESULT_FIELDS } from "../constants/fields";
 import {narrowWithString} from "../../langdetect"
+import { etext_tooltips } from "../pages/Search";
 
 //import history from "../../../history"
 
 import { getPropLabel, fullUri, getLangLabel, highlight } from '../../../components/App'
 import TextToggle from '../../../components/TextToggle'
 import { sortLangScriptLabels, extendedPresets } from '../../../lib/transliterators'
+
 
 const skos  = "http://www.w3.org/2004/02/skos/core#";
 
@@ -338,11 +342,13 @@ const CustomHit = ({ hit, routing, that, sortItems, recent, storage, advanced /*
     
     for(const r of RANGE_FIELDS[field+"_quality"]) {
       if(q >= r.from && q <= r.to) 
-        return I18n.t("access."+field+".quality."
+        return <>{I18n.t("access."+field+".quality."
             +r.from.toLocaleString('en', { minimumFractionDigits: 1 })
             +"-"
             +r.to.toLocaleString('en', { minimumFractionDigits: 1 })
-        )
+        )}{
+          etext_tooltips?.[r.from+"-"+r.to] && <Tooltip id="info-tooltip-etext-quality" title={etext_tooltips[r.from+"-"+r.to]}><InfoIcon className="info-icon" /></Tooltip>
+        }</>
     }
     
     return "?"+q+"?"
@@ -375,7 +381,7 @@ const CustomHit = ({ hit, routing, that, sortItems, recent, storage, advanced /*
             </span>}
           { hit.etext_access >= 1 && <span>
               <span>{I18n.t("types.etext" )}{I18n.t("misc.colon")}</span>&nbsp;
-              <span>{hit.etext_access < 3 ? I18n.t("access.etext.hit."+hit.etext_access) : getQuality("etext",hit.etext_quality)}</span>
+              <span className="quality">{hit.etext_access < 3 ? I18n.t("access.etext.hit."+hit.etext_access) : getQuality("etext",hit.etext_quality)}</span>
             </span>} 
         </Link>        
       </div>
