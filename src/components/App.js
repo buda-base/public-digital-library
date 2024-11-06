@@ -1096,7 +1096,7 @@ function InstantSearchBox(props) {
 
    console.log("ISB:",props,that)
 
-   //if(that.props.advancedSearch) return <div></div>
+   if(isMirador) return <div></div>
 
    return <div class={"ISB "+("advanced-"+that.props.advancedSearch)}>      
       { that.props.advancedSearch 
