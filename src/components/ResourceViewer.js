@@ -593,6 +593,7 @@ const topProperties = {
               
 let midProperties = {
    "Instance": [ 
+      _tmp+"workHasInstance",
       bdo+"workHasInstance",
       //bdo+"instanceOf",
       //bdo+"catalogInfo",
@@ -2253,6 +2254,8 @@ class ResourceViewer extends Component<Props,State>
       if(!prop[tmp+"propHasEtext"] && prop[tmp+"hasEtextInOutline"]?.length == 1) {
          prop[tmp+"propHasEtext"] = prop[tmp+"hasEtextInOutline"]
       }
+
+      if(!prop[tmp+"propHasEtext"] && prop[tmp+"propHasScans"]) prop[tmp+"propHasEtext"] = [{ value:tmp+"notAvailable"}]
 
       if(sorted)
       {
@@ -5976,6 +5979,14 @@ class ResourceViewer extends Component<Props,State>
       }
       else if(k === _tmp+"propHasEtext") {
 
+         if(elem.[0].value === _tmp+"notAvailable") 
+            return <div  data-prop={shortUri(k)} >               
+               <h3><span>{this.proplink(k,null,n)}{I18n.t("punc.colon")}</span> </h3>               
+                  <div class="group">
+                     {this.format("h4",k,"",false,"sub",elem)}
+                  </div>
+               </div>
+         
          let outlineEtext = this.getResourceElem(tmp+"hasEtextInOutline")
          return ( elem.map((e,i) => { 
             
@@ -10703,17 +10714,30 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
             //theOutline = <div data-prop="tmp:outline"><h3><span>Outline:</span></h3><div class="group">{theOutline}</div></div>
          }
 
+
+         let iof = this.getResourceElem(bdo+"instanceOf")
+         if(iof?.length) iof = shortUri(iof[0].value)
+         else iof = null
+
          let findText
-         if(!["Instance", "Images", "Etext"].includes(_T) && (_T != "Work" || serial?.length || isSerialWork) ) {            
-            findText = <InnerSearchPageContainer location={this.props.location} /*history={this.props.history}*/ auth={this.props.auth} isOsearch={true} RID={this.props.IRI} T={_T} />          
+         if(![/*"Instance",*/ "Images", "Etext"].includes(_T) && (_T != "Work" || serial?.length || isSerialWork) ) {            
+            findText = <InnerSearchPageContainer location={this.props.location} /*history={this.props.history}*/ auth={this.props.auth} isOsearch={true} RID={iof ?? this.props.IRI} T={_T} />          
+            if(_T == "Instance") {
+               findText = <div data-prop="tmp:workHasInstance" class="">                  
+                  <h3><span>{this.proplink(bdo+"workHasInstance",null,2)}{I18n.t("punc.colon")}</span> </h3>
+                  <div class="group">
+                     {findText}
+                  </div>
+               </div>
+            }
          }
-         let theDataTop = this.renderData(false, topProps,iiifpres,title,otherLabels,"top-props","main-info",versionTitle?[this.renderGenericProp(versionTitle, _tmp+"versionTitle", this.format("h4",_tmp+"versionTitle","",false,"sub",[{...versionTitle, type:"literal"}]))]:[],[], { [_tmp+"outline"]: theOutline, [_tmp+"map"]: hasMap.length ? header : undefined, [_tmp+"findText"]: hasMap.length ? findText : undefined})      
+         let theDataTop = this.renderData(false, topProps,iiifpres,title,otherLabels,"top-props","main-info",versionTitle?[this.renderGenericProp(versionTitle, _tmp+"versionTitle", this.format("h4",_tmp+"versionTitle","",false,"sub",[{...versionTitle, type:"literal"}]))]:[],[], { [_tmp+"outline"]: theOutline, [_tmp+"map"]: hasMap.length ? header : undefined, [_tmp+"findText"]: _T != "Instance" && hasMap.length ? findText : undefined})      
 
          console.log("serial:", serial)
 
          if(hasMap.length) findText = undefined
 
-         let { html: theDataMid, nbChildren: midPropsLen }= this.renderData(true, midProps,iiifpres,title,otherLabels,"mid-props", undefined, otherResourcesData) ?? {}
+         let { html: theDataMid, nbChildren: midPropsLen }= this.renderData(true, midProps,iiifpres,title,otherLabels,"mid-props", undefined, otherResourcesData, [], {[_tmp+"workHasInstance"]: _T === "Instance" ? findText : undefined}) ?? {}
          let theDataBot = this.renderData(false, kZprop.filter(k => !topProps.includes(k) && !midProps.includes(k) && !extProps.includes(k)).concat(listWithAS),iiifpres,title,otherLabels,"bot-props", undefined)      
 
          let theEtext

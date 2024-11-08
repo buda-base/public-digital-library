@@ -1172,3 +1172,85 @@ header[data-hits="0"] ~ .hits .pagination,
 .nav ~ .AppSK.advanced .App .SearchPane:not(#a) {
   min-height: 0;
 }
+
+
+.resource [data-prop="tmp:workHasInstance"] .data:not(#perma) > div:not(.firstImage):not(.browse):not(.header)::after {
+  content:none;
+}
+
+
+.resource [data-prop="tmp:workHasInstance"] .AppSK {
+  padding:0;
+}
+
+
+.resource [data-prop="tmp:workHasInstance"] .AppSK .main-content .result .RID,
+.resource [data-prop="tmp:workHasInstance"] .AppSK .main-content .result .T,
+.resource [data-prop="tmp:workHasInstance"] .AppSK .main-content .result .num-box,
+.resource [data-prop="tmp:workHasInstance"] .AppSK .main-content header,
+.resource [data-prop="tmp:workHasInstance"] .AppSK .content .filter,
+.resource [data-prop="tmp:workHasInstance"] .AppSK .searchbox {
+  display:none;
+}
+
+.resource [data-prop="tmp:workHasInstance"] .AppSK .content {
+  background:white;
+}
+
+
+.resource [data-prop="tmp:workHasInstance"] .AppSK .content .main-content {
+  width:100%;
+  padding:0;
+}
+
+.resource [data-prop="tmp:workHasInstance"] .AppSK .content .main-content .ais-Hits-list {
+  display: grid;
+  grid-template-columns: calc(50% - 20px) calc(50% - 20px); 
+  padding-left:15px; 
+  grid-gap:15px;
+}
+
+.resource [data-prop="tmp:workHasInstance"] .AppSK .content .main-content .ais-Hits-list li {
+  border:none;
+  padding:0;
+  box-shadow: none;
+  margin-bottom:0px;
+}
+
+.resource [data-prop="tmp:workHasInstance"] .AppSK:not(#a) .main-content .result .thumb a {
+  align-items: flex-start;
+}
+
+.resource [data-prop="tmp:workHasInstance"] .AppSK:not(#a) .main-content .result .thumb a,
+.resource [data-prop="tmp:workHasInstance"] .AppSK .main-content .result .thumb {
+  width:115px;
+}
+
+.resource [data-prop="tmp:workHasInstance"] .AppSK .main-content .result .thumb.hasImg a .img {
+  width:100px;
+  height:100px;
+  border:1px solid #ccc;
+  box-sizing: border-box;
+}
+
+.resource [data-prop="tmp:workHasInstance"] .AppSK .main-content .result .thumb.hasImg a .img  img {
+  height:100px;
+}
+
+.AppSK:not(#a) .result .thumb a .RID ~ span {
+  padding:0;
+}
+
+.resource [data-prop="tmp:workHasInstance"] .AppSK .result .data > a > span:not(.T) span {
+  font-size:14px;
+  font-weight:400;
+}
+
+.resource [data-prop="tmp:workHasInstance"] .AppSK .result .data .names > .label + span,
+.resource [data-prop="tmp:workHasInstance"] .AppSK .result .data .names > .label {
+  font-size:14px;
+}
+
+.resource [data-prop="tmp:workHasInstance"] .AppSK .result .data .T + span {
+  margin:0;
+}

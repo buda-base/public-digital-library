@@ -306,7 +306,8 @@
       "tmp:nocomm_search":"Exclude",
       "tmp:firstScanSyncDate":"First scan date",
       "bdr:PartTypeText": "Text In Outline",
-      "tmp:associatedTradition":"Tradition"
+      "tmp:associatedTradition":"Tradition",
+      "tmp:notAvailable":"Not available"
    },
    "guided":{
       "keyword":"keyword",
