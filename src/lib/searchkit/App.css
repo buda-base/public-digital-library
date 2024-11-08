@@ -1206,7 +1206,7 @@ header[data-hits="0"] ~ .hits .pagination,
 .resource [data-prop="tmp:workHasInstance"] .AppSK .content .main-content .ais-Hits-list {
   display: grid;
   grid-template-columns: calc(50% - 20px) calc(50% - 20px); 
-  padding-left:15px; 
+  padding-left:35px; 
   grid-gap:15px;
 }
 
