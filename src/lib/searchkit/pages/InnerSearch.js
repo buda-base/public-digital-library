@@ -1,9 +1,12 @@
 // Core
 import React, { Component, useState, useEffect, useCallback } from "react";
+import { Link } from "react-router-dom"
 import _ from "lodash"
 import Loader from "react-loader"
 import SimpleBar from 'simplebar-react';
 import 'simplebar/dist/simplebar.min.css';
+import ExpandLess from '@material-ui/icons/ExpandLess';
+import ExpandMore from '@material-ui/icons/ExpandMore';
 
 // Utils
 import Client from "@searchkit/instantsearch-client";
@@ -20,7 +23,9 @@ import {
   RefinementList,
   Pagination,
   Configure,
-  SortBy, useSortBy
+  SortBy, 
+  useSortBy,
+  useInstantSearch
 } from "react-instantsearch";
 
 import I18n from 'i18next';
@@ -41,6 +46,25 @@ import store from '../../../index';
 import { initiateApp } from '../../../state/actions';
 
 const routing = routingConfig()
+
+
+function OtherVersionsNav({ that, RID }) {
+
+  const { results } = useInstantSearch();
+
+  return <div class="other-versions-nav">
+    <span onClick={() => that.setState({toggled:!that.state.toggled})} class={results.nbHits-1 > 10 ? "show": ""}>
+      { !that.state.toggled 
+        ? I18n.t("misc.see10MoreN",{count:results.nbHits-1 >= 20 ? 10 : results.nbHits-1 - 10})
+        : I18n.t("misc.hide") }&nbsp;{that.state.toggled ? <ExpandLess /> : <ExpandMore /> }
+    </span>
+    <span>
+      <Link to={"/osearch/associated/"+RID+"/search"}>
+        {I18n.t("misc.browseA",{count: results.nbHits - 1})}
+      </Link>
+    </span>
+  </div>
+}
 
 export class InnerSearchPage extends Component<State, Props>
 {
@@ -72,7 +96,7 @@ export class InnerSearchPage extends Component<State, Props>
 
     const storageRef = React.createRef() 
 
-    let { RID, T, recent } = this.props
+    let { RID, T, recent, isOtherVersions, srcVersionID  } = this.props
 
     /* // debug sortBy
     if(recent) {
@@ -150,11 +174,13 @@ export class InnerSearchPage extends Component<State, Props>
                 <div className="main-content">
                   <SearchResultsHeader that={this} inner={true} recent={recent} {...{ storageRef }} />
                   <div className="hits">
-                    <Configure hitsPerPage={5} filters={pageFilters} />
-                    <HitsWithLabels that={this} {...{ routing, recent, storageRef }} />
-                    <div className="pagination">
-                      <Pagination />
-                    </div>
+                    <Configure hitsPerPage={isOtherVersions ? 11 * (this.state.toggled ? 2 : 1) : 5} filters={pageFilters} />
+                    <HitsWithLabels that={this} {...{ routing, recent, storageRef, isOtherVersions, srcVersionID }} />
+                    { isOtherVersions 
+                      ? <OtherVersionsNav {...{ that:this, RID } }/>
+                      : <div className="pagination">
+                        <Pagination />
+                      </div> }
                   </div>
                 </div>
               </div>

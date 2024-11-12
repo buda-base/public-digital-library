@@ -34,7 +34,7 @@ const Hit = ({ hit, label, debug = true }) => {
   );
 };
 
-const CustomHit = ({ hit, routing, that, sortItems, recent, storage, advanced /*= true*/ }) => {
+const CustomHit = ({ hit, routing, that, sortItems, recent, storage, advanced /*= true*/, isOtherVersions }) => {
 
   const [debug, setDebug] = useState(false)
   const [checked, setChecked] = useState(false)
@@ -58,7 +58,7 @@ const CustomHit = ({ hit, routing, that, sortItems, recent, storage, advanced /*
   const 
     page = that.props.location.pathname,
     uri = qs.stringify(routing.stateMapping.stateToRoute(uiState,true), { arrayFormat: 'index' }),
-    backLink = "?s="+encodeURIComponent(page+(uri ? "?"+encodeURIComponent(uri) : ""))+(hit.etext_instance?"&openEtext=bdr:"+hit.etext_vol+"&scope=bdr:"+hit.objectID:""),
+    backLink = "?"+(!isOtherVersions?"s="+encodeURIComponent(page+(uri ? "?"+encodeURIComponent(uri) : ""))+"&":"")+(hit.etext_instance?"openEtext=bdr:"+hit.etext_vol+"&scope=bdr:"+hit.objectID:""),
     link = "/show/bdr:"+(hit.etext_instance?hit.etext_instance:hit.objectID)+backLink
 
   useEffect(() => {
@@ -125,11 +125,13 @@ const CustomHit = ({ hit, routing, that, sortItems, recent, storage, advanced /*
             }
 
             hit[k].map((h,i) => name != "altLabel" && (advanced || !hidden.includes(name)) || hit._highlightResult[k] && hit._highlightResult[k][i]?.matchedWords?.length 
-              ? labels[name!="altLabel"?name:"prefLabel"].push({
+              ? !isOtherVersions || name=="prefLabel" && !labels["prefLabel"]?.some(l => l.lang === lang)
+                ? labels[name!="altLabel"?name:"prefLabel"].push({
                   ...mergeHLinVal(k, h, i), 
                   field: k, 
                   lang, hit, 
                 })
+                : null
               : null
             )
           }
@@ -394,12 +396,14 @@ const CustomHit = ({ hit, routing, that, sortItems, recent, storage, advanced /*
             {/* {{ hit.author && <Link to={"/show/bdr:"+hit.author}>{hit.author}</Link> } */} 
             { title }
           </Link>
-        { names.length > 0 && <>
+
+
+        { !isOtherVersions && names.length > 0 && <>
           <span class="names noNL">
             <span class="label">{I18n.t(prop, {count: names.length})}<span class="colon">:</span></span>
             <span>{names}</span>
           </span>
-        </> }
+        </> } 
         
         {/* // to put in publisher
           hit.publicationDate && sortBy?.startsWith("publicationDate") && <>
@@ -411,13 +415,14 @@ const CustomHit = ({ hit, routing, that, sortItems, recent, storage, advanced /*
         */}
         { 
           hit.inRootInstance?.length > 0 && <span class="names inRoot noNL">
-            <span class="label">{I18n.t("result.inRootInstance")}<span class="colon">:</span></span>
+            <span class="label">{I18n.t("result.inRootInstance"+(isOtherVersions?"S":""))}{!isOtherVersions?<span class="colon">:</span>:null}</span>
             <span>{hit.inRootInstance?.map(a => <span data-id={a}><Link to={"/show/bdr:"+a+backLink+"&part=bdr:"+hit.objectID}>{
               getPropLabel(that, fullUri("bdr:"+a), true, true, "", 1, storage, true) ?? a
             }</Link></span>)}</span>
           </span> 
         }
-        { 
+        {!isOtherVersions && <>{
+
           (hit.author?.length > 0 || hit.translator?.length > 0 || authorshipStatement.length > 0) && <span class="names author noNL">
             <span class="label">{I18n.t("result.workBy")}<span class="colon">:</span></span>
             <span>
@@ -488,9 +493,8 @@ const CustomHit = ({ hit, routing, that, sortItems, recent, storage, advanced /*
               { showMore.etext && <span className="toggle" onClick={() => toggleExpand("etext")}>{I18n.t(expand.etext ?"misc.hide":"Rsidebar.priority.more")}</span>}
              </span>
           </span>
-        }
-        
-      </div>
+        } 
+        </>}</div>
     </div>
     {
       (recent || hit.firstScanSyncDate && sortBy?.startsWith("firstScanSyncDate")) && <>

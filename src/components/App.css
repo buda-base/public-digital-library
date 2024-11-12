@@ -6237,9 +6237,10 @@ h3 .expand svg { position:absolute; margin-top:-18px; }*/
 .resource .data .withLinkTo .expand.linkToVersions,
 .resource .data .withLinkTo .expand + .expand { bottom:-20px; z-index:1; }
 
+.resource [data-prop="tmp:workHasInstance"] .other-versions-nav:not(#a) a,
 .resource .data :is(.withLinkTo,[data-prop="bdo:workHasInstance"]) .expand.linkToPlaces a,
 .resource .data :is(.withLinkTo,[data-prop="bdo:workHasInstance"]) .expand.linkToVersions a,
-.resource .data :is(.withLinkTo,[data-prop="bdo:workHasInstance"]) .expand + .expand a { color:white; background-color: #d73449; font-weight: 500; padding:10px 15px; border-radius: 5px; border:none;}
+.resource .data :is(.withLinkTo,[data-prop="bdo:workHasInstance"]) .expand + .expand a { color:white; background-color: #d73449; font-weight: 500; padding:10px 15px; border-radius: 5px; border:none; }
 
 .resource .data .withLinkTo .propCollapse + .expand + .expand { bottom:60px; }
 .resource.work .data [data-prop="bdo:workHasInstance"] .propCollapse + .expand + .expand { bottom:22px; }

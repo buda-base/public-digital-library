@@ -366,7 +366,8 @@
       "search":"Search Results",
       "hitKW":"{{count}} hit for \"{{kw}}\"",
       "hitKW_plural":"{{count}} hits for \"{{kw}}\"",
-      "added":"Added {{date}}"
+      "added":"Added {{date}}",
+      "inRootInstanceS": "in"
    },
    "map": {
       "touch": "Use two fingers to move the map",
@@ -488,7 +489,8 @@
       "DLD":"This text is not available on your DLD.\nWould you like to open it online instead?",
       "expand":"Expand",
       "otherR":"Other resource",
-      "otherR_plural":"Other resources"
+      "otherR_plural":"Other resources",
+      "see10MoreN": "See {{count}} More"
    },
    "lang": {
       "en": "English",

@@ -268,7 +268,7 @@ export function FiltersSidebar(props) {
 
 export function HitsWithLabels(props) {
 
-  const {that, sortItems, routing, recent, storageRef} = props
+  const {that, sortItems, routing, recent, storageRef, isOtherVersions, srcVersionID } = props
 
   const [currentItems, setCurrentItems] = useState([]);
   
@@ -335,7 +335,8 @@ export function HitsWithLabels(props) {
       setStorage(newStorage)      
     }
 
-    return items.map(it => ({...it, etext_search: "true" }))
+    return items/*.filter(i => (!isOtherVersions || i.objectID != srcVersionID))*/.map(it => ({...it, etext_search: "true" }))
+      //.concat(isOtherVersions ? items.filter(i => isOtherVersions && i.objectID == srcVersionID) : [])
   }
 
   useEffect(() => {
@@ -344,7 +345,7 @@ export function HitsWithLabels(props) {
 
   return <Hits 
     transformItems={prepItemsPage}
-    hitComponent={({hit}) => <CustomHit {...{ routing, hit, that, sortItems, recent, storage: storageRef?.current }}/>} 
+    hitComponent={({hit}) => (!isOtherVersions || hit.objectID != srcVersionID) && <CustomHit {...{ routing, hit, that, sortItems, recent, storage: storageRef?.current,  isOtherVersions }}/>} 
   />
 }
 

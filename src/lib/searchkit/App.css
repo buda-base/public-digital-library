@@ -1204,10 +1204,13 @@ header[data-hits="0"] ~ .hits .pagination,
 }
 
 .resource [data-prop="tmp:workHasInstance"] .AppSK .content .main-content .ais-Hits-list {
-  display: grid;
+  /* display: grid;
   grid-template-columns: calc(50% - 20px) calc(50% - 20px); 
+  grid-gap:15px; */
   padding-left:35px; 
-  grid-gap:15px;
+  display: block;
+  column-count: 2;
+  column-gap: 15px;
 }
 
 .resource [data-prop="tmp:workHasInstance"] .AppSK .content .main-content .ais-Hits-list li {
@@ -1215,10 +1218,22 @@ header[data-hits="0"] ~ .hits .pagination,
   padding:0;
   box-shadow: none;
   margin-bottom:0px;
+  align-items: flex-start;
+  margin-bottom: 15px;
+  break-inside: avoid;
 }
 
-.resource [data-prop="tmp:workHasInstance"] .AppSK:not(#a) .main-content .result .thumb a {
+.resource [data-prop="tmp:workHasInstance"] .AppSK .content .main-content .ais-Hits-list li:empty {
+  display: none;
+}
+
+.resource [data-prop="tmp:workHasInstance"] .AppSK:not(#a) .main-content .result .thumb.hasImg a {
   align-items: flex-start;
+}
+
+.resource [data-prop="tmp:workHasInstance"] .AppSK:not(#a) .main-content .result .thumb:not(.hasImg) a {
+  padding-right:15px;
+  box-sizing: border-box;
 }
 
 .resource [data-prop="tmp:workHasInstance"] .AppSK:not(#a) .main-content .result .thumb a,
@@ -1237,8 +1252,12 @@ header[data-hits="0"] ~ .hits .pagination,
   height:100px;
 }
 
-.AppSK:not(#a) .result .thumb a .RID ~ span {
+.resource [data-prop="tmp:workHasInstance"] .AppSK:not(#a) .result .thumb a .RID ~ span {
   padding:0;
+}
+
+.resource [data-prop="tmp:workHasInstance"] .AppSK:not(#a) .result .thumb a .RID ~ span svg { 
+  position: absolute;
 }
 
 .resource [data-prop="tmp:workHasInstance"] .AppSK .result .data > a > span:not(.T) span {
@@ -1254,3 +1273,63 @@ header[data-hits="0"] ~ .hits .pagination,
 .resource [data-prop="tmp:workHasInstance"] .AppSK .result .data .T + span {
   margin:0;
 }
+
+.resource [data-prop="tmp:workHasInstance"] .AppSK .result .data .names {
+  display:inline;
+  line-height:22px;
+}
+
+.resource [data-prop="tmp:workHasInstance"] .AppSK .content .main-content .ais-Hits-list li:nth-child(11):last-child,
+.resource [data-prop="tmp:workHasInstance"] .AppSK .content .main-content .ais-Hits-list li:nth-child(n+21) {
+  display: none;
+}
+
+.resource [data-prop="tmp:workHasInstance"] .AppSK .content .main-content .ais-Hits-list li:empty ~ li:nth-child(n+21),
+.resource [data-prop="tmp:workHasInstance"] .AppSK .content .main-content .ais-Hits-list li:empty ~ li:nth-child(11):last-child {
+  display: block;
+}
+
+.resource [data-prop="tmp:workHasInstance"] .AppSK .content .main-content .ais-Hits-list li:empty ~ li:nth-child(n+21) ~ li:nth-child(n+21) {
+  display: none;
+}
+
+
+.resource [data-prop="tmp:workHasInstance"] .other-versions-nav:not(#a) a {
+  font-size:13px;
+}
+
+.resource [data-prop="tmp:workHasInstance"] .other-versions-nav > span,
+.resource [data-prop="tmp:workHasInstance"] .other-versions-nav {
+  display: flex;
+  height:auto;
+}
+
+.resource [data-prop="tmp:workHasInstance"] .other-versions-nav {
+  justify-content: space-between;
+  align-items: baseline;
+  padding:0 35px;
+}
+
+.resource [data-prop="tmp:workHasInstance"] .other-versions-nav > span:first-child:not(.show) {
+  visibility: hidden;
+
+}
+
+.resource [data-prop="tmp:workHasInstance"] .other-versions-nav > span:first-child {
+  color: #d73449;
+  font-weight: 700;
+  font-size: 13px;
+  text-transform: lowercase;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.resource [data-prop="tmp:workHasInstance"] .other-versions-nav > span:first-child svg {
+  margin-top:2px;
+}
+
+.resource [data-prop="bdo:workHasInstance"]:not(#a):not(#b) {
+  display: none !important;
+}
+

@@ -6186,7 +6186,7 @@ class ResourceViewer extends Component<Props,State>
                <h3>
                   <span>
                       <Tooltip placement="bottom-start" classes={{tooltip:"commentT",popper:"commentP"}} style={{marginLeft:"50px"}} title={<div>{I18n.t("resource.sameL",{count:mapSame.length})}</div>}>
-                        <a class="propref">{I18n.t("misc.otherR",{count:mapSame.length})}</a>
+                        <a class="propref"><span>{I18n.t("misc.otherR",{count:mapSame.length})}</span></a>
                      </Tooltip>
                      {I18n.t("punc.colon")}
                   </span>
@@ -10720,8 +10720,8 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
          else iof = null
 
          let findText
-         if(![/*"Instance",*/ "Images", "Etext"].includes(_T) && (_T != "Work" || serial?.length || isSerialWork) ) {            
-            findText = <InnerSearchPageContainer location={this.props.location} /*history={this.props.history}*/ auth={this.props.auth} isOsearch={true} RID={iof ?? this.props.IRI} T={_T} />          
+         if(![/*"Instance",*/ "Images", "Etext"].includes(_T) && (_T != "Work" || serial?.length || isSerialWork) && (_T != "Instance" || this.getResourceElem(bdo+"workHasInstance")?.length && !this.props.loading )) {            
+            findText = <InnerSearchPageContainer isOtherVersions={_T === "Instance"} srcVersionID={_T === "Instance" ? this.props.IRI.split(":")[1] : undefined} location={this.props.location} /*history={this.props.history}*/ auth={this.props.auth} isOsearch={true} RID={iof ?? this.props.IRI} T={_T} />          
             if(_T == "Instance") {
                findText = <div data-prop="tmp:workHasInstance" class="">                  
                   <h3><span>{this.proplink(bdo+"workHasInstance",null,2)}{I18n.t("punc.colon")}</span> </h3>
