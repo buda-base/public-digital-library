@@ -4871,12 +4871,19 @@ line-height:12px; }
 
 :not(#etext-scroll) > h5:last-of-type { position: relative; padding-right:20px; }
 
+.etextPage:hover .overpage + .hover-menu,
 :not(#etext-scroll) > h5:hover .hover-menu,
 .hover-menu.on,
 .resource .data [data-prop="bdo:note"] .sub:hover .hover-menu,
 :not(#etext-scroll) > h4:hover .hover-menu {  opacity:1 !important; pointer-events: auto !important; }
 
 .resource .data:not(.legal-props) .group:hover > h4:not(.first):not(.multiple) + .hover-menu { opacity:1; }
+
+.overpage + .hover-menu {
+   top:5px;
+   position: absolute;
+   right:5px;
+}
 
 #popHoverM .resource .data h4[data-prop="bdo:role"] + h4 .hover-menu,
 #popHoverM .resource .data h4[data-prop="bdo:creator"] + .subgroup > h4.first,

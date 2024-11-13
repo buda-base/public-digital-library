@@ -179,12 +179,12 @@ function EtextPage(props) {
                   return (
                         <h5 className="withHoverM">
                           {withHoverM}
-                          <span onClick={() => { 
+                          {/* <span onClick={() => { 
                               //loggergen.log("elem:",e,iIp)
                               if(!iIp) onGetContext(props_IRI,e.start,e.end, 1650)	
                           }}>
                               { hoverMenu(" "+e.id,{ value:"etextMoreInfo", elem: e },[ imgElem, <>&nbsp;</>, withHoverM ])}
-                          </span>
+                          </span> */}
                         </h5>
                   )
             })}
@@ -265,9 +265,9 @@ function EtextPage(props) {
               
               if(lang === "bo") { size += 0.4 ; }
               return ([<span lang={lang} {...state_etextSize?{style:{ fontSize:size+"em", lineHeight:(size * 1.0)+"em" }}:{}}>{label}</span>])})}
-              { hoverMenu(bdo+"EtextHasPage",{value:pageVal,lang:pageLang,start:e.start,end:e.end},current)}
         </h4>
       </div>
+              { hoverMenu(bdo+"EtextHasPage",{value:pageVal,lang:pageLang,start:e.start,end:e.end},current)}
   </div>)
 }
 
