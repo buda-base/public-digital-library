@@ -627,6 +627,10 @@ html[lang="bo"] .msg-popup .front p { font-size:18px;}
    width:100%;
 }
 
+.resource [data-prop="tmp:containingOutline"]:not(#a) {
+   align-items: baseline;
+}
+
 .resource .data#outline > div {
    box-sizing: border-box;
 }
