@@ -4066,7 +4066,7 @@ class ResourceViewer extends Component<Props,State>
 
       let loca = { ...this.props.location }
       if(e.start !== undefined) { 
-         loca.search = loca.search.replace(/(^[?])|(&*startChar=[^&]+)/g,"")
+         loca.search = loca.search.replace(/(^[?])|(startChar=[^&]+&*)/g,"")
          loca.search = "?startChar="+e.start+(loca.search?"&"+loca.search:"")
       }
 
@@ -4102,7 +4102,11 @@ class ResourceViewer extends Component<Props,State>
             {! hasTT && 
                <div /*style={{pointerEvents:"none"}}*/ >
                   <span id="anchor">
-                     { (e.start !== undefined) && <Link to={loca.pathname+loca.search+"#open-viewer"}><img style={{width:"16px"}} src="/icons/PLINK_small.svg"/></Link> }
+                     { (e.start !== undefined) && <Link to={loca.pathname+loca.search+"#open-viewer"} onClick={(ev) => {
+                           const ETres = e.link.replace(/^.*openEtext=([^#&]+)[#&].*$/,"$1")
+                           this.props.onLoading("etext", true)
+                           this.props.onReinitEtext(ETres) 
+                        }}><img style={{width:"16px"}} src="/icons/PLINK_small.svg"/></Link> }
                      <img src="/icons/info.svg" onClick={this.toggleHoverM(ID)} />
                   </span> 
                </div>
