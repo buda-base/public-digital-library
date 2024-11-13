@@ -762,7 +762,8 @@
          "product": "Search texts in this collection"
       },
       "inCollection":"In collection",
-      "inCollection_plural":"In collections"
+      "inCollection_plural":"In collections",
+      "outLn":"{{n}} "
    },
    "tradition":{
       "boT":"Tibetan Tradition",

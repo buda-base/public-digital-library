@@ -3516,7 +3516,7 @@ class ResourceViewer extends Component<Props,State>
                         return false;
                      }
                                                 
-                  } } data-info={info}>{info}</a>
+                  } } data-info={info}>{(elem?.data?.partIndex ?? elem?.data?.index)  != undefined && I18n.t("resource.outLn", {n:(""+(elem.data.partIndex?? elem?.data?.index)).padStart(2,'0')})}{info}</a>
                }
                else link = <Link {...this.props.preview?{ target:"_blank" }:{}} className={"urilink prefLabel " } to={"/"+show+"/"+uri}>{info}</Link>
 
@@ -8601,7 +8601,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                   <span class={"parTy "+(/*e.details*/isCurrent?"on":"") } {...e.details?{title: I18n.t("resource."+(openD?"hideD":"showD")), onClick:(ev) => toggle(ev,root,e["@id"],"details",!e.hasPart && mono,e) /*openText()*/ }:{title:tLabel}} >
                      {pType && parts[pType] ? <div>{parts[pType]}</div> : <div>{parts["?"]}</div> }
                   </span>
-                  <span>{this.uriformat(_tmp+"withEtextPrefLang",{type:'uri', value:gUri, volume:fUri, inOutline: (!e.hasPart?tag+"-details":tag), /*url:"/show/"+e.link,*/ debug:false, noid:true, toggle:(ev) => toggle(null,root,e["@id"],/*!e.hasPart?"details":*/"",!e.hasPart && (mono || ut), e)  })}</span>
+                  <span>{this.uriformat(_tmp+"withEtextPrefLang",{type:'uri', value:gUri, volume:fUri, data:e, inOutline: (!e.hasPart?tag+"-details":tag), /*url:"/show/"+e.link,*/ debug:false, noid:true, toggle:(ev) => toggle(null,root,e["@id"],/*!e.hasPart?"details":*/"",!e.hasPart && (mono || ut), e)  })}</span>
                   <div class="abs">                  
                      { !e.hasPart && (
                            access 
@@ -9708,7 +9708,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                               <span class={"parTy "+(e.details?"on":"")}  ref={citeRef} {...e.details?{title:/*tLabel+" - "+*/ I18n.t("resource."+(this.state.collapse[tag+"-details"]?"hideD":"showD")), onClick:(ev) => toggle(ev,root,e["@id"],"details",false,e)}:{title:tLabel}} >
                                  {pType && parts[pType] ? <div>{parts[pType]}</div> : <div>{parts["?"]}</div> }
                               </span>
-                              <span>{this.uriformat(null,{noid:true, type:'uri', value:fUri, ...(e.partType==="bdr:PartTypeVolume"?{volumeNumber:e.volumeNumber}:{}), inOutline: (!e.hasPart?tag+"-details":tag), url, debug:false, toggle:() => toggle(null,root,togId,!e.hasPart&&!e["tmp:hasNonVolumeParts"]?"details":"",false,e,top)})}</span>
+                              <span>{this.uriformat(null,{noid:true, type:'uri', value:fUri, data: e, ...(e.partType==="bdr:PartTypeVolume"?{volumeNumber:e.volumeNumber}:{}), inOutline: (!e.hasPart?tag+"-details":tag), url, debug:false, toggle:() => toggle(null,root,togId,!e.hasPart&&!e["tmp:hasNonVolumeParts"]?"details":"",false,e,top)})}</span>
                               {e.id}
                               {this.samePopup(e.same,fUri)}
                               <div class="abs">
