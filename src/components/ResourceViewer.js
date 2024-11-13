@@ -8182,8 +8182,13 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
       labelSticky = getLangLabel(this, skos+"prefLabel", labelSticky) ?? {}    
       
       if(label.value?.startsWith("bdr:")) {
+         //console.log("ethdr:",label,refs,this.props.that?.props?.eTextRefs)
          if(refs?.[0]?.eTextInVolume) {
             const volN = this.props.that?.props?.eTextRefs?.["@graph"]?.filter(n => n["@id"] === refs?.[0]?.eTextInVolume)?.[0].volumeNumber
+            label.value = I18n.t("types.volume_num_noid",{num:volN})
+            label.lang = this.props.locale
+         } else if(refs?.[0]?.volumeNumber) {
+            const volN = refs?.[0]?.volumeNumber
             label.value = I18n.t("types.volume_num_noid",{num:volN})
             label.lang = this.props.locale
          }
