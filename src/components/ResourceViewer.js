@@ -10720,9 +10720,10 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
          else iof = null
 
          let findText
-         if(![/*"Instance",*/ "Images", "Etext"].includes(_T) && (_T != "Work" || serial?.length || isSerialWork) && (_T != "Instance" || this.getResourceElem(bdo+"workHasInstance")?.length && !this.props.loading )) {            
+         if(![/*"Instance",*/ "Images", "Etext"].includes(_T) && (_T != "Work" || serial?.length || isSerialWork) && (_T != "Instance" || this.getResourceElem(bdo+"workHasInstance")?.length && (!this.props.loading||this.state.collapse["findText-"+this.props.IRI]) )) {            
             findText = <InnerSearchPageContainer isOtherVersions={_T === "Instance"} srcVersionID={_T === "Instance" ? this.props.IRI.split(":")[1] : undefined} location={this.props.location} /*history={this.props.history}*/ auth={this.props.auth} isOsearch={true} RID={iof ?? this.props.IRI} T={_T} />          
             if(_T == "Instance") {
+               if(!this.state.collapse["findText-"+this.props.IRI]) this.setState({collapse:{...this.state.collapse,["findText-"+this.props.IRI]:true}})
                findText = <div data-prop="tmp:workHasInstance" class="">                  
                   <h3><span>{this.proplink(bdo+"workHasInstance",null,2)}{I18n.t("punc.colon")}</span> </h3>
                   <div class="group">
