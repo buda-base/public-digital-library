@@ -4973,7 +4973,7 @@ h4:hover a.no-bdrc img { opacity:1; }
 .resource .data > div:not(.firstImage):not(.browse):not(.header):not(:last-child)::after { background:rgba(0,0,0,0.25);}
 .resource .data.top-props > div:last-child::after { margin-bottom:20px !important; margin-top:0 !important; }
 
-.resource .data > div > h3 { width:calc(190px - 15px); padding-right:15px; /*line-height:24px;*/  vertical-align: top; }
+.resource .data > div > h3 { width:calc(190px - 20px); padding-right:20px; /*line-height:24px;*/  vertical-align: top; }
 .resource .data > div.parent { flex-wrap:wrap; }
 .resource .data > div.parent > h3 { flex-shrink:0 }
 .resource h3,.resource h4 { display:inline-block; margin-bottom:0px; font-size:14px; font-weight:normal; 

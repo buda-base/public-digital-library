@@ -48,19 +48,21 @@ import { initiateApp } from '../../../state/actions';
 const routing = routingConfig()
 
 
-function OtherVersionsNav({ that, RID }) {
+function OtherVersionsNav({ that, RID, srcVersionID }) {
 
   const { results } = useInstantSearch();
 
+  const numDiff = srcVersionID ? 1 : 0
+
   return <div class="other-versions-nav">
-    <span onClick={() => that.setState({toggled:!that.state.toggled})} class={results.nbHits-1 > 10 ? "show": ""}>
+    <span onClick={() => that.setState({toggled:!that.state.toggled})} class={results.nbHits-numDiff > 10 ? "show": ""}>
       { !that.state.toggled 
-        ? I18n.t("misc.see10MoreN",{count:results.nbHits-1 >= 20 ? 10 : results.nbHits-1 - 10})
+        ? I18n.t("misc.see10MoreN",{count:results.nbHits-numDiff >= 20 ? 10 : results.nbHits-numDiff - 10})
         : I18n.t("misc.hide") }&nbsp;{that.state.toggled ? <ExpandLess /> : <ExpandMore /> }
     </span>
     <span>
       <Link to={"/osearch/associated/"+RID+"/search"}>
-        {I18n.t("misc.browseA",{count: results.nbHits - 1})}
+        {I18n.t("misc.browseA",{count: results.nbHits - numDiff})}
       </Link>
     </span>
   </div>
@@ -177,7 +179,7 @@ export class InnerSearchPage extends Component<State, Props>
                     <Configure hitsPerPage={isOtherVersions ? 11 * (this.state.toggled ? 2 : 1) : 5} filters={pageFilters} />
                     <HitsWithLabels that={this} {...{ routing, recent, storageRef, isOtherVersions, srcVersionID }} />
                     { isOtherVersions 
-                      ? <OtherVersionsNav {...{ that:this, RID } }/>
+                      ? <OtherVersionsNav {...{ that:this, RID, srcVersionID } }/>
                       : <div className="pagination">
                         <Pagination />
                       </div> }

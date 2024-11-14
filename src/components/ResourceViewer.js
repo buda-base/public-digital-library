@@ -608,6 +608,10 @@ let midProperties = {
    ],
    "Person":[
       bdo+"personName"
+   ],
+   "Work": [ 
+      _tmp+"workHasInstance",
+      bdo+"workHasInstance",
    ]
 }
 
@@ -5304,6 +5308,7 @@ class ResourceViewer extends Component<Props,State>
 
       const t = getEntiType(this.props.IRI)
       if(t === "Instance" && k === bdo+"workHasInstance") k = _tmp + "otherInstance"
+      else if(t === "Work" && k === bdo+"workHasInstance") k = _tmp + "hasInstance"
 
       let tooltip
       if(this.props.dictionary && this.props.dictionary[k]) {
@@ -10728,10 +10733,10 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
          if(iof?.length) iof = shortUri(iof[0].value)
          else iof = null
 
-         let findText
-         if(![/*"Instance",*/ "Images", "Etext"].includes(_T) && (_T != "Work" || serial?.length || isSerialWork) && (_T != "Instance" || this.getResourceElem(bdo+"workHasInstance")?.length && (!this.props.loading||this.state.collapse["findText-"+this.props.IRI]) )) {            
-            findText = <InnerSearchPageContainer isOtherVersions={_T === "Instance"} srcVersionID={_T === "Instance" ? this.props.IRI.split(":")[1] : undefined} location={this.props.location} /*history={this.props.history}*/ auth={this.props.auth} isOsearch={true} RID={iof ?? this.props.IRI} T={_T} />          
-            if(_T == "Instance") {
+         let findText, shouldShowOtherInstances = _T == "Work" && !serial?.length && !isSerialWork
+         if(![/*"Instance",*/ "Images", "Etext"].includes(_T) /*&& (_T != "Work" || serial?.length || isSerialWork)*/ && (_T != "Instance" || this.getResourceElem(bdo+"workHasInstance")?.length && (!this.props.loading||this.state.collapse["findText-"+this.props.IRI]) )) {            
+            findText = <InnerSearchPageContainer isOtherVersions={_T === "Instance" || shouldShowOtherInstances} srcVersionID={_T === "Instance" ? this.props.IRI.split(":")[1] : undefined} location={this.props.location} /*history={this.props.history}*/ auth={this.props.auth} isOsearch={true} RID={iof ?? this.props.IRI} T={_T} />          
+            if(_T == "Instance" || shouldShowOtherInstances) {
                if(!this.state.collapse["findText-"+this.props.IRI]) this.setState({collapse:{...this.state.collapse,["findText-"+this.props.IRI]:true}})
                findText = <div data-prop="tmp:workHasInstance" class="">                  
                   <h3><span>{this.proplink(bdo+"workHasInstance",null,2)}{I18n.t("punc.colon")}</span> </h3>
@@ -10741,13 +10746,13 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                </div>
             }
          }
-         let theDataTop = this.renderData(false, topProps,iiifpres,title,otherLabels,"top-props","main-info",versionTitle?[this.renderGenericProp(versionTitle, _tmp+"versionTitle", this.format("h4",_tmp+"versionTitle","",false,"sub",[{...versionTitle, type:"literal"}]))]:[],[], { [_tmp+"outline"]: theOutline, [_tmp+"map"]: hasMap.length ? header : undefined, [_tmp+"findText"]: _T != "Instance" && hasMap.length ? findText : undefined})      
+         let theDataTop = this.renderData(false, topProps,iiifpres,title,otherLabels,"top-props","main-info",versionTitle?[this.renderGenericProp(versionTitle, _tmp+"versionTitle", this.format("h4",_tmp+"versionTitle","",false,"sub",[{...versionTitle, type:"literal"}]))]:[],[], { [_tmp+"outline"]: theOutline, [_tmp+"map"]: hasMap.length ? header : undefined, [_tmp+"findText"]: _T != "Instance" && shouldShowOtherInstances && hasMap.length ? findText : undefined})      
 
          console.log("serial:", serial)
 
          if(hasMap.length) findText = undefined
 
-         let { html: theDataMid, nbChildren: midPropsLen }= this.renderData(true, midProps,iiifpres,title,otherLabels,"mid-props", undefined, otherResourcesData, [], {[_tmp+"workHasInstance"]: _T === "Instance" ? findText : undefined}) ?? {}
+         let { html: theDataMid, nbChildren: midPropsLen }= this.renderData(true, midProps,iiifpres,title,otherLabels,"mid-props", undefined, otherResourcesData, [], {[_tmp+"workHasInstance"]: _T === "Instance"||shouldShowOtherInstances ? findText : undefined}) ?? {}
          let theDataBot = this.renderData(false, kZprop.filter(k => !topProps.includes(k) && !midProps.includes(k) && !extProps.includes(k)).concat(listWithAS),iiifpres,title,otherLabels,"bot-props", undefined)      
 
          let theEtext
@@ -11138,7 +11143,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
 
                   { theDataTop }
                   
-                  { !["Instance", "Scan", "Etext"].includes(_T) && findText != null && <>
+                  { !["Instance", "Scan", "Etext"].includes(_T) && findText != null && !shouldShowOtherInstances && <>
                      {/* // DONE: inner search results */}
                      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/instantsearch.css@7/themes/satellite-min.css" />                           
                      { findText }

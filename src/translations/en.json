@@ -307,7 +307,9 @@
       "tmp:firstScanSyncDate":"First scan date",
       "bdr:PartTypeText": "Text In Outline",
       "tmp:associatedTradition":"Tradition",
-      "tmp:notAvailable":"Not available"
+      "tmp:notAvailable":"Not available",
+      "tmp:hasInstance":"Version of this work",
+      "tmp:hasInstance_plural":"Versions of this work"
    },
    "guided":{
       "keyword":"keyword",

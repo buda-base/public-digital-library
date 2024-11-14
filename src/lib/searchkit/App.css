@@ -1207,10 +1207,17 @@ header[data-hits="0"] ~ .hits .pagination,
   /* display: grid;
   grid-template-columns: calc(50% - 20px) calc(50% - 20px); 
   grid-gap:15px; */
-  padding-left:35px; 
+  
+  /* padding-left:35px;  */
+
   display: block;
   column-count: 2;
   column-gap: 15px;
+}
+
+.resource [data-prop="tmp:workHasInstance"] .AppSK.InnerSearchPage.data .content {
+  width:calc(100% + 35px);
+  left:0;  
 }
 
 .resource [data-prop="tmp:workHasInstance"] .AppSK .content .main-content .ais-Hits-list li {
