@@ -1255,6 +1255,10 @@ header[data-hits="0"] ~ .hits .pagination,
 .resource [data-prop="tmp:workHasInstance"] .AppSK:not(#a) .result .thumb a .RID ~ span {
   padding:0;
 }
+.resource [data-prop="tmp:workHasInstance"] .AppSK:not(#a) .result .thumb a .RID ~ span + span:last-child {
+  padding-right:8px;
+}
+
 
 .resource [data-prop="tmp:workHasInstance"] .AppSK:not(#a) .result .thumb a .RID ~ span svg { 
   position: absolute;
