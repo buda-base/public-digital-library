@@ -3516,7 +3516,7 @@ class ResourceViewer extends Component<Props,State>
                         return false;
                      }
                                                 
-                  } } data-info={info}>{(elem?.data?.partIndex ?? elem?.data?.index)  != undefined && I18n.t("resource.outLn", {n:(""+(elem.data.partIndex?? elem?.data?.index)).padStart(2,'0')})}{info}</a>
+                  } } data-info={info}>{elem?.data?.partType === "bdr:PartTypeVolume" && (elem?.data?.partIndex ?? elem?.data?.index) != undefined && I18n.t("resource.outLn", {n:(""+(elem.data.partIndex?? elem?.data?.index)).padStart(2,'0')})}{info}</a>
                }
                else link = <Link {...this.props.preview?{ target:"_blank" }:{}} className={"urilink prefLabel " } to={"/"+show+"/"+uri}>{info}</Link>
 
