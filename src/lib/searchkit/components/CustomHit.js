@@ -423,11 +423,11 @@ const CustomHit = ({ hit, routing, that, sortItems, recent, storage, advanced /*
         }
         {!isOtherVersions && <>{
 
-          (hit.author?.length > 0 || hit.translator?.length > 0 || authorshipStatement.length > 0) && <span class="names author noNL">
+          (hit.author?.length > 0 /*|| hit.translator?.length > 0*/ || authorshipStatement.length > 0) && <span class="names author noNL">
             <span class="label">{I18n.t("result.workBy")}<span class="colon">:</span></span>
             <span>
               <span className="author-links">
-              {(hit.author ?? []).concat(hit.translator ?? [])
+              {(hit.author ?? []) //.concat(hit.translator ?? [])
                 .map(a => <span data-id={a}>
                   <Link to={"/show/bdr:"+a+backLink}>{ 
                     getPropLabel(that, fullUri("bdr:"+a), true, true, "", 1, storage, true) ?? a 
