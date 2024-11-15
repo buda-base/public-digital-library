@@ -1031,10 +1031,8 @@ class OutlineSearchBar extends Component<Props,State>
                   onFocus={this.changeOutlineKW.bind(this)} onBlur={() => setTimeout(() => this.setState({autocomplete: undefined}), 350)}
                   /*value={this.props.that.state.outlineKW} */ onChange={this.changeOutlineKW.bind(this)} 
                onKeyDown={ (e) => { 
-                  if(e.key === 'Enter') {
-                     
-                     
-                     if(this.state.autocomplete?.suggestionSel != -1) {
+                  if(e.key === 'Enter') {                     
+                     if(this.state.autocomplete && this.state.suggestionSel != -1) {
                         if(! this.state.suggestionList?.length ) {
                            if(this.state.value) { 
                               this.search(e)
@@ -1064,7 +1062,11 @@ class OutlineSearchBar extends Component<Props,State>
 
                }}/>
                <span class="button" onClick={(e) => { if(this.state.value) { this.search(e) } }}  title={I18n.t("resource.start")}></span>
-               { (this.props.that.props.outlineKW || this.props.that.state.outlineKW) && <span class="button" title={I18n.t("resource.reset")} onClick={(e) => { 
+               { (this.props.that.props.outlineKW || this.props.that.state.outlineKW || this.state.value) && <span class="button" title={I18n.t("resource.reset")} onClick={(e) => { 
+                  if(!(this.props.that.props.outlineKW || this.props.that.state.outlineKW)) {
+                     this.setState({value:"", autocomplete: undefined})
+                     return
+                  }
                   let collapse = this.cleanOutlineCollapse()
                   this.setState({value:"", autocomplete: undefined})
                   this.props.that.setState({outlineKW:"",collapse})

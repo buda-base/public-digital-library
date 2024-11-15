@@ -66,21 +66,23 @@ const redirect = (refine, query, pageFilters, navigate, location) => {
 
 const MAX_ITEMS = 8, MAX_ITEMS_HISTO = 3 
 
-const SearchBoxAction = ({ inputValue, isSearchStalled, refine, pageFilters }) => {
+const SearchBoxAction = ({ inputValue, isSearchStalled, refine, pageFilters, onReset }) => {
 
   const navigate = useNavigate()
   const location = useLocation()
 
   return (
     <>
-      <button type="submit" className="ais-SearchBox-submit" onClick={()=> redirect(refine, inputValue, pageFilters, navigate, location)}>
-        Submit
+      <button type="submit" className="ais-SearchBox-submit" 
+        onClick={()=> redirect(refine, inputValue, pageFilters, navigate, location)}>
+          Submit
       </button>
       <button
         className="ais-SearchBox-reset"
         type="reset"
         title="Clear the search query"
         hidden={inputValue.length === 0 || isSearchStalled}
+        onClick={onReset}
       >
         <svg
           className="ais-SearchBox-resetIcon"
@@ -341,6 +343,7 @@ const SearchBoxAutocomplete = (props) => {
       role="search"
       className="ais-SearchBox-form search-input"
       noValidate
+      data-submit-hidden={isSearchStalled}
       onBlur={() => {
         setTimeout(() => {
           setIsFocused(false);
@@ -410,6 +413,7 @@ const SearchBoxAutocomplete = (props) => {
         isSearchStalled={isSearchStalled || loading}
         refine={refine}
         pageFilters={pageFilters}
+        onReset={() => setQuery("")}        
       />
       <SuggestsList
         {...{ selected, setIsFocused, pageFilters }}

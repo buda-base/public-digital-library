@@ -133,7 +133,7 @@ export class InnerSearchPage extends Component<State, Props>
     return (<>
       { (pageFilters || !RID) && <div className="AppSK InnerSearchPage data">
           <InstantSearch
-            key={pageFilters+"-"+RID}            
+            key={pageFilters+"-"+RID+"_isOtherVersions-"+isOtherVersions+(srcVersionID?"_src-"+srcVersionID:"")}            
             indexName={process.env.REACT_APP_ELASTICSEARCH_INDEX}
             routing={routing}
             searchClient={searchClient}

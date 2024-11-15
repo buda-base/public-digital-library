@@ -339,6 +339,7 @@
   box-shadow: none;
   border-bottom:1px solid black;
   border-radius:0;
+  padding-left:0;
 }
 
 .AppSK.InnerSearchPage.data {
@@ -405,6 +406,31 @@ header[data-hits="0"] ~ .hits .pagination,
 :not(#a) .ais-SearchBox-loadingIndicator, 
 :not(#a) .ais-SearchBox-reset {
    z-index:1000;
+}
+
+
+:not(#a) .ais-SearchBox-form:before {
+  top:32px;
+  right:16px;
+  left:auto;
+}
+
+
+:not(#a) .ais-SearchBox-form[data-submit-hidden="true"]::before {
+  display:none;
+}
+
+:not(#a) .ais-SearchBox-reset {
+  right:44px;
+  top:32px;
+  width:44px;
+  height:44px;
+  padding:10px;
+  border-radius:22px;
+}
+
+:not(#a) .ais-SearchBox-reset:hover {
+  background-color:#ccc5;
 }
 
 .ais-SearchBox-form {
@@ -783,19 +809,22 @@ header[data-hits="0"] ~ .hits .pagination,
 
 
 
+.ISB .ais-SearchBox-submit,
 .AppSK .ais-SearchBox-submit {
   display:block;
   display: block;
   position: absolute;
-  left: 2px;
+  right: 2px;
   z-index: 1000;
   height: 44px;
   width: 44px;
-  top: 6px;
+  top: 10px;
   color: transparent;
   border-radius: 50%;
 }
 
+
+.ISB .ais-SearchBox-submit:hover,
 .AppSK .ais-SearchBox-submit:hover {
   background:#ccc5;
 }
