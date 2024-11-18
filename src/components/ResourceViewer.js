@@ -5995,7 +5995,7 @@ class ResourceViewer extends Component<Props,State>
          if(elem.[0].value === _tmp+"notAvailable") {
 
             let root = this.getResourceElem(bdo+"inRootInstance"), rootID = root?.length ? shortUri(root?.[0].value) : ""
-            let possibleEtext = this.getResourceElem(bdo+"instanceHasReproduction", shortUri(root[0].value), this.props.assocResources)?.filter(i => {
+            let possibleEtext = root?.length > 0 && this.getResourceElem(bdo+"instanceHasReproduction", shortUri(root[0].value), this.props.assocResources)?.filter(i => {
                let t = this.getResourceElem(rdf+"type", shortUri(i.value), this.props.assocResources)
                return t?.some(l => l?.value?.endsWith("EtextInstance"))
             })
