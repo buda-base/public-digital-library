@@ -58,7 +58,9 @@ const CustomHit = ({ hit, routing, that, sortItems, recent, storage, advanced /*
   const 
     page = that.props.location.pathname,
     uri = qs.stringify(routing.stateMapping.stateToRoute(uiState,true), { arrayFormat: 'index' }),
-    backLink = "?"+(!isOtherVersions?"s="+encodeURIComponent(page+(uri ? "?"+encodeURIComponent(uri) : ""))+"&":"")+(hit.etext_instance?"openEtext=bdr:"+hit.etext_vol+"&scope=bdr:"+hit.objectID:""),
+    backLink = "?"+(!isOtherVersions?"s="+encodeURIComponent(page+(uri ? "?"+encodeURIComponent(uri) : ""))+"&":"")
+      +(hit.etext_instance?"openEtext=bdr:"+hit.etext_vol+"&scope=bdr:"+hit.objectID+"&":"")
+      +(hit.etext_quality === 3 ? "unaligned=true" : ""),
     link = "/show/bdr:"+(hit.etext_instance?hit.etext_instance:hit.objectID)+backLink
 
   useEffect(() => {
