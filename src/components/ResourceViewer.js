@@ -5374,7 +5374,7 @@ class ResourceViewer extends Component<Props,State>
 
    setTitle = (kZprop,_T,other,rootC,noSame:boolean=false) => {
 
-      //loggergen.log("setT:", rootC, other)
+      //loggergen.log("setT:", rootC, this.props.IRI, other, kZprop, this.props.outlineOnly, )
 
       let placeT ;
       if(_T === "Place") {
@@ -5389,8 +5389,8 @@ class ResourceViewer extends Component<Props,State>
          </span>         
       </span>]
 
-      if(kZprop.indexOf(skos+"prefLabel") !== -1)       {
-         titlElem = this.getResourceElem(skos+"prefLabel",other,this.props.assocResources);         
+      if(kZprop.indexOf(skos+"prefLabel") !== -1 || this.props.outlineOnly)       {
+         titlElem = this.getResourceElem(skos+"prefLabel",this.props.outlineOnly?this.props.IRI:other,this.props.assocResources);         
       }
       else if(kZprop.indexOf(bdo+"eTextTitle") !== -1)     {
          titlElem = this.getResourceElem(bdo+"eTextTitle",other,this.props.assocResources);
@@ -5434,7 +5434,7 @@ class ResourceViewer extends Component<Props,State>
       }
 
 
-      //loggergen.log("sT",other,title,titlElem)
+      //loggergen.log("sT:",this.props.IRI,other,title,titlElem)
 
       return { title, titlElem, otherLabels }
    }
@@ -9961,7 +9961,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
          let _T = getEntiType(shortUri(baseW[0].value))
          let { title,titlElem,otherLabels } = this.setTitle(baseData,_T,baseW[0].value,rootC,titleRaw) ;
          
-         //loggergen.log("tEl:",titlElem)
+         // loggergen.log("tEl:",titlElem)
 
          if(titleRaw && titlElem) titleRaw.label = titlElem
          return title
@@ -10069,6 +10069,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
       let _T = getEntiType(this.props.IRI)
       let titleRaw = { label:[] }
       let { title,titlElem,otherLabels } = this.setTitle(kZprop,_T,null,null,true) ;
+      //console.log("tlm?",titlElem,_T)
       let versionTitle, ilabel 
       if(_T === "Instance") { 
          iTitle = title ; 
@@ -10088,6 +10089,8 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                </span>
                <span>{title.value}</span>
             </h2> 
+         } else if(this.props.outlineOnly && titlElem?.length) {
+            ilabel = getLangLabel(this,"",titlElem)
          }
 
          if(this.state.catalogOnly  && this.state.catalogOnly[this.props.IRI]) {
@@ -10785,7 +10788,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
          let get = qs.parse(this.props.location.search)          
          let theDataTop = this.renderData(false, topProps,iiifpres,title,otherLabels,"top-props","main-info",versionTitle?[this.renderGenericProp(versionTitle, _tmp+"versionTitle", this.format("h4",_tmp+"versionTitle","",false,"sub",[{...versionTitle, type:"literal"}]), undefined, get)]:[],[], { [_tmp+"outline"]: theOutline, [_tmp+"map"]: hasMap.length ? header : undefined, [_tmp+"findText"]: _T != "Instance" && shouldShowOtherInstances && hasMap.length ? findText : undefined})      
 
-         console.log("serial:", serial)
+         console.log("serial:", this.props.IRI, serial, ilabel)
 
          if(hasMap.length) findText = undefined
 
