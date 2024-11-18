@@ -1078,8 +1078,10 @@ header[data-hits="0"] ~ .hits .pagination,
 }
 
 
+.resource .possibleEtext .etext-loader,
 .etext-nav-parent .etext-search .etext-search-loader { transform:scale(0.5); /*transform-origin: 20px 20px;*/ right:25px; left:auto !important;}
 
+.resource .possibleEtext .etext-loader { margin-top:12px; }
 
 .resource ~ .ETSBresults > div:not(#a) {
   padding:10px;

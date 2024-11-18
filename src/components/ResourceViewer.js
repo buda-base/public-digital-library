@@ -5879,7 +5879,7 @@ class ResourceViewer extends Component<Props,State>
    }
 
 
-   renderGenericProp = (elem, k, tags, hasMaxDisplay) => {
+   renderGenericProp = (elem, k, tags, hasMaxDisplay, get) => {
 
       let ret,isSub
       if(this.hasSub(k)) { 
@@ -6004,7 +6004,7 @@ class ResourceViewer extends Component<Props,State>
             if(possibleEtext?.length) {
                ET = shortUri(possibleEtext?.[0]?.value)
                elem = [{ value: _tmp+"noPagination" }]
-            } else if(rootID && this.state.checkedEtext != rootID && !this.props.resources[rootID]) {
+            } else if(rootID && this.state.checkedEtext != rootID && !this.props.resources[rootID] && get.unaligned === "true") {
                this.props.onGetResource(rootID);
                this.setState({checkedEtext:rootID})
             }
@@ -6018,10 +6018,14 @@ class ResourceViewer extends Component<Props,State>
                               <ResourceViewerContainer  auth={this.props.auth} /*history={this.props.history}*/ location={this.props.location} navigate={this.props.navigate} IRI={ET} previewEtext={{ outETvol: null, outETstart: null, outETscope: null, outETinst: null }}/>  
                            </>
                         : rootID && (this.state.checkedEtext != rootID || this.props.resources[rootID] === true)
-                           ? <><h4 class="possibleEtext"><a disabled={this.props.resources[rootID] === true} onClick={() => { 
-                              this.props.onGetResource(rootID);
-                              this.setState({checkedEtext:rootID})
-                           }}>Click to check availability</a></h4></>
+                           ? <><h4 class="possibleEtext">
+                                 {this.props.resources[rootID] === true && <Loader className="etext-loader" loaded={false} /> }
+                                 <a disabled={this.props.resources[rootID] === true} onClick={() => {                                  
+                                       this.props.onGetResource(rootID);
+                                       this.setState({checkedEtext:rootID})
+                                    }}>Click to check availability
+                                 </a>
+                              </h4></>
                            : this.format("h4",k,"",false,"sub",elem) }
                   </div>
                </div>
@@ -7427,6 +7431,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
       let { doMap, doRegion, regBox } = this.getMapInfo(kZprop);
 
       //loggergen.log("data!",kZprop)
+      let get = qs.parse(this.props.location.search)          
 
       let data = kZprop.map((k) => {
 
@@ -7537,7 +7542,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                   else if(k !== bdo+"eTextHasChunk" && k !== bdo+"eTextHasPage" && (k !== bdo+"instanceHasVolume" || this.props.logged === "admin")) {
                      let disable
                      if(k === bdo+"scanInfo") disable = elem?.length && elem.some(l => l.value?.startsWith("Scanned or acquired in Tibetan areas of China by BDRC") )
-                     if(!disable) return this.renderGenericProp(elem, k, tags, hasMaxDisplay) //div!=="ext-props"?hasMaxDisplay:-1)
+                     if(!disable) return this.renderGenericProp(elem, k, tags, hasMaxDisplay, get) //div!=="ext-props"?hasMaxDisplay:-1)
                   }
                }
             }
@@ -7580,7 +7585,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                   logs = sortByTypeAndDate(logs);
                   
                   let tags = this.format("h4",adm+"logEntry","",false,"sub",logs)
-                  logs = this.renderGenericProp(logs, adm+"logEntry", tags, -1)                   
+                  logs = this.renderGenericProp(logs, adm+"logEntry", tags, -1, get)                   
 
                   if(this.state.collapse["commit"]) data.push(logs)
                   else if(logs /*&& logs.length*/ ) data.push(<div></div>)
@@ -10777,7 +10782,8 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                </div>
             }
          }
-         let theDataTop = this.renderData(false, topProps,iiifpres,title,otherLabels,"top-props","main-info",versionTitle?[this.renderGenericProp(versionTitle, _tmp+"versionTitle", this.format("h4",_tmp+"versionTitle","",false,"sub",[{...versionTitle, type:"literal"}]))]:[],[], { [_tmp+"outline"]: theOutline, [_tmp+"map"]: hasMap.length ? header : undefined, [_tmp+"findText"]: _T != "Instance" && shouldShowOtherInstances && hasMap.length ? findText : undefined})      
+         let get = qs.parse(this.props.location.search)          
+         let theDataTop = this.renderData(false, topProps,iiifpres,title,otherLabels,"top-props","main-info",versionTitle?[this.renderGenericProp(versionTitle, _tmp+"versionTitle", this.format("h4",_tmp+"versionTitle","",false,"sub",[{...versionTitle, type:"literal"}]), undefined, get)]:[],[], { [_tmp+"outline"]: theOutline, [_tmp+"map"]: hasMap.length ? header : undefined, [_tmp+"findText"]: _T != "Instance" && shouldShowOtherInstances && hasMap.length ? findText : undefined})      
 
          console.log("serial:", serial)
 
