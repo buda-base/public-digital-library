@@ -2261,8 +2261,12 @@ class ResourceViewer extends Component<Props,State>
          prop[tmp+"propHasEtext"] = prop[tmp+"hasEtextInOutline"]
       }
 
-      if(!prop[tmp+"propHasEtext"] && prop[tmp+"propHasScans"]) { 
-         prop[tmp+"propHasEtext"] = [{ value:tmp+"notAvailable"}]
+      if(prop[tmp+"propHasScans"]) {
+         if(!prop[tmp+"propHasEtext"]) { 
+            prop[tmp+"propHasEtext"] = []
+         }
+         if(!prop[tmp+"propHasEtext"].some(t => t.value === tmp+"notAvailable")) 
+            prop[tmp+"propHasEtext"].push({ value:tmp+"notAvailable"})
       }
 
       if(sorted)
@@ -5991,60 +5995,67 @@ class ResourceViewer extends Component<Props,State>
          )
       }
       else if(k === _tmp+"propHasEtext") {
-
-         if(elem.[0].value === _tmp+"notAvailable") {
-
-            let root = this.getResourceElem(bdo+"inRootInstance"), rootID = root?.length ? shortUri(root?.[0].value) : ""
-            let possibleEtext = root?.length > 0 && this.getResourceElem(bdo+"instanceHasReproduction", shortUri(root[0].value), this.props.assocResources)?.filter(i => {
-               let t = this.getResourceElem(rdf+"type", shortUri(i.value), this.props.assocResources)
-               return t?.some(l => l?.value?.endsWith("EtextInstance"))
-            })
-            //console.log("inRoot?", root, possibleEtext)
-            let ET
-            if(possibleEtext?.length) {
-               ET = shortUri(possibleEtext?.[0]?.value)
-               elem = [{ value: _tmp+"noPagination" }]
-            } else if(rootID && this.state.checkedEtext != rootID && !this.props.resources[rootID] && get.unaligned === "true") {
-               this.props.onGetResource(rootID);
-               this.setState({checkedEtext:rootID})
-            }
-            
-            return <div  data-prop={shortUri(k)} >               
-               <h3><span>{this.proplink(k,null,n)}{I18n.t("punc.colon")}</span> </h3>               
-                  <div class={"group"+(possibleEtext?.length > 0 ? " preview-etext" : "")}>
-                     {possibleEtext?.length > 0 
-                        ?  <>
-                              <h4><span>{I18n.t("prop.tmp:noPagination")}</span></h4>
-                              <ResourceViewerContainer  auth={this.props.auth} /*history={this.props.history}*/ location={this.props.location} navigate={this.props.navigate} IRI={ET} previewEtext={{ outETvol: null, outETstart: null, outETscope: null, outETinst: null }}/>  
-                           </>
-                        : rootID && (this.state.checkedEtext != rootID || this.props.resources[rootID] === true)
-                           ? <><h4 class="possibleEtext">
-                                 {this.props.resources[rootID] === true && <Loader className="etext-loader" loaded={false} /> }
-                                 <a disabled={this.props.resources[rootID] === true} onClick={() => {                                  
-                                       this.props.onGetResource(rootID);
-                                       this.setState({checkedEtext:rootID})
-                                    }}>Click to check availability
-                                 </a>
-                              </h4></>
-                           : this.format("h4",k,"",false,"sub",elem) }
-                  </div>
-               </div>
-         }
-         
+                  
          let outlineEtext = this.getResourceElem(tmp+"hasEtextInOutline")
+
+         let hasEtextAndNotAvail = elem.length > 1 && elem[elem.length - 1].value === _tmp+"notAvailable" 
+
          return ( elem.map((e,i) => { 
-            
+
             let outETvol, outETinst, outETstart, outETscope 
             if(outlineEtext?.length){
                outETscope = shortUri(outlineEtext[i].value)
                outETinst = this.getResourceElem(bdo+"eTextInInstance", outETscope, this.props.assocResources)
                outETvol = this.getResourceElem(bdo+"eTextInVolume", outETscope, this.props.assocResources)
                outETstart= this.getResourceElem(bdo+"sliceStartChar", outETscope, this.props.assocResources)              
-               console.log("oEiv:", outETinst, outETvol, outETstart, outETscope)
+               //console.log("oEiv:", outETinst, outETvol, outETstart, outETscope)
             }   
+
+            let root = this.getResourceElem(bdo+"inRootInstance"), rootID = root?.length ? shortUri(root?.[0].value) : ""
             
-            return  this.state.openMirador?<></>:( <div  data-prop={shortUri(k)} >               
-               <h3><span>{this.proplink(k,null,n)}{ret.length > 1 ? " "+I18n.t("punc.num",{num:i+1}) : ""}{I18n.t("punc.colon")}</span> </h3>
+            if(e.value === _tmp+"notAvailable") {
+
+               let possibleEtext = root?.length > 0 && this.getResourceElem(bdo+"instanceHasReproduction", shortUri(root[0].value), this.props.assocResources)?.filter(i => {
+                  let t = this.getResourceElem(rdf+"type", shortUri(i.value), this.props.assocResources)
+                  return t?.some(l => l?.value?.endsWith("EtextInstance")) && !  outlineEtext?.some(o => this.getResourceElem(bdo+"eTextInInstance", shortUri(o.value), this.props.assocResources)?.some(n => n.value === i.value))
+               })
+               
+               //console.log("inRoot?", root, possibleEtext, elem)
+
+               let ET, elem_
+               if(possibleEtext?.length) {
+                  ET = shortUri(possibleEtext?.[0]?.value)
+                  elem_ = [{ value: _tmp+"noPagination" }]
+               } else if(rootID && this.state.checkedEtext != rootID && !this.props.resources[rootID] && get.unaligned === "true") {
+                  this.props.onGetResource(rootID);
+                  this.setState({checkedEtext:rootID})
+               }
+               
+               return <div  data-prop={shortUri(k)} class={possibleEtext?.length > 0 ? "has-preview-true "+elem.length:""}>               
+                  <h3><span>{this.proplink(k,null,n)}{elem.length > 1 ? " "+I18n.t("punc.num",{num:i+1}) : ""}{I18n.t("punc.colon")}</span> </h3>               
+                     <div class={"group"+(possibleEtext?.length > 0 ? " preview-etext" : "")}>
+                        {possibleEtext?.length > 0 
+                           ?  <>
+                                 <h4><span>{I18n.t("prop.tmp:noPagination")}</span></h4>
+                                 <ResourceViewerContainer  auth={this.props.auth} /*history={this.props.history}*/ location={this.props.location} navigate={this.props.navigate} IRI={ET} previewEtext={{ outETvol: null, outETstart: null, outETscope: null, outETinst: null }}/>  
+                              </>
+                           : rootID && (this.state.checkedEtext != rootID || this.props.resources[rootID] === true)
+                              ? <><h4 class="possibleEtext">
+                                    {this.props.resources[rootID] === true && <Loader className="etext-loader" loaded={false} /> }
+                                    <a disabled={this.props.resources[rootID] === true} onClick={() => {                                  
+                                          this.props.onGetResource(rootID);
+                                          this.setState({checkedEtext:rootID})
+                                       }}>
+                                          {I18n.t("resource.checkET"+(elem.length > 1 ? "long":""))}
+                                    </a>
+                                 </h4></>
+                              : this.format("h4",k,"",false,"sub",elem_) }
+                     </div>
+                  </div>
+            }
+            
+            return  this.state.openMirador?<></>:( <div  data-prop={shortUri(k)} class={hasEtextAndNotAvail?" etext-preview-not-available":""} >               
+               <h3><span>{this.proplink(k,null,n)}{elem.filter(e => e.value !== _tmp+"notAvailable").length > 1  || this.state.checkedEtext === rootID ? " "+I18n.t("punc.num",{num:i+1}) : ""}{I18n.t("punc.colon")}</span> </h3>
                {this.preprop(k,0,n)}
                <div class="group preview-etext">
                   {/* <Link to={"/show/"+shortUri(e.value)}>{shortUri(e.value)}</Link> */}
@@ -6728,8 +6739,9 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
          </List>
       </Popover>
 
-
-   if(onlyDownload) { 
+   if(this.props.outlineOnly){
+      return popupCitation;
+   } else if(onlyDownload) { 
       return (<>
        { popupPdf }
        { pdfLink && 
@@ -10806,6 +10818,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
          
          if(this.props.outlineOnly) {            
             return <>
+               { this.perma_menu(pdfLink,monoVol,fairUse,kZprop.filter(k => k.startsWith(adm+"seeOther")), accessET && !etextAccessError, true) }
                <div  data-prop={"tmp:containingOutline"} >               
                   <h3><span>{this.proplink(_tmp+"containingOutline",null,1)}{I18n.t("punc.colon")}</span> </h3>
                   <div class="group">

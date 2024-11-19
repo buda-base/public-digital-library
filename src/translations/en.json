@@ -310,7 +310,7 @@
       "tmp:notAvailable":"Not available",
       "tmp:hasInstance":"Version of this work",
       "tmp:hasInstance_plural":"Versions of this work",
-      "tmp:noPagination": "No image indication. You might have to find the right page by yourself."
+      "tmp:noPagination": "You may have to find the right page yourself, because this is an unaligned etext."
    },
    "guided":{
       "keyword":"keyword",
@@ -766,7 +766,9 @@
       },
       "inCollection":"In collection",
       "inCollection_plural":"In collections",
-      "outLn":"{{n}}) "
+      "outLn":"{{n}}) ",
+      "checkET":"Click to check availability",
+      "checkETlong":"Click to check the availability of another etext"
    },
    "tradition":{
       "boT":"Tibetan Tradition",

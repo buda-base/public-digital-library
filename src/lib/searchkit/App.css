@@ -1383,3 +1383,22 @@ header[data-hits="0"] ~ .hits .pagination,
 .resource h4.possibleEtext a[disabled] {
   opacity:0.5;
 }
+
+
+.etext-preview-not-available::after {
+  background:none !important;
+  margin:5px 0px !important;
+}
+
+.etext-preview-not-available+[data-prop="tmp:propHasEtext"]:not(.has-preview-true) h3 {
+  visibility:hidden;
+}
+
+.etext-preview-not-available+[data-prop="tmp:propHasEtext"].has-preview-true::before {
+  content: '';
+    width: calc(100% - 190px);
+    height: 1px;
+    margin: 15px 0 25px 190px;
+    display: block;
+    background: rgba(0, 0, 0, 0.25);
+}
