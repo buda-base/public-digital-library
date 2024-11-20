@@ -1081,7 +1081,7 @@ header[data-hits="0"] ~ .hits .pagination,
 .resource .possibleEtext .etext-loader,
 .etext-nav-parent .etext-search .etext-search-loader { transform:scale(0.5); /*transform-origin: 20px 20px;*/ right:25px; left:auto !important;}
 
-.resource .possibleEtext .etext-loader { margin-top:12px; }
+.resource .possibleEtext .etext-loader { margin-top:12px; margin-left:5px; }
 
 .resource ~ .ETSBresults > div:not(#a) {
   padding:10px;
@@ -1396,9 +1396,21 @@ header[data-hits="0"] ~ .hits .pagination,
 
 .etext-preview-not-available+[data-prop="tmp:propHasEtext"].has-preview-true::before {
   content: '';
-    width: calc(100% - 190px);
-    height: 1px;
-    margin: 15px 0 25px 190px;
-    display: block;
-    background: rgba(0, 0, 0, 0.25);
+  width: calc(100% - 190px);
+  height: 1px;
+  margin: 15px 0 25px 190px;
+  display: block;
+  background: rgba(0, 0, 0, 0.25);
 }
+
+
+.has-possible-ET-false + .etext-preview-not-available .ETnum {
+  display:none;
+}
+/*
+.etext-preview-not-available:not(#a) + [data-prop="tmp:propHasEtext"]:not(.has-preview-true):not(#a)+:not([data-prop="tmp:propHasEtext"])::before
+
+.etext-preview-not-available:not(#a) + [data-prop="tmp:propHasEtext"]:not(.has-preview-true):not(#a) {
+  display:none !important;
+}
+*/

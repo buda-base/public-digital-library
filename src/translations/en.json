@@ -768,7 +768,8 @@
       "inCollection_plural":"In collections",
       "outLn":"{{n}}) ",
       "checkET":"Click to check availability",
-      "checkETlong":"Click to check the availability of another etext"
+      "checkETlong":"Click to check the availability of another etext",
+      "noOtherET":"No other etext available"
    },
    "tradition":{
       "boT":"Tibetan Tradition",

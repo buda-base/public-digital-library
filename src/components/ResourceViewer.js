@@ -5998,9 +5998,9 @@ class ResourceViewer extends Component<Props,State>
                   
          let outlineEtext = this.getResourceElem(tmp+"hasEtextInOutline")
 
-         let hasEtextAndNotAvail = elem.length > 1 && elem[elem.length - 1].value === _tmp+"notAvailable" 
+         let hasEtextAndNotAvail = elem.length > 1 && elem[elem.length - 1].value === _tmp+"notAvailable", hasPossibleET = false
 
-         return ( elem.map((e,i) => { 
+         let compo = ( elem.map((e,i) => { 
 
             let outETvol, outETinst, outETstart, outETscope 
             if(outlineEtext?.length){
@@ -6024,6 +6024,7 @@ class ResourceViewer extends Component<Props,State>
 
                let ET, elem_
                if(possibleEtext?.length) {
+                  hasPossibleET = true
                   ET = shortUri(possibleEtext?.[0]?.value)
                   elem_ = [{ value: _tmp+"noPagination" }]
                } else if(rootID && this.state.checkedEtext != rootID && !this.props.resources[rootID] && get.unaligned === "true") {
@@ -6049,13 +6050,15 @@ class ResourceViewer extends Component<Props,State>
                                           {I18n.t("resource.checkET"+(elem.length > 1 ? "long":""))}
                                     </a>
                                  </h4></>
-                              : this.format("h4",k,"",false,"sub",elem_) }
+                              : elem.length === 1 
+                                 ? this.format("h4",k,"",false,"sub",elem_) 
+                                 : <h4><span>{I18n.t("resource.noOtherET")}</span></h4>}
                      </div>
                   </div>
             }
             
             return  this.state.openMirador?<></>:( <div  data-prop={shortUri(k)} class={hasEtextAndNotAvail?" etext-preview-not-available":""} >               
-               <h3><span>{this.proplink(k,null,n)}{elem.filter(e => e.value !== _tmp+"notAvailable").length > 1  || this.state.checkedEtext === rootID ? " "+I18n.t("punc.num",{num:i+1}) : ""}{I18n.t("punc.colon")}</span> </h3>
+               <h3><span>{this.proplink(k,null,n)}{elem.filter(e => e.value !== _tmp+"notAvailable").length > 1  || this.state.checkedEtext === rootID ? <span class="ETnum">{" "+I18n.t("punc.num",{num:i+1})}</span> : ""}{I18n.t("punc.colon")}</span> </h3>
                {this.preprop(k,0,n)}
                <div class="group preview-etext">
                   {/* <Link to={"/show/"+shortUri(e.value)}>{shortUri(e.value)}</Link> */}
@@ -6063,6 +6066,11 @@ class ResourceViewer extends Component<Props,State>
                </div>
             </div>
          )}))
+
+         return <>
+            { <span class={"has-possible-ET-"+hasPossibleET}></span>}
+            { compo }
+            </>
       } else if(k === _tmp+"propHasScans") {
          console.log("pHs")
          return  this.state.openMirador?<></>:( ret.map((r,i) => (
