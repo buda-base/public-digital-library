@@ -6013,7 +6013,7 @@ class ResourceViewer extends Component<Props,State>
 
             let root = this.getResourceElem(bdo+"inRootInstance"), rootID = root?.length ? shortUri(root?.[0].value) : ""
             
-            if(e.value === _tmp+"notAvailable") {
+            if(e.value === _tmp+"notAvailable" && elem.length <= 2) {
 
                let possibleEtext = root?.length > 0 && this.getResourceElem(bdo+"instanceHasReproduction", shortUri(root[0].value), this.props.assocResources)?.filter(i => {
                   let t = this.getResourceElem(rdf+"type", shortUri(i.value), this.props.assocResources)
@@ -6052,12 +6052,15 @@ class ResourceViewer extends Component<Props,State>
                                  </h4></>
                               : elem.length === 1 
                                  ? this.format("h4",k,"",false,"sub",elem_) 
-                                 : <h4><span>{I18n.t("resource.noOtherET")}</span></h4>}
+                                 : rootID 
+                                    ? <h4><span>{I18n.t("resource.noOtherET")}</span></h4>
+                                    : null}
+
                      </div>
                   </div>
             }
             
-            return  this.state.openMirador?<></>:( <div  data-prop={shortUri(k)} class={hasEtextAndNotAvail?" etext-preview-not-available":""} >               
+            return  this.state.openMirador?<></>:( <div  data-prop={shortUri(k)} class={hasEtextAndNotAvail?" etext-and-preview-not-available":""} >               
                <h3><span>{this.proplink(k,null,n)}{elem.filter(e => e.value !== _tmp+"notAvailable").length > 1  || this.state.checkedEtext === rootID ? <span class="ETnum">{" "+I18n.t("punc.num",{num:i+1})}</span> : ""}{I18n.t("punc.colon")}</span> </h3>
                {this.preprop(k,0,n)}
                <div class="group preview-etext">

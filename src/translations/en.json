@@ -98,7 +98,9 @@
          "EtextInstance":"Collection",
          "EtextVolume":"Volume"
       },
-      "parttypetext":"text"
+      "parttypetext":"text",
+      "collection":"Collection",
+      "collection_plural":"Collections"
    },
    "topbar": {
       "about": "about us",
