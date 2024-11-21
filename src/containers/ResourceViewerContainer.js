@@ -52,7 +52,7 @@ const mapStateToProps = (state,ownProps) => {
             //loggergen.log("id?",id)
             for(let k of Object.keys(assocResources[id])) {
                let val = flatAssocResources[k]
-               flatAssocResources[k] = [ ...(val?val:[]), ...assocResources[id][k] ]
+               flatAssocResources[k] = [ ...(val?val:[]).filter(v => !assocResources[id][k].some(w => v.value === w.value && v.lang === w.lang)), ...assocResources[id][k] ]
             }
          }
       }

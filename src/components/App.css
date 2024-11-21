@@ -4601,7 +4601,8 @@ div.mustLogin a:hover { border:none; text-decoration: underline;}
 
 
 
-.hasTogHovM { cursor:help;}
+/* .hasTogHovM { cursor:help;} */
+
 #outline .hasTogHovM,
 .sub.hasTogHovM .subsub h4,
 .hasTogHovM span { cursor:auto;}
