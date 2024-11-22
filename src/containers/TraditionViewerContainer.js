@@ -37,10 +37,14 @@ const mapStateToProps = (state,ownProps) => {
 
    let dictionary = state.data.dictionary ;
 
+   let advancedSearch = state.ui.advancedSearch ?? ownProps.advancedSearch
+   let advKeyword = state.ui.advKeyword
+
    let props = { config, locale, profileName, portraitPopupClosed, isNewUser, feedbucket,
       latestSyncs,latestSyncsNb,latestSyncsMeta,
       langPreset,langIndex,langExt,
-      dictionary
+      dictionary,
+      advancedSearch, advKeyword,
    }
 
    return props
@@ -67,8 +71,10 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       },
       onGetLatestSyncs(meta) {
          dispatch(data.getLatestSyncs(meta))
-      }
-
+      },
+      onAdvancedSearch(s:boolean) {
+         dispatch(ui.advancedSearch(s))
+      },
 
    }
 }

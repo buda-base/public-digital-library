@@ -6013,7 +6013,9 @@ class ResourceViewer extends Component<Props,State>
 
             let root = this.getResourceElem(bdo+"inRootInstance"), rootID = root?.length ? shortUri(root?.[0].value) : ""
             
-            if(e.value === _tmp+"notAvailable" && elem.length <= 2) {
+            if(e.value === _tmp+"notAvailable" ) {
+               
+               if(elem.length > 2) return
 
                let possibleEtext = root?.length > 0 && this.getResourceElem(bdo+"instanceHasReproduction", shortUri(root[0].value), this.props.assocResources)?.filter(i => {
                   let t = this.getResourceElem(rdf+"type", shortUri(i.value), this.props.assocResources)
@@ -6032,7 +6034,7 @@ class ResourceViewer extends Component<Props,State>
                   this.setState({checkedEtext:rootID})
                }
                
-               return <div  data-prop={shortUri(k)} class={possibleEtext?.length > 0 ? "has-preview-true "+elem.length:""}>               
+               return <div {...rootID?{"data-rootID":rootID}:{}} data-prop={shortUri(k)} class={possibleEtext?.length > 0 ? "has-preview-true "+elem.length:""}>               
                   <h3><span>{this.proplink(k,null,n)}{elem.length > 1 ? " "+I18n.t("punc.num",{num:i+1}) : ""}{I18n.t("punc.colon")}</span> </h3>               
                      <div class={"group"+(possibleEtext?.length > 0 ? " preview-etext" : "")}>
                         {possibleEtext?.length > 0 
@@ -6042,7 +6044,7 @@ class ResourceViewer extends Component<Props,State>
                               </>
                            : rootID && (this.state.checkedEtext != rootID || this.props.resources[rootID] === true)
                               ? <><h4 class="possibleEtext">
-                                    {this.props.resources[rootID] === true && <Loader className="etext-loader" loaded={false} /> }
+                                    {rootID && this.props.resources[rootID] === true && <Loader className="etext-loader" loaded={false} /> }
                                     <a disabled={this.props.resources[rootID] === true} onClick={() => {                                  
                                           this.props.onGetResource(rootID);
                                           this.setState({checkedEtext:rootID})
@@ -6060,7 +6062,7 @@ class ResourceViewer extends Component<Props,State>
                   </div>
             }
             
-            return  this.state.openMirador?<></>:( <div  data-prop={shortUri(k)} class={hasEtextAndNotAvail?" etext-and-preview-not-available":""} >               
+            return  this.state.openMirador?<></>:( <div {...rootID?{"data-rootID":rootID}:{}} data-prop={shortUri(k)} class={hasEtextAndNotAvail?" etext-and-preview-not-available":""} >               
                <h3><span>{this.proplink(k,null,n)}{elem.filter(e => e.value !== _tmp+"notAvailable").length > 1  || this.state.checkedEtext === rootID ? <span class="ETnum">{" "+I18n.t("punc.num",{num:i+1})}</span> : ""}{I18n.t("punc.colon")}</span> </h3>
                {this.preprop(k,0,n)}
                <div class="group preview-etext">

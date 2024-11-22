@@ -4333,7 +4333,7 @@ html[lang='bo'] .resource .title h2 .T .space-fix span:not(.RID) { line-height: 
 #popHoverM .resource .data .sub:not(:first-child) > .subgroup > h4.first { width:150px; font-weight:400; font-size:14px;}
 #popHoverM .resource .data .sub:not(:first-child) > .subgroup > h4.first a { font-weight:400; font-size:14px;}
 
-#popHoverM .resource .data h4 .lang { display:inline-block;}
+#popHoverM .resource .data h4 .lang { display:none; /*inline-block;*/}
 
 #popHoverM .resource .data .sub > .subgroup > .subsub > h4,
 #popHoverM .resource .data .group h4 { width:auto !important; padding-right:0 !important;}
@@ -4392,10 +4392,12 @@ html[lang='bo'] .resource .title h2 .T .space-fix span:not(.RID) { line-height: 
 }
 #popHoverM .react-tabs__tab-panel span.first ~ div span { display:inline; } 
 
+#popHoverM .react-tabs__tab-panel span.first ~ div span.lang { display: none; }
+
 #popHoverM .react-tabs__tab-panel span.first { /*text-decoration: underline;*/ margin-right:0;}
 
 #popHoverM .react-tabs__tab-panel span.label { margin-right:0;}
-#popHoverM .react-tabs__tab-panel span.label:not(:last-child)::after { content:";";padding:0 5px;}
+#popHoverM .react-tabs__tab-panel span.label:not(:last-child)::after { content:";";padding:0 5px 0 0;}
 
 #popHoverM .react-tabs__tab-panel .ontolink:hover { border:none; text-decoration:underline; }
 

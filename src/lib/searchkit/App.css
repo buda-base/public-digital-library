@@ -1241,9 +1241,16 @@ header[data-hits="0"] ~ .hits .pagination,
   
   /* padding-left:35px;  */
 
+  /*
   display: block;
   column-count: 2;
+  */
+  
+  display: grid;
+  grid-template-columns: 1fr 1fr; 
   column-gap: 15px;
+  
+  padding-right:35px;
 }
 
 .resource [data-prop="tmp:workHasInstance"] .AppSK.InnerSearchPage.data .content {
@@ -1349,7 +1356,7 @@ header[data-hits="0"] ~ .hits .pagination,
 .resource [data-prop="tmp:workHasInstance"] .other-versions-nav {
   justify-content: space-between;
   align-items: baseline;
-  padding:0 35px;
+  padding:0 35px 0 0;
 }
 
 .resource [data-prop="tmp:workHasInstance"] .other-versions-nav > span:first-child:not(.show) {
@@ -1385,16 +1392,16 @@ header[data-hits="0"] ~ .hits .pagination,
 }
 
 
-.etext-and-preview-not-available::after {
+.etext-and-preview-not-available[data-rootid]::after {
   background:none !important;
   margin:5px 0px !important;
 }
 
-.etext-and-preview-not-available+[data-prop="tmp:propHasEtext"]:not(.has-preview-true) h3 {
+.etext-and-preview-not-available[data-rootid]+[data-prop="tmp:propHasEtext"]:not(.has-preview-true) h3 {
   visibility:hidden;
 }
 
-.etext-and-preview-not-available+[data-prop="tmp:propHasEtext"].has-preview-true::before {
+.etext-and-preview-not-available[data-rootid]+[data-prop="tmp:propHasEtext"].has-preview-true::before {
   content: '';
   width: calc(100% - 190px);
   height: 1px;
@@ -1403,8 +1410,12 @@ header[data-hits="0"] ~ .hits .pagination,
   background: rgba(0, 0, 0, 0.25);
 }
 
+.etext-and-preview-not-available:not([data-rootid])+[data-prop="tmp:propHasEtext"]:not(#a):not(#b) {
+  display:none !important;
+}
 
-.has-possible-ET-false + .etext-and-preview-not-available .ETnum {
+
+.has-possible-ET-false + .etext-and-preview-not-available[data-rootid] .ETnum {
   display:none;
 }
 /*
@@ -1416,7 +1427,7 @@ header[data-hits="0"] ~ .hits .pagination,
 */
 
 
-.noET-space-fix {
+[data-rootid] .noET-space-fix {
   margin-bottom:-50px;
   position: relative;
 }
