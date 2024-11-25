@@ -3234,7 +3234,7 @@ class ResourceViewer extends Component<Props,State>
          }
 
          let noLink = false
-         if(prop === adm+"logWho") noLink = true
+         if(prop === adm+"logWho" || elem.nolink) noLink = true
    
          // we need to know when info is from ontology (#360) 
          // + some properties are found both in query and ontology
