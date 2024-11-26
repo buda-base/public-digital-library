@@ -2,6 +2,8 @@ import React, { useState, useCallback, useEffect, useMemo, useRef } from "react"
 import I18n from 'i18next';
 import _ from "lodash"
 import HTMLparse from 'html-react-parser';
+import { useLocation } from 'react-router'
+import qs from 'query-string'
 
 import Loader from "react-loader"
 import InputLabel from '@material-ui/core/InputLabel';
@@ -30,6 +32,8 @@ export function EtextSearchBox(props) {
 
   const [loading, setLoading] = useState(false)
 
+  const location = useLocation()
+
   const scope = ETrefs?.filter(t => t["@id"] === scopeId)?.[0]
   const params = { 
     "EtextInstance": "etext_instance",
@@ -40,6 +44,16 @@ export function EtextSearchBox(props) {
   if(Array.isArray(ETtype)) {
      ETtype = ETtype.find(t => params[t])
   }
+
+  useEffect(() => {
+    const get = qs.parse(location.search)
+    //console.log("nw?",that.props.loading,query,get.ETkeyword,scope,ETtype,params[ETtype])
+    if(!query && get.ETkeyword && get.ETkeyword != query && !that.props.loading && scope) {
+      //console.log("nw kw:("+get.ETkeyword+")",location.search)
+      setQuery(get.ETkeyword)
+      handleNext(get.ETkeyword)
+    }
+  }, [location, query, handleNext, that?.props.loading, scope, ETtype])
 
   useEffect(() => {
     //console.log("id!",scopeId,scope)
@@ -96,11 +110,11 @@ export function EtextSearchBox(props) {
   }, [that.state.ETSBpage])
   
 
-  const startSearch = useCallback(async () => {
+  const startSearch = useCallback(async (useQuery) => {
     setLoading(true)
 
-    let res = _.orderBy(await getEtextSearchRequest({ query, lang: "bo", [params[ETtype]]: scopeId.split(":")[1] }), ["volumeNumber","startPnum"], ["asc","asc"])
-    console.log("gEsR:",res, scopeId, scope)  
+    let res = _.orderBy(await getEtextSearchRequest({ query: useQuery ?? query, lang: "bo", [params[ETtype]]: scopeId.split(":")[1] }), ["volumeNumber","startPnum"], ["asc","asc"])
+    console.log("gEsR:",res, scopeId, scope, ETtype)  
     if(res?.length > 1000) res = res?.slice(0,1000) ?? []
     setResults(res)
     if(res.length){
@@ -113,15 +127,15 @@ export function EtextSearchBox(props) {
     }
     setLoading(false)
     return res
-  }, [query, that, scopeId])
+  }, [query, that, scopeId, ETtype, scope])
 
 
-  const reloadPage = useCallback((res,idx,p) => {
+  const reloadPage = useCallback((res,idx,p,useQuery) => {
     if(res?.length) {
 
       const 
         currentText = "bdr:"+res[idx].volumeId, 
-        search = "?scope="+scopeId+"&openEtext="+currentText+"&startChar="+res[idx].startPageCstart,
+        search = "?scope="+scopeId+"&openEtext="+currentText+"&startChar="+res[idx].startPageCstart+"&ETkeyword="+encodeURIComponent(useQuery ?? query),
         page = document.querySelector("[data-iri='bdr:"+res[idx].volumeId+"'][data-seq='"+res[idx].startPnum+"']"),
         ancestor = document.querySelector("#root > :last-child"),
         noPage = !page || page?.getBoundingClientRect()?.top > ancestor?.getBoundingClientRect()?.height - window.innerHeight
@@ -170,14 +184,14 @@ export function EtextSearchBox(props) {
       }, noPage ? 1000 : 10)
            
     }
-  }, [that, scopeId])
+  }, [that, scopeId, query, that?.props.location])
 
 
-  const handleNext = useCallback(async () => {
+  const handleNext = useCallback(async (useQuery) => {
     console.log("hn:", results)
     let res = results, idx = index ?? 0, p = page ?? 0
     if(!res) {
-      res = await startSearch()
+      res = await startSearch(useQuery)
     } else do {
       idx = (idx + 1) % res.length
       if(idx > index) {
@@ -196,8 +210,8 @@ export function EtextSearchBox(props) {
       that.props.onCloseMonlam()
     }
 
-    if(p != page) reloadPage(res,idx,p)    
-  }, [query, that, results, index, page, scopeId, total])
+    if(p != page) reloadPage(res,idx,p,useQuery)    
+  }, [query, that, results, index, page, scopeId, total, startSearch])
 
   const handlePrev = useCallback(async () => {
     console.log("hp:", results)
@@ -223,7 +237,7 @@ export function EtextSearchBox(props) {
     }
     
     if(p != page) reloadPage(res,idx,p)    
-  }, [query, that, results, index, page, scopeId, total])
+  }, [query, that, results, index, page, scopeId, total, startSearch])
 
   //console.log("scope:", scope, index, page, total, that.state.ETSBpage)
 
