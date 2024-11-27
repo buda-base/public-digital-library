@@ -21,7 +21,7 @@ import { highlight } from "./App"
 
 export function EtextSearchBox(props) {
 
-  const { that, ETrefs, scopeId } = props
+  const { that, ETrefs, scopeId, setETSBpage } = props
 
   const [query, setQuery] = useState("")
   
@@ -51,7 +51,7 @@ export function EtextSearchBox(props) {
     if(!query && get.ETkeyword && get.ETkeyword != query && !that.props.loading && scope) {
       //console.log("nw kw:("+get.ETkeyword+")",location.search)
       setQuery(get.ETkeyword)
-      handleNext(get.ETkeyword)
+      handleNext(get.ETkeyword, Number(get.ETselect))
     }
   }, [location, query, handleNext, that?.props.loading, scope, ETtype])
 
@@ -130,12 +130,12 @@ export function EtextSearchBox(props) {
   }, [query, that, scopeId, ETtype, scope])
 
 
-  const reloadPage = useCallback((res,idx,p,useQuery) => {
+  const reloadPage = useCallback((res,idx,p,useQuery,selec) => {
     if(res?.length) {
 
       const 
         currentText = "bdr:"+res[idx].volumeId, 
-        search = "?scope="+scopeId+"&openEtext="+currentText+"&startChar="+res[idx].startPageCstart+"&ETkeyword="+encodeURIComponent(useQuery ?? query),
+        search = "?scope="+scopeId+"&openEtext="+currentText+"&startChar="+res[idx].startPageCstart+(selec?"&ETselect="+selec:"")+"&ETkeyword="+encodeURIComponent(useQuery ?? query),
         page = document.querySelector("[data-iri='bdr:"+res[idx].volumeId+"'][data-seq='"+res[idx].startPnum+"']"),
         ancestor = document.querySelector("#root > :last-child"),
         noPage = !page || page?.getBoundingClientRect()?.top > ancestor?.getBoundingClientRect()?.height - window.innerHeight
@@ -144,7 +144,7 @@ export function EtextSearchBox(props) {
         setTimeout(() => that.props.that.props.onReinitEtext(currentText), 150)                        
         that.props.that.setState({ currentText })
       }  
-      that.props.navigate({ ...that.props.location, search})      
+      that.props.navigate({ ...that.props.location, search}, {replace:true})      
 
       let timeout = setInterval(() => {
         const page = document.querySelector("[data-iri='bdr:"+res[idx].volumeId+"'][data-seq='"+res[idx].startPnum+"']");
@@ -187,11 +187,22 @@ export function EtextSearchBox(props) {
   }, [that, scopeId, query, that?.props.location])
 
 
-  const handleNext = useCallback(async (useQuery) => {
+  const handleNext = useCallback(async (useQuery, selec) => {
     console.log("hn:", results)
     let res = results, idx = index ?? 0, p = page ?? 0
     if(!res) {
       res = await startSearch(useQuery)
+      if(selec) { 
+        p = selec
+        let lasti = idx, s = selec
+        while(s) {
+          idx = (idx + 1) % res.length
+          if(res[idx].startPnum != res[lasti].startPnum || res[idx].volumeId != res[lasti].volumeId) { 
+            s--
+          }
+          lasti = idx    
+        }
+      }
     } else do {
       idx = (idx + 1) % res.length
       if(idx > index) {
@@ -210,7 +221,7 @@ export function EtextSearchBox(props) {
       that.props.onCloseMonlam()
     }
 
-    if(p != page) reloadPage(res,idx,p,useQuery)    
+    if(p != page) reloadPage(res,idx,p,useQuery,selec)    
   }, [query, that, results, index, page, scopeId, total, startSearch])
 
   const handlePrev = useCallback(async () => {

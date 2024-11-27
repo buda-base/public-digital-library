@@ -297,7 +297,7 @@ const CustomHit = ({ hit, routing, that, sortItems, recent, storage, advanced /*
             detec = narrowWithString(indexUiState.query)      
             let kw = '"'+indexUiState.query+'"@'+(detec[0]==="tibt"?"bo":"bo-x-ewts")
 
-            newEtextHits.push(<Link to={"/show/bdr:"+vol._source.etext_instance+backLink+"&scope=bdr:"+vol._id+"&openEtext=bdr:"+vol._source.etext_vol+"&startChar="+(ch._source.cstart-1000)+"&ETkeyword="+indexUiState.query+"#open-viewer"}>{highlight(label.value, expand.etext && text ? indexUiState.query : undefined, undefined 
+            newEtextHits.push(<Link to={"/show/bdr:"+vol._source.etext_instance+backLink+"&scope=bdr:"+vol._id+"&openEtext=bdr:"+vol._source.etext_vol+"&startChar="+(ch._source.cstart-1000)+(n?"&ETselect="+n:"")+"&ETkeyword="+indexUiState.query+"#open-viewer"}>{highlight(label.value, expand.etext && text ? indexUiState.query : undefined, undefined 
               /* // fixes crash when expand result on /osearch/search?author%5B0%5D=P1583&etext_quality%5B0%5D=0.95-1.01&q=klong%20chen%20rab%20%27byams%20pa%20dri%20med%20%27od%20zer&etext_search%5B0%5D=true
                // (uncomment to get pagination in etext results)
               , undefined, expand.etext && text
