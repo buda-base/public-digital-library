@@ -3936,10 +3936,10 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      console.warn("val==NULL:",val,prop,i)
                   }
                   */
-                  val = getLangLabel(this,prop,[i])
+                  val = getLangLabel(this,prop,[i]) ?? {}
                   let kw = lucenequerytokeywordmulti(this.props.keyword).map(v => v.trim().replace(/[་༌།]+$/,""))                  
-                  lang = val.lang
-                  if(!lang) lang = val["xml:lang"]
+                  lang = val?.lang
+                  if(!lang) lang = val?.["xml:lang"]
                   
                   if(prop === bdo+"biblioNote") { 
                      if(this.state.collapse[iri+"-note"] != true) {
