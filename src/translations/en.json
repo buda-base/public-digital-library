@@ -771,7 +771,8 @@
       "outLn":"{{n}}) ",
       "checkET":"Click to check availability",
       "checkETlong":"Click to check the availability of another etext",
-      "noOtherET":"No other etext available"
+      "noOtherET":"No other etext available",
+      "loginToPreview":"You must be logged in to open preview on BDRC"
    },
    "tradition":{
       "boT":"Tibetan Tradition",

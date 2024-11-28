@@ -3327,7 +3327,7 @@ class ResourceViewer extends Component<Props,State>
                if(!thumb?.length) thumb = this.getResourceElem(tmp+"thumbnailIIIFSelected", sUri, this.props.assocResources)
                if(!thumb?.length && this.props.firstImage) thumb = [{ value: this.props.firstImage }]
                               
-               //console.log("noT?", !thumb?.length, sUri, this.props.assocResources, this.props.firstImage)               
+               //console.log("noT?", thumb, !thumb?.length, sUri, this.props.assocResources, this.props.firstImage, this.props.IRI,this.props.manifestError)               
 
                if(!thumb || !thumb.length)  ret = [  <Link {...this.props.preview?{ target:"_blank" }:{}} to={"/show/"+sUri+"#open-viewer"} class={"images-thumb no-thumb 2a"} style={{"background-image":"url(/icons/header/instance.svg)"}}></Link> ]
                else {
@@ -3644,11 +3644,13 @@ class ResourceViewer extends Component<Props,State>
             if(!thumb && !thumbV) {
                ret = (<Link {...this.props.preview?{ target:"_blank" }:{}} className={"urilink "+ prefix} to={"/"+show+"/"+prefix+":"+pretty}><span lang="">{ret}{enti!="Etext"||prop?.endsWith("eTextInInstance")?prefix+":"+pretty:""}</span></Link>)
             }
-            else if(thumb && thumb.length) {
-               let thumbUrl = thumb[0].value
-               if(!thumbUrl.match(/[/]default[.][^.]+$/)) thumbUrl += "/full/"+(thumb[0].value.includes(".bdrc.io/")?"!2000,145":",145")+"/0/default.jpg"
-               else if(thumbUrl.match(/bdrc.io.*\/2000,\//)) thumbUrl = thumbUrl.replace(/\/2000,\//,"/!2000,145/")
-               else thumbUrl = thumbUrl.replace(/[/](max|(,600))[/]/,"/"+(thumbUrl.includes(".bdrc.io/")?"!2000,145":",145")+"/")
+            else if(thumb && thumb.length || this.props.manifestError?.error?.code === 401) {
+               let thumbUrl = thumb?.[0]?.value ?? ""
+               if(thumbUrl) {
+                  if(!thumbUrl.match(/[/]default[.][^.]+$/)) thumbUrl += "/full/"+(thumb[0].value.includes(".bdrc.io/")?"!2000,145":",145")+"/0/default.jpg"
+                  else if(thumbUrl.match(/bdrc.io.*\/2000,\//)) thumbUrl = thumbUrl.replace(/\/2000,\//,"/!2000,145/")
+                  else thumbUrl = thumbUrl.replace(/[/](max|(,600))[/]/,"/"+(thumbUrl.includes(".bdrc.io/")?"!2000,145":",145")+"/")
+               }
                let vlink = "/"+show+"/"+prefix+":"+pretty+"?s="+encodeURIComponent(this.props.location.pathname+this.props.location.search)+"#open-viewer"                
                thumb = <div class="images-thumb" style={{"background-image":"url("+thumbUrl+")"}}><img src={thumbUrl}/></div>;               
 
@@ -3698,16 +3700,16 @@ class ResourceViewer extends Component<Props,State>
                   quality = <div class="data access"><h3><span style={{textTransform:"none"}}>{I18n.t("access.quality0")}</span></h3></div>
                }
 
-               let fairUse = false, restrict = false
+               let fairUse = false, restrict = false, hasIA
                let elem = this.getResourceElem(adm+"access")
                if(!elem?.length) elem = this.getResourceElem(adm+"access", prefix+":"+pretty)
                if(elem && elem.filter(e => e.value.match(/(AccessFairUse)$/)).length >= 1) fairUse = true
                let accessLabel
-               if(elem?.length) accessLabel = getOntoLabel(this.props.dictionary,this.props.locale,elem[0].value)
+               if(elem?.length) accessLabel = getOntoLabel(this.props.dictionary,this.props.locale,elem[0].value)               
 
                if(fairUse) { // && (!this.props.auth || this.props.auth && !this.props.auth.isAuthenticated()) ) { 
 
-                  let fairTxt, hasIA, elem = this.getResourceElem(bdo+"digitalLendingPossible");
+                  let fairTxt, elem = this.getResourceElem(bdo+"digitalLendingPossible");
                   if(!elem?.length) elem = this.getResourceElem(bdo+"digitalLendingPossible", prefix+":"+pretty)
                   if(this.props.config && !this.props.config.chineseMirror) {
                      if(!elem || elem.length && elem[0].value == "true" ) { 
@@ -3719,8 +3721,10 @@ class ResourceViewer extends Component<Props,State>
 
                   if(!hasIA) {
                      fairTxt = <>
-                        {/* <a class="fairuse-IA-link no-IA" onClick={toggleSnippet}>{I18n.t("access.snippet"+(this.state.collapse.snippet?"H":"V"))}</a>*/}
+                        {/* 
+                        <a class="fairuse-IA-link no-IA" onClick={toggleSnippet}>{I18n.t("access.snippet"+(this.state.collapse.snippet?"H":"V"))}</a>
                         <br/> 
+                        */}
                         <Trans i18nKey="access.fairuse1" components={{ bold: <u /> }} /> { I18n.t("access.fairuse2")} <a href="mailto:help@bdrc.io">help@bdrc.io</a> { I18n.t("access.fairuse3")}
                      </>
                   } else {         
@@ -3790,7 +3794,7 @@ class ResourceViewer extends Component<Props,State>
                                        <ResourceViewerContainer auth={this.props.auth} /*history={this.props.history}*/ location={this.props.location} navigate={this.props.navigate} IRI={prefix+":"+pretty} pdfDownloadOnly={true} />
                                     </>
                                  :  this.props.IIIFerrors[prefix+":"+pretty].error.code === 401 && (!this.props.auth || !this.props.auth.isAuthenticated())
-                                    ? <a class="urilink nolink"><BlockIcon style={{width:"18px",verticalAlign:"top"}}/>&nbsp;{I18n.t("viewer.dlError401")}</a>                              
+                                    ? <a class="urilink nolink"><BlockIcon style={{width:"18px",verticalAlign:"top"}}/>&nbsp;{I18n.t(hasIA?"resource.loginToPreview":"viewer.dlError401")}</a>                              
                                     : [404,444].includes(this.props.IIIFerrors[prefix+":"+pretty].error.code) 
                                        ? <a class="urilink nolink"><BlockIcon style={{width:"18px",verticalAlign:"top"}}/>&nbsp;{I18n.t("access.notyet")}</a>                              
                                        : <a class="urilink nolink"><BlockIcon style={{width:"18px",verticalAlign:"top"}}/>&nbsp;{I18n.t("access.error")}</a>                              
