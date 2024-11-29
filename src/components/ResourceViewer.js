@@ -5445,7 +5445,9 @@ class ResourceViewer extends Component<Props,State>
       
          let _befo
          if(title && title.value) {
-            if(!other && !document.title.includes(title.value) ) document.title = title.value + " - " + (this.props.config?.khmerServer?"Khmer Manuscript Heritage Project":"Buddhist Digital Archives")
+            if(!other /*&& !document.title.includes(title.value)*/) { 
+               document.title = title.value + " - " + (this.props.config?.khmerServer?"Khmer Manuscript Heritage Project":"Buddhist Digital Archives")
+            }
             if(title.fromSameAs && !title.fromSameAs.match(new RegExp(bdr))) {
                const {befo,bdrcData} = this.getSameLink(title,shortUri(title.fromSameAs).split(":")[0]+" sameAs hasIcon")            
                _befo = befo
@@ -8287,7 +8289,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
 
       //console.log("rEtN:",this.props.that?.state?.scope,this.props,this.props.resources[this.props.IRI], repro, this.props.assocResources, label, back)
             
-      document.title = label.value + " - " + (this.props.config?.khmerServer?"Khmer Manuscript Heritage Project":"Buddhist Digital Archives")
+      if(!this.props.that.props.previewEtext) document.title = label.value + " - " + (this.props.config?.khmerServer?"Khmer Manuscript Heritage Project":"Buddhist Digital Archives")
 
       const title =({value: text, lang}) => <h2 title={text} lang={lang} class="on">
          <span class="newT etext">
