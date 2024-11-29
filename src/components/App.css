@@ -688,8 +688,8 @@ body > #pop-login { z-index:1000000 ;}
 #root > div > .infoPanel + .resource {
    width:1440px;
    box-sizing: border-box;
-   padding-left: 110px;
-   padding-right: 110px;
+   padding-left: 80px;
+   padding-right: 80px;
 }
 
 .resource #head + .data {
@@ -4173,7 +4173,7 @@ html[lang='bo'] .resource .title h2 .T .space-fix span:not(.RID) { line-height: 
 
 /* ------------------------------------------------------------------------------------------------------------------------ permalink */
 
-.resource .data#perma { background-color:#ffffff; padding:0 35px 50px 35px;}
+.resource .data#perma { background-color:#ffffff; padding:0 65px 50px 65px;}
 
 /* #top-left { position:absolute; top:calc(100% + 40px);right:40px; } */
 #perma > div { position:relative; background:#efefef; display:flex;align-items: center; justify-content:flex-start; margin-bottom:0px;
@@ -4945,7 +4945,7 @@ h4:hover a.no-bdrc img { opacity:1; }
 
 .resource .data.top-props .has-collapse:not(.custom):last-child { margin-bottom:-25px; }
 
-.resource .data { text-align:left ; background-color:#ffffff; padding:20px 70px;}
+.resource .data { text-align:left ; background-color:#ffffff; padding:20px 100px;}
 .resource .title + .data { padding-top:35px;padding-bottom:35px; }
 .resource > .data:last-child { padding-bottom:50px; }
 .resource .data + .data { padding-top:1px; }
@@ -5384,7 +5384,7 @@ html[lang="en"] .resource .data > [data-prop="bdo:creator"] h4[data-prop="bdo:ro
 .resource .data.related h2 + a { position:absolute;text-transform:uppercase;font-weight:500;border-bottom:2px solid black; 
    height:24px; right:35px; cursor:pointer; padding-top:14px; color:#343434;}
 
-.resource .data.ext-props > a:first-child { bottom: 70px; right: auto;left: 70px; z-index: 1;}
+.resource .data.ext-props > a:first-child { bottom: 70px; right: auto;left: 110px; z-index: 1;}
 
 .resource .data.ext-props + .ext-props { position:relative; }
 
@@ -5449,7 +5449,7 @@ html[lang="en"] .resource .data > [data-prop="bdo:creator"] h4[data-prop="bdo:ro
 
 .resource .data:not(.legal-props):not(.ext-props):not(#a):not(.b) > [data-prop="adm:metadataLegal"]:not(#a):not(.b) { display:none !important; } 
 
-.resource .data.legal-props { background-color:#ffffff; padding:35px; padding-bottom:0;}
+.resource .data.legal-props { background-color:#ffffff; padding:35px 65px; padding-bottom:0;}
 .resource .data.legal-props:last-child { padding-bottom:45px; }
 .resource .data.legal-props > div { background-color:#172832;padding:25px 35px; position:relative; display:flex;align-items: center;}
 .resource .data.legal-props > div h3 { width:105px; padding-right:60px; }
@@ -5518,7 +5518,7 @@ html[lang="en"] .resource .data > [data-prop="bdo:creator"] h4[data-prop="bdo:ro
 
 /* ------------------------------------------------------------------------------------------------------------------------ extended properties */
 
-.resource .data.ext-props { background-color:#ffffff; padding:35px; padding-bottom:0;}
+.resource .data.ext-props { background-color:#ffffff; padding:35px 65px; padding-bottom:0;}
 
 .resource .data.ext-props:last-child { padding-bottom:45px; }
 .resource .data.ext-props > div { background-color:#f0f0f0;padding:0px 35px 5px 35px; position:relative;}
