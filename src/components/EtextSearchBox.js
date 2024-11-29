@@ -132,10 +132,12 @@ export function EtextSearchBox(props) {
 
   const reloadPage = useCallback((res,idx,p,useQuery,selec) => {
     if(res?.length) {
+      
+      const get = qs.parse(that?.props.location.search,{decode:false})
 
       const 
         currentText = "bdr:"+res[idx].volumeId, 
-        search = "?scope="+scopeId+"&openEtext="+currentText+"&startChar="+res[idx].startPageCstart+(selec?"&ETselect="+selec:"")+"&ETkeyword="+encodeURIComponent(useQuery ?? query),
+        search = "?"+(get.s?"s="+get.s+"&":"")+"scope="+scopeId+"&openEtext="+currentText+"&startChar="+res[idx].startPageCstart+(selec?"&ETselect="+selec:"")+"&ETkeyword="+encodeURIComponent(useQuery ?? query),
         page = document.querySelector("[data-iri='bdr:"+res[idx].volumeId+"'][data-seq='"+res[idx].startPnum+"']"),
         ancestor = document.querySelector("#root > :last-child"),
         noPage = !page || page?.getBoundingClientRect()?.top > ancestor?.getBoundingClientRect()?.height - window.innerHeight
