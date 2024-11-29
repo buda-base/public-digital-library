@@ -174,11 +174,15 @@
 }
 
 
+#info-tooltip-workid > div > div { padding:10px !important;}
+
 #info-tooltip-etext-quality > div { padding:5px !important;}
 
 .AppSK .ais-RefinementList [data-simplebar] {
   max-height:65vh;
 }
+
+svg.help-workid { opacity:0.55; width:18px; vertical-align: -4px; margin-left:8px;}
 
 .AppSK .result .highlight,
 .AppSK .ais-Highlight-highlighted, 

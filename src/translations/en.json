@@ -296,8 +296,8 @@
       "tmp:CleanedOCR": "high",
       "tmp:ComputerInputOCR": "very high",
       "tmp:subscribed":"Subscribed Collections",
-      "tmp:otherInstance":"Other version of this work",
-      "tmp:otherInstance_plural":"Other versions of this work",
+      "tmp:otherInstance":"Other version",
+      "tmp:otherInstance_plural":"Other versions",
       "tmp:containingOutline": "Containing outline",
       "tmp:scans_access":"Scans",
       "tmp:etext_access":"Etext",
@@ -312,7 +312,8 @@
       "tmp:notAvailable":"Not available",
       "tmp:hasInstance":"Version of this work",
       "tmp:hasInstance_plural":"Versions of this work",
-      "tmp:noPagination": "You may have to find the right page yourself, because this is an unaligned etext."
+      "tmp:noPagination": "You may have to find the right page yourself, because this is an unaligned etext.",
+      "tmp:BDRCworkId":"BDRC Work Id"
    },
    "guided":{
       "keyword":"keyword",
@@ -772,7 +773,8 @@
       "checkET":"Click to check availability",
       "checkETlong":"Click to check the availability of another etext",
       "noOtherET":"No other etext available",
-      "loginToPreview":"You must be logged in to open preview on BDRC"
+      "loginToPreview":"You must be logged in to open preview on BDRC",
+      "helpWorkId":"A <italic>Work</italic> in the BDRC context represents the conceptual essence of the cataloged resource: authors, languages, and what it is about (subjects). It connects together all the versions. See the user guide for more."
    },
    "tradition":{
       "boT":"Tibetan Tradition",

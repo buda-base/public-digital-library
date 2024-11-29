@@ -35,6 +35,7 @@ import InfoIcon from '@material-ui/icons/InfoOutlined';
 import ErrorIcon from '@material-ui/icons/AddCircle';
 import Collapse from '@material-ui/core/Collapse';
 import ExpandLess from '@material-ui/icons/ExpandLess';
+import HelpIcon from '@material-ui/icons/Help';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 import MailIcon from '@material-ui/icons/MailOutline';
 import PrintIcon from '@material-ui/icons/LocalPrintshop';
@@ -617,6 +618,7 @@ let midProperties = {
 
 let extProperties = {
    "Work": [
+      tmp+"BDRCworkId",
       bf+"identifiedBy",
       bdo+"contentMethod",
       bdo+"printMethod",
@@ -2267,6 +2269,20 @@ class ResourceViewer extends Component<Props,State>
          }
          if(!prop[tmp+"propHasEtext"].some(t => t.value === tmp+"notAvailable")) 
             prop[tmp+"propHasEtext"].push({ value:tmp+"notAvailable"})
+      }
+
+      if(prop[bdo+"instanceOf"]) {
+         prop[tmp+"BDRCworkId"] = [{ 
+            type:"html", 
+            value:<span>
+               <Link to={window.location.hostname === "localhost" || window.location.hostname.startsWith("library-dev") 
+                     ? "/show/"+shortUri(prop[bdo+"instanceOf"]?.[0]?.value)
+                     : prop[bdo+"instanceOf"]?.[0]?.value}>{shortUri(prop[bdo+"instanceOf"]?.[0]?.value).split(":")[1]}</Link>                
+               <Tooltip placement="bottom-start" classes={{tooltip:"commentT",popper:"commentP"}} title={<div><Trans i18nKey="resource.helpWorkId" components={{ italic: <i /> }} /></div>} >
+                  <HelpIcon class="material-icons help-workid"/>
+               </Tooltip>
+            </span>
+         }]
       }
 
       if(sorted)
