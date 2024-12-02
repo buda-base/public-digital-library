@@ -268,7 +268,7 @@ body { overflow:auto !important;padding-right:0 !important; /*font-family:"Robot
 
 .infoPanel p { width:100%; margin:16px 0; display: inline-block;}
 
-.infoPanel + .resource > .ariane { top:30px; }
+.infoPanel + .resource > .ariane { top:40px; }
 
 #root > div > .infoPanel + .resource { padding-top:85px; }
 
@@ -1247,16 +1247,27 @@ ul.suggestions li > span > svg:first-child {
    margin-bottom:25px;
 }
 
+
+.infoPanel + .resource > .ariane a ~ span,
+.infoPanel + .resource > .ariane a,
 .App.tradition #tradition-breadcrumbs a {
    color:#343434;
    text-decoration: underline;
    /* text-transform: capitalize;    */
+   font-weight:400;
+   font-size:14px;
+}
+
+
+.infoPanel + .resource > .ariane a ~ span {
+   text-decoration: none;
 }
 
 .App.tradition #tradition-breadcrumbs span {
    color:#343434;
 }
 
+.infoPanel + .resource > .ariane a:not(:last-child)::after,
 .App.tradition #tradition-breadcrumbs a:not(:last-child)::after,
 .App.tradition #tradition-breadcrumbs span:not(:last-child)::after {
    content:">";
@@ -5824,6 +5835,11 @@ html[lang="en"] .resource .data > [data-prop="bdo:creator"] h4[data-prop="bdo:ro
 }
 
 
+.resource .data .back-anchor {
+   position: relative;
+} 
+
+.resource .data .back-anchor .urilink ,  
 .etext-header .urilink {
    color:#d73449;
    position: absolute;
@@ -5833,6 +5849,12 @@ html[lang="en"] .resource .data > [data-prop="bdo:creator"] h4[data-prop="bdo:ro
    font-weight:500;
    align-items: center;
    margin-top:-3px;
+}
+
+
+.resource .data .back-anchor .urilink {
+
+   margin-top:7px;
 }
 
 .etext-header > div > span {

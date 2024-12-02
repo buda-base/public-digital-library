@@ -11154,7 +11154,6 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
             tablist = tablist.filter(t => t).reverse()
             tabpanels = tabpanels.filter(t => t).reverse()            
          } 
-
          
          return (
          [getGDPRconsent(this),   
@@ -11167,28 +11166,39 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
             { ["Images","Instance"].includes(_T) && <abbr class="unapi-id" title={this.props.IRI}></abbr> }
             { infoPanelR }
             <div {...searchUrl?{"data-searchUrl":searchUrl}:{}} className={"resource "+hasTabs+getEntiType(this.props.IRI).toLowerCase() + (this.props.simple?" simple":"") + (this.props.preview?" preview":"") /*+(!this.props.portraitPopupClosed?" portrait-warn-on":"")*/} {...this.props.simple?{onClick:sendMsg}:{}}>                                             
-               {searchUrl && <div class="ariane" >
-                  <Link to={searchUrl} /*onClick={(ev) => {
-                     this.props.onLoading("search",true)                     
+               {/* {searchUrl &&  */}
+               <div class="ariane" >
+                  <span>
+                     <Link to="/">{I18n.t("topbar.home")}</Link>
+                     <span>{titlElem?.[0]?.value ?? this.props.IRI}</span>
+                  </span>
+                  {/*
+                  <Link to={searchUrl} 
+                  //    onClick={(ev) => {
+                  //    this.props.onLoading("search",true)                     
                      
-                     let pathname = "/osearch/search"
-                     if(fromStaticRoute){
-                        pathname = "/"+fromStaticRoute
-                        searchUrl = searchUrl.replace(new RegExp(fromStaticRoute+"[?]"),"")
-                     }                     
+                  //    let pathname = "/osearch/search"
+                  //    if(fromStaticRoute){
+                  //       pathname = "/"+fromStaticRoute
+                  //       searchUrl = searchUrl.replace(new RegExp(fromStaticRoute+"[?]"),"")
+                  //    }                     
 
-                     setTimeout(() => { 
-                           //this.props.navigate({pathname,search:"?"+searchUrl}) ; 
-                           this.props.navigate(searchUrl) ; 
-                     }, 100)
+                  //    setTimeout(() => { 
+                  //          //this.props.navigate({pathname,search:"?"+searchUrl}) ; 
+                  //          this.props.navigate(searchUrl) ; 
+                  //    }, 100)
 
-                     ev.preventDefault()
-                     ev.stopPropagation();
-                     return false
-                  }}*/
-                  ><img src="/icons/FILARIANE.svg" /><span>{searchUrl.startsWith("latest")?I18n.t("home.new").toLowerCase():I18n.t("topbar."+(searchTerm?"results":"resultsNoKW"))} <span>{searchTerm}</span></span></Link>
+                  //    ev.preventDefault()
+                  //    ev.stopPropagation();
+                  //    return false
+                  // }}
+                  >
+                     <img src="/icons/FILARIANE.svg" /><span>{searchUrl.startsWith("latest")?I18n.t("home.new").toLowerCase():I18n.t("topbar."+(searchTerm?"results":"resultsNoKW"))} <span>{searchTerm}</span></span>
+                  </Link> */}
+                  
                   {this.state.ready && <Loader loaded={!this.props.loading} options={{position:"fixed",left:"50%",top:"50%"}} /> }
-               </div> }
+               </div> 
+               {/* } */}
                <div class="index">                  
                   {/* { this.renderBrowseAssoRes() } */}
                   {/* { this.renderPdfLink(pdfLink,monoVol,fairUse) } */}
@@ -11209,6 +11219,9 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                   { (etext && !orig) && <div class={"data open-etext"+(etextAccessError?" disable":"")}><div><Link to={etextUT+(etextUT.includes("?")?"&":"?")+"backToEtext="+backToET+"#open-viewer"}>{etextLoca}</Link></div></div> }
                   { (etext && orig) && <div class="data open-etext"><div><a target="_blank" href={orig}>{I18n.t("resource.openO",{src:prov})}<img src="/icons/link-out_.svg"/></a></div></div> }
                   <div class={"data" + (_T === "Etext"?" etext-title":"")+(_T === "Images"?" images-title":"")}>
+                     {searchUrl && <span class="back-anchor">
+                        <Link className="urilink" to={searchUrl}><ChevronLeft />{I18n.t("resource.goB")}</Link>
+                     </span> }                     
                      {_T === "Images" && iTitle?[<h2 class="on intro">{I18n.t("resource.scanF")}</h2>,iTitle]
                       :(_T === "Etext" && iTitle?[<h2 class="on intro">{I18n.t("resource.etextF")}</h2>,iTitle]
                        :(_T === "Etext" && wTitle?[<h2 class="on intro">{I18n.t("resource.etextF")}</h2>,wTitle]
