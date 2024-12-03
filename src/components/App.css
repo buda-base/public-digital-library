@@ -152,6 +152,7 @@ footer#site-footer.no-syncs > div.head::before { background-color:#efefef; }
 .App:not(.home) .SearchPane { min-height:calc(100vh - 80px - 50px * 0);  }
 
 
+.etext-header-breadcrumbs *,
 .AppSK *,#etext-nav .etext-search input,
 #more-pages-menu a,[role='tooltip'] *, .App *,.nav *,.App *::before,.App *::after, .react-tabs *, .resource *:not(.fa):not(.material-icons), .resource + * *,
 .inRes *, #popDL.cite *, #menu-citationLang *, #pop-login li { 
@@ -268,7 +269,7 @@ body { overflow:auto !important;padding-right:0 !important; /*font-family:"Robot
 
 .infoPanel p { width:100%; margin:16px 0; display: inline-block;}
 
-.infoPanel + .resource > .ariane { top:40px; }
+.infoPanel + .resource > .ariane { top:40px;  }
 
 #root > div > .infoPanel + .resource { padding-top:85px; }
 
@@ -1248,6 +1249,10 @@ ul.suggestions li > span > svg:first-child {
 }
 
 
+.etext-header-breadcrumbs .ariane a ~ span,
+.etext-header-breadcrumbs .ariane a,
+.etext-header .ariane a,
+.etext-header .ariane a ~ span,
 .infoPanel + .resource > .ariane a ~ span,
 .infoPanel + .resource > .ariane a,
 .App.tradition #tradition-breadcrumbs a {
@@ -1259,6 +1264,14 @@ ul.suggestions li > span > svg:first-child {
 }
 
 
+
+.etext-header-breadcrumbs .ariane,
+.infoPanel + .resource > .ariane {
+   line-height: 22px;
+}
+
+.etext-header-breadcrumbs .ariane a ~ span,
+.etext-header .ariane a ~ span,
 .infoPanel + .resource > .ariane a ~ span {
    text-decoration: none;
 }
@@ -1267,6 +1280,9 @@ ul.suggestions li > span > svg:first-child {
    color:#343434;
 }
 
+
+.etext-header-breadcrumbs .ariane > :not(:last-child)::after,
+.etext-header .ariane  a:not(:last-child)::after,
 .infoPanel + .resource > .ariane a:not(:last-child)::after,
 .App.tradition #tradition-breadcrumbs a:not(:last-child)::after,
 .App.tradition #tradition-breadcrumbs span:not(:last-child)::after {
@@ -5776,7 +5792,7 @@ html[lang="en"] .resource .data > [data-prop="bdo:creator"] h4[data-prop="bdo:ro
    box-sizing: border-box;
    margin-bottom:20px;
 }
-
+.etext-header-breadcrumbs,
 .etext-header.sticky > div,
 .etext-header {
    width:1440px;
@@ -5817,11 +5833,12 @@ html[lang="en"] .resource .data > [data-prop="bdo:creator"] h4[data-prop="bdo:ro
 .etext-nav-parent.someClass .etext-header.sticky > div {
    width: 1224px;
    margin:auto;
-
+   
    display: flex;
    align-items: center;
 }
 
+.etext-header-breadcrumbs > div,
 .etext-header:not(.sticky) > div {
    width: 1280px;
    margin:auto;
@@ -5832,6 +5849,21 @@ html[lang="en"] .resource .data > [data-prop="bdo:creator"] h4[data-prop="bdo:ro
 .etext-header:not(.sticky) > div h2 {
    margin:0;
    font-size:32px;
+}
+
+.etext-header-breadcrumbs {
+   height:85px;
+   display: flex;
+}
+
+.etext-header-breadcrumbs ~ .etext-header {
+   padding-top:0;
+}
+
+.etext-header-breadcrumbs > .ariane {
+   background:none;
+   padding-top:0;
+   padding-bottom:0;
 }
 
 

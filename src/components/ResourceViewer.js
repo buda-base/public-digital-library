@@ -8159,7 +8159,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
       )
    }
 
-   renderEtextNav = (accessError) => {
+   renderEtextNav = (accessError, breadcrumbs) => {
     
       let etextSize = (inc:boolean=true) => {
          let size = this.state.etextSize ;
@@ -10552,8 +10552,12 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
          }
       }
 
-      if(this.props.previewEtext || this.props.disableInfiniteScroll || topLevel || this.props.openEtext || hasChunks && hasChunks.length && this.state.openEtext) {
-         
+      const breadcrumbs = [
+         <Link to="/">{I18n.t("topbar.home")}</Link>         
+      ]
+
+      if(this.props.previewEtext || this.props.disableInfiniteScroll || topLevel || this.props.openEtext || hasChunks && hasChunks.length && this.state.openEtext) {         
+
          let hasPages = this.getResourceElem(bdo+"eTextHasPage")
          let etextRes = this.getResourceElem(bdo+"eTextInInstance")         
          if(!etextRes?.length) etextRes = this.getResourceElem(bdo+"volumeOf") 
@@ -10578,7 +10582,41 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
             this.props.onGetETextRefs(etextRes);
          } else if(this.props.eTextRefs && this.props.eTextRefs !== true && !this.props.previewEtext && !this.props.disableInfiniteScroll) { 
             //extProps = extProps.filter(p => p !== bdo+"instanceHasVolume")
-            etRefs = this.renderEtextRefs(accessET, etextRes)      
+            etRefs = this.renderEtextRefs(accessET, etextRes)
+
+         }
+
+
+         const inst = this.getResourceElem(bdo+"eTextInInstance") ?? this.getResourceElem(bdo+"volumeOf") 
+         let repro = this.getResourceElem(bdo+"instanceReproductionOf"), back, t
+         if(!repro?.length && inst?.length) repro = this.getResourceElem(bdo+"instanceReproductionOf", shortUri(inst[0].value), this.props.assocResources)      
+         if(repro?.length) { 
+            back = repro.filter(r => (t=(this.getResourceElem(rdf+"type", shortUri(r.value), this.props.assocResources) ?? [])).some(s => s.value === bdo+"Instance") && !t.some(s => s.value === bdo+"ImageInstance" )  )
+            if(back?.length) back = shortUri(back[0].value)
+            else back = ""
+         }   
+      
+         if(back && this.props.that) { 
+            breadcrumbs.push(<Link to={"/show/"+back}>{back}</Link>)         
+            if(this.props.that.state.scope != etextRes) {
+               let openText = (ev,ETres) => {
+                  this.props.onLoading("etext", true)
+                  setTimeout(() => this.props.that.props.onReinitEtext(ETres), 150)                        
+                  this.props.that.setState({ currentText: ETres, scope: ETres })                       
+                  ev.preventDefault()
+                  ev.stopPropagation()
+                  return false             
+               }
+               breadcrumbs.push(<Link to={"/show/"+etextRes+"#open-viewer"} onClick={(ev,)=>openText(ev,etextRes)}>Etext</Link>)
+               if(this.props.that.state.currentText != this.props.that.state.scope) {
+                  breadcrumbs.push(<Link to={"/show/"+etextRes+"?openEtext="+this.props.that.state.currentText+"#open-viewer"} onClick={(ev)=>openText(ev,this.props.that.state.currentText)}>{this.props.that.state.currentText}</Link>)
+                  breadcrumbs.push(<span>{this.props.that.state.scope}</span>)
+               } else {
+                  breadcrumbs.push(<span>{this.props.that.state.currentText}</span>)
+               }
+            } else {
+               breadcrumbs.push(<span>Etext</span>)
+            }
          }
 
          loggergen.log("eR:", topLevel, etextRes, this.state.currentText, hasPages, etext_data, this.props.eTextRefs, etRefs, this.props, this.state)
@@ -10703,6 +10741,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
             return (<>            
                {getGDPRconsent(this)}
                {top_right_menu(this,title,searchUrl,etextRes,null,this.props.location)}                       
+                  
                   { this.state.currentText 
                      ? <ResourceViewerContainer auth={this.props.auth} /*history={this.props.history}*/ location={this.props.location} navigate={this.props.navigate} IRI={this.state.currentText} openEtext={true} openEtextRefs={!this.state.collapse.etextRefs} topEtextRefs={outline} that={this}/> 
                      : <>
@@ -10714,8 +10753,15 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                   }
                </>) 
          }
-         else return ([            
-            this.renderEtextNav(etextAccessError),
+         else return ([           
+                     
+            <div class="etext-header-breadcrumbs" >
+               <div class="ariane" >
+                  {breadcrumbs}
+               </div>
+            </div>,
+
+            this.renderEtextNav(etextAccessError, breadcrumbs),
             this.props.topEtextRefs,
             <div class={(monlamResults ? "withMonlam " : "")+(this.props.openEtextRefs ? "withOutline ":"")+(this.state.ETSBresults && !this.state.collapse.ETSBresults ? "withETSBresults ":"")}>               
                { monlamResults && <link rel="stylesheet" href="https://monlamdictionary.com/files/css/basic.css" /> }               
@@ -10788,6 +10834,8 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
          ])
       }
       else {
+
+         breadcrumbs.push(<span>{titlElem?.[0]?.value ?? this.props.IRI}</span>)
 
          let legal = this.getResourceElem(adm+"metadataLegal"), legalD, sameLegalD
          if(legal && legal.length) legal = legal.filter(p => !p.fromSameAs)
@@ -11169,8 +11217,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                {/* {searchUrl &&  */}
                <div class="ariane" >
                   <span>
-                     <Link to="/">{I18n.t("topbar.home")}</Link>
-                     <span>{titlElem?.[0]?.value ?? this.props.IRI}</span>
+                     {breadcrumbs}
                   </span>
                   {/*
                   <Link to={searchUrl} 
