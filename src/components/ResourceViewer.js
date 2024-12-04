@@ -10596,9 +10596,10 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
             else back = ""
          }   
       
+         let level = 0
          if(back && this.props.that) { 
             let labelMW, labelVL, labelUT
-            labelMW = this.getResourceElem(skos+"prefLabel", back)
+            labelMW = this.props.that.getResourceElem(skos+"prefLabel", back)
             if(labelMW && !Array.isArray(labelMW)) labelMW = [labelMW]
             labelMW = getLangLabel(this,skos+"prefLabel",labelMW) 
             if(this.props.that.props.eTextRefs?.["@graph"]) {
@@ -10620,8 +10621,8 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                   }
                }
             }
-            //console.log("lbls:",back, labelMW, this.props.that.props.eTextRefs, labelVL, labelUT)
-            breadcrumbs.push(<Link to={"/show/"+back}>{labelMW?.value ?? back}</Link>)         
+            //console.log("lbls:", back, repro, labelMW, this.props.that.props.eTextRefs, labelVL, labelUT)
+            breadcrumbs.push(<Link  class="can-shrink" to={"/show/"+back}>{labelMW?.value ?? back}</Link>)         
             if(this.props.that.state.scope != etextRes) {
                let openText = (ev,ETres,reset) => {
                   this.props.onLoading("etext", true)
@@ -10630,13 +10631,16 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                }
                breadcrumbs.push(<Link to={"/show/"+etextRes+"#open-viewer"} onClick={(ev,)=>openText(ev,etextRes,true)}>{I18n.t("types.etext")}</Link>)
                if(this.props.that.state.currentText != this.props.that.state.scope) {
-                  breadcrumbs.push(<Link to={"/show/"+etextRes+"?openEtext="+this.props.that.state.currentText+"#open-viewer"} onClick={(ev)=>openText(ev,this.props.that.state.currentText)}>{labelVL?.value ?? this.props.that.state.currentText}</Link>)
-                  breadcrumbs.push(<span>{labelUT?.value ?? this.props.that.state.scope}</span>)
+                  breadcrumbs.push(<Link  class="can-shrink" to={"/show/"+etextRes+"?openEtext="+this.props.that.state.currentText+"#open-viewer"} onClick={(ev)=>openText(ev,this.props.that.state.currentText)}>{labelVL?.value ?? this.props.that.state.currentText}</Link>)
+                  breadcrumbs.push(<span class="can-shrink">{labelUT?.value ?? this.props.that.state.scope}</span>)
+                  level = 3
                } else {
-                  breadcrumbs.push(<span>{labelVL?.value ??this.props.that.state.currentText}</span>)
+                  breadcrumbs.push(<span class="can-shrink">{labelVL?.value ??this.props.that.state.currentText}</span>)
+                  level = 2
                }
             } else {
                breadcrumbs.push(<span>Etext</span>)
+               level = 1
             }
          }
 
@@ -10777,7 +10781,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
          else return ([           
                      
             !this.props.previewEtext && !this.props.disableInfiniteScroll && <div class="etext-header-breadcrumbs" >
-               <div class="ariane" >
+               <div class="ariane" data-level={level}>
                   {breadcrumbs}
                </div>
             </div>,
@@ -10856,7 +10860,8 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
       }
       else {
 
-         breadcrumbs.push(<span>{titlElem?.[0]?.value ?? this.props.IRI}</span>)
+         const bcLabel = titlElem?.[0]?.value && getLangLabel(this, skos+"prefLabel", titlElem) 
+         breadcrumbs.push(<span class="can-shrink">{bcLabel?.value ?? this.props.IRI}</span>)
 
          let legal = this.getResourceElem(adm+"metadataLegal"), legalD, sameLegalD
          if(legal && legal.length) legal = legal.filter(p => !p.fromSameAs)
@@ -11236,10 +11241,8 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
             { infoPanelR }
             <div {...searchUrl?{"data-searchUrl":searchUrl}:{}} className={"resource "+hasTabs+getEntiType(this.props.IRI).toLowerCase() + (this.props.simple?" simple":"") + (this.props.preview?" preview":"") /*+(!this.props.portraitPopupClosed?" portrait-warn-on":"")*/} {...this.props.simple?{onClick:sendMsg}:{}}>                                             
                {/* {searchUrl &&  */}
-               <div class="ariane" >
-                  <span>
-                     {breadcrumbs}
-                  </span>
+               <div class="ariane" data-level={0}>
+                  {breadcrumbs}
                   {/*
                   <Link to={searchUrl} 
                   //    onClick={(ev) => {

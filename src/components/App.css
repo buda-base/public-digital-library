@@ -718,6 +718,8 @@ body > #pop-login { z-index:1000000 ;}
 .infoPanel + .resource > .ariane { 
    padding-left:70px; 
    margin-left:110px;
+   padding-right:70px;
+   width:1080px;
 }
 
 .inner-search-bar:not(#a) {
@@ -1261,13 +1263,44 @@ ul.suggestions li > span > svg:first-child {
    /* text-transform: capitalize;    */
    font-weight:400;
    font-size:14px;
+
+   white-space: nowrap; 
+   overflow: hidden; 
+   text-overflow: ellipsis; 
+
+   flex: 0 0 auto;
+   flex-shrink:0; 
 }
 
+.ariane .can-shrink:not(#a) {
+   flex-shrink:0;
+}
+
+.ariane .can-shrink:not(#a) ~ .can-shrink {
+   flex-shrink:0;
+}
+
+.ariane span.can-shrink:not(#a):last-of-type,
+.ariane .can-shrink:not(#a) ~ .can-shrink ~ .can-shrink {
+   flex-shrink:1;
+}
+
+/*
+.ariane[data-level="3"] > * {
+   max-width:33%;
+}
+
+.ariane:not([data-level]) > span > * {
+   max-width:70%;
+}
+*/
 
 
 .etext-header-breadcrumbs .ariane,
 .infoPanel + .resource > .ariane {
    line-height: 22px;
+   display: flex;
+   justify-content: flex-start;
 }
 
 .etext-header-breadcrumbs .ariane a ~ span,
@@ -1281,11 +1314,12 @@ ul.suggestions li > span > svg:first-child {
 }
 
 
-.etext-header-breadcrumbs .ariane > :not(:last-child)::after,
-.etext-header .ariane  a:not(:last-child)::after,
-.infoPanel + .resource > .ariane a:not(:last-child)::after,
-.App.tradition #tradition-breadcrumbs a:not(:last-child)::after,
-.App.tradition #tradition-breadcrumbs span:not(:last-child)::after {
+.etext-header-breadcrumbs .ariane > :not(:first-child)::before,
+.etext-header .ariane  a:not(:first-child)::before,
+.infoPanel + .resource > .ariane a:not(:first-child)::before,
+.infoPanel + .resource > .ariane span:not(:first-child)::before,
+.App.tradition #tradition-breadcrumbs a:not(:first-child)::before,
+.App.tradition #tradition-breadcrumbs span:not(:first-child)::before {
    content:">";
    display: inline-block;
    margin:0 10px;
