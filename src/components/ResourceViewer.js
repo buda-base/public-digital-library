@@ -6996,7 +6996,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
       const get = qs.parse(this.props.location.search)
       let firstC = 0, lastC = 10000000, text
       if(info?.[0]?.type === "EtextVolume") {
-         console.log("info:",info)
+         //console.log("info:",info)
          let vhet = info[0].volumeHasEtext
          if(vhet) {
             if(!Array.isArray(vhet)) vhet = [ vhet ]
@@ -10597,22 +10597,43 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
          }   
       
          if(back && this.props.that) { 
-            breadcrumbs.push(<Link to={"/show/"+back}>{back}</Link>)         
+            let labelMW, labelVL, labelUT
+            labelMW = this.getResourceElem(skos+"prefLabel", back)
+            if(labelMW && !Array.isArray(labelMW)) labelMW = [labelMW]
+            labelMW = getLangLabel(this,skos+"prefLabel",labelMW) 
+            if(this.props.that.props.eTextRefs?.["@graph"]) {
+               if(this.props.that.state.scope != etextRes) {
+                  for(const n of this.props.that.props.eTextRefs?.["@graph"]) {
+                     if(n["@id"] === this.props.that.state.currentText) {
+                        labelVL = n["skos:prefLabel"] 
+                        if(!labelVL && n.volumeNumber) labelVL = { "@language":this.props.locale, "@value": I18n.t("types.volume_num_noid",{num:n.volumeNumber}) }
+                        if(labelVL && !Array.isArray(labelVL)) labelVL = [labelVL]
+                        labelVL = getLangLabel(this,skos+"prefLabel",labelVL) 
+                     }
+                     if(n["@id"] === this.props.that.state.scope) { 
+                        labelUT = n["skos:prefLabel"] ?? []
+                        if(labelUT && !Array.isArray(labelUT)) labelUT = [labelUT]
+                        labelUT = getLangLabel(this,skos+"prefLabel",labelUT) 
+                     }
+                     if(labelVL && labelUT || labelVL && this.props.that.state.currentText == this.props.that.state.scope)
+                        break;
+                  }
+               }
+            }
+            //console.log("lbls:",back, labelMW, this.props.that.props.eTextRefs, labelVL, labelUT)
+            breadcrumbs.push(<Link to={"/show/"+back}>{labelMW?.value ?? back}</Link>)         
             if(this.props.that.state.scope != etextRes) {
-               let openText = (ev,ETres) => {
+               let openText = (ev,ETres,reset) => {
                   this.props.onLoading("etext", true)
                   setTimeout(() => this.props.that.props.onReinitEtext(ETres), 150)                        
-                  this.props.that.setState({ currentText: ETres, scope: ETres })                       
-                  ev.preventDefault()
-                  ev.stopPropagation()
-                  return false             
+                  this.props.that.setState({ currentText: reset?null:ETres, scope: ETres })                       
                }
-               breadcrumbs.push(<Link to={"/show/"+etextRes+"#open-viewer"} onClick={(ev,)=>openText(ev,etextRes)}>Etext</Link>)
+               breadcrumbs.push(<Link to={"/show/"+etextRes+"#open-viewer"} onClick={(ev,)=>openText(ev,etextRes,true)}>{I18n.t("types.etext")}</Link>)
                if(this.props.that.state.currentText != this.props.that.state.scope) {
-                  breadcrumbs.push(<Link to={"/show/"+etextRes+"?openEtext="+this.props.that.state.currentText+"#open-viewer"} onClick={(ev)=>openText(ev,this.props.that.state.currentText)}>{this.props.that.state.currentText}</Link>)
-                  breadcrumbs.push(<span>{this.props.that.state.scope}</span>)
+                  breadcrumbs.push(<Link to={"/show/"+etextRes+"?openEtext="+this.props.that.state.currentText+"#open-viewer"} onClick={(ev)=>openText(ev,this.props.that.state.currentText)}>{labelVL?.value ?? this.props.that.state.currentText}</Link>)
+                  breadcrumbs.push(<span>{labelUT?.value ?? this.props.that.state.scope}</span>)
                } else {
-                  breadcrumbs.push(<span>{this.props.that.state.currentText}</span>)
+                  breadcrumbs.push(<span>{labelVL?.value ??this.props.that.state.currentText}</span>)
                }
             } else {
                breadcrumbs.push(<span>Etext</span>)
@@ -10755,7 +10776,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
          }
          else return ([           
                      
-            <div class="etext-header-breadcrumbs" >
+            !this.props.previewEtext && !this.props.disableInfiniteScroll && <div class="etext-header-breadcrumbs" >
                <div class="ariane" >
                   {breadcrumbs}
                </div>
