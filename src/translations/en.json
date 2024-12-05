@@ -313,7 +313,7 @@
       "tmp:hasInstance":"Version of this work",
       "tmp:hasInstance_plural":"Versions of this work",
       "tmp:noPagination": "You may have to find the right page yourself, because this is an unaligned etext.",
-      "tmp:BDRCworkId":"BDRC Work Id"
+      "tmp:BDRCworkId":"Work Page"
    },
    "guided":{
       "keyword":"keyword",
@@ -774,7 +774,10 @@
       "checkETlong":"Click to check the availability of another etext",
       "noOtherET":"No other etext available",
       "loginToPreview":"You must be logged in to open preview on BDRC",
-      "helpWorkId":"A <italic>Work</italic> in the BDRC context represents the conceptual essence of the cataloged resource: authors, languages, and what it is about (subjects). It connects together all the versions. See the user guide for more."
+      "helpWorkId":"A <italic>Work</italic> in the BDRC context represents the conceptual essence of the cataloged resource: authors, languages, and what it is about (subjects). It connects together all the versions. See the user guide for more.",
+      "workId1":"See the \"work\" page which combines all the different versions of this text.",
+      "workId2":"The ID of this version is {{ id }}.",
+      "workId3":"The overarching work ID is {{ id }}"
    },
    "tradition":{
       "boT":"Tibetan Tradition",

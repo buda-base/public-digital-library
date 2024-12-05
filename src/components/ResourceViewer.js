@@ -2277,7 +2277,12 @@ class ResourceViewer extends Component<Props,State>
             value:<span>
                <Link to={window.location.hostname === "localhost" || window.location.hostname.startsWith("library-dev") 
                      ? "/show/"+shortUri(prop[bdo+"instanceOf"]?.[0]?.value)
-                     : prop[bdo+"instanceOf"]?.[0]?.value}>{shortUri(prop[bdo+"instanceOf"]?.[0]?.value).split(":")[1]}</Link>                
+                     : prop[bdo+"instanceOf"]?.[0]?.value}>
+                        {I18n.t("resource.workId1")}
+               </Link>&#32;
+               {I18n.t("resource.workId2", {id:this.props.IRI.split(":")[1]})} 
+               <br/>
+               {I18n.t("resource.workId3", {id: shortUri(prop[bdo+"instanceOf"]?.[0]?.value).split(":")[1] } )} 
                <Tooltip placement="bottom-start" classes={{tooltip:"commentT",popper:"commentP"}} title={<div><Trans i18nKey="resource.helpWorkId" components={{ italic: <i /> }} /></div>} >
                   <HelpIcon class="material-icons help-workid"/>
                </Tooltip>
