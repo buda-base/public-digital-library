@@ -10603,14 +10603,16 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
       
          let level = 0
          if(back && this.props.that) { 
-            let labelMW, labelVL, labelUT
+            let labelMW, labelVL, labelUT, vol
             labelMW = this.props.that.getResourceElem(skos+"prefLabel", back)
             if(labelMW && !Array.isArray(labelMW)) labelMW = [labelMW]
             labelMW = getLangLabel(this,skos+"prefLabel",labelMW) 
             if(this.props.that.props.eTextRefs?.["@graph"]) {
                if(this.props.that.state.scope != etextRes) {
                   for(const n of this.props.that.props.eTextRefs?.["@graph"]) {
-                     if(n["@id"] === this.props.that.state.currentText) {
+                     if(n["@id"] === this.props.that.state.currentText && (!n.etextInVolume || this.props.that.state.scope != this.props.that.state.currentText) 
+                        || n.volumeHasEtext === this.props.that.state.currentText) {
+                        vol = n
                         labelVL = n["skos:prefLabel"] 
                         if(!labelVL && n.volumeNumber) labelVL = { "@language":this.props.locale, "@value": I18n.t("types.volume_num_noid",{num:n.volumeNumber}) }
                         if(labelVL && !Array.isArray(labelVL)) labelVL = [labelVL]
@@ -10626,7 +10628,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                   }
                }
             }
-            //console.log("lbls:", back, repro, labelMW, this.props.that.props.eTextRefs, labelVL, labelUT)
+            //console.log("lbls:", back, repro, vol, labelMW, this.props.that.props.eTextRefs, labelVL, labelUT)
             breadcrumbs.push(<Link  class="can-shrink" to={"/show/"+back}>{labelMW?.value ?? back}</Link>)         
             if(this.props.that.state.scope != etextRes) {
                let openText = (ev,ETres,reset) => {
@@ -10635,13 +10637,15 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                   this.props.that.setState({ currentText: reset?null:ETres, scope: ETres })                       
                }
                breadcrumbs.push(<Link to={"/show/"+etextRes+"#open-viewer"} onClick={(ev,)=>openText(ev,etextRes,true)}>{I18n.t("types.etext")}</Link>)
-               if(this.props.that.state.currentText != this.props.that.state.scope) {
+               if(this.props.that.state.currentText != this.props.that.state.scope && vol && Array.isArray(vol?.volumeHasEtext ?? []) && vol?.volumeHasEtext?.length > 1 ) {
                   breadcrumbs.push(<Link  class="can-shrink" to={"/show/"+etextRes+"?openEtext="+this.props.that.state.currentText+"#open-viewer"} onClick={(ev)=>openText(ev,this.props.that.state.currentText)}>{labelVL?.value ?? this.props.that.state.currentText}</Link>)
                   breadcrumbs.push(<span class="can-shrink">{labelUT?.value ?? this.props.that.state.scope}</span>)
                   level = 3
-               } else {
-                  breadcrumbs.push(<span class="can-shrink">{labelVL?.value ??this.props.that.state.currentText}</span>)
+               } else if(labelVL?.value) {
+                  breadcrumbs.push(<span class="can-shrink">{labelVL?.value}</span>)
                   level = 2
+               } else {
+                  //this.props.that.state.currentText
                }
             } else {
                breadcrumbs.push(<span>Etext</span>)
