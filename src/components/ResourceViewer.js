@@ -2279,7 +2279,7 @@ class ResourceViewer extends Component<Props,State>
                      ? "/show/"+shortUri(prop[bdo+"instanceOf"]?.[0]?.value)
                      : prop[bdo+"instanceOf"]?.[0]?.value}>
                         {I18n.t("resource.workId1")}
-               </Link>&#32;
+               </Link><span>&#32;</span>
                {I18n.t("resource.workId2", {id:this.props.IRI.split(":")[1]})} 
                <br/>
                {I18n.t("resource.workId3", {id: shortUri(prop[bdo+"instanceOf"]?.[0]?.value).split(":")[1] } )} 
