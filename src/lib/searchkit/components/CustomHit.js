@@ -132,7 +132,7 @@ const CustomHit = ({ hit, routing, that, sortItems, recent, storage, advanced /*
               }
 
               return ({
-                value: hit._highlightResult && hit._highlightResult[k] //&& hit._highlightResult[k][i]
+                value: hit._highlightResult && hit._highlightResult[k] && isMetaMatch //&& hit._highlightResult[k][i]
                     ? decode(withHL.replace(/<mark>/g,"↦").replace(/<\/mark>/g,"↤").replace(/↤ ↦/g, " "))
                     : h, 
                 num
