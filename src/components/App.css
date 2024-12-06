@@ -5704,7 +5704,7 @@ html[lang="en"] .resource .data > [data-prop="bdo:creator"] h4[data-prop="bdo:ro
 
 
 /* .resource.etext-view .etextPage [lang=bo] .highlight { margin-top:-4px;padding:4px 5px 0 5px ; line-height:20px; display: inline;} */
-.resource.etext-view .etextPage .highlight { font-weight:800; background:none; padding:0;} 
+/* .resource.etext-view .etextPage .highlight { font-weight:800; background:none; padding:0;}  */
 
 .resource.etext:not(#a) .data.bot-props #etext-scroll { display:none !important; }
 

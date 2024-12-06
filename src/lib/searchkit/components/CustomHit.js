@@ -47,6 +47,8 @@ const CustomHit = ({ hit, routing, that, sortItems, recent, storage, advanced /*
   const [note, setNote] = useState("")
   const [authorshipStatement, setAuthorshipStatement] = useState("")
   const [etextHits, setEtextHits] = useState([])
+  const [nbEtextHits, setNbEtextHits] = useState(0)
+  const [etextLink, setEtextLink] = useState("")
   const [seriesName, setSeriesName] = useState("")
 
   const [showMore, setShowMore] = useState({})
@@ -55,13 +57,24 @@ const CustomHit = ({ hit, routing, that, sortItems, recent, storage, advanced /*
   const { uiState, indexUiState } = useInstantSearch()
   const { sortBy, refinementList } = uiState?.[process.env.REACT_APP_ELASTICSEARCH_INDEX]
 
+  const isMetaMatch = useMemo(() => {
+    for(const k of Object.keys(hit._highlightResult)) {
+        if(k.startsWith("prefLabel_") || k.startsWith("altLabel_")) {
+          if(hit._highlightResult[k].some(r => r.matchLevel && r.matchLevel != "none")) return true
+        }
+    }
+    return false
+  }, [hit?._highlightResult])
+
   const 
     page = that.props.location.pathname,
     uri = qs.stringify(routing.stateMapping.stateToRoute(uiState,true), { arrayFormat: 'index' }),
     backLink = "?"+(!isOtherVersions?"s="+encodeURIComponent(page+(uri ? "?"+encodeURIComponent(uri) : ""))+"&":"")
       +(hit.etext_instance?"openEtext=bdr:"+hit.etext_vol+"&scope=bdr:"+hit.objectID+"&":"")
       +(hit.etext_quality === 3 ? "unaligned=true" : ""),
-    link = "/show/bdr:"+(hit.etext_instance?hit.etext_instance:hit.objectID)+backLink
+    link = isMetaMatch 
+      ? "/show/bdr:"+(hit.etext_instance?hit.etext_instance:hit.objectID)+backLink
+      : etextLink
 
   useEffect(() => {
     const labels = {}
@@ -243,7 +256,7 @@ const CustomHit = ({ hit, routing, that, sortItems, recent, storage, advanced /*
     //console.log("labels:", labels, newShow)
 
     const newEtextHits = []
-    let n = 0
+    let n = 0, etextLink
     //if(hit.inner_hits?.etext?.hits?.hits?.length > 0) {
     let ekeys = Object.keys(hit.inner_hits ?? {})
     if(ekeys.length > 0) for(const ek of ekeys) {
@@ -271,7 +284,7 @@ const CustomHit = ({ hit, routing, that, sortItems, recent, storage, advanced /*
 
             newShow.etext = true                  
             if(n > 0) { 
-              if(!expand.etext || n >= 5) continue
+              //if(!expand.etext || n >= 5) continue
             }
             
             let c = h.join("")
@@ -290,19 +303,29 @@ const CustomHit = ({ hit, routing, that, sortItems, recent, storage, advanced /*
 
             }
 
-            let detec = narrowWithString(c)      
-            //console.log("c:",c,detec)
-            const label = getLangLabel(that, fullUri("tmp:textMatch"), [{lang:detec[0]==="tibt"?"bo":"bo-x-ewts", value:(c ?? "").replace(/<em>/g,"↦").replace(/<\/em>/g,"↤").replace(/↤ ↦/g, " ")}])          
+            
+            if(newEtextHits?.length === 0) { 
 
-            detec = narrowWithString(indexUiState.query)      
-            let kw = '"'+indexUiState.query+'"@'+(detec[0]==="tibt"?"bo":"bo-x-ewts")
+              etextLink = "/show/bdr:"+vol._source.etext_instance+backLink+"&scope=bdr:"+vol._id+"&openEtext=bdr:"+vol._source.etext_vol+"&startChar="+(ch._source.cstart-1000)+(n?"&ETselect="+n:"")+"&ETkeyword="+indexUiState.query+"#open-viewer"
 
-            newEtextHits.push(<Link to={"/show/bdr:"+vol._source.etext_instance+backLink+"&scope=bdr:"+vol._id+"&openEtext=bdr:"+vol._source.etext_vol+"&startChar="+(ch._source.cstart-1000)+(n?"&ETselect="+n:"")+"&ETkeyword="+indexUiState.query+"#open-viewer"}>{highlight(label.value, expand.etext && text ? indexUiState.query : undefined, undefined 
-              /* // fixes crash when expand result on /osearch/search?author%5B0%5D=P1583&etext_quality%5B0%5D=0.95-1.01&q=klong%20chen%20rab%20%27byams%20pa%20dri%20med%20%27od%20zer&etext_search%5B0%5D=true
-               // (uncomment to get pagination in etext results)
-              , undefined, expand.etext && text
-              */
-            )}</Link>)
+              let detec = narrowWithString(c)      
+              //console.log("c:",c,detec)
+              const label = getLangLabel(that, fullUri("tmp:textMatch"), [{lang:detec[0]==="tibt"?"bo":"bo-x-ewts", value:(c ?? "").replace(/<em>/g,"↦").replace(/<\/em>/g,"↤").replace(/↤ ↦/g, " ")}])          
+  
+              detec = narrowWithString(indexUiState.query)    
+
+              let kw = '"'+indexUiState.query+'"@'+(detec[0]==="tibt"?"bo":"bo-x-ewts")
+                newEtextHits.push(
+              // <Link to={"/show/bdr:"+vol._source.etext_instance+backLink+"&scope=bdr:"+vol._id+"&openEtext=bdr:"+vol._source.etext_vol+"&startChar="+(ch._source.cstart-1000)+(n?"&ETselect="+n:"")+"&ETkeyword="+indexUiState.query+"#open-viewer"}>{
+                highlight(label.value, expand.etext && text ? indexUiState.query : undefined, undefined 
+                /* // fixes crash when expand result on /osearch/search?author%5B0%5D=P1583&etext_quality%5B0%5D=0.95-1.01&q=klong%20chen%20rab%20%27byams%20pa%20dri%20med%20%27od%20zer&etext_search%5B0%5D=true
+                // (uncomment to get pagination in etext results)
+                , undefined, expand.etext && text
+                */
+              )
+              // }</Link>
+              )
+            }
 
             n++
 
@@ -311,6 +334,8 @@ const CustomHit = ({ hit, routing, that, sortItems, recent, storage, advanced /*
       }
     }
     setEtextHits(newEtextHits)
+    setNbEtextHits(n)
+    setEtextLink(etextLink)
 
 
   }, [hit, that.props.langPreset, expand, refinementList, sortBy, that.props.location])
@@ -367,7 +392,7 @@ const CustomHit = ({ hit, routing, that, sortItems, recent, storage, advanced /*
     return t.map(s => getPropLabel(that,fullUri("bdr:"+s), true, false)).map((s,i) => i > 0 ? ([<span style={{whiteSpace:"pre"}} lang={that.props.locale}>{I18n.t("punc.comma")}</span>,s]):s)
   }
 
-  //console.log("hit:", hit, link, that.props.location?.search, sortBy, refinementList, uiState, publisher, storage)
+  //console.log("hit:", hit, isMetaMatch, link, that.props.location?.search, sortBy, refinementList, uiState, publisher, storage)
 
   return (<div class={"result "+hit.type}>        
     <div class="main">
@@ -393,12 +418,32 @@ const CustomHit = ({ hit, routing, that, sortItems, recent, storage, advanced /*
           <Link to={link}>
             <span class="T">
               { hit.placeType ? getPlaceTypeLabels(hit.placeType) : getPropLabel(that,fullUri("bdr:"+hit.type), true, false, "types."+(hit.type+"").toLowerCase())}
-              { hit.script && hit.script.map(s => <span title={getPropLabel(that,fullUri('bdo:script'),false)+I18n.t("punc.colon")+" "+getPropLabel(that, fullUri("bdr:"+s), false)} data-lang={s.replace(/.*Script/)}>{s.replace(/^.*Script/,"")}</span>)}
+              { isMetaMatch 
+                ? hit.script && hit.script.map(s => <span title={getPropLabel(that,fullUri('bdo:script'),false)+I18n.t("punc.colon")+" "+getPropLabel(that, fullUri("bdr:"+s), false)} data-lang={s.replace(/.*Script/)}>{s.replace(/^.*Script/,"")}</span>) 
+                : <span>{I18n.t("types.etext")}</span>}
             </span>
             {/* {{ hit.author && <Link to={"/show/bdr:"+hit.author}>{hit.author}</Link> } */} 
             { title }
           </Link>
 
+
+        {
+          !isMetaMatch && etextHits.length > 0 && <span class="names etext-hits">
+            <span class="label red">{I18n.t("types.etext")}<span class="colon">:</span></span>
+            <span>
+              {etextHits.map((h,i) => i === 0 && <span>{h}</span>)}
+              {/* { showMore.etext && <span className="toggle" onClick={() => toggleExpand("etext")}>{I18n.t(expand.etext ?"misc.hide":"Rsidebar.priority.more")}</span>} */}
+             </span>
+          </span>
+        } 
+        {
+          !isMetaMatch && nbEtextHits > 0 && <span class="names">
+            <span class="label">{I18n.t("result.nHitET", {count: nbEtextHits})}<span class="colon">:</span></span>
+            <span>
+              <span>{nbEtextHits}</span>
+            </span>
+          </span>
+        } 
 
         { !isOtherVersions && names.length > 0 && <>
           <span class="names noNL">
@@ -418,9 +463,13 @@ const CustomHit = ({ hit, routing, that, sortItems, recent, storage, advanced /*
         { 
           hit.inRootInstance?.length > 0 && <span class="names inRoot noNL">
             <span class="label">{I18n.t("result.inRootInstance"+(isOtherVersions?"S":""))}{!isOtherVersions?<span class="colon">:</span>:null}</span>
-            <span>{hit.inRootInstance?.map(a => <span data-id={a}><Link to={"/show/bdr:"+a+backLink+"&part=bdr:"+hit.objectID}>{
+            <span>{hit.inRootInstance?.map(a => <span data-id={a}>
+              {/* <Link to={"/show/bdr:"+a+backLink+"&part=bdr:"+hit.objectID}> */}
+              {
               getPropLabel(that, fullUri("bdr:"+a), true, true, "", 1, storage, true) ?? a
-            }</Link></span>)}</span>
+              }
+              {/* </Link> */}
+              </span>)}</span>
           </span> 
         }
         {!isOtherVersions && <>{
@@ -431,9 +480,12 @@ const CustomHit = ({ hit, routing, that, sortItems, recent, storage, advanced /*
               <span className="author-links">
               {(hit.author ?? []) //.concat(hit.translator ?? [])
                 .map(a => <span data-id={a}>
-                  <Link to={"/show/bdr:"+a+backLink}>{ 
+                  {/* <Link to={"/show/bdr:"+a+backLink}> */}
+                  { 
                     getPropLabel(that, fullUri("bdr:"+a), true, true, "", 1, storage, true) ?? a 
-                  }</Link></span>
+                  }
+                  {/* </Link> */}
+                  </span>
               )}
               </span>
               { authorshipStatement.length > 0 && <span className="authorship">
@@ -444,6 +496,15 @@ const CustomHit = ({ hit, routing, that, sortItems, recent, storage, advanced /*
           </span> 
         }
         
+        {
+          isMetaMatch && nbEtextHits > 0 && <span class="names">
+            <span class="label">{I18n.t("result.nHitET", {count: nbEtextHits})}<span class="colon">:</span></span>
+            <span>
+              <span>{nbEtextHits}</span>
+            </span>
+          </span>
+        } 
+
         { hit.extent && <>
           <span class="names noNL">
             <span class="label capitalize">{getPropLabel(that, fullUri("bdo:extentStatement"), true, true)}<span class="colon">:</span></span>
@@ -463,7 +524,11 @@ const CustomHit = ({ hit, routing, that, sortItems, recent, storage, advanced /*
           seriesName && <span class="names inRoot noNL">
             <span class="label">{I18n.t("types.serial")}<span class="colon">:</span></span>
             <span>{hit.seriesName_res?.length > 0
-              ? hit.seriesName_res.map(a => <span data-id={a}><Link to={"/show/bdr:"+a+backLink}>{seriesName}</Link></span>)
+              ? hit.seriesName_res.map(a => <span data-id={a}>
+                {/* <Link to={"/show/bdr:"+a+backLink}> */}
+                {seriesName}
+                {/* </Link> */}
+                </span>)
               : seriesName
               }</span>
           </span> 
@@ -471,9 +536,13 @@ const CustomHit = ({ hit, routing, that, sortItems, recent, storage, advanced /*
         { 
           hit.locatedIn?.length > 0 && <span class="names locatedIn noNL">
             <span class="label capitalize">{getPropLabel(that, fullUri("bdo:placeLocatedIn"), true, true)}<span class="colon">:</span></span>
-            <span>{hit.locatedIn?.map(a => <span data-id={a}><Link to={"/show/bdr:"+a}>{
+            <span>{hit.locatedIn?.map(a => <span data-id={a}>
+              {/* <Link to={"/show/bdr:"+a}> */}
+              {
               getPropLabel(that, fullUri("bdr:"+a), true, true, "", 1, storage, true) ?? a
-            }</Link></span>)}</span>
+              }
+              {/* </Link> */}
+              </span>)}</span>
           </span> 
         }
         {
@@ -487,15 +556,6 @@ const CustomHit = ({ hit, routing, that, sortItems, recent, storage, advanced /*
             </span>
           </>
         }
-        {
-          etextHits.length > 0 && <span class="names etext-hits">
-            <span class="label">{I18n.t("types.etext")}<span class="colon">:</span></span>
-            <span>
-              {etextHits.map(h => <span>{h}</span>)}
-              { showMore.etext && <span className="toggle" onClick={() => toggleExpand("etext")}>{I18n.t(expand.etext ?"misc.hide":"Rsidebar.priority.more")}</span>}
-             </span>
-          </span>
-        } 
         </>}</div>
     </div>
     {

@@ -187,16 +187,16 @@ svg.help-workid { opacity:0.55; width:18px; vertical-align: -4px; margin-left:8p
 .AppSK .result .highlight,
 .AppSK .ais-Highlight-highlighted, 
 .AppSK .ais-Snippet-highlighted {
-   /* background-color:#fce08d; */
+   background-color:#fce08d;
    font-weight:700;
    color:black;
-   /* padding:1px 5px; */
+   padding:1px 3px;
 }
 
 .AppSK .result a .highlight,
 .AppSK a .ais-Highlight-highlighted, 
 .AppSK a .ais-Snippet-highlighted {
-  color:#d73449;
+  /* color:#d73449; */
 }
 
 .AppSK .ais-RefinementList-checkbox {
@@ -544,18 +544,19 @@ header[data-hits="0"] ~ .hits .pagination,
 
 .AppSK:not(#a) .result .data > a {
   text-decoration: none;
-  color:#d73449;
+  /* color:#d73449; */
 }
 
 .AppSK .result:hover .data .names a:hover,
 .AppSK .result:hover .data > a .T + span:hover {
   text-decoration: underline;
-  color:#d73449;
+  /* color:#d73449; */
 }
 
 .AppSK .result .data > a > span:not(.T) span {
-  color:#d73449;
-  font-weight:500;
+  /* color:#d73449; */
+  color:black;
+  font-weight:600;
   font-size:15px;
 }
 
@@ -614,6 +615,11 @@ header[data-hits="0"] ~ .hits .pagination,
   margin-right:5px;
   float:left;
   flex-shrink: 0;
+}
+
+
+.AppSK .result .data .names > .label.red {
+  color:#d73449;
 }
 
 .AppSK .result .data .names > .label + span {
