@@ -374,8 +374,8 @@
       "hitKW_plural":"{{count}} hits for \"{{kw}}\"",
       "added":"Added {{date}}",
       "inRootInstanceS": "in",
-      "nHitET":"Hit in etext",
-      "nHitET_plural":"Hits in etext"
+      "nHitET":"Match in etext",
+      "nHitET_plural":"Matches in etext"
    },
    "map": {
       "touch": "Use two fingers to move the map",
