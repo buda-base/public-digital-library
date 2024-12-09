@@ -2810,7 +2810,7 @@ a.result + #matches .result-content::before { left:110px; width:calc(100% - 110p
 
 .AppSK .result .thumb a .RID,
 .result-content #icon .RID { color: rgba(118, 118, 118, 0.9); font-size:9px;font-weight:600; 
-      max-width: 100px;  overflow: hidden; position: relative; text-overflow: ellipsis; text-align: center; margin: 5px auto; white-space: nowrap;
+      max-width: 130px;  overflow: hidden; position: relative; text-overflow: ellipsis; text-align: center; margin: 5px auto; white-space: nowrap;
 }
       
 .result-content .contenu { display:inline-block; margin-left:160px; max-width: calc(100% - 160px - 20px); vertical-align: top; }

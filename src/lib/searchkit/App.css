@@ -570,6 +570,12 @@ header[data-hits="0"] ~ .hits .pagination,
   align-items: baseline;
 }
 
+.AppSK .result .data .etext-label:not(#a) {
+  font-size:15px;
+  font-weight:600;
+  color:black;
+}
+
 .AppSK .result .data .names > span {
   display:inline;
   flex-wrap: wrap;
@@ -648,6 +654,24 @@ header[data-hits="0"] ~ .hits .pagination,
   /* margin-left:5px; */
 }
 
+
+.AppSK .result .thumb .etext-type {
+  position: absolute;
+  z-index:1;
+  background-color:#fce08d;
+  left:50%;
+  margin-left:-40px;
+  width:80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 28px;
+  border-radius:13px;
+  border:1px solid white;
+  font-size:12px;
+  font-weight:600;
+  top:10px;
+}
 
 .AppSK:not(#a) .result .thumb .quality:not(#a) {
   display: inline;

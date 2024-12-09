@@ -72,7 +72,7 @@ const CustomHit = ({ hit, routing, that, sortItems, recent, storage, advanced /*
     backLink = "?"+(!isOtherVersions?"s="+encodeURIComponent(page+(uri ? "?"+encodeURIComponent(uri) : ""))+"&":"")
       +(hit.etext_instance?"openEtext=bdr:"+hit.etext_vol+"&scope=bdr:"+hit.objectID+"&":"")
       +(hit.etext_quality === 3 ? "unaligned=true" : ""),
-    link = isMetaMatch 
+    link = isMetaMatch || !etextHits.length 
       ? "/show/bdr:"+(hit.etext_instance?hit.etext_instance:hit.objectID)+backLink
       : etextLink
 
@@ -132,7 +132,7 @@ const CustomHit = ({ hit, routing, that, sortItems, recent, storage, advanced /*
               }
 
               return ({
-                value: hit._highlightResult && hit._highlightResult[k] && isMetaMatch //&& hit._highlightResult[k][i]
+                value: hit._highlightResult && hit._highlightResult[k] && (isMetaMatch || !etextHits.length) //&& hit._highlightResult[k][i]
                     ? decode(withHL.replace(/<mark>/g,"↦").replace(/<\/mark>/g,"↤").replace(/↤ ↦/g, " "))
                     : h, 
                 num
@@ -316,14 +316,14 @@ const CustomHit = ({ hit, routing, that, sortItems, recent, storage, advanced /*
 
               let kw = '"'+indexUiState.query+'"@'+(detec[0]==="tibt"?"bo":"bo-x-ewts")
                 newEtextHits.push(
-              // <Link to={"/show/bdr:"+vol._source.etext_instance+backLink+"&scope=bdr:"+vol._id+"&openEtext=bdr:"+vol._source.etext_vol+"&startChar="+(ch._source.cstart-1000)+(n?"&ETselect="+n:"")+"&ETkeyword="+indexUiState.query+"#open-viewer"}>{
+              <Link to={"/show/bdr:"+vol._source.etext_instance+backLink+"&scope=bdr:"+vol._id+"&openEtext=bdr:"+vol._source.etext_vol+"&startChar="+(ch._source.cstart-1000)+(n?"&ETselect="+n:"")+"&ETkeyword="+indexUiState.query+"#open-viewer"}>{
                 highlight(label.value, expand.etext && text ? indexUiState.query : undefined, undefined 
                 /* // fixes crash when expand result on /osearch/search?author%5B0%5D=P1583&etext_quality%5B0%5D=0.95-1.01&q=klong%20chen%20rab%20%27byams%20pa%20dri%20med%20%27od%20zer&etext_search%5B0%5D=true
                 // (uncomment to get pagination in etext results)
                 , undefined, expand.etext && text
                 */
               )
-              // }</Link>
+              }</Link>
               )
             }
 
@@ -399,6 +399,11 @@ const CustomHit = ({ hit, routing, that, sortItems, recent, storage, advanced /*
       <Link to={link} className="BG-link"></Link>
       <div class={"num-box "+(checked?"checked":"")} onClick={() => setChecked(!checked) }>{hit.__position}</div>
       <div class={"thumb "+(img&&!imgError?"hasImg":"")}>      
+        { !isMetaMatch && etextHits.length && <span class="etext-type">
+            <img src="/icons/sidebar/etext.svg"/>
+            &nbsp;
+            {I18n.t("types.etext")}
+          </span>}
         <Link to={link}>
           { !imgError && img && <span class="img"><img src={img} onError={() => setImgError(true)}/></span> }
           <span class="RID">{hit.objectID}</span>
@@ -414,7 +419,7 @@ const CustomHit = ({ hit, routing, that, sortItems, recent, storage, advanced /*
             </span>} 
         </Link>        
       </div>
-      <div class="data">      
+      <div class="data">                 
           <Link to={link}>
             <span class="T">
               { hit.placeType ? getPlaceTypeLabels(hit.placeType) : getPropLabel(that,fullUri("bdr:"+hit.type), true, false, "types."+(hit.type+"").toLowerCase())}
@@ -423,13 +428,13 @@ const CustomHit = ({ hit, routing, that, sortItems, recent, storage, advanced /*
                 : <span>{I18n.t("types.etext")}</span>}
             </span>
             {/* {{ hit.author && <Link to={"/show/bdr:"+hit.author}>{hit.author}</Link> } */} 
-            { title }
+            { !isMetaMatch && etextHits.length ? <span class="etext-label"><i>Etext for: </i> { title }</span> : title }
           </Link>
 
 
         {
           !isMetaMatch && etextHits.length > 0 && <span class="names etext-hits">
-            <span class="label red">{I18n.t("types.etext")}<span class="colon">:</span></span>
+            <span class="label red">{/* {I18n.t("types.etext")}<span class="colon">:</span> */}</span>
             <span>
               {etextHits.map((h,i) => i === 0 && <span>{h}</span>)}
               {/* { showMore.etext && <span className="toggle" onClick={() => toggleExpand("etext")}>{I18n.t(expand.etext ?"misc.hide":"Rsidebar.priority.more")}</span>} */}
