@@ -10916,7 +10916,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
             }
          }
          let get = qs.parse(this.props.location.search)          
-         let theDataTop = this.renderData(false, topProps,iiifpres,title,otherLabels,"top-props","main-info",versionTitle?[this.renderGenericProp(versionTitle, _tmp+"versionTitle", this.format("h4",_tmp+"versionTitle","",false,"sub",[{...versionTitle, type:"literal"}]), undefined, get)]:[],[], { [_tmp+"outline"]: theOutline, [_tmp+"map"]: hasMap.length ? header : undefined, [_tmp+"findText"]: _T != "Instance" && shouldShowOtherInstances && hasMap.length ? findText : undefined})      
+         let theDataTop = this.renderData(false, topProps,iiifpres,title,otherLabels,"top-props","main-info",versionTitle?[this.renderGenericProp(versionTitle, _tmp+"versionTitle", this.format("h4",_tmp+"versionTitle","",false,"sub",[{...versionTitle, type:"literal"}]), undefined, get)]:[],[], { [_tmp+"outline"]: theOutline, [_tmp+"map"]: hasMap.length ? header : undefined, [_tmp+"findText"]: _T != "Instance" && (shouldShowOtherInstances || hasMap.length) ? findText : undefined})      
 
          console.log("serial:", this.props.IRI, serial, ilabel)
 

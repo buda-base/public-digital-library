@@ -399,7 +399,7 @@ const CustomHit = ({ hit, routing, that, sortItems, recent, storage, advanced /*
       <Link to={link} className="BG-link"></Link>
       <div class={"num-box "+(checked?"checked":"")} onClick={() => setChecked(!checked) }>{hit.__position}</div>
       <div class={"thumb "+(img&&!imgError?"hasImg":"")}>      
-        { !isMetaMatch && etextHits.length && <span class="etext-type">
+        { !isMetaMatch && etextHits.length > 0 && <span class="etext-type">
             <img src="/icons/sidebar/etext.svg"/>
             &nbsp;
             {I18n.t("types.etext")}
@@ -423,12 +423,12 @@ const CustomHit = ({ hit, routing, that, sortItems, recent, storage, advanced /*
           <Link to={link}>
             <span class="T">
               { hit.placeType ? getPlaceTypeLabels(hit.placeType) : getPropLabel(that,fullUri("bdr:"+hit.type), true, false, "types."+(hit.type+"").toLowerCase())}
-              { isMetaMatch 
+              { isMetaMatch || etextHits.length == 0
                 ? hit.script && hit.script.map(s => <span title={getPropLabel(that,fullUri('bdo:script'),false)+I18n.t("punc.colon")+" "+getPropLabel(that, fullUri("bdr:"+s), false)} data-lang={s.replace(/.*Script/)}>{s.replace(/^.*Script/,"")}</span>) 
                 : <span>{I18n.t("types.etext")}</span>}
             </span>
             {/* {{ hit.author && <Link to={"/show/bdr:"+hit.author}>{hit.author}</Link> } */} 
-            { !isMetaMatch && etextHits.length ? <span class="etext-label"><i>Etext for: </i> { title }</span> : title }
+            { !isMetaMatch && etextHits.length > 0 ? <span class="etext-label"><i>Etext for: </i> { title }</span> : title }
           </Link>
 
 

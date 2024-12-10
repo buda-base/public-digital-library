@@ -160,7 +160,7 @@ export class InnerSearchPage extends Component<State, Props>
               */
           >
             <Loader loaded={!this.props.loading}/>
-            <div data-props="tmp:search">
+            <div data-prop="tmp:search">
               { !recent && <div className="searchbox">
                 <h3><span><a class="propref"><span>{leftTitle}{I18n.t("punc.colon")}</span></a></span></h3>
                 <div className="search inner-search-bar group">

@@ -5445,7 +5445,7 @@ html[lang="en"] .resource .data > [data-prop="bdo:creator"] h4[data-prop="bdo:ro
 .resource .data.related h2 + a { position:absolute;text-transform:uppercase;font-weight:500;border-bottom:2px solid black; 
    height:24px; right:35px; cursor:pointer; padding-top:14px; color:#343434;}
 
-.resource .data.ext-props > a:first-child { bottom: 70px; right: auto;left: 110px; z-index: 1;}
+.resource .data.ext-props > a:first-child { bottom: 70px; right: auto;left: 100px; z-index: 1;}
 
 .resource .data.ext-props + .ext-props { position:relative; }
 

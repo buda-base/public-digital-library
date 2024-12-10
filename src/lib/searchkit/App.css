@@ -141,6 +141,7 @@
 }
 
 
+.AppSK br + .ais-RefinementList[data-id='nocomm_search'],
 .AppSK .ais-RefinementList[data-id='nocomm_search']+[data-id='etext_search'],
 .AppSK .ais-RefinementList[data-id='etext_access']+[data-id='etext_quality'],
 .AppSK .ais-RefinementList[data-id='etext_access']+[data-id='etext_access'],
@@ -298,7 +299,7 @@ svg.help-workid { opacity:0.55; width:18px; vertical-align: -4px; margin-left:8p
   margin-top:-30px;
 }
 
-.resource .AppSK.InnerSearchPage:not(#a) > [data-props]:not(#a) {
+.resource .AppSK.InnerSearchPage:not(#a) > [data-prop]:not(#a) {
   display:block !important;
 }
 
@@ -863,6 +864,10 @@ header[data-hits="0"] ~ .hits .pagination,
   background:#ccc5;
 }
 
+
+.resource .top-props > .AppSK [data-prop="tmp:search"] {
+  width:calc(100% + 70px);
+}
 
 .resource [data-prop="tmp:outline"] #outline > h2 {
   display: none;
