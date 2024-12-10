@@ -4140,10 +4140,19 @@ class ResourceViewer extends Component<Props,State>
                <div /*style={{pointerEvents:"none"}}*/ >
                   <span id="anchor">
                      { (e.start !== undefined) && <Link to={loca.pathname+loca.search+"#open-viewer"} onClick={(ev) => {
-                           const ETres = e.link.replace(/^.*openEtext=([^#&]+)[#&].*$/,"$1")
-                           this.props.onLoading("etext", true)
-                           this.props.onReinitEtext(ETres) 
-                        }}><img style={{width:"16px"}} src="/icons/PLINK_small.svg"/></Link> }
+                              /*
+                              const ETres = e.link.replace(/^.*openEtext=([^#&]+)[#&].*$/,"$1")
+                              this.props.onLoading("etext", true)
+                              this.props.onReinitEtext(ETres) 
+                              */
+                              const text = window.location.origin+loca.pathname+loca.search+"#open-viewer"
+                              navigator.clipboard.writeText(text)
+                              prompt(I18n.t("misc.cbET"), text)
+                              ev.preventDefault()
+                              ev.stopPropagation()
+                              return false
+                           }}><img style={{width:"16px"}} src="/icons/PLINK_small.svg"/>
+                           </Link>}
                      <img src="/icons/info.svg" onClick={this.toggleHoverM(ID)} />
                   </span> 
                </div>

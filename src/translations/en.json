@@ -498,7 +498,8 @@
       "expand":"Expand",
       "otherR":"Other resource",
       "otherR_plural":"Other resources",
-      "see10MoreN": "See {{count}} More"
+      "see10MoreN": "See {{count}} More",
+      "cbET": "Link to this page copied to clipboard."
    },
    "lang": {
       "en": "English",
