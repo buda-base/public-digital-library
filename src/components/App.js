@@ -1168,8 +1168,10 @@ export function top_right_menu(that,etextTitle,backUrl,etextres,isMirador,locati
                      ev.stopPropagation()
                      return false
                   }
-               } }><img src="/icons/BUDA-small.svg"/><span>BUDA</span></Link>                                  
-               <a id="by"><span>by</span></a>
+               } }><img src="/icons/BUDA-small.svg"/><span class="buda-caption"><span>BUDA</span><span class="buda-small">{I18n.t("home.buda")}</span></span></Link>                                  
+               
+               {/* <a id="by">
+                  <span>by</span></a>
                { !onZhMirror && [
                   <a href={"https://bdrc.io/"} target="_blank" id="BDRC"><span>BDRC</span></a>,
                   <a href={"https://bdrc.io/"} target="_blank"><img src="/BDRC-Logo_.png"/></a>
@@ -1177,7 +1179,7 @@ export function top_right_menu(that,etextTitle,backUrl,etextres,isMirador,locati
                { onZhMirror && [
                   <Link to={"/static/about"} id="BDRC"><span>BDRC</span></Link>,
                   <Link to={"/static/about"} ><img src="/BDRC-Logo_.png"/></Link>
-               ]}
+               ]} */}
             </div>,
 
    ]
@@ -1213,14 +1215,21 @@ export function top_right_menu(that,etextTitle,backUrl,etextres,isMirador,locati
       && !location.pathname.includes("/buda-user-guide") 
       && that.props.config?.msg?.some((m,i) => m.popup && (!m.condition || eval(m.condition)) && !that.state.collapse["msgPopup"+(m.id?"-"+m.id:"")])
 
+   let corpo_lang = that.props.locale
+   if(corpo_lang.startsWith("bo")) corpo_lang = "bo"
+   else if(corpo_lang.startsWith("zh")) corpo_lang = "zh-hans"
+
    const overNav = (
          <div class="over-nav" style={{ ...isMirador?{position:"absolute"}:{} }}>
             <div>
                <div><i>{I18n.t("topbar.preserving")}</i></div>
                <div style={{ textTransform: "capitalize" }}>
-                  <a href="https://www.bdrc.io/about-us" target="_blank" rel="nofollow">{I18n.t("topbar.about")}</a>
-                  <Link to="/buda-user-guide">{I18n.t("topbar.guide")}</Link>
-                  <a href="https://bdrc.io/donation" target="_blank" rel="nofollow">{I18n.t("topbar.donate")}</a>
+                  <a href={"https://www.bdrc.io?lang="+corpo_lang} target="_blank" rel="nofollow" class="BDRC-link"><img src="/BDRC-Logo_.png"/>{I18n.t("topbar.BDRC")}</a>
+                  <a href={"https://www.bdrc.io/buda-archive?lang="+corpo_lang} target="_blank" rel="nofollow">{I18n.t("topbar.aboutB")}</a>
+                  <a href={"https://www.bdrc.io/news?lang="+corpo_lang} target="_blank" rel="nofollow">{I18n.t("topbar.news")}</a>
+                  <a href={"https://www.bdrc.io/programs?lang="+corpo_lang} target="_blank" rel="nofollow">{I18n.t("topbar.programs")}</a>
+                  {/* <Link to="/buda-user-guide">{I18n.t("topbar.guide")}</Link> */}
+                  <a href={"https://bdrc.io/donation?lang="+corpo_lang} target="_blank" rel="nofollow">{I18n.t("topbar.donate")}</a>
                </div>
             </div>
          </div>
@@ -7589,14 +7598,16 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   <div class="fond-logo">
                      <a id="logo" target="_blank" old-href="https://www.tbrc.org/">
                         {/* <img src="/logo.svg" style={{width:"200px"}} /> */}
-                        <img src="/pichome.jpg" />
+                        {/* <img src="/pichome.jpg" /> */}
+                        <img src="library-hero.jpg" />
                         <div>
                            <div>
                               {/* { I18n.t("home.BUDA") } */}
                               {/* <h1>{ I18n.t("home.titleBDRC1") }<br/>{ I18n.t("home.titleBDRC2") }<br/>{ I18n.t("home.titleBDRC3") }</h1> */}
-                              <h1 lang={this.props.locale}>{ I18n.t("home.archives1") }{this.props.locale==="en" && <br/>}{ I18n.t("home.archives2") }</h1>
+                              {/* <h1 lang={this.props.locale}>{ I18n.t("home.archives1") }{this.props.locale==="en" && <br/>}{ I18n.t("home.archives2") }</h1> */}
+                              <h1 lang={this.props.locale}>{ I18n.t("home.buda") }</h1>                              
                               <div>{ I18n.t("home.by") }</div>
-                              <span>{ I18n.t("home.subtitle") }</span>
+                              <span>{ I18n.t("home.subtitle_new") }</span>
                            </div>
                         </div>
                      </a>

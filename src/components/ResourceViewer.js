@@ -8652,7 +8652,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
             let tLabel 
             //loggergen.log("e:",e,tag,pType,parts);
             if(pType) {
-               if(Array.isArray(pType)) pType = pType[0]
+               if(Array.isArray(e["type"])) pType = "bdo:"+e["type"].find(p => parts['bdo:'+p])
                tLabel = getOntoLabel(this.props.dictionary,this.props.locale,fullUri(pType))
                tLabel = tLabel[0].toUpperCase() + tLabel.slice(1)
                // TODO use translation from ontology
@@ -8706,11 +8706,15 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
             }
             */
 
+            let pT = <div>{parts["?"]}</div>
+            if(pType && parts[pType]) pT = <div>{parts[pType]}</div>
+            else pT = <div>{pType}</div>
+
             ret.push(<span {...ref} class={'top' + (/*this.state.collapse[tag]*/ isCurrent?" on":"") }>
                   {(e.hasPart && !open) && <img src="/icons/triangle.png" onClick={(ev) => toggle(null,root,e["@id"],!e.hasPart?"details":"",!e.hasPart && mono, e)} className="xpd right"/>}
                   {(e.hasPart && open) && <img src="/icons/triangle_.png" onClick={(ev) => toggle(null,root,e["@id"],!e.hasPart?"details":"",!e.hasPart && mono, e)} className="xpd"/>}
                   <span class={"parTy "+(/*e.details*/isCurrent?"on":"") } {...e.details?{title: I18n.t("resource."+(openD?"hideD":"showD")), onClick:(ev) => toggle(ev,root,e["@id"],"details",!e.hasPart && mono,e) /*openText()*/ }:{title:tLabel}} >
-                     {pType && parts[pType] ? <div>{parts[pType]}</div> : <div>{parts["?"]}</div> }
+                  {pT}
                   </span>
                   <span>{this.uriformat(_tmp+"withEtextPrefLang",{type:'uri', value:gUri, volume:fUri, data:e, inOutline: (!e.hasPart?tag+"-details":tag), /*url:"/show/"+e.link,*/ debug:false, noid:true, toggle:(ev) => toggle(null,root,e["@id"],/*!e.hasPart?"details":*/"",!e.hasPart && (mono || ut), e)  })}</span>
                   <div class="abs">                  

@@ -201,18 +201,18 @@ body { overflow:auto !important;padding-right:0 !important; /*font-family:"Robot
    height:100%;
    position:absolute;
    display:flex;
-   align-items: center;
+   align-items: flex-end;
    justify-content: flex-end;
    top:0;
 }
 .SearchPane #logo > div > div {
-   width:585px; height:300px; background:white;padding:0px 50px;box-sizing: border-box;
+   width:620px; height:230px; background:white;padding:0px 30px;box-sizing: border-box;
    font-size:24px;color:black;line-height:28px; display:flex; flex-direction: column; justify-content: center; align-items: flex-start;
 }
 
-.SearchPane #logo h1 { font-size:46px; color: #152631; font-size: 46px; font-weight: 900; font-family:"Noto Sans TC","Noto Sans", "Noto Serif Tibetan", "Noto Serif Khmer", "Noto Sans Mongolian", "Roboto", "Helvetica", "Arial", sans-serif  !important;
+.SearchPane #logo h1 { color: #152631; font-size: 40px; font-weight: 900; font-family:"Noto Sans TC","Noto Sans", "Noto Serif Tibetan", "Noto Serif Khmer", "Noto Sans Mongolian", "Roboto", "Helvetica", "Arial", sans-serif  !important;
    /* letter-spacing: 0.65px;  */
-   line-height: 53px;margin-top:0; margin-bottom:14px;text-align: left;;
+   line-height: 48px;margin-top:0; margin-bottom:14px;text-align: left;;
 }
 
 .SearchPane #logo h1[lang="bo"] {  font-size:61px; margin-bottom:32px; font-weight:500; line-height: 105px; }
@@ -675,6 +675,16 @@ body > #pop-login { z-index:1000000 ;}
 
 .over-nav { display: flex; align-items: center; justify-content: center; height:50px; background:#172832; 
    position: relative; width:100% ; z-index:100001;
+}
+
+.over-nav .BDRC-link {
+}
+
+.over-nav .BDRC-link img {
+   filter:invert(1);
+   height:24px;
+   vertical-align: -5px;
+   margin-right:8px;
 }
 
 .over-nav > div a,
@@ -1728,7 +1738,11 @@ ul.suggestions li > span > svg:first-child {
 .nav #logo a { display: inline-block; margin-right:15px; }
 .nav #logo a#BDRC span,
 .nav #logo a:last-child span,
-.nav #logo a:first-child span { font-size:24px; line-height:26px; font-weight:500;}
+.nav #logo a:first-child span { font-size:32px; /*line-height:26px;*/ font-weight:400; line-height:36px;}
+
+.nav #logo a:first-child span + .buda-small { font-size:11px; text-transform: none; line-height:12px; padding-left:2px;}
+
+.nav #logo a:first-child .buda-caption { display:inline-flex; flex-direction: column; }
 
 .nav #logo a#BDRC + a img { height:40px;}
 
