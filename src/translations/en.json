@@ -133,7 +133,40 @@
       "BDRC":"BDRC",
       "aboutB":"About BUDA",
       "news":"News",
-      "programs":"Programs"
+      "programs":"Programs",
+      "howToF":"How to find things?",
+      "phonetics":"Try phonetics, like <ita>chenrezig</ita>",
+      "new":"New",
+      "how":{
+         "tibetan":{
+            "title":"Tibetan: Unicode, Wylie or English phonetics",
+            "body":"Titles and names do not require exact orthography. English phonetics or broken Tibetan or Wylie work.  “Chenrezig”, “spyan ras gzigs” and སྤྱན་རས་གཟིགས་ all find the same pages.<nl/><nl/>Etexts only match full phrases typed exactly as in the text. Metadata typically requires an exact match, with some exceptions."
+         },
+         "chinese": {
+            "title":"Chinese: hani Unicode",
+            "body":"Exact match in Unicode required in all titles and content."
+         },
+         "sanskrit": {
+            "title":"Sanskrit: iast",
+            "body":"Diacritics are not required. Otherwise, exact match required in all titles and content."
+         },
+         "khmer": {
+            "title":"Khmer and Burmese: Unicode",
+            "body":"Exact match in Unicode required."
+         },
+         "codes": {
+            "title":"Codes, IDs, ISBN",
+            "body":"BDRC codes, Tohoku numbers, Derge numbers, ISBN codes and several other systems are supported."
+         },
+         "AND": {
+            "title":"AND",
+            "body":"Combine two or more phrases with AND in upper case, for example, in titles and etext.  All phrases have to be typed exactly as it appears in the data."
+         },
+         "scope": {
+            "title":"Scopes of search",
+            "body":"When the search box is on a yellow background and says “Search BDRC’s Library”, it covers everything we have.  In many other cases, the search element is just a line on white background, and the limited scopes are mentioned, for example “Search texts by this person or about this person”."
+         }
+      }
    },
    "Lsidebar": {
       "sortBy": {

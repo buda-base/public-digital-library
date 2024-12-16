@@ -1159,16 +1159,14 @@ export function top_right_menu(that,etextTitle,backUrl,etextres,isMirador,locati
 
    let logo = [
             <div id="logo">
-               <Link to="/"  onClick={(ev) => { 
-                  if(this.props.advancedSearch || this.state.filters) {
-                     that.props.navigate({pathname:"/",search:""}); 
-                     if(that.props.keyword) { that.props.onResetSearch(); } 
-                     that.setState({blurSearch:false})
-                     ev.preventDefault()
-                     ev.stopPropagation()
-                     return false
-                  }
-               } }><img src="/icons/BUDA-small.svg"/><span class="buda-caption"><span>BUDA</span><span class="buda-small">{I18n.t("home.buda")}</span></span></Link>                                  
+               <Link to="/" {...(that?.props?.advancedSearch || that?.state?.filters) ? {onClick:(ev) => { 
+                  that.props.navigate({pathname:"/",search:""}); 
+                  if(that.props.keyword) { that.props.onResetSearch(); } 
+                  that.setState({blurSearch:false})
+                  ev.preventDefault()
+                  ev.stopPropagation()
+                  return false
+               }}:{}} ><img src="/icons/BUDA-small.svg"/><span class="buda-caption"><span>BUDA</span><span class="buda-small">{I18n.t("home.buda")}</span></span></Link>                                  
                
                {/* <a id="by">
                   <span>by</span></a>

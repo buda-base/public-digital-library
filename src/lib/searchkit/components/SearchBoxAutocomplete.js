@@ -6,6 +6,8 @@ import CloseIcon from '@material-ui/icons/Close';
 import IconButton from '@material-ui/core/IconButton';
 import qs from "query-string"
 import I18n from 'i18next';
+import { Trans } from 'react-i18next'
+import Paper from '@material-ui/core/Paper';
 
 // hooks
 import { useSearchBox, useInstantSearch, useClearRefinements } from "react-instantsearch";
@@ -335,6 +337,11 @@ const SearchBoxAutocomplete = (props) => {
 
   const suggLen = (actualList?.length ?? suggestions.length)
 
+  const [howTo, setHowTo] = useState(false)
+
+
+  const ref = useRef()
+
   //console.log("sL:",suggLen, selected)
 
   return (
@@ -424,10 +431,21 @@ const SearchBoxAutocomplete = (props) => {
         //setActualLength={setSuggestionLen}
         setActualList={setActualList}
       />
-      { !inner && <a id="simple-search" onClick={() => {
-        that.setState({[that.state.filters?"keyword":"SKquery"]:lucenequerytokeyword(inputValue)})
-        that.props.onAdvancedSearch(true)
-      }}>{I18n.t("topbar.advanced")}</a> }
+      { !inner && <><div id="simple-search" ref={ref}>
+          <a class="regular"><span class="new">{I18n.t("topbar.new")}</span><Trans i18nKey="topbar.phonetics" components={{ita:<i/>}}/></a>
+          <a onClick={() => setHowTo(!howTo)}>{I18n.t("topbar.howToF")}</a>
+          <a onClick={() => {
+            that.setState({[that.state.filters?"keyword":"SKquery"]:lucenequerytokeyword(inputValue)})
+            that.props.onAdvancedSearch(true)
+          }}>{I18n.t("topbar.advanced")}
+          </a>
+        </div>
+        { howTo && <Paper 
+          id="popHowTo" 
+          onBlur={() => alert("blur")}
+        >youpi</Paper> }
+      </> 
+    }
     </form>
   );
 };

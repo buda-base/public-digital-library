@@ -749,7 +749,7 @@ body > #pop-login { z-index:1000000 ;}
    max-width:100%;
 }
 
-.inner-search-bar #simple-search,
+
 #search-bar #simple-search {
    position: absolute;
    right: 0;
@@ -762,6 +762,50 @@ body > #pop-login { z-index:1000000 ;}
    font-weight:700;
    z-index:10;
    color:#343434;
+}
+
+
+.inner-search-bar #simple-search {
+   position: absolute;
+   right: 0;
+   top: calc(100% - 0px);
+   left:0;
+   display: flex;
+   font-size: 0;
+   z-index:102;
+   justify-content: space-between;
+}
+
+.inner-search-bar #simple-search a  {
+   font-size: 12px;
+   margin-top: -6px;
+   line-height: 44px;
+   height: 44px;
+   cursor: pointer;
+   font-weight:700;
+   color:#343434;
+}
+
+
+.inner-search-bar #simple-search a.regular {
+   font-weight:400;
+   cursor:auto;
+}
+
+
+.inner-search-bar #simple-search a .new {
+   color:white;
+   font-weight:600;
+   background:#d73449;
+   padding:1px 4px;
+   margin-right:5px;
+   font-size:10px;
+}
+
+
+.inner-search-bar #simple-search a:first-child + a {
+   margin-left:auto;
+   margin-right:30px;
 }
 
 .inner-search-bar:not(#a)::after {
@@ -934,7 +978,7 @@ body > #pop-login { z-index:1000000 ;}
    background:white;
    box-shadow:0 2px 3px 1px rgba(0,0,0,0.25);
    position:absolute;
-   z-index:100;
+   z-index:103;
    max-width:100%;
    overflow: hidden;
    box-sizing: border-box;   
@@ -4361,6 +4405,7 @@ html[lang='bo'] .resource .title h2 .T .space-fix span:not(.RID) { line-height: 
 #popDL.print { z-index:1000000!important;}
 
 
+#popHowTo { z-index:100100;  width:700px; box-sizing:border-box; padding:40px; position: absolute; top:calc(100% + 35px); }
 
 
 #popLang { z-index:100100; }
@@ -4514,6 +4559,8 @@ body > [id^="menu-cita"] { z-index:1001000; }
 }
 #menu-interest ul li.selected::after { background: url(/icons/check-black.svg); }
 
+
+#popHowTo > div:last-child,
 body > [id^="menu-"] > div:last-child,
 .collapse.sortBy > div:last-child,
 #popLang > div:last-child,
