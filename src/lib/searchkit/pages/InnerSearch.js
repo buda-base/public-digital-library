@@ -98,7 +98,7 @@ export class InnerSearchPage extends Component<State, Props>
 
     const storageRef = React.createRef() 
 
-    let { RID, T, recent, isOtherVersions, srcVersionID  } = this.props
+    let { RID, T, recent, isOtherVersions, srcVersionID, noScrollFilters  } = this.props
 
     /* // debug sortBy
     if(recent) {
@@ -170,9 +170,14 @@ export class InnerSearchPage extends Component<State, Props>
                 </div>
               </div> }
               <div className="content">
-                <SimpleBar className="filter">
-                  <FiltersSidebar that={this} recent={recent}/> 
-                </SimpleBar>
+                { noScrollFilters 
+                  ? <div className="filter no-scroll">
+                    <FiltersSidebar that={this} recent={recent}/> 
+                  </div>
+                  : <SimpleBar className="filter"> 
+                      <FiltersSidebar that={this} recent={recent}/> 
+                  </SimpleBar> 
+                }
                 <div className="main-content">
                   <SearchResultsHeader that={this} inner={true} recent={recent} {...{ storageRef }} />
                   <div className="hits">

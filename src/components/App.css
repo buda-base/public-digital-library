@@ -152,6 +152,7 @@ footer#site-footer.no-syncs > div.head::before { background-color:#efefef; }
 .App:not(.home) .SearchPane { min-height:calc(100vh - 80px - 50px * 0);  }
 
 
+#popHowTo div p,
 .etext-header-breadcrumbs *,
 .AppSK *,#etext-nav .etext-search input,
 #more-pages-menu a,[role='tooltip'] *, .App *,.nav *,.App *::before,.App *::after, .react-tabs *, .resource *:not(.fa):not(.material-icons), .resource + * *,
@@ -2668,7 +2669,8 @@ p.no-result {
 
 #res-container > ul li h4 span { text-transform: none; font-weight:500;}
 
-#res-container > ul li { padding-left:0; pointer-events:none; }
+/* #res-container > ul li { padding-left:0; pointer-events:none; } */
+
 #res-container > ul h4 { padding-left:22px;; }
 #res-container > ul h4 { color:#343434; font-size:24px; /*font-family:"Noto Sans";*/ font-weight:900; text-transform:uppercase; }
 #res-container > ul:not(#samples) h4 {
@@ -2728,7 +2730,7 @@ p.no-result {
 #res-container > ul li h4 a { pointer-events:auto; text-transform:none; font-weight:500;color: #d73449; padding-bottom:30px; display:inline-block;}
 #res-container > ul li h4 a:hover { text-decoration: underline;}
 #res-container > ul li h4 + span { display:none !important;}
-#res-container > ul li:hover { background:none;}
+/* #res-container > ul li:hover { background:none;} */
 #res-container > ul li { height:auto !important;}
 
 #results  > li:first-child > h4 > a { padding-bottom:0; }
@@ -4405,8 +4407,8 @@ html[lang='bo'] .resource .title h2 .T .space-fix span:not(.RID) { line-height: 
 #popDL.print { z-index:1000000!important;}
 
 
-#popHowTo { z-index:100100;  width:700px; box-sizing:border-box; padding:40px; position: absolute; top:calc(100% + 35px); }
-
+#popHowTo { z-index:100100;  width:700px; box-sizing:border-box; padding:15px 30px; position: absolute; top:calc(100% + 35px); }
+#root > .AppSK > .search #popHowTo { width: 630px; }
 
 #popLang { z-index:100100; }
 #popLang.black > div:last-child { margin-top:0px; }
@@ -4560,7 +4562,10 @@ body > [id^="menu-cita"] { z-index:1001000; }
 #menu-interest ul li.selected::after { background: url(/icons/check-black.svg); }
 
 
-#popHowTo > div:last-child,
+#popHowTo > div:last-child {
+   text-align:left;
+}
+
 body > [id^="menu-"] > div:last-child,
 .collapse.sortBy > div:last-child,
 #popLang > div:last-child,
@@ -4714,12 +4719,16 @@ a.mustLogin:hover { text-decoration: underline;}
 div.mustLogin a { display:inline; padding:0; color:#d73449; line-height:24px;}
 div.mustLogin a:hover { border:none; text-decoration: underline;}
 
+.popHowTo.bg,
 #feedback .tooltip .bg { background:none; position: fixed; left:0; right:0; top:0; bottom:0; z-index: -1; }
 #feedback .tooltip { background:white; padding:10px 15px; position: absolute; right:calc(100% + 10px); cursor: auto; 
    box-shadow: 0 1px 4px rgba(107, 107, 107, 0.5);
 }
 #feedback .tooltip a { cursor: pointer; }
 #feedback .tooltip:not(.on) { display: none; }
+
+
+.popHowTo.bg { z-index:1000; background-color:rgba(0,0,0,0.25)}
 
 /* ------------------------------------------------------------------------------------------------------------------------ hover panel */
 

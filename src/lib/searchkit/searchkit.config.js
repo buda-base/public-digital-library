@@ -55,6 +55,7 @@ class MyTransporter extends ESTransporter {
         // quickfix for not triggering default query on homepage
         window.location.pathname != "/osearch/search" 
         && !window.location.pathname.startsWith("/tradition") 
+        && window.location.pathname != "/" 
         && !requests?.some(r => r.request.params.query || r.request.params.filters)
         || 
         window.location.pathname.startsWith("/show")

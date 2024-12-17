@@ -88,6 +88,7 @@ import { Trans } from 'react-i18next'
 import axios from "axios"
 
 
+import InnerSearchPageContainer from '../containers/InnerSearchPageContainer'
 import LanguageSidePaneContainer from '../containers/LanguageSidePaneContainer';
 import ResourceViewerContainer from '../containers/ResourceViewerContainer';
 import {getOntoLabel,provImg as img,providers,provNoLogo as nologo} from './ResourceViewer';
@@ -7958,7 +7959,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                         <link rel="canonical" href={"https://library.bdrc.io"} />
                      </Helmet>
                      <List id="samples">
-                        {/* { messageD } */}
+                        {/* { messageD } 
                         <h3>{ I18n.t("home.message") }</h3>
                         <h4>{ I18n.t("home.submessage") }</h4>
                         { ((!this.props.config || !this.props.config.chineseMirror) && !this.props.auth?.isAuthenticated() && !isProxied(this)) && <h4 class="subsubtitleFront">
@@ -7973,6 +7974,15 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                         { this.props.subscribedCollections?.length >= 1 && 
                             <Trans i18nKey="home.collec" components={{h:<h4 class="subsubtitleFront"/>, nl:<br/>, bold:<b/>, lk:<a class='uri-link' target='_blank' />}}/>
                         }
+                            */}
+
+                        <div class="home-tradi-grid">
+                           {["bo","km","sa","zh"].map(l => <><img src={"/tradi/"+l+".jpg"}/></>)}
+                        </div>
+
+                        <h3>{I18n.t("tradition.recent")}</h3> 
+                        <InnerSearchPageContainer /*noScrollFilters={true}*/ location={this.props.location} auth={this.props.auth} isOsearch={true} recent={true} />  
+                           
                      </List> 
                   </>}
                { /* (this.props.datatypes && this.props.datatypes.hash && this.props.datatypes.metadata[bdo+this.state.filters.datatype[0]] && message.length === 0 && !this.props.loading) && 

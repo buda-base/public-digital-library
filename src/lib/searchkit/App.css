@@ -269,16 +269,20 @@ svg.help-workid { opacity:0.55; width:18px; vertical-align: -4px; margin-left:8p
   border-radius: 2px; 
 }
 
+:not(.SearchPane) > .ISB,
 .AppSK .content {
    width:1440px;
-   max-width:97%;
    box-sizing: border-box;
    margin:auto;
-   z-index:10000;
-   position: relative;
-   background-color:#efefef;
-   padding:0 100px;
-   overflow: hidden;
+}
+
+  .AppSK .content {
+  max-width:97%;
+  z-index:10000;
+  position: relative;
+  background-color:#efefef;
+  padding:0 100px;
+  overflow: hidden;
 }
 
 .AppSK .content .filter {
@@ -840,8 +844,12 @@ header[data-hits="0"] ~ .hits .pagination,
 
 }
 
-
-
+:not(.SearchPane) > .ISB,
+.inner-search-bar:not(.group),
+.inner-search-bar:not(.group) > div,
+.SearchPane:not(#a) > div.ISB {
+  background-color:#fce08d;
+}
 
 
 .ISB .ais-SearchBox-submit,
@@ -1175,6 +1183,38 @@ header[data-hits="0"] ~ .hits .pagination,
   font-weight:700;
 }
 
+
+.App.home #samples h3 {
+  text-transform: none;
+}
+
+.App.home #samples .home-tradi-grid {
+  padding:35px;
+  display: flex;
+  position: relative;
+  justify-content: space-between;
+}
+
+.App.home #samples .home-tradi-grid > * {
+  width:calc((100% - 3 * 35px)/4);
+}
+
+:not(.static-container) > #samples .AppSK.InnerSearchPage.data .content {
+  width: calc(100% - 70px);
+  left: 35px;
+}
+
+#samples .AppSK.InnerSearchPage.data .content .main-content {
+  width:calc(100% - 330px);
+  /* padding-top:0; padding-bottom:0; */
+}
+
+#samples .AppSK.InnerSearchPage.data .content .filter {
+  width:280px;
+  /* padding-top:0; padding-bottom:0; */
+}
+
+
 .ISB {
   min-height:120px;
 }
@@ -1228,6 +1268,7 @@ header[data-hits="0"] ~ .hits .pagination,
   margin-bottom:18px;
   text-transform: capitalize;
 }
+
 
 .nav ~ .AppSK.advanced #search-bar h2 {
   width:630px;

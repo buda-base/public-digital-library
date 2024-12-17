@@ -440,10 +440,23 @@ const SearchBoxAutocomplete = (props) => {
           }}>{I18n.t("topbar.advanced")}
           </a>
         </div>
-        { howTo && <Paper 
-          id="popHowTo" 
-          onBlur={() => alert("blur")}
-        >youpi</Paper> }
+        { howTo && <>
+          <div class="popHowTo bg" onClick={() => setHowTo(false)}></div>
+          <Paper 
+            id="popHowTo" 
+            onBlur={() => alert("blur")}
+          >
+            <div>{
+              ["tibetan","chinese","sanskrit","khmer","codes","AND","scope"].map(k => <div>
+                <p>
+                  <b>{I18n.t("topbar.how."+k+".title")}</b>
+                  <br/>
+                  <Trans i18nKey={"topbar.how."+k+".body"} components={{ nl : <br /> }}/>
+                </p>
+              </div>)
+            }</div>
+          </Paper>
+        </> }
       </> 
     }
     </form>
