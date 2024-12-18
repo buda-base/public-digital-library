@@ -376,6 +376,7 @@ const SearchBoxAutocomplete = (props) => {
         }
       }}
     >
+      <h2>{I18n.t("topbar.placeHda")}</h2>
       <input
         ref={inputRef}
         className="ais-SearchBox-input"
@@ -386,7 +387,7 @@ const SearchBoxAutocomplete = (props) => {
         maxLength={512}
         type="search"
         value={inputValue}
-        {...placeholder ? { placeholder} : { placeholder: "Search the website" } }
+        {...placeholder ? { placeholder} : { placeholder: I18n.t("topbar.placeHda") } }
         onFocus={(ev) => {
           setIsFocused(true);
           handleChange(inputValue)

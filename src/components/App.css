@@ -152,6 +152,7 @@ footer#site-footer.no-syncs > div.head::before { background-color:#efefef; }
 .App:not(.home) .SearchPane { min-height:calc(100vh - 80px - 50px * 0);  }
 
 
+.ISB *,
 #popHowTo div p,
 .etext-header-breadcrumbs *,
 .AppSK *,#etext-nav .etext-search input,

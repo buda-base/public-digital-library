@@ -448,6 +448,14 @@ header[data-hits="0"] ~ .hits .pagination,
    margin:auto;
 }
 
+
+.ais-SearchBox-form h2 {
+  position: absolute;
+  font-size:22px;
+  bottom:100%;
+  margin:7px 0;
+}
+
 .ais-CustomDateRange [type="date"] {
   width:95px;
 }
@@ -1267,7 +1275,13 @@ header[data-hits="0"] ~ .hits .pagination,
 
 
 .ISB {
-  min-height:120px;
+  min-height:130px;
+  display: flex;
+}
+
+
+.ISB.advanced-false {
+  align-items: flex-end;
 }
 
 
