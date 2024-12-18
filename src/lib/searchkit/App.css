@@ -1273,9 +1273,12 @@ header[data-hits="0"] ~ .hits .pagination,
   /* padding-top:0; padding-bottom:0; */
 }
 
-
 .ISB {
-  min-height:130px;
+  min-height:120px;
+}
+
+.App.home .ISB {
+  min-height:150px;
   display: flex;
 }
 
@@ -1284,6 +1287,13 @@ header[data-hits="0"] ~ .hits .pagination,
   align-items: flex-end;
 }
 
+.inner-search-bar:not(#a) .ais-SearchBox-form  h2 {
+  display:none;
+}
+
+.App.home .inner-search-bar:not(#a) h2 {
+  display:flex;
+}
 
 .ISB.advanced-true .App .SearchPane:not(#a) #search-bar {
   padding-bottom:45px;
