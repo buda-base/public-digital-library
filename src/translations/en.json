@@ -166,7 +166,9 @@
             "title":"Scopes of search",
             "body":"When the search box is on a yellow background and says “Search BDRC’s Library”, it covers everything we have.  In many other cases, the search element is just a line on white background, and the limited scopes are mentioned, for example “Search texts by this person or about this person”."
          }
-      }
+      },
+      "donate2":"Donate to BDRC",
+      "support":"We need your support"
    },
    "Lsidebar": {
       "sortBy": {
@@ -411,7 +413,7 @@
       "search":"Search Results",
       "hitKW":"{{count}} hit for \"{{kw}}\"",
       "hitKW_plural":"{{count}} hits for \"{{kw}}\"",
-      "added":"Added {{date}}",
+      "added":"{{date}}",
       "inRootInstanceS": "in",
       "nHitET":"Match in etext",
       "nHitET_plural":"Matches in etext"

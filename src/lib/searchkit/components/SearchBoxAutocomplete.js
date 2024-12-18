@@ -446,7 +446,10 @@ const SearchBoxAutocomplete = (props) => {
             id="popHowTo" 
             onBlur={() => alert("blur")}
           >
-            <div>{
+            <div>
+              <IconButton onClick={() => setHowTo(false)}>
+                <CloseIcon /> 
+              </IconButton>{
               ["tibetan","chinese","sanskrit","khmer","codes","AND","scope"].map(k => <div>
                 <p>
                   <b>{I18n.t("topbar.how."+k+".title")}</b>

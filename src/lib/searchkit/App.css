@@ -27,6 +27,7 @@
 }
 
 
+.filter .simplebar-content > h3+button+br+.ais-RefinementList,
 .filter .simplebar-content > h3+button+br+div .filter-title > p:not(#a) {
   margin-top: 0;
 }
@@ -258,13 +259,13 @@ svg.help-workid { opacity:0.55; width:18px; vertical-align: -4px; margin-left:8p
 .AppSK .ais-Hits-item .debug button {
    position:absolute; 
    right:24px;
-   top:24px;   
+   top:22px;   
 }
 .AppSK .ais-Hits-item .names.firstScan {
-  background-color:#d73449;
-  color:white;
-  font-size:12px;
+  /* background-color:#d73449;
   font-weight:600;
+  color:white; */
+  font-size:12px;
   padding:0 5px;
   border-radius: 2px; 
 }
@@ -1183,9 +1184,37 @@ header[data-hits="0"] ~ .hits .pagination,
   font-weight:700;
 }
 
+.App.home #samples {
+  padding-top:0;
+}
 
 .App.home #samples h3 {
   text-transform: none;
+}
+
+.App.home #samples .home-support {
+  display:flex;
+  flex-direction:column;
+  justify-content: center;
+  align-items: center;
+  margin-bottom:70px; 
+}
+
+
+.App.home #samples .home-support span {
+  font-size: 15px;
+  font-weight:600;;
+}
+
+
+.App.home #samples .home-support a {
+  color:white;
+  padding:10px;
+  background-color:#d73449;
+  border-radius:5px;
+  margin-top:10px;
+  font-weight: 700;
+  font-size: 16px;
 }
 
 .App.home #samples .home-tradi-grid {
@@ -1193,10 +1222,32 @@ header[data-hits="0"] ~ .hits .pagination,
   display: flex;
   position: relative;
   justify-content: space-between;
+  margin-bottom:50px;
 }
 
 .App.home #samples .home-tradi-grid > * {
   width:calc((100% - 3 * 35px)/4);
+  background-color:#fce08d;
+  font-size:0;
+  text-decoration: none;
+}
+
+.App.home #samples .home-tradi-grid span {
+  font-size:16px;
+  font-weight:700;
+  color:black;
+  display:flex;
+  justify-content: center;
+  align-items: center;
+  height:40px;
+}
+
+
+.App.home #samples .home-tradi-grid img {
+  width:100%;
+  height:235px;
+  object-fit: cover ;
+  object-position: center;
 }
 
 :not(.static-container) > #samples .AppSK.InnerSearchPage.data .content {

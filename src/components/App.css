@@ -4566,6 +4566,13 @@ body > [id^="menu-cita"] { z-index:1001000; }
    text-align:left;
 }
 
+
+#popHowTo > div:last-child > button {
+   position: absolute;
+   top:0;
+   right:0;
+}
+
 body > [id^="menu-"] > div:last-child,
 .collapse.sortBy > div:last-child,
 #popLang > div:last-child,

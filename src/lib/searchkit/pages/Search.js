@@ -144,13 +144,16 @@ export const searchClient = Client(
   {
     hooks: {
       beforeSearch: async (requests) => {
+
+        
         const customizedRequest = requests.map((request) => {          
           if (request.indexName === process.env.REACT_APP_ELASTICSEARCH_INDEX) {
             return getCustomizedBdrcIndexRequest(request);
           }
           return getGenericRequest(request); //request;
         });
-        console.log("requests?",requests, customizedRequest)
+        console.log("requests?", requests, customizedRequest)
+        console.log("author?", customizedRequest.map(r => r.body?.aggs?.author))
 
         return customizedRequest;
       },
@@ -225,7 +228,9 @@ export function FiltersSidebar(props) {
   //console.log("sB?", that, indexUiState, sortItems, recent)
 
   return <>
-    { ! recent && <h3>{I18n.t("result.filter")}</h3> }
+    {/* { ! recent &&  */}
+    <h3>{I18n.t("result.filter")}</h3> 
+    {/* } */}
 
     <MyClearRefinements   
       translations={{
@@ -235,7 +240,9 @@ export function FiltersSidebar(props) {
     />
     <br/>
 
-    { !recent && <RefinementListWithLocalLabels that={that} {...filters[0] } className={recent ? "": "MT0"}  /> }
+    {/* { !recent &&  */}
+    <RefinementListWithLocalLabels that={that} {...filters[0] } className={recent ? "": "MT0"}  /> 
+    {/* }  */}
 
     { filters.slice(1).map((filter) => <RefinementListWithLocalLabels that={that} {...filter} showMore={true}  />) }
 

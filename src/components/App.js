@@ -7568,6 +7568,10 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
       const clearRef = React.createRef()
 
+      let corpo_lang = this.props.locale
+      if(corpo_lang.startsWith("bo")) corpo_lang = "bo"
+      else if(corpo_lang.startsWith("zh")) corpo_lang = "zh-hans"
+      
       const ret = (<>
 { top_right_menu(this,null,null,null,null,this.props.location) }
 <div className={(this.props.simple?"simpleSearch":"")}>
@@ -7977,7 +7981,18 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                             */}
 
                         <div class="home-tradi-grid">
-                           {["bo","km","sa","zh"].map(l => <><img src={"/tradi/"+l+".jpg"}/></>)}
+                           { ["bo","pi","sa","zh"].map(t => (
+                              <Link onClick={() => { document.documentElement.scrollTo({ top:0, left:0, behavior: "instant" }); }} 
+                                    className={this.props.tradition === t ? "active": ""} to={"/tradition/"+t+"/"}>
+                                 <span>{I18n.t("tradition."+t+"T")}</span>
+                                 <img src={"/tradi/"+t+".jpg"}/>
+                              </Link>
+                           ))}
+                        </div>
+
+                        <div class="home-support">
+                           <span>{I18n.t("topbar.support")}</span>
+                           <a href={"https://bdrc.io/donation?lang="+corpo_lang} target="_blank" rel="nofollow">{I18n.t("topbar.donate2")}</a>
                         </div>
 
                         <h3>{I18n.t("tradition.recent")}</h3> 
