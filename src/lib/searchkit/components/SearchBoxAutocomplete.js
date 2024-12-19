@@ -218,7 +218,7 @@ const SearchBoxAutocomplete = (props) => {
   //const [suggestionLen, setSuggestionLen] = useState(0)
   const [actualList, setActualList] = useState([])
 
-  //console.log("pF:", pageFilters)
+  //console.log("pF:", placeholder, pageFilters)
 
   const { refine: clearRefine } = useClearRefinements(props);
 
@@ -280,6 +280,7 @@ const SearchBoxAutocomplete = (props) => {
   const debouncedHandleChange = useCallback(
     debounce((newValue) => {
       getAutocompleteRequest(newValue, pageFilters).then((requests) => {
+        //console.log("debounced:", newValue, pageFilters)
         setSuggestions(requests);
       });
     }, 350),

@@ -33,20 +33,35 @@ const forgeFacetFilters = (facetFilters, filters) => {
     allFilters = [...allFilters, [filters]];
   }
 
-  let queryFilters = allFilters.map((group) => ({
-    bool: {
-      should: group.map((facet) => {
-        // TODO: handle OR
-        const [field, value] = facet.split(":");
+  
+  let queryFilters = allFilters.map((group) => { 
+
+    const should = []
+  
+    for(const facet of group) {
+      // TODO: handle OR
+      const facets = facet.includes("OR") ? facet.split(" OR ") : [ facet ] 
+  
+      for(const f of facets) {
+        const [field, value] = f.split(":");
         if (DATE_RANGE_FIELDS.includes(field)) {
-          return { range: { [field]: createDateRangeQuery(value) } };
+          should.push({ range: { [field]: createDateRangeQuery(value) } });
+          continue;
         }
         if (RANGE_FIELDS[field]) {
-          return { range: { [field]: createRangeQuery(value, field) } }
-        }        return { term: { [field]: value } };
-      }),
-    },
-  }));
+          should.push({ range: { [field]: createRangeQuery(value, field) } })
+          continue;
+        }        
+        should.push({ term: { [field]: value } });
+      }
+    }
+
+    return ({
+      bool: {
+        should,
+      },
+    })
+});
 
   return queryFilters;
 };

@@ -355,19 +355,29 @@ export class TraditionViewer extends Component<State, Props>
 
   renderTopLevel(tradi, {content, breadcrumbs}) {
 
+    const filters = {
+      "bo":"script:ScriptDbuCan OR script:ScriptDbuMed",
+      "pi":"language:LangPi OR language:LangKm OR script:ScriptKhmr",
+      "sa":"language:LangSa",
+      "zh":"language:LangZh"
+    }
+
     breadcrumbs.push(<span>{I18n.t("tradition."+this.props.tradition+"T")}</span>)
 
     content.push(<>
-      <h1 style={{width:"100%"}}>{I18n.t("tradition."+this.props.tradition+"T")}</h1>
+      <h1 style={{width:"100%"}}>{I18n.t("tradition.title."+this.props.tradition+"T")}</h1>
       { tradi && tradi.content?.map(t => {
         return <div id={"tradi-"+t.id} className={"tradi-content "+(t.classes ?? "")}>
           <h2>{I18n.t("tradition."+t.id)}</h2>
           {this.renderContent(t)}
         </div>
       })}
+      { this.props.tradition != "bo" && <div id="tradi-recent" className="tradi-content">
+        <InnerSearchPageContainer /*history={this.props.history} */  location={this.props.location} auth={this.props.auth} isOsearch={true} recent={false} /*sortByDefault={true}*/ customFilters={filters[this.props.tradition]} customPholder={I18n.t("resource.searchTtrad", {trad:I18n.t("tradition.title."+this.props.tradition+"T"),interpolation: {escapeValue: false} }) }/>          
+      </div> }
       <div id="tradi-recent" className="tradi-content">
         <h2>{I18n.t("tradition.recent")}</h2> 
-        <InnerSearchPageContainer /*history={this.props.history} */  location={this.props.location} auth={this.props.auth} isOsearch={true} recent={true} />          
+        <InnerSearchPageContainer /*history={this.props.history} */  location={this.props.location} auth={this.props.auth} isOsearch={true} recent={true} customFilters={filters[this.props.tradition]}/>          
       </div>
     </>)
   }

@@ -98,7 +98,7 @@ export class InnerSearchPage extends Component<State, Props>
 
     const storageRef = React.createRef() 
 
-    let { RID, T, recent, isOtherVersions, srcVersionID, noScrollFilters  } = this.props
+    let { RID, T, recent, isOtherVersions, srcVersionID, noScrollFilters, customFilters, sortByDefault, customPholder  } = this.props
 
     /* // debug sortBy
     if(recent) {
@@ -128,12 +128,20 @@ export class InnerSearchPage extends Component<State, Props>
       */
     }
 
+    if(!pageFilters && customFilters) { 
+      pageFilters = customFilters
+
+      leftTitle = I18n.t("resource.findT",{type:I18n.t("types.tradition")})
+
+      if(customPholder) placeholder = customPholder
+    }
+
     console.log("iSsC:", searchClient, routingConfig, this.props, pageFilters, storageRef, recent)        
     
     return (<>
       { (pageFilters || !RID) && <div className="AppSK InnerSearchPage data">
           <InstantSearch
-            key={pageFilters+"-"+RID+"_isOtherVersions-"+isOtherVersions+(srcVersionID?"_src-"+srcVersionID:"")}            
+            key={pageFilters+"-"+RID+"_isOtherVersions-"+isOtherVersions+(srcVersionID?"_src-"+srcVersionID:"")+("_recent-"+recent)}            
             indexName={process.env.REACT_APP_ELASTICSEARCH_INDEX}
             routing={routing}
             searchClient={searchClient}
@@ -172,17 +180,17 @@ export class InnerSearchPage extends Component<State, Props>
               <div className="content">
                 { noScrollFilters 
                   ? <div className="filter no-scroll">
-                    <FiltersSidebar that={this} recent={recent}/> 
+                    <FiltersSidebar that={this} recent={recent&&!sortByDefault}/> 
                   </div>
                   : <SimpleBar className="filter"> 
-                      <FiltersSidebar that={this} recent={recent}/> 
+                      <FiltersSidebar that={this} recent={recent&&!sortByDefault}/> 
                   </SimpleBar> 
                 }
                 <div className="main-content">
-                  <SearchResultsHeader that={this} inner={true} recent={recent} {...{ storageRef }} />
+                  <SearchResultsHeader that={this} inner={true} recent={recent&&!sortByDefault} {...{ storageRef }} />
                   <div className="hits">
                     <Configure hitsPerPage={isOtherVersions ? 11 * (this.state.toggled ? 2 : 1) : 5} filters={pageFilters} />
-                    <HitsWithLabels that={this} {...{ routing, recent, storageRef, isOtherVersions, srcVersionID }} />
+                    <HitsWithLabels that={this} {...{ routing, recent:recent&&!sortByDefault, storageRef, isOtherVersions, srcVersionID }} />
                     { isOtherVersions 
                       ? <OtherVersionsNav {...{ that:this, RID, srcVersionID } }/>
                       : <div className="pagination">
