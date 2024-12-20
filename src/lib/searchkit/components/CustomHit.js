@@ -133,7 +133,7 @@ const CustomHit = ({ hit, routing, that, sortItems, recent, storage, advanced /*
 
               return ({
                 value: hit._highlightResult && hit._highlightResult[k] && (isMetaMatch || !etextHits.length) //&& hit._highlightResult[k][i]
-                    ? decode(withHL.replace(/<mark>/g,"↦").replace(/<\/mark>/g,"↤").replace(/↤ ↦/g, " "))
+                    ? decode(withHL.replace(/<mark>/g,"↦").replace(/<\/mark>/g,"↤").replace(/↤( )?↦/g, "$1"))
                     : h, 
                 num
               })
