@@ -350,13 +350,14 @@
       "tmp:etext_search":"Etext",
       "tmp:nocomm_search":"Exclude",
       "tmp:firstScanSyncDate":"First scan date",
-      "bdr:PartTypeText": "Text In Outline",
+      "bdr:PartTypeText": "Text in outline",
       "tmp:associatedTradition":"Tradition",
       "tmp:notAvailable":"Not available",
       "tmp:hasInstance":"Version of this work",
       "tmp:hasInstance_plural":"Versions of this work",
       "tmp:noPagination": "You may have to find the right page yourself, because this is an unaligned etext.",
-      "tmp:BDRCworkId":"Work Page"
+      "tmp:BDRCworkId":"Work Page",
+      "bdr:PartTypeCodicologicalVolume": "Codicological volume"
    },
    "guided":{
       "keyword":"keyword",

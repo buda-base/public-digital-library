@@ -240,13 +240,13 @@ export function FiltersSidebar(props) {
     />
     <br/>
 
+    <RefinementListWithLocalLabels I18n_prefix={"types"} that={that} attribute="type" showMore={true} title={I18n.t("Lsidebar.datatypes.title")}/>
+
     {/* { !recent &&  */}
     <RefinementListWithLocalLabels that={that} {...filters[0] } className={recent ? "": "MT0"}  /> 
     {/* }  */}
 
     { filters.slice(1).map((filter) => <RefinementListWithLocalLabels that={that} {...filter} showMore={true}  />) }
-
-    <RefinementListWithLocalLabels I18n_prefix={"types"} that={that} attribute="type" showMore={true} title={I18n.t("Lsidebar.datatypes.title")}/>
 
     <div className="filter-title MT"><p>{getPropLabel(that,fullUri("tmp:firstScanSyncDate"))}</p></div>
     <CustomDateRange attribute="firstScanSyncDate" /*{...recent?{ defaultBefore: lastMonthFormatted }:{}}*/ {...{request, setRequest}} />
