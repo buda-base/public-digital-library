@@ -310,7 +310,7 @@ function ResourceCompo() {
 
    }, [IRI, location])
 
-   return (<ResourceViewerContainer { ...{ navigate, location, auth, IRI } } /> )
+   return (<ResourceViewerContainer key={IRI+"_root"} { ...{ navigate, location, auth, IRI } } /> )
 }
 
 function TradiCompo(props) {

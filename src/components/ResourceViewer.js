@@ -3812,7 +3812,7 @@ class ResourceViewer extends Component<Props,State>
                               :  !this.props.IIIFerrors||!this.props.IIIFerrors[prefix+":"+pretty]                            
                                  ?  <>
                                        <Link {...this.props.preview?{ target:"_blank" }:{}} className={"urilink "+ prefix} to={vlink} onClick={checkDLD.bind(this)}>{I18n.t("index.openViewer"+(fairUse?"FU":""))}</Link>
-                                       <ResourceViewerContainer auth={this.props.auth} /*history={this.props.history}*/ location={this.props.location} navigate={this.props.navigate} IRI={prefix+":"+pretty} pdfDownloadOnly={true} />
+                                       <ResourceViewerContainer key={this.props.IRI+"_scans-"+prefix+":"+pretty} auth={this.props.auth} /*history={this.props.history}*/ location={this.props.location} navigate={this.props.navigate} IRI={prefix+":"+pretty} pdfDownloadOnly={true} />
                                     </>
                                  :  this.props.IIIFerrors[prefix+":"+pretty].error.code === 401 && (!this.props.auth || !this.props.auth.isAuthenticated())
                                     ? <a class="urilink nolink"><BlockIcon style={{width:"18px",verticalAlign:"top"}}/>&nbsp;{I18n.t(hasIA?"resource.loginToPreview":"viewer.dlError401")}</a>                              
@@ -6076,7 +6076,7 @@ class ResourceViewer extends Component<Props,State>
                         {possibleEtext?.length > 0 
                            ?  <>
                                  <h4><span>{I18n.t("prop.tmp:noPagination")}</span></h4>
-                                 <ResourceViewerContainer  auth={this.props.auth} /*history={this.props.history}*/ location={this.props.location} navigate={this.props.navigate} IRI={ET} previewEtext={{ outETvol: null, outETstart: null, outETscope: null, outETinst: null }}/>  
+                                 <ResourceViewerContainer key={this.props.IRI+"_etext"+"-"+i+"_"+ET}  auth={this.props.auth} /*history={this.props.history}*/ location={this.props.location} navigate={this.props.navigate} IRI={ET} previewEtext={{ outETvol: null, outETstart: null, outETscope: null, outETinst: null }}/>  
                               </>
                            : rootID && (this.state.checkedEtext != rootID || this.props.resources[rootID] === true)
                               ? <><h4 class="possibleEtext">
@@ -6103,7 +6103,7 @@ class ResourceViewer extends Component<Props,State>
                {this.preprop(k,0,n)}
                <div class="group preview-etext">
                   {/* <Link to={"/show/"+shortUri(e.value)}>{shortUri(e.value)}</Link> */}
-                  <ResourceViewerContainer  auth={this.props.auth} /*history={this.props.history}*/ location={this.props.location} navigate={this.props.navigate} IRI={shortUri(outETvol?.[0]?.value ?? e.value)} previewEtext={{ outETvol, outETstart, outETscope, outETinst }}/>  
+                  <ResourceViewerContainer key={shortUri(outETvol?.[0]?.value ?? e.value)+"_preview"} auth={this.props.auth} /*history={this.props.history}*/ location={this.props.location} navigate={this.props.navigate} IRI={shortUri(outETvol?.[0]?.value ?? e.value)} previewEtext={{ outETvol, outETstart, outETscope, outETinst }}/>  
                </div>
             </div>
          )}))
@@ -6131,7 +6131,7 @@ class ResourceViewer extends Component<Props,State>
             console.log('ctnO:', data, elem)
          }
          return ( 
-            <ResourceViewerContainer auth={this.props.auth} /*history={this.props.history}*/ location={this.props.location} navigate={this.props.navigate} IRI={shortUri(elem[0]?.value)} outlineOnly={true} part={this.props.IRI}/> 
+            <ResourceViewerContainer IRI={shortUri(elem[0]?.value)+"_outline"} auth={this.props.auth} /*history={this.props.history}*/ location={this.props.location} navigate={this.props.navigate} IRI={shortUri(elem[0]?.value)} outlineOnly={true} part={this.props.IRI}/> 
          )
          
       } else {
@@ -10767,10 +10767,11 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                   console.log("vols:",vols)
                }
             }
+            const iri = this.state.currentText ?? (vols?.length ? shortUri(vols[0].f.v.value) : shortUri(this.props.previewEtext?.outETvol?.[0]?.value ?? ""))
             return (<>            
                { this.state.currentText || this.props.previewEtext?.outETvol?.length || vols?.length
                   ? <>
-                     <ResourceViewerContainer  auth={this.props.auth} location={this.props.location} navigate={this.props.navigate} /*history={this.props.history}*/ IRI={this.state.currentText ?? (vols?.length ? shortUri(vols[0].f.v.value) : shortUri(this.props.previewEtext?.outETvol?.[0]?.value ?? ""))} openEtext={true} openEtextRefs={false} disableInfiniteScroll={vols?.length ? {etextRes:this.props.IRI,outETscope:this.props.IRI, outETvol:[vols[0].f.v], outETstart:[{value:1}] } : this.props.previewEtext} that={this}/> 
+                     <ResourceViewerContainer key={this.props.IRI+"_currentText-"+iri}  auth={this.props.auth} location={this.props.location} navigate={this.props.navigate} /*history={this.props.history}*/ IRI={iri} openEtext={true} openEtextRefs={false} disableInfiniteScroll={vols?.length ? {etextRes:this.props.IRI,outETscope:this.props.IRI, outETvol:[vols[0].f.v], outETstart:[{value:1}] } : this.props.previewEtext} that={this}/> 
                   </>
                   : this.props.etextErrors?.[this.props.IRI] 
                      ? <h4><div class="images-thumb-links"  data-n={4} style={{ marginLeft:0 }}><a class="urilink nolink"><BlockIcon style={{width:"18px",verticalAlign:"top"}}/>&nbsp;{I18n.t("access.errorE")}</a></div></h4>
@@ -10790,7 +10791,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                {top_right_menu(this,title,searchUrl,etextRes,null,this.props.location)}                       
                   
                   { this.state.currentText 
-                     ? <ResourceViewerContainer auth={this.props.auth} /*history={this.props.history}*/ location={this.props.location} navigate={this.props.navigate} IRI={this.state.currentText} openEtext={true} openEtextRefs={!this.state.collapse.etextRefs} topEtextRefs={outline} that={this}/> 
+                     ? <ResourceViewerContainer key={this.props.IRI+"_currentText_sub_"+this.state.currentText}  auth={this.props.auth} /*history={this.props.history}*/ location={this.props.location} navigate={this.props.navigate} IRI={this.state.currentText} openEtext={true} openEtextRefs={!this.state.collapse.etextRefs} topEtextRefs={outline} that={this}/> 
                      : <>
                         { outline }
                         <Loader className="etext-viewer-loader" loaded={!this.props.loading} 
