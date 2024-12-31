@@ -6131,7 +6131,7 @@ class ResourceViewer extends Component<Props,State>
             console.log('ctnO:', data, elem)
          }
          return ( 
-            <ResourceViewerContainer IRI={shortUri(elem[0]?.value)+"_outline"} auth={this.props.auth} /*history={this.props.history}*/ location={this.props.location} navigate={this.props.navigate} IRI={shortUri(elem[0]?.value)} outlineOnly={true} part={this.props.IRI}/> 
+            <ResourceViewerContainer key={shortUri(elem[0]?.value)+"_outline"} auth={this.props.auth} /*history={this.props.history}*/ location={this.props.location} navigate={this.props.navigate} IRI={shortUri(elem[0]?.value)} outlineOnly={true} part={this.props.IRI}/> 
          )
          
       } else {
