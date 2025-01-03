@@ -682,6 +682,27 @@ export default class API {
 
    }
 
+   async loadEtextSnippet(IRI:string): Promise<string>
+   {
+      try {
+         let config = store.getState().data.config.ldspdi
+         let url = config.endpoints[config.index]+ "/osearch" 
+         let param = {"searchType": "snippet", "id": IRI, osearch: true }
+         
+         let data = await this.getQueryResults(url, IRI, param,"GET","application/ld+json");
+
+         loggergen.log("etextsnippet",JSON.stringify(data,null,3))
+
+         return data ;
+      }
+      catch(e){
+         throw(e)
+      }
+
+   }
+
+
+
    async loadEtextChunks(IRI:string,next:number=0,nb:number=10000,useContext:boolean=false): Promise<string>
    {
       //let resource =  JSON.parse(await this.getURLContents(this._etextPath(IRI),false));

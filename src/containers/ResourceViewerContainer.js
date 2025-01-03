@@ -286,6 +286,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       onGetAnnotations:(IRI:string) => {
          dispatch(data.getAnnotations(IRI));
       },
+      onGetSnippet:(IRI:string) => {
+         dispatch(data.getSnippet(IRI));
+      },
       onGetChunks:(IRI:string,next:number=0) => {
          dispatch(data.getChunks(IRI,next));
       },

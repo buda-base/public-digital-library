@@ -551,6 +551,15 @@ export const gotContext = (search:string, iri: string,start:integer,end:integer,
     }
 }
 
+TYPES.getSnippet = 'GET_SNIPPET';
+export const getSnippet = (iri: string): Action => {
+
+    return {
+        type: TYPES.getSnippet,
+        payload: iri
+    }
+}
+
 TYPES.getChunks = 'GET_CHUNKS';
 export const getChunks = (iri: string,next:number=0): Action => {
 

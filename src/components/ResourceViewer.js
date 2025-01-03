@@ -6051,7 +6051,7 @@ class ResourceViewer extends Component<Props,State>
             
             if(e.value === _tmp+"notAvailable" ) {
                
-               if(elem.length > 2) return
+               if(elem.length > 1) return
 
                let possibleEtext = root?.length > 0 && this.getResourceElem(bdo+"instanceHasReproduction", shortUri(root[0].value), this.props.assocResources)?.filter(i => {
                   let t = this.getResourceElem(rdf+"type", shortUri(i.value), this.props.assocResources)
@@ -6082,7 +6082,7 @@ class ResourceViewer extends Component<Props,State>
                               ? <><h4 class="possibleEtext">
                                     {rootID && this.props.resources[rootID] === true && <Loader className="etext-loader" loaded={false} /> }
                                     <a disabled={this.props.resources[rootID] === true} onClick={() => {                                  
-                                          this.props.onGetResource(rootID);
+                                          this.props.onGetSnippet(rootID);
                                           this.setState({checkedEtext:rootID})
                                        }}>
                                           {I18n.t("resource.checkET"+(elem.length > 1 ? "long":""))}

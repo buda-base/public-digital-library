@@ -1080,6 +1080,17 @@ export function* watchGetContext() {
 }
 
 
+async function getSnippet(iri) {
+
+   try {     
+      
+      let data = await api.loadEtextSnippet(iri);
+
+   } catch(e) {
+      logError(e)
+      console.error("ERRROR with snippet",iri,e)
+   }
+}
 
 async function getChunks(iri,next,nb = 10000,useContext = false) {
 
@@ -3892,6 +3903,14 @@ export function* watchGetResource() {
    );
 }
 
+export function* watchGetSnippet() {
+
+   yield takeLatest(
+      dataActions.TYPES.getSnippet,
+      (action) => getSnippet(action.payload)
+   );
+}
+
 export function* watchGetChunks() {
 
    yield takeLatest(
@@ -3964,6 +3983,7 @@ export default function* rootSaga() {
       watchGetCitationData(),
       //watchChoosingHost(),
       //watchGetDatatypes(),
+      watchGetSnippet(),
       watchGetChunks(),
       watchGetPages(),
       watchGetFacetInfo(),
