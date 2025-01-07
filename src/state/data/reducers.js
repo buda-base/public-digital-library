@@ -699,6 +699,37 @@ export const getAnnotations = (state: DataState, action: Action) => {
 reducers[actions.TYPES.getAnnotations] = getAnnotations;
 
 
+export const getSnippet = (state: DataState, action: Action) => {
+
+   state = {
+       ...state,
+       "snippets":{
+          ...state.snippets ?? {},
+          [action.payload]: true
+        }
+     }
+
+   return state ;
+}
+reducers[actions.TYPES.getSnippet] = getSnippet;
+
+
+
+export const gotSnippet = (state: DataState, action: Action) => {
+
+   state = {
+       ...state,
+       "snippets":{
+          ...state.snippets ?? {},
+          [action.payload]:action.meta?{...action.meta}:false
+        }
+     }
+
+   return state ;
+}
+reducers[actions.TYPES.gotSnippet] = gotSnippet;
+
+
 export const gotAnnoResource = (state: DataState, action: Action) => {
 
    const adm  = "http://purl.bdrc.io/ontology/admin/";

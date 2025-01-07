@@ -1753,12 +1753,13 @@ class ResourceViewer extends Component<Props,State>
       let loadETres = props.disableInfiniteScroll?.outETvol
       if(loadETres?.length) {
          loadETres = shortUri(loadETres?.[0]?.value ?? "")
-         if(state.currentText != loadETres && !props.resources[props.IRI]) {
-            let startChar =  Number(props.disableInfiniteScroll?.outETstart?.[0].value ?? 0)
+         let startChar =  Number(props.disableInfiniteScroll?.outETstart?.[0].value ?? 0)
+         if(!props.resources[props.IRI] && state.currentText != loadETres || state.startChar != startChar) {  
             props.onLoading("etext", true)            
             props.onReinitEtext(loadETres, { startChar }, true)
             if(!s) s = { ...state }
             s.currentText = loadETres
+            s.startChar = startChar
          }
       }
 
@@ -2054,6 +2055,14 @@ class ResourceViewer extends Component<Props,State>
    componentWillUnmount() {
       //console.log("cwu:openMirador",this.props.IRI, this.props.pdfDownloadOnly, this.state.openMirador)
       window.removeEventListener('popstate', this.onBackButtonEvent);
+
+      /* // not what's needed to reset the preview when only changing startChar
+      if(this.props.disableInfiniteScroll?.outETvol?.length) {
+         const id = shortUri(this.props.disableInfiniteScroll?.outETvol[0]?.value)
+         console.log("unmounting:",id,this)
+         setTimeout( () => this.props.onResetEtext(id), 1)
+      }
+      */
    }
    
    componentDidMount()
@@ -6069,10 +6078,32 @@ class ResourceViewer extends Component<Props,State>
                   this.props.onGetResource(rootID);
                   this.setState({checkedEtext:rootID})
                }
+
+               let snip = this.props.snippets?.[this.props.IRI],
+                  outETvol = null , outETstart = null, outETscope = null, outETinst = null
+               if(snip) {
+                  
+                  outETvol = [{
+                     "type": "uri",
+                     "value": fullUri("bdr:"+snip.etext_vol)
+                  }]
+                  outETstart = [{
+                     "type": "literal",
+                     "value": "0",
+                     "datatype": "http://www.w3.org/2001/XMLSchema#integer"
+                  }]
+                  outETscope = "bdr:"+(snip.ut ?? snip.etext_vol)
+                  outETinst = [{
+                     "type": "uri",
+                     "value": fullUri("bdr:"+snip.etext_instance)
+                  }]
+               }
+
+               console.log("snip:",rootID,snip)
                
                return <div {...rootID?{"data-rootID":rootID}:{}} data-prop={shortUri(k)} class={possibleEtext?.length > 0 ? "has-preview-true "+elem.length:""}>               
                   <h3><span>{this.proplink(k,null,n)}{elem.length > 1 ? " "+I18n.t("punc.num",{num:i+1}) : ""}{I18n.t("punc.colon")}</span> </h3>               
-                     <div class={"group"+(possibleEtext?.length > 0 ? " preview-etext" : "")}>
+                     <div class={"group"+(possibleEtext?.length > 0 || snip? " preview-etext" : "")}>
                         {possibleEtext?.length > 0 
                            ?  <>
                                  <h4><span>{I18n.t("prop.tmp:noPagination")}</span></h4>
@@ -6082,17 +6113,22 @@ class ResourceViewer extends Component<Props,State>
                               ? <><h4 class="possibleEtext">
                                     {rootID && this.props.resources[rootID] === true && <Loader className="etext-loader" loaded={false} /> }
                                     <a disabled={this.props.resources[rootID] === true} onClick={() => {                                  
-                                          this.props.onGetSnippet(rootID);
+                                          this.props.onGetSnippet(this.props.IRI);
                                           this.setState({checkedEtext:rootID})
                                        }}>
                                           {I18n.t("resource.checkET"+(elem.length > 1 ? "long":""))}
                                     </a>
                                  </h4></>
-                              : elem.length === 1 
-                                 ? this.format("h4",k,"",false,"sub",elem_) 
-                                 : rootID 
-                                    ? <h4><span>{I18n.t("resource.noOtherET")}</span></h4>
-                                    : null}
+                              : snip
+                                 ? <>
+                                       { snip.precision <= 1 && <h4><span>{I18n.t("prop.tmp:noPagination")}</span></h4> }
+                                       <ResourceViewerContainer key={this.props.IRI+"_etext"+"-"+i+"_"+snip.etext_instance}  auth={this.props.auth} /*history={this.props.history}*/ location={this.props.location} navigate={this.props.navigate} IRI={"bdr:"+snip.etext_instance} previewEtext={{ outETvol, outETstart, outETscope, outETinst }}/>  
+                                    </>
+                                 : elem.length === 1 
+                                    ? this.format("h4",k,"",false,"sub",elem_) 
+                                    : rootID
+                                       ? <h4><span>{I18n.t("resource.noOtherET")}</span></h4>
+                                       : null}
 
                      </div>
                   </div>

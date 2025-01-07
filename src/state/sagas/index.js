@@ -1086,9 +1086,12 @@ async function getSnippet(iri) {
       
       let data = await api.loadEtextSnippet(iri);
 
+      store.dispatch(dataActions.gotSnippet(iri,data))
+
    } catch(e) {
       logError(e)
       console.error("ERRROR with snippet",iri,e)
+      store.dispatch(dataActions.gotSnippet(iri,false))
    }
 }
 

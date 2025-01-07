@@ -211,6 +211,7 @@ const mapStateToProps = (state,ownProps) => {
 
    let etextErrors = state.data.etextErrors
 
+   let snippets = state.data.snippets
 
    let portraitPopupClosed = state.ui.portraitPopupClosed
 
@@ -242,7 +243,8 @@ const mapStateToProps = (state,ownProps) => {
       feedbucket,
       monlamResults, monlamKeyword,
       isNewUser, 
-      advancedSearch, advKeyword
+      advancedSearch, advKeyword,
+      snippets
    }
 
    if(config && !config.auth) props.auth = false
@@ -354,6 +356,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       onAdvancedSearch(s:boolean) {
          dispatch(ui.advancedSearch(s))
       },
+      // onResetEtext(id:string) {
+      //    store.dispatch(data.gotNextPages(id,{ reset: true}));
+      // },
       onReinitEtext(id:string, params?:{}, preview) {
          const nav = document.querySelector("#etext-scroll > div:first-child")//(".over-nav")
          setTimeout(() => {             

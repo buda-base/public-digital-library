@@ -560,6 +560,16 @@ export const getSnippet = (iri: string): Action => {
     }
 }
 
+TYPES.gotSnippet = 'GOT_SNIPPET';
+export const gotSnippet = (iri: string, data: {}): Action => {
+
+    return {
+        type: TYPES.gotSnippet,
+        payload: iri,
+        meta: data
+    }
+}
+
 TYPES.getChunks = 'GET_CHUNKS';
 export const getChunks = (iri: string,next:number=0): Action => {
 
