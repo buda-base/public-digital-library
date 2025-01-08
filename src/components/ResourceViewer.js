@@ -6074,15 +6074,14 @@ class ResourceViewer extends Component<Props,State>
                   hasPossibleET = true
                   ET = shortUri(possibleEtext?.[0]?.value)
                   elem_ = [{ value: _tmp+"noPagination" }]
-               } else if(rootID && this.state.checkedEtext != rootID && !this.props.resources[rootID] && !this.props.snippets?.[this.props.IRI] && get.unaligned === "true") {
-                  //this.props.onGetResource(rootID);
+               } else if(!this.props.snippets?.[this.props.IRI] && get.unaligned === "true") {
                   this.props.onGetSnippet(this.props.IRI);
-                  this.setState({checkedEtext:rootID})
                }
 
                let snip = this.props.snippets?.[this.props.IRI],
                   outETvol = null , outETstart = null, outETscope = null, outETinst = null
-               if(snip) {
+
+               if(snip?.precision > 0) {
                   
                   outETvol = [{
                      "type": "uri",
@@ -6098,9 +6097,12 @@ class ResourceViewer extends Component<Props,State>
                      "type": "uri",
                      "value": fullUri("bdr:"+snip.etext_instance)
                   }]
+               } else if(snip && rootID && this.state.checkedEtext != rootID && !this.props.resources[rootID]) {
+                  this.props.onGetResource(rootID);
+                  this.setState({checkedEtext:rootID})
                }
 
-               console.log("snip:",rootID,snip)
+               console.log("snip:",rootID,snip,this.state.checkedEtext,this.props.resources?.[rootID])
                
                return <div {...rootID?{"data-rootID":rootID}:{}} data-prop={shortUri(k)} class={possibleEtext?.length > 0 ? "has-preview-true "+elem.length:""}>               
                   <h3><span>{this.proplink(k,null,n)}{elem.length > 1 ? " "+I18n.t("punc.num",{num:i+1}) : ""}{I18n.t("punc.colon")}</span> </h3>               
@@ -6115,7 +6117,6 @@ class ResourceViewer extends Component<Props,State>
                                     {rootID && this.props.resources[rootID] === true && <Loader className="etext-loader" loaded={false} /> }
                                     <a disabled={this.props.resources[rootID] === true} onClick={() => {                                  
                                           this.props.onGetSnippet(this.props.IRI);
-                                          this.setState({checkedEtext:rootID})
                                        }}>
                                           {I18n.t("resource.checkET"+(elem.length > 1 ? "long":""))}
                                     </a>
