@@ -8569,8 +8569,8 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                               //nav.push(<Link to={"/show/"+txt[0].eTextResource} class="ulink">{I18n.t("resource.openR")}</Link>)
                               //nav.push(<span>|</span>)
                               nav.push(<Link  {...!access?{disabled:true}:{}} to={"/show/"+g.link} class="ulink" onClick={(ev) => {                                 
-                                 this.props.onLoading("etext", true)
-                                 this.props.onReinitEtext(ETres)
+                                 //this.props.onLoading("etext", true)
+                                 //this.props.onReinitEtext(ETres)
                                  this.setState({currentText: ETres, scope:ETres})
                               }}>{I18n.t("result.openE")}</Link>)
                               nav.push(<span>|</span>)
@@ -8595,8 +8595,8 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                      //nav.push(<Link to={"/show/"+g.eTextResource} class="ulink">{I18n.t("resource.openR")}</Link>)
                      //nav.push(<span>|</span>)
                      nav.push(<Link {...!access?{disabled:true}:{}} to={"/show/"+g.link} class="ulink" onClick={(ev) => {                                                         
-                        this.props.onLoading("etext", true)
-                        this.props.onReinitEtext(ETres)                        
+                        //this.props.onLoading("etext", true)
+                        //this.props.onReinitEtext(ETres)                        
                         this.setState({currentText: ETres, scope:g["@id"]})
                      }}>{I18n.t("result.openE")}</Link>)
                      nav.push(<span>|</span>)
@@ -8615,8 +8615,8 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                      g.link += "#open-viewer"
                      
                      nav.push(<Link {...!access?{disabled:true}:{}} to={"/show/" + g.link} class="ulink" onClick={(ev) => {                                                         
-                        this.props.onLoading("etext", true)
-                        setTimeout(() => this.props.onReinitEtext(ETres), 150)                        
+                        //this.props.onLoading("etext", true)
+                        //setTimeout(() => this.props.onReinitEtext(ETres), 150)                        
                         this.setState({ currentText: ETres, scope:g["@id"] })
                      }}>{I18n.t("result.openE")}</Link>)
                      nav.push(<span>|</span>)
@@ -10880,7 +10880,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                      { !etextAccessError && (!this.props.disableInfiniteScroll?.outETvol?.length ? etext_data : <div onClick={() => {
                         const loadETres = shortUri(this.props.disableInfiniteScroll.outETvol[0].value)
                         this.props.onGetResource(loadETres)
-                        this.props.onReinitEtext(loadETres, { startChar: this.props.disableInfiniteScroll.outETstart[0].value})                  
+                        //this.props.onReinitEtext(loadETres, { startChar: this.props.disableInfiniteScroll.outETstart[0].value})                  
                         this.props.navigate(this.renderEtextLink(etextRes))
                      }}>{etext_data}</div>)}
                      { this.props.disableInfiniteScroll && etextAccessError && <h4  style={{ lineHeight:"23px" }}>
