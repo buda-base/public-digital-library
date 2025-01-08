@@ -6069,17 +6069,17 @@ class ResourceViewer extends Component<Props,State>
                
                //console.log("inRoot?", root, possibleEtext, elem)
 
+               let snip = this.props.snippets?.[this.props.IRI],
+                  outETvol = null , outETstart = null, outETscope = null, outETinst = null
+
                let ET, elem_
                if(possibleEtext?.length) {
                   hasPossibleET = true
                   ET = shortUri(possibleEtext?.[0]?.value)
                   elem_ = [{ value: _tmp+"noPagination" }]
-               } else if(!this.props.snippets?.[this.props.IRI] && get.unaligned === "true") {
+               } else if(snip === undefined && get.unaligned === "true") {
                   this.props.onGetSnippet(this.props.IRI);
                }
-
-               let snip = this.props.snippets?.[this.props.IRI],
-                  outETvol = null , outETstart = null, outETscope = null, outETinst = null
 
                if(snip?.precision > 0) {
                   
@@ -6102,7 +6102,7 @@ class ResourceViewer extends Component<Props,State>
                   this.setState({checkedEtext:rootID})
                }
 
-               console.log("snip:",rootID,snip,this.state.checkedEtext,this.props.resources?.[rootID])
+               //console.log("snip:",rootID,snip,this.state.checkedEtext,this.props.resources?.[rootID])
                
                return <div {...rootID?{"data-rootID":rootID}:{}} data-prop={shortUri(k)} class={possibleEtext?.length > 0 ? "has-preview-true "+elem.length:""}>               
                   <h3><span>{this.proplink(k,null,n)}{elem.length > 1 ? " "+I18n.t("punc.num",{num:i+1}) : ""}{I18n.t("punc.colon")}</span> </h3>               
