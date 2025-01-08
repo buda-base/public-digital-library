@@ -6074,8 +6074,9 @@ class ResourceViewer extends Component<Props,State>
                   hasPossibleET = true
                   ET = shortUri(possibleEtext?.[0]?.value)
                   elem_ = [{ value: _tmp+"noPagination" }]
-               } else if(rootID && this.state.checkedEtext != rootID && !this.props.resources[rootID] && get.unaligned === "true") {
-                  this.props.onGetResource(rootID);
+               } else if(rootID && this.state.checkedEtext != rootID && !this.props.resources[rootID] && !this.props.snippets?.[this.props.IRI] && get.unaligned === "true") {
+                  //this.props.onGetResource(rootID);
+                  this.props.onGetSnippet(this.props.IRI);
                   this.setState({checkedEtext:rootID})
                }
 
