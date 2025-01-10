@@ -141,31 +141,31 @@
       "how":{
          "tibetan":{
             "title":"Tibetan: Unicode, Wylie or English phonetics",
-            "body":"Titles and names do not require exact orthography. English phonetics or broken Tibetan or Wylie work.  “Chenrezig”, “spyan ras gzigs” and སྤྱན་རས་གཟིགས་ all find the same pages.<nl/><nl/>Etexts only match full phrases typed exactly as in the text. Metadata typically requires an exact match, with some exceptions."
+            "body":"Searching in Tibetan do not require exact orthography. Phonetics in English (“Chenrezig”), approximate spelling in Tibetan or Wylie work.<nl/><nl/>Partial matches are returned in titles and names but only full matches are returned in etexts."
+         },
+         "codes": {
+            "title":"Codes and dates",
+            "body":"Searching ISBN numbers, BDRC numbers (ex: MW22084), Derge numbers (ex: D24) and several other systems is supported. Dates should also return relevant results directly (ex: 1745)."
+         },
+         "AND": {
+            "title":"Exact match and query combination",
+            "body":"Surrounding your query in double quotes will only find matches that are strictly identical to your query. Combining two or more phrases with the keyword AND (upper cased, as in sde dge AND bka' 'gyur') will find results that contain all the phrases but not necessarily adjacent (for instance they can be in different fields)."
          },
          "chinese": {
-            "title":"Chinese: hani Unicode",
-            "body":"Exact match in Unicode required in all titles and content."
+            "title":"Chinese",
+            "body":"The search will return the same results for Traditional and Simplified characters but Pinyin search is not implemented."
          },
          "sanskrit": {
-            "title":"Sanskrit: iast",
-            "body":"Diacritics are not required. Otherwise, exact match required in all titles and content."
+            "title":"Sanskrit and Pali",
+            "body":"Sanskrit and Pali are searched in transliteration only, but diacritics are not required."
          },
          "khmer": {
             "title":"Khmer and Burmese: Unicode",
-            "body":"Exact match in Unicode required."
-         },
-         "codes": {
-            "title":"Codes, IDs, ISBN",
-            "body":"BDRC codes, Tohoku numbers, Derge numbers, ISBN codes and several other systems are supported."
-         },
-         "AND": {
-            "title":"AND",
-            "body":"Combine two or more phrases with AND in upper case, for example, in titles and etext.  All phrases have to be typed exactly as it appears in the data."
+            "body":"Search in Khmer and Burmese works best in Unicode, but searching in transliteration will work to some extent."
          },
          "scope": {
             "title":"Scopes of search",
-            "body":"When the search box is on a yellow background and says “Search the Digital Archives”, it covers everything we have.  In many other cases, the search element is just a line on white background, and the limited scopes are mentioned, for example “Search texts by this person or about this person”."
+            "body":"When the search box is on a yellow background and says “Search the Digital Archives”, it covers everything we have. When the search bar is on white background it will search on a limited subset of the database and will indicate it (for example “Search in outline”)."
          }
       },
       "donate2":"Donate to BDRC",
