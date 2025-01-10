@@ -452,11 +452,11 @@ const SearchBoxAutocomplete = (props) => {
               <IconButton onClick={() => setHowTo(false)}>
                 <CloseIcon /> 
               </IconButton>{
-              ["tibetan","chinese","sanskrit","khmer","codes","AND","scope"].map(k => <div>
+              ["tibetan","codes","AND","chinese","sanskrit","khmer","scope"].map(k => <div>
                 <p>
                   <b>{I18n.t("topbar.how."+k+".title")}</b>
                   <br/>
-                  <Trans i18nKey={"topbar.how."+k+".body"} components={{ nl : <br /> }}/>
+                  <Trans i18nKey={"topbar.how."+k+".body"} components={{ nl : <br />, ita: <i /> }}/>
                 </p>
               </div>)
             }</div>

@@ -6077,7 +6077,7 @@ class ResourceViewer extends Component<Props,State>
                   hasPossibleET = true
                   ET = shortUri(possibleEtext?.[0]?.value)
                   elem_ = [{ value: _tmp+"noPagination" }]
-               } else if(snip === undefined && get.unaligned === "true") {
+               } else if(snip === undefined) { //} && get.unaligned === "true") {
                   this.props.onGetSnippet(this.props.IRI);
                }
 
@@ -8621,7 +8621,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                      }}>{I18n.t("result.openE")}</Link>)
                      nav.push(<span>|</span>)
                      //nav.push(<a href={fullUri(g.eTextResource).replace(/^http:/,"https:")+".txt"} class="ulink" download type="text" target="_blank">{I18n.t("mirador.downloadE")}</a>)                     
-                     nav.push(etextDL(ETres))
+                     nav.push(etextDL(g["@id"]))
          
                      
                   }else {
@@ -8773,7 +8773,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                      { e.details && <span id="anchor" title={I18n.t("resource."+(openD?"hideD":"showD"))} onClick={(ev) => toggle(ev,root,e["@id"],"details",!e.hasPart && (mono || ut), e)}>
                         <img src="/icons/info.svg"/>
                      </span> }
-                     <CopyToClipboard text={gUri} onCopy={(e) => prompt(I18n.t("misc.clipboard"),gUri)}>
+                     <CopyToClipboard text={fullUri(gUri)} onCopy={(e) => prompt(I18n.t("misc.clipboard"),fullUri(gUri))}>
                         <a class="permalink" title={I18n.t("misc.permalink")}>
                            <img src="/icons/PLINK_small.svg"/>
                            <img src="/icons/PLINK_small_r.svg"/>
