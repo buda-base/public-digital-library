@@ -136,20 +136,20 @@
       "news":"News",
       "programs":"Programs",
       "howToF":"How to find things?",
-      "phonetics":"Try phonetics, like <ita>chenrezig</ita>",
+      "phonetics":"Search Tibetan in phonetics!",
       "new":"New",
       "how":{
          "tibetan":{
             "title":"Tibetan: Unicode, Wylie or English phonetics",
-            "body":"Searching in Tibetan do not require exact orthography. Phonetics in English (“Chenrezig”), approximate spelling in Tibetan or Wylie work.<nl/><nl/>Partial matches are returned in titles and names but only full matches are returned in etexts."
+            "body":"Searching in Tibetan do not require exact orthography. Phonetics in English (ex: <ita>Chenrezig</ita>), approximate spelling in Tibetan or Wylie work.<nl/><nl/>Partial matches are returned in titles and names but only full matches are returned in etexts."
          },
          "codes": {
             "title":"Codes and dates",
-            "body":"Searching ISBN numbers, BDRC numbers (ex: MW22084), Derge numbers (ex: D24) and several other systems is supported. Dates should also return relevant results directly (ex: 1745)."
+            "body":"Searching ISBN numbers, BDRC numbers (ex: <ita>MW22084</ita>), Derge Canon numbers (ex: <ita>D24</ita>) and several other systems is supported. Dates should also return relevant results directly (ex: <ita>1745</ita>)."
          },
          "AND": {
             "title":"Exact match and query combination",
-            "body":"Surrounding your query in double quotes will only find matches that are strictly identical to your query. Combining two or more phrases with the keyword AND (upper cased, as in sde dge AND bka' 'gyur') will find results that contain all the phrases but not necessarily adjacent (for instance they can be in different fields)."
+            "body":"Surrounding your query in double quotes (<ita>\"</ita>) will only find matches that are strictly identical to your query. Combining two or more phrases with the keyword <ita>AND</ita> (upper cased, as in <ita>sde dge AND bka' 'gyur</ita>) will find results that contain all the phrases but not necessarily adjacent (for instance they can be in different fields)."
          },
          "chinese": {
             "title":"Chinese",
