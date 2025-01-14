@@ -7549,7 +7549,8 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
             let elem = this.getResourceElem(k);
 
             if(k === bdo+"eTextHasPage" && this.props.disableInfiniteScroll?.snip?.snippet?.length) {
-               elem = this.props.disableInfiniteScroll?.snip?.snippet.map((p,i) => ({language:p[1], value:p[0], seq:i+(this.props.disableInfiniteScroll?.snip?.start_page_num ?? 0)}))
+               elem = [{ value:"", chunks: this.props.disableInfiniteScroll?.snip?.snippet.map((p,i) => ({"@language":p[1], "@value":p[0] })) }]
+                  //, seq:i+(this.props.disableInfiniteScroll?.snip?.start_page_num ?? 0)}))
             }
 
             if(!elem && customData[k]) {

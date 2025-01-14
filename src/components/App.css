@@ -5730,7 +5730,7 @@ html[lang="en"] .resource .data > [data-prop="bdo:creator"] h4[data-prop="bdo:ro
 }
 
 .preview-etext .resource.etext-view .data #etext-scroll { 
-   overflow: hidden; max-height: 130px; cursor:pointer;  padding-bottom:50px;
+   overflow: hidden; max-height: 180px; cursor:pointer;  padding-bottom:0px;
 }
 
 .preview-etext .resource.etext-view .data #etext-scroll > * { pointer-events: none; } 
@@ -5776,10 +5776,15 @@ html[lang="en"] .resource .data > [data-prop="bdo:creator"] h4[data-prop="bdo:ro
 .preview-etext .resource.etext-view .etextPage .overpage{ padding:0px; }
 .preview-etext .resource.etext-view .etextPage{ border:none;}
 
+
+.resource.etext-view .etextPage {
+   line-height:25px;
+}
+
 .resource.etext-view .etextPage h4 [lang=bo],
 .resource.etext-view .etextPage h4 [lang=bo] > span,
 .resource.etext #etext-scroll [lang=bo] > span:not(.startChar) { font-family:'Tibetan Machine Uni','Noto Sans', "Roboto", "Helvetica", "Arial", sans-serif !important; 
-   line-height:38px; 
+   line-height:36px; 
 }
 
 
