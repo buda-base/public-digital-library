@@ -308,9 +308,10 @@ const CustomHit = ({ hit, routing, that, sortItems, recent, storage, advanced /*
 
               etextLink = "/show/bdr:"+vol._source.etext_instance+backLink+"&scope=bdr:"+vol._id+"&openEtext=bdr:"+vol._source.etext_vol+"&startChar="+(ch._source.cstart-1000)+(n?"&ETselect="+n:"")+"&ETkeyword="+indexUiState.query+"#open-viewer"
 
-              let detec = narrowWithString(c)      
+              // WIP: handle non Tibetan etext + fix bug when leading bogus latin in Tibetan
+              let detec = ch._source.text_bo ? [ "bo" ]: ch._source.text_zh ? [ "zh" ] : [ "en" ] //narrowWithString(c)      
               //console.log("c:",c,detec)
-              const label = getLangLabel(that, fullUri("tmp:textMatch"), [{lang:detec[0]==="tibt"?"bo":"bo-x-ewts", value:(c ?? "").replace(/<em>/g,"↦").replace(/<\/em>/g,"↤").replace(/↤ ↦/g, " ")}])          
+              const label = getLangLabel(that, fullUri("tmp:textMatch"), [{lang:detec[0] /*==="tibt"?"bo":"bo-x-ewts"*/, value:(c ?? "").replace(/<em>/g,"↦").replace(/<\/em>/g,"↤").replace(/↤ ↦/g, " ")}])          
   
               detec = narrowWithString(indexUiState.query)    
 

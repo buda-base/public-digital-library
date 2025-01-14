@@ -1208,7 +1208,7 @@ function GenericSwipeable(props) {
 }
 
 
-let oldScrollTop = 0
+let oldScrollTop = 0, ETreinit
 
 
 class ResourceViewer extends Component<Props,State>
@@ -1755,8 +1755,17 @@ class ResourceViewer extends Component<Props,State>
          loadETres = shortUri(loadETres?.[0]?.value ?? "")
          let startChar =  Number(props.disableInfiniteScroll?.outETstart?.[0].value ?? 0)
          if(!props.resources[props.IRI] && state.currentText != loadETres || state.startChar != startChar) {  
-            props.onLoading("etext", true)            
-            props.onReinitEtext(loadETres, { startChar }, true)
+            
+            if(!props.that && props.snippets?.[props.IRI] === undefined) props.onGetSnippet(props.IRI);
+            
+            /*
+            else if((!props.snippets?.[props.IRI] || !props.snippets[props.IRI]?.length) && ETreinit != loadETres +"@"+ startChar) {
+               ETreinit = loadETres +"@"+ startChar
+               props.onLoading("etext", true)            
+               props.onReinitEtext(loadETres, { startChar }, true)
+            }
+            */
+
             if(!s) s = { ...state }
             s.currentText = loadETres
             s.startChar = startChar
@@ -6055,6 +6064,12 @@ class ResourceViewer extends Component<Props,State>
                outETstart= this.getResourceElem(bdo+"sliceStartChar", outETscope, this.props.assocResources)              
                //console.log("oEiv:", outETinst, outETvol, outETstart, outETscope)
             }   
+            
+            let snip = this.props.snippets?.[this.props.IRI]  
+            if(snip === undefined && this._snip != this.props.IRI && !this.props.outlineOnly) { //} && get.unaligned === "true") {
+               this.props.onGetSnippet(this.props.IRI);
+               this._snip = this.props.IRI
+            }
 
             let root = this.getResourceElem(bdo+"inRootInstance"), rootID = root?.length ? shortUri(root?.[0].value) : ""
             
@@ -6069,17 +6084,14 @@ class ResourceViewer extends Component<Props,State>
                
                //console.log("inRoot?", root, possibleEtext, elem)
 
-               let snip = this.props.snippets?.[this.props.IRI],
-                  outETvol = null , outETstart = null, outETscope = null, outETinst = null
+               let outETvol = null , outETstart = null, outETscope = null, outETinst = null
 
                let ET, elem_
                if(possibleEtext?.length) {
                   hasPossibleET = true
                   ET = shortUri(possibleEtext?.[0]?.value)
                   elem_ = [{ value: _tmp+"noPagination" }]
-               } else if(snip === undefined) { //} && get.unaligned === "true") {
-                  this.props.onGetSnippet(this.props.IRI);
-               }
+               } 
 
                if(snip?.precision > 0) {
                   
@@ -6124,7 +6136,7 @@ class ResourceViewer extends Component<Props,State>
                               : snip
                                  ? <>
                                        { snip.precision <= 1 && <h4><span>{I18n.t("prop.tmp:noPagination")}</span></h4> }
-                                       <ResourceViewerContainer key={this.props.IRI+"_etext"+"-"+i+"_"+snip.etext_instance}  auth={this.props.auth} /*history={this.props.history}*/ location={this.props.location} navigate={this.props.navigate} IRI={"bdr:"+snip.etext_instance} previewEtext={{ outETvol, outETstart, outETscope, outETinst }}/>  
+                                       <ResourceViewerContainer key={this.props.IRI+"_etext"+"-"+i+"_"+snip.etext_instance}  auth={this.props.auth} /*history={this.props.history}*/ location={this.props.location} navigate={this.props.navigate} IRI={"bdr:"+snip.etext_instance} previewEtext={{ outETvol, outETstart, outETscope, outETinst, snip }}/>  
                                     </>
                                  : elem.length === 1 
                                     ? this.format("h4",k,"",false,"sub",elem_) 
@@ -6141,7 +6153,7 @@ class ResourceViewer extends Component<Props,State>
                {this.preprop(k,0,n)}
                <div class="group preview-etext">
                   {/* <Link to={"/show/"+shortUri(e.value)}>{shortUri(e.value)}</Link> */}
-                  <ResourceViewerContainer key={shortUri(outETvol?.[0]?.value ?? e.value)+"_preview"} auth={this.props.auth} /*history={this.props.history}*/ location={this.props.location} navigate={this.props.navigate} IRI={shortUri(outETvol?.[0]?.value ?? e.value)} previewEtext={{ outETvol, outETstart, outETscope, outETinst }}/>  
+                  <ResourceViewerContainer key={shortUri(outETvol?.[0]?.value ?? e.value)+"_preview"} auth={this.props.auth} /*history={this.props.history}*/ location={this.props.location} navigate={this.props.navigate} IRI={shortUri(outETvol?.[0]?.value ?? e.value)} previewEtext={{ outETvol, outETstart, outETscope, outETinst, snip }}/>  
                </div>
             </div>
          )}))
@@ -7072,7 +7084,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
 
       
       let next, prev;
-      if(elem && elem.length) { 
+      if(elem && elem.length && !this.props.disableInfiniteScroll?.snip) { 
          elem = elem.filter(e => e.value && e.start !== undefined && e.start >= firstC && e.start < lastC)
          prev = elem.filter(e => e.value && e.start !== undefined)
          next = elem.filter(e => e.value && e.end)
@@ -7535,6 +7547,10 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
       let data = kZprop.map((k) => {
 
             let elem = this.getResourceElem(k);
+
+            if(k === bdo+"eTextHasPage" && this.props.disableInfiniteScroll?.snip?.snippet?.length) {
+               elem = this.props.disableInfiniteScroll?.snip?.snippet.map((p,i) => ({language:p[1], value:p[0], seq:i+(this.props.disableInfiniteScroll?.snip?.start_page_num ?? 0)}))
+            }
 
             if(!elem && customData[k]) {
                return customData[k]
@@ -10622,7 +10638,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
          else if(this.props.disableInfiniteScroll?.outETinst?.length) etextRes = shortUri(this.props.disableInfiniteScroll.outETinst[0].value)
          else etextRes = null
          
-         let etext_data = this.renderData(false, [!hasPages?bdo+"eTextHasChunk":bdo+"eTextHasPage"],iiifpres,title,otherLabels,"etext-data",undefined,undefined,
+         let etext_data = this.renderData(false, [!hasPages&&!this.props.disableInfiniteScroll?.snip?bdo+"eTextHasChunk":bdo+"eTextHasPage"],iiifpres,title,otherLabels,"etext-data",undefined,undefined,
             this.props.disableInfiniteScroll&&etextRes?[<div class="etext-continue"><Link onClick={() => {                
                if(this.props.disableInfiniteScroll?.outETvol?.length) { 
                   const loadETres = shortUri(this.props.disableInfiniteScroll.outETvol[0].value)
@@ -10809,7 +10825,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
             return (<>            
                { this.state.currentText || this.props.previewEtext?.outETvol?.length || vols?.length
                   ? <>
-                     <ResourceViewerContainer key={this.props.IRI+"_currentText-"+iri}  auth={this.props.auth} location={this.props.location} navigate={this.props.navigate} /*history={this.props.history}*/ IRI={iri} openEtext={true} openEtextRefs={false} disableInfiniteScroll={vols?.length ? {etextRes:this.props.IRI,outETscope:this.props.IRI, outETvol:[vols[0].f.v], outETstart:[{value:1}] } : this.props.previewEtext} that={this}/> 
+                     <ResourceViewerContainer key={this.props.IRI+"_currentText-"+iri}  auth={this.props.auth} location={this.props.location} navigate={this.props.navigate} /*history={this.props.history}*/ IRI={iri} openEtext={true} openEtextRefs={false} disableInfiniteScroll={vols?.length ? {snip: this.props.previewEtext?.snip, etextRes:this.props.IRI,outETscope:this.props.IRI, outETvol:[vols[0].f.v], outETstart:[{value:1}] } : this.props.previewEtext} that={this}/> 
                   </>
                   : this.props.etextErrors?.[this.props.IRI] 
                      ? <h4><div class="images-thumb-links"  data-n={4} style={{ marginLeft:0 }}><a class="urilink nolink"><BlockIcon style={{width:"18px",verticalAlign:"top"}}/>&nbsp;{I18n.t("access.errorE")}</a></div></h4>

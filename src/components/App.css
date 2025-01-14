@@ -5836,6 +5836,9 @@ html[lang="en"] .resource .data > [data-prop="bdo:creator"] h4[data-prop="bdo:ro
 .etextPage.unformated:not(.hasSeq)  { padding-bottom:25px; }
 .etextPage.unformated h4.page { white-space: normal;  }
 .etextPage h5 { margin-top:0; color:#777; display:inline-block; margin-bottom:10px;}
+
+.preview-etext .etext-data .etextPage h5 { margin-bottom:12px;}
+
 .etextPage h4 + h5 { margin-top:15px;margin-bottom:30px;}
 .etextPage img.page, .etextPage h5 a, .etextPage .small a { cursor:pointer; } 
 .etextPage img.page { box-shadow:1px 1px 7px rgba(0,0,0,0.6); display:block; max-width:calc(100% - 14px); margin-bottom:25px; margin-top:3px;
