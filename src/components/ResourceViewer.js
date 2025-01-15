@@ -6130,7 +6130,7 @@ class ResourceViewer extends Component<Props,State>
                      <div class={"group"+(possibleEtext?.length > 0 || snip? " preview-etext" : "")}>
                         {possibleEtext?.length > 0 
                            ?  <>
-                                 <h4><span>{I18n.t("prop.tmp:noPagination")}</span></h4>
+                                 {!(snip.precision > 1) && <h4><span>{I18n.t("prop.tmp:noPagination")}</span></h4> }
                                  <ResourceViewerContainer key={this.props.IRI+"_etext"+"-"+i+"_"+ET}  auth={this.props.auth} /*history={this.props.history}*/ location={this.props.location} navigate={this.props.navigate} IRI={ET} previewEtext={{ outETvol: null, outETstart: null, outETscope: null, outETinst: null, snip }}/>  
                               </>
                            : rootID && (this.state.checkedEtext != rootID || this.props.resources[rootID] === true)
@@ -8223,6 +8223,12 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
       if(ldspdi) base = ldspdi.endpoints[ldspdi.index]
       let url = "", id = this.props.that?.state?.scope ?? this.props.disableInfiniteScroll?.outETscope ?? this.props.IRI
       if(id) { 
+         let etrefs = this.props.that?.props?.eTextRefs?.["@graph"]?.find(r => r["@id"]===id)
+         if(etrefs && etrefs.instanceHasVolume) {
+            if(!Array.isArray(etrefs.instanceHasVolume)) id = etrefs.instanceHasVolume
+            else if(etrefs.instanceHasVolume?.length === 1) id = etrefs.instanceHasVolume[0]
+         }
+         console.log("etdl:",id,url,this,etrefs)
          if(base.includes("-dev")) url = base + "/resource/" + id.split(":")[1] +".txt"
          else url = fullUri(id).replace(/^http:/,"https:")+".txt"
          url = url.replace(/^\/\//,"https://")
