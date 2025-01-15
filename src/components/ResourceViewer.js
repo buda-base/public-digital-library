@@ -6122,7 +6122,7 @@ class ResourceViewer extends Component<Props,State>
                         {possibleEtext?.length > 0 
                            ?  <>
                                  <h4><span>{I18n.t("prop.tmp:noPagination")}</span></h4>
-                                 <ResourceViewerContainer key={this.props.IRI+"_etext"+"-"+i+"_"+ET}  auth={this.props.auth} /*history={this.props.history}*/ location={this.props.location} navigate={this.props.navigate} IRI={ET} previewEtext={{ outETvol: null, outETstart: null, outETscope: null, outETinst: null }}/>  
+                                 <ResourceViewerContainer key={this.props.IRI+"_etext"+"-"+i+"_"+ET}  auth={this.props.auth} /*history={this.props.history}*/ location={this.props.location} navigate={this.props.navigate} IRI={ET} previewEtext={{ outETvol: null, outETstart: null, outETscope: null, outETinst: null, snip }}/>  
                               </>
                            : rootID && (this.state.checkedEtext != rootID || this.props.resources[rootID] === true)
                               ? <><h4 class="possibleEtext">
