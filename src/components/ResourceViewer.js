@@ -6070,14 +6070,23 @@ class ResourceViewer extends Component<Props,State>
                this.props.onGetSnippet(this.props.IRI);
                this._snip = this.props.IRI
             }
+            if(snip === false) {
+               if(i == 0) return <div {...rootID?{"data-rootID":rootID}:{}} data-prop={shortUri(k)} class={""}>               
+                  <h3><span>{this.proplink(k,null,n)}{I18n.t("punc.colon")}</span> </h3>               
+                  <div class={"group"}>
+                     { this.format("h4",k,"",false,"sub",[elem[elem.length-1]]) }
+                  </div>
+               </div>
+               else return null
+            }
 
             let root = this.getResourceElem(bdo+"inRootInstance"), rootID = root?.length ? shortUri(root?.[0].value) : ""
             
-            if(e.value === _tmp+"notAvailable" ) {
+            if(e.value === _tmp+"notAvailable" || snip === false) {
                
-               if(elem.length > 1) return
+               if(snip != false && elem.length > 1) return
 
-               let possibleEtext = root?.length > 0 && this.getResourceElem(bdo+"instanceHasReproduction", shortUri(root[0].value), this.props.assocResources)?.filter(i => {
+               let possibleEtext = root?.length > 0 && snip != false && this.getResourceElem(bdo+"instanceHasReproduction", shortUri(root[0].value), this.props.assocResources)?.filter(i => {
                   let t = this.getResourceElem(rdf+"type", shortUri(i.value), this.props.assocResources)
                   return t?.some(l => l?.value?.endsWith("EtextInstance")) && !  outlineEtext?.some(o => this.getResourceElem(bdo+"eTextInInstance", shortUri(o.value), this.props.assocResources)?.some(n => n.value === i.value))
                })
