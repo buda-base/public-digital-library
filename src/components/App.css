@@ -4828,6 +4828,21 @@ div.mustLogin a:hover { border:none; text-decoration: underline;}
    margin-left:28px;vertical-align:top; align-items: baseline; flex-wrap: wrap;
 }
 
+#etext-nav a#DL {
+   display:flex; align-items: center; width:210px;
+}
+
+#etext-nav a#DL img {
+   flex-grow:0;
+   flex-shrink: 0;
+}
+
+#etext-nav a#DL:not(.on) img {
+   margin-left:10px;
+}
+
+.etext-top-links a#DL:not(.on) { opacity:0.5; pointer-events: none;  }
+
 .etext-top-links a {cursor: pointer;}
 
 .etext-top-links a:hover { text-decoration: underline !important; }

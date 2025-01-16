@@ -8221,22 +8221,31 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
    renderEtextDLlink = (accessError, noIcon = false) => { 
       let ldspdi = this.props.config.ldspdi, base 
       if(ldspdi) base = ldspdi.endpoints[ldspdi.index]
-      let url = "", id = this.props.that?.state?.scope ?? this.props.disableInfiniteScroll?.outETscope ?? this.props.IRI
-      if(id) { 
+      let noDL, url = "", id = this.props.that?.state?.scope ?? this.props.disableInfiniteScroll?.outETscope ?? this.props.IRI
+      if(id) {          
          let etrefs = this.props.that?.props?.eTextRefs?.["@graph"]?.find(r => r["@id"]===id)
-         if(etrefs && etrefs.instanceHasVolume) {
+         if(!this.props.disableInfiniteScroll && etrefs && etrefs.instanceHasVolume) {
             if(!Array.isArray(etrefs.instanceHasVolume)) id = etrefs.instanceHasVolume
             else if(etrefs.instanceHasVolume?.length === 1) id = etrefs.instanceHasVolume[0]
+         } 
+         //console.log("etR?",etrefs)
+         if(this.props.disableInfiniteScroll) {
+            etrefs = this.props?.that?.getResourceElem(bdo+"instanceHasVolume")
+            if(etrefs && Array.isArray(etrefs) && etrefs?.length > 1) noDL = true 
+            else if(etrefs && Array.isArray(etrefs) && etrefs.length === 1) id = shortUri(etrefs[0].value) 
+            else if(etrefs && !Array.isArray(etrefs)) id = shortUri(etrefs.value)
+         } else {
+            if(etrefs?.instanceHasVolume && Array.isArray(etrefs.instanceHasVolume) && etrefs.instanceHasVolume.length > 1) noDL = true
          }
-         console.log("etdl:",id,url,this,etrefs)
+         //console.log("etdl:",this.props.IRI,id,url,this,etrefs)
          if(base.includes("-dev")) url = base + "/resource/" + id.split(":")[1] +".txt"
          else url = fullUri(id).replace(/^http:/,"https:")+".txt"
          url = url.replace(/^\/\//,"https://")
       }
       return (
-         <a id="DL" class={!accessError?"on":""} onClick={(e) => this.setState({...this.state,anchorLangDL:e.currentTarget, collapse: {...this.state.collapse, langDL:!this.state.collapse.langDL } } ) }>
+         <a id="DL" class={!accessError&&!noDL?"on":""} onClick={(e) => !noDL && this.setState({...this.state,anchorLangDL:e.currentTarget, collapse: {...this.state.collapse, langDL:!this.state.collapse.langDL } } ) }>
             {etext_lang_selec(this,true,<>
-                  {I18n.t("mirador.downloadE")}
+                  {I18n.t(!noDL?"mirador.downloadE":this.props.disableInfiniteScroll?"mirador.noDL":"mirador.noDLviewer")}
                   {!noIcon && <img src="/icons/DLw.png"/>}
                </>, url)}
             </a>
