@@ -3136,7 +3136,7 @@ class ResourceViewer extends Component<Props,State>
       if(!info) info = [ getLangLabel(this, prop, infoBase.filter((e)=>((e["xml:lang"] || e["lang"] || e.fromKey && e.fromKey === foaf+"name")))) ]                        
       if(!info) info = [ getLangLabel(this, prop, infoBase.filter((e)=>((e["xml:lang"] || e["lang"]) && e.type==prop))) ]
 
-      //loggergen.log("info?",prop,infoBase,info)
+      loggergen.log("info?",prop,infoBase,info)
 
       //if(info.value) info = info.value
 
@@ -3242,7 +3242,7 @@ class ResourceViewer extends Component<Props,State>
             return JSON.stringify(elem);
          }
 
-         //loggergen.log("uriformat",prop,elem.value,elem,dic,withProp,show)
+         loggergen.log("uriformat",prop,elem.value,JSON.stringify(elem.data?.["skos:prefLabel"]?.[0]??{}),elem,dic,withProp,show)
          
          if(elem?.value?.startsWith("bdr:")) elem.value = elem.value.replace(/^bdr:/,bdr)
 
@@ -3287,7 +3287,7 @@ class ResourceViewer extends Component<Props,State>
          if(!infoBase || !infoBase.length)  {
             if(this.props.dictionary) infoBase = this.props.dictionary[elem.value]
             
-            //loggergen.log("ib",infoBase,dico)
+            loggergen.log("ib",infoBase,dico)
 
             if(infoBase &&  infoBase[skos+"prefLabel"]) infoBase = infoBase[skos+"prefLabel"]
             else if(infoBase &&  infoBase[rdfs+"label"]) infoBase = infoBase[rdfs+"label"]
@@ -3298,14 +3298,14 @@ class ResourceViewer extends Component<Props,State>
 
          }
 
-         //loggergen.log("base:", noLink, JSON.stringify(infoBase,null,3))
+         loggergen.log("base:", noLink, JSON.stringify(infoBase,null,3))
 
          if(infoBase) {
             let { _info, _lang } = this.getInfo(prop,infoBase,withProp, !elem.noid?elem.value:undefined) 
             info = _info
             lang = _lang
 
-            //loggergen.log("info!",info)
+            loggergen.log("info!",info)
 
             if(!info) info = shortUri(elem.value)
          }
@@ -3493,7 +3493,7 @@ class ResourceViewer extends Component<Props,State>
                   //if(pI) uri = this.props.IRI+"?part="+uri
                   //else uri = uri.replace(/^((bdr:MW[^_]+)_[^_]+)/,"$2?part=$1")
 
-                  //loggergen.log("inOutL:",elem,info,uri,dico)
+                  loggergen.log("inOutL:",elem,info,uri,dico)
 
                   if(info === uri) {                      
                      if(elem.volume) {
@@ -3567,7 +3567,11 @@ class ResourceViewer extends Component<Props,State>
                         return false;
                      }
                                                 
-                  } } data-info={info}>{elem?.data?.partType === "bdr:PartTypeVolume" && (elem?.data?.partIndex ?? elem?.data?.index) != undefined && I18n.t("resource.outLn", {n:(""+(elem.data.partIndex?? elem?.data?.index)).padStart(2,'0')})}{info}</a>
+                  } } data-info={info}>{
+                        elem?.data?.partType === "bdr:PartTypeVolume" && (elem?.data?.partIndex ?? elem?.data?.index) != undefined && I18n.t("resource.outLn", {n:(""+(elem.data.partIndex?? elem?.data?.index)).padStart(2,'0')})
+                     }{
+                        elem?.data?.type === "EtextVolume" && elem?.data?.volumeNumber != undefined && I18n.t("resource.outLn", {n:(""+(elem?.data?.volumeNumber)).padStart(2,'0')})
+                     }{info}</a>
                }
                else link = <Link {...this.props.preview?{ target:"_blank" }:{}} className={"urilink prefLabel " } to={"/"+show+"/"+uri}>{info}</Link>
 
@@ -8456,7 +8460,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
          
       }
 
-      let toggle = (e,r,i,x = "",force,el) => {                 
+      let toggle = (e,r,i,x = "",force,el,openT = true) => {                 
 
          console.log("el:",el,e,r,i,x,force,this.props.eTextRefs,this.state.scope)
 
@@ -8488,11 +8492,19 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                   firstVol = null
                }
             }
-            this.setState( { scope:i, ...(val != this.state.collapse[tag] ? { collapse: { ...this.state.collapse, [tag]:val }}:{}) })         
-            if(i != r) { 
-               if(this.state.scope != i) openText(el, true)
+            
+            if(!openT) {
+               
+               this.setState( { collapse: { ...this.state.collapse, [tag]: this.state.scope === i?val:!this.state.collapse[tag] } })         
+            
             } else {
-               openText({ link:"/show/"+r, "@id":r }, true, firstVol)               
+               this.setState( { scope:i, ...(val != this.state.collapse[tag] ? { collapse: { ...this.state.collapse, [tag]:val }}:{}) })         
+            
+               if(i != r) { 
+                  if(this.state.scope != i) openText(el, true)
+               } else {
+                  openText({ link:"/show/"+r, "@id":r }, true, firstVol)               
+               }
             }
 
          }
@@ -8600,6 +8612,12 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                      g.link =  useRoot+"?"+back+"openEtext="+ g["@id"] + "#open-viewer"
                      if(g.volumeHasEtext) {
                         if(!Array.isArray(g.volumeHasEtext)) {
+                           let txt = elem.filter(e => e["@id"] === g.volumeHasEtext)                           
+                           const ETres = txt[0]?.["@id"] //txt[0]?.eTextResource || txt[0]?.etextResource["@id"]
+                           if(txt[0]?.["skos:prefLabel"]) g.hasPart = true
+
+                        } else if(false && !Array.isArray(g.volumeHasEtext)) {
+
                            let txt = elem.filter(e => e["@id"] === g.volumeHasEtext)                           
                            const ETres = txt[0]?.["@id"] //txt[0]?.eTextResource || txt[0]?.etextResource["@id"]
                            if(ETres) {                                                            
@@ -8790,8 +8808,8 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
             else pT = <div>{pType}</div>
 
             ret.push(<span {...ref} class={'top' + (/*this.state.collapse[tag]*/ isCurrent?" on":"") }>
-                  {(e.hasPart && !open) && <img src="/icons/triangle.png" onClick={(ev) => toggle(null,root,e["@id"],!e.hasPart?"details":"",!e.hasPart && mono, e)} className="xpd right"/>}
-                  {(e.hasPart && open) && <img src="/icons/triangle_.png" onClick={(ev) => toggle(null,root,e["@id"],!e.hasPart?"details":"",!e.hasPart && mono, e)} className="xpd"/>}
+                  {(e.hasPart && !open) && <img src="/icons/triangle.png" onClick={(ev) => toggle(null,root,e["@id"],!e.hasPart?"details":"",!e.hasPart && mono, e, false)} className="xpd right"/>}
+                  {(e.hasPart && open) && <img src="/icons/triangle_.png" onClick={(ev) => toggle(null,root,e["@id"],!e.hasPart?"details":"",!e.hasPart && mono, e, false)} className="xpd"/>}
                   <span class={"parTy "+(/*e.details*/isCurrent?"on":"") } {...e.details?{title: I18n.t("resource."+(openD?"hideD":"showD")), onClick:(ev) => toggle(ev,root,e["@id"],"details",!e.hasPart && mono,e) /*openText()*/ }:{title:tLabel}} >
                   {pT}
                   </span>
