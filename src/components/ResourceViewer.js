@@ -3136,7 +3136,7 @@ class ResourceViewer extends Component<Props,State>
       if(!info) info = [ getLangLabel(this, prop, infoBase.filter((e)=>((e["xml:lang"] || e["lang"] || e.fromKey && e.fromKey === foaf+"name")))) ]                        
       if(!info) info = [ getLangLabel(this, prop, infoBase.filter((e)=>((e["xml:lang"] || e["lang"]) && e.type==prop))) ]
 
-      loggergen.log("info?",prop,infoBase,info)
+      //loggergen.log("info?",prop,infoBase,info)
 
       //if(info.value) info = info.value
 
@@ -3242,7 +3242,7 @@ class ResourceViewer extends Component<Props,State>
             return JSON.stringify(elem);
          }
 
-         loggergen.log("uriformat",prop,elem.value,JSON.stringify(elem.data?.["skos:prefLabel"]?.[0]??{}),elem,dic,withProp,show)
+         //loggergen.log("uriformat",prop,elem.value,JSON.stringify(elem.data?.["skos:prefLabel"]?.[0]??{}),elem,dic,withProp,show)
          
          if(elem?.value?.startsWith("bdr:")) elem.value = elem.value.replace(/^bdr:/,bdr)
 
@@ -3287,7 +3287,7 @@ class ResourceViewer extends Component<Props,State>
          if(!infoBase || !infoBase.length)  {
             if(this.props.dictionary) infoBase = this.props.dictionary[elem.value]
             
-            loggergen.log("ib",infoBase,dico)
+            //loggergen.log("ib",infoBase,dico)
 
             if(infoBase &&  infoBase[skos+"prefLabel"]) infoBase = infoBase[skos+"prefLabel"]
             else if(infoBase &&  infoBase[rdfs+"label"]) infoBase = infoBase[rdfs+"label"]
@@ -3298,14 +3298,14 @@ class ResourceViewer extends Component<Props,State>
 
          }
 
-         loggergen.log("base:", noLink, JSON.stringify(infoBase,null,3))
+         //loggergen.log("base:", noLink, JSON.stringify(infoBase,null,3))
 
          if(infoBase) {
             let { _info, _lang } = this.getInfo(prop,infoBase,withProp, !elem.noid?elem.value:undefined) 
             info = _info
             lang = _lang
 
-            loggergen.log("info!",info)
+            //loggergen.log("info!",info)
 
             if(!info) info = shortUri(elem.value)
          }
@@ -3493,7 +3493,7 @@ class ResourceViewer extends Component<Props,State>
                   //if(pI) uri = this.props.IRI+"?part="+uri
                   //else uri = uri.replace(/^((bdr:MW[^_]+)_[^_]+)/,"$2?part=$1")
 
-                  loggergen.log("inOutL:",elem,info,uri,dico)
+                  //loggergen.log("inOutL:",elem,info,uri,dico)
 
                   if(info === uri) {                      
                      if(elem.volume) {
