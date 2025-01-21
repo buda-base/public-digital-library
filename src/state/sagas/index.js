@@ -2350,7 +2350,7 @@ function sortResultsByYear(results,reverse,aux) {
       },{})
       keys = _.orderBy(keys,['ctx','n','p'],[(reverse?'desc':'desc'), (reverse?'desc':'asc'), (reverse?'asc':'desc')])
       
-      loggergen.log("keysY:",keys)
+      //loggergen.log("keysY:",keys)
 
       let sortRes = {}
       for(let k of keys) sortRes[k.k] = results[k.k]

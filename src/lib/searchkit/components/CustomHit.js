@@ -451,6 +451,19 @@ const CustomHit = ({ hit, routing, that, sortItems, recent, storage, advanced /*
           </span>
         } 
 
+        {(hit.birthDate != undefined || hit.deathDate != undefined) && <>
+          <span class="names noNL dates">
+            <span class="label"></span>
+            <span>{hit.birthDate
+              ? hit.deathDate 
+                ? I18n.t("result.bdDate", { birth: hit.birthDate, death: hit.deathDate, interpolation: {escapeValue: false} })
+                : I18n.t("result.bDate", { num: hit.birthDate, interpolation: {escapeValue: false} })
+              : I18n.t("result.dDate", { num: hit.deathDate, interpolation: {escapeValue: false} })
+            }</span>
+          </span>
+        </>
+        }
+
         { !isOtherVersions && names.length > 0 && <>
           <span class="names noNL">
             <span class="label">{I18n.t(prop, {count: names.length})}<span class="colon">:</span></span>
