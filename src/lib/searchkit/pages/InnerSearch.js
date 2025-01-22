@@ -68,6 +68,26 @@ function OtherVersionsNav({ that, RID, srcVersionID }) {
   </div>
 }
 
+function MaskWhenNoResult({ setEmpty }) {
+
+  const { status, results } = useInstantSearch();
+  
+  const [done, setDone] = useState(0)
+
+  //console.log("mwnr:", done, status, results)
+
+  useEffect(() => {
+    if(status === "loading" && done == 0) setDone(1)
+    else if(status === "idle" && done == 1) setDone(2)
+  }, [status, done])
+
+  useEffect(() => {
+    if(done === 2) setEmpty(results.query==="" && results.nbPages===0)
+  }, [results, done])
+
+  return null
+}
+
 export class InnerSearchPage extends Component<State, Props>
 {
   _urlParams = {}
@@ -138,8 +158,10 @@ export class InnerSearchPage extends Component<State, Props>
 
     console.log("iSsC:", searchClient, routingConfig, this.props, pageFilters, storageRef, recent)        
     
+    //if(this.state.isEmpty) return null
+
     return (<>
-      { (pageFilters || !RID) && <div className="AppSK InnerSearchPage data">
+      { (pageFilters || !RID) && <div className={"AppSK InnerSearchPage data empty-"+(this.state.isEmpty)}>
           <InstantSearch
             key={pageFilters+"-"+RID+"_isOtherVersions-"+isOtherVersions+(srcVersionID?"_src-"+srcVersionID:"")+("_recent-"+recent)}            
             indexName={process.env.REACT_APP_ELASTICSEARCH_INDEX}
@@ -167,6 +189,7 @@ export class InnerSearchPage extends Component<State, Props>
             }} 
               */
           >
+            <MaskWhenNoResult setEmpty={(val) => { if(val != this.state.isEmpty) this.setState({isEmpty:val}); }} />
             <Loader loaded={!this.props.loading}/>
             <div data-prop="tmp:search">
               { !recent && <div className="searchbox">
