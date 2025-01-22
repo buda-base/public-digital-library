@@ -18,7 +18,7 @@ import { etext_tooltips } from "../pages/Search";
 
 //import history from "../../../history"
 
-import { getPropLabel, fullUri, getLangLabel, highlight } from '../../../components/App'
+import { getPropLabel, fullUri, getLangLabel, highlight, renderDates } from '../../../components/App'
 import TextToggle from '../../../components/TextToggle'
 import { sortLangScriptLabels, extendedPresets } from '../../../lib/transliterators'
 
@@ -393,6 +393,15 @@ const CustomHit = ({ hit, routing, that, sortItems, recent, storage, advanced /*
     return t.map(s => getPropLabel(that,fullUri("bdr:"+s), true, false)).map((s,i) => i > 0 ? ([<span style={{whiteSpace:"pre"}} lang={that.props.locale}>{I18n.t("punc.comma")}</span>,s]):s)
   }
 
+  const prepDate = (date) => {
+    if(date) return [{type:fullUri("bdo:eventWhen"), value: (""+date), "xml:lang":""}]
+      else return []
+  }
+  const dates = useMemo( 
+    () => renderDates(prepDate(hit.birthDate), prepDate(hit.deathDate), prepDate(hit.floruitDate), that.props.locale), 
+    [hit]
+  )
+
   //console.log("hit:", hit, isMetaMatch, link, that.props.location?.search, sortBy, refinementList, uiState, publisher, storage)
 
   return (<div class={"result "+hit.type}>        
@@ -451,15 +460,10 @@ const CustomHit = ({ hit, routing, that, sortItems, recent, storage, advanced /*
           </span>
         } 
 
-        {(hit.birthDate != undefined || hit.deathDate != undefined) && <>
+        {dates?.length > 0 && <>
           <span class="names noNL dates">
             <span class="label"></span>
-            <span>{hit.birthDate
-              ? hit.deathDate 
-                ? I18n.t("result.bdDate", { birth: hit.birthDate, death: hit.deathDate, interpolation: {escapeValue: false} })
-                : I18n.t("result.bDate", { num: hit.birthDate, interpolation: {escapeValue: false} })
-              : I18n.t("result.dDate", { num: hit.deathDate, interpolation: {escapeValue: false} })
-            }</span>
+            <span>{dates}</span>
           </span>
         </>
         }
