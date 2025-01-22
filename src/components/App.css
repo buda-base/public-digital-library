@@ -1777,6 +1777,12 @@ ul.suggestions li > span > svg:first-child {
    display:none;
 }
 
+
+[data-prop="tmp:propHasEtext"] .etext-top-links > a,
+[data-prop="tmp:propHasScans"] .images-thumb-links > .urilink {
+   font-weight:600;
+}
+
 /* ----------------------------- end new-UX/instance ---------------------------- */
 
 .nav > div > div > a > img { vertical-align: middle;}
@@ -5782,7 +5788,7 @@ html[lang="en"] .resource .data > [data-prop="bdo:creator"] h4[data-prop="bdo:ro
 
 .preview-etext .resource.etext-view .data .etext-continue a:not(:hover) { border-bottom:1px solid transparent; }
 
-.preview-etext .resource.etext-view .data .etext-continue a { font-size:14px; font-weight: 500;}
+.preview-etext .resource.etext-view .data .etext-continue a { font-size:14px; font-weight: 400;}
 
 .withMonlam .resource.etext-view .etextPage .overpage .page .hover-menu { display:none !important; }
 
