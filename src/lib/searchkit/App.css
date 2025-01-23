@@ -296,6 +296,10 @@ svg.help-workid { opacity:0.55; width:18px; vertical-align: -4px; margin-left:8p
    width:calc(100% - 305px);
 }
 
+.resource.etext-view #etext-scroll > :first-child {
+  scroll-margin:calc(60px * 3);
+}
+
 .AppSK.InnerSearchPage:not(.empty-false),
 .AppSK.InnerSearchPage .mask-when-no-result {
   display:none;

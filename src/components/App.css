@@ -3773,6 +3773,8 @@ div:has(.resource.preview) .infoPanel.inRes { margin:0 !important; }
 
 .resource .data#outline .is-root { scroll-margin: calc((100vh - 80px) /2); }
 
+.resource .data#outline  .parTy.on { scroll-margin:calc((100vh - 2 * 60px) / 2); }
+
 .resource .data#outline .root.is-root .parTy + span > h2 > a:hover,
 .resource .data#outline .top:not(.is-root) .parTy + span > .ulink > a:hover { text-decoration: none; }
 .resource .data#outline .top:not(.is-root) .parTy + span > .ulink > a:hover { text-decoration: none; color:black;}

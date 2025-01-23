@@ -376,8 +376,22 @@ const mapDispatchToProps = (dispatch, ownProps) => {
             }
          
             setTimeout(() => {             
-               if(nav && !get.part && document.querySelector(".etext-nav-parent.someClass")) nav.scrollIntoView()
+               if(nav && !get.part && document.querySelector(//".etext-nav-parent.someClass"
+                     ".resource.etext-view #etext-scroll > :first-child"
+                  )) nav.scrollIntoView()
+
+               const timer = setInterval(() => {
+                  console.log("tmr")
+                  const elem = document.querySelector(".data.etextrefs .parTy.on")
+                  if(elem) {
+                     clearInterval(timer)
+                     elem.scrollIntoView() 
+                  }  
+               }, 150)
+
             }, 1000)
+
+
 
          }, 150);         
       }
