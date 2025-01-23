@@ -23,6 +23,7 @@ const onKhmerUrl = (
 require('formdata-polyfill')
 
 const CONFIG_PATH = onKhmerUrl?'/config-khmer_v2.json':'/config_v2.json'
+const TRADI_PATH = '/traditions.json'
 const CONFIGDEFAULTS_PATH = '/config-defaults.json'
 const ONTOLOGY_PATH = '/ontology/core.json'
 const DICTIONARY_PATH = '/ontology/data/json' //  '/graph/ontologySchema.json'
@@ -333,6 +334,8 @@ export default class API {
     {
       try {
          let config =  JSON.parse(await this.getURLContents(this._configPath,false));
+         let tradiObj =  JSON.parse(await this.getURLContents(this._tradiPath,false));
+         config.tradition = tradiObj.tradition
          loggergen.log("config",config)
          return config ;
       }
@@ -1598,6 +1601,15 @@ export default class API {
 
       return path;
   }
+
+  get _tradiPath(): string {
+   let path = TRADI_PATH;
+   if (this._server) {
+       path = this._server + TRADI_PATH;
+   }
+   return path;
+  }
+
   get _configDefaultsPath(): string {
       let path = CONFIGDEFAULTS_PATH;
       if (this._server) {
