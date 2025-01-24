@@ -30,7 +30,7 @@ type State = { content:any, error:integer, collapse:{}, route:"" }
 
 type Props = { history:{}, locale:string, config:{} }
 
-let _that
+let _that, already
 
 let xml, tbrc
 const purl = "https://purl.bdrc.io/resource/"
@@ -394,11 +394,13 @@ export class TraditionViewer extends Component<State, Props>
     
     fetching = fetching.filter(i => !storage[i])
     
-    if(fetching.length) {
+    if(fetching.length && !already) {
 
       console.log("fetching:", fetching)
-
+      
+      already = true
       const fetchedItems = await fetchLabels(fetching, attribute)
+      already = false
       
       console.log("fetched:", fetchedItems)
       
@@ -409,6 +411,7 @@ export class TraditionViewer extends Component<State, Props>
     }
 
     if(!_.isEqual(this.state.storage, storage)) this.setState({ storage })
+
   }
 
   render(props) {         
@@ -437,7 +440,7 @@ export class TraditionViewer extends Component<State, Props>
       const tradi = this.props.config?.tradition && this.props.config?.tradition[this.props.tradition]    
       let content = [], breadcrumbs = [<Link to="/">{I18n.t("topbar.home")}</Link>]                
 
-      console.log("tradi:",tradi,content,this.props)
+      //console.log("tradi:",tradi,content,this.props)
 
       if(!tradi) return <></>
       else if(this.props.school) this.renderSubLevel(tradi, {content, breadcrumbs})
