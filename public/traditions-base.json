@@ -36,8 +36,7 @@
                "to":"/osearch/search?associatedTradition%5B0%5D=:rid&type%5B0%5D=Instance",
                "content":[{
                   "id":"bdr:TraditionBodong",
-                  "img":"/tbrc/bodong.jpg",
-                  "to":"/tradition/bo/bodong"
+                  "img":"/tbrc/bodong.jpg"
                },{
                   "id":"bdr:TraditionBon",
                   "img":"/tbrc/bon.jpg",
