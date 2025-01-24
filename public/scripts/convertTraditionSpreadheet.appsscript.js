@@ -69,14 +69,14 @@ function processSheetData() {
     "Sakya":{id:"sakya",bdr:'bdr:TraditionSakya'},
     "Kagyu":{id:"kagyu",bdr:'bdr:TraditionKagyu'},
     "དགེ་ལུགས":{id:"geluk",bdr:'bdr:TraditionGeluk'},
-    "བཀའ་གདམས་པ།":{id:"kadampa",bdr:'bdr:TraditionKadampa'},
+    "བཀའ་གདམས་པ།":{id:"kadampa",bdr:'bdr:TraditionKadam'},
     "Bon":{id:"bon",bdr:'bdr:TraditionBon'},
     "Jonang":{id:"jonang",bdr:'bdr:TraditionJonang'},
     "Zhije":{id:"zhije",bdr:'bdr:TraditionZhije'},
     "Rime":{id:"rime",bdr:'bdr:TraditionRime'},
-    "Poetry":{id:"poetry",bdr:'bdr:TraditionPoetry'},
-    "History":{id:"history",bdr:'bdr:TraditionHistory'},
-    "Karchak":{id:"karchak",bdr:'bdr:TraditionKarchak'},
+    "Poetry":{id:"poetry",bdr:'tmp:T281'},
+    "History":{id:"history",bdr:'tmp:T1134'},
+    "Karchak":{id:"karchak",bdr:'tmp:T13'},
   };
   
   for (var i = 0; i < sheets.length; i++) {
