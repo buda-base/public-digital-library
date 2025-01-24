@@ -191,14 +191,14 @@ export class TraditionViewer extends Component<State, Props>
   renderContent(t, route, storage = this.state.storage){ 
     return (t.content ?? t)?.map(c => {
       let label = { value: "", lang: this.props.locale }, rid = (c.id ?? "").split(":")[1] ?? ""
-      if(t.id && c.id && storage && storage[c.id.replace(/^bdr:/,"")]) label = getLangLabel(this,skos+"prefLabel",storage[c.id.replace(/^bdr:/,"")].label ?? [])
-      else if(c.label) label = getLangLabel(this,skos+"prefLabel",c.label ?? [])
+      if(t.id && c.id && storage && storage[c.id.replace(/^bdr:/,"")]) label = getLangLabel(this,skos+"prefLabel",storage[c.id.replace(/^bdr:/,"")].label ?? [], false, true)
+      else if(c.label) label = getLangLabel(this,skos+"prefLabel",c.label ?? [], false, true)
       else if(c.id) {
         if(c.id.startsWith("bdr:")) label = getPropLabel(this, fullUri(c.id), false, true)
         else label.value = I18n.t("tradition."+c.id) 
       }
 
-      //console.log("sto:", storage, label, t)
+      //console.log("sto:", label, c.label) // , storage, t)
 
       let link = route ?? c.to ?? t.to
       if(!link?.startsWith("/")) link = "/tradition/"+this.props.tradition+"/"+ link
@@ -436,6 +436,8 @@ export class TraditionViewer extends Component<State, Props>
 
       const tradi = this.props.config?.tradition && this.props.config?.tradition[this.props.tradition]    
       let content = [], breadcrumbs = [<Link to="/">{I18n.t("topbar.home")}</Link>]                
+
+      console.log("tradi:",tradi,content,this.props)
 
       if(!tradi) return <></>
       else if(this.props.school) this.renderSubLevel(tradi, {content, breadcrumbs})

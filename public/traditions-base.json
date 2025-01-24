@@ -36,26 +36,32 @@
                "to":"/osearch/search?associatedTradition%5B0%5D=:rid&type%5B0%5D=Instance",
                "content":[{
                   "id":"bdr:TraditionBodong",
-                  "img":"/tbrc/bodong.jpg"
+                  "img":"/tbrc/bodong.jpg",
+                  "to":"/tradition/bo/bodong"
                },{
                   "id":"bdr:TraditionBon",
-                  "img":"/tbrc/bon.jpg"
+                  "img":"/tbrc/bon.jpg",
+                  "to":"/tradition/bo/bon"
                },{
                   "id":"bdr:TraditionNyingma",
                   "img":"/tbrc/nyingma.jpg",
                   "to":"/tradition/bo/nyingma"
                },{
                   "id":"bdr:TraditionGeluk",
-                  "img":"/tbrc/gelug.jpg"
+                  "img":"/tbrc/gelug.jpg",
+                  "to":"/tradition/bo/geluk"
                },{
                   "id":"bdr:TraditionKagyu",
-                  "img":"/tbrc/kagyu.jpg"
+                  "img":"/tbrc/kagyu.jpg",
+                  "to":"/tradition/bo/kagyu"
                },{
                   "id":"bdr:TraditionSakya",
-                  "img":"/tbrc/sakya.jpg"
+                  "img":"/tbrc/sakya.jpg",
+                  "to":"/tradition/bo/sakya"
                },{
                   "id":"bdr:TraditionJonang",
-                  "img":"/tbrc/jonang2.jpg"
+                  "img":"/tbrc/jonang2.jpg",
+                  "to":"/tradition/bo/jonang"
                },{
                   "id":"bdr:TraditionZhalu",
                   "img":"/tbrc/tradition-buton.jpg"
@@ -64,9 +70,10 @@
                   "img":"/tbrc/tradition-shangpa.jpg"
                },{
                   "id":"bdr:TraditionRime",
-                  "img":"/tbrc/rismed.jpg"
-               }         
-            ]},{
+                  "img":"/tbrc/rismed.jpg",
+                  "to":"/tradition/bo/rime"
+               }]
+            },{
                "id":"all",
                "classes":"display-block",
                "content":[{

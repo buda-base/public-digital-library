@@ -381,12 +381,13 @@ function AuthCompo(props) {
 
 function ProfileCompo() {   
    const location = useLocation();
+   const navigate = useNavigate();
 
    useEffect(() => {
       store.dispatch(initiateApp(qs.parse(location.search)));
    }, [location])
 
-   return (<ProfileContainer {...{ location, auth }} />)
+   return (<ProfileContainer {...{ location, navigate, auth }} />)
 }
 
 function IIIFCookieCompo(){
