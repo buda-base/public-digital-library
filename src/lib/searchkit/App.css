@@ -969,6 +969,7 @@ header[data-hits="0"] ~ .hits .pagination,
 }
 
 .etext-header.sticky .etext-header-breadcrumbs .ariane {
+  width:1150px;
   padding-left:20px;
  }
 
