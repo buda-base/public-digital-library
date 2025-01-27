@@ -1332,6 +1332,7 @@ ul.suggestions li > span > svg:first-child {
 
 .ariane .can-shrink:not(#a) {
    flex-shrink:0;
+   max-width:65%;
 }
 
 .ariane .can-shrink:not(#a) ~ .can-shrink {
