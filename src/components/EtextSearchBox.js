@@ -23,7 +23,7 @@ export function EtextSearchBox(props) {
 
   const { that, ETrefs, scopeId, setETSBpage } = props
 
-  const [query, setQuery] = useState("")
+  const [query, setQuery] = useState(null)
   
   const [results, setResults] = useState(false)
   const [index, setIndex] = useState()
@@ -48,7 +48,7 @@ export function EtextSearchBox(props) {
   useEffect(() => {
     const get = qs.parse(location.search)
     //console.log("nw?",that.props.loading,query,get.ETkeyword,scope,ETtype,params[ETtype])
-    if(!query && get.ETkeyword && get.ETkeyword != query && !that.props.loading && scope) {
+    if(query == null && get.ETkeyword && get.ETkeyword != query && !that.props.loading && scope) {
       //console.log("nw kw:("+get.ETkeyword+")",location.search)
       setQuery(get.ETkeyword)
       handleNext(get.ETkeyword, Number(get.ETselect))
