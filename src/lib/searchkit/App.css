@@ -956,6 +956,23 @@ header[data-hits="0"] ~ .hits .pagination,
   position: relative;
 }
 
+
+.etext-header-breadcrumbs ~ .etext-header .etext-header-breadcrumbs {
+  display:none;
+}
+
+.etext-header.sticky .etext-header-breadcrumbs {
+  display:inline-flex;
+  width:auto;
+  height:auto;
+  background:none;
+}
+
+.etext-header.sticky .etext-header-breadcrumbs .ariane {
+  width:auto;
+  padding-left:20px;
+ }
+
 .resource .title + .data + .data.top-props {
   padding-bottom:20px;
 }

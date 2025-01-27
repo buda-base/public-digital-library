@@ -8393,6 +8393,11 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
             <span class="space-fix">
                <span>{ETtype ? I18n.t("types.ET."+ETtype) : I18n.t("types.etext")}</span>
             </span>
+            <div class="etext-header-breadcrumbs" >
+               <div class="ariane" /*data-level={level}*/>
+                  {breadcrumbs}
+               </div>
+            </div>
          </span>
          <span><span class="placeType">{text}</span></span>
       </h2>
