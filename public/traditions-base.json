@@ -64,24 +64,24 @@
                   "img":"/tbrc/rismed.jpg",
                   "to":"/tradition/bo/rime"
                },{
-                 "id":"bdr:TraditionKadam",
-                 "img":"/tbrc/.jpg",
+                  "id":"bdr:TraditionKadam",
+                  "img":"/tbrc/kadam.jpg",
                   "to":"/tradition/bo/kadampa"
-               },{
+                },{
                   "id":"bdr:TraditionZhije",
-                  "img":"/tbrc/.jpg",
+                  "img":"/tbrc/shije.jpg",
                   "to":"/tradition/bo/zhije"
-               },{
+                },{
                   "id":"tmp:T281",
-                  "img":"/tbrc/.jpg",
+                  "img":"/tbrc/poetry.jpg",
                   "to":"/tradition/bo/poetry"
                 },{
                   "id":"tmp:T1134",
-                  "img":"/tbrc/.jpg",
+                  "img":"/tbrc/history.jpg",
                   "to":"/tradition/bo/history"
                 },{
                   "id":"tmp:T13",
-                  "img":"/tbrc/.jpg",
+                  "img":"/tbrc/karchak.jpg",
                   "to":"/tradition/bo/karchak"
                 }
                ]
