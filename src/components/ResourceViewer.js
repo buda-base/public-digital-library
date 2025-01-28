@@ -10893,7 +10893,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                {top_right_menu(this,title,searchUrl,etextRes,null,this.props.location)}                       
                   
                   { this.state.currentText 
-                     ? <ResourceViewerContainer key={this.props.IRI+"_currentText_sub_"+this.state.currentText}  auth={this.props.auth} /*history={this.props.history}*/ location={this.props.location} navigate={this.props.navigate} IRI={this.state.currentText} openEtext={true} openEtextRefs={!this.state.collapse.etextRefs} topEtextRefs={outline} that={this}/> 
+                     ? <ResourceViewerContainer key={this.props.IRI+"_currentText_sub_" /*+this.state.currentText*/ }  auth={this.props.auth} /*history={this.props.history}*/ location={this.props.location} navigate={this.props.navigate} IRI={this.state.currentText} openEtext={true} openEtextRefs={!this.state.collapse.etextRefs} topEtextRefs={outline} that={this}/> 
                      : <>
                         { outline }
                         <Loader className="etext-viewer-loader" loaded={!this.props.loading} 

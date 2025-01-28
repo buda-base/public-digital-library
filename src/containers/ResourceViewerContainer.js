@@ -386,7 +386,12 @@ const mapDispatchToProps = (dispatch, ownProps) => {
                   if(elem) {
                      clearInterval(timer)
                      elem.scrollIntoView() 
-                  }  
+                  } else {
+                     const elem = document.querySelector(".data.etextrefs .root.on > .parTy")
+                     if(elem) {
+                        clearInterval(timer)
+                     }
+                  }
                }, 150)
 
             }, 1000)
