@@ -966,7 +966,8 @@
             "0":{
                "95-1":{"01":"good quality"},
                "8-0":{"95":"mediocre quality"},
-               "0-0":{"8":"poor quality"}
+               "0-0":{"8":"poor quality"},
+               "0-1":{"01":"lesser quality"}
             }
          },
          "quality_new":{

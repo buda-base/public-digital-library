@@ -281,8 +281,8 @@ export function EtextSearchBox(props) {
           : <span>{I18n.t("resource.noR")}</span>
         )}
     </span>
-    <IconButton disabled={!query} onClick={handlePrev}><ChevronUp />{I18n.t("resource.prev")}</IconButton>
-    <IconButton disabled={!query} onClick={handleNext}><ChevronDown />{I18n.t("resource.showNnodes")}</IconButton>
+    <IconButton disabled={!query} onClick={() => handlePrev()}><ChevronUp />{I18n.t("resource.prev")}</IconButton>
+    <IconButton disabled={!query} onClick={() => handleNext()}><ChevronDown />{I18n.t("resource.showNnodes")}</IconButton>
   </div>   
 }
 

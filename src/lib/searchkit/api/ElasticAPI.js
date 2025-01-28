@@ -9,9 +9,10 @@ const DATE_RANGE_FIELDS = ["firstScanSyncDate"];
 
 const RANGE_FIELDS = { 
   "etext_quality": [
-    { "from":0,    "to":0.8  },
-    { "from":0.8,  "to":0.95 },
-    { "from":0.95, "to":1.01 },
+    { "from":0,    "to":1.01 },
+    // { "from":0,    "to":0.8  },
+    // { "from":0.8,  "to":0.95 },
+    // { "from":0.95, "to":1.01 },
     { "from":1.99, "to":2.01 },
     { "from":2.99, "to":3.01 },
     { "from":3.99, "to":4.01 }
@@ -23,6 +24,14 @@ const RANGE_FIELDS = {
   ]
 };
 
+const HIT_RANGE_FIELDS = { ...RANGE_FIELDS,
+  "etext_quality": [
+    { "from":0,    "to":0.8  },
+    { "from":0.8,  "to":0.95 },
+    { "from":0.95, "to":1.01 },
+    ...RANGE_FIELDS["etext_quality"].slice(1)
+  ]
+};
 
 const forgeFacetFilters = (facetFilters, filters) => {
   let allFilters = [];
@@ -322,6 +331,7 @@ const getAutocompleteElasticRequest = async (queryStr) => {
 
 export {
   RANGE_FIELDS,
+  HIT_RANGE_FIELDS,
   getGenericRequest,
   getCustomizedBdrcIndexRequest,
   getAutocompleteElasticRequest,

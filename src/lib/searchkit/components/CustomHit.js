@@ -11,7 +11,7 @@ import InfoIcon from '@material-ui/icons/Info';
 import Tooltip from '@material-ui/core/Tooltip';
 
 
-import { RANGE_FIELDS } from "../api/ElasticAPI";
+import { HIT_RANGE_FIELDS } from "../api/ElasticAPI";
 import { RESULT_FIELDS } from "../constants/fields";
 import {narrowWithString} from "../../langdetect"
 import { etext_tooltips } from "../pages/Search";
@@ -370,7 +370,7 @@ const CustomHit = ({ hit, routing, that, sortItems, recent, storage, advanced /*
 
   const getQuality = (field, q) => {
     
-    for(const r of RANGE_FIELDS[field+"_quality"]) {
+    for(const r of HIT_RANGE_FIELDS[field+"_quality"]) {
       if(q >= r.from && q <= r.to) 
         return <>{I18n.t("access."+field+".quality."
             +r.from.toLocaleString('en', { minimumFractionDigits: 1 })

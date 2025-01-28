@@ -55,6 +55,8 @@ export const etext_tooltips = {
   "0.8-0.95":"Etext is automatically created with OCR (Optical Character Recognition) and is usable, but contains some errors.",
   "0.0-0.8":"Etext is automatically created with OCR (Optical Character Recognition) and contains errors",
   "0-0.8":  "Etext is automatically created with OCR (Optical Character Recognition) and contains errors",
+  "0.0-1.01":"Etext is automatically created with OCR (Optical Character Recognition) and is of lesser quality.",
+  "0-1.01":"Etext is automatically created with OCR (Optical Character Recognition) and is of lesser quality."
 }
 
 export const filters = [{ 
