@@ -582,7 +582,7 @@ const CustomHit = ({ hit, routing, that, sortItems, recent, storage, advanced /*
         </>}</div>
     </div>
     {
-      (recent || hit.firstScanSyncDate && sortBy?.startsWith("firstScanSyncDate")) && <>
+      !isOtherVersions && (recent || hit.firstScanSyncDate && sortBy?.startsWith("firstScanSyncDate")) && <>
         <span class="names firstScan">
           {/* <span class="label">{I18n.t("sort.lastS")}<span class="colon">:</span></span> */}
           <span>{I18n.t("result.added",{date:formatDate(hit.firstScanSyncDate)})}</span>

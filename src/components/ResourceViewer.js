@@ -8999,6 +8999,11 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
          if(this.props.outlineKW) osearch = this.props.outlineKW
 
          let toggle = (e,r,i,x = "",force = false, node, volFromUri) => {
+
+            if(x === "open") {
+               return
+            }
+
             let tag = "outline-"+r+"-"+i+(x?"-"+x:"")
             let val = this.state.collapse[tag]
             if(osearch) {
@@ -9256,7 +9261,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                         if(collapse["outline-"+root+"-"+opart+";"+n["@id"]+"-details"]) {
                            //break ;
                         } else if(collapse["outline-"+root+"-"+opart+";"+n["@id"]+"-details"] === undefined) {
-                           collapse["outline-"+root+"-"+opart+";"+n["@id"]+"-details"] = true
+                           collapse["outline-"+root+"-"+opart+";"+n["@id"]+"-details"] = false //true
                            //loggergen.log("hello:","outline-"+root+"-"+opart+";"+n["@id"]+"-details")
                            update = true
                            //break ;
@@ -9925,7 +9930,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                               <span class={"parTy "+(e.details?"on":"")}  ref={citeRef} {...e.details?{title:/*tLabel+" - "+*/ I18n.t("resource."+(this.state.collapse[tag+"-details"]?"hideD":"showD")), onClick:(ev) => toggle(ev,root,e["@id"],"details",false,e)}:{title:tLabel}} >
                                  {pType && parts[pType] ? <div>{parts[pType]}</div> : <div>{parts["?"]}</div> }
                               </span>
-                              <span>{this.uriformat(null,{noid:true, type:'uri', value:fUri, data: e, ...(e.partType==="bdr:PartTypeVolume"?{volumeNumber:e.volumeNumber}:{}), inOutline: (!e.hasPart?tag+"-details":tag), url, debug:false, toggle:() => toggle(null,root,togId,!e.hasPart&&!e["tmp:hasNonVolumeParts"]?"details":"",false,e,top)})}</span>
+                              <span>{this.uriformat(null,{noid:true, type:'uri', value:fUri, data: e, ...(e.partType==="bdr:PartTypeVolume"?{volumeNumber:e.volumeNumber}:{}), inOutline: (!e.hasPart?tag+"-details":tag), url, debug:false, toggle:() => toggle(null,root,togId,!e.hasPart&&!e["tmp:hasNonVolumeParts"]?"open"/*"details"*/:"",false,e,top)})}</span>
                               {e.id}
                               {this.samePopup(e.same,fUri)}
                               <div class="abs">
@@ -10001,7 +10006,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                            )
                         //loggergen.log("will loop:",e["@id"], top, this.props.outlines[e["@id"]],tag,this.state.collapse[tag])
                         if((osearch && this.state.collapse[tag] !== false) || (this.props.outlines[e["@id"]] && this.props.outlines[e["@id"]] !== true && this.state.collapse[tag]) ) 
-                           ret.push(<div style={{paddingLeft:"33px"}}>{makeNodes(e["@id"],top)}</div>)                        
+                           ret.push(<div style={{paddingLeft:"28px"/*"33px"*/}}>{makeNodes(e["@id"],top)}</div>)                        
                         return ( ret )
                      })
                   }
@@ -10103,7 +10108,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                      { !open && [<img src="/icons/triangle.png" className="xpd right" onClick={(e) => toggle(e,root,root)} />,colT,<span onClick={rootClick}>{title}</span>]}
                      {  open && [<img src="/icons/triangle_.png" className="xpd" onClick={(e) => toggle(e,root,root)} />,colT,<span onClick={rootClick} class='on'>{title}</span>]}
                   </div>
-                  { open && <div style={{paddingLeft:"50px"}}>{outline}</div> }
+                  { open && <div style={{paddingLeft:"45px" /*"50px"*/}}>{outline}</div> }
                </div>
             </div>
          </> )
