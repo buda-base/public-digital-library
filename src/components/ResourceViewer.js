@@ -3527,7 +3527,7 @@ class ResourceViewer extends Component<Props,State>
                      //loggergen.log("dico:",uri,info)
                   }
 
-                  link = <a class={"urilink prefLabel " } href={elem.url} onClick={(e) => { 
+                  link = <Link class={"urilink prefLabel " } to={elem.url} onClick={(e) => { 
 
                      if(!elem.debug) {
 
@@ -3571,7 +3571,7 @@ class ResourceViewer extends Component<Props,State>
                         elem?.data?.partType === "bdr:PartTypeVolume" && (elem?.data?.partIndex ?? elem?.data?.index) != undefined && I18n.t("resource.outLn", {n:(""+(elem.data.partIndex?? elem?.data?.index)).padStart(2,'0')})
                      }{
                         elem?.data?.type === "EtextVolume" && elem?.data?.volumeNumber != undefined && I18n.t("resource.outLn", {n:(""+(elem?.data?.volumeNumber)).padStart(2,'0')})
-                     }{info}</a>
+                     }{info}</Link>
                }
                else link = <Link {...this.props.preview?{ target:"_blank" }:{}} className={"urilink prefLabel " } to={"/"+show+"/"+uri}>{info}</Link>
 
@@ -6134,7 +6134,7 @@ class ResourceViewer extends Component<Props,State>
                      <div class={"group"+(possibleEtext?.length > 0 || snip? " preview-etext" : "")}>
                         {possibleEtext?.length > 0 
                            ?  <>
-                                 {!(snip.precision > 1) && <h4><span>{I18n.t("prop.tmp:noPagination")}</span></h4> }
+                                 {!(snip?.precision > 1) && <h4><span>{I18n.t("prop.tmp:noPagination")}</span></h4> }
                                  <ResourceViewerContainer key={this.props.IRI+"_etext"+"-"+i+"_"+ET}  auth={this.props.auth} /*history={this.props.history}*/ location={this.props.location} navigate={this.props.navigate} IRI={ET} previewEtext={{ outETvol: null, outETstart: null, outETscope: null, outETinst: null, snip }}/>  
                               </>
                            : rootID && (this.state.checkedEtext != rootID || this.props.resources[rootID] === true)
@@ -6148,7 +6148,7 @@ class ResourceViewer extends Component<Props,State>
                                  </h4></>
                               : snip
                                  ? <>
-                                       { snip.precision <= 1 && <h4><span>{I18n.t("prop.tmp:noPagination")}</span></h4> }
+                                       { snip?.precision <= 1 && <h4><span>{I18n.t("prop.tmp:noPagination")}</span></h4> }
                                        <ResourceViewerContainer key={this.props.IRI+"_etext"+"-"+i+"_"+snip.etext_instance}  auth={this.props.auth} /*history={this.props.history}*/ location={this.props.location} navigate={this.props.navigate} IRI={"bdr:"+snip.etext_instance} previewEtext={{ outETvol, outETstart, outETscope, outETinst, snip }}/>  
                                     </>
                                  : elem.length === 1 
@@ -9166,7 +9166,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
 
                Object.keys(collapse).filter(k => k.startsWith("outline-"+root)).map(k => { delete collapse[k]; })
                collapse["outline-"+root+"-"+opart] = true
-               collapse["outline-"+root+"-"+opart+"-details"] = true          
+               collapse["outline-"+root+"-"+opart+"-details"] = false // true          
 
                let nodes = this.props.outlines[opart], preloading = false, update = false
                if(nodes && nodes["@graph"]) nodes = nodes["@graph"]
@@ -9891,7 +9891,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                      //loggergen.log("outline?",elem,outline)
 
                      outline = outline.map(e => {
-                        let url = "/show/"+root+"?part="+e["@id"]
+                        let url = "/show/"+e["@id"] //root+"?part="+e["@id"]
                         let togId = e["@id"]
                         if(e["@id"] && e["@id"].startsWith("bdr:I")) {                           
                            url = "/show/"+e["@id"].split(";")[0]
@@ -9930,7 +9930,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                               <span class={"parTy "+(e.details?"on":"")}  ref={citeRef} {...e.details?{title:/*tLabel+" - "+*/ I18n.t("resource."+(this.state.collapse[tag+"-details"]?"hideD":"showD")), onClick:(ev) => toggle(ev,root,e["@id"],"details",false,e)}:{title:tLabel}} >
                                  {pType && parts[pType] ? <div>{parts[pType]}</div> : <div>{parts["?"]}</div> }
                               </span>
-                              <span>{this.uriformat(null,{noid:true, type:'uri', value:fUri, data: e, ...(e.partType==="bdr:PartTypeVolume"?{volumeNumber:e.volumeNumber}:{}), inOutline: (!e.hasPart?tag+"-details":tag), url, debug:false, toggle:() => toggle(null,root,togId,!e.hasPart&&!e["tmp:hasNonVolumeParts"]?"open"/*"details"*/:"",false,e,top)})}</span>
+                              <span>{this.uriformat(null,{noid:true, type:'uri', value:fUri, data: e, ...(e.partType==="bdr:PartTypeVolume"?{volumeNumber:e.volumeNumber}:{}), inOutline: (!e.hasPart?tag+"-details":tag), url, debug:false, ...!e.hasPart&&!e["tmp:hasNonVolumeParts"]?{}:{toggle:() => toggle(null,root,togId,!e.hasPart&&!e["tmp:hasNonVolumeParts"]?"open"/*"details"*/:"",false,e,top)} })}</span>
                               {e.id}
                               {this.samePopup(e.same,fUri)}
                               <div class="abs">

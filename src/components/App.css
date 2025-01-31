@@ -1592,6 +1592,25 @@ ul.suggestions li > span > svg:first-child {
 .resource.etext-outline  .etextrefs:not(#a)  {
    height:100%;
 }
+
+.resource.etext-outline .data#outline .parTy.on + span a:not(#a):hover,
+.resource.etext-outline .data#outline .parTy.on + span a {
+   color:#d73449;
+}
+
+
+.resource.etext-outline .data#outline .parTy.on + span + .abs img:not(#a) {
+   filter:none;
+}
+
+
+.resource.etext-outline .data#outline .parTy.on + span + .abs img:first-child:not(:last-child) {
+   display:none;
+}
+
+.resource.etext-outline .data#outline .parTy.on + span + .abs img:last-child:not(:first-child) {
+   display:inline;
+}
 /*
 .resource ~ .ETSBresults > div:not(#a) {
    white-space: pre;
@@ -3647,7 +3666,14 @@ div:has(.resource.preview) .infoPanel.inRes { margin:0 !important; }
 */
 { font-weight:700 !important;  }
 .resource .data#outline span a { color: #343434; display:flex; line-height:20px; }
-.resource .data#outline span a:hover { border:none; text-decoration: underline; text-decoration-color: #343434; }
+.resource .data#outline .root > .parTy + .on:not(#a) a span { 
+   color:#343434;
+}
+.resource .data#outline .root > .parTy + .on:not(#a) a:hover span,
+.resource .data#outline span a:hover { border:none; 
+   /* text-decoration: underline; text-decoration-color: #343434;  */
+   color:black ;
+}
 .resource .data#outline span .lang { display:none; }
 .resource .data#outline div img.xpd { width:7px; height:5px;margin-right:0px;  cursor:pointer; opacity:1; padding:5px; top:0;left:0;}
 /* .resource .data#outline div svg.xpd { width:20px; margin-right:5px;  cursor:pointer; opacity:0.75;} */
@@ -3668,19 +3694,20 @@ div:has(.resource.preview) .infoPanel.inRes { margin:0 !important; }
 
 .resource .data#outline .parTy + span .ulink .before  { display:none !important; }
 
-/*
+
 .resource .data#outline span.is-root #print,
 .resource .data#outline span.is-root #cite,
 .resource .data#outline .is-root h2 a span,
 .resource .data#outline span.is-root a  { color:#d73449;  }
-*/
 
-/* .resource .data#outline span.is-root #print svg, */
-/*
-.resource .data#outline span.is-root #cite svg { border-color:#d73449 !important;  }
-*/
 
-/* .resource .data#outline .is-root a:hover { text-decoration-color: #d73449;} */
+.resource .data#outline span.is-root #print svg,
+.resource .data#outline span.is-root #cite svg { border-color:#d73449 !important;  } 
+
+.resource .data#outline .is-root a:hover {
+   text-decoration:none;
+    /* text-decoration-color: #d73449; */
+}
 
 .resource .data#outline .root img.xpd { margin-top:3px; }
 .resource .data#outline img.xpd.right { transform:rotate(90deg); }
@@ -3767,11 +3794,13 @@ div:has(.resource.preview) .infoPanel.inRes { margin:0 !important; }
 .resource .data#outline div .id::before { content:'['; padding:0 2px; font-size:12px!important;vertical-align:1px;}
 .resource .data#outline div .id::after { content:']'; }
 
-/* .resource .data#outline .is-root .id { color:#d73449; } */
+.resource .data#outline .is-root .id { color:#d73449; }
 
+/*
 .resource .data#outline .is-root .abs img:not(#a):not(#b){ filter:grayscale(1); }
 .resource .data#outline .is-root .abs svg:not(#a):not(#b):not(:hover),
 .resource .data#outline .is-root .abs img:not(#a):not(#b):not(:hover) { opacity:0.75; }
+*/
 
 .resource .data#outline .root + div .abs { position:absolute; width:110px;}
 
@@ -3806,6 +3835,7 @@ div:has(.resource.preview) .infoPanel.inRes { margin:0 !important; }
 .resource .data#outline .parTy:not(#a).on { cursor:pointer; font-weight:700; background:rgba(0,0,0,0.15);}
 .resource .data#outline .parTy.on:hover { text-decoration: underline; /*text-decoration-color: #d73449;*/ }
 .resource .data#outline .parTy.on div { opacity:1.0;}
+
 
 .resource .data#outline .root:not(.is-root) .parTy,
 .resource .data#outline .top:not(.is-root) .parTy { text-decoration-color:rgba(0,0,0,0.65) !important; }
