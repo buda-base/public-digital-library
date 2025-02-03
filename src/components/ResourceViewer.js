@@ -6093,7 +6093,7 @@ class ResourceViewer extends Component<Props,State>
                let possibleEtext = root?.length > 0 && snip != false && this.getResourceElem(bdo+"instanceHasReproduction", shortUri(root[0].value), this.props.assocResources)?.filter(i => {
                   let t = this.getResourceElem(rdf+"type", shortUri(i.value), this.props.assocResources)
                   return t?.some(l => l?.value?.endsWith("EtextInstance")) && !  outlineEtext?.some(o => this.getResourceElem(bdo+"eTextInInstance", shortUri(o.value), this.props.assocResources)?.some(n => n.value === i.value))
-               })
+               }).filter(r => !snip || r.value?.endsWith(snip.etext_instance))
                
                //console.log("inRoot?", root, possibleEtext, elem)
 
@@ -6140,11 +6140,11 @@ class ResourceViewer extends Component<Props,State>
                            : rootID && (this.state.checkedEtext != rootID || this.props.resources[rootID] === true)
                               ? <><h4 class="possibleEtext">
                                     {rootID && this.props.resources[rootID] === true && <Loader className="etext-loader" loaded={false} /> }
-                                    <a disabled={this.props.resources[rootID] === true} onClick={() => {                                  
+                                    {/* <a disabled={this.props.resources[rootID] === true} onClick={() => {                                  
                                           this.props.onGetSnippet(this.props.IRI);
                                        }}>
                                           {I18n.t("resource.checkET"+(elem.length > 1 ? "long":""))}
-                                    </a>
+                                    </a> */}
                                  </h4></>
                               : snip
                                  ? <>
