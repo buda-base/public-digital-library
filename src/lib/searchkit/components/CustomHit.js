@@ -404,9 +404,14 @@ const CustomHit = ({ hit, routing, that, sortItems, recent, storage, advanced /*
 
   //console.log("hit:", hit, isMetaMatch, link, that.props.location?.search, sortBy, refinementList, uiState, publisher, storage)
 
+  const scrollToTop = () => {
+    const top = document.querySelector("#root > .over-nav")
+    if(top) top.scrollIntoView()
+  }
+
   return (<div class={"result "+hit.type}>        
     <div class="main">
-      <Link to={link} className="BG-link"></Link>
+      <Link to={link} className="BG-link" onClick={scrollToTop}></Link>
       <div class={"num-box "+(checked?"checked":"")} onClick={() => setChecked(!checked) }>{hit.__position}</div>
       <div class={"thumb "+(img&&!imgError?"hasImg":"")}>      
         { !isMetaMatch && etextHits.length > 0 && <span class="etext-type">
@@ -414,7 +419,7 @@ const CustomHit = ({ hit, routing, that, sortItems, recent, storage, advanced /*
             &nbsp;
             {I18n.t("types.etext")}
           </span>}
-        <Link to={link}>
+        <Link to={link} onClick={scrollToTop}>
           { !imgError && img && <span class="img"><img src={img} onError={() => setImgError(true)}/></span> }
           <span class="RID">{hit.objectID}</span>
           { (hit.scans_access <= 5 || hit.scans_quality) && <span>
@@ -430,7 +435,7 @@ const CustomHit = ({ hit, routing, that, sortItems, recent, storage, advanced /*
         </Link>        
       </div>
       <div class="data">                 
-          <Link to={link}>
+          <Link to={link} onClick={scrollToTop}>
             <span class="T">
               { hit.placeType ? getPlaceTypeLabels(hit.placeType) : getPropLabel(that,fullUri("bdr:"+hit.type), true, false, "types."+(hit.type+"").toLowerCase())}
               { isMetaMatch || etextHits.length == 0

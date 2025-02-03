@@ -204,6 +204,11 @@ export class TraditionViewer extends Component<State, Props>
       if(!link?.startsWith("/")) link = "/tradition/"+this.props.tradition+"/"+ link
       link = link.replace(/:rid/g, rid).replace(/:id/g, c.id).replace(/:n/g, (c.id??"").replace(/[^0-9]/g,""))                  
 
+      const scrollToTop = () => {
+        const top = document.querySelector("#root > .over-nav") // "".App > div > div > #samples")
+        if(top) top.scrollIntoView()
+      }
+
       if(c.content) {
         this.goFetch(c.content.map(i => i.id.split(":")[1]),c.id)
         return <>
@@ -213,7 +218,7 @@ export class TraditionViewer extends Component<State, Props>
           </h5>
           {this.renderContent(c, route, storage)}
         </>
-      } else return <Link to={link} className={(c.img ? "has-img ":"")+(c.classes??"")}>
+      } else return <Link to={link} className={(c.img ? "has-img ":"")+(c.classes??"")} onClick={scrollToTop}>
           { c.img && <img src={c.img}/> }
           <span lang={label?.lang}>{label?.value}</span>
         </Link>
