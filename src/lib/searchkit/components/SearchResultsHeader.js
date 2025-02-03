@@ -26,7 +26,7 @@ function SearchResultsHeader(props) {
   
   const label = getPropLabel(that, fullUri("bdo:"+config[1]), false, true, undefined, undefined, storageRef?.current)
   
-  console.log("status:", status, searchStatus)
+  //console.log("status:", status, searchStatus)
 
   useEffect(() => {
     if(results?.processingTimeMS && results?.nbHits === 0) {

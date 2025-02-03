@@ -83,7 +83,7 @@ const CustomHit = ({ hit, routing, that, sortItems, recent, storage, advanced /*
     if(!langs) return
     langs = extendedPresets(langs)
 
-    const hidden = [ "publisherName", "publisherLocation", "authorshipStatement", "comment" ]
+    const hidden = [ /*"publisherName", "publisherLocation",*/ "authorshipStatement", "comment" ]
     const hidden_if_no_match_and_not_locale_en = [ "summary" ]
 
     if(hit) { 
