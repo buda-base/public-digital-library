@@ -23,6 +23,8 @@ const getItem = (collection, id) => {
   return collection.find((_item) => _item.id === id);
 };
 
+const already = {}
+
 function CustomRefinementList(props) {
   const { attribute, that, I18n_prefix, prefix, iri, sort, sortFunc, defaultItems, className, tooltips } = props;
 
@@ -83,10 +85,12 @@ function CustomRefinementList(props) {
 
       const missingIds = newItems.filter((item) => item.label === false).map(item => item.id)
       
-      if (missingIds.length > 0) {
+      if (missingIds.length > 0 && !already[attribute]) {
         try {
 
+          already[attribute] = true
           const fetchedItems = await fetchLabels(missingIds, attribute)
+          already[attribute] = false
           
           storage = {...storage, ...fetchedItems };
 

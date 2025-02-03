@@ -350,7 +350,7 @@ export class TraditionViewer extends Component<State, Props>
 
     } else {          
       content.push(<>
-          <h1 style={{width:"100%"}}>{I18n.t("tradition."+this.props.tradition+"T")} &ndash; {I18n.t("tradition.t_"+this.props.type)} &ndash; {id}</h1>
+          <h1 style={{width:"100%"}}>{/*{I18n.t("tradition."+this.props.tradition+"T")} &ndash; */}{I18n.t("tradition.t_"+this.props.type)} &ndash; {id}</h1>
           <div className={"tradi-content main "+(classes ?? "")}>
             {subContent}
           </div>

@@ -275,6 +275,8 @@ export function FiltersSidebar(props) {
   </>
 }
 
+let already = false
+
 export function HitsWithLabels(props) {
 
   const {that, sortItems, routing, recent, storageRef, isOtherVersions, srcVersionID } = props
@@ -286,12 +288,17 @@ export function HitsWithLabels(props) {
   const [fetching, setFetching] = useState({})
 
   const goFetch = useCallback(async () => {
+    
+    if(already) return
 
     console.log("fetching:", fetching)
 
+
+    already = true
     const attribute = "pagination"
     const fetchedItems = await fetchLabels(Object.keys(fetching), attribute)
-    
+    already = false
+
     console.log("fetched", fetchedItems)
     
     const newStorage = { ...storage }
