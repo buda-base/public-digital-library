@@ -962,12 +962,17 @@
          "quality":{
             "3":{"99-4":{"01":"best quality"}},
             "2":{"99-3":{"01":"best quality, unaligned"}},
-            "1":{"99-2":{"01":"excellent quality"}},
+            "1":{
+               "99-2":{"01":"excellent quality"},
+               "99-4":{"01":"manually reviewed"}
+            },
             "0":{
-               "95-1":{"01":"good quality"},
+               "95-1":{"01":"good OCR"},
                "8-0":{"95":"mediocre quality"},
-               "0-0":{"8":"poor quality"},
-               "0-1":{"01":"lesser quality"}
+               "0-0":{
+                  "8":"poor quality",
+                  "95":"lesser OCR"
+               }
             }
          },
          "quality_new":{
