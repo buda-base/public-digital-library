@@ -275,6 +275,7 @@ svg.help-workid { opacity:0.55; width:18px; vertical-align: -4px; margin-left:8p
    width:1440px;
    box-sizing: border-box;
    margin:auto;
+   max-width:100%;
 }
 
   .AppSK .content {
@@ -1623,4 +1624,75 @@ header[data-hits="0"] ~ .hits .pagination,
 [data-rootid] .noET-space-fix {
   margin-bottom:-50px;
   position: relative;
+}
+
+
+
+
+#etext-nav > div > *:not(#a):not(:first-child) {
+  margin-left:auto;
+}
+
+#etext-nav > div > *:not(#a):not(:nth-last-child(2)) {
+  margin-right:auto;
+}
+
+.etext-nav-parent .etext-search > span input { width:160px; }
+
+#etext-nav a:not(#a) #check,
+#etext-nav > div > #control + a > span:first-child {
+  margin-right:15px;
+}
+
+#etext-nav a #check ~ span img,
+#etext-nav > div > #control + a > span + img {
+  margin-left:15px;
+}
+
+
+/* responsive */
+
+.SearchPane #logo img {
+  max-width: 100%;
+  height:490px;
+  object-fit: cover;
+  object-position: center;
+}
+
+@media (max-width: 1440px) {
+  
+}
+
+@media (max-width: 1320px) {
+
+  #etext-nav > div > #dico,
+  #etext-nav > div > #control + a {
+    display:flex;
+    align-items: center;
+  }
+  
+
+  #etext-nav > div > #dico > span {
+    width:60px;
+    display: block;
+  }
+
+  #etext-nav > div > #control + a > span + span {
+    width:35px;
+    display: block;
+  }
+
+}
+
+@media (max-width: 1280px) {
+  .infoPanel + .resource > .ariane:not(#a) {
+    left:20px;
+  }
+
+}
+
+@media (max-width: 1024px) {
+  .SearchPane #logo > div:not(#a) {
+      transform-origin: 100% 100%;
+  }
 }

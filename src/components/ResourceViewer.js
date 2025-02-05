@@ -8437,13 +8437,13 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                      this.setState({noHilight:false, enableDicoSearch:!this.state.enableDicoSearch, ...this.state.enableDicoSearch?{monlam:null}:{}})
                   }}>
                      {/* <div class="new">{I18n.t("viewer.new")}</div> */}
-                     {this.state.enableDicoSearch?<img id="check" src="/icons/check.svg"/>:<span id="check"></span>}{I18n.t("viewer.monlam")}<span><img class="ico" src="/icons/monlam.png"/></span></a> }
+                     {this.state.enableDicoSearch?<img id="check" src="/icons/check.svg"/>:<span id="check"></span>}<span>{I18n.t("viewer.monlam")}</span><span><img class="ico" src="/icons/monlam.png"/></span></a> }
                   <div id="control">
                      <span title={I18n.t("mirador.decreaseFont")} class={!size||size > 0.6?"on":""} onClick={(e)=>etextSize(false)}><img src="/icons/Zm.svg"/></span>
                      <span title={I18n.t("mirador.increaseFont")} class={!size||size < 2.4?"on":""} onClick={(e)=>etextSize(true)}><img src="/icons/Zp.svg"/></span>
                      {etext_lang_selec(this,true)}
                   </div>
-                  <a class={showToggleScan?"on":""} onClick={(e) => this.setState({showEtextImages:!this.state.showEtextImages})}>{this.state.showEtextImages?<img id="check" src="/icons/check.svg"/>:<span id="check"></span>}{I18n.t("mirador.showI")}<img width="42" src="/icons/search/images_b.svg"/></a>
+                  <a class={showToggleScan?"on":""} onClick={(e) => this.setState({showEtextImages:!this.state.showEtextImages})}>{this.state.showEtextImages?<img id="check" src="/icons/check.svg"/>:<span id="check"></span>}<span>{I18n.t("mirador.showI")}</span><img width="42" src="/icons/search/images_b.svg"/></a>
                   <EtextSearchBox that={this} scopeId={this.props?.that?.state?.scope} ETrefs={this.props.that?.props.eTextRefs?.["@graph"]} setETSBpage={(p,v,i) => { if(!this.state.ETSBpage || this.state.ETSBpage?.page != p || this.state.ETSBpage?.vol != v || this.state.ETSBpage?.idx != i) this.setState({ ETSBpage:{page:p, vol:v, idx:i } }) }} />
                   <span class="X" onClick={() => this.setState({ collapse:{ ...this.state.collapse, etextNav:!this.state.collapse.etextNav }})}></span>
                </div>

@@ -166,7 +166,7 @@ footer#site-footer.no-syncs > div.head::before { background-color:#efefef; }
 
 #root .App .SearchPane,
 #root > div > .resource {   box-sizing: content-box; background-color:#efefef; width:1160px; margin-left:auto;margin-right:auto;
-   max-width:97%;background-color:#efefef;  position:relative; }
+   max-width:100%;background-color:#efefef;  position:relative; }
 
 #root > div > .resource {  padding:155px 140px; padding-bottom:75px; display:flex; text-align:left; }
 
@@ -1123,6 +1123,7 @@ ul.suggestions li > span > svg:first-child {
       max-width: 100%;
       box-sizing: border-box;
    }
+/*
 
    .nav #logo { width:210px; position: relative;}
 
@@ -1138,7 +1139,7 @@ ul.suggestions li > span > svg:first-child {
    .nav #logo #by { margin-right:5px; }
 
    .nav #logo #by + a span:not(#a) { font-weight:500; font-size:18px; }
-
+*/
    .over-nav + .nav .inner-nav > div { line-height:normal; height:auto; max-width:80px; text-align: center; }
 }
 
@@ -1273,6 +1274,11 @@ ul.suggestions li > span > svg:first-child {
    align-items: center;
    justify-content: center;
    margin-bottom:22px;
+}
+
+
+.App.tradition .tradi-content:not(#tradi-all) a.has-img:last-child span { 
+   margin-bottom:0;
 }
 
 .App.tradition .tradi-content:not(#tradi-all) a.has-img span[lang="bo"] {
@@ -6002,7 +6008,7 @@ html[lang="en"] .resource .data > [data-prop="bdo:creator"] h4[data-prop="bdo:ro
 .etext-header.sticky > div,
 .etext-header {
    width:1440px;
-   max-width:97%;
+   max-width:100%;
    margin:auto;
    height:60px;
    background:#efefef;
@@ -6020,6 +6026,11 @@ html[lang="en"] .resource .data > [data-prop="bdo:creator"] h4[data-prop="bdo:ro
 
    height:auto;
    padding-top:40px;
+}
+
+
+.etext-nav-parent.someClass .etext-header.sticky {
+   max-width:calc(100% - 200px);
 }
 
 .etext-nav-parent.someClass .etext-header.sticky,
@@ -6051,6 +6062,7 @@ html[lang="en"] .resource .data > [data-prop="bdo:creator"] h4[data-prop="bdo:ro
    background:white;
    padding:15px 100px;
    box-sizing: border-box;
+   max-width:100%;
 }
 .etext-header:not(.sticky) > div h2 {
    margin:0;
@@ -6109,7 +6121,7 @@ html[lang="en"] .resource .data > [data-prop="bdo:creator"] h4[data-prop="bdo:ro
    left: 0;
    bottom: 0;
    width: 1440px; 
-   max-width:97%;
+   max-width:100%;
    margin:auto;   
    height: 80px;
    background: #172832;
@@ -7190,13 +7202,41 @@ feedbucket-app:not(.on)  { display:none !important; }
 @media (max-width:1440px)
 {
 
+   .infoPanel + .resource > .ariane {
+      padding-left:0;
+      padding-right:0;
+      width:1222px;
+      box-sizing:border-box;
+      margin-left:auto; 
+      margin-right:auto;
+      left:calc((100% - 1222px) / 2);
+      padding-left:70px;
+      padding-right:70px;
+   }
+
 
    .open-etext { right:0px; }
 
    .resource > .ariane { margin-left:0; padding-left:16.7%; }
 
-   #root > div > :is(.App.home:not(.guidedsearch),.resource) { overflow:visible ; width:100%; box-sizing: border-box;}
+   #root > div > :is(.App.home:not(.guidedsearch),.resource) { overflow:visible ; width:100%; box-sizing: border-box; 
+      padding-left:calc((max(100%, 1222px + 40px) - 1222px) / 2);;
+      padding-right:calc((max(100%, 1222px + 40px) - 1222px) / 2);;
+   }
    
+   #root > div > .resource > div > .data { padding-left:70px; padding-right:70px; }  
+   
+   #root > div > .resource .data#perma,
+   #root > div > .resource .data.legal-props,
+   #root > div > .resource .data.ext-props {
+      padding-left:35px;
+      padding-right:35px;
+   }
+
+   .resource .data.ext-props > a:first-child {
+      left:70px;
+   }
+
    /*
    #root .App .SearchPane,
    #root > div > .resource { padding:155px calc((100vw - (1440px - (140px * 2))) / 2); padding-bottom:0; } 
