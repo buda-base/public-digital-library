@@ -866,7 +866,7 @@ body > #pop-login { z-index:1000000 ;}
 
 .ais-SearchBox-form:not(#a),
 .inner-search-bar:not(#a) > div > span:last-child { 
-   width:calc(100% - (110px + 70px + 10px) - 190px - 70px);
+   width:calc(100% - (110px + 70px + 10px) - 190px - 70px + 80px);
    height:60px;
    box-sizing: border-box;
 }
@@ -7209,9 +7209,9 @@ feedbucket-app:not(.on)  { display:none !important; }
       box-sizing:border-box;
       margin-left:auto; 
       margin-right:auto;
-      left:calc((100% - 1222px) / 2);
-      padding-left:70px;
-      padding-right:70px;
+      left:calc((100% - 1280px) / 2);
+      padding-left:100px;
+      padding-right:100px;
    }
 
 
@@ -7220,17 +7220,17 @@ feedbucket-app:not(.on)  { display:none !important; }
    .resource > .ariane { margin-left:0; padding-left:16.7%; }
 
    #root > div > :is(.App.home:not(.guidedsearch),.resource) { overflow:visible ; width:100%; box-sizing: border-box; 
-      padding-left:calc((max(100%, 1222px + 40px) - 1222px) / 2);;
-      padding-right:calc((max(100%, 1222px + 40px) - 1222px) / 2);;
+      padding-left:calc((max(100%, 1280px + 40px) - 1280px) / 2);
+      padding-right:calc((max(100%, 1280px + 40px) - 1280px) / 2);
    }
    
-   #root > div > .resource > div > .data { padding-left:70px; padding-right:70px; }  
+   #root > div > .resource > div > .data { padding-left:100px; padding-right:100px; }  
    
    #root > div > .resource .data#perma,
    #root > div > .resource .data.legal-props,
    #root > div > .resource .data.ext-props {
-      padding-left:35px;
-      padding-right:35px;
+      padding-left:65px;
+      padding-right:65px;
    }
 
    .resource .data.ext-props > a:first-child {

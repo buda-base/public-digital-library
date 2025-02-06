@@ -288,13 +288,14 @@ svg.help-workid { opacity:0.55; width:18px; vertical-align: -4px; margin-left:8p
 }
 
 .AppSK .content .filter {
-   width:305px;
+   width:265px;
    box-sizing: border-box;
-   padding-right:70px;
+   padding-right:30px;
+   padding-left:10px;
 }
 
 .AppSK .content .main-content {
-   width:calc(100% - 305px);
+   width:calc(100% - 275px);
 }
 
 .resource.etext-view #etext-scroll > :first-child {
@@ -1649,6 +1650,10 @@ header[data-hits="0"] ~ .hits .pagination,
   margin-left:15px;
 }
 
+.AppSK.InnerSearchPage.data {
+  padding-bottom:40px;
+}
+
 
 /* responsive */
 
@@ -1660,7 +1665,10 @@ header[data-hits="0"] ~ .hits .pagination,
 }
 
 @media (max-width: 1440px) {
-  
+  .ais-SearchBox-form:not(#a):not(#b), .inner-search-bar:not(#a) > div:not(#a) > span:last-child {
+    width:700px;
+    max-width:100%;
+  }
 }
 
 @media (max-width: 1320px) {
@@ -1687,6 +1695,7 @@ header[data-hits="0"] ~ .hits .pagination,
 @media (max-width: 1280px) {
   .infoPanel + .resource > .ariane:not(#a) {
     left:20px;
+    width:calc(100% - 20px * 2);
   }
 
 }
