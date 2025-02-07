@@ -269,6 +269,7 @@ export function EtextSearchBox(props) {
             handleNext()
           }
         }} 
+        onFocus={() => { if(that.state.collapse.ETSBresults) that.setState({collapse:{...that.state.collapse, ETSBresults: false }}) }}
         autoComplete="off"
         autoCorrect="off"
         autoCapitalize="off"

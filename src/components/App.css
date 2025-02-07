@@ -1680,11 +1680,12 @@ ul.suggestions li > span > svg:first-child {
    z-index:1000000;
 }
 
-.close-etext-outline {
+button.close-etext-results,
+button.close-etext-outline {
    z-index:1;
    position:absolute;
-   top:8px;
-   right:8px;
+   top:1px;
+   right:1px;
    cursor: pointer;
 }
 

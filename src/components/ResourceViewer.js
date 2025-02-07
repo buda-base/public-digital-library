@@ -8914,7 +8914,9 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
 
       return (
          <div class="data etextrefs" id="outline">
-            <Close width="24" className="close-etext-outline" onClick={() => this.setState({collapse:{...this.state.collapse, etextRefs:true}})}/>
+            <IconButton className="close-etext-outline" onClick={() => this.setState({collapse:{...this.state.collapse, etextRefs:true}})}>
+               <Close width="24" />
+            </IconButton>
             {/* <Loader  options={{position:"fixed",left:"calc(50% + 100px)",top:"calc(50% - 20px)"}} loaded={!this.props.loading === "etext"}/> */}
             <div>
                <div class={"root is-root "+ (isCurrent?"on":"")} onClick={(e) => toggle(e,root,root)} >                     
@@ -10777,7 +10779,11 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
 
          let ETSBresults 
          if(this.state.ETSBresults) {
-            ETSBresults = <div>{this.state.ETSBresults.map((r,i) => (
+            ETSBresults = <div>
+               <IconButton className="close-etext-results" onClick={() => this.setState({collapse:{...this.state.collapse, ETSBresults:true}})}>
+                  <Close width="24" />
+               </IconButton>
+               {this.state.ETSBresults.map((r,i) => (
                <EtextSearchResult page={this.state.ETSBpage.page} vol={this.state.ETSBpage.vol} start={this.state.ETSBpage.start} res={r} n={i} 
                   setETSBpage={(p,v,i,s) => { if(!this.state.ETSBpage || this.state.ETSBpage?.start != s || this.state.ETSBpage?.page != p || this.state.ETSBpage?.vol != v || this.state.ETSBpage?.idx != i) this.setState({ ETSBpage:{page:p, vol:v, idx:i, start:s } }) }}
                   getLabel={(l) => getLangLabel(this,bdo+"eTextHasPage",l)}
