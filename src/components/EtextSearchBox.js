@@ -72,7 +72,8 @@ export function EtextSearchBox(props) {
   const onIndexUpdated = useCallback(() => {
     const p = results?.[index]?.startPnum ?? 0
     const v = results?.[index]?.volumeId ?? ""
-    if(!that.state.ETSBpage || that.state.ETSBpage.page != p || that.state.ETSBpage.vol != v|| that.state.ETSBpage.idx != index) that.setState({ ETSBpage:{ page: p, vol: v, idx:index} })
+    const s = results?.[index]?.startPageCstart ?? 0
+    if(!that.state.ETSBpage || that.state.ETSBpage.page != p || that.state.ETSBpage.vol != v|| that.state.ETSBpage.start != s|| that.state.ETSBpage.idx != index) that.setState({ ETSBpage:{ page: p, vol: v, idx:index, start:s} })
   }, [that.state.ETSBpage, index])
 
   useEffect(() => {
@@ -82,7 +83,7 @@ export function EtextSearchBox(props) {
   const onUpdatedPage = useCallback(() => {
     const q = results?.[index]?.startPnum ?? 0
     const v = results?.[index]?.volumeId ?? ""
-    console.log("q?",q,page)
+    //console.log("q?",q,page)
     if(that.state.ETSBpage && (that.state.ETSBpage?.page != q || that.state.ETSBpage?.vol != v || that.state.ETSBpage.idx != index)) {
       let p = 0, oldP, i
       for(i = 0 ; i < results.length ; i ++) {
@@ -113,7 +114,7 @@ export function EtextSearchBox(props) {
   const startSearch = useCallback(async (useQuery) => {
     setLoading(true)
 
-    let res = _.orderBy(await getEtextSearchRequest({ query: useQuery ?? query, lang: "bo", [params[ETtype]]: scopeId.split(":")[1] }), ["volumeNumber","startPnum"], ["asc","asc"])
+    let res = _.orderBy(await getEtextSearchRequest({ query: useQuery ?? query, lang: "bo", [params[ETtype]]: scopeId.split(":")[1] }), ["volumeNumber","startPageCstart"], ["asc","asc"])
     console.log("gEsR:",res, scopeId, scope, ETtype)  
     if(res?.length > 1000) res = res?.slice(0,1000) ?? []
     setResults(res)
@@ -138,7 +139,7 @@ export function EtextSearchBox(props) {
       const 
         currentText = "bdr:"+res[idx].volumeId, 
         search = "?"+(get.s?"s="+get.s /*encodeURIComponent(get.s)*/+"&":"")+"scope="+scopeId+"&openEtext="+currentText+"&startChar="+res[idx].startPageCstart+(selec?"&ETselect="+selec:"")+"&ETkeyword="+encodeURIComponent(useQuery ?? query),
-        page = document.querySelector("[data-iri='bdr:"+res[idx].volumeId+"'][data-seq='"+res[idx].startPnum+"']"),
+        page = document.querySelector("[data-iri='bdr:"+res[idx].volumeId+"'][data-start='"+res[idx].startPageCstart+"']"),
         ancestor = document.querySelector("#root > :last-child"),
         noPage = !page || page?.getBoundingClientRect()?.top > ancestor?.getBoundingClientRect()?.height - window.innerHeight
 
@@ -149,7 +150,7 @@ export function EtextSearchBox(props) {
       that.props.navigate({ ...that.props.location, search}, {replace:true})      
 
       let timeout = setInterval(() => {
-        const page = document.querySelector("[data-iri='bdr:"+res[idx].volumeId+"'][data-seq='"+res[idx].startPnum+"']");
+        const page = document.querySelector("[data-iri='bdr:"+res[idx].volumeId+"'][data-start='"+res[idx].startPageCstart+"']");
         //console.log("to", page, res[idx], page?.getBoundingClientRect()?.top, ancestor?.getBoundingClientRect()?.top)
 
         if(page) {
@@ -288,7 +289,7 @@ export function EtextSearchBox(props) {
 
 
 export function EtextSearchResult(props) {
-  const { setETSBpage, getLabel, res, n, page, vol, etextLang } = props
+  const { setETSBpage, getLabel, res, n, page, vol, etextLang, start } = props
 
   const ref = useRef()
 
@@ -297,20 +298,20 @@ export function EtextSearchResult(props) {
     if(res.snippet) return highlight(getLabel([{ value:res.snippet?.replace(/<em>/g,"↦").replace(/<\/em>/g,"↤")??"", lang:"bo" }])?.value)
   }, [res, etextLang])
 
-  //console.log("res:n",n,page,vol,res,label,res.snippet)
+  //console.log("res:n",n,start,page,vol,res,label,res.snippet)
 
   const [on,setOn] = useState("")
   useEffect(() => {
-    if(res.volumeId === vol && res.startPnum <= page && page <= res.endPnum && !on) {
+    if(res.volumeId === vol && res.startPnum <= page && page <= res.endPnum && !on && start === res.startPageCstart) {
       setOn("on")
       if(ref.current) ref.current.scrollIntoView({behavior:"auto",block:"nearest",inline:"start"})
     } else if(on) {
       setOn("")
     }
-  },[res, vol, page])
+  },[res, vol, page, start])
 
   return <div ref={ref} class={"ETSBresult "+on} 
-      onClick={() => setETSBpage(res.startPnum, res.volumeId, n)}
+      onClick={() => setETSBpage(res.startPnum, res.volumeId, n, res.startPageCstart)}
     >
       <div class="ETSBheader">
         <span>{I18n.t("punc.nth",{num: n+1})}</span><span>{I18n.t("resource.pageRvol",{p:res.startPnum,v:res.volumeNumber})}</span>

@@ -7487,7 +7487,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                   props_manifestError={this.props.manifestError} 
                   props_assocResources={this.props.assocResources}
 
-                  { ...{ thatGetLangLabel, thatSetState, uriformat, hoverMenu, onGetContext, ETSBresults:ETSBresults?.filter(r => "bdr:"+r.volumeId === this.props.that?.state?.currentText && r.startPnum <= e.seq && e.seq <= r.endPnum) } }
+                  { ...{ thatGetLangLabel, thatSetState, uriformat, hoverMenu, onGetContext, ETSBresults:ETSBresults?.filter(r => "bdr:"+r.volumeId === this.props.that?.state?.currentText && r.startPnum <= e.seq && e.seq <= r.endPnum && e.start - 5 <= r.startPageCstart && r.startPageCstart <= e.start + 5) } }
 
                />
          })  }
@@ -8444,7 +8444,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                      {etext_lang_selec(this,true)}
                   </div>
                   <a class={showToggleScan?"on":""} onClick={(e) => this.setState({showEtextImages:!this.state.showEtextImages})}>{this.state.showEtextImages?<img id="check" src="/icons/check.svg"/>:<span id="check"></span>}<span>{I18n.t("mirador.showI")}</span><img width="42" src="/icons/search/images_b.svg"/></a>
-                  <EtextSearchBox that={this} scopeId={this.props?.that?.state?.scope} ETrefs={this.props.that?.props.eTextRefs?.["@graph"]} setETSBpage={(p,v,i) => { if(!this.state.ETSBpage || this.state.ETSBpage?.page != p || this.state.ETSBpage?.vol != v || this.state.ETSBpage?.idx != i) this.setState({ ETSBpage:{page:p, vol:v, idx:i } }) }} />
+                  <EtextSearchBox that={this} scopeId={this.props?.that?.state?.scope} ETrefs={this.props.that?.props.eTextRefs?.["@graph"]} setETSBpage={(p,v,i,s) => { if(!this.state.ETSBpage || this.state.ETSBpage?.start != s || this.state.ETSBpage?.page != p || this.state.ETSBpage?.vol != v || this.state.ETSBpage?.idx != i) this.setState({ ETSBpage:{page:p, vol:v, idx:i, start:s } }) }} />
                   <span class="X" onClick={() => this.setState({ collapse:{ ...this.state.collapse, etextNav:!this.state.collapse.etextNav }})}></span>
                </div>
             </div>
@@ -8547,7 +8547,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
          let etextrefs = []
          let loadETres
 
-         loggergen.log("node:",this.props.IRI,this.props.eTextRefs,node,top)
+         //loggergen.log("node:",this.props.IRI,this.props.eTextRefs,node,top)
 
          if(node.length && (node[0].instanceHasVolume || node[0].volumeHasEtext))
          {
@@ -10773,13 +10773,13 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
             }
          }
 
-         loggergen.log("eR:", topLevel, etextRes, this.state.currentText, hasPages, etext_data, this.props.eTextRefs, etRefs, this.props, this.state)
+         //loggergen.log("eR:", topLevel, etextRes, this.state.currentText, hasPages, etext_data, this.props.eTextRefs, etRefs, this.props, this.state)
 
          let ETSBresults 
          if(this.state.ETSBresults) {
             ETSBresults = <div>{this.state.ETSBresults.map((r,i) => (
-               <EtextSearchResult page={this.state.ETSBpage.page} vol={this.state.ETSBpage.vol} res={r} n={i} 
-                  setETSBpage={(p,v,i) => { if(!this.state.ETSBpage || this.state.ETSBpage?.page != p || this.state.ETSBpage?.vol != v || this.state.ETSBpage?.idx != i) this.setState({ ETSBpage:{page:p, vol:v, idx:i } }) }}
+               <EtextSearchResult page={this.state.ETSBpage.page} vol={this.state.ETSBpage.vol} start={this.state.ETSBpage.start} res={r} n={i} 
+                  setETSBpage={(p,v,i,s) => { if(!this.state.ETSBpage || this.state.ETSBpage?.start != s || this.state.ETSBpage?.page != p || this.state.ETSBpage?.vol != v || this.state.ETSBpage?.idx != i) this.setState({ ETSBpage:{page:p, vol:v, idx:i, start:s } }) }}
                   getLabel={(l) => getLangLabel(this,bdo+"eTextHasPage",l)}
                   etextLang={this.props.etextLang}
                />
