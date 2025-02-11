@@ -93,6 +93,7 @@ import LanguageSidePaneContainer from '../containers/LanguageSidePaneContainer';
 import ResourceViewerContainer from '../containers/ResourceViewerContainer';
 import {getOntoLabel,provImg as img,providers,provNoLogo as nologo} from './ResourceViewer';
 import {humanizeEDTF, locales} from './ResourceViewer';
+import StickyElement from './StickyElement';
 import {getQueryParam} from './GuidedSearch';
 import {getEntiType, logError, staticQueries} from '../lib/api';
 import {narrowWithString} from "../lib/langdetect"
@@ -888,7 +889,7 @@ export function lang_selec(that,black:boolean = false,inPopup:false, useCheckbox
 
    if(inPopup) return form
    else return [
-         <span id="lang" title={I18n.t("home.choose")} onClick={(e) => that.setState({...that.state,anchorLang:e.currentTarget, collapse: {...that.state.collapse, lang:!that.state.collapse.lang } } ) }><img src={"/icons/LANGUE"+(onKhmerUrl?"km":"")+(black?"b":"")+".svg"}/></span>
+         <IconButton id="lang" title={I18n.t("home.choose")} onClick={(e) => that.setState({...that.state,anchorLang:e.currentTarget, collapse: {...that.state.collapse, lang:!that.state.collapse.lang } } ) }><img src={"/icons/LANGUE"+(onKhmerUrl?"km":"")+(black?"b":"")+".svg"}/></IconButton>
          ,
          <Popover
             id="popLang"
@@ -1234,7 +1235,8 @@ export function top_right_menu(that,etextTitle,backUrl,etextres,isMirador,locati
          </div>
       ),
       innerNav = (
-         <div class={"inner-nav"}>
+
+         <div className="inner-nav">
             { ["bo","pi","sa","zh"].map(t => <div><Link className={that.props.tradition === t ? "active": ""} to={"/tradition/"+t+"/"}>{I18n.t("tradition."+t+"T")}</Link></div>) }
          </div>
       ),
@@ -1260,9 +1262,9 @@ export function top_right_menu(that,etextTitle,backUrl,etextres,isMirador,locati
    if(false && etextTitle)
       return (<>
       {!that.props.portraitPopupClosed && portrait}
-      <div class={"mobile-button top"+(!that.state.collapse.navMenu?" off":" on")} onClick={()=>that.setState({collapse:{...that.state.collapse,navMenu:!that.state.collapse.navMenu}})}><img src="/icons/burger.svg" /></div>      
+      {/* <div class={"mobile-button top"+(!that.state.collapse.navMenu?" off":" on")} onClick={()=>that.setState({collapse:{...that.state.collapse,navMenu:!that.state.collapse.navMenu}})}><img src="/icons/burger.svg" /></div>       */}
       {overNav}
-      <div class={"nav etext-nav"+(onZhMirror?" zhMirror":"")+(that.state.collapse.navMenu?" on":"") +(msgPopupOn?" msgPopupOn":"") }>
+      <StickyElement className={"nav etext-nav"+(onZhMirror?" zhMirror":"")+(that.state.collapse.navMenu?" on":"") +(msgPopupOn?" msgPopupOn":"") }>
          {uiLangPopup}
          <div>
             {logo}
@@ -1357,7 +1359,7 @@ export function top_right_menu(that,etextTitle,backUrl,etextres,isMirador,locati
                   
                }}>+</div> 
          </div>      
-      </div>{feedbucket}{innerSearch}</>)
+      </StickyElement>{feedbucket}{innerSearch}</>)
    else {
 
       const toggleHoverLogin = (hoverLogin,e) => {
@@ -1371,11 +1373,12 @@ export function top_right_menu(that,etextTitle,backUrl,etextres,isMirador,locati
       //loggergen.log("proxied?",!window.location.host.includes("localhost"), that.props.config?.primaryUrl, that.props.config?.primaryUrl != window.location.host)
 
       let login       
-      if(that.props.auth) login = <div id="login" {...(proxied?{class:"proxied"}:{})}>
-         <AccountCircleIcon style={{color:"black", width:28, height:28, marginLeft:10}} onClick={(ev) => that.setState({
+      if(that.props.auth) login = <><IconButton id="login" {...(proxied?{class:"proxied"}:{})}>
+          <AccountCircleIcon style={{color:"black", width:28, height:28, /*marginLeft:10*/}} onClick={(ev) => that.setState({
                anchor:{...that.state.anchor??{}, account:ev.currentTarget},
                collapse:{...that.state.collapse, account:!that.state.account}
             })}/>
+         </IconButton>
          <Popover open={that.state.collapse.account}
             transformOrigin={{ vertical: 'top', horizontal: 'right'}} 
             anchorOrigin={{vertical: 'bottom', horizontal: 'right'}} 
@@ -1409,14 +1412,14 @@ export function top_right_menu(that,etextTitle,backUrl,etextres,isMirador,locati
                </div>
          }
          </Popover>
-      </div>
+      </>
 
       if(proxied) {
          const dot = '.'
          login = <Tooltip id="hoverLogin" open={that.state.collapse.hoverLogin === undefined?false:that.state.collapse.hoverLogin} 
                      placement="center" 
                      onOpen={(e)=>toggleHoverLogin(true,e)} onClose={(e)=>toggleHoverLogin(false,e)} 
-                     title={<span style={{ whiteSpace:"normal" }} onMouseEnter={(e)=>toggleHoverLogin(true, e)} onMouseLeave={(e)=>toggleHoverLogin(false,e)}><Trans i18nKey="topbar.proxied" values={{library: "library"+dot+"bdrc"+dot+"io"}} components={{ tag: <a /> }} /></span>}  >{login}</Tooltip>
+                     title={<IconButton style={{ whiteSpace:"normal" }} onMouseEnter={(e)=>toggleHoverLogin(true, e)} onMouseLeave={(e)=>toggleHoverLogin(false,e)}><Trans i18nKey="topbar.proxied" values={{library: "library"+dot+"bdrc"+dot+"io"}} components={{ tag: <a /> }} /></IconButton>}  >{login}</Tooltip>
       }
 
       let khmerLinks 
@@ -1462,9 +1465,9 @@ export function top_right_menu(that,etextTitle,backUrl,etextres,isMirador,locati
 
       return ([
       !that.props.portraitPopupClosed? portrait:null,
-      <div class={"mobile-button top"+(!that.state.collapse.navMenu?" off":" on")} onClick={() => that.setState({collapse:{...that.state.collapse,navMenu:!that.state.collapse.navMenu}})}><img src="/icons/burger.svg" /></div>,
+      // <div class={"mobile-button top"+(!that.state.collapse.navMenu?" off":" on")} onClick={() => that.setState({collapse:{...that.state.collapse,navMenu:!that.state.collapse.navMenu}})}><img src="/icons/burger.svg" /></div>,
       overNav,
-      <div class={"nav"+(onZhMirror?" zhMirror":"")+ (that.state.collapse.navMenu?" on":"")+(onKhmerServer||onKhmerUrl?" khmerServer":"")
+      <StickyElement className={"nav"+(onZhMirror?" zhMirror":"")+ (that.state.collapse.navMenu?" on":"")+(onKhmerServer||onKhmerUrl?" khmerServer":"")
                +(msgPopupOn?" msgPopupOn":"")
          } style={{ ...isMirador?{position:"absolute"}:{} }} >
          {uiLangPopup}
@@ -1519,13 +1522,17 @@ export function top_right_menu(that,etextTitle,backUrl,etextres,isMirador,locati
          <div id="lang-login">
          { lang_selec(that) }
          { that.props.auth && login }
+         <IconButton id="burger">
+            <img src="/icons/burger.svg" />
+         </IconButton>
          </div>
 
          { (!that.props.config || !that.props.config.chineseMirror) && <a target="_blank" href="https://bdrc.io/donation/" id="donate"><img src="/donate.svg"/>{I18n.t("topbar.donate")}</a> }
 
+
          { <div class="close" onClick={()=>that.setState({collapse:{...that.state.collapse,navMenu:false}})}>+</div> }
        </div>
-     </div>,
+     </StickyElement>,
      feedbucket,
      innerSearch,
       ]

@@ -8389,7 +8389,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
       if(!this.props.that.props.previewEtext) document.title = label.value + " - " + (this.props.config?.khmerServer?"Khmer Manuscript Heritage Project":"Buddhist Digital Archives")
 
       const title =({value: text, lang}) => <h2 title={text} lang={lang} class="on">
-         <span class="newT etext">
+         <span class={"newT etext "+ETtype}>
             <span class="space-fix">
                <span>{ETtype ? I18n.t("types.ET."+ETtype) : I18n.t("types.etext")}</span>
             </span>

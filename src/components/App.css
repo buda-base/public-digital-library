@@ -1883,14 +1883,16 @@ footer #donate,
 
 .nav a > span { color:#192229; display:inline-block;   }
 
-#login span { display:inline-block; margin-left:25px; cursor:pointer; /*pointer-events:none; opacity:0.65;*/}
+/* #login span { display:inline-block; margin-left:25px; cursor:pointer;  */
+   /*pointer-events:none; opacity:0.65;*/
+/* } */
 
 footer #donate,
 .nav #donate { width:150px;height:50px;border-radius: 4px; color:white;background-color: #d73449; line-height:50px; 
    text-align:center; display:inline-block;  margin-left:25px; }
 .nav #donate img { vertical-align: middle; display: inline-block; margin-right:10px;}
 
-.nav #lang { cursor:pointer; margin-top:7px; margin-left:25px; display: inline-block;}
+.nav #lang { cursor:pointer; /*margin-top:7px;*/ margin-left:25px; display: inline-block;}
 .nav #lang img { display: inline-block; width:28px; } 
 
 /* .resource .title + .data + .data .browse { display:none; } */
@@ -6205,7 +6207,7 @@ html[lang="en"] .resource .data > [data-prop="bdo:creator"] h4[data-prop="bdo:ro
 
 
 @media(max-width:750px) {
-   #root .nav #lang, #root .nav #login span { margin-left:25px; }
+   /* #root .nav #lang, #root .nav #login span { margin-left:25px; } */
    .nav #login > div > span:first-child { max-width: 120px; }
    .nav #logo a:first-child span { font-size:0; }
 }
@@ -7397,7 +7399,7 @@ feedbucket-app:not(.on)  { display:none !important; }
    #etext-nav a #check { margin-right:10px; }
    #etext-nav #dico img.ico { margin-left:0; }
 
-   .resource:not(.etext-view) > :not(.index):not(.ariane) { width:100%; margin:0;}
+   .resource:not(.etext-view) > :not(.index,.ariane,.simplebar-track) { width:100%; margin:0;}
 
    .resource > .ariane { padding-left: 0; } 
    /* calc((100% - 700px) /2) ; } */
@@ -7508,7 +7510,8 @@ a.result + #matches.mobile,
    
    /* ------------------------------------------------------------------------------------------------------------------------ home/topbar */ 
    #root .nav {  height:60px; padding:0 10px; top:0px; transition:all 400ms ease-in-out; 
-      z-index: 100001; padding-left:55px; 
+      z-index: 100001; 
+      /* padding-left:55px;  */
    }
    #root .App .SearchPane { margin-top:0px; }
    #root .nav .history,
@@ -7516,11 +7519,11 @@ a.result + #matches.mobile,
    #root .nav #donate {  margin-left:35px; 
       /* width:150px; color:white; padding-left:0; */
    }
-   #root .nav #lang,
-   #root .nav #login span { margin-left:35px;}
+   /* #root .nav #lang,
+   #root .nav #login span { margin-left:35px;} */
 
 
-   #root .nav:not(.on) { top:-100px; }
+   /* #root .nav:not(.on) { top:-100px; } */
    
 
    .fond-logo img { height:100vh; }
@@ -7756,7 +7759,7 @@ a.result + #matches.mobile,
 
    #root > div > .resource > .index { display:none; }
 
-   .resource:not(.etext-view):not(.static) > :not(.index):not(.ariane) { margin-left:0; width:100%;}
+   .resource:not(.etext-view):not(.static) > :not(.index,.ariane,.simplebar-track) { margin-left:0; width:100%;}
    
    .resource .data#first-image.simple,
    .resource .title + .data,
