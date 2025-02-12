@@ -1468,11 +1468,13 @@ export function top_right_menu(that,etextTitle,backUrl,etextres,isMirador,locati
       // <div class={"mobile-button top"+(!that.state.collapse.navMenu?" off":" on")} onClick={() => that.setState({collapse:{...that.state.collapse,navMenu:!that.state.collapse.navMenu}})}><img src="/icons/burger.svg" /></div>,
       overNav,
       <StickyElement className={"nav"+(onZhMirror?" zhMirror":"")+ (that.state.collapse.navMenu?" on":"")+(onKhmerServer||onKhmerUrl?" khmerServer":"")
-               +(msgPopupOn?" msgPopupOn":"")
+               +(msgPopupOn?" msgPopupOn":"")+(that.state.collapse.burgerOn?" on":"")
          } style={{ ...isMirador?{position:"absolute"}:{} }} >
          {uiLangPopup}
           <div>
          {logo}
+
+         { that.state.collapse.burgerOn && <div class="burgerBG" onClick={() => that.setState({collapse:{...that.state.collapse,burgerOn:false}})}></div> }
 
          { innerNav}
 
@@ -1522,9 +1524,9 @@ export function top_right_menu(that,etextTitle,backUrl,etextres,isMirador,locati
          <div id="lang-login">
          { lang_selec(that) }
          { that.props.auth && login }
-         <IconButton id="burger">
-            <img src="/icons/burger.svg" />
-         </IconButton>
+         <IconButton id="burger" onClick={() => that.setState({collapse:{...that.state.collapse,burgerOn:!that.state.collapse.burgerOn}})}>
+            { !that.state.collapse.burgerOn ? <img src="/icons/burger.svg" /> : <Close style={{color:"#222222"}}/> }
+         </IconButton>         
          </div>
 
          { (!that.props.config || !that.props.config.chineseMirror) && <a target="_blank" href="https://bdrc.io/donation/" id="donate"><img src="/donate.svg"/>{I18n.t("topbar.donate")}</a> }

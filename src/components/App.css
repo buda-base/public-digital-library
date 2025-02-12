@@ -6209,7 +6209,7 @@ html[lang="en"] .resource .data > [data-prop="bdo:creator"] h4[data-prop="bdo:ro
 @media(max-width:750px) {
    /* #root .nav #lang, #root .nav #login span { margin-left:25px; } */
    .nav #login > div > span:first-child { max-width: 120px; }
-   .nav #logo a:first-child span { font-size:0; }
+   /* .nav #logo a:first-child span { font-size:0; } */
 }
 
 @font-face {
@@ -7528,10 +7528,11 @@ a.result + #matches.mobile,
 
    .fond-logo img { height:100vh; }
 
-   .SearchPane #logo > div {
+   /* .SearchPane #logo > div {
       transform: scale(0.75);
-      transform-origin: 100% 50%;
+      transform-origin: 100% 50%; 
    }
+   */
 
    .App:not(.home) #search-bar {padding-top:20px;}
 
@@ -7800,7 +7801,7 @@ a.result + #matches.mobile,
    .resource .data > div > h3 { width:calc(155px - 15px); }
 
    .resource .data:not(#perma) > div:not(.firstImage):not(.browse):not(.header)::after { margin:25px 0 25px 155px; width: calc(100% - 155px); }
-   .resource .data .group { width: calc(100% - 155px); }
+   .resource .data .group { width: calc(100% - 160px); }
 
    .resource .sub > h4.label:not(:first-of-type) {}
 
@@ -8045,17 +8046,17 @@ a.result + #matches.mobile,
    #about + a:not(#collections) svg { display:block; }
    #about + a:not(#collections) > span { font-size:0; }
 
-   .not-logged svg { display:block; }
+   /* .not-logged svg { display:block; }
    .not-logged > span { font-size:0; }
 
    .logged svg { display:block; }
-   .logged > span { font-size:0; }
+   .logged > span { font-size:0; } */
 
-   .nav #logo a#BDRC span, 
+   /* .nav #logo a#BDRC span, 
    .nav #logo a:last-child span
-   { font-size: 0px; }
+   { font-size: 0px; } */
 
-   .nav #logo a:first-child span { display:none; }
+   /* .nav #logo a:first-child span { display:none; } */
 
    .nav #logo.khmer + .links a { margin-left:0; margin-right:0px;}
 
@@ -8399,9 +8400,9 @@ a.result + #matches.mobile,
    .App:not(.home) #search-bar > div:first-child > div:first-child > div:first-child { padding-left:24px; }
    
    .nav #logo.khmer + .links { flex-shrink:1; }
-   .nav > div { justify-content: flex-end; }
+   .nav > div { justify-content: space-between; }
 
-   
+/*    
    .nav #logo a#BDRC span, 
    .nav #logo a:last-child span, 
    .nav #logo a:first-child span { display:none; }
@@ -8410,12 +8411,13 @@ a.result + #matches.mobile,
    .nav > div > #login,
    .nav > div > #login > div > span, 
    .nav > div > :is(a,div,span) { margin:0 0 0 25px !important; }
-     
+      */
+
    .nav > div > .close { margin-right:10px !important;  }
 
    .nav.khmerServer > div > .close { position: absolute; top:0; }
 
-   .nav > div > #logo { position:absolute; left:55px; margin-left:0 !important; }
+   /* .nav > div > #logo { position:absolute; left:55px; margin-left:0 !important; } */
 
    #root .App #res-container, #search-bar > div:first-child > div:first-child { width:100%; }
 
@@ -8566,7 +8568,7 @@ a.result + #matches.mobile,
    .nav > div > #lang,
    .nav > div > #login,
    .nav > div > #login > div > span, 
-   .nav > div > :is(a,div,span) { margin:0 0 0 17px !important; }
+   .nav > div > :is(a,div,span) { margin:0  !important; }
    
    .nav > div > #login { margin-left:0px !important;}
 
