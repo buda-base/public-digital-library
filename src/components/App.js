@@ -1220,7 +1220,7 @@ export function top_right_menu(that,etextTitle,backUrl,etextres,isMirador,locati
    else if(corpo_lang.startsWith("zh")) corpo_lang = "zh-hans"
 
    const overNav = (
-         <div class="over-nav" style={{ ...isMirador?{position:"absolute"}:{} }}>
+         <div class={"over-nav mirador-"+isMirador} style={{ ...isMirador?{position:"absolute"}:{} }}>
             <div>
                <div><i>{I18n.t("topbar.preserving")}</i></div>
                <div style={{ textTransform: "capitalize" }}>
@@ -1469,7 +1469,7 @@ export function top_right_menu(that,etextTitle,backUrl,etextres,isMirador,locati
       overNav,
       <StickyElement className={"nav"+(onZhMirror?" zhMirror":"")+ (that.state.collapse.navMenu?" on":"")+(onKhmerServer||onKhmerUrl?" khmerServer":"")
                +(msgPopupOn?" msgPopupOn":"")+(that.state.collapse.burgerOn?" on":"")
-         } style={{ ...isMirador?{position:"absolute"}:{} }} >
+         }  rootMarginTop={60} style={{ ...isMirador?{position:"absolute"}:{} }} >
          {uiLangPopup}
           <div>
          {logo}
@@ -8003,7 +8003,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                            <span>{I18n.t("topbar.support")}</span>
                            <a href={"https://bdrc.io/donation?lang="+corpo_lang} target="_blank" rel="nofollow">{I18n.t("topbar.donate2")}</a>
                         </div>
-
+                        <StickyElement className="home-settings-sticky"></StickyElement>
                         <h3>{I18n.t("tradition.recent")}</h3> 
                         <InnerSearchPageContainer /*noScrollFilters={true}*/ location={this.props.location} auth={this.props.auth} isOsearch={true} recent={true} />  
                            

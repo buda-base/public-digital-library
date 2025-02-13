@@ -217,7 +217,7 @@ export class InnerSearchPage extends Component<State, Props>
                     { isOtherVersions 
                       ? <OtherVersionsNav {...{ that:this, RID, srcVersionID } }/>
                       : <div className="pagination">
-                        <Pagination />
+                        <Pagination padding={window.innerWidth <= 665 ? 1 : 3}/>
                       </div> }
                   </div>
                 </div>

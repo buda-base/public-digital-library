@@ -1658,6 +1658,15 @@ header[data-hits="0"] ~ .hits .pagination,
 
 .over-nav + .nav  #lang-login  #burger:not(#a) { display:none; }
 
+.AppSK .ais-Hits-item,
+#res-container > ul li.ais-Hits-item {
+  margin-bottom:5px; 
+}
+
+.mirador-true ~ .nav {
+  display: none;
+}
+
 /* responsive */
 
 .SearchPane #logo img {
@@ -1729,6 +1738,11 @@ header[data-hits="0"] ~ .hits .pagination,
 }
 
 @media (max-width: 1024px) {
+
+  #root {
+    background:white;
+  }
+
   .SearchPane #logo > div:not(#a) {
       transform-origin: 100% 100%;
   }
@@ -1751,8 +1765,30 @@ header[data-hits="0"] ~ .hits .pagination,
 
   .over-nav + .nav:not(#a)  {
     position: sticky;
-    top:0;
+    top:-61px;
     transition: none;
+    padding:0;
+  }
+
+
+  .over-nav + .nav:not(#a) > div {
+    top:60px;
+    position: relative;
+    padding:0 20px 0 30px;
+    height:100%;
+    background:white;
+  }
+
+  #root .over-nav {
+    padding:0 30px;
+  } 
+
+  .over-nav + .nav:not(.someClass,#a) > div {
+    top:0;
+  }
+  
+  .over-nav + .nav.someClass:not(.on,#a) > div {
+    background:none;
   }
 
   .over-nav + .nav:not(.on) .inner-nav {
@@ -1784,7 +1820,7 @@ header[data-hits="0"] ~ .hits .pagination,
 
   .over-nav + .nav .burgerBG { position:fixed; left:0 ; top:0; right:0; bottom:0; 
     /* background: rgba(0,0,0,0.5);  */
-    display:block !important; margin-left:0 !important;
+    display:block !important; margin-left:0 !important;z-index: -1;
   }
 
   .over-nav + .nav.someClass:not(.on)  #lang-login  #burger:not(#a) {
@@ -1806,7 +1842,23 @@ header[data-hits="0"] ~ .hits .pagination,
   .over-nav > div > div + div > a:not(:first-child) {
     display: none;
   }
-  
+
+  .over-nav > div > * {
+    display: flex;
+    font-size:14px;
+    align-items: center;
+  } 
+
+
+  .over-nav > div a:not(#a) {
+    margin-left:0;
+  }
+
+
+  .over-nav > div a:not(#a) img {
+    margin-right:3px;
+  }
+
   .nav #logo a:first-child span:not(.buda-small) {
     line-height:30px;
   }
@@ -1817,24 +1869,54 @@ header[data-hits="0"] ~ .hits .pagination,
     width:100%;
   }
 
+  #root:not(#a) > .AppSK > .search #popHowTo,
   #popHowTo:not(#a) {
     width:100%;
   }
 
-
+  .AppSK .content .filter,
   #samples .AppSK.InnerSearchPage.data .content .filter {
     display:none;
+  }
+
+  .AppSK .content .main-content {
+    width: calc(100%);
   }
 
   #samples .AppSK.InnerSearchPage.data .content .main-content {
    
     width: calc(100% - 40px);
   }
+  
+  #root .inner-search-bar:not(#a),
+  .AppSK .content {
+    
+    max-width:100%;
+  }
+
+  .AppSK .content {
+    padding:0 30px;
+  }
+
+
+  .home-settings-sticky:not(.someClass) ~ .AppSK #settings {
+    display:none;
+  }
+
+  #root .AppSK #settings {
+    left:5px; right:auto;
+  }
 }
 
 
 @media (max-width:800px){
   
+  .over-nav + .nav:not(#a) > div { padding:0 0 0 10px ;}
+
+  .over-nav + .nav > div { padding:0 0 0 10px ;}
+
+  .over-nav + .nav.someClass:not(.on) > div { right:5px;}
+
   .nav:not(#a), #root .over-nav { padding: 0 10px;}
 
   .over-nav > div a { white-space: nowrap;}
@@ -1880,6 +1962,7 @@ header[data-hits="0"] ~ .hits .pagination,
     font-weight: 700;
     width:100%;
     margin-bottom:10px;
+    line-height: 38px;
   }
 
   #root .SearchPane #logo h1 + div {
@@ -1927,8 +2010,15 @@ header[data-hits="0"] ~ .hits .pagination,
   #samples .AppSK.InnerSearchPage.data .content .main-content {
     padding-right:10px;
     padding-left:10px;
-    width:100%;
+    width:100%;    
   }
+
+
+  .AppSK .content {
+    padding:0 10px;
+  }
+
+
 }
 
 @media (max-width:665px){
@@ -1946,16 +2036,32 @@ header[data-hits="0"] ~ .hits .pagination,
     margin-left:0;
   }
 
-  #root .App.home .ISB {
-    min-height:180px;
+  #root .App.home .ISB .inner-search-bar:not(#a) {
+    height:140px;
   }
-  #root .inner-search-bar:not(#a) {
-    display:block;
-    margin-top:42px;
+
+  #root > .AppSK > .inner-search-bar:not(#a) {
+    min-height:170px;
+    padding-top:30px;
+    align-items:flex-start;
   }
-  #root .inner-search-bar #simple-search a {
+  
+
+  #root > .AppSK > .inner-search-bar:not(#a) > div {
     margin-top:0;
   }
+
+  #root .ISB .inner-search-bar:not(#a) {
+    display:block;
+    margin-top:42px;
+  } 
+   
+  
+  #root .inner-search-bar #simple-search a {
+    margin-top:0;
+    text-align: center;
+  }
+
   #root .inner-search-bar #simple-search a:first-child ~ a {
     margin-top:-12px;
   }
@@ -1986,6 +2092,32 @@ header[data-hits="0"] ~ .hits .pagination,
   .AppSK:not(#a) .result .thumb a .RID ~ span,
   .AppSK:not(#a) .result .thumb a .RID ~ span span:first-child + span {
     display: block !important;
+  }
+
+  #root .AppSK .result .thumb a .RID, #root .result-content #icon .RID {
+    max-width:95px;
+  }
+
+  #samples .AppSK.InnerSearchPage.data .content .main-content {
+    padding-right: 0px;
+    padding-left: 0px;
+    width: 100%;
+    padding-top: 10px;
+    padding-bottom: 0;
+  }
+
+  #root :not(.static-container) > #samples .AppSK.InnerSearchPage.data .content {
+    width: calc(100%);
+    left: 0px;
+  }
+
+  .AppSK .ais-Hits-item,
+  #res-container > ul li.ais-Hits-item {
+    padding:10px; 
+  }
+
+  .AppSK .ais-Hits-item .names.firstScan, .AppSK .ais-Hits-item .debug button {
+    top:9px;
   }
 }
 
@@ -2018,7 +2150,7 @@ header[data-hits="0"] ~ .hits .pagination,
 
   body { min-width:375px; }
   
-  #root .nav > div > #logo {
+  #root .nav:not(.someClass) > div > #logo {
     display: flex;
   }
 

@@ -1,9 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
 
-function useSticky() {
+function useSticky(props) {
+  const {rootMarginTop} = props ?? {}
   const ref = useRef(null)
 
   const [isSticky, setIsSticky] = useState(false)
+
+  //console.log("rmt:",rootMarginTop)
 
   useEffect(() => {
       if (!ref.current) {
@@ -11,8 +14,11 @@ function useSticky() {
       }
 
       const observer = new IntersectionObserver(
-          ([event]) => setIsSticky(event.intersectionRatio < 1),
-          {threshold: [1], rootMargin: '-1px 0px 0px 0px',}
+          ([event]) => {
+            //console.log("ev:",event.intersectionRatio,event) 
+            setIsSticky(event.intersectionRatio < 1)
+          },
+          {threshold: [1], rootMargin: (rootMarginTop??-1)+'px 0px 0px 0px',}
       )
       observer.observe(ref.current)
 
@@ -22,9 +28,9 @@ function useSticky() {
   return {ref, isSticky}
 }
 
-function StickyElement({ className = '', children }) {
+function StickyElement({ className = '', children, rootMarginTop }) {
 
-  const {ref, isSticky} = useSticky()
+  const {ref, isSticky} = useSticky({ rootMarginTop })
 
   /*
   useEffect(() => {

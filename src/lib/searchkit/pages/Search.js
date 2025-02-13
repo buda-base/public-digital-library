@@ -473,10 +473,10 @@ export class SearchPage extends Component<State, Props>
                   <div className="pagination">
                     <Pagination />
                   </div>
-                  <Configure hitsPerPage={20} filters={pageFilters} />
+                  <Configure hitsPerPage={window.innerWidth <= 665 ? 20 : 20} filters={pageFilters} />
                   <HitsWithLabels that={this} {...{ routing, sortItems, storageRef }} />
                   <div className="pagination">
-                    <Pagination />
+                    <Pagination padding={window.innerWidth <= 665 ? 1 : 3}/>
                   </div>
                 </div>
               </div>
