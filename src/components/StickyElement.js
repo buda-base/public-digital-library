@@ -6,7 +6,7 @@ function useSticky(props) {
 
   const [isSticky, setIsSticky] = useState(false)
 
-  //console.log("rmt:",rootMarginTop)
+  console.log("rmt:",rootMarginTop)
 
   useEffect(() => {
       if (!ref.current) {
@@ -15,7 +15,7 @@ function useSticky(props) {
 
       const observer = new IntersectionObserver(
           ([event]) => {
-            //console.log("ev:",event.intersectionRatio,event) 
+            console.log("ev:",event.intersectionRatio,event) 
             setIsSticky(event.intersectionRatio < 1)
           },
           {threshold: [1], rootMargin: (rootMarginTop??-1)+'px 0px 0px 0px',}

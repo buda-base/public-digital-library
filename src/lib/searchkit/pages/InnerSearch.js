@@ -199,7 +199,8 @@ export class InnerSearchPage extends Component<State, Props>
                     <SearchBoxAutocomplete inner={true} searchAsYouType={false} loading={this.props.loading} {...{ pageFilters, placeholder, routing, that: this }}/>
                   </div>
                 </div>
-              </div> }
+              </div> } 
+              <div id="settings" onClick={() => this.setState({collapse:{...this.state.collapse, settings:!this.state.collapse.settings}})}><img src="/icons/settings.svg"/></div>
               <div className="content">
                 { noScrollFilters 
                   ? <div className="filter no-scroll">

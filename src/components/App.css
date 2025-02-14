@@ -95,7 +95,7 @@ footer#site-footer > div.head { background: #dddddd; position:absolute; height:5
 footer#site-footer > div.head::before { content:'';display:block;background:white /*#efefef*/; height:100%; width:1440px;max-width:100%; margin:auto;}
 footer#site-footer > div.foot,
 footer#site-footer > div.body { padding:40px 60px; width:1222px; max-width:100%; margin:auto; z-index:1;
-   display:block;position: relative;
+   display:block;position: relative;box-sizing: border-box;
 }
 
 footer#site-footer > div.body { background:#fce08d; color:#172832; }
@@ -5544,7 +5544,7 @@ html[lang="en"] .resource .data > [data-prop="bdo:creator"] h4[data-prop="bdo:ro
 .resource .data > [data-prop="bdo:note"] > div {  width:calc(100% - 190px); display:inline-block; }
 
 .resource .data > [data-prop="bdo:note"]  .sub { display:inline-block; line-height:22px; width:calc(100% - 10px); padding-right:20px;}
-.resource .data > [data-prop="bdo:note"]  .sub > h4 + div:not(.subsub) { display:inline-block; /*letter-spacing:0.25px;*/color:#777;font-size:13px; }
+.resource .data > [data-prop="bdo:note"]  .sub > h4 + div:not(.subsub) { display:inline /*-block*/; /*letter-spacing:0.25px;*/color:#777;font-size:13px; }
 .resource .data > [data-prop="bdo:note"]  .sub > h4 + div + .subsub h4 { font-size:14px; /*letter-spacing:0.5px;*/}
 .resource .data > [data-prop="bdo:note"]  .sub > h4.first { font-size:13px; padding-right:5px;}
 .resource .data > [data-prop="bdo:note"]  .sub > h4 + div.subsub,
@@ -7236,9 +7236,11 @@ feedbucket-app:not(.on)  { display:none !important; }
       padding-right:65px;
    }
 
+   /*
    .resource .data.ext-props > a:first-child {
       left:70px;
    }
+   */
 
    /*
    #root .App .SearchPane,
@@ -7539,7 +7541,7 @@ a.result + #matches.mobile,
    
 
    #root .App #res-container,
-   #search-bar > div:first-child > div:first-child { width:calc(100vw - 80px) !important; }
+   #search-bar > div:first-child > div:first-child { width:100%; box-sizing: border-box;}
 
    
 

@@ -463,7 +463,8 @@ export class SearchPage extends Component<State, Props>
                   }} />
               </div>
             </div>
-            <div className="content">
+            <div id="settings" onClick={() => this.setState({collapse:{...this.state.collapse, settings:!this.state.collapse.settings}})}><img src="/icons/settings.svg"/></div>
+            <div className="content">    
               <div className="filter">
                 <FiltersSidebar that={this} />
               </div>

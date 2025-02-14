@@ -1658,13 +1658,23 @@ header[data-hits="0"] ~ .hits .pagination,
 
 .over-nav + .nav  #lang-login  #burger:not(#a) { display:none; }
 
+/*
 .AppSK .ais-Hits-item,
 #res-container > ul li.ais-Hits-item {
   margin-bottom:5px; 
 }
+  */
 
 .mirador-true ~ .nav {
   display: none;
+}
+
+.settings-sticky {
+  position: sticky;
+  height:10px; 
+  background:pink;
+  top:0;
+  z-index:100000;
 }
 
 /* responsive */
@@ -1717,13 +1727,17 @@ header[data-hits="0"] ~ .hits .pagination,
     display: block;
   }
 
-}
-
-@media (max-width: 1280px) {
   .infoPanel + .resource > .ariane:not(#a) {
     left:20px;
     width:calc(100% - 20px * 2);
   }
+
+  #root #samples {
+    width:1170px;
+  }
+}
+
+@media (max-width: 1280px) {
   
   .App.home #samples .home-tradi-grid {
     padding: 35px calc((100% - 260px * 2 - 35px) / 2);
@@ -1898,15 +1912,137 @@ header[data-hits="0"] ~ .hits .pagination,
     padding:0 30px;
   }
 
+  .home-support + h3 {
+    position:absolute;
+    width:100%;
+    box-sizing: border-box;
+  }
+  
+  .home-support + h3 + .AppSK {
+    margin-top:100px;  
+  }
 
+  /*
   .home-settings-sticky:not(.someClass) ~ .AppSK #settings {
     display:none;
   }
+  */
 
   #root .AppSK #settings {
-    left:5px; right:auto;
+    position:sticky; 
+    top:calc(100% - 60px);
+    z-index:10000000;
+    display:inline-block;
+    margin-left:-25px;
+    margin-bottom:10px;
+    margin-top:-10px;
+  }
+/* 
+  .AppSK.InnerSearchPage.data {
+    padding-bottom: 40px;
+  } */
+
+  #samples .AppSK.InnerSearchPage.data .content .main-content {
+    padding-bottom:0;
+  }
+
+  #settings + .content {
+    margin-top:-55px;
+  }
+
+
+  #root > .AppSK > #settings {
+    margin-left:5px;
+  }
+
+  #root > div > .resource > div > .data:not(#a) {
+
+    padding-left: 30px;
+    padding-right: 30px;
+  }
+
+
+  .data .expand {
+    margin-left:215px;
+    margin-top:15px;
+  }
+
+  #root .resource .data > div > h3 {
+    width:195px;
+  }
+
+  #root .propCollapse, 
+  #root .has-collapse.custom .propCollapseHeader, .resource .data [data-prop="bdo:workHasInstance"] .group,
+  #root .resource .data .group {
+    width:calc(100% - 195px - 25px);
+  }
+
+  #root .resource .data:not(#perma) > div:not(.firstImage):not(.browse):not(.header)::after {
+    margin: 15px 0 15px 215px;
+    width: calc(100% - 215px);
+  }
+
+  #root .resource .data.legal-props > div h3 {
+    width: 190px;
+    padding-right: 70px;
+    box-sizing: border-box;
+  }
+
+  #root > div > .resource > div > .data:not(#a) {
+    /* padding:0; */
+  }
+  #root:not(#a) .resource .data#outline, 
+  #root:not(#a) .resource .data.related, 
+  #root:not(#a) .resource .data.ext-props, 
+  #root:not(#a) .resource .data.legal-props, 
+  #root:not(#a) .resource .data#perma, 
+  #root:not(#a) .resource .data  {
+    padding-left:10px;
+    padding-right:10px;
+  }
+
+  .AppSK.InnerSearchPage.data .content .main-content {
+    width:100%;
+  }
+
+  .AppSK.InnerSearchPage .searchbox > .inner-search-bar:not(#a) {
+    width: calc(100% - 185px);
+  }
+
+  .AppSK.InnerSearchPage.data .content {
+    width:calc(100% + 40px);
+    left:-20px;;
+  }
+
+  .AppSK.InnerSearchPage.data .content .main-content {
+    padding:20px;
+    padding-bottom:0;
+  }
+  
+  .AppSK.InnerSearchPage.data .searchbox {
+    margin-bottom:30px;
+  }
+
+  #root .resource .data.ext-props > a:first-child {
+    left:30px;
+    bottom:60px;
+  }
+
+  #root .resource .data h2.on ~ .date, 
+  #root .resource .data h2.on {
+    padding-left:0;
+  }
+
+  #root .resource .data h2.on span.newT span.space-fix:not(#a):not(#b):not(#c), 
+  #root .resource .data h2.on span.newT span.space-fix:not(#a):not(#b):not(#c) span {
+    font-size:14px;
+  }
+
+  #root .infoPanel.inRes {
+    display:none;
   }
 }
+
 
 
 @media (max-width:800px){
@@ -2019,9 +2155,28 @@ header[data-hits="0"] ~ .hits .pagination,
   }
 
 
+  #root .AppSK #settings {
+    margin-left:-5px;
+    margin-bottom:10px;
+  }
+
+  .AppSK .pagination {
+    margin-top: 20px;
+    margin-bottom: 20px;
+  }
+
+  
 }
 
 @media (max-width:665px){
+  
+  #root .propCollapse, 
+  #root .has-collapse.custom .propCollapseHeader, 
+  .resource .data [data-prop="bdo:workHasInstance"] .group, 
+  #root .resource .data .group {
+    width:200%;
+  }
+ 
   
   #root .inner-search-bar #simple-search {
     flex-wrap:wrap;

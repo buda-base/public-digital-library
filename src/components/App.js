@@ -8003,7 +8003,6 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                            <span>{I18n.t("topbar.support")}</span>
                            <a href={"https://bdrc.io/donation?lang="+corpo_lang} target="_blank" rel="nofollow">{I18n.t("topbar.donate2")}</a>
                         </div>
-                        <StickyElement className="home-settings-sticky"></StickyElement>
                         <h3>{I18n.t("tradition.recent")}</h3> 
                         <InnerSearchPageContainer /*noScrollFilters={true}*/ location={this.props.location} auth={this.props.auth} isOsearch={true} recent={true} />  
                            

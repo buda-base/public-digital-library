@@ -42,7 +42,6 @@ function SearchResultsHeader(props) {
   }, [results])
 
   return <header data-hits={results?.nbHits} data-status={status}>    
-    <div id="settings" onClick={() => that.setState({collapse:{...that.state.collapse, settings:!that.state.collapse.settings}})}><img src="/icons/settings.svg"/></div>
     { !inner && <>{ config.length > 1 && config[0] === "associated_res" 
       ? <h1 class={that.props.locale === "bo" || label?.lang === "bo" ? "has-bo" : ""}>
         <Trans i18nKey="result.assocNoT" values={{ name: label?.value || config[1] }} components={{ res: <Link to={inner?"/osearch/associated/"+config[1]+"/search":"/show/bdr:"+config[1]} /> }}/>
