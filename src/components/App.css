@@ -8035,6 +8035,20 @@ a.result + #matches.mobile,
    .resource .data.images-title h2.intro + h2 span { max-width:80vw;}
 
 
+   .resource .data#perma > div { justify-content: center; }
+
+   .resource .data#perma > div > .NL.nl-copy,   
+   .resource .data#perma > div > .NL.nl-dl  { margin:5px; display: block; width:100%; }
+
+   .resource .data#perma > div > #DL { padding-left:0; border-left:none; }
+   .resource .data#perma > div > #rid { padding-right:0; }
+   .resource .data#perma #cite { padding-right:0; }
+   .resource .data#perma #copyright { margin-left:0; padding-right:0; }
+
+   #popDL.cite { flex-wrap: wrap; width:90vw; }
+   #popDL.cite > div { width:100%; box-sizing: border-box; padding:0 0 16px 0 !important; }
+   #popDL.cite li { max-width: 100%;}
+
 }
 
 #about + a:not(#collections) svg,
@@ -8242,20 +8256,6 @@ a.result + #matches.mobile,
    .has-collapse.custom:not(.max-10) .propCollapseHeader.in-true ~ .expand, 
    .has-collapse.custom .propCollapseHeader.in-true ~ .expand { margin-left:20px; margin-top:8px; }
 
-
-   .resource .data#perma > div { justify-content: center; }
-
-   .resource .data#perma > div > .NL.nl-copy,   
-   .resource .data#perma > div > .NL.nl-dl  { margin:5px; display: block; width:100%; }
-
-   .resource .data#perma > div > #DL { padding-left:0; border-left:none; }
-   .resource .data#perma > div > #rid { padding-right:0; }
-   .resource .data#perma #cite { padding-right:0; }
-   .resource .data#perma #copyright { margin-left:0; padding-right:0; }
-
-   #popDL.cite { flex-wrap: wrap; width:90vw; }
-   #popDL.cite > div { width:100%; box-sizing: border-box; padding:0 0 16px 0 !important; }
-   #popDL.cite li { max-width: 100%;}
 
 
    .resource .data.ext-props .propCollapseHeader + div .sub,

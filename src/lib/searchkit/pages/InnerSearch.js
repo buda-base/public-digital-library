@@ -200,7 +200,7 @@ export class InnerSearchPage extends Component<State, Props>
                   </div>
                 </div>
               </div> } 
-              <div id="settings" onClick={() => this.setState({collapse:{...this.state.collapse, settings:!this.state.collapse.settings}})}><img src="/icons/settings.svg"/></div>
+              { !isOtherVersions && <div id="settings" onClick={() => this.setState({collapse:{...this.state.collapse, settings:!this.state.collapse.settings}})}><img src="/icons/settings.svg"/></div> }
               <div className="content">
                 { noScrollFilters 
                   ? <div className="filter no-scroll">

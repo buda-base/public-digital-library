@@ -1316,11 +1316,14 @@ header[data-hits="0"] ~ .hits .pagination,
   min-height:120px;
 }
 
-.App.home .ISB {
+.ISB {
   min-height:150px;
   display: flex;
 }
 
+.ISB.advanced-true > div:last-child {
+  width:100%;
+}
 
 .ISB.advanced-false {
   align-items: flex-end;
@@ -1749,6 +1752,7 @@ header[data-hits="0"] ~ .hits .pagination,
   .App.home #samples .home-tradi-grid > * {
     width:260px;
   }
+  
 }
 
 @media (max-width: 1024px) {
@@ -1968,22 +1972,22 @@ header[data-hits="0"] ~ .hits .pagination,
   }
 
   #root .resource .data > div > h3 {
-    width:195px;
+    width:155px;
   }
 
   #root .propCollapse, 
   #root .has-collapse.custom .propCollapseHeader, .resource .data [data-prop="bdo:workHasInstance"] .group,
   #root .resource .data .group {
-    width:calc(100% - 195px - 25px);
+    width:calc(100% - 155px - 20px);
   }
 
   #root .resource .data:not(#perma) > div:not(.firstImage):not(.browse):not(.header)::after {
-    margin: 15px 0 15px 215px;
-    width: calc(100% - 215px);
+    margin: 15px 0 15px 175px;
+    width: calc(100% - 175px);
   }
 
   #root .resource .data.legal-props > div h3 {
-    width: 190px;
+    width: 150px;
     padding-right: 70px;
     box-sizing: border-box;
   }
@@ -1991,12 +1995,12 @@ header[data-hits="0"] ~ .hits .pagination,
   #root > div > .resource > div > .data:not(#a) {
     /* padding:0; */
   }
-  #root:not(#a) .resource .data#outline, 
+  /* #root:not(#a) .resource .data#outline,  */
   #root:not(#a) .resource .data.related, 
   #root:not(#a) .resource .data.ext-props, 
   #root:not(#a) .resource .data.legal-props, 
   #root:not(#a) .resource .data#perma, 
-  #root:not(#a) .resource .data  {
+  #root:not(#a) .resource > div > .data  {
     padding-left:10px;
     padding-right:10px;
   }
@@ -2006,7 +2010,7 @@ header[data-hits="0"] ~ .hits .pagination,
   }
 
   .AppSK.InnerSearchPage .searchbox > .inner-search-bar:not(#a) {
-    width: calc(100% - 185px);
+    width: calc(100% - 145px);
   }
 
   .AppSK.InnerSearchPage.data .content {
@@ -2041,6 +2045,72 @@ header[data-hits="0"] ~ .hits .pagination,
   #root .infoPanel.inRes {
     display:none;
   }
+
+  .AppSK .result .thumb.hasImg a img {
+    height:100px;
+  }
+  .AppSK .result .thumb.hasImg a .img {
+    width: 100px;
+    height: 100px;
+  }
+  .AppSK:not(#a) .result .thumb a {
+    width:130px;
+  }
+  /*
+  .AppSK:not(#a) .result .thumb a .RID ~ span,
+  .AppSK:not(#a) .result .thumb a .RID ~ span span:first-child + span {
+    display: block !important;
+  }
+  */
+
+  #root .AppSK .result .thumb a .RID, #root .result-content #icon .RID {
+    max-width:95px;
+  }
+  .AppSK .ais-Hits-item, #res-container > ul li.ais-Hits-item {
+    padding:20px;
+  }
+  
+
+
+  #otherR + div .AppSK.InnerSearchPage.data .content .main-content {
+    padding:0;
+    padding-top:10px;
+  }
+
+  .resource [data-prop="tmp:workHasInstance"] .AppSK.InnerSearchPage.data .content {
+    width:100%;
+  }
+
+  .resource [data-prop="tmp:workHasInstance"] .AppSK .content .main-content .ais-Hits-list {
+    display:flex;
+    flex-direction: column;
+    padding-right:0;
+  }
+
+  .resource [data-prop="tmp:workHasInstance"] .other-versions-nav {
+    padding-right:0;
+  }
+
+  .ISB.advanced-true .App .SearchPane:not(#a) #search-bar  { 
+    padding:15px 30px;
+    box-sizing: border-box;
+    height:160px; 
+  }
+
+  .ISB.advanced-true .App .SearchPane:not(#a) #search-bar #simple-search + div,
+  .ISB.advanced-true .App .SearchPane:not(#a) #search-bar > :not(:last-child) {
+    width:100% !important; 
+    box-sizing: border-box;
+  }
+
+  .ISB.advanced-true .App .SearchPane:not(#a) #search-bar > h2 {
+   margin-bottom:10px;  
+  }
+
+  #otherR + div .AppSK.InnerSearchPage.data {
+    padding-bottom:20px;
+  }
+  
 }
 
 
@@ -2165,7 +2235,14 @@ header[data-hits="0"] ~ .hits .pagination,
     margin-bottom: 20px;
   }
 
-  
+  .AppSK.InnerSearchPage .searchbox > .inner-search-bar:not(#a) {
+    width: calc(100% - 165px);
+  }
+
+
+  .ISB.advanced-true .App .SearchPane:not(#a) #search-bar  { 
+    padding:15px 0px;
+  }
 }
 
 @media (max-width:665px){
@@ -2173,8 +2250,8 @@ header[data-hits="0"] ~ .hits .pagination,
   #root .propCollapse, 
   #root .has-collapse.custom .propCollapseHeader, 
   .resource .data [data-prop="bdo:workHasInstance"] .group, 
-  #root .resource .data .group {
-    width:200%;
+  #root .resource > div > .data .group {
+    width:100%;
   }
  
   
@@ -2206,8 +2283,18 @@ header[data-hits="0"] ~ .hits .pagination,
     margin-top:0;
   }
 
+  #root .ISB {
+    min-height:170px;
+    padding-top:10px;
+  }
+
   #root .ISB .inner-search-bar:not(#a) {
     display:block;
+    margin-top:15px;
+  } 
+
+
+  #root .home .ISB .inner-search-bar:not(#a) {
     margin-top:42px;
   } 
    
@@ -2229,11 +2316,12 @@ header[data-hits="0"] ~ .hits .pagination,
     margin-top:10px;
   }
 
-  #root .SearchPane .formControl {
+  #root .App.home .SearchPane .formControl {
     bottom:55px;
     left:25px;
   }
 
+  /*
   .AppSK .result .thumb.hasImg a img {
     height:80px;
   }
@@ -2244,14 +2332,16 @@ header[data-hits="0"] ~ .hits .pagination,
   .AppSK:not(#a) .result .thumb a {
     width:100px;
   }
+  
+  #root .AppSK .result .thumb a .RID, #root .result-content #icon .RID {
+    max-width:95px;
+  }
+
   .AppSK:not(#a) .result .thumb a .RID ~ span,
   .AppSK:not(#a) .result .thumb a .RID ~ span span:first-child + span {
     display: block !important;
   }
-
-  #root .AppSK .result .thumb a .RID, #root .result-content #icon .RID {
-    max-width:95px;
-  }
+  */
 
   #samples .AppSK.InnerSearchPage.data .content .main-content {
     padding-right: 0px;
@@ -2274,6 +2364,34 @@ header[data-hits="0"] ~ .hits .pagination,
   .AppSK .ais-Hits-item .names.firstScan, .AppSK .ais-Hits-item .debug button {
     top:9px;
   }
+
+  #root .resource .data > div > h3,
+  #root .resource [data-prop='tmp:outlineSearch'] .search > div {
+    width:100%;
+  }
+
+  #root .resource .data:not(#perma) > div:not(.firstImage):not(.browse):not(.header)::after {
+    width: calc(100% + 10px);
+    margin: 25px 0 25px -5px;
+  }
+
+  #root .resource .data.legal-props > div h3 {
+    width:100%;
+  }
+
+  .etext-top-links:not(#a),
+  .resource .data .images-thumb-links {
+    padding-left:20px;
+  }
+
+  .ISB.advanced-true .App .SearchPane:not(#a) #search-bar {
+    height:200px;
+  }
+
+  #otherR + div > .group {
+    padding-left:0;
+  }
+
 }
 
 
@@ -2297,6 +2415,14 @@ header[data-hits="0"] ~ .hits .pagination,
 
   #root .nav #logo a {
     margin-right:0;
+  }
+
+  .etext-top-links a#DL {
+    margin-left:0;
+    display:block;
+  }
+  .etext-top-links a#DL::before {
+    content:none;
   }
 }
 
