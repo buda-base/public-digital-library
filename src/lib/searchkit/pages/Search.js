@@ -3,6 +3,11 @@ import React, { useState, useEffect, useCallback } from "react";
 import _ from "lodash"
 import Loader from 'react-loader';
 import { useLocation, useNavigate } from 'react-router-dom'
+import IconButton from '@material-ui/core/IconButton';
+import Close from '@material-ui/icons/Close';
+import SimpleBar from 'simplebar-react';
+import 'simplebar/dist/simplebar.min.css';
+
 
 // Utils
 import Client from "@searchkit/instantsearch-client";
@@ -463,11 +468,16 @@ export class SearchPage extends Component<State, Props>
                   }} />
               </div>
             </div>
-            <div id="settings" onClick={() => this.setState({collapse:{...this.state.collapse, settings:!this.state.collapse.settings}})}><img src="/icons/settings.svg"/></div>
+            { !this.state.collapse.settings && <div id="settings" onClick={() => this.setState({collapse:{...this.state.collapse, settings:!this.state.collapse.settings}})}><img src="/icons/settings.svg"/></div> }
             <div className="content">    
-              <div className="filter">
+              <div className={"filter "+(this.state.collapse.settings ? "on":"")}>
                 <FiltersSidebar that={this} />
-              </div>
+                <IconButton><Close /></IconButton>
+              </div> 
+              <SimpleBar className={"mobile filter "+(this.state.collapse.settings ? "on":"")}> 
+                <FiltersSidebar that={this} /> 
+                <IconButton className="close"><Close /></IconButton>
+              </SimpleBar>
               <div className="main-content">
                 <SearchResultsHeader that={this} {...{ storageRef }}/>
                 <div className="hits">

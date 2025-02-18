@@ -1680,6 +1680,17 @@ header[data-hits="0"] ~ .hits .pagination,
   z-index:100000;
 }
 
+.App.tradition #tradition-breadcrumbs {
+  white-space: nowrap;
+  max-width:100%;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.mobile.filter {
+  display: none;
+}
+
 /* responsive */
 
 .SearchPane #logo img {
@@ -1757,6 +1768,7 @@ header[data-hits="0"] ~ .hits .pagination,
 
 @media (max-width: 1024px) {
 
+
   #root {
     background:white;
   }
@@ -1775,6 +1787,12 @@ header[data-hits="0"] ~ .hits .pagination,
   #root > div:not(#a) > :is(.App.home:not(.guidedsearch),.resource) {
     padding:0;
   }
+  #root > div:not(#a) > :is(.resource:not(#a)) {
+    padding-top:70px;
+    position: relative;
+  }
+
+  .infoPanel + .resource > .ariane { top:280px; }
 
   .App #results, .App #samples {
     padding-left:0;
@@ -1892,8 +1910,45 @@ header[data-hits="0"] ~ .hits .pagination,
     width:100%;
   }
 
+  .AppSK:not(.InnerSearchPage) .filter:not(.mobile) {
+    display: none;
+  }
+
+  .AppSK:not(.InnerSearchPage) .filter.mobile {
+    display: flex;
+  }
+
   .AppSK .content .filter,
   #samples .AppSK.InnerSearchPage.data .content .filter {
+    position: fixed;
+    top:0;
+    bottom:0;
+    background:#eee;
+    z-index:10;
+    padding-top:0;
+    left:0;
+    padding-right:10px;
+  }
+
+
+  .AppSK .content .filter button.close,
+  #samples .AppSK.InnerSearchPage.data .content .filter button.close {
+    position:absolute;
+    top:0;
+    right:0;
+    color:#343434;
+  }
+
+
+  .AppSK .content .filter > :first-child:not(.simplebar-wrapper),
+  .AppSK .content .filter > :first-child:not(.simplebar-wrapper) ~ :nth-child(-n+3),
+  #samples .AppSK.InnerSearchPage.data .content .filter > :first-child:not(.simplebar-wrapper),
+  #samples .AppSK.InnerSearchPage.data .content .filter > :first-child:not(.simplebar-wrapper) ~ :nth-child(-n+3) {
+    display: none;
+  }
+
+  .AppSK .content .filter:not(.on),
+  #samples .AppSK.InnerSearchPage.data .content .filter:not(.on) {
     display:none;
   }
 
@@ -2111,25 +2166,53 @@ header[data-hits="0"] ~ .hits .pagination,
     padding-bottom:20px;
   }
   
+  #root .infoPanel + .resource > .ariane {
+    padding:0 10px;
+    margin-top:5px;
+  } 
+
+  #root .resource .data .back-anchor .urilink, #root .etext-header .urilink {
+    position: relative;
+    right:auto;
+  }
+
+  #root .static-container > #samples > div {
+    padding-left:30px;
+    padding-right:30px;
+  }
+
+  #root .static-container > #samples {
+    padding-top:45px;
+  }
+
+  #root .App.tradition .tradi-content {
+    margin-right:0;
+    /* justify-content: center; */
+  }
+
+  #root .App.tradition .tradi-content a.has-img {
+    margin-left:10px;
+    margin-right:10px;
+  }
+
+  #root .App.tradition #tradi-selected a.has-img span:not(#a), 
+  #root .App.tradition .tradi-content.main:not(#a) a.has-img span {
+    width:110px;
+  }
+
+  .tradition .AppSK.InnerSearchPage.data .content {
+    width:calc(100% + 40px);
+  }
+
+  #root .nav:not(.on) ~ .AppSK .content {
+    z-index:1000000;
+  }
 }
 
 
 
 @media (max-width:800px){
   
-  .over-nav + .nav:not(#a) > div { padding:0 0 0 10px ;}
-
-  .over-nav + .nav > div { padding:0 0 0 10px ;}
-
-  .over-nav + .nav.someClass:not(.on) > div { right:5px;}
-
-  .nav:not(#a), #root .over-nav { padding: 0 10px;}
-
-  .over-nav > div a { white-space: nowrap;}
-
-  .inner-search-bar:not(#a) > div:not(#a) {
-    padding:0 10px;
-  }
 
   #root .App:not(#a) #res-container {
     padding:10px;
@@ -2154,7 +2237,7 @@ header[data-hits="0"] ~ .hits .pagination,
   #root .SearchPane #logo > div > div {
     height:auto;
     width:100%;
-    padding:20px 10px;
+    padding:20px 30px;
   }
 
   .App.home #samples .home-tradi-grid {
@@ -2192,7 +2275,7 @@ header[data-hits="0"] ~ .hits .pagination,
   #root #search-bar > h2+div,
   #root .App #search-bar h2, #root .nav ~ .AppSK.advanced #search-bar h2 {
     width:100%;
-    padding:0 10px;
+    padding:0 30px;
     box-sizing: border-box;
   }
 
@@ -2201,7 +2284,7 @@ header[data-hits="0"] ~ .hits .pagination,
   }
 
   #root #search-bar #simple-search {
-    right:10px;
+    right:30px;
   }
 
   #root :not(.static-container) > #samples .AppSK.InnerSearchPage.data .content {
@@ -2226,8 +2309,13 @@ header[data-hits="0"] ~ .hits .pagination,
 
 
   #root .AppSK #settings {
-    margin-left:-5px;
+    margin-left:5px;
     margin-bottom:10px;
+  }
+
+
+  #root .AppSK.InnerSearchPage #settings {
+    margin-left:-25px;
   }
 
   .AppSK .pagination {
@@ -2318,7 +2406,7 @@ header[data-hits="0"] ~ .hits .pagination,
 
   #root .App.home .SearchPane .formControl {
     bottom:55px;
-    left:25px;
+    left:45px;
   }
 
   /*
@@ -2344,8 +2432,10 @@ header[data-hits="0"] ~ .hits .pagination,
   */
 
   #samples .AppSK.InnerSearchPage.data .content .main-content {
+    /* 
     padding-right: 0px;
-    padding-left: 0px;
+    padding-left: 0px; 
+    */
     width: 100%;
     padding-top: 10px;
     padding-bottom: 0;
@@ -2392,16 +2482,44 @@ header[data-hits="0"] ~ .hits .pagination,
     padding-left:0;
   }
 
+
+  #root .App.tradition h1 {
+    font-size:26px;
+  }
+
+  #root .App.tradition .tradi-content h2 {
+    font-size:20px;
+  }
 }
 
 
 @media (max-width:480px) {
+
+  .over-nav + .nav:not(#a) > div { padding:0 0 0 10px ;}
+
+  .over-nav + .nav > div { padding:0 0 0 10px ;}
+
+  .over-nav + .nav.someClass:not(.on) > div { right:5px;}
+
+  .nav:not(#a), #root .over-nav { padding: 0 10px;}
+
+  .over-nav > div a { white-space: nowrap;}
+
+  .inner-search-bar:not(#a) > div:not(#a) {
+    padding:0 10px;
+  }
+
   .nav #logo a:first-child span + .buda-small,
   #root .nav #logo a,
   #lang-login {
     display: flex;
 
   }
+
+  #root > div > .resource > div > .data:not(#a) {
+    padding-left: 10px;
+    padding-right: 10px;
+}
 
 
   .nav #logo a:first-child span + .buda-small {
@@ -2423,6 +2541,41 @@ header[data-hits="0"] ~ .hits .pagination,
   }
   .etext-top-links a#DL::before {
     content:none;
+  }
+
+
+  #root .App.home .SearchPane .formControl {
+    bottom:55px;
+    left:25px;
+  }
+
+
+  #root #search-bar > h2+div,
+  #root .App #search-bar h2, #root .nav ~ .AppSK.advanced #search-bar h2 {
+    padding:0 10px;
+  }
+
+  #root #search-bar #simple-search {
+    right:10px;
+  }
+
+
+  #root .SearchPane #logo > div > div {
+    padding:20px 10px;
+  }
+  #root .static-container > #samples > div {
+    padding-left:10px;
+    padding-right:10px;
+  }
+
+  .AppSK.InnerSearchPage.data .content .main-content {
+    padding-left:10px;
+    padding-right:10px;
+  }
+
+  .AppSK.InnerSearchPage.data .content {
+    width:calc(100%);
+    left:0px;
   }
 }
 

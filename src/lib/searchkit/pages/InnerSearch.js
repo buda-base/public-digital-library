@@ -7,6 +7,9 @@ import SimpleBar from 'simplebar-react';
 import 'simplebar/dist/simplebar.min.css';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
+import IconButton from '@material-ui/core/IconButton';
+import Close from '@material-ui/icons/Close';
+
 
 // Utils
 import Client from "@searchkit/instantsearch-client";
@@ -200,14 +203,15 @@ export class InnerSearchPage extends Component<State, Props>
                   </div>
                 </div>
               </div> } 
-              { !isOtherVersions && <div id="settings" onClick={() => this.setState({collapse:{...this.state.collapse, settings:!this.state.collapse.settings}})}><img src="/icons/settings.svg"/></div> }
+              { !isOtherVersions && !this.state.collapse.settings && <div id="settings" onClick={() => this.setState({collapse:{...this.state.collapse, settings:!this.state.collapse.settings}})}><img src="/icons/settings.svg"/></div> }
               <div className="content">
-                { noScrollFilters 
-                  ? <div className="filter no-scroll">
+                {noScrollFilters && !this.state.collapse.settings
+                  ? <div className={"filter no-scroll "+(this.state.collapse.settings ? "on":"")}>
                     <FiltersSidebar that={this} recent={recent&&!sortByDefault}/> 
                   </div>
-                  : <SimpleBar className="filter"> 
+                  : <SimpleBar className={"filter "+(this.state.collapse.settings ? "on":"")}> 
                       <FiltersSidebar that={this} recent={recent&&!sortByDefault}/> 
+                      <IconButton className="close"><Close /></IconButton>
                   </SimpleBar> 
                 }
                 <div className="main-content">
