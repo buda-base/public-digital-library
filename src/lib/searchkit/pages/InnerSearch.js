@@ -163,6 +163,8 @@ export class InnerSearchPage extends Component<State, Props>
     
     //if(this.state.isEmpty) return null
 
+    const toggleSettings = () => this.setState({collapse:{...this.state.collapse, settings:!this.state.collapse.settings}})
+
     return (<>
       { (pageFilters || !RID) && <div className={"AppSK InnerSearchPage data empty-"+(this.state.isEmpty)}>
           <InstantSearch
@@ -203,15 +205,15 @@ export class InnerSearchPage extends Component<State, Props>
                   </div>
                 </div>
               </div> } 
-              { !isOtherVersions && !this.state.collapse.settings && <div id="settings" onClick={() => this.setState({collapse:{...this.state.collapse, settings:!this.state.collapse.settings}})}><img src="/icons/settings.svg"/></div> }
+              { !isOtherVersions && !this.state.collapse.settings && <div id="settings" onClick={toggleSettings}><img src="/icons/settings.svg"/></div> }
               <div className="content">
                 {noScrollFilters && !this.state.collapse.settings
                   ? <div className={"filter no-scroll "+(this.state.collapse.settings ? "on":"")}>
                     <FiltersSidebar that={this} recent={recent&&!sortByDefault}/> 
                   </div>
                   : <SimpleBar className={"filter "+(this.state.collapse.settings ? "on":"")}> 
+                      <IconButton className="close" onClick={toggleSettings}><Close /></IconButton>
                       <FiltersSidebar that={this} recent={recent&&!sortByDefault}/> 
-                      <IconButton className="close"><Close /></IconButton>
                   </SimpleBar> 
                 }
                 <div className="main-content">

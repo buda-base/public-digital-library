@@ -340,6 +340,9 @@ const SearchBoxAutocomplete = (props) => {
 
   const [howTo, setHowTo] = useState(false)
 
+  useEffect(() => {
+    that.setState({collapse:{...that.state.collapse, isFocused}})
+  }, [isFocused])
 
   const ref = useRef()
 

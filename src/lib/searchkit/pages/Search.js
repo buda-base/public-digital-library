@@ -429,12 +429,13 @@ export class SearchPage extends Component<State, Props>
     const storageRef = React.createRef() 
 
     console.log("sC:", this.state.query, this.props.advKeyword, searchClient, routingConfig, pageFilters, storageRef)    
-    
+
+    const toggleSettings = () => this.setState({collapse:{...this.state.collapse, settings:!this.state.collapse.settings}})    
 
     return (
       <>
         { top_right_menu(this,null,null,null,null,this.props.location) }
-        <div className={"AppSK"+(this.props.advancedSearch?" advanced":"")}>
+        <div className={"AppSK"+(this.props.advancedSearch?" advanced":"") + (" isFocused-"+this.state.collapse.isFocused)}>
           { this.props.advancedSearch && <HomeCompo auth={this.props.auth} SKquery={this.state.SKquery} />}
           <InstantSearch
             key={pageFilters ?? "main"}
@@ -468,15 +469,14 @@ export class SearchPage extends Component<State, Props>
                   }} />
               </div>
             </div>
-            { !this.state.collapse.settings && <div id="settings" onClick={() => this.setState({collapse:{...this.state.collapse, settings:!this.state.collapse.settings}})}><img src="/icons/settings.svg"/></div> }
+            { !this.state.collapse.settings && <div id="settings" onClick={toggleSettings}><img src="/icons/settings.svg"/></div> }
             <div className="content">    
               <div className={"filter "+(this.state.collapse.settings ? "on":"")}>
                 <FiltersSidebar that={this} />
-                <IconButton><Close /></IconButton>
               </div> 
               <SimpleBar className={"mobile filter "+(this.state.collapse.settings ? "on":"")}> 
+                <IconButton className="close" onClick={toggleSettings}><Close /></IconButton>
                 <FiltersSidebar that={this} /> 
-                <IconButton className="close"><Close /></IconButton>
               </SimpleBar>
               <div className="main-content">
                 <SearchResultsHeader that={this} {...{ storageRef }}/>

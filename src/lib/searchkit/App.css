@@ -1918,7 +1918,7 @@ header[data-hits="0"] ~ .hits .pagination,
     display: flex;
   }
 
-  .AppSK .content .filter,
+  .AppSK:not(.InnerSearchPage) .content .filter,
   #samples .AppSK.InnerSearchPage.data .content .filter {
     position: fixed;
     top:0;
@@ -1927,9 +1927,15 @@ header[data-hits="0"] ~ .hits .pagination,
     z-index:10;
     padding-top:0;
     left:0;
-    padding-right:10px;
+    padding-top:35px;
+    padding-left:15px;
+    padding-right:15px;
   }
 
+
+  #samples .AppSK.InnerSearchPage.data .content .filter {
+    position:absolute;
+  }
 
   .AppSK .content .filter button.close,
   #samples .AppSK.InnerSearchPage.data .content .filter button.close {
@@ -1940,12 +1946,14 @@ header[data-hits="0"] ~ .hits .pagination,
   }
 
 
+  /*
   .AppSK .content .filter > :first-child:not(.simplebar-wrapper),
   .AppSK .content .filter > :first-child:not(.simplebar-wrapper) ~ :nth-child(-n+3),
   #samples .AppSK.InnerSearchPage.data .content .filter > :first-child:not(.simplebar-wrapper),
   #samples .AppSK.InnerSearchPage.data .content .filter > :first-child:not(.simplebar-wrapper) ~ :nth-child(-n+3) {
     display: none;
   }
+  */
 
   .AppSK .content .filter:not(.on),
   #samples .AppSK.InnerSearchPage.data .content .filter:not(.on) {
@@ -2204,9 +2212,13 @@ header[data-hits="0"] ~ .hits .pagination,
     width:calc(100% + 40px);
   }
 
-  #root .nav:not(.on) ~ .AppSK .content {
+  
+  
+  #root .nav:not(.on,.someClass) ~ .AppSK:not(.isFocused-true) .content {
     z-index:1000000;
   }
+    
+    
 }
 
 
@@ -2316,6 +2328,10 @@ header[data-hits="0"] ~ .hits .pagination,
 
   #root .AppSK.InnerSearchPage #settings {
     margin-left:-25px;
+  }
+
+  #root .home-support ~ .AppSK.InnerSearchPage #settings {
+    margin-left:-5px;
   }
 
   .AppSK .pagination {
