@@ -430,13 +430,15 @@ export class SearchPage extends Component<State, Props>
 
     console.log("sC:", this.state.query, this.props.advKeyword, searchClient, routingConfig, pageFilters, storageRef)    
 
-    const toggleSettings = () => this.setState({collapse:{...this.state.collapse, settings:!this.state.collapse.settings}})    
+    const toggleSettings = () => this.setState({collapse:{...this.state.collapse, settings:!this.state.collapse.settings}}) 
+
+    const toggleIsFocused = () => this.setState({collapse:{...this.state.collapse, isFocused:!this.state.collapse.isFocused}}) 
 
     return (
       <>
         { top_right_menu(this,null,null,null,null,this.props.location) }
-        <div className={"AppSK"+(this.props.advancedSearch?" advanced":"") + (" isFocused-"+this.state.collapse.isFocused)}>
-          { this.props.advancedSearch && <HomeCompo auth={this.props.auth} SKquery={this.state.SKquery} />}
+        <div className={"AppSK"+(this.props.advancedSearch?" advanced":"") + (" isFocused-"+this.state.collapse.isFocused) + (" settings-"+this.state.collapse.settings)}>
+          { this.props.advancedSearch && <HomeCompo auth={this.props.auth} SKquery={this.state.SKquery} isFocused={this.state.collapse.isFocused} setIsFocused={toggleIsFocused}/>}
           <InstantSearch
             key={pageFilters ?? "main"}
             indexName={process.env.REACT_APP_ELASTICSEARCH_INDEX}

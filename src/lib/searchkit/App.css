@@ -1691,6 +1691,17 @@ header[data-hits="0"] ~ .hits .pagination,
   display: none;
 }
 
+.ISB {
+  z-index:100000;
+  position: relative;
+}
+
+
+#root .nav:not(.on,.someClass) ~ .AppSK.advanced.settings-false  #feedback + div {
+  z-index:10000000;
+  position: relative;
+}
+
 /* responsive */
 
 .SearchPane #logo img {
@@ -1930,11 +1941,17 @@ header[data-hits="0"] ~ .hits .pagination,
     padding-top:35px;
     padding-left:15px;
     padding-right:15px;
+    box-shadow:0 0 2px 2px rgba(0,0,0,0.2);
   }
 
 
   #samples .AppSK.InnerSearchPage.data .content .filter {
     position:absolute;
+  }
+
+  .AppSK.InnerSearchPage.data .content .filter {
+    z-index: 1;
+    background: #eee;
   }
 
   .AppSK .content .filter button.close,
@@ -2191,6 +2208,21 @@ header[data-hits="0"] ~ .hits .pagination,
 
   #root .static-container > #samples {
     padding-top:45px;
+    #root #search-bar > h2+div,
+    #root .App #search-bar h2, #root .nav ~ .AppSK.advanced #search-bar h2 {
+      width:100%;
+      padding:0 30px;
+      box-sizing: border-box;
+    }
+  
+    #root #search-bar > div > span + div {
+      width:100% !important;
+    }
+  
+    #root #search-bar #simple-search {
+      right:30px;
+    }
+  
   }
 
   #root .App.tradition .tradi-content {
@@ -2217,8 +2249,35 @@ header[data-hits="0"] ~ .hits .pagination,
   #root .nav:not(.on,.someClass) ~ .AppSK:not(.isFocused-true) .content {
     z-index:1000000;
   }
+  
     
+  #root #search-bar > h2+div,
+  #root .App #search-bar h2, #root .nav ~ .AppSK.advanced #search-bar h2 {
+    width:100%;
+    padding:0 30px;
+    box-sizing: border-box;
+  }
+
+  #root #search-bar > div > span + div {
+    width:100% !important;
+  }
+
+  #root #search-bar #simple-search {
+    right:30px;
+  }
+
     
+  #root .SearchPane .formControl {
+    right: 70px
+  }
+
+  #suggestions  {
+    max-width:calc(100% - 30px * 2);
+  }
+
+  #root .resource [data-prop="tmp:workHasInstance"] .AppSK .content .main-content {
+    padding-top:0;
+  }
 }
 
 
@@ -2284,21 +2343,6 @@ header[data-hits="0"] ~ .hits .pagination,
   }
 
 
-  #root #search-bar > h2+div,
-  #root .App #search-bar h2, #root .nav ~ .AppSK.advanced #search-bar h2 {
-    width:100%;
-    padding:0 30px;
-    box-sizing: border-box;
-  }
-
-  #root #search-bar > div > span + div {
-    width:100% !important;
-  }
-
-  #root #search-bar #simple-search {
-    right:30px;
-  }
-
   #root :not(.static-container) > #samples .AppSK.InnerSearchPage.data .content {
     width:calc(100% - 20px);
     left:10px;
@@ -2327,7 +2371,7 @@ header[data-hits="0"] ~ .hits .pagination,
 
 
   #root .AppSK.InnerSearchPage #settings {
-    margin-left:-25px;
+    margin-left:-5px;
   }
 
   #root .home-support ~ .AppSK.InnerSearchPage #settings {
@@ -2347,6 +2391,12 @@ header[data-hits="0"] ~ .hits .pagination,
   .ISB.advanced-true .App .SearchPane:not(#a) #search-bar  { 
     padding:15px 0px;
   }
+
+
+  #root .resource .data#outline .root + div {
+    width: calc(100% - 25px - 50px - 35px + 35px);
+  }
+
 }
 
 @media (max-width:665px){
@@ -2423,6 +2473,11 @@ header[data-hits="0"] ~ .hits .pagination,
   #root .App.home .SearchPane .formControl {
     bottom:55px;
     left:45px;
+  }
+
+
+  #root .ISB .App.home .SearchPane .formControl {
+    bottom:62px;
   }
 
   /*
@@ -2505,6 +2560,25 @@ header[data-hits="0"] ~ .hits .pagination,
 
   #root .App.tradition .tradi-content h2 {
     font-size:20px;
+  }
+
+  .AppSK .result .data .names  {
+    flex-wrap:wrap;
+  }
+
+  .AppSK .result .data .names > .label + span {
+    width:100%;
+    padding-left:10px;
+
+  }
+
+  #root .SearchPane .formControl {
+    right: auto;
+  }
+
+
+  #root .resource [data-prop="tmp:workHasInstance"] .AppSK .content .main-content {
+    padding-top:20px;
   }
 }
 
@@ -2592,6 +2666,26 @@ header[data-hits="0"] ~ .hits .pagination,
   .AppSK.InnerSearchPage.data .content {
     width:calc(100%);
     left:0px;
+  }
+
+  #root .tradition .AppSK.InnerSearchPage.data .content {
+    width:100%;
+  }
+
+  #root .infoPanel + .resource > .ariane {
+    left:0;
+  }
+
+  #root .resource .data > [data-prop="bdo:creator"] .subgroup .subsub:first-child,
+  #root .resource .sub h4.first {
+    margin-right:0;
+  }
+  .resource .data > [data-prop="bdo:creator"] .subgroup > .subsub h4 {
+    box-sizing: border-box;
+  }
+
+  #suggestions  {
+    max-width:calc(100% - 10px * 2);
   }
 }
 

@@ -7224,6 +7224,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             ) value = ""
 
          loggergen.log("changeKW",value,keyEv,ev)
+
+         if(this.props.setIsFocused && !this.props.isFocused) this.props.setIsFocused(true)
          
          let dataSource = [] 
          let language = this.state.language
@@ -7685,7 +7687,12 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      closeIcon={<Close className="searchClose" style={ {color:"rgba(0,0,0,1.0)",opacity:1} } onClick={() => { this.props.navigate({pathname:"/",search:""}); this.props.onResetSearch();} }/>}
                      disabled={this.props.hostFailure}
                      onClick={(ev) => { changeKW(this.state.keyword?lucenequerytokeyword(this.state.keyword):""); $("#search-bar input[type=text][placeholder]").attr("placeholder",I18n.t("home.start"));  } }
-                     onBlur={(ev) => { loggergen.log("BLUR"); setTimeout(() => this.setState({...this.state,dataSource:[],blurSearch:true}),100); $("#search-bar input[type=text][placeholder]").attr("placeholder", I18n.t("home.search"));  } }
+                     onBlur={(ev) => { loggergen.log("BLUR"); setTimeout(() => { 
+                           this.setState({...this.state,dataSource:[],blurSearch:true}) 
+                        },100); 
+                        $("#search-bar input[type=text][placeholder]").attr("placeholder", I18n.t("home.search"))
+                        if(this.props.setIsFocused && this.props.isFocused) this.props.setIsFocused(false)    
+                     }}
                      onChange={(value:string) => changeKW(value)}
                      onKeyDown={(ev) => { 
                         //loggergen.log("kd:",ev)

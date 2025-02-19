@@ -7143,7 +7143,7 @@ feedbucket-app:not(.on)  { display:none !important; }
    }
    
    .nav.etext-nav + #feedback:not(.X),
-   .nav + #feedback.top:not(.X) { bottom: 5px; left:5px;}
+   .nav + #feedback.top:not(.X) { bottom: 5px; right:5px;}
    
    .nav.etext-nav + #feedback:not(.X) { width:52px; height:52px; border-radius:26px; }
    
@@ -7655,12 +7655,12 @@ a.result + #matches.mobile,
    .person + a.result { min-height: 0;}
    .person #matches > .match.dates { padding-left:5px; }
 
-   #settings { position:fixed;bottom:5px;right:5px; border-radius:50%; background:white;box-shadow: 0 0 5px 0px rgb(0 0 0 / 13%); 
+   #settings { position:fixed;bottom:5px;left:5px; border-radius:50%; background:white;box-shadow: 0 0 5px 0px rgb(0 0 0 / 13%); 
       padding:5px; z-index:1;
    }
 
-   .SidePane.left { position:fixed; right:0; left:auto; transition:right 400ms ease-in-out; padding:10px; height:100vh;overflow:scroll;}
-   .SidePane.left.closed { right:-300px; left:auto;}
+   .SidePane.left { position:fixed; left:0; /*transition:right 400ms ease-in-out;*/ padding:10px; height:100vh;/*overflow:scroll;*/ box-sizing: border-box;}
+   .SidePane.left.closed { left:-300px;}
    .SidePane.left #closeSettings { display:block; position:absolute;right:0px;top:10px;}
    .SidePane.left .widget-header  { text-align: left;  }
    #root .App #res-container .SidePane.left p  { padding-left:0;  }
@@ -8492,7 +8492,7 @@ a.result + #matches.mobile,
    .resource.hasTabs .title { top:0; width:calc(100% - 66px); position: fixed; right:5px;z-index:10;flex-wrap: wrap;}
    .resource.hasTabs .title::before { width:calc(100% + 60px); height:100%; background: #efefef; display: block; content:'';margin-left:-60px;position:absolute;top:0;left:0;z-index:-1;}
    .resource.hasTabs .title::after { width:calc(100% + 66px); height:10px; background: white; display: block; content:'';margin-left:-56px;}
-   #root > div:not(.H100vh) > .resource.hasTabs > .index + div { top:30px;}
+   /* #root > div:not(.H100vh) > .resource.hasTabs > .index + div { top:30px;} */
    .resource .title h2 { transition:height 200ms; }
    .resource.scrolled .title h2 { height:60px;  }
    .resource .title h2 .T { transition:font-size 200ms; }
@@ -8631,10 +8631,12 @@ a.result + #matches.mobile,
 
 @media (max-width:480px) {
 
- 
+
+   /*
    .infoPanel+.resource>.ariane {
       top: 80px;
    }
+   */
    
    /*
    html:not(.auto_rela) {
