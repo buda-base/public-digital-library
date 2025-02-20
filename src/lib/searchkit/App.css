@@ -1702,6 +1702,10 @@ header[data-hits="0"] ~ .hits .pagination,
   position: relative;
 }
 
+#root .App .resultPage #res-container h4 {
+  padding-left:5px;
+}
+
 /* responsive */
 
 .SearchPane #logo img {
@@ -2278,6 +2282,37 @@ header[data-hits="0"] ~ .hits .pagination,
   #root .resource [data-prop="tmp:workHasInstance"] .AppSK .content .main-content {
     padding-top:0;
   }
+
+  .nav:not(.someClass) ~ div:last-child:not(.AppSK).settings-true {
+    z-index: 1000000;
+    position: relative;
+  }
+
+  #root .SidePane.left,
+  #root .SidePane.left .simplebar-content {
+    padding:0 !important;
+
+  }
+
+
+  .SidePane.left > [data-simplebar] {
+    padding:10px !important;
+  }
+
+
+  #root .SidePane.left {
+    /* height:auto !important; */
+    bottom:0;
+    margin-top:0;
+  }
+
+  #root .SidePane.left .simplebar-content > div {
+    padding:10px;
+  }
+
+  #root .SidePane.left .simplebar-track.simplebar-vertical {
+    right:0;
+  }
 }
 
 
@@ -2397,6 +2432,10 @@ header[data-hits="0"] ~ .hits .pagination,
     width: calc(100% - 25px - 50px - 35px + 35px);
   }
 
+  #root > div:last-child:not(.AppSK) #filters-UI {
+    padding-top:20px;
+    padding-bottom:10px;
+  }
 }
 
 @media (max-width:665px){
@@ -2471,6 +2510,8 @@ header[data-hits="0"] ~ .hits .pagination,
   }
 
   #root .App.home .SearchPane .formControl {
+    /*
+    */
     bottom:55px;
     left:45px;
   }
@@ -2580,6 +2621,10 @@ header[data-hits="0"] ~ .hits .pagination,
   #root .resource [data-prop="tmp:workHasInstance"] .AppSK .content .main-content {
     padding-top:20px;
   }
+
+  #root .App:not(.home) .SearchPane .formControl {
+    left:45px;
+  }
 }
 
 
@@ -2686,6 +2731,11 @@ header[data-hits="0"] ~ .hits .pagination,
 
   #suggestions  {
     max-width:calc(100% - 10px * 2);
+  }
+
+
+  #root .App:not(.home) .SearchPane .formControl {
+    left:25px;
   }
 }
 

@@ -6703,7 +6703,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   {/* <IconButton className="close" onClick={e => this.setState({...this.state,leftPane:false,closeLeftPane:true})}><Close/></IconButton> */}
                { //this.props.datatypes && (results ? results.numResults > 0:true) &&
                   <div style={{ /*minWidth:"335px",*/ position:"relative"}}>                 
-                     <div id="closeSettings" onClick={() => this.setState({collapse:{...this.state.collapse, settings:false}})}><Close /></div>    
+                     <IconButton id="closeSettings" onClick={() => this.setState({collapse:{...this.state.collapse, settings:false}})}><Close /></IconButton>    
                      <Typography className="sidebar-title">
                         {I18n.t("Lsidebar.title")}
                      </Typography>
@@ -7585,7 +7585,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       
       const ret = (<>
 { top_right_menu(this,null,null,null,null,this.props.location) }
-<div className={(this.props.simple?"simpleSearch":"")}>
+<div className={(this.props.simple?"simpleSearch":"")+(" settings-"+this.state.collapse.settings)}>
    {getGDPRconsent(this)}
    {/* <Link to="/about">About</Link> */}
 

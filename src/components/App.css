@@ -7661,7 +7661,7 @@ a.result + #matches.mobile,
 
    .SidePane.left { position:fixed; left:0; /*transition:right 400ms ease-in-out;*/ padding:10px; height:100vh;/*overflow:scroll;*/ box-sizing: border-box;}
    .SidePane.left.closed { left:-300px;}
-   .SidePane.left #closeSettings { display:block; position:absolute;right:0px;top:10px;}
+   .SidePane.left #closeSettings { display:block; position:absolute;right:0px;top:0px;}
    .SidePane.left .widget-header  { text-align: left;  }
    #root .App #res-container .SidePane.left p  { padding-left:0;  }
    #pagine div a { margin:0 8px; }
