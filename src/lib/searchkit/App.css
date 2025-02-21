@@ -976,6 +976,14 @@ header[data-hits="0"] ~ .hits .pagination,
   padding-right:0;
  }
 
+.etext-header.sticky .EtextVolume .etext-header-breadcrumbs .ariane {
+  width:1170px;
+}
+
+.etext-header.sticky .EtextInstance .etext-header-breadcrumbs .ariane {
+  width:1150px;
+}
+
 .resource .title + .data + .data.top-props {
   padding-bottom:20px;
 }
@@ -1706,6 +1714,10 @@ header[data-hits="0"] ~ .hits .pagination,
   padding-left:5px;
 }
 
+.AppSK .filter .close {
+  display:none;
+}
+
 /* responsive */
 
 .SearchPane #logo img {
@@ -1727,9 +1739,13 @@ header[data-hits="0"] ~ .hits .pagination,
     box-sizing: border-box;
   }
 
-
+  
   .etext-header.sticky .EtextInstance .etext-header-breadcrumbs .ariane {
     width:calc(100vw - 280px);
+  }
+
+  .etext-header.sticky .EtextVolume .etext-header-breadcrumbs .ariane {
+    width:calc(100vw - 270px);
   }
 
   .etext-header.sticky .Etext .etext-header-breadcrumbs .ariane {
@@ -1763,6 +1779,12 @@ header[data-hits="0"] ~ .hits .pagination,
 
   #root #samples {
     width:1170px;
+  }
+
+  #root > div:not(.withMonlam,.withETSBresults) > .resource { min-width:100%; }
+
+  #root > .withETSBresults.withOutline:not(#a) > .resource.etext-view:not(#a), #root > .withMonlam.withOutline:not(#a) > .resource.etext-view:not(#a) {
+    width: calc(100% - 400px);
   }
 }
 
@@ -1956,6 +1978,7 @@ header[data-hits="0"] ~ .hits .pagination,
   .AppSK.InnerSearchPage.data .content .filter {
     z-index: 1;
     background: #eee;
+    box-shadow:0 0 2px 2px rgba(0,0,0,0.2);
   }
 
   .AppSK .content .filter button.close,
@@ -2200,11 +2223,17 @@ header[data-hits="0"] ~ .hits .pagination,
     margin-top:5px;
   } 
 
-  #root .resource .data .back-anchor .urilink, #root .etext-header .urilink {
+  #root .resource .data .back-anchor .urilink, #root .etext-header:not(.sticky) .urilink {
     position: relative;
     right:auto;
   }
 
+  .etext-header:not(.sticky) .urilink {
+    margin-bottom:10px;
+  }
+
+  #root .etext-header-breadcrumbs:not(.sticky) > div, 
+  #root .etext-header:not(.sticky) > div,
   #root .static-container > #samples > div {
     padding-left:30px;
     padding-right:30px;
@@ -2313,6 +2342,47 @@ header[data-hits="0"] ~ .hits .pagination,
   #root .SidePane.left .simplebar-track.simplebar-vertical {
     right:0;
   }
+
+
+  .AppSK .filter .close {
+    display:flex;
+  }
+
+
+  #root #etext-nav .X {
+    right:auto;
+    left:0;
+    transform: rotate(180deg);
+    width:36px;
+  }
+
+  #root #etext-nav .X::before {
+    left:16px;
+  }
+
+  .etext-header-breadcrumbs ~ #settings {
+    
+    top:5px;
+    bottom:auto;
+    
+    background: #172832;
+    z-index:100000;
+  }
+
+
+  .etext-header-breadcrumbs ~ #settings img {
+    filter:invert(1.0);
+  }
+
+  .nav.someClass ~ .ISB:not(.etextNav-true) ~ .etext-nav-parent.someClass~.show-outline-etext:not(#a),
+  .nav.someClass ~ .ISB:not(.etextNav-true) ~.etext-nav-parent.someClass {
+    display: none;;
+  }
+
+
+  .ISB.etextNav-true ~ #settings,
+  .etext-nav-parent:not(.someClass) ~ #settings { display:none; }
+
 }
 
 
@@ -2737,6 +2807,18 @@ header[data-hits="0"] ~ .hits .pagination,
   #root .App:not(.home) .SearchPane .formControl {
     left:25px;
   }
+
+
+  #root .etext-header-breadcrumbs:not(.sticky) > div, 
+  #root .etext-header:not(.sticky) > div {
+    padding-left:10px;
+    padding-right:10px;
+  }
+
+  #root .etext-nav-parent.someClass .etext-header.sticky {
+    max-width: calc(100% - 200px + 40px);
+  }
+
 }
 
 

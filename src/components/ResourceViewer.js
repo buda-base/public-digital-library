@@ -8419,7 +8419,6 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
 
       return (!this.props.disableInfiniteScroll && <>
          { monlamPop }
-         <div id="settings" onClick={() => this.setState({collapse:{...this.state.collapse, etextNav:!this.state.collapse.etextNav}})}><img src="/icons/settings.svg"/></div>
           {/* <GenericSwipeable onSwipedRight={() => this.setState({ collapse:{ ...this.state.collapse, etextNav:!this.state.collapse.etextNav }})}> */}
          <div class="etext-header">
             {header(label)}
@@ -8445,10 +8444,12 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                   </div>
                   <a class={showToggleScan?"on":""} onClick={(e) => this.setState({showEtextImages:!this.state.showEtextImages})}>{this.state.showEtextImages?<img id="check" src="/icons/check.svg"/>:<span id="check"></span>}<span>{I18n.t("mirador.showI")}</span><img width="42" src="/icons/search/images_b.svg"/></a>
                   <EtextSearchBox that={this} scopeId={this.props?.that?.state?.scope} ETrefs={this.props.that?.props.eTextRefs?.["@graph"]} setETSBpage={(p,v,i,s) => { if(!this.state.ETSBpage || this.state.ETSBpage?.start != s || this.state.ETSBpage?.page != p || this.state.ETSBpage?.vol != v || this.state.ETSBpage?.idx != i) this.setState({ ETSBpage:{page:p, vol:v, idx:i, start:s } }) }} />
-                  <span class="X" onClick={() => this.setState({ collapse:{ ...this.state.collapse, etextNav:!this.state.collapse.etextNav }})}></span>
+                  <span class="X" onClick={() => this.props.that.setState({ collapse:{ ...this.props.that.state.collapse, etextNav:!this.props.that.state.collapse.etextNav }})}></span>
                </div>
             </div>
          </StickyElement>
+         <div id="settings" onClick={() => this.props.that.setState({collapse:{...this.props.that.state.collapse, etextNav:!this.props.that.state.collapse.etextNav}})}><img src="/icons/settings.svg"/></div>
+         
          {/* </GenericSwipeable>  */}
       </>)
    }

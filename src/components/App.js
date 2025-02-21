@@ -1100,7 +1100,7 @@ function InstantSearchBox(props) {
 
    if(isMirador) return <div></div>
 
-   return <div class={"ISB "+("advanced-"+that.props.advancedSearch)}>      
+   return <div class={"ISB "+("advanced-"+that.props.advancedSearch)+(" etextNav-"+(that.state.collapse.etextNav))}>      
       { that.props.advancedSearch 
       ? <HomeCompo auth={that.props.auth} SKquery={that.state.SKquery} />
       : <InstantSearch         

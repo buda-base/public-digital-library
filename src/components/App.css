@@ -7383,7 +7383,6 @@ feedbucket-app:not(.on)  { display:none !important; }
 
    #root > div > .resource { padding:155px 24px; padding-bottom:80px; margin:0; box-sizing:border-box;}
 
-   #root > div:not(.withMonlam) > .resource { min-width:100%; }
    .resource ~ .monlamResults > div { top:0; height:100%; }
    
    .resource ~ .monlamResults.visible, .resource ~ .monlamResults.visible > div { width:min(400px,100vw - 75px); }
