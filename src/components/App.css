@@ -8611,6 +8611,7 @@ a.result + #matches.mobile,
    }
 
 
+   /*
    #etext-nav a#DL img { margin-right:0px; }
 
    #etext-nav #control + a,
@@ -8623,7 +8624,8 @@ a.result + #matches.mobile,
    #etext-nav #dico #check { margin:0 }
    #etext-nav #dico img.ico { width:32px; }
 
-
+   */
+   
    .resource .data.related > div div.rel-or-crea > div {   width: calc((100vw - 40px - 30px - 20px - 30px)/1); }
    .resource .data.related > div div.rel-or-crea > div .header { height: calc((100vw - 40px - 30px - 20px - 30px)/1); }
 }

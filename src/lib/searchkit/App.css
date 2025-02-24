@@ -2383,6 +2383,85 @@ header[data-hits="0"] ~ .hits .pagination,
   .ISB.etextNav-true ~ #settings,
   .etext-nav-parent:not(.someClass) ~ #settings { display:none; }
 
+  #root .etext-nav-parent #etext-nav {
+    padding-left:36px;
+  }
+
+  #root #etext-nav a#DL {
+    margin-right:auto;
+    width:auto;
+  }
+
+  #etext-nav > div > #control + a > #check + span,
+  #etext-nav > div > #dico > #check + span {
+    display:none;
+  }
+
+  #root .resource ~ .ETSBresults,
+  #root .resource ~ .monlamResults {
+    position: sticky;
+    width:0;
+    top:0;
+    z-index: 1;
+  }
+
+  
+  #root .resource ~ .ETSBresults > div ,
+  #root .resource ~ .monlamResults > div {
+    margin-left: -400px;
+    width: 400px;
+    background: white;
+    position:absolute;
+  }
+  
+  /*
+  #root > .withETSBresults:not(#a), #root > .withMonlam:not(#a) {
+    display:block;
+  }
+    */
+
+  #root > .withETSBresults:not(#a) > .resource.etext-view:not(#a):not(#b), 
+  #root > .withMonlam:not(#a) > .resource.etext-view:not(#a):not(#b) {
+    width:100%;
+  }
+  
+  /*
+  .resource ~ .ETSBresults > div:not(#a) {
+    top:0;
+  }
+  #root > div.withMonlam > .resource.etext-view:not(#a),
+  #root > div.withETSBresults > .resource.etext-view:not(#a) {
+    max-width:100%;
+    width:100%;
+  }
+    */
+
+
+    #root .etext-nav-parent:not(.someClass) #etext-nav  {
+      padding-left:20px;
+    }
+
+    #root .etext-nav-parent:not(.someClass) #etext-nav .X {
+      display:none;
+    }
+
+    
+    #root .ISB:not(.etextNav-true) ~ .resource.etext-outline,
+    #root .ISB:not(.etextNav-true) ~ div .ETSBresults > div:not(#a), 
+    #root .ISB:not(.etextNav-true) ~ div .monlamResults > div:not(#a) {
+      top:0;
+      height:100vh;
+    }
+
+
+    #root .ISB:not(.etextNav-true) ~ div .ETSBresults > div:not(#a) {
+      margin-top:-120px;
+    }
+
+    .etext-nav-parent .etext-search {
+      white-space:nowrap;
+    }
+      
 }
 
 
@@ -2505,6 +2584,45 @@ header[data-hits="0"] ~ .hits .pagination,
   #root > div:last-child:not(.AppSK) #filters-UI {
     padding-top:20px;
     padding-bottom:10px;
+  }
+
+  #etext-nav > div {
+    flex-wrap:wrap;
+  }
+
+  .etext-nav-parent .etext-search {
+    /* width:100%; */
+    text-align: center;
+    margin-top:10px;
+  }
+
+  #root #etext-nav .X,
+  #root .etext-nav-parent #etext-nav {
+    height:120px;
+  }
+
+  #root .resource.etext-outline,
+  .nav.someClass ~ .ISB.etextNav-true ~ .resource.etext-outline {
+    top:180px;
+    height: calc(100vh - 180px);
+  }
+  
+  #root .resource ~ .ETSBresults > div:not(#a), 
+  #root .resource ~ .monlamResults > div:not(#a) {
+    top:180px;
+    height: calc(100vh - 180px);
+  }
+
+  #root .resource.etext-outline.withOutline-true+* {
+    margin-top: calc(-100vh + 60px);
+  }
+
+  #root .ISB:not(.etextNav-true) ~ div .ETSBresults > div:not(#a) {
+    margin-top:-60px;
+  }
+
+  #root .etext-nav-parent  {
+    margin-bottom:60px;
   }
 }
 
@@ -2695,6 +2813,10 @@ header[data-hits="0"] ~ .hits .pagination,
   #root .App:not(.home) .SearchPane .formControl {
     left:45px;
   }
+
+  #root #etext-nav {
+    padding-right:0px;
+  }
 }
 
 
@@ -2819,6 +2941,17 @@ header[data-hits="0"] ~ .hits .pagination,
     max-width: calc(100% - 200px + 40px);
   }
 
+  #root #etext-nav > div {
+    justify-content: center;
+  }
+
+  .etext-nav-parent .etext-search > span input {
+    width:120px;
+  }
+
+  .resource.etext-outline {
+    max-width:100%;
+  }
 }
 
 
