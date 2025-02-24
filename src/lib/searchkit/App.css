@@ -2624,6 +2624,18 @@ header[data-hits="0"] ~ .hits .pagination,
   #root .etext-nav-parent  {
     margin-bottom:60px;
   }
+
+  /*
+  #root .resource ~ .ETSBresults > div, #root .resource ~ .monlamResults > div {
+    position:absolute;
+    max-width:100%;
+  }
+    */
+
+    #root .ISB.etextNav-true ~ div .monlamResults.visible {
+    top:180px;
+    height:calc(100vh - 180px);  
+  }
 }
 
 @media (max-width:665px){
