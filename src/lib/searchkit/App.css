@@ -1744,6 +1744,44 @@ header[data-hits="0"] ~ .hits .pagination,
   max-width:40%;
 }
 
+/*
+#viewer.mirador-container .mirador-viewer {
+  top:60px;
+}
+
+
+.nav-bar-top #logo #buda img,
+#viewer .nav-bar-top,
+#viewer .mirador-main-menu-bar {
+  height:60px;
+}
+*/
+
+#viewer .nav-bar-top  {
+  overflow: hidden;
+}
+
+#viewer .nav-bar-top #logo #buda + a ~ * {
+  display: none;
+}
+
+
+#viewer .nav-bar-top #logo #buda + a span {
+  font-size: 32px;
+  font-weight: 400;
+  line-height: 36px;
+}
+
+
+#viewer .nav-bar-top #logo #buda + a span::after {
+  content:"The Buddhist Digital Archives";
+  font-size: 11px;
+  text-transform: none;
+  line-height: 12px;
+  padding-left: 2px;
+  display: block;
+}
+
 /* responsive */
 
 .SearchPane #logo img {
@@ -1825,6 +1863,11 @@ header[data-hits="0"] ~ .hits .pagination,
 
   .App.home #samples .home-tradi-grid > * {
     width:260px;
+  }
+
+
+  #viewer .nav-bar-top {
+    padding:0 30px; 
   }
   
 }
@@ -2463,31 +2506,38 @@ header[data-hits="0"] ~ .hits .pagination,
     */
 
 
-    #root .etext-nav-parent:not(.someClass) #etext-nav  {
-      padding-left:20px;
-    }
+  #root .etext-nav-parent:not(.someClass) #etext-nav  {
+    padding-left:20px;
+  }
 
-    #root .etext-nav-parent:not(.someClass) #etext-nav .X {
-      display:none;
-    }
+  #root .etext-nav-parent:not(.someClass) #etext-nav .X {
+    display:none;
+  }
 
+  
+  #root .ISB:not(.etextNav-true) ~ .resource.etext-outline,
+  #root .ISB:not(.etextNav-true) ~ div .ETSBresults > div:not(#a), 
+  #root .ISB:not(.etextNav-true) ~ div .monlamResults > div:not(#a) {
+    top:0;
+    height:100vh;
+  }
+
+
+  #root .ISB:not(.etextNav-true) ~ div .ETSBresults > div:not(#a) {
+    margin-top:-120px;
+  }
+
+  .etext-nav-parent .etext-search {
+    white-space:nowrap;
+  }
     
-    #root .ISB:not(.etextNav-true) ~ .resource.etext-outline,
-    #root .ISB:not(.etextNav-true) ~ div .ETSBresults > div:not(#a), 
-    #root .ISB:not(.etextNav-true) ~ div .monlamResults > div:not(#a) {
-      top:0;
-      height:100vh;
-    }
+  #viewer .nav-bar-top {
+    padding:0 10px; 
+  }
 
-
-    #root .ISB:not(.etextNav-true) ~ div .ETSBresults > div:not(#a) {
-      margin-top:-120px;
-    }
-
-    .etext-nav-parent .etext-search {
-      white-space:nowrap;
-    }
-      
+  #root > .mirador-true:not(#a) ~ div > .resource:not(#a) {
+    padding-top:0;
+  }
 }
 
 
@@ -2666,6 +2716,7 @@ header[data-hits="0"] ~ .hits .pagination,
   #root .etext-header.sticky > div .ariane {
     padding-right:0;
   }
+
 }
 
 @media (max-width:665px){
@@ -2858,6 +2909,11 @@ header[data-hits="0"] ~ .hits .pagination,
 
   #root #etext-nav {
     padding-right:0px;
+  }
+
+
+  #viewer .nav-bar-top #buda + a {
+    display:none;
   }
 }
 
