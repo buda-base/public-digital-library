@@ -1718,6 +1718,32 @@ header[data-hits="0"] ~ .hits .pagination,
   display:none;
 }
 
+#root .etext-header-breadcrumbs > .ariane {
+  /*
+  display: inline;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  */
+}
+
+#root .ariane .can-shrink:nth-last-child(3):nth-child(2),
+#root .ariane .can-shrink:nth-last-child(1):nth-child(4),
+#root .ariane .can-shrink:nth-last-child(4):nth-child(2),
+#root .ariane .can-shrink:nth-last-child(2):nth-child(4),
+#root .ariane .can-shrink:nth-last-child(1):nth-child(5) {
+  max-width:30%;
+  display: inline;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+#root .ariane .can-shrink:nth-last-child(3):nth-child(2),
+#root .ariane .can-shrink:nth-last-child(1):nth-child(4) {
+  max-width:40%;
+}
+
 /* responsive */
 
 .SearchPane #logo img {
@@ -2591,7 +2617,7 @@ header[data-hits="0"] ~ .hits .pagination,
   }
 
   .etext-nav-parent .etext-search {
-    /* width:100%; */
+    width:100%;
     text-align: center;
     margin-top:10px;
   }
@@ -2635,6 +2661,10 @@ header[data-hits="0"] ~ .hits .pagination,
     #root .ISB.etextNav-true ~ div .monlamResults.visible {
     top:180px;
     height:calc(100vh - 180px);  
+  }
+
+  #root .etext-header.sticky > div .ariane {
+    padding-right:0;
   }
 }
 
@@ -2963,6 +2993,10 @@ header[data-hits="0"] ~ .hits .pagination,
 
   .resource.etext-outline {
     max-width:100%;
+  }
+
+  .etext-nav-parent .etext-search {
+    width:auto;
   }
 }
 
