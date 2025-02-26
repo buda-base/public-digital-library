@@ -10895,10 +10895,13 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
             </>) 
          } else if(topLevel) { 
             const outline = <>
-               <SimpleBar class={"resource etext-outline "+(this.state.collapse.etextRefs ? "withOutline-false":"withOutline-true")}>
+               {/* {this.state.collapse.etextRefs &&  */}
+                  <IconButton width="32" className={"show-outline-etext collapseETr-"+this.state.collapse.etextRefs} onClick={() => this.setState({collapse:{...this.state.collapse,etextRefs:false}})}><img src="/icons/collecN.svg" /></IconButton>
+               {/* }  */}
+               <SimpleBar class={"resource etext-outline "+(this.state.collapse.etextRefs ? "withOutline-false":"withOutline-true")+(" collapseETr-"+this.state.collapse.etextRefs)}>
                { etRefs }          
                </SimpleBar>
-               {this.state.collapse.etextRefs && <IconButton width="32" className="show-outline-etext" onClick={() => this.setState({collapse:{...this.state.collapse,etextRefs:false}})}><img src="/icons/collecN.svg" /></IconButton>}
+               {this.state.collapse.etextRefs &&<div></div>}
             </>
             return (<>            
                {getGDPRconsent(this)}

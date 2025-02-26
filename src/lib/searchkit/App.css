@@ -1782,6 +1782,12 @@ header[data-hits="0"] ~ .hits .pagination,
   display: block;
 }
 
+
+#root .show-outline-etext:not(#a) {
+  margin-top:0;
+}
+
+
 /* responsive */
 
 .SearchPane #logo img {
@@ -1874,11 +1880,11 @@ header[data-hits="0"] ~ .hits .pagination,
 
 @media (max-width: 1024px) {
 
-
+/*
   #root {
     background:white;
   }
-
+*/
   .SearchPane #logo > div:not(#a) {
       transform-origin: 100% 100%;
   }
@@ -2422,11 +2428,11 @@ header[data-hits="0"] ~ .hits .pagination,
     right:auto;
     left:0;
     transform: rotate(180deg);
-    width:36px;
+    width:28px;
   }
 
   #root #etext-nav .X::before {
-    left:16px;
+    left:12px;
   }
 
   .etext-header-breadcrumbs ~ #settings {
@@ -2523,9 +2529,11 @@ header[data-hits="0"] ~ .hits .pagination,
   }
 
 
+  /*
   #root .ISB:not(.etextNav-true) ~ div .ETSBresults > div:not(#a) {
     margin-top:-120px;
   }
+    */
 
   .etext-nav-parent .etext-search {
     white-space:nowrap;
@@ -2537,6 +2545,25 @@ header[data-hits="0"] ~ .hits .pagination,
 
   #root > .mirador-true:not(#a) ~ div > .resource:not(#a) {
     padding-top:0;
+  }
+
+  
+  /* #root .show-outline-etext:not(#a).collapseETr-true, */
+  #root .resource.etext-outline.collapseETr-undefined {
+    visibility: hidden;
+    pointer-events: none;
+  }
+
+  #root:not(#a) > div:not(#a) > .resource.etext-view:not(#a) {
+    padding-top:45px ;
+    }
+  /* 
+  #root .resource.etext-outline.withOutline-true~.withOutline {
+    margin-top:calc(-100vh + 30px);
+  } 
+  */
+  #root .resource.etext-outline.withOutline-true~.withOutline {
+    margin-top:calc(-100vh);
   }
 }
 
@@ -2693,9 +2720,11 @@ header[data-hits="0"] ~ .hits .pagination,
     margin-top: calc(-100vh + 60px);
   }
 
+  /*
   #root .ISB:not(.etextNav-true) ~ div .ETSBresults > div:not(#a) {
     margin-top:-60px;
   }
+    */
 
   #root .etext-nav-parent  {
     margin-bottom:60px;
@@ -2715,6 +2744,10 @@ header[data-hits="0"] ~ .hits .pagination,
 
   #root .etext-header.sticky > div .ariane {
     padding-right:0;
+  }
+
+  #root .show-outline-etext:not(#a) {
+    top:190px;
   }
 
 }
@@ -3051,8 +3084,15 @@ header[data-hits="0"] ~ .hits .pagination,
     max-width:100%;
   }
 
-  .etext-nav-parent .etext-search {
+  .etext-nav-parent:not(#a) .etext-search:not(#a) {
     width:auto;
+    margin-left: 0;
+  }
+
+  #root .resource ~ .ETSBresults > div, 
+  #root .resource ~ .monlamResults > div {
+    width:375px;
+    margin-left:-375px;
   }
 }
 
@@ -3069,4 +3109,15 @@ header[data-hits="0"] ~ .hits .pagination,
   #root #lang-login {
     margin-left:0 !important;
   }
+
+
+  /*
+  #root .resource.etext-outline, 
+  #root .nav.someClass ~ .ISB.etextNav-true ~ .resource.etext-outline,
+  #root .resource:not(#a) ~ .ETSBresults > div:not(#a), 
+  #root .resource:not(#a) ~ .monlamResults > div:not(#a) {
+    bottom:0;
+    height:auto;
+  }
+    */
 }

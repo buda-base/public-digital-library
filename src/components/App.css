@@ -1589,7 +1589,7 @@ ul.suggestions li > span > svg:first-child {
    justify-content: flex-end;
 }
 
-.resource.etext-outline.withOutline-true+* {
+.resource.etext-outline.withOutline-true~.withOutline {
    margin-top:calc(-100vh + 120px);
 }
 .resource.etext-outline  .etextrefs:not(#a) {
@@ -5827,7 +5827,7 @@ html[lang="en"] .resource .data > [data-prop="bdo:creator"] h4[data-prop="bdo:ro
 
 .preview-etext .resource.etext-view .data #etext-scroll > * { pointer-events: none; } 
 
-.resource.etext-view > :not(.index) { width:100%; padding:0; }
+.resource.etext-view > :not(.index) { width:100%; padding:0;box-sizing: border-box; }
 
 #root > div > .resource.etext-view > .loadedContent { display:none; }
 
@@ -8625,7 +8625,7 @@ a.result + #matches.mobile,
    #etext-nav #dico img.ico { width:32px; }
 
    */
-   
+
    .resource .data.related > div div.rel-or-crea > div {   width: calc((100vw - 40px - 30px - 20px - 30px)/1); }
    .resource .data.related > div div.rel-or-crea > div .header { height: calc((100vw - 40px - 30px - 20px - 30px)/1); }
 }
