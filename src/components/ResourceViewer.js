@@ -10901,7 +10901,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                <SimpleBar class={"resource etext-outline "+(this.state.collapse.etextRefs ? "withOutline-false":"withOutline-true")+(" collapseETr-"+this.state.collapse.etextRefs)}>
                { etRefs }          
                </SimpleBar>
-               <div></div>
+               {/* <div></div> */}
             </>
             return (<>            
                {getGDPRconsent(this)}
