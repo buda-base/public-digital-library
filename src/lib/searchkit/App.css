@@ -2565,6 +2565,10 @@ header[data-hits="0"] ~ .hits .pagination,
   #root .resource.etext-outline.withOutline-true~.withOutline {
     margin-top:calc(-100vh);
   }
+
+  .main-content header[data-hits="0"]+div {
+    height:calc(50vh);
+  }
 }
 
 
