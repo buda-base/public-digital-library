@@ -8579,7 +8579,7 @@ a.result + #matches.mobile,
 
 @media (max-width:375px)
 {
-   .nav > div > #logo { display:none; }
+   /* .nav > div > #logo { display:none; } */
 }
 
 @media (max-width:400px)
