@@ -1334,7 +1334,10 @@ export function top_right_menu(that,etextTitle,backUrl,etextres)
 
          { lang_selec(that) }
 
-         { (!that.props.config || !that.props.config.chineseMirror) && <a target="_blank" href="https://bdrc.io/donation/" id="donate"><img src="/donate.svg"/>{I18n.t("topbar.donate")}</a> }
+         {that.props.auth && isGroup(that.props.auth, "fullaccess") 
+            ? <a target="_blank" href="https://beta.bdrc.io/" id="donate"><img style={{background:"white",borderRadius:"3px",verticalAlign:"-11px"}} width="33" src="/icons/BUDA-small.svg"/>BETA</a>
+            : (!that.props.config || !that.props.config.chineseMirror) && <a target="_blank" href="https://bdrc.io/donation/" id="donate"><img src="/donate.svg"/>{I18n.t("topbar.donate")}</a>
+         }
 
          { <div class="close" onClick={()=>that.setState({collapse:{...that.state.collapse,navMenu:false}})}>+</div> }
        </div>
