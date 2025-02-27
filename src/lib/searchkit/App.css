@@ -1695,6 +1695,8 @@ header[data-hits="0"] ~ .hits .pagination,
   overflow: hidden;
 }
 
+.adv-filter-BG,
+.simple-filter-BG,
 .mobile.filter {
   display: none;
 }
@@ -2568,6 +2570,46 @@ header[data-hits="0"] ~ .hits .pagination,
 
   .main-content header[data-hits="0"]+div {
     height:calc(50vh);
+  }
+
+
+  #root .SidePane.left.closed #closeSettings {
+    display:none;
+  }
+
+  .adv-filter-BG,
+  .simple-filter-BG {
+    position:fixed;
+    top:0;left:0;right:0;bottom:0;
+    z-index:1;
+    /* background:rgba(0,0,0,0.5); */
+  }
+
+  .SidePane:not(.closed) .adv-filter-BG,
+  .filter.on + .simple-filter-BG {
+    display: block;
+  }
+
+  .SidePane.left  > [data-simplebar],
+  .AppSK.InnerSearchPage.data .content .filter {
+    z-index:2;
+  }
+  .AppSK.InnerSearchPage.data .content .simple-filter-BG {
+    position:absolute;
+  }
+
+  #root .SidePane.left #closeSettings,
+  .AppSK .content .filter button.close {
+    position:fixed;
+    right:auto;
+    left:220px;
+    top:-5px;
+    z-index:1;
+  }
+
+  #root .SidePane.left #closeSettings {
+    left:250px;
+    top:0;
   }
 }
 

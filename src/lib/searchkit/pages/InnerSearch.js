@@ -216,6 +216,7 @@ export class InnerSearchPage extends Component<State, Props>
                       <FiltersSidebar that={this} recent={recent&&!sortByDefault}/> 
                   </SimpleBar> 
                 }
+                <div className="simple-filter-BG" onClick={toggleSettings}></div>
                 <div className="main-content">
                   <SearchResultsHeader that={this} inner={true} recent={recent&&!sortByDefault} {...{ storageRef }} />
                   <div className="hits">

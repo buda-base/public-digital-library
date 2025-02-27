@@ -476,6 +476,7 @@ export class SearchPage extends Component<State, Props>
               <div className={"filter "+(this.state.collapse.settings ? "on":"")}>
                 <FiltersSidebar that={this} />
               </div> 
+              <div className="simple-filter-BG" onClick={toggleSettings}></div>
               <SimpleBar className={"mobile filter "+(this.state.collapse.settings ? "on":"")}> 
                 <IconButton className="close" onClick={toggleSettings}><Close /></IconButton>
                 <FiltersSidebar that={this} /> 

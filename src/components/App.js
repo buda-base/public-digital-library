@@ -6698,12 +6698,15 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       this._refs["sidepane"] = React.createRef()
       this._refs["simplebar"] = React.createRef()
       
+      const closeSettings = () => this.setState({collapse:{...this.state.collapse, settings:false}})
+
       return ( <div ref={this._refs["sidepane"]} className={"SidePane left "+(!this.state.collapse.settings?"closed":"") + (this.state.stuck?" isTop":"")}>
+            <div className="adv-filter-BG" onClick={closeSettings}></div>
             <SimpleBar ref={this._refs["simplebar"]} /*forceVisible="y" autoHide={false}*/ >
                   {/* <IconButton className="close" onClick={e => this.setState({...this.state,leftPane:false,closeLeftPane:true})}><Close/></IconButton> */}
                { //this.props.datatypes && (results ? results.numResults > 0:true) &&
                   <div style={{ /*minWidth:"335px",*/ position:"relative"}}>                 
-                     <IconButton id="closeSettings" onClick={() => this.setState({collapse:{...this.state.collapse, settings:false}})}><Close /></IconButton>    
+                     <IconButton id="closeSettings" onClick={closeSettings}><Close /></IconButton>    
                      <Typography className="sidebar-title">
                         {I18n.t("Lsidebar.title")}
                      </Typography>
