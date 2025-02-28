@@ -5845,7 +5845,7 @@ class ResourceViewer extends Component<Props,State>
                               {eL && <div><span>{I18n.t("location.endL",{num:eL})}</span></div>}
                            </div>
                         }>
-                           <h4>{str}{str && w && <span class="of"> {I18n.t("misc.of")}</span>} {w && this.uriformat(bdo+"contentLocationInstance",{value:w})}{this.hoverMenu()}</h4>
+                           <h4>{str}{/*str && w && <span class="of"> {I18n.t("misc.of")}</span>} {w && this.uriformat(bdo+"contentLocationInstance",{value:w})*/}{this.hoverMenu()}</h4>
                      </Tooltip>]
                );
             else if(w)
