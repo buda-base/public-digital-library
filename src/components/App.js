@@ -1237,7 +1237,7 @@ export function top_right_menu(that,etextTitle,backUrl,etextres,isMirador,locati
       innerNav = (
 
          <div className="inner-nav">
-            { ["bo","pi","sa","zh"].map(t => <div><Link className={that.props.tradition === t ? "active": ""} to={"/tradition/"+t+"/"}>{I18n.t("tradition."+t+"T")}</Link></div>) }
+            { ["bo","pi","sa","zh"].map(t => <div><Link onClick={() => that.state.collapse.burgerOn && that.setState({collapse:{...that.state.collapse, burgerOn:false}})} className={that.props.tradition === t ? "active": ""} to={"/tradition/"+t+"/"}>{I18n.t("tradition."+t+"T")}</Link></div>) }
          </div>
       ),
       innerSearch = (
