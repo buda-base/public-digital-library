@@ -832,7 +832,7 @@ footer #donate,
 @media(max-width:1280px) {
    .App.home.khmerServer .SearchPane #logo > div { padding-left:50px;  }
 
-   .nav #donate { width:60px; color:transparent;padding-left:10px;}
+   /* .nav #donate { width:60px; color:transparent;padding-left:10px;} */
    .nav .khmer #BDRC span { display:none; }
 
    .nav #logo.khmer + .links a { margin:10px 10px 0 15px; }
@@ -5647,7 +5647,11 @@ feedbucket-app:not(.on)  { display:none !important; }
 
    #res-header > div { margin-left:0px; width:100%; padding:0 24px !important;}
 
-   .nav #donate { width:60px; color:transparent;padding-left:10px; font-size:0; }
+   /* .nav #donate { width:60px; color:transparent;padding-left:10px; font-size:0; } */
+   /* #root .nav #donate img { display:none; } */
+
+   .nav #donate { width:auto; padding:0 10px; white-space: nowrap;}
+
    #results, #samples { width:100%;margin:0 auto; padding:30px calc((100vw - 700px) / 2);}
 
    .resource .title h2 .RID { max-width:80%; }
@@ -5734,7 +5738,9 @@ feedbucket-app:not(.on)  { display:none !important; }
 
    .nav { padding:0 calc((100% - 700px) / 2); }
    .nav #lang { margin-left:20px; }
-   .nav #donate { width:40px; margin-left:15px; }
+
+   .nav #donate { width:35px; margin-left:15px; }
+   .nav #donate img { display:none; }
 
    #res-header > div .widget-header { 
       margin-left: 145px;
@@ -5817,7 +5823,7 @@ a.result + #matches.mobile,
    #root .nav:not(.on) { top:-100px; }
    
 
-   .fond-logo img { height:100vh; }
+   .fond-logo img { height:100vh; width:100%;object-fit: cover;object-position: center;}
 
    .SearchPane #logo > div {
       transform: scale(0.75);
