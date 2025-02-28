@@ -1790,6 +1790,22 @@ header[data-hits="0"] ~ .hits .pagination,
 }
 
 
+.home-tradi-grid a[href$="/bo/"] {
+  position: relative;
+}
+
+.home-tradi-grid a[href$="/bo/"]::after,
+.SearchPane #logo::after {
+
+  content:'Photo by Ven. Matthieu Ricard';
+  position:absolute;
+  color:white;
+  bottom:0;
+  left:0;
+  font-size:12px;
+  text-shadow:1px 1px 1px black;
+}
+
 /* responsive */
 
 .SearchPane #logo img {
