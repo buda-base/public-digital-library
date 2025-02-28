@@ -152,6 +152,7 @@ footer#site-footer.no-syncs > div.head::before { background-color:#efefef; }
 .App:not(.home) .SearchPane { min-height:calc(100vh - 80px - 50px * 0);  }
 
 
+#uiLangPopup *,
 .ISB *,
 #popHowTo div p,
 .etext-header-breadcrumbs *,
@@ -1893,6 +1894,7 @@ footer #donate,
 .nav #donate img { vertical-align: middle; display: inline-block; margin-right:10px;}
 
 .nav #lang { cursor:pointer; /*margin-top:7px;*/ margin-left:25px; display: inline-block;}
+#uiLangPopup #lang img,
 .nav #lang img { display: inline-block; width:28px; } 
 
 /* .resource .title + .data + .data .browse { display:none; } */

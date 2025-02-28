@@ -1263,9 +1263,9 @@ export function top_right_menu(that,etextTitle,backUrl,etextres,isMirador,locati
       return (<>
       {!that.props.portraitPopupClosed && portrait}
       {/* <div class={"mobile-button top"+(!that.state.collapse.navMenu?" off":" on")} onClick={()=>that.setState({collapse:{...that.state.collapse,navMenu:!that.state.collapse.navMenu}})}><img src="/icons/burger.svg" /></div>       */}
+      {uiLangPopup}
       {overNav}
       <StickyElement className={"nav etext-nav"+(onZhMirror?" zhMirror":"")+(that.state.collapse.navMenu?" on":"") +(msgPopupOn?" msgPopupOn":"") }>
-         {uiLangPopup}
          <div>
             {logo}
 
@@ -1466,11 +1466,11 @@ export function top_right_menu(that,etextTitle,backUrl,etextres,isMirador,locati
       return ([
       !that.props.portraitPopupClosed? portrait:null,
       // <div class={"mobile-button top"+(!that.state.collapse.navMenu?" off":" on")} onClick={() => that.setState({collapse:{...that.state.collapse,navMenu:!that.state.collapse.navMenu}})}><img src="/icons/burger.svg" /></div>,
+      uiLangPopup,
       overNav,
       <StickyElement className={"nav"+(onZhMirror?" zhMirror":"")+ (that.state.collapse.navMenu?" on":"")+(onKhmerServer||onKhmerUrl?" khmerServer":"")
                +(msgPopupOn?" msgPopupOn":"")+(that.state.collapse.burgerOn?" on":"")
          }  rootMarginTop={60} style={{ ...isMirador?{position:"absolute"}:{} }} >
-         {uiLangPopup}
           <div>
          {logo}
 
