@@ -548,11 +548,16 @@ export function report_GA(config,location) {
 
 
 
-export function highlight(val,k,expand,newline,force)
+export function highlight(val,k,expand,newline,force,lang)
 {
    if(k == "-") return val
 
    //loggergen.log("hi:",val,k,expand)
+
+   if(lang && !lang?.startsWith("bo")) {
+      val = val?.replace(/\[/g, "_OSQRBRCK_")
+      val = val?.replace(/\]/g, "_CSQRBRCK_")
+   }
 
    if(expand && expand.value) val = expand.value.replace(/([^\n])[\n]([^\n])/g,"$1$2")
 
@@ -588,6 +593,11 @@ export function highlight(val,k,expand,newline,force)
    val = val.replace(/(\[[^\]]*?)([↤])([^\]]*?\])/g,"$2$1$3");
    val = val.replace(/(↦↤)|(\[ *\])/g,"");
    val = val.replace(/\[( *\(…\) *)\]/g," $1 ");
+
+   if(lang && !lang?.startsWith("bo")) {
+      val = val?.replace(/_OSQRBRCK_/g,"[")
+      val = val?.replace(/_CSQRBRCK_/g,"]")
+   }
 
    val = val.split(/↦/)
    val = val.map((e,_idx) => { 

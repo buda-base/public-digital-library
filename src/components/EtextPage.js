@@ -249,10 +249,10 @@ function EtextPage(props) {
               }
               if(label) { label = label["value"]; pageVal += " "+label ; chunkVal = label }
               if(label && props_highlight && props_highlight.key /*&& state_noHilight != e.seq*/) { 
-                  label = highlight(label,kw.map(k => k.replace(/(.)/g,"$1\\n?")),null,false,true); 
+                  label = highlight(label,kw.map(k => k.replace(/(.)/g,"$1\\n?")),null,false,true,lang); 
                   current.push(label); }
               else if(ETSBresults?.length) {
-                label = highlight(label,null,null,false,true)
+                label = highlight(label,null,null,false,true,lang)
               }
               else if(label) { 
                   label = [ label.startsWith("\n") ? <br/>:""].concat(label.split(/[\n\r]/))                           

@@ -151,7 +151,8 @@ export function EtextSearchBox(props) {
 
       let timeout = setInterval(() => {
         const page = document.querySelector("[data-iri='bdr:"+res[idx].volumeId+"'][data-start='"+res[idx].startPageCstart+"']");
-        //console.log("to", page, res[idx], page?.getBoundingClientRect()?.top, ancestor?.getBoundingClientRect()?.top)
+        
+        console.log("to:", page, res[idx], page?.getBoundingClientRect()?.top, ancestor?.getBoundingClientRect()?.top)
 
         if(page) {
           
@@ -179,6 +180,7 @@ export function EtextSearchBox(props) {
             
             parent.scrollTo({ 
               left:position.left - parent.getBoundingClientRect().left + parent.scrollLeft - 200, 
+              top:position.top - parent.getBoundingClientRect().top,
               behavior:"auto" 
             });
 
@@ -290,16 +292,18 @@ export function EtextSearchBox(props) {
 
 
 export function EtextSearchResult(props) {
-  const { setETSBpage, getLabel, res, n, page, vol, etextLang, start } = props
+  const { setETSBpage, getLabel, res, n, page, vol, etextLang, start, pages } = props
 
   const ref = useRef()
 
   const label = useMemo(() => {
-    // TODO: handle language
-    if(res.snippet) return highlight(getLabel([{ value:res.snippet?.replace(/<em>/g,"↦").replace(/<\/em>/g,"↤")??"", lang:"bo" }])?.value)
-  }, [res, etextLang])
+    let lang
+    // WIP: handle language
+    if(res.snippet) return highlight(getLabel([{ value:res.snippet?.replace(/<em>/g,"↦").replace(/<\/em>/g,"↤")??"", lang:lang=pages?.find(p => p.seq == page)?.language??"bo" }])?.value, undefined, undefined, undefined, undefined, lang)
+    
+  }, [res, etextLang, pages])
 
-  //console.log("res:n",n,start,page,vol,res,label,res.snippet)
+  //console.log("res:n",pages,n,start,page,vol,res,label,res.snippet,etextLang)
 
   const [on,setOn] = useState("")
   useEffect(() => {

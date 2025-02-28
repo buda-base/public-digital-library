@@ -390,6 +390,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
                      const elem = document.querySelector(".data.etextrefs .root.on > .parTy")
                      if(elem) {
                         clearInterval(timer)
+                     } else {
+                        if(document.querySelector(".data.etextrefs .root .parTy") && !document.querySelector(".data.etextrefs .on"))
+                           clearInterval(timer)
                      }
                   }
                }, 150)
