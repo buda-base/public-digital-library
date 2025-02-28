@@ -1797,13 +1797,14 @@ header[data-hits="0"] ~ .hits .pagination,
 .home-tradi-grid a[href$="/bo/"]::after,
 .SearchPane #logo::after {
 
-  content:'Photo by Ven. Matthieu Ricard';
+  content:attr(data-caption);
   position:absolute;
   color:white;
   bottom:0;
   left:0;
   font-size:12px;
   text-shadow:1px 1px 1px black;
+  padding-left:3px;
 }
 
 /* responsive */
@@ -2812,6 +2813,10 @@ header[data-hits="0"] ~ .hits .pagination,
     top:190px;
   }
 
+  .SearchPane #logo::after {
+    bottom:auto;
+    top:calc(max(100vw,375px) * 490 / 1440 - 17px);
+  }
 }
 
 @media (max-width:665px){
@@ -3010,6 +3015,8 @@ header[data-hits="0"] ~ .hits .pagination,
   #viewer .nav-bar-top #buda + a {
     display:none;
   }
+
+
 }
 
 

@@ -7613,7 +7613,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             { showMenus }
                { !this.props.config.khmerServer && 
                   <div class="fond-logo">
-                     <a /*title="Photo by Ven. Matthieu Ricard"*/ id="logo" target="_blank" old-href="https://www.tbrc.org/">
+                     <a /*title="Photo by Ven. Matthieu Ricard"*/ id="logo" target="_blank" old-href="https://www.tbrc.org/"
+                        data-caption='Photo by Ven. Matthieu Ricard'>
                         {/* <img src="/logo.svg" style={{width:"200px"}} /> */}
                         {/* <img src="/pichome.jpg" /> */}
                         <img src="library-hero.jpg" />
@@ -8001,7 +8002,9 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
                         <div class="home-tradi-grid">
                            { ["bo","pi","sa","zh"].map(t => (
-                              <Link /*{...t=="bo"?{title:"Photo by Ven. Matthieu Ricard"}:{}}*/ onClick={() => { document.documentElement.scrollTo({ top:0, left:0, behavior: "instant" }); }} 
+                              <Link /*{...t=="bo"?{title:"Photo by Ven. Matthieu Ricard"}:{}}*/ 
+                                 data-caption='Photo by Ven. Matthieu Ricard'
+                                 onClick={() => { document.documentElement.scrollTo({ top:0, left:0, behavior: "instant" }); }} 
                                     className={this.props.tradition === t ? "active": ""} to={"/tradition/"+t+"/"}>
                                  <span>{I18n.t("tradition."+t+"T")}</span>
                                  <img src={"/tradi/"+t+".jpg"}/>
