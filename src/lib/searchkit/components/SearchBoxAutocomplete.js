@@ -205,6 +205,8 @@ const SearchBoxAutocomplete = (props) => {
   const { status, setUiState, indexUiState, results, refresh } = useInstantSearch();
   const { loading, placeholder, pageFilters, routing, that, inner } = props
 
+  const forceFocus = that?.state.forceFocus
+
   const [inputValue, setInputValue] = useState(query);
   const [isFocused, setIsFocused] = useState(false);
   const [suggestions, setSuggestions] = useState([]);
@@ -310,6 +312,7 @@ const SearchBoxAutocomplete = (props) => {
     if (newQuery.length > 0) {
       debouncedHandleChange(newQuery);
     }
+    if(newQuery && that.state.forceFocus) that.setState({forceFocus:false})
   }, [debouncedHandleChange])
 
   const advToSimpleFromSimple = useCallback(() => {
@@ -396,6 +399,9 @@ const SearchBoxAutocomplete = (props) => {
           setIsFocused(true);
           handleChange(inputValue)
         }}
+        onClick={() => {
+          if(that.state.forceFocus) that.setState({forceFocus:false})
+        }}
         onKeyDown={(e) => {
           if (e.key === "Enter") {
             setIsFocused(false);
@@ -432,7 +438,7 @@ const SearchBoxAutocomplete = (props) => {
         query={inputValue}
         items={suggestions}
         onClick={debouncedHandleClick}
-        isVisible={isFocused}
+        isVisible={isFocused && !forceFocus}
         //setActualLength={setSuggestionLen}
         setActualList={setActualList}
       />

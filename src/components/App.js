@@ -1174,7 +1174,7 @@ export function top_right_menu(that,etextTitle,backUrl,etextres,isMirador,locati
                <Link to="/" {...(that?.props?.advancedSearch || that?.state?.filters) ? {onClick:(ev) => { 
                   that.props.navigate({pathname:"/",search:""}); 
                   if(that.props.keyword) { that.props.onResetSearch(); } 
-                  that.setState({blurSearch:false})
+                  that.setState({blurSearch:false, forceFocus: true})
                   ev.preventDefault()
                   ev.stopPropagation()
                   return false
@@ -1893,7 +1893,8 @@ class App extends Component<Props,State> {
          anchor:{},
          LpanelWidth:375,
          //leftPane:false //(window.innerWidth > 1400 && this.props.keyword),
-         checked:{}
+         checked:{},
+         forceFocus:true
       };
 
 
@@ -1917,10 +1918,18 @@ class App extends Component<Props,State> {
 
    componentDidUpdate() {
       if(!this.state.blurSearch) {
-         let elem = document.querySelector("#search-bar input")
-         if(elem && window.innerWidth > 800) { 
-            elem.focus()
-            $("#search-bar input[type=text][placeholder]").attr("placeholder",I18n.t("home.start"));
+         if(window.innerWidth > 1024) {
+
+            let elem = document.querySelector(".ais-SearchBox-form input")
+            if(elem) { 
+               if(this.state.forceFocus) elem.focus()
+            } else {
+               elem = document.querySelector("#search-bar input")
+               if(elem) {
+                  elem.focus()
+                  $("#search-bar input[type=text][placeholder]").attr("placeholder",I18n.t("home.start"));
+               }
+            }            
          }
       }
 
