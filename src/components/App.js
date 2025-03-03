@@ -1175,7 +1175,7 @@ export function top_right_menu(that,etextTitle,backUrl,etextres,isMirador,locati
 
    let logo = [
             <div id="logo">
-               <Link to="/" {...(that?.props?.advancedSearch || that?.state?.filters) ? {onClick:(ev) => { 
+               <Link to="/?sortBy=firstScanSyncDate_desc&type%5B0%5D=Instance" {...(that?.props?.advancedSearch || that?.state?.filters) ? {onClick:(ev) => { 
                   that.props.navigate({pathname:"/",search:""}); 
                   if(that.props.keyword) { that.props.onResetSearch(); } 
                   that.setState({blurSearch:false, forceFocus: true})
