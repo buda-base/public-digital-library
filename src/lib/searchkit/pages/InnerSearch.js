@@ -220,7 +220,7 @@ export class InnerSearchPage extends Component<State, Props>
                 <div className="main-content">
                   <SearchResultsHeader that={this} inner={true} recent={recent&&!sortByDefault} {...{ storageRef }} />
                   <div className="hits">
-                    <Configure hitsPerPage={isOtherVersions ? 11 * (this.state.toggled ? 2 : 1) : 5} filters={pageFilters} />
+                    <Configure hitsPerPage={isOtherVersions ? 11 * (this.state.toggled ? 2 : 1) : (recent ? 20 : 5)} filters={pageFilters} />
                     <HitsWithLabels that={this} {...{ routing, recent:recent&&!sortByDefault, storageRef, isOtherVersions, srcVersionID }} />
                     { isOtherVersions 
                       ? <OtherVersionsNav {...{ that:this, RID, srcVersionID } }/>

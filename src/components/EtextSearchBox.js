@@ -211,7 +211,7 @@ export function EtextSearchBox(props) {
     } else do {
       idx = (idx + 1) % res.length
       if(idx > index) {
-        if(res[index].startPnum != res[idx].startPnum || res[index].volumeId != res[idx].volumeId) { 
+        if(res[index].startPnum != res[idx]?.startPnum || res[index].volumeId != res[idx]?.volumeId) { 
           p = (p + 1) % total
         }
       } else {

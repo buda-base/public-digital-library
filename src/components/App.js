@@ -178,6 +178,10 @@ const tol   = "http://api.treasuryoflives.org/resource/";
 const wc    = "https://www.worldcat.org/identities/";
 
 
+const customTradLink = {
+   "bo": "?type[0]=Instance&language[0]=LangBo&sortBy=firstScanSyncDate_desc"
+}
+
 export const prefixesMap = { adm, bda, bdac, bdan, bdo, bdou, bdr, bdu, bf, cbcp, cbct, dila, eftr, foaf, oa, mbbt, owl, rdf, rdfs, rkts, skos, wd, ola, viaf, xsd, tmp, 
    bn, cbeta, har, idp, loc, lul, ngmpp, sat, sats, sbb, src, tol, wc }
 export const prefixes = Object.values(prefixesMap) ;
@@ -1247,7 +1251,7 @@ export function top_right_menu(that,etextTitle,backUrl,etextres,isMirador,locati
       innerNav = (
 
          <div className="inner-nav">
-            { ["bo","pi","sa","zh"].map(t => <div><Link onClick={() => that.state.collapse.burgerOn && that.setState({collapse:{...that.state.collapse, burgerOn:false}})} className={that.props.tradition === t ? "active": ""} to={"/tradition/"+t+"/"}>{I18n.t("tradition."+t+"T")}</Link></div>) }
+            { ["bo","pi","sa","zh"].map(t => <div><Link onClick={() => that.state.collapse.burgerOn && that.setState({collapse:{...that.state.collapse, burgerOn:false}})} className={that.props.tradition === t ? "active": ""} to={"/tradition/"+t+"/"+(customTradLink[t]??"")}>{I18n.t("tradition."+t+"T")}</Link></div>) }
          </div>
       ),
       innerSearch = (
@@ -8024,7 +8028,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                               <Link /*{...t=="bo"?{title:"Photo by Ven. Matthieu Ricard"}:{}}*/ 
                                  data-caption='Photo by Ven. Matthieu Ricard'
                                  onClick={() => { document.documentElement.scrollTo({ top:0, left:0, behavior: "instant" }); }} 
-                                    className={this.props.tradition === t ? "active": ""} to={"/tradition/"+t+"/"}>
+                                    className={this.props.tradition === t ? "active": ""} to={"/tradition/"+t+"/"+(customTradLink[t]??"")}>
                                  <span>{I18n.t("tradition."+t+"T")}</span>
                                  <img src={"/tradi/"+t+".jpg"}/>
                               </Link>

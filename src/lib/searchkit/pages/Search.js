@@ -234,6 +234,19 @@ export function FiltersSidebar(props) {
 
   //console.log("sB?", that, indexUiState, sortItems, recent)
 
+  const recentWidget = <>
+    <div className={"filter-title "+(recent?"":"MT")} ><p {...recent?{style:{marginTop:0}}:{}}>Sort by</p></div>
+    <span style={{fontSize:"16px"}}>
+      <MySortBy recent={recent} />
+      {/* <SortBy
+        initialIndex={recent ? "firstScanSyncDate_desc" : process.env.REACT_APP_ELASTICSEARCH_INDEX}
+        items={recent ? [sortItems[1], sortItems[0], sortItems[2], sortItems[3]] : sortItems}
+        />     */}
+    </span>
+  </>
+
+  const first = recent ? filters[filters.length - 1] : null
+
   return <>
     {/* { ! recent &&  */}
     <h3>{I18n.t("result.filter")}</h3> 
@@ -247,29 +260,31 @@ export function FiltersSidebar(props) {
     />
     <br/>
 
+    { recent && recentWidget}
+
+    { first  && <RefinementListWithLocalLabels that={that} {...first } /> }
+
     <RefinementListWithLocalLabels I18n_prefix={"types"} that={that} attribute="type" showMore={true} title={I18n.t("Lsidebar.datatypes.title")}/>
+
 
     {/* { !recent &&  */}
     <RefinementListWithLocalLabels that={that} {...filters[0] } className={recent ? "": "MT0"}  /> 
     {/* }  */}
 
-    { filters.slice(1).map((filter) => <RefinementListWithLocalLabels that={that} {...filter} showMore={true}  />) }
+    { filters.slice(1).map((filter,i) => (!recent||i<filters.length - 1 - 1)&&<RefinementListWithLocalLabels that={that} {...filter} showMore={true}  />) }
 
     <div className="filter-title MT"><p>{getPropLabel(that,fullUri("tmp:firstScanSyncDate"))}</p></div>
     <CustomDateRange attribute="firstScanSyncDate" /*{...recent?{ defaultBefore: lastMonthFormatted }:{}}*/ {...{request, setRequest}} />
     
-    <div className="filter-title MT" ><p>Sort by</p></div>
-    <span style={{fontSize:"16px"}}>
-      <MySortBy recent={recent} />
-      {/* <SortBy
-        initialIndex={recent ? "firstScanSyncDate_desc" : process.env.REACT_APP_ELASTICSEARCH_INDEX}
-        items={recent ? [sortItems[1], sortItems[0], sortItems[2], sortItems[3]] : sortItems}
-      />     */}
-    </span>
+    {!recent && recentWidget}
 
-    <br />
-    <br />
-    <br />
+    {recent 
+      ? <div style={{fontSize:"20px"}}><br/></div>
+      : <>
+      <br />
+      <br />
+      <br />
+    </> }
 
     <MyClearRefinements   
       translations={{
