@@ -402,6 +402,9 @@ const SearchBoxAutocomplete = (props) => {
         onClick={() => {
           if(that.state.forceFocus) that.setState({forceFocus:false})
         }}
+        onBlur={() => {
+          if(that.state.forceFocus) that.setState({forceFocus:false})
+        }}
         onKeyDown={(e) => {
           if (e.key === "Enter") {
             setIsFocused(false);

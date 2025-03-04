@@ -3,6 +3,7 @@ import React, {useEffect} from "react"
 
 import { useInstantSearch, useConfigure } from "react-instantsearch";
 import { Link } from "react-router-dom"
+import { useLocation, useNavigate } from "react-router"
 import { Trans } from 'react-i18next'
 import I18n from 'i18next';
 
@@ -15,7 +16,7 @@ function SearchResultsHeader(props) {
   const { that, storageRef, inner, recent } = props
 
   const searchStatus = useInstantSearch();
-  const { indexUiState, status, error, results, refresh } = searchStatus
+  const { indexUiState, status, error, results, refresh, setIndexUiState} = searchStatus
   
   // const { refine } = useCurrentRefinements(props);
 
@@ -27,6 +28,21 @@ function SearchResultsHeader(props) {
   const label = getPropLabel(that, fullUri("bdo:"+config[1]), false, true, undefined, undefined, storageRef?.current)
   
   //console.log("status:", status, searchStatus)
+
+  const location = useLocation()
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    if(location.pathname === '/' && location.search === "") {
+      setIndexUiState((prevIndexUiState) => ({
+        ...prevIndexUiState,
+        refinementList: {
+          ...prevIndexUiState.refinementList,
+          type: ['Instance'],
+        },
+      }));
+    }
+  }, [location])
 
   useEffect(() => {
     if(results?.processingTimeMS && results?.nbHits === 0) {
