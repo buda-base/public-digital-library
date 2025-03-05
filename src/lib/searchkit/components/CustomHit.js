@@ -57,10 +57,28 @@ const CustomHit = ({ hit, routing, that, sortItems, recent, storage, advanced /*
   const { uiState, indexUiState } = useInstantSearch()
   const { sortBy, refinementList } = uiState?.[process.env.REACT_APP_ELASTICSEARCH_INDEX]
 
+
+  const hasEtextScoreRatio = useMemo(() => {
+    const mainScore = hit._score
+    let ekeys = Object.keys(hit.inner_hits ?? {}), maxETscore = 0
+    if(ekeys.length > 0) for(const ek of ekeys) {
+      console.log(hit.objectID, hit.inner_hits?.[ek]?.hits?.hits)
+      for(const vol of hit.inner_hits?.[ek]?.hits?.hits) {
+        //console.log( vol.inner_hits.chunks.hits)
+        maxETscore = Math.max(vol.inner_hits.chunks.hits.max_score??0, maxETscore) 
+      }
+    }
+    console.log("ETsc:",maxETscore/mainScore,maxETscore,mainScore)
+    if(maxETscore && mainScore / maxETscore < 5) {
+      return true
+    }
+    return false
+  }, [hit])
+
   const isMetaMatch = useMemo(() => {
     for(const k of Object.keys(hit._highlightResult)) {
         if(k.startsWith("prefLabel_") || k.startsWith("altLabel_")) {
-          if(hit._highlightResult[k].some(r => r.matchLevel && r.matchLevel != "none")) return true
+          if(hit._highlightResult[k].some(r => r.matchLevel && r.matchLevel != "none")) return !hasEtextScoreRatio
         }
     }
     return false
@@ -132,7 +150,7 @@ const CustomHit = ({ hit, routing, that, sortItems, recent, storage, advanced /*
               }
 
               return ({
-                value: hit._highlightResult && hit._highlightResult[k] && (isMetaMatch || !etextHits.length) //&& hit._highlightResult[k][i]
+                value: hit._highlightResult && hit._highlightResult[k] && !hasEtextScoreRatio && (isMetaMatch || !etextHits.length) //&& hit._highlightResult[k][i]
                     ? decode(withHL.replace(/<mark>/g,"↦").replace(/<\/mark>/g,"↤").replace(/↤( )?↦/g, "$1"))
                     : h, 
                 num
@@ -153,6 +171,8 @@ const CustomHit = ({ hit, routing, that, sortItems, recent, storage, advanced /*
         }        
       }
     }
+
+    //console.log("labels:",hit.objectID,labels,hit)
     
     const sortLabels = sortLangScriptLabels(labels.prefLabel,langs.flat,langs.translit)
     if(sortLabels.length) { 
@@ -311,7 +331,7 @@ const CustomHit = ({ hit, routing, that, sortItems, recent, storage, advanced /*
               // WIP: handle non Tibetan etext + fix bug when leading bogus latin in Tibetan
               let detec = ch._source.text_bo ? [ "bo" ]: ch._source.text_zh ? [ "zh" ] : [ "en" ] //narrowWithString(c)      
               //console.log("c:",c,detec)
-              const label = getLangLabel(that, fullUri("tmp:textMatch"), [{lang:detec[0] /*==="tibt"?"bo":"bo-x-ewts"*/, value:(c ?? "").replace(/<em>/g,"↦").replace(/<\/em>/g,"↤").replace(/↤ ↦/g, " ")}])          
+              const label = getLangLabel(that, fullUri("tmp:textMatch"), [{lang:detec[0] /*==="tibt"?"bo":"bo-x-ewts"*/, value:(c ?? "").replace(/<em>/g,"↦").replace(/<\/em>/g,"↤").replace(/↤([་ ]?)↦/g, "$1")}])          
   
               detec = narrowWithString(indexUiState.query)    
 

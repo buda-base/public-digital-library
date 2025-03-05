@@ -75,11 +75,24 @@ export const transliterators = {
       "zh-latn-pinyin" : (val) => pinyin4js.convertToPinyinString(val, ' ', pinyin4js.WITH_TONE_MARK) , 
       "zh-hant" : (val) => hanziConv.sc2tc(val) 
    },
+   "zh-Hans":{ 
+      "zh-latn-pinyin" : (val) => pinyin4js.convertToPinyinString(val, ' ', pinyin4js.WITH_TONE_MARK) , 
+      "zh-hant" : (val) => hanziConv.sc2tc(val) 
+   },
    "zh-hant":{ 
       "zh-latn-pinyin" : (val) => pinyin4js.convertToPinyinString(val, ' ', pinyin4js.WITH_TONE_MARK) , 
       "zh-hans" : (val) => hanziConv.tc2sc(val) 
    },
+   "zh-Hant":{ 
+      "zh-latn-pinyin" : (val) => pinyin4js.convertToPinyinString(val, ' ', pinyin4js.WITH_TONE_MARK) , 
+      "zh-hans" : (val) => hanziConv.tc2sc(val) 
+   },
    "zh-hani":{ 
+      "zh-latn-pinyin" : (val) => pinyin4js.convertToPinyinString(val, ' ', pinyin4js.WITH_TONE_MARK) , 
+      "zh-hant" : (val) => hanziConv.sc2tc(val) , 
+      "zh-hans" : (val) => hanziConv.tc2sc(val) 
+   },
+   "zh-Hani":{ 
       "zh-latn-pinyin" : (val) => pinyin4js.convertToPinyinString(val, ' ', pinyin4js.WITH_TONE_MARK) , 
       "zh-hant" : (val) => hanziConv.sc2tc(val) , 
       "zh-hans" : (val) => hanziConv.tc2sc(val) 

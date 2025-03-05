@@ -44,24 +44,14 @@ const ALL_FIELDS = [
   { label: "workIsAbout", highlightable: true },
   { label: "author", highlightable: true },
   { label: "translator", highlightable: true },
-  { label: "seriesName_res", highlightable: true },
-  { label: "seriesName_bo_x_ewts", highlightable: true },
-  { label: "seriesName_en", highlightable: true },
-  { label: "summary_bo_x_ewts", highlightable: true },
-  { label: "summary_en", highlightable: true },
-  { label: "authorshipStatement_bo_x_ewts", highlightable: true },
-  { label: "authorshipStatement_en", highlightable: true },
-  { label: "publisherName_bo_x_ewts", highlightable: true },
-  { label: "publisherLocation_bo_x_ewts", highlightable: true },
-  { label: "publisherName_en", highlightable: true },
-  { label: "publisherLocation_en", highlightable: true },
-  { label: "prefLabel_bo_x_ewts", highlightable: true },
-  { label: "prefLabel_en", highlightable: true },
-  { label: "comment_bo_x_ewts", highlightable: true },
-  { label: "comment_en", highlightable: true },
-  { label: "altLabel_bo_x_ewts", highlightable: true },
-  { label: "altLabel_en", highlightable: true },
-];
+  { label: "seriesName_res", highlightable: true }
+].concat(
+  ...["seriesName", "summary", "authorshipStatement","publisherName","publisherLocation","prefLabel","comment","altLabel"]
+    .map(t => (
+      ["en", "bo_x_ewts", "iast", "hani", "khmr"].map(l => ({label:t+"_"+l, highlightable: true}))
+    )
+  )
+);
 
 const NO_KEYWORD_FIELD = [
   { label: "objectID", highlightable: false },
