@@ -1206,19 +1206,23 @@ async function getPages(iri,next,meta) {
       data = await api.loadEtextChunks(iri,next);
       
       pages = []
-      chunk = []
       for(const j of data) {
-         for(const p of j.innerHits.etext_pages.hits) {
-            if(!pages.some(q => q.sourceAsMap.pnum === p.sourceAsMap.pnum)) pages.push(p)
-         }
+         chunk = []
          for(const c of j.innerHits.chunks.hits) {
             if(!chunk.some(d => c.sourceAsMap.cstart === d.sourceAsMap.cstart)) chunk.push(c)
          }
+         for(const p of j.innerHits.etext_pages.hits) {
+            if(!pages.some(q => q.sourceAsMap.pnum === p.sourceAsMap.pnum)) { 
+               pages.push(p)
+               p.chunk = chunk
+            }
+         }
+
       }
       pages = _.orderBy(pages, (val) => val.sourceAsMap.cstart, ['asc'])            
-      chunk = _.orderBy(chunk, (val) => val.sourceAsMap.cstart, ['asc'])
+      //chunk = _.orderBy(chunk, [(val) => val.id,(val) => val.sourceAsMap.cstart], ['asc', 'asc'])
 
-      loggergen.log("pages:",pages,chunk)
+      //loggergen.log("pages:",iri,pages,chunk)
 
       let lang //= chunk[0].chunkContents["@language"]
 
@@ -1234,7 +1238,7 @@ async function getPages(iri,next,meta) {
          let clang 
          let chunks = []
          
-         let value = chunk.reduce( (acc,c) => { 
+         let value = e.chunk.reduce( (acc,c) => { 
             
             let k = Object.keys(c.sourceAsMap ?? {}).filter(t => t.startsWith("text_")).[0]
             let _cval = c.sourceAsMap[k] //e.chunkContents["@value"]

@@ -57,6 +57,7 @@ const CustomHit = ({ hit, routing, that, sortItems, recent, storage, advanced /*
   const { uiState, indexUiState } = useInstantSearch()
   const { sortBy, refinementList } = uiState?.[process.env.REACT_APP_ELASTICSEARCH_INDEX]
 
+  const ETEXT_SCORE_RATIO = 4 ;
 
   const hasEtextScoreRatio = useMemo(() => {
     const mainScore = hit._score
@@ -69,7 +70,7 @@ const CustomHit = ({ hit, routing, that, sortItems, recent, storage, advanced /*
       }
     }
     console.log("ETsc:",maxETscore/mainScore,maxETscore,mainScore)
-    if(maxETscore && mainScore / maxETscore < 5) {
+    if(maxETscore && mainScore / maxETscore < ETEXT_SCORE_RATIO) {
       return true
     }
     return false
