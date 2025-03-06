@@ -114,7 +114,16 @@ export function EtextSearchBox(props) {
   const startSearch = useCallback(async (useQuery) => {
     setLoading(true)
 
-    let res = _.orderBy(await getEtextSearchRequest({ query: useQuery ?? query, lang: "bo", [params[ETtype]]: scopeId.split(":")[1] }), ["volumeNumber","startPageCstart"], ["asc","asc"])
+    let res = await getEtextSearchRequest({ query: useQuery ?? query, lang: "bo", [params[ETtype]]: scopeId.split(":")[1] })
+    let last
+    res = _.orderBy(res, ["volumeNumber","startPageCstart"], ["asc","asc"]).filter(r => {
+      if(last && last.volumeId === r.volumeId && last.highlightStart === r.highlightStart && last.highlightEnd === r.highlightEnd) {
+        last = r
+        return false
+      }
+      last = r
+      return true
+    })
     console.log("gEsR:",res, scopeId, scope, ETtype)  
     if(res?.length > 1000) res = res?.slice(0,1000) ?? []
     setResults(res)

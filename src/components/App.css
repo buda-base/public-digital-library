@@ -6261,7 +6261,7 @@ div[role="tooltip"]:not(.cite) > div b { font-weight:700; }
 #matches br[data-last=true], 
 #matches br[data-last=true] ~ br { display:none; }
 
-.hasSeq .page > span:last-of-type > span:last-of-type br[data-last=true] { display:none; } 
+/* .hasSeq .page > span:last-of-type > span:last-of-type br[data-last=true] { display:none; }  */
 
 .toggle-note span { border-bottom:1px solid transparent;}
 
