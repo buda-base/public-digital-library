@@ -75,15 +75,7 @@ export const transliterators = {
       "zh-latn-pinyin" : (val) => pinyin4js.convertToPinyinString(val, ' ', pinyin4js.WITH_TONE_MARK) , 
       "zh-hant" : (val) => hanziConv.sc2tc(val) 
    },
-   "zh-Hans":{ 
-      "zh-latn-pinyin" : (val) => pinyin4js.convertToPinyinString(val, ' ', pinyin4js.WITH_TONE_MARK) , 
-      "zh-hant" : (val) => hanziConv.sc2tc(val) 
-   },
    "zh-hant":{ 
-      "zh-latn-pinyin" : (val) => pinyin4js.convertToPinyinString(val, ' ', pinyin4js.WITH_TONE_MARK) , 
-      "zh-hans" : (val) => hanziConv.tc2sc(val) 
-   },
-   "zh-Hant":{ 
       "zh-latn-pinyin" : (val) => pinyin4js.convertToPinyinString(val, ' ', pinyin4js.WITH_TONE_MARK) , 
       "zh-hans" : (val) => hanziConv.tc2sc(val) 
    },
@@ -92,17 +84,38 @@ export const transliterators = {
       "zh-hant" : (val) => hanziConv.sc2tc(val) , 
       "zh-hans" : (val) => hanziConv.tc2sc(val) 
    },
-   "zh-Hani":{ 
+
+   "km":{ "km-x-iast": (val) => Sanscript.t(val,"khmer","iast") },
+   "km-x-iast":{ "km": (val) => Sanscript.t(val,"iast","khmer") },
+
+   // for new search results
+
+   "hani":{ 
       "zh-latn-pinyin" : (val) => pinyin4js.convertToPinyinString(val, ' ', pinyin4js.WITH_TONE_MARK) , 
       "zh-hant" : (val) => hanziConv.sc2tc(val) , 
       "zh-hans" : (val) => hanziConv.tc2sc(val) 
    },
 
-   "km":{ "km-x-iast": (val) => Sanscript.t(val,"khmer","iast") },
-   "km-x-iast":{ "km": (val) => Sanscript.t(val,"iast","khmer") },
+   "khmr":{ "km-x-iast": (val) => Sanscript.t(val,"khmer","iast") },
+
+   "iast":{ 
+      "sa-deva": (val) => Sanscript.t(val.toLowerCase(),"iast","devanagari"),
+      "sa-newa": (val) => Sanscript.t(val.toLowerCase(),"iast","newa"), 
+      "sa-sinh": (val) => Sanscript.t(val.toLowerCase(),"iast","sinhala"), 
+      "sa-khmr": (val) => Sanscript.t(val.toLowerCase(),"iast","khmer"),
+      
+      "pi-deva": (val) => Sanscript.t(val.toLowerCase(),"iast","devanagari") ,
+      "pi-newa": (val) => Sanscript.t(val.toLowerCase(),"iast","newa"),
+      "pi-sinh": (val) => Sanscript.t(val.toLowerCase(),"iast","sinhala"),
+      "pi-khmr": (val) => Sanscript.t(val.toLowerCase(),"iast","khmer"),
+
+      "km": (val) => Sanscript.t(val.toLowerCase(),"iast","khmer") 
+   },
 }
 
 export function translitHelper(src,dst) {
+   src = src?.toLowerCase()
+   dst = dst?.toLowerCase()
    if(transliterators[src] && transliterators[src][dst]) return transliterators[src][dst];
    else for(let k of Object.keys(transliterators)) { 
       if(src.match(new RegExp("^"+k+"$"))) for(let v of Object.keys(transliterators[k])) {
@@ -208,6 +221,7 @@ export function sortLangScriptLabels(data,preset,translit,mergeXs = false, caseI
       if(!k) k = e["xml:lang"]
       if(!k) k = e["@language"]
       if(!k) k = ""
+      k = k?.toLowerCase()
       if(mergeXs) k = k.replace(/-x-.*$/,"-x")
       let v = e["value"]
       if(!v) v = e["@value"]
@@ -341,6 +355,7 @@ export function getMainLabel(data,extpreset)
       if(!k) k = e["xml:lang"]
       // case of strings with no lang tag
       if(!k) k = ""
+      k = k?.toLowerCase()
       let thisscore = extpreset.invscores[k] || 99;
       if (thisscore < bestscore || bestelt === null) {
         bestelt = e;
