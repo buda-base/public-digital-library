@@ -57,6 +57,7 @@ const CustomHit = ({ hit, routing, that, sortItems, recent, storage, advanced /*
   const { uiState, indexUiState } = useInstantSearch()
   const { sortBy, refinementList } = uiState?.[process.env.REACT_APP_ELASTICSEARCH_INDEX]
 
+  /*
   const ETEXT_SCORE_RATIO = 4 ;
 
   const hasEtextScoreRatio = useMemo(() => {
@@ -75,11 +76,12 @@ const CustomHit = ({ hit, routing, that, sortItems, recent, storage, advanced /*
     }
     return false
   }, [hit])
+  */
 
   const isMetaMatch = useMemo(() => {
     for(const k of Object.keys(hit._highlightResult)) {
         if(k.startsWith("prefLabel_") || k.startsWith("altLabel_")) {
-          if(hit._highlightResult[k].some(r => r.matchLevel && r.matchLevel != "none")) return !hasEtextScoreRatio
+          if(hit._highlightResult[k].some(r => r.matchLevel && r.matchLevel != "none")) return true; //!hasEtextScoreRatio
         }
     }
     return false
@@ -151,7 +153,7 @@ const CustomHit = ({ hit, routing, that, sortItems, recent, storage, advanced /*
               }
 
               return ({
-                value: hit._highlightResult && hit._highlightResult[k] && !hasEtextScoreRatio && (isMetaMatch || !etextHits.length) //&& hit._highlightResult[k][i]
+                value: hit._highlightResult && hit._highlightResult[k] && /*!hasEtextScoreRatio &&*/ (isMetaMatch || !etextHits.length) //&& hit._highlightResult[k][i]
                     ? decode(withHL.replace(/<mark>/g,"↦").replace(/<\/mark>/g,"↤").replace(/↤( )?↦/g, "$1"))
                     : h, 
                 num
