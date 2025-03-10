@@ -46,7 +46,7 @@ const ALL_FIELDS = [
   { label: "translator", highlightable: true },
   { label: "seriesName_res", highlightable: true }
 ].concat(
-  ...["seriesName", "summary", "authorshipStatement","publisherName","publisherLocation","prefLabel","comment","altLabel"]
+  ...["seriesName","summary","authorName","authorshipStatement","publisherName","publisherLocation","prefLabel","comment","altLabel"]
     .map(t => (
       ["en", "bo_x_ewts", "iast", "hani", "khmr"].map(l => ({label:t+"_"+l, highlightable: true}))
     )
