@@ -753,7 +753,7 @@ function pretty(str:string) {
 }
 
 
-export function getPropLabel(that, i, withSpan = true, withLang = false, useI18n = "", useI18n_count = 1, storage, defaultToRID = false) {
+export function getPropLabel(that, i, withSpan = true, withLang = false, useI18n = "", useI18n_count = 1, storage, defaultToRID = false, matchingLabels) {
 
    
    if(!that.props.dictionary) return 
@@ -784,35 +784,55 @@ export function getPropLabel(that, i, withSpan = true, withLang = false, useI18n
 
    }
    
+   let lang, foundMatch
+   
+   if(labels && matchingLabels?.length) {
+      //console.log("gpl:",i,labels,matchingLabels)
+      for(const l of labels) {
+         const tmp = getLangLabel(that,"",[l])
+         for(const m of matchingLabels) {
+            if(m.k === tmp.value) {
+               label = m.value
+               lang = m.lang
+               foundMatch = true
+               break ;
+            }
+         }
+         if(foundMatch) break;
+      }
+   }
+   
    //console.log("labels:", labels, i)
 
-   let lang
-   if(labels) {
+   if(!foundMatch) {
 
-      if(!Array.isArray(labels)) labels = [ labels ]
+      if(labels) {
+            
+         if(!Array.isArray(labels)) labels = [ labels ]
 
-      // fix for "Author: False" in facets on /search?r=bdr:P1KG13161&t=Work
-      let filteredLabels = labels.filter(l => l.lang != undefined || l.fromKey == skos+"prefLabel")
-      if(!filteredLabels.length) filteredLabels = labels
-      label = getLangLabel(that,"",filteredLabels,true)
+         // fix for "Author: False" in facets on /search?r=bdr:P1KG13161&t=Work
+         let filteredLabels = labels.filter(l => l.lang != undefined || l.fromKey == skos+"prefLabel")
+         if(!filteredLabels.length) filteredLabels = labels
+         label = getLangLabel(that,"",filteredLabels,true)
+         
+         //loggergen.log("label:",i,label,labels)
+         
+         if(label) {
+            if(label.lang) lang = label.lang
+            else if(label["@language"]) lang = label["@language"]
+            else if(label["xml:lang"]) lang = label["xml:lang"]
 
-      //loggergen.log("label:",i,label,labels)
-
-      if(label) {
-         if(label.lang) lang = label.lang
-         else if(label["@language"]) lang = label["@language"]
-         else if(label["xml:lang"]) lang = label["xml:lang"]
-
-         if(label.value) label = label.value
-         else if(label["@value"]) label = label["@value"]
-
+            if(label.value) label = label.value
+            else if(label["@value"]) label = label["@value"]
+            
+         }
+      } else { 
+         
+         label = that.pretty?that.pretty(i):pretty(i)
       }
-   } else { 
-
-      label = that.pretty?that.pretty(i):pretty(i)
    }
 
-   if(withSpan) return <span {...lang?{lang}:{}} class={label?.includes(" ") ? "hasSpace":""}>{label}</span>
+   if(withSpan) return <span {...lang?{lang}:{}} class={label?.includes(" ") ? "hasSpace":""}>{foundMatch ? highlight(label) : label}</span>
    else if(!withLang) return label
    else return {value:label,lang}
 }

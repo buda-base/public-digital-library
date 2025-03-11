@@ -449,6 +449,11 @@ export class SearchPage extends Component<State, Props>
 
     const toggleIsFocused = () => this.setState({collapse:{...this.state.collapse, isFocused:!this.state.collapse.isFocused}}) 
 
+    const scrollToTop = () => {
+      const top = document.querySelector("#root > .over-nav")
+      if(top) top.scrollIntoView()
+    }
+
     return (
       <>
         { top_right_menu(this,null,null,null,null,this.props.location) }
@@ -504,7 +509,7 @@ export class SearchPage extends Component<State, Props>
                   </div>
                   <Configure hitsPerPage={window.innerWidth <= 665 ? 20 : 20} filters={pageFilters} />
                   <HitsWithLabels that={this} {...{ routing, sortItems, storageRef }} />
-                  <div className="pagination">
+                  <div className="pagination" onClick={scrollToTop}>
                     <Pagination padding={window.innerWidth <= 665 ? 1 : 3}/>
                   </div>
                 </div>

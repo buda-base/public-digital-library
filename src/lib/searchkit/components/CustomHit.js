@@ -109,7 +109,7 @@ const CustomHit = ({ hit, routing, that, sortItems, recent, storage, advanced /*
     const hidden_if_no_match_and_not_locale_en = [ "summary" ]
 
     if(hit) { 
-      for(const name of ["prefLabel", "altLabel", /*"authorName",*/ "publisherName", "publisherLocation", "summary", "authorshipStatement", "comment", "seriesName"]) {
+      for(const name of ["prefLabel", "altLabel", "authorName", "publisherName", "publisherLocation", "summary", "authorshipStatement", "comment", "seriesName"]) {
         if(!labels[name]) labels[name] = []
         for(const k of Object.keys(hit)) {
           if(k.startsWith(name) && !k.endsWith("_res")) { 
@@ -143,7 +143,7 @@ const CustomHit = ({ hit, routing, that, sortItems, recent, storage, advanced /*
                     }
                     const idx = withHL.indexOf(untagged)
                     let start = "", end = ""
-                    console.log("wHL:",hit.objectID,k,c,h,idx,num)
+                    //console.log("wHL:",hit.objectID,k,c,h,idx,num)
                     if(idx >= 0 && num === i) { 
                       start = withHL.substring(0, idx)
                       if(idx + untagged.length <= withHL.length) end = withHL.substring(idx + untagged.length)
@@ -220,7 +220,7 @@ const CustomHit = ({ hit, routing, that, sortItems, recent, storage, advanced /*
     const newShow = {}
     out = []
     let tag = "note"
-    for(const name of ["seriesName", "summary", "comment", "authorshipStatement" /*, "authorName"*/]) {      
+    for(const name of ["seriesName", "summary", "comment", "authorshipStatement", "authorName"]) {      
       if(labels[name]?.length) {
         const byLang = labels[name].reduce((acc,l) => ({
           ...acc,
@@ -229,9 +229,13 @@ const CustomHit = ({ hit, routing, that, sortItems, recent, storage, advanced /*
         
         //console.log("byL:", byLang, labels[name])
 
-        const hasMatchInLang = Object.values(byLang).some(b => b.includes("↦"))
+        if(name === "authorName") {
+          const matchingAuthorNames = labels[name].filter(n => n.value?.includes("↦")).map(n => (sortLangScriptLabels([{value:n.value,lang:n.lang}],langs.flat,langs.translit)??[])[0]).map(n => ({...n,k:n.value.replace(/[↦↤]/g,"").replace(/(^ +)|( +$)/g,"")}))
+          setAuthorName(matchingAuthorNames)
+          continue;
+        }
         
-        const sortLabels = sortLangScriptLabels(Object.keys(byLang).filter(k => !hasMatchInLang || byLang[k]?.includes("↦")).map(k => ({lang:k, value:byLang[k]})),langs.flat,langs.translit)
+        const sortLabels = sortLangScriptLabels(Object.keys(byLang).map(k => ({lang:k, value:byLang[k]})),langs.flat,langs.translit)
       
         if(hidden_if_no_match_and_not_locale_en.includes(name) && sortLabels.length && !sortLabels[0].value?.includes("↦") && (!sortLabels[0].lang.startsWith("en") || that.props.locale != "en")) continue;
           
@@ -275,9 +279,9 @@ const CustomHit = ({ hit, routing, that, sortItems, recent, storage, advanced /*
       } else if(name === "authorshipStatement") {
         setAuthorshipStatement(out)
         out = []
-        tag = "authorName"
-      } else if(name === "authorName") {
-        setAuthorName(out)
+      //  tag = "authorName"
+      //} else if(name === "authorName") {
+      //  setAuthorName(out)
       } else if(name === "seriesName") {
         if(out.length) setSeriesName(out)
         out = []
@@ -441,6 +445,20 @@ const CustomHit = ({ hit, routing, that, sortItems, recent, storage, advanced /*
     if(top) top.scrollIntoView()
   }
 
+  const memoAuthors = useMemo(() => (
+    (hit.author ?? []) //.concat(hit.translator ?? [])
+      .map(a => {
+        const label = getPropLabel(that, fullUri("bdr:"+a), true, true, "", 1, storage, true, authorName) ?? a 
+
+        return (<span data-id={a}>
+          {/* <Link to={"/show/bdr:"+a+backLink}> */}
+          { label }
+          {/* </Link> */}
+          </span>)
+        }
+      )
+  ), [hit.author, storage, authorName])
+
   return (<div class={"result "+hit.type}>        
     <div class="main">
       <Link to={link} className="BG-link" onClick={scrollToTop}></Link>
@@ -538,19 +556,7 @@ const CustomHit = ({ hit, routing, that, sortItems, recent, storage, advanced /*
             <span class="label">{I18n.t("result.workBy")}<span class="colon">:</span></span>
             <span>
               <span className="author-links">
-              {false && authorName ?
-                <span>{authorName}</span> 
-                : (hit.author ?? []) //.concat(hit.translator ?? [])
-                .map(a => {
-                  return (<span data-id={a}>
-                    {/* <Link to={"/show/bdr:"+a+backLink}> */}
-                    { 
-                      getPropLabel(that, fullUri("bdr:"+a), true, true, "", 1, storage, true) ?? a 
-                    }
-                    {/* </Link> */}
-                    </span>)
-                  }
-                )}
+              { memoAuthors }
               </span>
               { authorshipStatement.length > 0 && <span className="authorship">
                 { authorshipStatement }
@@ -559,7 +565,18 @@ const CustomHit = ({ hit, routing, that, sortItems, recent, storage, advanced /*
             </span>
           </span> 
         }
-        
+
+        {/* // debug
+          authorName && <span class="names author noNL">
+            <span class="label">{I18n.t("result.workBy")}<span class="colon">:</span></span>
+            <span>
+              <span className="author-links">
+              { authorName && <span>{JSON.stringify(authorName)}</span> }
+              </span>
+            </span>
+          </span> 
+        */}
+
         {
           isMetaMatch && nbEtextHits > 0 && <span class="names">
             <span class="label">{I18n.t("result.nHitET", {count: nbEtextHits})}<span class="colon">:</span></span>

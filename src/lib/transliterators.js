@@ -88,7 +88,7 @@ export const transliterators = {
    "km":{ "km-x-iast": (val) => Sanscript.t(val,"khmer","iast") },
    "km-x-iast":{ "km": (val) => Sanscript.t(val,"iast","khmer") },
 
-   // for new search results
+   // quickfix for new search results
 
    "hani":{ 
       "zh-latn-pinyin" : (val) => pinyin4js.convertToPinyinString(val, ' ', pinyin4js.WITH_TONE_MARK) , 
