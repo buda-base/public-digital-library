@@ -1130,7 +1130,7 @@ function InstantSearchBox(props) {
 
    const { isMirador, that } = props
 
-   console.log("ISB:",props,that)
+   //console.log("ISB:",props,that)
 
    if(isMirador) return <div></div>
 
@@ -7327,7 +7327,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          if(value.match(/(^[0-9]{3,4}$)/) && Number(value) < 2100)  dataSource.unshift(value+"@find as a date")         
          if(value && this.state.searchTypes.some(d => ["Instance","Work"].includes(d))) dataSource.push(value.replace(/^d([0-9]+)/,"D$1")+"@find as an identifier")
 
-         this.setState({...this.state,keyword:value, language, dataSource, blurSearch:false, spellingError:[]  } ) 
+         this.setState({...this.state,keyword:value, language, dataSource, blurSearch:false, forceFocus:false,spellingError:[]  } ) 
          
          /*
          if(changeKWtimer) clearTimeout(changeKWtimer)
@@ -7735,7 +7735,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      disabled={this.props.hostFailure}
                      onClick={(ev) => { changeKW(this.state.keyword?lucenequerytokeyword(this.state.keyword):""); $("#search-bar input[type=text][placeholder]").attr("placeholder",I18n.t("home.start"));  } }
                      onBlur={(ev) => { loggergen.log("BLUR"); setTimeout(() => { 
-                           this.setState({...this.state,dataSource:[],blurSearch:true}) 
+                           this.setState({...this.state,dataSource:[],blurSearch:true,forceFocus:false}) 
                         },100); 
                         $("#search-bar input[type=text][placeholder]").attr("placeholder", I18n.t("home.search"))
                         if(this.props.setIsFocused && this.props.isFocused) this.props.setIsFocused(false)    

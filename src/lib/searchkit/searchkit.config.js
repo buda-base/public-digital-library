@@ -60,6 +60,8 @@ class MyTransporter extends ESTransporter {
         || 
         window.location.pathname.startsWith("/show")
         && !requests?.some(r => r.request.params.filters)         
+        ||
+        window.location.pathname == "/search" 
       ) return [
       {
           "_shards": {
@@ -239,18 +241,21 @@ const routingConfig = () => ({
     createURL({ qsModule, location, routeState }) {
       
       let { origin, pathname, hash, search } = location, url;
-      if(pathname.startsWith("/search") 
-        || !pathname.endsWith("/search") && !pathname.startsWith("/show/") //&& !pathname.startsWith("/tradition/") 
+      if(!pathname.startsWith("/search")) {
+
+        if(pathname.startsWith("/search") 
+          || !pathname.endsWith("/search") && !pathname.startsWith("/show/") //&& !pathname.startsWith("/tradition/") 
             && routeState.q) pathname = "/osearch/search"
-      
-      const indexState = routeState['instant_search'] || {};
-      const queryString = qsModule.stringify({ ...qsModule.parse(search.replace(/^\?/,""))??{}, ...routeState});
+        
+        const indexState = routeState['instant_search'] || {};
+        const queryString = qsModule.stringify({ ...qsModule.parse(search.replace(/^\?/,""))??{}, ...routeState});
 
-      url = `${origin}${pathname}?${queryString}${hash}`;      
-      
-      //console.log("cURL:", search, qsModule.parse(search), queryString, url, location, routeState, indexState, search)
+        url = `${origin}${pathname}?${queryString}${hash}`;      
+        
+        //console.log("cURL:", search, qsModule.parse(search), queryString, url, location, routeState, indexState, search)
 
-      return url
+        return url
+      }
   
     },
     

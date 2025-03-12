@@ -58,7 +58,7 @@ const _tmp = tmp ;
 let IIIFurl = "//iiif.bdrc.io" ;
 
 const handleAuthentication = (nextState, isAuthCallback) => {
-   console.log("hA:",nextState)
+   //console.log("hA:",nextState)
    if (nextState && /access_token|id_token|error/.test(nextState.location.hash)) {
       auth.handleAuthentication();      
    } else if(auth && !isAuthCallback && !auth.isAuthenticated()) { 

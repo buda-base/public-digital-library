@@ -284,7 +284,7 @@ function ResourceCompo() {
 
    let { IRI } = useParams()
 
-   console.log("Rc:",location)
+   //console.log("Rc:",location)
 
    useEffect(() => {
       // #766

@@ -6,7 +6,7 @@ function useSticky(props) {
 
   const [isSticky, setIsSticky] = useState(false)
 
-  console.log("rmt:",rootMarginTop)
+  //console.log("rmt:",rootMarginTop)
 
   useEffect(() => {
       if (!ref.current) {
