@@ -159,8 +159,8 @@ export const searchClient = Client(
           }
           return getGenericRequest(request); //request;
         });
-        console.log("requests?", requests, customizedRequest)
-        console.log("author?", customizedRequest.map(r => r.body?.aggs?.author))
+        //console.log("requests?", requests, customizedRequest)
+        //console.log("author?", customizedRequest.map(r => r.body?.aggs?.author))
 
         return customizedRequest;
       },
@@ -443,7 +443,7 @@ export class SearchPage extends Component<State, Props>
 
     const storageRef = React.createRef() 
 
-    console.log("sC:", this.state.query, this.props.advKeyword, searchClient, routingConfig, pageFilters, storageRef)    
+    //console.log("sC:", this.state.query, this.props.advKeyword, searchClient, routingConfig, pageFilters, storageRef)    
 
     const toggleSettings = () => this.setState({collapse:{...this.state.collapse, settings:!this.state.collapse.settings}}) 
 

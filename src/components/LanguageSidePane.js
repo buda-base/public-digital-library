@@ -229,7 +229,7 @@ class LanguageSidePane extends Component<Props,State> {
             ]
          }
 
-         loggergen.log("props:", this.props, k, i, this.props.langIndex)
+         //loggergen.log("props:", this.props, k, i, this.props.langIndex)
 
          let checked = k === this.props.langIndex || i === this.props.langIndex  
 

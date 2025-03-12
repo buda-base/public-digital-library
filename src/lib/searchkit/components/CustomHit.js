@@ -448,7 +448,7 @@ const CustomHit = ({ hit, routing, that, sortItems, recent, storage, advanced /*
   const memoAuthors = useMemo(() => (
     (hit.author ?? []) //.concat(hit.translator ?? [])
       .map(a => {
-        const label = getPropLabel(that, fullUri("bdr:"+a), true, true, "", 1, storage, true, authorName) ?? a 
+        const label = getPropLabel(that, fullUri("bdr:"+a), true, true, "", 1, storage, true, authorName, false) ?? a 
 
         return (<span data-id={a}>
           {/* <Link to={"/show/bdr:"+a+backLink}> */}

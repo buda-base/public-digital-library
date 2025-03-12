@@ -753,7 +753,7 @@ function pretty(str:string) {
 }
 
 
-export function getPropLabel(that, i, withSpan = true, withLang = false, useI18n = "", useI18n_count = 1, storage, defaultToRID = false, matchingLabels) {
+export function getPropLabel(that, i, withSpan = true, withLang = false, useI18n = "", useI18n_count = 1, storage, defaultToRID = false, matchingLabels, preferUIlang = true) {
 
    
    if(!that.props.dictionary) return 
@@ -813,7 +813,7 @@ export function getPropLabel(that, i, withSpan = true, withLang = false, useI18n
          // fix for "Author: False" in facets on /search?r=bdr:P1KG13161&t=Work
          let filteredLabels = labels.filter(l => l.lang != undefined || l.fromKey == skos+"prefLabel")
          if(!filteredLabels.length) filteredLabels = labels
-         label = getLangLabel(that,"",filteredLabels,true)
+         label = getLangLabel(that,"",filteredLabels,preferUIlang)
          
          //loggergen.log("label:",i,label,labels)
          
@@ -3316,7 +3316,7 @@ class App extends Component<Props,State> {
       */
 
       this.setState(state)
-      loggergen.log("state::",JSON.stringify(state.collapse,null,3))
+      //loggergen.log("state::",JSON.stringify(state.collapse,null,3))
 
    }
 /*

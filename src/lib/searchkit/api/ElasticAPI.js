@@ -257,7 +257,7 @@ const getCustomizedBdrcIndexRequest = (request) => {
   };
 
 
-  console.log("userInput?", userInput, clonedRequest.body.query)
+  //console.log("userInput?", userInput, clonedRequest.body.query)
 
   return clonedRequest;
 };
@@ -287,7 +287,7 @@ const getGenericRequest = (request) => {
   if(userInput) clonedRequest.body.query = getCustomQueryPart(userInput, userQueryFacetFilters) //, "bdrc-query")
   else clonedRequest.body.query.bool.filter = userQueryFacetFilters
 
-  console.log("userInput?", userInput, clonedRequest.body.query)
+  //console.log("userInput?", userInput, clonedRequest.body.query)
 
   return clonedRequest;
 };

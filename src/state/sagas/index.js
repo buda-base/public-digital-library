@@ -863,7 +863,7 @@ export async function updateConfigFromProfile() {
       store.dispatch(uiActions.langPreset(litLangs, preset));
 
 
-      loggergen.log("state:", state, res, litLangs, locale, isCustom,litLangs.toString(),state.data.config.language.data.presets[locale])
+      //loggergen.log("state:", state, res, litLangs, locale, isCustom,litLangs.toString(),state.data.config.language.data.presets[locale])
    }
 
    try {

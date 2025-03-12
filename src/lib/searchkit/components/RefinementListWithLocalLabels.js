@@ -19,6 +19,8 @@ import { getPropLabel, fullUri } from '../../../components/App'
 
 const LANGUAGE = "bo-x-ewts";
 
+const dontUseUIlang = [ "author" ]
+
 const getItem = (collection, id) => {
   return collection.find((_item) => _item.id === id);
 };
@@ -31,7 +33,7 @@ function CustomRefinementList(props) {
   const [title, setTitle] = useState("")
 
   const searchStatus = useInstantSearch();
-  const { indexUiState, status } = searchStatus
+  const { indexUiState, status, results } = searchStatus
 
   useEffect(() => {
     setTitle(getPropLabel(that, fullUri(iri ?? (prefix ?? "bdo")+":"+attribute)))
@@ -49,7 +51,7 @@ function CustomRefinementList(props) {
   } = useRefinementList({...props, limit:8, showMoreLimit:1000});
 
   const current = (indexUiState?.refinementList?.[attribute] ?? []).filter(c => !items.find(i => i.value === c)).map(c => ({ 
-    value:c, label:c, highlighted:c, isRefined:true, count:-1
+    value:c, label:c, highlighted:c, isRefined:true, count:results?.nbHits
   }))
   const tItems = items?.concat(!items.length 
       ? (defaultItems??[]).filter(i => !current.some(j => i.value === j.value)&&!items.some(j => i.value === j.value)) ?? [] 
@@ -70,7 +72,7 @@ function CustomRefinementList(props) {
 
         //console.log("item:", attribute, _item)
 
-        const val = getPropLabel(that, fullUri("bdr:"+_item.value), true, false, I18n_prefix ? I18n_prefix+"."+_item.value?.toLowerCase() : "", 1, storage)
+        const val = getPropLabel(that, fullUri("bdr:"+_item.value), true, false, I18n_prefix ? I18n_prefix+"."+_item.value?.toLowerCase() : "", 1, storage, undefined, undefined, dontUseUIlang.includes(attribute)?false:true)
 
         return ({
           id: _item.value,
