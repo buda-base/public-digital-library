@@ -24,6 +24,8 @@
 //   { label: "workIsAbout.prefLabel_en", highlightable: true },
 // ];
 
+export const highlightableLocalizableFields = ["seriesName","summary","authorName","authorshipStatement","publisherName","publisherLocation","prefLabel","comment","altLabel"]
+
 const ALL_FIELDS = [
   { label: "associated_res", highlightable: true },
   { label: "graphs", highlightable: true },
@@ -46,7 +48,7 @@ const ALL_FIELDS = [
   { label: "translator", highlightable: true },
   { label: "seriesName_res", highlightable: true }
 ].concat(
-  ...["seriesName","summary","authorName","authorshipStatement","publisherName","publisherLocation","prefLabel","comment","altLabel"]
+  ...highlightableLocalizableFields
     .map(t => (
       ["en", "bo_x_ewts", "iast", "hani", "khmr"].map(l => ({label:t+"_"+l, highlightable: true}))
     )

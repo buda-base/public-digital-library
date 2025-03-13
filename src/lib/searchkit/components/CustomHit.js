@@ -12,7 +12,7 @@ import Tooltip from '@material-ui/core/Tooltip';
 
 
 import { HIT_RANGE_FIELDS } from "../api/ElasticAPI";
-import { RESULT_FIELDS } from "../constants/fields";
+import { RESULT_FIELDS, highlightableLocalizableFields } from "../constants/fields";
 import {narrowWithString} from "../../langdetect"
 import { etext_tooltips } from "../pages/Search";
 
@@ -99,17 +99,37 @@ const CustomHit = ({ hit, routing, that, sortItems, recent, storage, advanced /*
       : etextLink
 
   useEffect(() => {
-    const labels = {}
-
+    const labels = {} 
+    
     let langs = that.props.langPreset
     if(!langs) return
     langs = extendedPresets(langs)
-
+    
     const hidden = [ /*"publisherName", "publisherLocation",*/ "authorshipStatement", "comment" ]
     const hidden_if_no_match_and_not_locale_en = [ "summary" ]
+    
+    const labelInHighlightResult = {}
 
     if(hit) { 
-      for(const name of ["prefLabel", "altLabel", "authorName", "publisherName", "publisherLocation", "summary", "authorshipStatement", "comment", "seriesName"]) {
+      if(hit._highlightResult) for(const k of Object.keys(hit._highlightResult)) {
+        //console.log("k:",k)
+        if(highlightableLocalizableFields.some(l => k.startsWith(l))) {
+          labelInHighlightResult[k] = []
+          for(const v of hit._highlightResult[k]){
+            if(! v.matchedWords?.length) continue
+            //console.log("v:",v)
+            const untagged = decode(v.value).replace(/<[^>]+>/g,"")
+            for(const i in hit[k]) {
+              const a = hit[k][i]
+              //console.log("a:",i,a,a === untagged)
+              labelInHighlightResult[k][i] = labelInHighlightResult[k][i] || (a.indexOf(untagged) != -1)
+            }
+          }
+        }
+      }
+      
+      
+      for(const name of highlightableLocalizableFields) {
         if(!labels[name]) labels[name] = []
         for(const k of Object.keys(hit)) {
           if(k.startsWith(name) && !k.endsWith("_res")) { 
@@ -131,13 +151,16 @@ const CustomHit = ({ hit, routing, that, sortItems, recent, storage, advanced /*
 
               let val = h, withHL = decode(val), num = i
               if(hit._highlightResult[k]?.length){ 
-                if(hit._highlightResult[k]?.length != hit[k].length) { 
+                //if(hit._highlightResult[k]?.length != hit[k].length) { 
+                  let lastNum
                   for(const c of hit._highlightResult[k]) {
                     const untagged = decode(c.value).replace(/<[^>]+>/g,"")          
-                    let num = hit[k].findIndex(u => u.includes(untagged))      
+                    let num = hit[k].findIndex(u => u.includes(untagged))   
                     if(num != -1 && num == i) {
-                      h = hit[k][num]
-                      withHL = decode(h)
+                      if(num != lastNum) {
+                        h = hit[k][num]
+                        withHL = decode(h)
+                      }                      
                     } else {
                       num = i
                     }
@@ -148,11 +171,13 @@ const CustomHit = ({ hit, routing, that, sortItems, recent, storage, advanced /*
                       start = withHL.substring(0, idx)
                       if(idx + untagged.length <= withHL.length) end = withHL.substring(idx + untagged.length)
                       withHL = start + decode(c.value) + end
+                      //break;
                     }
+                    lastNum = num
                   }
-                } else {
-                  withHL = hit._highlightResult[k][i]?.value ?? ""
-                }
+                //} else {
+                //  withHL = hit._highlightResult[k][i]?.value ?? ""
+                //}
               }
 
               return ({
@@ -163,9 +188,9 @@ const CustomHit = ({ hit, routing, that, sortItems, recent, storage, advanced /*
               })
             }
 
-            hit[k].map((h,i) => name != "altLabel" && (advanced || !hidden.includes(name)) || hit._highlightResult[k] && hit._highlightResult[k][i]?.matchedWords?.length 
+            hit[k].map((h,i) => name != "altLabel" && (advanced || !hidden.includes(name) ) || labelInHighlightResult[k]?.[i] //|| hit._highlightResult[k] && hit._highlightResult[k][i]?.matchedWords?.length 
               ? !isOtherVersions || name=="prefLabel" && !labels["prefLabel"]?.some(l => l.lang === lang)
-                ? labels[name!="altLabel"?name:"prefLabel"].push({
+                ? labels[name].push({ //name!="altLabel" ? name:"prefLabel"].push({
                   ...mergeHLinVal(k, h, i), 
                   field: k, 
                   lang, hit, 
@@ -178,14 +203,14 @@ const CustomHit = ({ hit, routing, that, sortItems, recent, storage, advanced /*
       }
     }
 
-    //console.log("labels:",hit.objectID,labels,hit)
+    //console.log("labels:",hit.objectID,labelInHighlightResult,labels,hit)
     
     const sortLabels = sortLangScriptLabels(labels.prefLabel,langs.flat,langs.translit)
     if(sortLabels.length) { 
       const label = getLangLabel(that,skos+"prefLabel",[{ ...sortLabels[0] }])
       //setTitle(<Hit debug={false} hit={sortLabels[0].hit} label={sortLabels[0].field} />)
       setTitle(<span lang={label.lang}>{highlight(label.value)}</span>)
-      if(sortLabels.length > 1) { 
+      if(sortLabels.length > 1 || labels.altLabel?.length) { 
         sortLabels.shift()
         //setNames(sortLabels.map(l => <Hit debug={false} hit={l.hit} label={l.field} />))
         setNames((sortLabels.concat(sortLangScriptLabels(labels.altLabel,langs.flat,langs.translit))).map(label => <span lang={label.lang}>{highlight(label.value)}</span>))
