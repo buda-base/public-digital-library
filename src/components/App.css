@@ -244,6 +244,10 @@ body { overflow:auto !important;padding-right:0 !important; /*font-family:"Robot
    vertical-align: bottom;
    padding:0 5px;
 }
+
+.infoPanel p svg.info {
+   vertical-align: -6px;
+}
 .infoPanel p svg.error {
    transform:rotate(45deg);   
    vertical-align: -6px;
