@@ -44,7 +44,7 @@ import RefinementListWithLocalLabels from "../components/RefinementListWithLocal
 import SearchResultsHeader from "../components/SearchResultsHeader"
 
 // PDL
-import { top_right_menu, getPropLabel, fullUri, highlight } from '../../../components/App'
+import { top_right_menu, getPropLabel, fullUri, highlight, renderBanner } from '../../../components/App'
 import AppContainer from '../../../containers/AppContainer';
 import { Component } from 'react';
 import qs from 'query-string'
@@ -436,6 +436,12 @@ export class SearchPage extends Component<State, Props>
   }
   
   render() {
+
+    let infoPanelS
+    if(this.props.config && this.props.config.msg && !this.props.preview && !this.props.simple) {
+       infoPanelS = this.props.config.msg.filter(m => m.display && m.display.includes("search"))            
+       if(infoPanelS && infoPanelS.length) infoPanelS = renderBanner(this, infoPanelS, true)
+    }
     
     if(!this.props.config) return <div><Loader /></div>
 
@@ -456,7 +462,7 @@ export class SearchPage extends Component<State, Props>
 
     return (
       <>
-        { top_right_menu(this,null,null,null,null,this.props.location) }
+        { top_right_menu(this,null,null,null,null,this.props.location, infoPanelS) }
         <div className={"AppSK"+(this.props.advancedSearch?" advanced":"") + (" isFocused-"+this.state.collapse.isFocused) + (" settings-"+this.state.collapse.settings)}>
           { this.props.advancedSearch && <HomeCompo auth={this.props.auth} SKquery={this.state.SKquery} isFocused={this.state.collapse.isFocused} setIsFocused={toggleIsFocused}/>}
           <InstantSearch

@@ -9,7 +9,7 @@ import logdown from 'logdown'
 
 //import history from "../history"
 import store from '../index';
-import { top_right_menu, getLangLabel, getPropLabel, fullUri } from './App'
+import { top_right_menu, getLangLabel, getPropLabel, fullUri, renderBanner } from './App'
 import { auth, Redirect404 } from '../routes'
 import { initiateApp } from '../state/actions';
 //import LatestSyncs, { latestSyncsScopes } from "./LatestSyncs"
@@ -421,6 +421,12 @@ export class TraditionViewer extends Component<State, Props>
 
   render(props) {         
     
+    let infoPanelT
+    if(this.props.config && this.props.config.msg && !this.props.preview && !this.props.simple) {
+       infoPanelT = this.props.config.msg.filter(m => m.display && m.display.includes("tradition"))            
+       if(infoPanelT && infoPanelT.length) infoPanelT = renderBanner(this, infoPanelT, true)
+    }
+
     if(this.props.config?.tradition && this.props.tradition && !this.props.config?.tradition[this.props.tradition]) 
       return <Redirect404  /*history={history}*/  auth={auth}/>
     else  {
@@ -456,7 +462,7 @@ export class TraditionViewer extends Component<State, Props>
 
       return (
         <>
-          { top_right_menu(this, null, null, null, null, this.props.location) }
+          { top_right_menu(this, null, null, null, null, this.props.location, infoPanelT) }
           <div>
             <div class={"App tradition tradition-"+(this.props.tradition)}>
               <div class="SearchPane">

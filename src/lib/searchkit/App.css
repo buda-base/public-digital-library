@@ -1235,9 +1235,11 @@ header[data-hits="0"] ~ .hits .pagination,
 }
 
 
+.ETSBresult .ETSBheader + div em,
 .ETSBresult .ETSBheader + div .highlight {
   color:#d73449;
   font-weight:700;
+  font-style: normal;
 }
 
 .App.home #samples {

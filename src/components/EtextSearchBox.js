@@ -308,8 +308,10 @@ export function EtextSearchResult(props) {
   const label = useMemo(() => {
     let lang
     // WIP: handle language
-    if(res.snippet) return highlight(getLabel([{ value:res.snippet?.replace(/<em>/g,"↦").replace(/<\/em>/g,"↤")??"", lang:lang=pages?.find(p => p.seq == page)?.language??"bo" }])?.value, undefined, undefined, undefined, undefined, lang)
-    
+    //if(res.snippet) return highlight(getLabel([{ value:res.snippet?.replace(/<em>/g,"↦").replace(/<\/em>/g,"↤")??"", lang:lang=pages?.find(p => p.seq == page)?.language??"bo" }])?.value, undefined, undefined, undefined, undefined, lang)
+    // #1020
+    if(res.snippet) return HTMLparse(getLabel([{ value:res.snippet??"", lang:lang=pages?.find(p => p.seq == page)?.language??"bo" }])?.value)
+
   }, [res, etextLang, pages])
 
   //console.log("res:n",pages,n,start,page,vol,res,label,res.snippet,etextLang)

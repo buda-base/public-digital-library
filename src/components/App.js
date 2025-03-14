@@ -1170,7 +1170,7 @@ function InstantSearchBox(props) {
    </div>
 }
 
-export function top_right_menu(that,etextTitle,backUrl,etextres,isMirador,location)
+export function top_right_menu(that,etextTitle,backUrl,etextres,isMirador,location,infoPanel)
 {
    let onZhMirror = (that.props.config && that.props.config.chineseMirror)
    let onKhmerServer = (that.props.config && that.props.config.khmerServer)
@@ -1393,7 +1393,7 @@ export function top_right_menu(that,etextTitle,backUrl,etextres,isMirador,locati
                   
                }}>+</div> 
          </div>      
-      </StickyElement>{feedbucket}{innerSearch}</>)
+      </StickyElement>{feedbucket}{ infoPanel }{innerSearch}</>)
    else {
 
       const toggleHoverLogin = (hoverLogin,e) => {
@@ -1570,6 +1570,7 @@ export function top_right_menu(that,etextTitle,backUrl,etextres,isMirador,locati
        </div>
      </StickyElement>,
      feedbucket,
+     infoPanel,
      innerSearch,
       ]
    )}
@@ -7527,13 +7528,15 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
 
       let infoPanelH, infoPanelR
+      
       if(this.props.config && this.props.config.msg && !this.props.simple && !this.props.preview) {
-         if(message.length == 0 && !this.props.loading && !this.props.keyword) infoPanelH = this.props.config.msg.filter(m => m.display && m.display.includes("home"))
-         else infoPanelR = this.props.config.msg.filter(m => m.display && m.display.includes("search"))
+         if(message.length == 0 && !this.props.loading && !this.props.keyword) infoPanelH = this.props.config.msg.filter(m => m.display && m.display.includes("home") && this.props.location.pathname === "/" )
+         else infoPanelR = this.props.config.msg.filter(m => m.display && m.display.includes("home") && this.props.location.pathname === "/")
          
          if(infoPanelH && infoPanelH.length) infoPanelH = renderBanner(this, infoPanelH)
          if(infoPanelR && infoPanelR.length) infoPanelR = renderBanner(this, infoPanelR)
       }
+      
 
 
 
@@ -7696,6 +7699,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   </div>
                }
                { infoPanelH }
+               { infoPanelR }
                {/* <h2>BUDA Platform</h2> */}
                {/* <h3>Buddhist Digital Resource Center</h3> */}
                { (this.props.language && this.props.language != "-" || !this.props.keyword && !this.props.loading) && <>               
@@ -7951,7 +7955,6 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                </section>
             </>
            }
-           { infoPanelR }
            {  (message.length > 0 || message.length == 0 && !this.props.loading ) && <div id="res-header" ref={this._refs["header"]}>
                <div>
                   <div id="settings" onClick={() => this.setState({collapse:{...this.state.collapse, settings:!this.state.collapse.settings}})}><img src="/icons/settings.svg"/></div>
