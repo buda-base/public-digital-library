@@ -234,8 +234,24 @@ body { overflow:auto !important;padding-right:0 !important; /*font-family:"Robot
 }
 
 .infoPanel {
-   background:#204772;
-   background: #d73449;
+   
+   background-color: #2B6D9F;
+   background-color: #1A5E8C;
+   background-color: #4389BE;
+   background-color: #005F73;
+   background-color: #7BAFD4;
+   
+   background-color: #4A9D6D;
+   background-color: #568F56;
+   background-color: #2E7D32;
+   background-color: #00897B;
+   background-color: #7CB342;
+
+   background-color: #172832;
+   background-color: #204772;
+   
+   background-color: #d73449;
+   
    color: white;
    font-weight: 600;
    flex-wrap: wrap;
