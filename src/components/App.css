@@ -235,6 +235,7 @@ body { overflow:auto !important;padding-right:0 !important; /*font-family:"Robot
 
 .infoPanel {
    background: #d73449;
+   /* background:#204772; */
    color: white;
    font-weight: 600;
    flex-wrap: wrap;
@@ -683,6 +684,24 @@ footer #donate,
 .nav #donate { width:150px;height:50px;border-radius: 4px; color:white;background-color: #d73449; line-height:50px; 
    text-align:center; display:inline-block;  margin-left:25px; }
 .nav #donate img { vertical-align: middle; display: inline-block; margin-right:10px;}
+
+
+.nav #donate { 
+   background-color: #204772;
+   /* background-color: #172832; */
+
+   /* background-color: #2B6D9F; */
+   /* background-color: #1A5E8C; */
+   /* background-color: #4389BE; */
+   /* background-color: #005F73; */
+   /* background-color: #7BAFD4; */
+
+   /* background-color: #4A9D6D; */
+   /* background-color: #568F56; */
+   /* background-color: #2E7D32; */
+   /* background-color: #00897B; */
+   /* background-color: #7CB342; */
+}
 
 .nav #lang { cursor:pointer; margin-top:7px; margin-left:25px; display: inline-block;}
 .nav #lang img { display: inline-block; width:28px; } 
