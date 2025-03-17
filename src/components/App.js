@@ -8063,7 +8063,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                            <a href={"https://bdrc.io/donation?lang="+corpo_lang} target="_blank" rel="nofollow">{I18n.t("topbar.donate2")}</a>
                         </div>
                         <h3>{I18n.t("tradition.recent")}</h3> 
-                        <InnerSearchPageContainer /*noScrollFilters={true}*/ location={this.props.location} auth={this.props.auth} isOsearch={true} recent={true} />  
+                        <InnerSearchPageContainer /*noScrollFilters={true}*/ customPholder={I18n.t("resource.searchTtrad", {trad:I18n.t("tradition.title.recent"),interpolation: {escapeValue: false} }) } forceSearch={true} location={this.props.location} auth={this.props.auth} isOsearch={true} recent={true} />  
                            
                      </List> 
                   </>}

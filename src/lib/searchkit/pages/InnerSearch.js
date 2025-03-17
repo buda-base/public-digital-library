@@ -121,7 +121,7 @@ export class InnerSearchPage extends Component<State, Props>
 
     const storageRef = React.createRef() 
 
-    let { RID, T, recent, isOtherVersions, srcVersionID, noScrollFilters, customFilters, sortByDefault, customPholder  } = this.props
+    let { RID, T, recent, isOtherVersions, srcVersionID, noScrollFilters, customFilters, sortByDefault, customPholder, forceSearch  } = this.props
 
     /* // debug sortBy
     if(recent) {
@@ -151,12 +151,15 @@ export class InnerSearchPage extends Component<State, Props>
       */
     }
 
-    if(!pageFilters && customFilters) { 
-      pageFilters = customFilters
+    if(!pageFilters && customFilters || forceSearch) {
 
-      leftTitle = I18n.t("resource.findT",{type:I18n.t("types.tradition")})
+      if(!pageFilters && customFilters) pageFilters = customFilters
+
+      if(!forceSearch) leftTitle = I18n.t("resource.findT",{type:I18n.t("types.tradition")})
+      else leftTitle = I18n.t("resource.findTrecent")
 
       if(customPholder) placeholder = customPholder
+    
     }
 
     console.log("iSsC:", searchClient, routingConfig, this.props, pageFilters, storageRef, recent)        
@@ -197,11 +200,11 @@ export class InnerSearchPage extends Component<State, Props>
             <MaskWhenNoResult setEmpty={(val) => { if(val != this.state.isEmpty) this.setState({isEmpty:val}); }} />
             <Loader loaded={!this.props.loading}/>
             <div data-prop="tmp:search">
-              { !recent && <div className="searchbox">
+              { (!recent || forceSearch) && <div className="searchbox">
                 <h3><span><a class="propref"><span>{leftTitle}{I18n.t("punc.colon")}</span></a></span></h3>
                 <div className="search inner-search-bar group">
                   <div>
-                    <SearchBoxAutocomplete inner={true} searchAsYouType={false} loading={this.props.loading} {...{ pageFilters, placeholder, routing, that: this }}/>
+                    <SearchBoxAutocomplete inner={true} searchAsYouType={false} loading={this.props.loading} {...{ forceSearch, pageFilters, placeholder, routing, that: this }}/>
                   </div>
                 </div>
               </div> } 
@@ -218,7 +221,7 @@ export class InnerSearchPage extends Component<State, Props>
                 }
                 <div className="simple-filter-BG" onClick={toggleSettings}></div>
                 <div className="main-content">
-                  <SearchResultsHeader that={this} inner={true} recent={recent&&!sortByDefault} {...{ storageRef }} />
+                  <SearchResultsHeader that={this} inner={true} recent={recent&&!sortByDefault} {...{ storageRef, forceSearch }} />
                   <div className="hits">
                     <Configure hitsPerPage={isOtherVersions ? 11 * (this.state.toggled ? 2 : 1) : (recent ? 20 : 5)} filters={pageFilters} />
                     <HitsWithLabels that={this} {...{ routing, recent:recent&&!sortByDefault, storageRef, isOtherVersions, srcVersionID }} />

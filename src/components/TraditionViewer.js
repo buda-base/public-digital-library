@@ -382,7 +382,7 @@ export class TraditionViewer extends Component<State, Props>
       </div> }
       <div id="tradi-recent" className="tradi-content">
         <h2>{I18n.t("tradition.recent")}</h2> 
-        <InnerSearchPageContainer /*history={this.props.history} */  location={this.props.location} auth={this.props.auth} isOsearch={true} recent={true} customFilters={filters[this.props.tradition]}/>          
+        <InnerSearchPageContainer /*history={this.props.history} */ customPholder={I18n.t("resource.searchTtrad", {trad:I18n.t("tradition.title."+(this.props.tradition=== "bo"?"recent":this.props.tradition+"T")),interpolation: {escapeValue: false} }) } forceSearch={this.props.tradition === "bo"} location={this.props.location} auth={this.props.auth} isOsearch={true} recent={true} customFilters={filters[this.props.tradition]}/>          
       </div>
     </>)
   }

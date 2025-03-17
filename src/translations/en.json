@@ -798,6 +798,7 @@
       "findT":"Find Texts Related to this {{type}}",
       "findTbyP":"Find texts created by this person",
       "findTaboutT":"Find texts about this topic",
+      "findTrecent":"Find Texts in the Recent Acquisitions",
       "searchT":"Search this {{type}}",
       "goB":"Back",
       "prev":"Prev",
@@ -836,7 +837,8 @@
          "boT":"Tibetan Tradition",
          "piT":"Pali and South East Asian Tradition",
          "saT":"Sanskrit Tradition",
-         "zhT":"Chinese Tradition"
+         "zhT":"Chinese Tradition",
+         "recent":"Recent Acquisitions"
       },
       "all":"All texts",
       "links":"Quick Links",

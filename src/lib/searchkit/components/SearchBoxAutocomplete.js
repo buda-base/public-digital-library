@@ -32,7 +32,7 @@ export function updateHistory(query, pageFilters) {
 }
   
 
-const redirect = (refine, query, pageFilters, navigate, location) => {
+const redirect = (refine, query, pageFilters, navigate, location, forceSearch) => {
   //console.warn("redir:", query, pageFilters)
   updateHistory(query, pageFilters)
   
@@ -42,7 +42,7 @@ const redirect = (refine, query, pageFilters, navigate, location) => {
   const loca = location  
   if(loca.pathname.startsWith("/search") 
     || !loca.pathname.endsWith("/search") && !loca.pathname.endsWith("/show/")  // && !loca.pathname.startsWith("/tradition/") 
-       && !pageFilters){          
+       && !pageFilters && !forceSearch){          
              
       
     /*
@@ -68,7 +68,7 @@ const redirect = (refine, query, pageFilters, navigate, location) => {
 
 const MAX_ITEMS = 8, MAX_ITEMS_HISTO = 3 
 
-const SearchBoxAction = ({ inputValue, isSearchStalled, refine, pageFilters, onReset }) => {
+const SearchBoxAction = ({ inputValue, isSearchStalled, refine, pageFilters, onReset, forceSearch }) => {
 
   const navigate = useNavigate()
   const location = useLocation()
@@ -76,7 +76,7 @@ const SearchBoxAction = ({ inputValue, isSearchStalled, refine, pageFilters, onR
   return (
     <>
       <button type="submit" className="ais-SearchBox-submit" 
-        onClick={()=> redirect(refine, inputValue, pageFilters, navigate, location)}>
+        onClick={()=> redirect(refine, inputValue, pageFilters, navigate, location, forceSearch)}>
           Submit
       </button>
       <button
@@ -203,7 +203,7 @@ export const formatResponseForURLSearchParams = (query) => {
 const SearchBoxAutocomplete = (props) => {
   const { query, refine  } = useSearchBox(props);
   const { status, setUiState, indexUiState, results, refresh } = useInstantSearch();
-  const { loading, placeholder, pageFilters, routing, that, inner } = props
+  const { loading, placeholder, pageFilters, routing, that, inner, forceSearch } = props
 
   const forceFocus = that?.state.forceFocus
 
@@ -302,7 +302,7 @@ const SearchBoxAutocomplete = (props) => {
     const newQuery = formatResponseForURLSearchParams(item.res);
     setQuery(newQuery);
     setIsFocused(false);
-    redirect(refine, newQuery, pageFilters, navigate, location);    
+    redirect(refine, newQuery, pageFilters, navigate, location, forceSearch);    
   }, [refine, pageFilters])
 
   const handleChange = useCallback((newQuery) => {
@@ -434,7 +434,8 @@ const SearchBoxAutocomplete = (props) => {
         isSearchStalled={isSearchStalled || loading}
         refine={refine}
         pageFilters={pageFilters}
-        onReset={() => setQuery("")}        
+        onReset={() => setQuery("")}      
+        forceSearch={forceSearch}  
       />
       <SuggestsList
         {...{ selected, setIsFocused, pageFilters }}

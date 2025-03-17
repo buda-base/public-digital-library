@@ -1063,6 +1063,13 @@ header[data-hits="0"] ~ .hits .pagination,
   margin-bottom:20px;
 }
 
+
+.home-tradi-grid ~ .AppSK.InnerSearchPage .searchbox > .inner-search-bar:not(#a),
+.tradition .AppSK.InnerSearchPage .searchbox > .inner-search-bar:not(#a) {
+  width: calc(100% - 260px);
+}
+
+.home-tradi-grid ~ .AppSK.InnerSearchPage.data .content .main-content h3,
 .tradition:not(#a) .AppSK.InnerSearchPage.data .content .main-content h3 {
   margin-top:0px;
   margin-bottom:20px;
@@ -1070,6 +1077,25 @@ header[data-hits="0"] ~ .hits .pagination,
   text-transform: none;
   text-align: left;
   font-weight:400;
+}
+
+.home-tradi-grid ~ .AppSK .inner-search-bar:not(#a) h2 {
+  visibility: hidden;
+}
+
+.home-tradi-grid ~ .AppSK.InnerSearchPage .searchbox {
+  padding:0 70px;
+  box-sizing: border-box;
+}
+
+.home-tradi-grid ~ .AppSK.InnerSearchPage.data .content .main-content h3 {
+  padding-right:5px;
+}
+
+.home-tradi-grid ~ .AppSK .propref span {
+  color: #343434;
+  font-size: 16px;
+  font-weight: 600;
 }
 
 #tradi-recent .AppSK { width:100%; }
@@ -2632,12 +2658,19 @@ header[data-hits="0"] ~ .hits .pagination,
     top:0;
   }
 
+  .home-tradi-grid ~ .AppSK.InnerSearchPage .searchbox {
+    padding:0 10px 0 55px;
+  }
 }
 
 
 
 @media (max-width:800px){
   
+
+  .home-tradi-grid ~ .AppSK.InnerSearchPage .searchbox {
+    padding:0 20px;
+  }
 
   #root .App:not(#a) #res-container {
     padding:10px;
@@ -2821,10 +2854,39 @@ header[data-hits="0"] ~ .hits .pagination,
     bottom:auto;
     top:calc(max(100vw,375px) * 490 / 1440 - 17px);
   }
+
+  .AppSK.InnerSearchPage.data .searchbox {
+    flex-wrap:wrap;
+  }
+
+  .AppSK.InnerSearchPage .searchbox h3:not(#a) {
+    margin-bottom: 0;
+    margin-left:20px;
+  }
+
+  .inner-search-bar:not(#a) > div:not(#a) {
+    padding-left:50px; 
+  }
+
+  .AppSK.InnerSearchPage:not(#a) .searchbox > .inner-search-bar:not(#a) {
+    width:100%;
+  }
 }
 
 @media (max-width:665px){
   
+  .inner-search-bar:not(#a) > div:not(#a) {
+    padding-left:20px; 
+  }
+
+  .tradition .inner-search-bar:not(#a) > div:not(#a) {
+    padding-left:40px; 
+  }
+
+  .AppSK.InnerSearchPage .searchbox h3:not(#a) {
+    margin-left:0px;
+  }
+
   #root .propCollapse, 
   #root .has-collapse.custom .propCollapseHeader, 
   .resource .data [data-prop="bdo:workHasInstance"] .group, 
