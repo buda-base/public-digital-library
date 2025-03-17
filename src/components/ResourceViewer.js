@@ -11378,6 +11378,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
          // <Loader className="resource-viewer-loader" loaded={false}  options={{position:"fixed",left:"50%",top:"50%"}} />,
          <div class={isMirador?"H100vh OF0":""}>
             { ["Images","Instance"].includes(_T) && <abbr class="unapi-id" title={this.props.IRI}></abbr> }           
+            <div class="infoPanel" style={{display:"none"}}></div>
             <div {...searchUrl?{"data-searchUrl":searchUrl}:{}} className={"resource "+hasTabs+getEntiType(this.props.IRI).toLowerCase() + (this.props.simple?" simple":"") + (this.props.preview?" preview":"") /*+(!this.props.portraitPopupClosed?" portrait-warn-on":"")*/} {...this.props.simple?{onClick:sendMsg}:{}}>                                             
                {/* {searchUrl &&  */}
                <div class="ariane" data-level={0}>
