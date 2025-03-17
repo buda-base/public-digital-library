@@ -235,6 +235,9 @@ body { overflow:auto !important;padding-right:0 !important; /*font-family:"Robot
 
 .infoPanel {
    
+   /* background-color: #d73449; */
+
+/*    
    background-color: #2B6D9F;
    background-color: #1A5E8C;
    background-color: #4389BE;
@@ -250,8 +253,10 @@ body { overflow:auto !important;padding-right:0 !important; /*font-family:"Robot
    background-color: #172832;
    background-color: #204772;
    
-   background-color: #d73449;
+    */
    
+   background-color: #00897B;
+
    color: white;
    font-weight: 600;
    flex-wrap: wrap;
@@ -701,7 +706,7 @@ footer #donate,
    text-align:center; display:inline-block;  margin-left:25px; }
 .nav #donate img { vertical-align: middle; display: inline-block; margin-right:10px;}
 
-
+/*
 .nav #donate { 
    
    background-color: #2B6D9F;
@@ -719,6 +724,7 @@ footer #donate,
    background-color: #172832;
    background-color: #204772;
 }
+*/
 
 .nav #lang { cursor:pointer; margin-top:7px; margin-left:25px; display: inline-block;}
 .nav #lang img { display: inline-block; width:28px; } 
@@ -872,7 +878,7 @@ footer #donate,
 @media(max-width:1280px) {
    .App.home.khmerServer .SearchPane #logo > div { padding-left:50px;  }
 
-   /* .nav #donate { width:60px; color:transparent;padding-left:10px;} */
+   .nav #donate { width:60px; color:transparent;padding-left:10px;}
    .nav .khmer #BDRC span { display:none; }
 
    .nav #logo.khmer + .links a { margin:10px 10px 0 15px; }
@@ -5687,10 +5693,10 @@ feedbucket-app:not(.on)  { display:none !important; }
 
    #res-header > div { margin-left:0px; width:100%; padding:0 24px !important;}
 
-   /* .nav #donate { width:60px; color:transparent;padding-left:10px; font-size:0; } */
+   .nav #donate { width:60px; color:transparent;padding-left:10px; font-size:0; } 
+   
+   /* .nav #donate { width:auto; padding:0 10px; white-space: nowrap;} */
    /* #root .nav #donate img { display:none; } */
-
-   .nav #donate { width:auto; padding:0 10px; white-space: nowrap;}
 
    #results, #samples { width:100%;margin:0 auto; padding:30px calc((100vw - 700px) / 2);}
 
@@ -5779,8 +5785,10 @@ feedbucket-app:not(.on)  { display:none !important; }
    .nav { padding:0 calc((100% - 700px) / 2); }
    .nav #lang { margin-left:20px; }
 
-   .nav #donate { width:35px; margin-left:15px; }
-   .nav #donate img { display:none; }
+   .nav #donate { width:40px; margin-left:15px; }
+
+   /* .nav #donate { width:35px; margin-left:15px; } */
+   /* .nav #donate img { display:none; } */
 
    #res-header > div .widget-header { 
       margin-left: 145px;
