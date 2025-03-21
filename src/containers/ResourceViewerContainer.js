@@ -378,6 +378,8 @@ const mapDispatchToProps = (dispatch, ownProps) => {
             setTimeout(() => {             
                if(nav && !get.part && document.querySelector(//".etext-nav-parent.someClass"
                      ".resource.etext-view #etext-scroll > :first-child"
+                  ) && !document.querySelector(
+                     ".resource.etext-view #etext-scroll .highlight"
                   )) nav.scrollIntoView()
 
                const timer = setInterval(() => {

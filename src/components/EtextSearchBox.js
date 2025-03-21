@@ -310,8 +310,17 @@ export function EtextSearchResult(props) {
     // WIP: handle language
     //if(res.snippet) return highlight(getLabel([{ value:res.snippet?.replace(/<em>/g,"↦").replace(/<\/em>/g,"↤")??"", lang:lang=pages?.find(p => p.seq == page)?.language??"bo" }])?.value, undefined, undefined, undefined, undefined, lang)
     // #1020
-    if(res.snippet) return HTMLparse(getLabel([{ value:res.snippet??"", lang:lang=pages?.find(p => p.seq == page)?.language??"bo" }])?.value)
-
+    if(res.snippet) {
+      let val = getLabel([{ value:res.snippet??"", lang:lang=pages?.find(p => p.seq == page)?.language??"bo" }])
+      // #1026
+      if(val?.lang?.startsWith("bo")) {
+        val = val?.value ?? ""
+        val = val.replace(/\[(<\/?em>)\]/g,"$1")
+      } else {
+        val = val?.value ?? ""
+      }
+      return HTMLparse(val)
+    }
   }, [res, etextLang, pages])
 
   //console.log("res:n",pages,n,start,page,vol,res,label,res.snippet,etextLang)
