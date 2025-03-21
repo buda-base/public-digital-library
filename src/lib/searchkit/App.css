@@ -1633,6 +1633,8 @@ header[data-hits="0"] ~ .hits .pagination,
 }
 */
 
+.preview-etext .etext-top-links .lang { display:none; }
+
 .etext-and-preview-not-available[data-rootid]+[data-prop="tmp:propHasEtext"]:not(.has-preview-true) h3 {
   visibility:hidden;
 }

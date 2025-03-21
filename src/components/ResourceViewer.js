@@ -6159,9 +6159,9 @@ class ResourceViewer extends Component<Props,State>
 
                      </div>
                   </div>
-            }
+               }
             
-            return  this.state.openMirador?<></>:( <div {...rootID?{"data-rootID":rootID}:{}} data-prop={shortUri(k)} class={hasEtextAndNotAvail?" etext-and-preview-not-available":""} >               
+               return  this.state.openMirador?<></>:( <div {...rootID?{"data-rootID":rootID}:{}} data-prop={shortUri(k)} class={hasEtextAndNotAvail?" etext-and-preview-not-available":""} >               
                <h3><span>{this.proplink(k,null,n)}{elem.filter(e => e.value !== _tmp+"notAvailable").length > 1  || this.state.checkedEtext === rootID ? <span class="ETnum">{" "+I18n.t("punc.num",{num:i+1})}</span> : ""}{I18n.t("punc.colon")}</span> </h3>
                {this.preprop(k,0,n)}
                <div class="group preview-etext">
@@ -10867,8 +10867,8 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
       
          // TODO fix loader not hiding when closing then opening again
 
-         const monlamVisible = this.state.enableDicoSearch && (this.state.monlam && this.state.collapse.monlamPopup || monlamResults)
-
+         const monlamVisible = this.state.enableDicoSearch && (this.state.monlam && this.state.collapse.monlamPopup || monlamResults)   
+         
          if(this.props.previewEtext) { 
             let vols
             if(!this.state.currentText && !this.props.previewEtext?.outETvol?.length) {
@@ -10918,85 +10918,91 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                   }
                </>) 
          }
-         else return ([           
-                     
-            !this.props.previewEtext && !this.props.disableInfiniteScroll && <div class="etext-header-breadcrumbs" >
-               <div class="ariane" data-level={level}>
-                  {breadcrumbs}
-               </div>
-            </div>,
+         else { 
+            let inCollec = this.getResourceElem(bdo+"inCollection")
+            if(!inCollec?.length) inCollec = this.getResourceElem(bdo+"inCollection", this.props.disableInfiniteScroll.etextRes)
+         
+            return ([           
+                        
+               !this.props.previewEtext && !this.props.disableInfiniteScroll && <div class="etext-header-breadcrumbs" >
+                  <div class="ariane" data-level={level}>
+                     {breadcrumbs}
+                  </div>
+               </div>,
 
-            this.renderEtextNav(etextAccessError, breadcrumbs),
-            this.props.topEtextRefs,
-            <div class={(monlamResults ? "withMonlam " : "")+(this.props.openEtextRefs ? "withOutline ":"")+(this.state.ETSBresults && !this.state.collapse.ETSBresults ? "withETSBresults ":"")}>               
-               { monlamResults && <link rel="stylesheet" href="https://monlamdictionary.com/files/css/basic.css" /> }               
-               { this.renderMirador(isMirador) }           
-               <div class="resource etext-view" >                                    
-                  { this.props.disableInfiniteScroll && etextRes && !etextAccessError && <>
-                     <div style={{ lineHeight:"23px"}}>
-                      { this.renderOCR(<Trans i18nKey="access.OCRnew" components={{ bold: <b style={{ fontWeight:600 }}/>, nl: <br /> }} />) }
-                     </div>
-                     <div class={"etext-top-links"}>
-                        <Link to={this.renderEtextLink(etextRes)} onClick={() => { 
-                           if(this.props.disableInfiniteScroll?.outETvol?.length) {
-                              const loadETres = shortUri(this.props.disableInfiniteScroll.outETvol[0].value)
-                              this.props.onGetResource(loadETres)
-                              //this.props.onReinitEtext(loadETres, { startChar: this.props.disableInfiniteScroll.outETstart[0].value})                  
-                           }
-                        }}>{I18n.t("resource.openViewer")}</Link>
-                        { this.renderEtextDLlink(etextAccessError, true) }
-                     </div> 
-                  </>}
-                  <div class="">
-                     { //(this.props.disableInfiniteScroll ? this.props.loading?.startsWith && this.props.loading?.startsWith("etext") : this.props.loading ) 
-                         this.props.loading && <Loader className="etext-viewer-loader"  loaded={!this.props.loading}  
-                           {...!this.props.disableInfiniteScroll ? {options:{position:"fixed",left:"calc(50% + 200px)",top:"50%"}}:{}}
-                        />  }
-                     { this.unpaginated() && !this.props.disableInfiniteScroll && <h4 style={{fontSize:"16px",fontWeight:600,textAlign:"center", marginBottom:"50px",top:"20px"}}>{I18n.t("resource.unpag")}</h4>}
-                     { !this.props.disableInfiniteScroll && etextAccessError && <h4 style={{fontSize:"16px",fontWeight:600,textAlign:"center",marginTop:"80px"}}>
-                        <><img style={{height:"50px", verticalAlign:"middle", marginRight:"10px"}} src="/icons/unknown.svg"/><Trans i18nKey="access.fairuseEtext" components={{ bold: <u /> }} /></>
-                     </h4> }
-                     { !etextAccessError && (!this.props.disableInfiniteScroll?.outETvol?.length ? etext_data : <div onClick={() => {
-                        const loadETres = shortUri(this.props.disableInfiniteScroll.outETvol[0].value)
-                        this.props.onGetResource(loadETres)
-                        //this.props.onReinitEtext(loadETres, { startChar: this.props.disableInfiniteScroll.outETstart[0].value})                  
-                        this.props.navigate(this.renderEtextLink(etextRes))
-                     }}>{etext_data}</div>)}
-                     { this.props.disableInfiniteScroll && etextAccessError && <h4  style={{ lineHeight:"23px" }}>
-                        <div class="images-thumb-links"  data-n={5} style={{ marginLeft:0 }}>
-                           <a class="urilink nolink noIA"><BlockIcon style={{width:"18px",verticalAlign:"top"}}/>{I18n.t("access.restrictedC")}</a>
-                           <div class="data access generic"><h3><span style={{ textTransform: "none", width: "100%" }}><Trans i18nKey="access.fairuseEtext" components={{ bold: <span style={{ textTransform: "none"}} /> }}/></span></h3></div>
+               this.renderEtextNav(etextAccessError, breadcrumbs),
+               this.props.topEtextRefs,
+               <div class={(monlamResults ? "withMonlam " : "")+(this.props.openEtextRefs ? "withOutline ":"")+(this.state.ETSBresults && !this.state.collapse.ETSBresults ? "withETSBresults ":"")}>               
+                  { monlamResults && <link rel="stylesheet" href="https://monlamdictionary.com/files/css/basic.css" /> }               
+                  { this.renderMirador(isMirador) }           
+                  <div class="resource etext-view" >                                    
+                     { this.props.disableInfiniteScroll && etextRes && !etextAccessError && <>
+                        <div style={{ lineHeight:"23px"}}>
+                        { this.renderOCR(<Trans i18nKey="access.OCRnew" components={{ bold: <b style={{ fontWeight:600 }}/>, nl: <br /> }} />) }
                         </div>
-                     </h4> } 
-                  </div>                     
-               </div>
-               {!this.props.disableInfiniteScroll && <GenericSwipeable classN={"monlamResults "+(monlamVisible ? "visible" : "")} onSwipedRight={() => { 
-                     this.setState({noHilight:false, monlam:null, collapse:{ ...this.state.collapse, monlamPopup: true }})
-                     this.props.onCloseMonlam()
-                  }}>                  
-                  <SimpleBar>
-                     <h2>
-                        <a href="https://monlamdic.com" target="_blank" rel="noopener noreferrer"><img width="32" src="/icons/monlam.png" title="monlamdic.com"/></a>
-                        <a href="https://monlamdic.com" target="_blank" rel="noopener noreferrer">{I18n.t("viewer.monlamTitle")}</a>
-                        {/* <a href="https://monlamdic.com" target="_blank" rel="noopener noreferrer"><img width="32" src="/icons/monlam.png" title="monlamdic.com"/></a> */}
-                        <Close width="32" onClick={() => { 
-                           this.setState({noHilight:false, monlam:null, collapse:{ ...this.state.collapse, monlamPopup: true }})
-                           this.props.onCloseMonlam()
-                        }}/>
-                     </h2>
-                     { this.props.monlamResults == true && <Loader  /> }
-                     { monlamResults }
-                  </SimpleBar>
-               </GenericSwipeable> }
-               { !this.props.disableInfiniteScroll && <GenericSwipeable classN={"ETSBresults "+(!monlamVisible && this.state.ETSBresults&&!this.state.collapse.ETSBresults? "visible" : "")} onSwipedRight={() => { 
-                     this.setState({ collapse:{ ...this.state.collapse, ETSBresults: true }})
-                  }}>
-                  <SimpleBar>
-                     { ETSBresults }
-                  </SimpleBar>
-               </GenericSwipeable> }
-            </div>,
-         ])
+                        <div class={"etext-top-links"}>
+                           <Link to={this.renderEtextLink(etextRes)} onClick={() => { 
+                              if(this.props.disableInfiniteScroll?.outETvol?.length) {
+                                 const loadETres = shortUri(this.props.disableInfiniteScroll.outETvol[0].value)
+                                 this.props.onGetResource(loadETres)
+                                 //this.props.onReinitEtext(loadETres, { startChar: this.props.disableInfiniteScroll.outETstart[0].value})                  
+                              }
+                           }}>{I18n.t("resource.openViewer")}</Link>
+                           { this.renderEtextDLlink(etextAccessError, true) }
+                           { inCollec?.length && <div>{I18n.t("resource.inCollection",{count:inCollec.length})} {inCollec.map((c,i) => ([i > 0 ? " | ":null,this.uriformat("", { type:"uri", value:c.value })]))}</div>}
+                        </div> 
+                     </>}
+                     <div class="">
+                        { //(this.props.disableInfiniteScroll ? this.props.loading?.startsWith && this.props.loading?.startsWith("etext") : this.props.loading ) 
+                           this.props.loading && <Loader className="etext-viewer-loader"  loaded={!this.props.loading}  
+                              {...!this.props.disableInfiniteScroll ? {options:{position:"fixed",left:"calc(50% + 200px)",top:"50%"}}:{}}
+                           />  }
+                        { this.unpaginated() && !this.props.disableInfiniteScroll && <h4 style={{fontSize:"16px",fontWeight:600,textAlign:"center", marginBottom:"50px",top:"20px"}}>{I18n.t("resource.unpag")}</h4>}
+                        { !this.props.disableInfiniteScroll && etextAccessError && <h4 style={{fontSize:"16px",fontWeight:600,textAlign:"center",marginTop:"80px"}}>
+                           <><img style={{height:"50px", verticalAlign:"middle", marginRight:"10px"}} src="/icons/unknown.svg"/><Trans i18nKey="access.fairuseEtext" components={{ bold: <u /> }} /></>
+                        </h4> }
+                        { !etextAccessError && (!this.props.disableInfiniteScroll?.outETvol?.length ? etext_data : <div onClick={() => {
+                           const loadETres = shortUri(this.props.disableInfiniteScroll.outETvol[0].value)
+                           this.props.onGetResource(loadETres)
+                           //this.props.onReinitEtext(loadETres, { startChar: this.props.disableInfiniteScroll.outETstart[0].value})                  
+                           this.props.navigate(this.renderEtextLink(etextRes))
+                        }}>{etext_data}</div>)}
+                        { this.props.disableInfiniteScroll && etextAccessError && <h4  style={{ lineHeight:"23px" }}>
+                           <div class="images-thumb-links"  data-n={5} style={{ marginLeft:0 }}>
+                              <a class="urilink nolink noIA"><BlockIcon style={{width:"18px",verticalAlign:"top"}}/>{I18n.t("access.restrictedC")}</a>
+                              <div class="data access generic"><h3><span style={{ textTransform: "none", width: "100%" }}><Trans i18nKey="access.fairuseEtext" components={{ bold: <span style={{ textTransform: "none"}} /> }}/></span></h3></div>
+                           </div>
+                        </h4> } 
+                     </div>                     
+                  </div>
+                  {!this.props.disableInfiniteScroll && <GenericSwipeable classN={"monlamResults "+(monlamVisible ? "visible" : "")} onSwipedRight={() => { 
+                        this.setState({noHilight:false, monlam:null, collapse:{ ...this.state.collapse, monlamPopup: true }})
+                        this.props.onCloseMonlam()
+                     }}>                  
+                     <SimpleBar>
+                        <h2>
+                           <a href="https://monlamdic.com" target="_blank" rel="noopener noreferrer"><img width="32" src="/icons/monlam.png" title="monlamdic.com"/></a>
+                           <a href="https://monlamdic.com" target="_blank" rel="noopener noreferrer">{I18n.t("viewer.monlamTitle")}</a>
+                           {/* <a href="https://monlamdic.com" target="_blank" rel="noopener noreferrer"><img width="32" src="/icons/monlam.png" title="monlamdic.com"/></a> */}
+                           <Close width="32" onClick={() => { 
+                              this.setState({noHilight:false, monlam:null, collapse:{ ...this.state.collapse, monlamPopup: true }})
+                              this.props.onCloseMonlam()
+                           }}/>
+                        </h2>
+                        { this.props.monlamResults == true && <Loader  /> }
+                        { monlamResults }
+                     </SimpleBar>
+                  </GenericSwipeable> }
+                  { !this.props.disableInfiniteScroll && <GenericSwipeable classN={"ETSBresults "+(!monlamVisible && this.state.ETSBresults&&!this.state.collapse.ETSBresults? "visible" : "")} onSwipedRight={() => { 
+                        this.setState({ collapse:{ ...this.state.collapse, ETSBresults: true }})
+                     }}>
+                     <SimpleBar>
+                        { ETSBresults }
+                     </SimpleBar>
+                  </GenericSwipeable> }
+               </div>,
+            ])
+         }
       }
       else {
 
