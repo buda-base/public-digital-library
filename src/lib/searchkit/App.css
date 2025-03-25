@@ -3120,6 +3120,7 @@ header[data-hits="0"] ~ .hits .pagination,
   .nav #logo a:first-child span + .buda-small {
     position: absolute;
     bottom:10px;
+    z-index: 1;
   }
 
   .nav #logo {

@@ -668,6 +668,8 @@ html[lang="bo"] .msg-popup .front p { font-size:18px;}
 #pop-login,
 #lang-login { cursor:pointer; }
 
+#lang-login { display: flex; align-items: center;}
+
 .over-nav + .nav .inner-nav > div { margin:0 25px; line-height:44px;height:44px; font-size:16px;}
 
 .over-nav + .nav .inner-nav > div a { font-size:16px; color:black;}
@@ -1893,7 +1895,8 @@ footer #donate,
    text-align:center; display:inline-block;  margin-left:25px; }
 .nav #donate img { vertical-align: middle; display: inline-block; margin-right:10px;}
 
-.nav #lang { cursor:pointer; /*margin-top:7px;*/ margin-left:25px; display: inline-block;}
+.nav #lang { cursor:pointer; /*margin-top:7px; margin-left:25px;*/ display: inline-block;}
+.nav .lang-login > :first-child { margin-left:25px; }
 #uiLangPopup #lang img,
 .nav #lang img { display: inline-block; width:28px; } 
 
@@ -4816,6 +4819,10 @@ div.mustLogin a:hover { border:none; text-decoration: underline;}
 #feedback .tooltip a { cursor: pointer; }
 #feedback .tooltip:not(.on) { display: none; }
 
+#feedback.top .tooltip {
+   right:-4px;
+   top:100%;
+}
 
 .popHowTo.bg { z-index:1000; background-color:rgba(0,0,0,0.25)}
 
@@ -7103,16 +7110,36 @@ a.result .contenu ul > div:last-child h3[lang=bo] span { font-size:18px;}
 
 
 /* feedbucket */
+#feedback.top:not(.on,.off),
 .nav + #feedback:not(.on,.off),
 feedbucket-app:not(.on)  { display:none !important; }
 
 #root.recording ~ feedbucket-app  { display:block !important; }
 
+#feedback.top,
 .nav + #feedback { position:fixed; color:#d73449; background:white; display: flex; border-radius: 20px 20px; width:40px; height: 40px; box-sizing: border-box; 
-   box-shadow: 0 2px 4px rgba(187, 187, 187, 0.5); bottom:calc(50% - 20px); right:10px ; cursor: pointer; justify-content: center; align-items: center; z-index:1000000;
+   box-shadow: 0 2px 4px rgba(187, 187, 187, 0.5); bottom:calc(50% - 20px); right:10px ; cursor: pointer; justify-content: center; align-items: center; z-index:10000000;
 }
+
+#feedback.top {
+   position:relative;bottom:auto;right:auto;top:auto;left:auto;box-shadow: none; margin-right:4px;z-index:0;
+}
+
+
+#feedback.top svg {
+   color:#d73449;
+}
+
+#feedback:not(.top):not(.X) { visibility: hidden; }
+
+#feedback.top svg,
 .nav + #feedback svg { width:24px; height:24px; display:none; position: absolute;}
+
+#feedback.top.X svg:first-of-type,
+#feedback.top:not(.X) svg:first-of-type,
 .nav + #feedback:not(.X) svg:first-of-type { display: block;}
+
+/* #feedback.X.top svg:last-of-type, */
 .nav + #feedback.X svg:last-of-type { display: block;}
 
 .nav + #feedback.X { top:calc(50% + 117px); right:10px; bottom:auto; }
@@ -7444,7 +7471,7 @@ feedbucket-app:not(.on)  { display:none !important; }
 {
 
    .nav { padding:0 calc((100% - 700px) / 2); }
-   .nav #lang { margin-left:20px; }
+   /* .nav #lang { margin-left:20px; } */
    .nav #donate { width:40px; margin-left:15px; }
 
    #res-header > div .widget-header { 

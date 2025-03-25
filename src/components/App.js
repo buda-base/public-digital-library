@@ -1193,6 +1193,25 @@ export function top_right_menu(that,etextTitle,backUrl,etextres,isMirador,locati
          }}>{I18n.t("viewer.mustLoginFeedback")}</a>
       </div></div>
 
+   let feedbucketTop = <div id="feedback" title={I18n.t("topbar.feedback")} className={"top "+ that.props.feedbucket + (that.props.keyword&&!that.props.IRI?" top":"")} onClick={(ev) => {
+      if(!document.querySelector('feedbucket-app')) {
+         $("#feedback .tooltip").toggleClass("on")
+      } else {
+         $("feedbucket-app").toggleClass("on")
+         that.props.onFeedbucketClick("on "+(that.props.feedbucket?.endsWith("X")?"":"X"))
+      }
+   }}><IconButton><Feedback /></IconButton>{/*<Close />*/}<div class="tooltip mustLogin">      
+         <div class="bg" onClick={(e) => {
+            $("#feedback .tooltip").removeClass("on")
+            e.stopPropagation()
+         }}></div>
+         <a onClick={(e) => { 
+            that.props.auth.login(location)            
+            e.stopPropagation()
+         }}>{I18n.t("viewer.mustLoginFeedback")}</a>
+      </div></div>
+
+
    let logo = [
             <div id="logo">
                <Link to="/?sortBy=firstScanSyncDate_desc&type%5B0%5D=Instance" {...(that?.props?.advancedSearch || that?.state?.filters) ? {onClick:(ev) => { 
@@ -1556,6 +1575,7 @@ export function top_right_menu(that,etextTitle,backUrl,etextres,isMirador,locati
          </div>
 
          <div id="lang-login">
+         { feedbucketTop } 
          { lang_selec(that) }
          { that.props.auth && login }
          <IconButton id="burger" onClick={() => that.setState({collapse:{...that.state.collapse,burgerOn:!that.state.collapse.burgerOn}})}>
