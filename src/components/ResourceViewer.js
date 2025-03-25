@@ -2293,7 +2293,7 @@ class ResourceViewer extends Component<Props,State>
          prop[tmp+"BDRCworkId"] = [{ 
             type:"html", 
             value:<span>
-               <Link to={window.location.hostname === "localhost" || window.location.hostname.startsWith("library-dev") 
+               <Link to={window.location.hostname != "library.bdrc.io" 
                      ? "/show/"+shortUri(prop[bdo+"instanceOf"]?.[0]?.value)
                      : prop[bdo+"instanceOf"]?.[0]?.value}>
                         {I18n.t("resource.workId1")}
@@ -10201,13 +10201,18 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
          //loggergen.log("WithD?",redir);
          if(redir[adm+"replaceWith"]) {
             redir = shortUri(redir[adm+"replaceWith"][0].value)                        
-            
+           
+            //loggergen.log("rw:", redir, this.props);
+
             let path = "/show/" 
             if(this.props.simple) path = "/simple/"
             if(this.props.preview) path = "/preview/"
 
             if(redir != this.props.IRI) {
-               return (               
+               if(this.props.pdfDownloadOnly) {
+                  return <ResourceViewerContainer {...this.props} IRI={redir}/>
+               }
+               else return (               
                   <Redirect404 navigate={this.props.navigate} location={this.props.location} message={"Record withdrawn in favor of "+redir} to={path+redir+this.props.location.search+this.props.location.hash} />
                )
             }
