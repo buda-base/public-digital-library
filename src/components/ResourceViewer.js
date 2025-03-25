@@ -1224,7 +1224,7 @@ class ResourceViewer extends Component<Props,State>
    {
       super(props);
 
-      this.state = { uviewer:false, imageLoaded:false, collapse:{etextNav:true}, pdfOpen:false, showAnno:true, errors:{},updates:{},title:{}, anchorEl:{}, enableDicoSearch: true }
+      this.state = { uviewer:false, imageLoaded:false, collapse:{etextNav:true}, pdfOpen:false, showAnno:true, errors:{},updates:{},title:{}, anchorEl:{}, enableDicoSearch: false /* // #1028 // true*/ }
 
       loggergen.log("props",props)
 
@@ -6878,7 +6878,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
             </a>
             : that.props.manifestError && !that.props.manifestError.error.message.match(/Restricted access/) 
                ? <a class="urilink nolink">{I18n.t("viewer.pdferror2")} ({I18n.t("user.errors.server2")})</a>
-               : <Loader  className="scans-viewer-loader" loaded={that.props.firstImage && !that.props.firstImage.includes("bdrc.io") || !( (!(that.props.manifestError && that.props.manifestError.error.message.match(/Restricted access/)) /*&& !fairUse*/) || (that.props.auth && that.props.auth.isAuthenticated())) } />
+               : <Loader  className="scans-viewer-loader" loaded={that.props.firstImage && !that.props.firstImage.includes("bdrc.io") || !( (!(that.props.manifestError && that.props.manifestError.error.message.match(/Restricted access/)) /*&& !fairUse*/) || (that.props.auth && that.props.auth.isAuthenticated())) || that.props.loading === false} />
          }      
       </>)
    }
@@ -10210,7 +10210,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
 
             if(redir != this.props.IRI) {
                if(this.props.pdfDownloadOnly) {
-                  return <ResourceViewerContainer {...this.props} IRI={redir}/>
+                  return <ResourceViewerContainer key={this.props.IRI+"_scans-redir-"+redir} IRI={redir} auth={this.props.auth} location={this.props.location} navigate={this.props.navigate} pdfDownloadOnly={true} />
                }
                else return (               
                   <Redirect404 navigate={this.props.navigate} location={this.props.location} message={"Record withdrawn in favor of "+redir} to={path+redir+this.props.location.search+this.props.location.hash} />
@@ -10925,7 +10925,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
          }
          else { 
             let inCollec = this.getResourceElem(bdo+"inCollection")
-            if(!inCollec?.length) inCollec = this.getResourceElem(bdo+"inCollection", this.props.disableInfiniteScroll.etextRes)
+            if(!inCollec?.length) inCollec = this.getResourceElem(bdo+"inCollection", this.props.disableInfiniteScroll?.etextRes)
          
             return ([           
                         
