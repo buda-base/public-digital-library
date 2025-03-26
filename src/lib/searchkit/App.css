@@ -186,7 +186,7 @@
 
 svg.help-workid { opacity:0.55; width:18px; vertical-align: -4px; margin-left:8px;}
 
-
+.AppSK .result .etext-hits em,
 .AppSK .result .highlight,
 .AppSK .ais-Highlight-highlighted, 
 .AppSK .ais-Snippet-highlighted {
@@ -194,6 +194,7 @@ svg.help-workid { opacity:0.55; width:18px; vertical-align: -4px; margin-left:8p
    font-weight:700;
    color:black;
    padding:1px 3px;
+   font-style: normal;
 }
 
 .AppSK .result a .highlight,
@@ -2662,6 +2663,11 @@ header[data-hits="0"] ~ .hits .pagination,
 
   .home-tradi-grid ~ .AppSK.InnerSearchPage .searchbox {
     padding:0 10px 0 55px;
+  }
+
+  #root .home-tradi-grid:not(#a)~.AppSK.InnerSearchPage.data .content .main-content h3:not(#a), 
+  #root .tradition:not(#a) .AppSK.InnerSearchPage.data .content .main-content h3:not(#a) {
+    font-size:16px;
   }
 }
 

@@ -315,7 +315,7 @@ export function EtextSearchResult(props) {
       // #1026
       if(val?.lang?.startsWith("bo")) {
         val = val?.value ?? ""
-        val = val.replace(/\[(<\/?em>)\]/g,"$1")
+        val = val.replace(/\[( *<\/?em> *)\]/g,"$1")
       } else {
         val = val?.value ?? ""
       }

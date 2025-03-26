@@ -372,19 +372,32 @@ const CustomHit = ({ hit, routing, that, sortItems, recent, storage, advanced /*
               // WIP: handle non Tibetan etext + fix bug when leading bogus latin in Tibetan
               let detec = ch._source.text_bo ? [ "bo" ]: ch._source.text_zh ? [ "zh" ] : [ "en" ] //narrowWithString(c)      
               //console.log("c:",c,detec)
-              const label = getLangLabel(that, fullUri("tmp:textMatch"), [{lang:detec[0] /*==="tibt"?"bo":"bo-x-ewts"*/, value:(c ?? "").replace(/<em>/g,"↦").replace(/<\/em>/g,"↤").replace(/↤([་ ]?)↦/g, "$1")}])          
+              const label = getLangLabel(that, fullUri("tmp:textMatch"), [{lang:detec[0] /*==="tibt"?"bo":"bo-x-ewts"*/, value:(c ?? "") //.replace(/<em>/g,"↦").replace(/<\/em>/g,"↤").replace(/↤([་ ]?)↦/g, "$1")}])          
+                .replace(/<\/em>([་ \n\r]*)<em>/g, "$1")}]) 
   
               detec = narrowWithString(indexUiState.query)    
 
               let kw = '"'+indexUiState.query+'"@'+(detec[0]==="tibt"?"bo":"bo-x-ewts")
+              
+              // #1020
+              let val = label
+              if(val?.lang?.startsWith("bo")) {
+                val = val?.value ?? ""
+                val = val.replace(/\[( *<\/?em> *)\]/g,"$1")
+              } else {
+                val = val?.value ?? ""
+              }
+              
                 newEtextHits.push(
               <Link to={"/show/bdr:"+vol._source.etext_instance+backLink+"&scope=bdr:"+vol._id+"&openEtext=bdr:"+vol._source.etext_vol+"&startChar="+(ch._source.cstart-1000)+(n?"&ETselect="+n:"")+"&ETkeyword="+indexUiState.query+"#open-viewer"}>{
-                highlight(label.value, expand.etext && text ? indexUiState.query : undefined, undefined 
+                //#1020
+                HTMLparse(val)
+                //highlight(label.value, expand.etext && text ? indexUiState.query : undefined, undefined 
                 /* // fixes crash when expand result on /osearch/search?author%5B0%5D=P1583&etext_quality%5B0%5D=0.95-1.01&q=klong%20chen%20rab%20%27byams%20pa%20dri%20med%20%27od%20zer&etext_search%5B0%5D=true
                 // (uncomment to get pagination in etext results)
                 , undefined, expand.etext && text
                 */
-              )
+                //)
               }</Link>
               )
             }
