@@ -18,7 +18,7 @@ import { etext_tooltips } from "../pages/Search";
 
 //import history from "../../../history"
 
-import { getPropLabel, fullUri, getLangLabel, highlight, renderDates } from '../../../components/App'
+import { getPropLabel, fullUri, getLangLabel, /*highlight,*/ renderDates } from '../../../components/App'
 import TextToggle from '../../../components/TextToggle'
 import { sortLangScriptLabels, extendedPresets } from '../../../lib/transliterators'
 
@@ -97,6 +97,19 @@ const CustomHit = ({ hit, routing, that, sortItems, recent, storage, advanced /*
     link = isMetaMatch || !etextHits.length 
       ? "/show/bdr:"+(hit.etext_instance?hit.etext_instance:hit.objectID)+backLink
       : etextLink
+
+  // #1020
+  const hilight = (val) => {
+    if(val?.lang?.startsWith("bo")) {
+      val = val?.value ?? ""
+      val = val.replace(/\[( *<\/?em> *)\]/g,"$1")
+    } else {
+      val = val?.value ?? ""
+    }
+    if(val.includes("↦")) val = val.replace(/↦/g,"<em>").replace(/↤/g,"</em>")
+    val = val.replace(/<\/em>([་ \n\r]*)<em>/g, "$1") 
+    return HTMLparse(val)
+  }
 
   useEffect(() => {
     const labels = {} 
@@ -209,11 +222,11 @@ const CustomHit = ({ hit, routing, that, sortItems, recent, storage, advanced /*
     if(sortLabels.length) { 
       const label = getLangLabel(that,skos+"prefLabel",[{ ...sortLabels[0] }])
       //setTitle(<Hit debug={false} hit={sortLabels[0].hit} label={sortLabels[0].field} />)
-      setTitle(<span lang={label.lang}>{highlight(label.value)}</span>)
+      setTitle(<span lang={label.lang}>{hilight(label)}</span>)
       if(sortLabels.length > 1 || labels.altLabel?.length) { 
         sortLabels.shift()
         //setNames(sortLabels.map(l => <Hit debug={false} hit={l.hit} label={l.field} />))
-        setNames((sortLabels.concat(sortLangScriptLabels(labels.altLabel,langs.flat,langs.translit))).map(label => <span lang={label.lang}>{highlight(label.value)}</span>))
+        setNames((sortLabels.concat(sortLangScriptLabels(labels.altLabel,langs.flat,langs.translit))).map(label => <span lang={label.lang}>{hilight(label)}</span>))
       }
     }          
 
@@ -233,7 +246,7 @@ const CustomHit = ({ hit, routing, that, sortItems, recent, storage, advanced /*
       for(const name of ["publisherName", "publisherLocation"]) {
         if(labels[name].length) {
           const sortLabels = sortLangScriptLabels(labels[name],langs.flat,langs.translit)
-          out.push(<span lang={sortLabels[0].lang}>{highlight(sortLabels[0].value)}</span>)
+          out.push(<span lang={sortLabels[0].lang}>{hilight(sortLabels[0])}</span>)
         }
       }
     }
@@ -288,7 +301,7 @@ const CustomHit = ({ hit, routing, that, sortItems, recent, storage, advanced /*
             
           }
 
-          out.push(<span lang={sortLabels[0].lang}>{highlight(label, undefined, undefined, expand[tag] ? "[\n\r]+" : undefined)}</span>)
+          out.push(<span lang={sortLabels[0].lang}>{hilight({value:label, lang})/*highlight(label, undefined, undefined, expand[tag] ? "[\n\r]+" : undefined)*/}</span>)
           
 
           //out.push(<TextToggle text={<span lang={sortLabels[0].lang}>{highlight(label)}</span>} />)
@@ -373,25 +386,16 @@ const CustomHit = ({ hit, routing, that, sortItems, recent, storage, advanced /*
               let detec = ch._source.text_bo ? [ "bo" ]: ch._source.text_zh ? [ "zh" ] : [ "en" ] //narrowWithString(c)      
               //console.log("c:",c,detec)
               const label = getLangLabel(that, fullUri("tmp:textMatch"), [{lang:detec[0] /*==="tibt"?"bo":"bo-x-ewts"*/, value:(c ?? "") //.replace(/<em>/g,"↦").replace(/<\/em>/g,"↤").replace(/↤([་ ]?)↦/g, "$1")}])          
-                .replace(/<\/em>([་ \n\r]*)<em>/g, "$1")}]) 
-  
+              }])
+
               detec = narrowWithString(indexUiState.query)    
 
               let kw = '"'+indexUiState.query+'"@'+(detec[0]==="tibt"?"bo":"bo-x-ewts")
               
-              // #1020
-              let val = label
-              if(val?.lang?.startsWith("bo")) {
-                val = val?.value ?? ""
-                val = val.replace(/\[( *<\/?em> *)\]/g,"$1")
-              } else {
-                val = val?.value ?? ""
-              }
-              
-                newEtextHits.push(
+              newEtextHits.push(
               <Link to={"/show/bdr:"+vol._source.etext_instance+backLink+"&scope=bdr:"+vol._id+"&openEtext=bdr:"+vol._source.etext_vol+"&startChar="+(ch._source.cstart-1000)+(n?"&ETselect="+n:"")+"&ETkeyword="+indexUiState.query+"#open-viewer"}>{
                 //#1020
-                HTMLparse(val)
+                hilight(label)
                 //highlight(label.value, expand.etext && text ? indexUiState.query : undefined, undefined 
                 /* // fixes crash when expand result on /osearch/search?author%5B0%5D=P1583&etext_quality%5B0%5D=0.95-1.01&q=klong%20chen%20rab%20%27byams%20pa%20dri%20med%20%27od%20zer&etext_search%5B0%5D=true
                 // (uncomment to get pagination in etext results)
