@@ -8113,6 +8113,15 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
       }
    }
 
+   renderScanPage = () => {
+
+      let repro = this.getResourceElem(bdo+"instanceReproductionOf")
+      if(repro?.length) {
+         let rid = shortUri(repro[0].value)
+         return <div class="data access redirect"><h3><InfoIcon /><span style={{textTransform:"none"}}><Trans i18nKey="access.redirect" components={{ lnk: <Link to={"/show/"+rid}/>, nl: <br/> }} values={{url:window.location.hostname+"/show/"+rid,interpolation: {escapeValue: false}}}/></span></h3></div>
+      }
+   }
+
    renderOCR = (extra) => {
       // #817
       let elem = this.getResourceElem(bdo+"OPFOCRWordMedianConfidenceIndex")
@@ -11437,7 +11446,6 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                   {/* { this.renderAnnoPanel() } */}
                   { this.renderWithdrawn() }             
                   <div class="title">{ wTitle }{ iTitle }{ rTitle }</div>
-                  { /* header */ }
                   { (etext && !orig) && <div class={"data open-etext"+(etextAccessError?" disable":"")}><div><Link to={etextUT+(etextUT.includes("?")?"&":"?")+"backToEtext="+backToET+"#open-viewer"}>{etextLoca}</Link></div></div> }
                   { (etext && orig) && <div class="data open-etext"><div><a target="_blank" href={orig}>{I18n.t("resource.openO",{src:prov})}<img src="/icons/link-out_.svg"/></a></div></div> }
                   <div class={"data" + (_T === "Etext"?" etext-title":"")+(_T === "Images"?" images-title":"")}>
@@ -11464,6 +11472,8 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                   
                   { this.renderMirador(isMirador) }                            
 
+                  {  isGroup(this.props.auth, "editors") ? header : _T === "Images" && this.renderScanPage() }
+                  
                   { theDataTop }
                   
                   { !["Instance", "Scan", "Etext"].includes(_T) && findText != null && !shouldShowOtherInstances && <>
@@ -11471,6 +11481,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/instantsearch.css@7/themes/satellite-min.css" />                           
                      { findText }
                    </>}
+
 
                   <div class="data" id="perma">{ this.perma_menu(pdfLink,monoVol,fairUse,kZprop.filter(k => k.startsWith(adm+"seeOther")), accessET && !etextAccessError)  }</div>
                   { theDataMid }

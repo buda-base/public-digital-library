@@ -1848,6 +1848,12 @@ header[data-hits="0"] ~ .hits .pagination,
   object-position: center;
 }
 
+
+#root:not(#a) .resource .data#first-image {
+  padding-left:65px; 
+  padding-right:65px; 
+}
+
 @media (max-width: 1440px) {
   .ais-SearchBox-form:not(#a):not(#b), .inner-search-bar:not(#a) > div:not(#a) > span:last-child {
     width:700px;
@@ -2229,6 +2235,7 @@ header[data-hits="0"] ~ .hits .pagination,
     /* padding:0; */
   }
   /* #root:not(#a) .resource .data#outline,  */
+  #root:not(#a) .resource .data#first-image,
   #root:not(#a) .resource .data.related, 
   #root:not(#a) .resource .data.ext-props, 
   #root:not(#a) .resource .data.legal-props, 

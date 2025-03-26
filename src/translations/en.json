@@ -988,7 +988,8 @@
       },
       "restrictedC":"Restricted by Copyright",
       "OCRnew": "<bold>These etexts were created through OCR (optical character recognition), not manually input, and have not been edited.</bold><nl/>OCR for Tibetan script is not 100% perfect but it is accurate enough to create text that will enhance the BDRC database. We hope that etexts like these improve the discoverability and usefulness of the BDRC archive for you.",
-      "errorE": "An error occurred while trying to access the etext"
+      "errorE": "An error occurred while trying to access the etext",
+      "redirect":"This is an internal page, please go to<nl/><lnk>{{url}}</lnk><nl/>for the user page."
    },
    "location": {
       "beginV": "Begin volume: {{num}}",
