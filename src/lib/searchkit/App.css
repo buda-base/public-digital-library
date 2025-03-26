@@ -934,6 +934,10 @@ header[data-hits="0"] ~ .hits .pagination,
   display:none;
 }
 
+.etext-header:not(.sticky) > div h2:not([title*=" "]) {
+  word-break: break-all;
+}
+
 .etext-header > div  h2 .newT > span,
 .etext-nav-parent .etext-header.sticky > div  h2 .newT > span,
 .resource h2 .newT > span {
