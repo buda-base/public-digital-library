@@ -9,7 +9,7 @@ import { formatDistance, parseISO } from "date-fns"
 import { enUS, zhCN } from 'date-fns/locale';
 import InfoIcon from '@material-ui/icons/Info';
 import Tooltip from '@material-ui/core/Tooltip';
-
+import _ from "lodash"
 
 import { HIT_RANGE_FIELDS } from "../api/ElasticAPI";
 import { RESULT_FIELDS, highlightableLocalizableFields } from "../constants/fields";
@@ -166,7 +166,7 @@ const CustomHit = ({ hit, routing, that, sortItems, recent, storage, advanced /*
               if(hit._highlightResult[k]?.length){ 
                 //if(hit._highlightResult[k]?.length != hit[k].length) { 
                   let lastNum
-                  for(const c of hit._highlightResult[k]) {
+                  for(const c of _.orderBy(hit._highlightResult[k],(v)=>v.matchedWords?.length,"desc")) {
                     const untagged = decode(c.value).replace(/<[^>]+>/g,"")          
                     let num = hit[k].findIndex(u => u.includes(untagged))   
                     if(num != -1 && num == i) {
