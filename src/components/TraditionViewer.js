@@ -396,18 +396,19 @@ export class TraditionViewer extends Component<State, Props>
     }      
     let storage = JSON.parse(sessionStorage.getItem(attribute));
 
+    fetching = fetching.filter(i => i && !storage[i])
     
-    fetching = fetching.filter(i => !storage[i])
-    
+    //console.log("already:",cat,already,fetching)
+
     if(fetching.length && !already) {
 
-      console.log("fetching:", fetching)
+      //console.log("fetching:", fetching)
       
       already = true
       const fetchedItems = await fetchLabels(fetching, attribute)
       already = false
       
-      console.log("fetched:", fetchedItems)
+      //console.log("fetched:", fetchedItems)
       
       const newStorage = { ...storage, ...fetchedItems }
       sessionStorage.setItem(attribute, JSON.stringify(newStorage));    
