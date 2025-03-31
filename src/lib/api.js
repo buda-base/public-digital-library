@@ -532,7 +532,12 @@ export default class API {
             let data 
             // #730 fallback for case when hasNonVolumePart is true but Outline_root_volumes returns 404
             try { 
-               if(IRI === "tmp:uri") {
+               if(IRI === "bdr:PR1ER12" || volFromUri === "bdr:PR1ER12" || node?.rid === "bdr:PR1ER12") {
+                  data = { 
+                     "@context": "http://purl.bdrc.io/context.jsonld",
+                     "@graph": (await(await this._fetch("/sungbum_ALL.json")).json()??{})[IRI]
+                    };
+               } else if(IRI === "tmp:uri") {
                   console.warn("tmp:uri?outline",IRI,node,volFromUri)
                   data = {"@graph":[]}
                } else {

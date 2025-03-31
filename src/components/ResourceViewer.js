@@ -508,7 +508,8 @@ propOrder["Images"] = propOrder["Work"]
 
 const topProperties = {
    "Product":[
-      rdfs+"comment"
+      rdfs+"comment",
+      _tmp+"outline"
    ],
    "Topic": [ 
       skos+"prefLabel", 
@@ -1598,6 +1599,9 @@ class ResourceViewer extends Component<Props,State>
       
       if(props.resources && props.resources[props.IRI]) {
 
+         if(props.IRI === "bdr:PR1ER12") {
+            if(!props.outlines?.[props.IRI]) props.onGetOutline(props.IRI)
+         }
          
          let root = getElem(bdo+"inRootInstance",props.IRI)
          if(root && root.length) {
@@ -10101,14 +10105,14 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
 
 
          return ( <>
-            <div data-prop="tmp:outlineSearch">
+            {this.props.IRI != "bdr:PR1ER12" && <div data-prop="tmp:outlineSearch">
                <h3><span>Outline Search:</span></h3>
                <div class="group">
                   <OutlineSearchBar that={this} outlineSearch={outlineSearch}/>
                </div>
-            </div>
+            </div> }
             <div class="data" id="outline" data-prop="tmp:outline">
-               <h3><span>Outline:</span></h3>
+               <h3><span>{(this.props.IRI != "bdr:PR1ER12" ? I18n.t("index.outline") : "Sungbum")+I18n.t("punc.colon")}</span></h3>
                <div class="group">
                   <Loader  options={{
                         position:this.props.outlineOnly?"absolute":"fixed",
@@ -11042,7 +11046,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
          let header = this.renderHeader(hasMap, _T, etextUT, root)
          
          let theOutline, showOutline = this.state.collapse.containingOutline || this.state.collapse.containingOutline === undefined && this.props.outlineKW
-         if((!root || !root.length) && (!this.props.outlineOnly || showOutline)) theOutline = this.renderOutline()      
+         if((!root || !root.length) && (!this.props.outlineOnly || showOutline || this.props.IRI === "bdr:PR1ER12")) theOutline = this.renderOutline()      
 
          if(theOutline && !this.props.outlineOnly) {
             //theOutline = <div data-prop="tmp:outline"><h3><span>Outline:</span></h3><div class="group">{theOutline}</div></div>
