@@ -39,7 +39,7 @@
       "jquery": "^3.3.1",
       "js-cookies": "^1.0.4",
       "js-file-download": "^0.4.1",
-      "jsewts": "^1.0.3",
+      "jsewts": "https://github.com/buda-base/jsewts",
       "leaflet": "^1.7.1",
       "leaflet-gesture-handling": "^1.2.1",
       "leaflet.markercluster.freezable": "^1.0.0",
