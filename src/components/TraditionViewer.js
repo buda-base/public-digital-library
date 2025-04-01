@@ -6,6 +6,8 @@ import I18n from 'i18next';
 import _ from "lodash";
 import $ from 'jquery' ;
 import logdown from 'logdown'
+import ExpandLess from '@material-ui/icons/ExpandLess';
+import ExpandMore from '@material-ui/icons/ExpandMore';
 
 //import history from "../history"
 import store from '../index';
@@ -209,14 +211,17 @@ export class TraditionViewer extends Component<State, Props>
         if(top) top.scrollIntoView()
       }
 
+
+      //if(e.depth > 0) res.push(<h5 onClick={() => this.setState({collapse:{...this.state.collapse,[e.rank+"_"+e.value]:!this.state.collapse[e.rank+"_"+e.value]}})} class={"collapse-"+(!!this.state.collapse[e.rank+"_"+e.value])} lang={e.lang}><ExpandLess/>{e.value}</h5>)// | {e.rank}</h5>)
+      
       if(c.content) {
         this.goFetch(c.content.map(i => i.id.split(":")[1]),c.id)
         return <>
-          <h5 className={(c.img ? "has-img ":"")+(c.classes??"")}>
-            { c.img && <img src={c.img}/> }
+          <h5 onClick={() => !c.img && this.setState({collapse:{...this.state.collapse,[c.id]:!this.state.collapse[c.id]}})} class={"collapse-"+(!!this.state.collapse[c.id])} className={(c.img ? "has-img ":"")+(c.classes??"")+" collapse-"+(!!this.state.collapse[c.id])}>
+            { c.img ? <img src={c.img}/> : <ExpandLess/>}
             <span lang={label?.lang}>{label?.value}</span>
           </h5>
-          {this.renderContent(c, route, storage)}
+          {this.state.collapse[c.id] && this.renderContent(c, route, storage)}
         </>
       } else return <Link to={link} className={(c.img ? "has-img ":"")+(c.classes??"")} onClick={scrollToTop}>
           { c.img && <img src={c.img}/> }
@@ -265,8 +270,8 @@ export class TraditionViewer extends Component<State, Props>
     const res = []
     for(const e of sort) {
       if(e.sublist) {
-        if(e.depth > 0) res.push(<h5 lang={e.lang}>{e.value}</h5>)// | {e.rank}</h5>)
-        res.push(this.renderList(e.sublist))
+        if(e.depth > 0) res.push(<h5 onClick={() => this.setState({collapse:{...this.state.collapse,[e.rank+"_"+e.value]:!this.state.collapse[e.rank+"_"+e.value]}})} class={"collapse-"+(!!this.state.collapse[e.rank+"_"+e.value])} lang={e.lang}><ExpandLess/>{e.value}</h5>)// | {e.rank}</h5>)
+        if(e.depth === 0 || this.state.collapse[e.rank+"_"+e.value]) res.push(this.renderList(e.sublist))
       }
       else if(e.to) res.push(<Link lang={e.lang} to={e.to}>{e.value}{e.length?" ["+e.length+"]":""}</Link>)// | {e.rank}</Link>)
       else res.push(<i>{e.value} {e.lang}</i>)// | {e.rank}</i>)

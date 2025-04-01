@@ -1196,8 +1196,29 @@ ul.suggestions li > span > svg:first-child {
 }
 
 
+.App.tradition .tradi-content > h5:not(.hasImg),
+.App.tradition .tradi-content.listing > h5 {
+   align-items: center;
+   display: flex;
+   cursor: pointer;
+}
+
+
+.App.tradition .tradi-content > h5:not(.hasImg) > svg,
+.App.tradition .tradi-content.listing > h5 > svg {
+   transform:rotate(90deg);
+   margin-left:-5px
+}
+
+.App.tradition .tradi-content > h5:not(.hasImg).collapse-true > svg,
+.App.tradition .tradi-content.listing > h5.collapse-true > svg {
+   transform:rotate(180deg);
+}
+
+
+.App.tradition .tradi-content > h5:not(.hasImg) ~ a,
 .App.tradition .tradi-content.listing > h5 ~ a {
-   margin-left:20px;
+   margin-left:35px;
 }
 
 .App.tradition .tradi-content.listing [lang='en'] {
