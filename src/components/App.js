@@ -1277,7 +1277,7 @@ export function top_right_menu(that,etextTitle,backUrl,etextres,isMirador,locati
 
    let msgPopupOn = !location.pathname.includes("/static/") 
       && !location.pathname.includes("/buda-user-guide") 
-      && that.props.config?.msg?.some((m,i) => (!sourcePage || m.display?.includes()) && m.popup && (!m.condition || eval(m.condition)) && !that.state.collapse["msgPopup"+(m.id?"-"+m.id:"")])
+      && that.props.config?.msg?.some((m,i) => (!sourcePage || m.display?.includes(sourcePage)) && m.popup && (!m.condition || eval(m.condition)) && !that.state.collapse["msgPopup"+(m.id?"-"+m.id:"")])
 
    //console.log("mpo:",JSON.stringify(that.state.collapse),msgPopupOn, that.state.collapse, that.props.config?.msg?.some((m,i) => m.popup && (!m.condition || eval(m.condition)) && that.state.collapse["msgPopup"+(m.id?"-"+m.id:"")] != true))
 

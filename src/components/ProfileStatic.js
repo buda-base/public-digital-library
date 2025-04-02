@@ -415,7 +415,7 @@ export class Profile extends Component<Props,State> {
 
         return (
         <div class="profile static">
-          {top_right_menu(this,null,null,null,null,this.props.location)}
+          {top_right_menu(this,null,null,null,null,this.props.location, undefined, "profile")}
           {getGDPRconsent(this)}
           <div class="resource user">
             <div class="index">
