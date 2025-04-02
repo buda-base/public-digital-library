@@ -83,6 +83,8 @@ export const filters = [{
     attribute:"nocomm_search", I18n_prefix: "search.nocomm_search", prefix:"tmp", defaultItems:[{ value: "true" }]
   },{
     attribute:"etext_search", I18n_prefix: "search.etext_search", prefix:"tmp", defaultItems:[{ value: "true" }]
+  },{
+    attribute:"exclude_etexts", I18n_prefix: "search.exclude_etexts", prefix:"tmp", defaultItems:[{ value: "true" }]
   },{ 
     attribute:"associatedTradition", prefix:"tmp"
   },{ 

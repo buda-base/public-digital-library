@@ -673,6 +673,9 @@
       },
       "etext_search":{
          "true":"Search inside etext, exclude titles and metadata"
+      },
+      "exclude_etexts":{
+         "true":"Exclude etexts"
       }
    },
    "Rsidebar": {

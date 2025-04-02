@@ -81,6 +81,11 @@ const FACET_ATTRIBUTES = [
     attribute: "nocomm_search",
     field: "nocomm_search",
     type: "string"
+  },
+  {
+    attribute: "exclude_etexts",
+    field: "exclude_etexts",
+    type: "string"
   }
 ];
 

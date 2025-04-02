@@ -144,6 +144,7 @@
 
 .AppSK br + .ais-RefinementList[data-id='nocomm_search'],
 .AppSK .ais-RefinementList[data-id='nocomm_search']+[data-id='etext_search'],
+.AppSK .ais-RefinementList[data-id='etext_search']+[data-id='exclude_etexts'],
 .AppSK .ais-RefinementList[data-id='etext_access']+[data-id='etext_quality'],
 .AppSK .ais-RefinementList[data-id='etext_access']+[data-id='etext_access'],
 .AppSK .ais-RefinementList[data-id='etext_quality']+[data-id='etext_access'] {
@@ -151,6 +152,7 @@
 }
 
 .AppSK .ais-RefinementList[data-id='nocomm_search']+[data-id='etext_search'] .filter-title,
+.AppSK .ais-RefinementList[data-id='etext_search']+[data-id='exclude_etexts'] .filter-title,
 .AppSK .ais-RefinementList[data-id='etext_access']+[data-id='etext_quality'] .filter-title,
 .AppSK .ais-RefinementList[data-id='etext_access']+[data-id='etext_access'] .filter-title,
 .AppSK .ais-RefinementList[data-id='etext_quality']+[data-id='etext_access'] .filter-title {
