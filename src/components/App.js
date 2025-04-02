@@ -416,11 +416,12 @@ export const langProfile = [
 
 export const renderBanner = (that, infoPanel, isResourcePage) => {
 
-   return (<div class={"infoPanel "+(isResourcePage?"inRes":"")}>{ infoPanel.map((m,i) => {
+   const collapse = {}
+   const res = (<div class={"infoPanel "+(isResourcePage?"inRes":"")}>{ infoPanel.map((m,i) => {
       let lab = getLangLabel(that,tmp+"bannerMessage",m.text) 
       let icon 
 
-      //loggergen.log("popup/m:",m,lab,m.text,that.props.locale,that)
+      //loggergen.log("popup/m:",m.id,m,lab,m.text,that.props.locale,that)
       
       if(m.severity=="info") icon = <InfoIcon className="info"/>
       else if(m.severity=="warning") icon = <WarnIcon className="warn"/>
@@ -474,7 +475,7 @@ export const renderBanner = (that, infoPanel, isResourcePage) => {
             if(m.showEveryNDay != undefined) showEveryNDay = m.showEveryNDay
             const wasClosed = localStorage.getItem("msg-popup-closed"+(m.id?"-"+m.id:"")) 
             const tooOld = showEveryNDay != -1 && Date.now() - wasClosed > showEveryNDay * 24 * 3600 * 1000
-            //loggergen.log("sENd:",showEveryNDay,m.showEveryNDay,wasClosed,Date.now(),tooOld)         
+            //loggergen.log("sENd:",m.id,hidden,showEveryNDay,m.showEveryNDay,wasClosed,Date.now(),tooOld)         
             if(!hidden && condition && (!wasClosed || tooOld)) {
                //loggergen.log("show!",hidden) 
                hidden = false               
@@ -489,9 +490,14 @@ export const renderBanner = (that, infoPanel, isResourcePage) => {
          
          hidden = hidden || isProxied(that) && lab.value.includes("/donation/") 
 
-         if(hidden != that.state.collapse["msgPopup"+(m.id?"-"+m.id:"")]) that.setState({collapse:{ ...that.state.collapse, ["msgPopup"+(m.id?"-"+m.id:"")]: hidden }})
+         if(hidden != that.state.collapse["msgPopup"+(m.id?"-"+m.id:"")]) { 
+            //console.log("stt:",hidden)
+            //that.setState({collapse:{ ...that.state.collapse, ["msgPopup"+(m.id?"-"+m.id:"")]: hidden }})
+            collapse["msgPopup"+(m.id?"-"+m.id:"")] =  hidden 
+         }
 
          const closePopup = (ev) => {
+            //console.log("cpp:",that,m)            
             that.setState({collapse:{ ...that.state.collapse, ["msgPopup"+(m.id?"-"+m.id:"")]: true }})
             localStorage.setItem("msg-popup-closed"+(m.id?"-"+m.id:""), Date.now())
          }
@@ -518,6 +524,11 @@ export const renderBanner = (that, infoPanel, isResourcePage) => {
          </div>
       }
    }) }</div>)
+
+   //console.log("rbr:",JSON.stringify(collapse))
+
+   if(Object.keys(collapse).length) that.setState({collapse:{ ...that.state.collapse, ...collapse }})
+   return res
 }
 
 
@@ -1170,7 +1181,7 @@ function InstantSearchBox(props) {
    </div>
 }
 
-export function top_right_menu(that,etextTitle,backUrl,etextres,isMirador,location,infoPanel)
+export function top_right_menu(that,etextTitle,backUrl,etextres,isMirador,location,infoPanel,sourcePage)
 {
    let onZhMirror = (that.props.config && that.props.config.chineseMirror)
    let onKhmerServer = (that.props.config && that.props.config.khmerServer)
@@ -1266,7 +1277,9 @@ export function top_right_menu(that,etextTitle,backUrl,etextres,isMirador,locati
 
    let msgPopupOn = !location.pathname.includes("/static/") 
       && !location.pathname.includes("/buda-user-guide") 
-      && that.props.config?.msg?.some((m,i) => m.popup && (!m.condition || eval(m.condition)) && !that.state.collapse["msgPopup"+(m.id?"-"+m.id:"")])
+      && that.props.config?.msg?.some((m,i) => (!sourcePage || m.display?.includes()) && m.popup && (!m.condition || eval(m.condition)) && !that.state.collapse["msgPopup"+(m.id?"-"+m.id:"")])
+
+   //console.log("mpo:",JSON.stringify(that.state.collapse),msgPopupOn, that.state.collapse, that.props.config?.msg?.some((m,i) => m.popup && (!m.condition || eval(m.condition)) && that.state.collapse["msgPopup"+(m.id?"-"+m.id:"")] != true))
 
    let corpo_lang = that.props.locale
    if(corpo_lang.startsWith("bo")) corpo_lang = "bo"
@@ -7653,7 +7666,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       else if(corpo_lang.startsWith("zh")) corpo_lang = "zh-hans"
       
       const ret = (<>
-{ top_right_menu(this,null,null,null,null,this.props.location) }
+{ top_right_menu(this,null,null,null,null,this.props.location, undefined, infoPanelH?.length ? "home" : infoPanelR?.length ? "resource" : undefined) }
 <div className={(this.props.simple?"simpleSearch":"")+(" settings-"+this.state.collapse.settings)}>
    {getGDPRconsent(this)}
    {/* <Link to="/about">About</Link> */}

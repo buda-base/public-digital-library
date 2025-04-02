@@ -468,7 +468,7 @@ export class TraditionViewer extends Component<State, Props>
 
       return (
         <>
-          { top_right_menu(this, null, null, null, null, this.props.location, infoPanelT) }
+          { top_right_menu(this, null, null, null, null, this.props.location, infoPanelT, "tradition") }
           <div>
             <div class={"App tradition tradition-"+(this.props.tradition)}>
               <div class="SearchPane">

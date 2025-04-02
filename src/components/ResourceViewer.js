@@ -10923,7 +10923,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
             </>
             return (<>            
                {getGDPRconsent(this)}
-               {top_right_menu(this,title,searchUrl,etextRes,null,this.props.location)}                       
+               {top_right_menu(this,title,searchUrl,etextRes,null,this.props.location, undefined, "resource")}                       
                   
                   { this.state.currentText 
                      ? <ResourceViewerContainer key={this.props.IRI+"_currentText_sub_" /*+this.state.currentText*/ }  auth={this.props.auth} /*history={this.props.history}*/ location={this.props.location} navigate={this.props.navigate} IRI={this.state.currentText} openEtext={true} openEtextRefs={!this.state.collapse.etextRefs} topEtextRefs={outline} that={this}/> 
@@ -11398,7 +11398,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
          <Helmet>
             <link rel="canonical" href={"https://library.bdrc.io"+this.props.location.pathname} />
          </Helmet>,
-         top_right_menu(this, null, null, null, isMirador, this.props.location, infoPanelR),
+         top_right_menu(this, null, null, null, isMirador, this.props.location, infoPanelR, "resource"),
          // <Loader className="resource-viewer-loader" loaded={false}  options={{position:"fixed",left:"50%",top:"50%"}} />,
          <div class={isMirador?"H100vh OF0":""}>
             { ["Images","Instance"].includes(_T) && <abbr class="unapi-id" title={this.props.IRI}></abbr> }           

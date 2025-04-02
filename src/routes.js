@@ -317,16 +317,17 @@ function TradiCompo(props) {
    const location = useLocation();
    const navigate = useNavigate();
    const {TRAD:tradition, TYPE:type, ID: id, ROOT: root, SCHOOL:school } = useParams()
+   const key = "tradi:"+tradition+";"+type+";"+id+";"+root+";"+school
 
    useEffect(() => {
       console.log("trad/param/root:",props)
       store.dispatch(initiateApp(qs.parse(location.search), null, null, "tradition"))
    }, [location])
 
-   if(tradition && type && id &&  root ) return (<TraditionViewerContainer {...{location, navigate, auth, tradition, type, id, root } }/> )    
-   else if(tradition && type && id) return (<TraditionViewerContainer {...{location, navigate, auth, tradition, type, id} }/> ) 
-   else if(tradition && school) return (<TraditionViewerContainer {...{location, navigate, auth, tradition, type:"selected", id: school} }/> ) 
-   else if(tradition) return (<TraditionViewerContainer {...{location, navigate, auth, tradition } }/> ) 
+   if(tradition && type && id &&  root ) return (<TraditionViewerContainer {...{key, location, navigate, auth, tradition, type, id, root } }/> )    
+   else if(tradition && type && id) return (<TraditionViewerContainer {...{key,location, navigate, auth, tradition, type, id} }/> ) 
+   else if(tradition && school) return (<TraditionViewerContainer {...{key,location, navigate, auth, tradition, type:"selected", id: school} }/> ) 
+   else if(tradition) return (<TraditionViewerContainer {...{key, location, navigate, auth, tradition } }/> ) 
       
 }
 
