@@ -9893,7 +9893,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                            }
 
                            // #784
-                           if(g.details?.length === 1 && g.hidden?.length) {
+                           if(g.details?.length === 1 && g.hidden?.length || this.props.IRI === "bdr:PR1ER12" && g.hidden?.length) {
                               g.details = g.details.concat(g.hidden)
                               g.hidden = []
                            }
