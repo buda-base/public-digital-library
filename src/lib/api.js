@@ -4,6 +4,8 @@ import {auth} from '../routes'
 import qs from 'query-string'
 //import history from '../history';
 import {shortUri,isAdmin} from '../components/App';
+import { fetchLabels } from "../lib/searchkit/api/LabelAPI";
+
 
 import * as rdflib from "rdflib"
 
@@ -504,13 +506,23 @@ export default class API {
 
    }
 
-
     async loadOutline(IRI:string,node?:{},volFromUri?:string): Promise<string>
     {
+
+         const pathToRoot = (id, outline) => {
+            if(id === "bdr:PR1ER12") return []
+            else {
+               const parent = outline.find(n => n.hasPart?.includes(id))
+               if(parent) return [parent].concat(pathToRoot(parent["@id"]??parent.id, outline))
+               return []
+            }
+         }
+
          try {
             
             if(!IRI.indexOf(':') === -1 ) IRI = "bdr:"+IRI
-            let config = store.getState().data.config.ldspdi
+            let state = store.getState()
+            let config = state.data.config.ldspdi
             let url = config.endpoints[config.index]+"/query/graph" ;            
             let searchType = "Outline_root", extraParam, isTaishoNode
             const initParams = { IRI, searchType } 
@@ -532,10 +544,37 @@ export default class API {
             let data 
             // #730 fallback for case when hasNonVolumePart is true but Outline_root_volumes returns 404
             try { 
-               if(IRI === "bdr:PR1ER12" || volFromUri === "bdr:PR1ER12" || node?.rid === "bdr:PR1ER12") {
+               if(IRI === "bdr:PR1ER12" || volFromUri === "bdr:PR1ER12" || node?.rid === "bdr:PR1ER12" || node?.useRid === "bdr:PR1ER12") {
+                  const nodes = (state.data.outlines?.["bdr:PR1ER12"]?.["@nodes"]) ?? (await(await this._fetch("/sungbum_ALL.json")).json()??{}) ?? []
+                  await new Promise(r => setTimeout(r, 1));
+                  const top = nodes.find(n => (n["@id"] ?? n.id) === IRI)
+                  let graph = [top].concat(nodes.filter(m => top.hasPart?.includes(m["@id"] ?? m.id)))
+                  graph = graph.concat(nodes.filter(m => graph.some(g => g["bf:identifiedBy"]?.some(idb => (idb["@id"] ?? idb.id) === (m["@id"] ?? m.id)))))
+                  graph = graph.concat(pathToRoot(top["@id"]??top.id, nodes))
+                  let extra = graph.map(g => ([g["tmp:author"]?.["@id"]??g["tmp:author"]?.id,g["instanceOf"]])).flat().filter(n => n).map(n => n.split(":")[1]??n)
+                  //console.log("nodes:",nodes,JSON.stringify(top,null,3),IRI,JSON.stringify(graph,null,3), extra)
+                  if(extra?.length) {
+                     const attribute = "outline-bdr:PR1ER12"
+                     if (!sessionStorage.getItem(attribute)) {
+                        sessionStorage.setItem(attribute, JSON.stringify({}));
+                     }      
+                     let storage = JSON.parse(sessionStorage.getItem(attribute));
+                     let fetching = extra.filter(i => i && !storage[i])
+                     if(fetching.length) {
+                        const fetchedItems = await fetchLabels(fetching, attribute)
+                        const newStorage = { ...storage, ...fetchedItems }
+                        sessionStorage.setItem(attribute, JSON.stringify(newStorage));   
+                        storage = newStorage      
+                     }
+                     const labels = extra.reduce((acc,k) => ({...acc, [k]:storage[k]}),{})
+                     //console.log("extra:",extra,labels,fetching,storage)
+                     extra = Object.keys(labels).map(k => ({"id":"bdr:"+k, "skos:prefLabel":labels[k].label.map(l => ({"@language":l.lang,"@value":l.value}))}))
+                     graph = graph.concat(extra)
+                  }
                   data = { 
                      "@context": "http://purl.bdrc.io/context.jsonld",
-                     "@graph": (await(await this._fetch("/sungbum_ALL.json")).json()??{})[IRI]
+                     "@graph": graph,
+                     ...IRI === "bdr:PR1ER12"?{"@nodes": nodes}:{}
                     };
                } else if(IRI === "tmp:uri") {
                   console.warn("tmp:uri?outline",IRI,node,volFromUri)

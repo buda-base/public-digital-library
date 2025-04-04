@@ -11,6 +11,15 @@ function getDepth(row) {
   return -1
 }
 
+function pathToRoot(id, outline) {
+  if(id === "bdr:PR1ER12") return []
+  else {
+    const parent = outline.find(n => n.hasPart?.includes(id))
+    if(parent) return [parent].concat(pathToRoot(parent.id, outline))
+    return []
+  }
+}
+
 function processSheetData() {
   var spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
   var sheet = spreadsheet.getSheets()?.[0];
@@ -104,13 +113,19 @@ function processSheetData() {
    };
    */
 
-  
+  /*
   // v2 for each node, itself and its direct children
   var globalResults = [root].concat(outline).reduce((acc, n) => ({
     ...acc,
-    ...n.hasPart ? {[n.id]: [n].concat(outline.filter(m => n.hasPart?.includes(m.id))).concat(otherNodes[n.id])}:{} 
+    //...n.hasPart ? {
+    [n.id]: [n].concat(outline.filter(m => n.hasPart?.includes(m.id))).concat(otherNodes[n.id]??[]).concat(pathToRoot(n.id, outline))
+    //}:{} 
   }), {})
+  */
 
+  // v3 the whole tree + building the "by node" structure in the client
+  var globalResults = [root].concat(outline).concat(Object.values(otherNodes).flat()).filter(n => !Array.isArray(n) && !n.length)
+   
 
   return globalResults;
 }

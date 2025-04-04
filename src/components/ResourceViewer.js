@@ -9126,8 +9126,9 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                      }
                   }
                   */
-               } else {                     
-                  this.props.onGetOutline(opart);
+               } else {                  
+                  if(this.props.IRI === "bdr:PR1ER12") this.props.onGetOutline(opart,{ useRid: "bdr:PR1ER12" })   
+                  else this.props.onGetOutline(opart);
                }
 
             }
@@ -9240,7 +9241,10 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                               }
                            }
                            else parent_head = null
-                           if(!this.props.outlines[head]) this.props.onGetOutline(head, head_node, parent_head);
+                           if(!this.props.outlines[head]) {
+                              if(this.props.IRI != "bdr:PR1ER12") this.props.onGetOutline(head, head_node, parent_head);
+                              else this.props.onGetOutline(head, {...head_node, useRid:"bdr:PR1ER12"}, parent_head);
+                           }
                            child_node = head_node
                         }
                         done_opart = true
@@ -9907,7 +9911,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                      //loggergen.log("outline?",elem,outline)
 
                      outline = outline.map(e => {
-                        let url = "/show/"+e["@id"] //root+"?part="+e["@id"]
+                        let url = this.props.IRI != "bdr:PR1ER12" ? "/show/"+e["@id"] : "/show/"+root+"?part="+e["@id"]
                         let togId = e["@id"]
                         if(e["@id"] && e["@id"].startsWith("bdr:I")) {                           
                            url = "/show/"+e["@id"].split(";")[0]
