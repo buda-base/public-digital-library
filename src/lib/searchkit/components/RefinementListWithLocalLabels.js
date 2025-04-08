@@ -28,7 +28,7 @@ const getItem = (collection, id) => {
 const already = {}
 
 function CustomRefinementList(props) {
-  const { attribute, that, I18n_prefix, prefix, iri, sort, sortFunc, defaultItems, className, tooltips } = props;
+  const { attribute, that, I18n_prefix, prefix, iri, sort, sortFunc, defaultItems, className, tooltips, disableIfNoKeyword } = props;
 
   const [title, setTitle] = useState("")
 
@@ -135,7 +135,7 @@ function CustomRefinementList(props) {
       /> */}
                 
       <SimpleBar>
-      <ul className="ais-RefinementList-list">
+      <ul className="ais-RefinementList-list" disabled={disableIfNoKeyword && !indexUiState.query}>
         {useItems.map((item) => (
 
           (item.count > 0 || item.count === -1) 

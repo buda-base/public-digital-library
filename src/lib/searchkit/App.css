@@ -134,6 +134,12 @@
   box-shadow:0 0 0 1px #dddddd,0 2px 0 1px rgba(35,38,59,.05)
 }
 
+
+.AppSK .ais-RefinementList .ais-RefinementList-list[disabled] {
+  pointer-events: none;
+  opacity:0.65;
+}
+
 /* .AppSK  .ais-CustomDateRange,
 .AppSK  .ais-SortBy, */
 .AppSK .ais-RefinementList {
