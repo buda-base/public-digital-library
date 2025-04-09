@@ -37,7 +37,7 @@ import I18n from 'i18next';
 import { getPropLabel, fullUri } from '../../../components/App'
 import CustomHit from "../components/CustomHit";
 import SearchBoxAutocomplete from "../components/SearchBoxAutocomplete";
-import { searchClient, HitsWithLabels, filters, FiltersSidebar, sortItems } from "./Search";
+import { searchClient, HitsWithLabels, filters, FiltersSidebar, sortItems, MyConfigure } from "./Search";
 import RefinementListWithLocalLabels from "../components/RefinementListWithLocalLabels";
 import CustomDateRange from "../components/CustomDateRange";
 import SearchResultsHeader from "../components/SearchResultsHeader"
@@ -223,7 +223,8 @@ export class InnerSearchPage extends Component<State, Props>
                 <div className="main-content">
                   <SearchResultsHeader that={this} inner={true} recent={recent&&!sortByDefault} {...{ storageRef, forceSearch }} />
                   <div className="hits">
-                    <Configure hitsPerPage={isOtherVersions ? 11 * (this.state.toggled ? 2 : 1) : (recent ? 20 : 5)} filters={pageFilters} />
+                    {/* TODO: use MyConfigure once bug with sorting is fixed (#1029) */}
+                    <Configure hitsPerPage={isOtherVersions ? 11 * (this.state.toggled ? 2 : 1) : (recent ? 20 : 5)} { ...{ pageFilters } } />
                     <HitsWithLabels that={this} {...{ routing, recent:recent&&!sortByDefault, storageRef, isOtherVersions, srcVersionID }} />
                     { isOtherVersions 
                       ? <OtherVersionsNav {...{ that:this, RID, srcVersionID } }/>

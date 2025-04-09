@@ -413,6 +413,30 @@ export function QueryRefCompo({ that }) {
   return <></>
 } 
 
+export function MyConfigure(props = {}) {
+  
+  const { indexUiState } = useInstantSearch();
+  let { pageFilters, hitsPerPage } = props
+  const [filters, setFilters ] = useState(pageFilters ?? "")
+
+  //console.log("myconf:", pageFilters, indexUiState)
+
+  useEffect(() => {
+    let newFilters = ""
+    if(indexUiState?.refinementList?.type?.length) {
+      newFilters = "exclude_etexts:true"
+    } 
+    if(pageFilters) {
+      newFilters = newFilters + (newFilters ? " AND " : "") + pageFilters
+    }
+    setFilters(newFilters)
+  }, [indexUiState?.refinementList, pageFilters])
+
+  return (
+    <Configure { ...{ hitsPerPage, filters } } />
+  )
+}
+
 export class SearchPage extends Component<State, Props>
 {
   _urlParams = {}
@@ -515,7 +539,7 @@ export class SearchPage extends Component<State, Props>
                   <div className="pagination">
                     <Pagination />
                   </div>
-                  <Configure hitsPerPage={window.innerWidth <= 665 ? 20 : 20} filters={pageFilters} />
+                  <MyConfigure hitsPerPage={window.innerWidth <= 665 ? 20 : 20} { ...{ pageFilters } }/>
                   <HitsWithLabels that={this} {...{ routing, sortItems, storageRef }} />
                   <div className="pagination" onClick={scrollToTop}>
                     <Pagination padding={window.innerWidth <= 665 ? 1 : 3}/>

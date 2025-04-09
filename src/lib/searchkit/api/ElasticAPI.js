@@ -43,36 +43,46 @@ const forgeFacetFilters = (facetFilters, filters) => {
   if (filters) {
     allFilters = [...allFilters, [filters]];
   }
+  
+  let queryFilters = [] 
+  
+  allFilters.map((group) => { 
 
-  
-  let queryFilters = allFilters.map((group) => { 
+    //console.log("group:",group)
 
-    const should = []
-  
-    for(const facet of group) {
-      // TODO: handle OR
-      const facets = facet.includes("OR") ? facet.split(" OR ") : [ facet ] 
-  
-      for(const f of facets) {
-        const [field, value] = f.split(":");
-        if (DATE_RANGE_FIELDS.includes(field)) {
-          should.push({ range: { [field]: createDateRangeQuery(value) } });
-          continue;
+    // DONE: handle AND
+    for(const and of group) {
+
+      and = and.includes("AND") ? and.split(" AND ") : [ and ] 
+      
+      for(const facet of and) {
+        
+        const should = []
+
+        // DONE: handle OR
+        const facets = facet.includes("OR") ? facet.split(" OR ") : [ facet ] 
+    
+        for(const f of facets) {
+          const [field, value] = f.split(":");
+          if (DATE_RANGE_FIELDS.includes(field)) {
+            should.push({ range: { [field]: createDateRangeQuery(value) } });
+            continue;
+          }
+          if (RANGE_FIELDS[field]) {
+            should.push({ range: { [field]: createRangeQuery(value, field) } })
+            continue;
+          }        
+          should.push({ term: { [field]: value } });
         }
-        if (RANGE_FIELDS[field]) {
-          should.push({ range: { [field]: createRangeQuery(value, field) } })
-          continue;
-        }        
-        should.push({ term: { [field]: value } });
+        
+        queryFilters.push({
+          bool: {
+            should,
+          },
+        })
       }
     }
-
-    return ({
-      bool: {
-        should,
-      },
-    })
-});
+  });
 
   return queryFilters;
 };
