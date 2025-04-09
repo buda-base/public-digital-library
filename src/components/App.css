@@ -2715,6 +2715,10 @@ p.no-result {
    margin: 20px 22px 0 22px;
 }
 
+.no-result.inAppSK {
+   font-size:14px;
+}
+
 .no-result .noR { display:block; margin-top:25px; }
 .no-result .noR li:not(#a) { list-style-type: disc; margin-left:30px;margin-top:6px;}
 
@@ -2725,7 +2729,7 @@ p.no-result {
 .no-result .reset-khmer { display:flex; align-items: baseline;}
 .no-result .reset-khmer #clear-filters { display: inline-flex; }
 
-.no-result .noR:not(.bo-x-ewts) li:last-child { display:none; }
+.no-result:not(.inAppSK) .noR:not(.bo-x-ewts) li:last-child { display:none; }
 #res-container .no-result .noR.bo-x-ewts li:last-child { pointer-events:auto; }
 #res-container .no-result .noR.bo-x-ewts li:last-child .uri-link { margin-left:0;}
 .noR.bo-x-ewts li .uri-link:not(:hover) { border-bottom:1px solid transparent; }
