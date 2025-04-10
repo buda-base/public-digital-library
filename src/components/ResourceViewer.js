@@ -9827,12 +9827,16 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                               subtime(5)
 
 
-                              if(showDetails && g["tmp:author"]) {
-                                 //loggergen.log("g:",g["tmp:author"],g["@id"]);
-                                 if(!Array.isArray(g["tmp:author"])) g["tmp:author"] = [ g["tmp:author"] ]
-                                 g.hidden.push(<div class="sub"><h4 class="first type">{this.proplink(tmp+"author", undefined, g["tmp:author"].length)}{I18n.t("punc.colon")} </h4>{this.format("h4","instacO","",false, "sub", 
-                                    g["tmp:author"].map(aut => ({type:"uri",value:fullUri(aut["@id"])}))
-                                 )}</div>)
+                              if(showDetails) for(let p of ["tmp:author", "tmp:topic"]) if(g[p]) {
+                                 //loggergen.log("g:",g[p],g["@id"]);
+                                 if(!Array.isArray(g[p])) g[p] = [ g[p] ]
+                                 for(const _i in g[p]) {
+                                    const aut = g[p][_i]
+                                    g.hidden.push(<div class={"sub "+(_i > 0 ? "hideT" : "")}>
+                                       <h4 class="first type">{this.proplink(fullUri(p), undefined, g[p].length)}{I18n.t("punc.colon")} </h4>
+                                       {this.format("h4","instacO","",false, "sub",({type:"uri",value:fullUri(aut["@id"])}))}
+                                    </div>)
+                                 } 
                               }
 
                               subtime(6)

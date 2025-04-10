@@ -357,7 +357,8 @@
       "tmp:hasInstance_plural":"Versions of this work",
       "tmp:noPagination": "You may have to find the right page yourself, because this is an unaligned etext.",
       "tmp:BDRCworkId":"Work Page",
-      "bdr:PartTypeCodicologicalVolume": "Codicological volume"
+      "bdr:PartTypeCodicologicalVolume": "Codicological volume",
+      "tmp:topic": "Is About"
    },
    "guided":{
       "keyword":"keyword",

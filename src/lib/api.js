@@ -551,8 +551,17 @@ export default class API {
                   let graph = [top].concat(nodes.filter(m => top.hasPart?.includes(m["@id"] ?? m.id)))
                   graph = graph.concat(nodes.filter(m => graph.some(g => g["bf:identifiedBy"]?.some(idb => (idb["@id"] ?? idb.id) === (m["@id"] ?? m.id)))))
                   graph = graph.concat(pathToRoot(top["@id"]??top.id, nodes))
-                  let extra = graph.map(g => ([g["tmp:author"]?.["@id"]??g["tmp:author"]?.id,g["instanceOf"]])).flat().filter(n => n).map(n => n.split(":")[1]??n)
-                  //console.log("nodes:",nodes,JSON.stringify(top,null,3),IRI,JSON.stringify(graph,null,3), extra)
+                  let more = [], extra = graph.map(g => { 
+                     for(const p of ["tmp:author", "tmp:topic"]) if(g[p]) {
+                        if(!Array.isArray(g[p])) g[p] = [ g[p] ]
+                        for(const v of g[p]) {
+                           more.push(v["@id"]??v.id)
+                        }                     
+                     }
+                     if(g["instanceOf"]) more.push(g["instanceOf"])
+                     return more
+                  }).flat().filter(n => n).map(n => n.split(":")[1]??n)
+                  //console.log("nodes:",nodes,JSON.stringify(top,null,3),IRI,JSON.stringify(graph,null,3), extra, more)
                   if(extra?.length) {
                      const attribute = "outline-bdr:PR1ER12"
                      if (!sessionStorage.getItem(attribute)) {
@@ -568,7 +577,7 @@ export default class API {
                      }
                      const labels = extra.reduce((acc,k) => ({...acc, [k]:storage[k]}),{})
                      //console.log("extra:",extra,labels,fetching,storage)
-                     extra = Object.keys(labels).map(k => ({"id":"bdr:"+k, "skos:prefLabel":labels[k].label.map(l => ({"@language":l.lang,"@value":l.value}))}))
+                     extra = Object.keys(labels).map(k => ({"id":"bdr:"+k, "skos:prefLabel":(labels[k]?.label??[]).map(l => ({"@language":l.lang,"@value":l.value}))}))
                      graph = graph.concat(extra)
                   }
                   data = { 
