@@ -36,6 +36,12 @@ function processSheetData() {
       Logger.log("WARNING no depth")
       return false
     } else {
+      const rela = row[col_rela] ? row[col_rela].split(/ *, */) : [], author = [], topic = []
+      for(const r of rela) {
+        // TODO: is it always P --> author and other --> about? 
+        if(r.startsWith("bdr:P")) author.push({id: r})
+        else topic.push({id: r})
+      }
       elem = {
         id: "bdr:MWALL_" + row[col_ID],
         "skos:prefLabel": [
@@ -45,8 +51,10 @@ function processSheetData() {
         ],
         "bf:identifiedBy":[{ id: "bdr:ID_ALL_"+row[col_ID]},{ id: "bdr:ID_ALL_D_"+row[col_ID]}].concat(row[col_type]?[{ id: "bdr:ID_ALL_T_"+row[col_ID]}]:[]),
         ...row[col_WA]?{ instanceOf: "bdr:"+row[col_WA]}:{},
-        ...row[col_rela]?.startsWith("bdr:P")?{ "tmp:author": { id: row[col_rela] }}:{},
+        ...author.length?{ "tmp:author": author}:{},
+        ...topic.length?{ "tmp:topic": topic}:{},
         _depth: depth,
+        partType:row[col_dir] === "F" ? "bdr:PartTypeText":"bdr:PartTypeSection",
         ...row[col_type] ? { _type: row[col_type] } : {}
         //_parent:parent[parent.length - 1].id
       }
@@ -124,7 +132,7 @@ function processSheetData() {
   */
 
   // v3 the whole tree + building the "by node" structure in the client
-  var globalResults = [root].concat(outline).concat(Object.values(otherNodes).flat()).filter(n => !Array.isArray(n) && !n.length)
+  var globalResults = [root].concat(outline).concat(Object.values(otherNodes).flat())
    
 
   return globalResults;
