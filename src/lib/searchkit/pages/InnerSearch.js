@@ -77,7 +77,7 @@ function MaskWhenNoResult({ setEmpty }) {
   
   const [done, setDone] = useState(0)
 
-  //console.log("mwnr:", done, status, results)
+  console.log("mwnr:", done, status, results)
 
   useEffect(() => {
     if(status === "loading" && done == 0) setDone(1)

@@ -50,7 +50,7 @@ function processSheetData() {
             : { "@language": "en", "@value": row[col_en] }
         ],
         "bf:identifiedBy":[{ id: "bdr:ID_ALL_"+row[col_ID]},{ id: "bdr:ID_ALL_D_"+row[col_ID]}].concat(row[col_type]?[{ id: "bdr:ID_ALL_T_"+row[col_ID]}]:[]),
-        ...row[col_WA]?{ instanceOf: "bdr:"+row[col_WA]}:{},
+        ...row[col_WA]?{ instanceOf: "bdr:"+row[col_WA].replace(/^W([^A])/,"WA$1")}:{},
         ...author.length?{ "tmp:author": author}:{},
         ...topic.length?{ "tmp:topic": topic}:{},
         _depth: depth,
