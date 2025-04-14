@@ -151,7 +151,8 @@ class MyTransporter extends ESTransporter {
       }
       return responses.responses    
     } catch (error) {
-      throw error
+      // if thrown it prevents the UI to display the "server error" message
+      //throw error
     }
   }
 
