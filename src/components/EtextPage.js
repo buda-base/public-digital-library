@@ -86,15 +86,16 @@ function EtextPage(props) {
 
   //loggergen.log("links:",imageLinks,e,errors, imgErr)
 
+  let getPname = (e) => e.pname != undefined ? " ["+e.pname+"]":""
+
   const imgElem = !unpag && !imgErr && <h5><a title={I18n.t("misc."+(!showIm?"show":"hide"))+" "+I18n.t("available scans for that page")} onClick={(eve) => {
       /*
       let id = "image-"+props_IRI+"-"+e.seq
       thatSetState({ collapse:{...state_collapse, [id]:!showIm}}) 
       */
       setShowIm(!showIm)
-  }}>{I18n.t("resource.page",{num:e.seq})}</a>                                             
+  }}>{I18n.t("resource.page",{num:e.seq})}{getPname(e)}</a>                                             
   </h5>
-
 
 
   // #807 debug mode
@@ -169,7 +170,7 @@ function EtextPage(props) {
         </span> }
         {/* { <h5><a title="Open image+text view in Mirador" onClick={eve => { openMiradorAtPage(imageLinks[e.seq].id) }}>p.{e.seq}</a></h5> } */}
         {   !unpag && !preview && !imgErr && imgElem }        
-            { (unpag || preview || imgErr ) && <h5><a class="unpag" title={I18n.t("resource.unpag")}>{I18n.t("resource.pageN",{num:e.seq})}</a></h5>}
+            { (unpag || preview || imgErr ) && <h5><a class="unpag" title={I18n.t("resource.unpag")}>{I18n.t("resource.pageN",{num:e.seq})}{getPname(e)}</a></h5>}
             &nbsp;
             { !preview && Object.keys(imageLinks).sort().map(id => {
               //loggergen.log("id:",id,e)

@@ -1294,6 +1294,7 @@ async function getPages(iri,next,meta) {
                value,
                language:lang,
                seq:e.sourceAsMap.pnum,
+               pname:e.sourceAsMap.pname,
                start:e.sourceAsMap.cstart,
                end:e.sourceAsMap.cend,
                id: fullUri("bdr:"+e.id),

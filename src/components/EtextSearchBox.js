@@ -339,7 +339,7 @@ export function EtextSearchResult(props) {
       onClick={() => setETSBpage(res.startPnum, res.volumeId, n, res.startPageCstart)}
     >
       <div class="ETSBheader">
-        <span>{I18n.t("punc.nth",{num: n+1})}</span><span>{I18n.t("resource.pageRvol",{p:res.startPnum,v:res.volumeNumber})}</span>
+        <span>{I18n.t("punc.nth",{num: n+1})}{res.pname != undefined ? " ["+res.pname+"]" : ""}</span><span>{I18n.t("resource.pageRvol",{p:res.startPnum,v:res.volumeNumber})}</span>
       </div>
       <div>
         {label}
