@@ -423,7 +423,7 @@ export function MyConfigure(props = {}) {
 
   useEffect(() => {
     let newFilters = ""
-    if(indexUiState?.refinementList?.type?.length) {
+    if(indexUiState?.refinementList?.type?.length && indexUiState.query) {
       newFilters = "exclude_etexts:true"
     } 
     if(pageFilters) {
