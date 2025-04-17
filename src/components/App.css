@@ -317,7 +317,7 @@ body { overflow:auto !important;padding-right:0 !important; /*font-family:"Robot
 }
 .msg-popup .front .close { color:#555; position:absolute; right:15px; top:15px; cursor: pointer;}
 
-.nav.nav:not(.etext-nav).msgPopupOn ~ div:last-child {
+.nav.nav:not(.etext-nav).msgPopupOn ~ :not(.etext-outline) + div:last-child {
    position: relative;
    z-index:100000;
 }
@@ -5906,6 +5906,16 @@ html[lang="en"] .resource .data > [data-prop="bdo:creator"] h4[data-prop="bdo:ro
 
 .withMonlam .resource.etext-view .etextPage .overpage .page .hover-menu { display:none !important; }
 
+
+.resource.etext-view .etextPage .page > span { vertical-align: baseline}
+
+.resource.etext-view .etextPage .page > span[lang='bo-x-ewts'] > span { vertical-align: inherit !important; }
+
+.resource.etext-view .etextPage .rend-bold { font-weight:700; }
+.resource.etext-view .etextPage .rend-italic { font-style:italic; }
+.resource.etext-view .etextPage .rend-small:not(#a) { font-size:70%;  line-height:inherit; }
+
+
 .resource.etext-view .etextPage .overpage{ padding-top:5px;}
 
 .preview-etext .resource.etext-view .etextPage .overpage{ padding:0px; }
@@ -6998,6 +7008,7 @@ span.subcollapse.off { opacity:0.5 !important; }
 .img.disabled,
 .checkbox.disabled { opacity:0.5; pointer-events: none; }
 
+/* h4.page > span > br:first-child { display: none; } */
 
 h4 span.highlight,
 h3 span.highlight,

@@ -1185,7 +1185,7 @@ async function getPages(iri,next,meta) {
    store.dispatch(uiActions.loading("etext pages", true));
 
    try {
-      let data, chunk, pages ;
+      let data, chunk, pages, spans ;
       /*
       if(next == 0) {
          data = await api.loadEtextChunks(iri,next,1000);  
@@ -1205,6 +1205,7 @@ async function getPages(iri,next,meta) {
 
       data = await api.loadEtextChunks(iri,next);
       
+      spans = []
       pages = []
       for(const j of data) {
          chunk = []
@@ -1217,12 +1218,30 @@ async function getPages(iri,next,meta) {
                p.chunk = chunk
             }
          }
-
+         for(const c of j.innerHits.etext_spans.hits) {
+            spans.push(c)
+         }
       }
       pages = _.orderBy(pages, (val) => val.sourceAsMap.cstart, ['asc'])            
       //chunk = _.orderBy(chunk, [(val) => val.id,(val) => val.sourceAsMap.cstart], ['asc', 'asc'])
 
-      //loggergen.log("pages:",iri,pages,chunk)
+      let sortedSpans = []
+      if(spans.length) {
+         for(const s of spans) {
+            //if(e.sourceAsMap.cstart <= s.sourceAsMap.cstart && s.sourceAsMap.cstart < e.sourceAsMap.cend) {
+               sortedSpans.push({data:s.sourceAsMap, index:s.sourceAsMap.cstart, mode:"open"})  
+            //}
+            //if(e.sourceAsMap.cstart <= s.sourceAsMap.cend && s.sourceAsMap.cend < e.sourceAsMap.cend) {
+               sortedSpans.push({data:s.sourceAsMap, index:s.sourceAsMap.cend, mode:"close"})  
+            //}
+         }
+         sortedSpans = _.orderBy(sortedSpans, "index", "desc")
+         //for(const s of sorted) {
+         //   value = value.substring(0, s.index) + (s.mode === "open" ? "<span class='rend>" : "</span>" ) + value.substring(s.index) 
+         //}
+      }
+
+      //loggergen.log("pages:",iri,pages,chunk,sortedSpans)
 
       let lang //= chunk[0].chunkContents["@language"]
 
@@ -1270,8 +1289,31 @@ async function getPages(iri,next,meta) {
             }
 
             if(start >= 0 && end >= 0) {
-               acc += _cval.substring(start,end+1) ;
-               chunks.push({"@value":_cval.substring(start,end+1),"@language":_clang})
+               let str = _cval.substring(start,end+1), pre = ""
+               for(const s of sortedSpans) {
+                  //console.log("s:",start,end,s,c.sourceAsMap,e.sourceAsMap)
+                  if(e.sourceAsMap.cstart <= s.index && s.index < e.sourceAsMap.cend) {
+                     //console.log("in page!")
+                     if(start+c.sourceAsMap.cstart <= s.index && s.index < end+c.sourceAsMap.cstart) {
+                        //console.log("display!")
+                        str = str.substring(0, s.index - start - c.sourceAsMap.cstart) + (s.mode === "open" ? "<span class='rend-"+s.data.rend+"'>" : "</span>" ) +str.substring(s.index - start - c.sourceAsMap.cstart)    
+                     }
+                  }
+
+                  // TODO: handle spans over multiple subchunks
+
+                  // if(start <= s.index - c.sourceAsMap.cstart && s.index - c.sourceAsMap.cstart < end) {
+                  //    str = str.substring(0, s.index - c.sourceAsMap.cstart) + (s.mode === "open" ? "|span class='rend-"+s.data.rend+"'|" : "|/span|" ) +str.substring(s.index - c.sourceAsMap.cstart)
+                  //    if(s.mode === "close" && s.data.start < c.sourceAsMap.cstart) {
+                  //       pre += "|span class='rend-"+s.data.rend+"'|"
+                  //    }
+                  // } 
+               }
+               // console.log("pre:",pre,c,e)
+               str = pre + str
+               acc += str ;
+               chunks.push({"@value":/*"|CHUNK "+c.sourceAsMap.cstart+"-"+c.sourceAsMap.cend+" ~ "+start+"-"+end+"|"+*/ str /*+"|/CHUNK|"*/,"@language":_clang})
+               
             }
 
             return acc ; 

@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, useCallback } from "react"
 import I18n from 'i18next';
 import rangy from "rangy"
 import "rangy/lib/rangy-textrange"
@@ -9,13 +9,15 @@ import $ from 'jquery' ;
 import SettingsApp from '@material-ui/icons/SettingsApplications';
 import { Link } from 'react-router-dom';
 import _ from "lodash"
+import HTMLparse from 'html-react-parser';
 
-import { getLangLabel, highlight } from './App';
+import { getLangLabel, /*highlight*/ } from './App';
 
 const loggergen = new logdown('etext', { markdown: false });
 
 const bdo   = "http://purl.bdrc.io/ontology/core/"
 const bdr   = "http://purl.bdrc.io/resource/";
+
 
 function EtextPage(props) {  
 
@@ -27,6 +29,16 @@ function EtextPage(props) {
     uriformat, hoverMenu, monlamPopup, onGetContext,
     ETSBresults
   } = props
+
+
+  const highlight = useCallback((str) => HTMLparse(
+    str
+      .replace(/(.rend-small.)/g,"$1 data-youpi='true' style='vertical-align:"+(0.3+(state_etextSize ?? 1.6)*0.017)+"em'")
+      .replace(/\[([ ]*)(<[^>]+>)([ ]*)\]/g,"$1$2$3")
+      .replace(/[\]\[]*↤[\]\[]*/g,"</span>")
+      .replace(/[\]\[]*↦[\]\[]*/g,"<span class='highlight'>")
+      .replace(/[\n\r]+/g, "<br/>")
+  ), [state_etextSize])
 
   //console.log("page:", _i, imageLinks, unpag, ETSBresults, e)
 
@@ -256,8 +268,9 @@ function EtextPage(props) {
                 label = highlight(label,null,null,false,true,lang)
               }
               else if(label) { 
-                  label = [ label.startsWith("\n") ? <br/>:""].concat(label.split(/[\n\r]/))                           
-                  label = label.map( (e,i) =>(e?[e,i > 0 && i < label.length-1?<br/>:null]:[])).filter(e => e)
+                label = highlight(label)
+                //label = [ label.startsWith("\n") ? <br/>:""].concat(label.split(/[\n\r]/))                           
+                //label = label.map( (e,i) =>(e?[e,i > 0 && i < label.length-1?<br/>:null]:[])).filter(e => e)
               } 
               //label = f
               let size = state_etextSize
