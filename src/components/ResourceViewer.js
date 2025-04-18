@@ -7243,6 +7243,9 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
 
       const monlamPopup = (ev, seq, pageVal) => {
 
+         // #1036
+         pageVal = pageVal?.replace(/<[^>]+>/g,"")
+
          ev.persist()
 
          const MAX_SELECTION_LENGTH = 120

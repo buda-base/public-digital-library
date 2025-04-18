@@ -1296,7 +1296,7 @@ async function getPages(iri,next,meta) {
                      //console.log("in page!")
                      if(start+c.sourceAsMap.cstart <= s.index && s.index < end+c.sourceAsMap.cstart) {
                         //console.log("display!")
-                        str = str.substring(0, s.index - start - c.sourceAsMap.cstart) + (s.mode === "open" ? "<span class='rend-"+s.data.rend+"'>" : "</span>" ) +str.substring(s.index - start - c.sourceAsMap.cstart)    
+                        str = str.substring(0, s.index - start - c.sourceAsMap.cstart) + (s.mode === "open" ? "</span><span class='rend-"+s.data.rend+"'>" : "</span><span>" ) +str.substring(s.index - start - c.sourceAsMap.cstart)    
                      }
                   }
 
@@ -1310,7 +1310,7 @@ async function getPages(iri,next,meta) {
                   // } 
                }
                // console.log("pre:",pre,c,e)
-               str = pre + str
+               str = pre + "<span>" + str + "</span>"
                acc += str ;
                chunks.push({"@value":/*"|CHUNK "+c.sourceAsMap.cstart+"-"+c.sourceAsMap.cend+" ~ "+start+"-"+end+"|"+*/ str /*+"|/CHUNK|"*/,"@language":_clang})
                
