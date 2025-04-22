@@ -71,6 +71,10 @@ function processSheetData() {
         } while (depth < prevDepth)
       }
 
+      if(!["F","D"].includes(row[col_dir])) {
+        Logger.log("warning: in row "+i+" col H = "+row[col_dir]+" (col I = "+row[col_type]+")")
+      }
+
       if(parent[parent.length - 1]?._type !== "C") {
 
         if (!parent[parent.length - 1].hasPart) parent[parent.length - 1].hasPart = []
