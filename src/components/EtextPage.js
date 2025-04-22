@@ -249,26 +249,29 @@ function EtextPage(props) {
               if(tags.length) {
                 tags = _.orderBy(tags, (r) => r.index, "desc")
 
-                //console.log("tags:", e.seq, tags)
+                console.log("tags:", e.seq, tags)
 
-                let c = "", last_c = "" //current_c = []
+                let c = "", last_c = "", current_c = []
                 for(let t of tags) {
+                  
                   if(t.span?.data?.rend) {
                     c = "rend-"+t.span.data.rend
                   } else {
                     c = "highlight"
                   }
+
+                  console.log("t:",t,c,t.span?.mode,current_c)
                   
                   h = h.substring(0, t.index) 
                   + (t.span.mode === "open" 
-                    ? "</span><span class='"+c+"'>" 
-                    : "</span><span class='"+last_c+"'>")
+                    ? "</span><span class='"+c+(current_c.length?" "+current_c.join(" "):"")+"'>" 
+                    : "</span><span class='"+current_c.join(" ")+"'>")
                     + h.substring(t.index)    
                     
                   if(t.span.mode === "open") {
-                    last_c = ""
+                    current_c = current_c.filter(t => t != c)
                   } else {
-                    last_c = c
+                    if(!current_c.includes(c)) current_c.push(c)
                   }
                   
                 }
