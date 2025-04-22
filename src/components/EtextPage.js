@@ -32,12 +32,14 @@ function EtextPage(props) {
 
 
   const highlight = useCallback((str) => HTMLparse(
-    str
+    "<span>"
+    + str
       .replace(/(.rend-small.)/g,"$1 style='vertical-align:"+(0.12+(state_etextSize ?? 1.5)*0.0075)+"em'")
       .replace(/\[([ ]*)((<[^>]+>)+)([ ]*)\]/g,"$1$2$4")
-      .replace(/[\]\[]*↤[\]\[]*/g,"</span><span>")
-      .replace(/[\]\[]*↦[\]\[]*/g,"</span><span class='highlight'>")
+      //.replace(/[\]\[]*↤[\]\[]*/g,"</span><span>")
+      //.replace(/[\]\[]*↦[\]\[]*/g,"</span><span class='highlight'>")
       .replace(/[\n\r]+/g, "<br/>")
+    + "</span>"
   ), [state_etextSize])
 
   //console.log("page:", _i, imageLinks, unpag, ETSBresults, e)
@@ -229,22 +231,47 @@ function EtextPage(props) {
             {!e.value.match(/[\n\r]/) && !e.seq ?[<span class="startChar"><span>[&nbsp;<Link to={"/show/"+props_IRI+"?startChar="+e.start+"#open-viewer"}>@{e.start}</Link>&nbsp;]</span></span>]:null}{(e.chunks?.length?e.chunks:[e.value]).map(f => {
               let h = f["@value"] ?? f              
               
-
+              let tags = [ ...f?.tags ?? [] ]
+              
               if (ETSBresults?.length > 0) {
-                _.orderBy(ETSBresults, "highlightStart" , "desc").forEach(result => {
-                    const highlightStart = result.highlightStart - result.startPageCstart - shift; 
-                    const highlightEnd = result.highlightEnd - result.startPageCstart - shift;
+                ETSBresults.forEach(result => { 
 
-                    if(highlightStart >= 0 && highlightEnd >=0 && highlightStart <= (f["@value"] ?? f).length && highlightEnd <= (f["@value"] ?? f).length) {
-                      h = h.slice(0, highlightStart) + '↦' +
-                          h.slice(highlightStart, highlightEnd) + '↤' +
-                          h.slice(highlightEnd);
-                    } else {
-                      // TODO? case when match in two part
-                    }
+                  let highlightStart = result.highlightStart - result.startPageCstart - shift; 
+                  let highlightEnd = result.highlightEnd - result.startPageCstart - shift;
 
-               
-                });
+                  if(highlightStart >= 0 && highlightEnd >=0 && highlightStart <= (f["@value"] ?? f).length && highlightEnd <= (f["@value"] ?? f).length) {
+                    tags.push({span:{...result, mode:"open" }, index:highlightStart })
+                    tags.push({span:{...result, mode:"close" }, index:highlightEnd })
+                  }
+                })
+              }
+
+              if(tags.length) {
+                tags = _.orderBy(tags, (r) => r.index, "desc")
+
+                //console.log("tags:", e.seq, tags)
+
+                let c = "", last_c = "" //current_c = []
+                for(let t of tags) {
+                  if(t.span?.data?.rend) {
+                    c = "rend-"+t.span.data.rend
+                  } else {
+                    c = "highlight"
+                  }
+                  
+                  h = h.substring(0, t.index) 
+                  + (t.span.mode === "open" 
+                    ? "</span><span class='"+c+"'>" 
+                    : "</span><span class='"+last_c+"'>")
+                    + h.substring(t.index)    
+                    
+                  if(t.span.mode === "open") {
+                    last_c = ""
+                  } else {
+                    last_c = c
+                  }
+                  
+                }
               }
 
               shift += (f["@value"] ?? f).length

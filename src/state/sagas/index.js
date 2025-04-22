@@ -1289,14 +1289,17 @@ async function getPages(iri,next,meta) {
             }
 
             if(start >= 0 && end >= 0) {
-               let str = _cval.substring(start,end+1), pre = ""
+               let str = _cval.substring(start,end+1), pre = "", tags = []
                for(const s of sortedSpans) {
                   //console.log("s:",start,end,s,c.sourceAsMap,e.sourceAsMap)
                   if(e.sourceAsMap.cstart <= s.index && s.index < e.sourceAsMap.cend) {
                      //console.log("in page!")
                      if(start+c.sourceAsMap.cstart <= s.index && s.index < end+c.sourceAsMap.cstart) {
                         //console.log("display!")
-                        str = str.substring(0, s.index - start - c.sourceAsMap.cstart) + (s.mode === "open" ? "</span><span class='rend-"+s.data.rend+"'>" : "</span><span>" ) +str.substring(s.index - start - c.sourceAsMap.cstart)    
+
+                        // TODO: do this after results are highlighted
+                        //str = str.substring(0, s.index - start - c.sourceAsMap.cstart) + (s.mode === "open" ? "</span><span class='rend-"+s.data.rend+"'>" : "</span><span>" ) +str.substring(s.index - start - c.sourceAsMap.cstart)    
+                        tags.push({span:s, index:s.index - start - c.sourceAsMap.cstart})
                      }
                   }
 
@@ -1309,10 +1312,14 @@ async function getPages(iri,next,meta) {
                   //    }
                   // } 
                }
+               
                // console.log("pre:",pre,c,e)
-               str = pre + "<span>" + str + "</span>"
+
+               // TODO: do this after search results are highlighted
+               //str = pre + "<span>" + str + "</span>"
+               
                acc += str ;
-               chunks.push({"@value":/*"|CHUNK "+c.sourceAsMap.cstart+"-"+c.sourceAsMap.cend+" ~ "+start+"-"+end+"|"+*/ str /*+"|/CHUNK|"*/,"@language":_clang})
+               chunks.push({tags, "@value":/*"|CHUNK "+c.sourceAsMap.cstart+"-"+c.sourceAsMap.cend+" ~ "+start+"-"+end+"|"+*/ str /*+"|/CHUNK|"*/,"@language":_clang})
                
             }
 
