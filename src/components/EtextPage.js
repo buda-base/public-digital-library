@@ -34,7 +34,7 @@ function EtextPage(props) {
   const highlight = useCallback((str) => HTMLparse(
     "<span>"
     + str
-      .replace(/(.rend-small.)/g,"$1 style='vertical-align:"+(0.12+(state_etextSize ?? 1.5)*0.0075)+"em'")
+      .replace(/(['"][^'"]*rend-small[^'"]*['"])/g,"$1 style='vertical-align:"+(0.12+(state_etextSize ?? 1.5)*0.0075)+"em'")
       .replace(/\[([ ]*)((<[^>]+>)+)([ ]*)\]/g,"$1$2$4")
       //.replace(/[\]\[]*↤[\]\[]*/g,"</span><span>")
       //.replace(/[\]\[]*↦[\]\[]*/g,"</span><span class='highlight'>")
@@ -249,7 +249,7 @@ function EtextPage(props) {
               if(tags.length) {
                 tags = _.orderBy(tags, (r) => r.index, "desc")
 
-                console.log("tags:", e.seq, tags)
+                //console.log("tags:", e.seq, tags)
 
                 let c = "", last_c = "", current_c = []
                 for(let t of tags) {
@@ -260,7 +260,7 @@ function EtextPage(props) {
                     c = "highlight"
                   }
 
-                  console.log("t:",t,c,t.span?.mode,current_c)
+                  //console.log("t:",t,c,t.span?.mode,current_c)
                   
                   h = h.substring(0, t.index) 
                   + (t.span.mode === "open" 
