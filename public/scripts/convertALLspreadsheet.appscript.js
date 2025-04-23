@@ -1,5 +1,5 @@
 
-const DEBUG = false, DEBUG_SIZE = 100, DEBUG_SAVE = true // true --> only 10-20 nodes, output to Drive or not
+const DEBUG = false, DEBUG_SIZE = 100, DEBUG_SAVE = true, DEBUG_ID = false // true --> only 10-20 nodes, output to Drive or not
 const FORMAT = false // pretty formatting output 
 
 const col_dir = 7, col_type = 8, col_bo = 9, col_en = 10, col_ID = 12, col_rela = 13, col_WA = 15
@@ -49,12 +49,12 @@ function processSheetData() {
             ? { "@language": "bo-x-ewts", "@value": row[col_bo].toLowerCase() }
             : { "@language": "en", "@value": row[col_en] }
         ],
-        "bf:identifiedBy":[{ id: "bdr:ID_ALL_"+row[col_ID]},{ id: "bdr:ID_ALL_D_"+row[col_ID]}].concat(row[col_type]?[{ id: "bdr:ID_ALL_T_"+row[col_ID]}]:[]),
+        "bf:identifiedBy":[{ id: "bdr:ID_ALL_"+row[col_ID]},{ id: "bdr:ID_ALL_D_"+row[col_ID]}].concat(row[col_type]?[{ id: "bdr:ID_ALL_T_"+row[col_ID]}]:[]).filter((e,i) => DEBUG_ID || i === 0 && !row[col_ID].startsWith("D")),
         ...row[col_WA]?{ instanceOf: "bdr:"+row[col_WA].replace(/^W([^A])/,"WA$1")}:{},
         ...author.length?{ "tmp:author": author}:{},
         ...topic.length?{ "tmp:topic": topic}:{},
         _depth: depth,
-        partType:row[col_dir] === "F" ? "bdr:PartTypeText":"bdr:PartTypeSection",
+        partType:"FC".includes(row[col_dir]) || "C".includes(row[col_type]) ? "bdr:PartTypeText":"bdr:PartTypeSection",
         ...row[col_type] ? { _type: row[col_type] } : {}
         //_parent:parent[parent.length - 1].id
       }
@@ -82,21 +82,25 @@ function processSheetData() {
 
         const pID = parent[parent.length - 1].id
         if(!otherNodes[pID]) otherNodes[pID] = []
-        otherNodes[pID].push({
-          "id": "bdr:ID_ALL_"+row[col_ID],
-          "rdf:value": row[col_ID],
-          "type": "tmp:ALL_id"
-        })
-        otherNodes[pID].push({
-          "id": "bdr:ID_ALL_D_"+row[col_ID],
-          "rdf:value": row[col_dir],
-          "type": "tmp:dir"
-        })
-        if(row[col_type]) otherNodes[pID].push({
-          "id": "bdr:ID_ALL_T_"+row[col_ID],
-          "rdf:value": row[col_type],
-          "type": "tmp:type"
-        })
+        if(DEBUG_ID || !row[col_ID].startsWith("D")) { 
+          otherNodes[pID].push({
+            "id": "bdr:ID_ALL_"+row[col_ID],
+            "rdf:value": row[col_ID],
+            "type": "tmp:ACIP_id"
+          })
+        }
+        if(DEBUG_ID) {
+          otherNodes[pID].push({
+            "id": "bdr:ID_ALL_D_"+row[col_ID],
+            "rdf:value": row[col_dir],
+            "type": "tmp:dir"
+          })
+          if(row[col_type]) otherNodes[pID].push({
+            "id": "bdr:ID_ALL_T_"+row[col_ID],
+            "rdf:value": row[col_type],
+            "type": "tmp:type"
+          })
+        }
       }
 
 

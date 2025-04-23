@@ -3497,7 +3497,7 @@ class ResourceViewer extends Component<Props,State>
                   //if(pI) uri = this.props.IRI+"?part="+uri
                   //else uri = uri.replace(/^((bdr:MW[^_]+)_[^_]+)/,"$2?part=$1")
 
-                  //loggergen.log("inOutL:",elem,info,uri,dico)
+                  loggergen.log("inOutL:",elem,info,uri,dico)
 
                   if(info === uri) {                      
                      if(elem.volume) {
@@ -3529,6 +3529,10 @@ class ResourceViewer extends Component<Props,State>
                      if(!info || info === uri) info = I18n.t("resource.noT")
 
                      //loggergen.log("dico:",uri,info)
+                  }
+
+                  if(elem.tmpAuthor?.length) {
+                     info = info+ I18n.t("prop.tmp:by") + elem.tmpAuthor
                   }
 
                   link = <Link class={"urilink prefLabel " } to={elem.url} onClick={(e) => { 
@@ -9830,15 +9834,21 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                               subtime(5)
 
 
-                              if(showDetails) for(let p of ["tmp:author", "tmp:topic"]) if(g[p]) {
+                              if(showDetails || this.props.IRI === "bdr:PR1ER12") for(let p of ["tmp:author", "tmp:topic"]) if(g[p]) {
                                  //loggergen.log("g:",g[p],g["@id"]);
                                  if(!Array.isArray(g[p])) g[p] = [ g[p] ]
+                                 if(p === "tmp:author") g.tmpAuthor = []
                                  for(const _i in g[p]) {
                                     const aut = g[p][_i]
-                                    g.hidden.push(<div class={"sub "+(_i > 0 ? "hideT" : "")}>
+                                    if(g.hidden) g.hidden.push(<div class={"sub "+(_i > 0 ? "hideT" : "")}>
                                        <h4 class="first type">{this.proplink(fullUri(p), undefined, g[p].length)}{I18n.t("punc.colon")} </h4>
                                        {this.format("h4","instacO","",false, "sub",({type:"uri",value:fullUri(aut["@id"])}))}
                                     </div>)
+                                    if(p === "tmp:author" && this.props.IRI === "bdr:PR1ER12") {
+                                       let labels = (this.props.assocResources[fullUri(aut["@id"])]??[]).filter(a => a.type === skos+"prefLabel")
+                                       if(labels?.length) labels = getLangLabel(this,skos+"prefLabel",labels)
+                                       if(labels?.value) g.tmpAuthor.push(labels.value)
+                                    }
                                  } 
                               }
 
@@ -9957,7 +9967,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                               <span class={"parTy "+(e.details?"on":"")}  ref={citeRef} {...e.details?{title:/*tLabel+" - "+*/ I18n.t("resource."+(this.state.collapse[tag+"-details"]?"hideD":"showD")), onClick:(ev) => toggle(ev,root,e["@id"],"details",false,e)}:{title:tLabel}} >
                                  {pType && parts[pType] ? <div>{parts[pType]}</div> : <div>{parts["?"]}</div> }
                               </span>
-                              <span>{this.uriformat(null,{noid:true, type:'uri', value:fUri, data: e, ...(e.partType==="bdr:PartTypeVolume"?{volumeNumber:e.volumeNumber}:{}), inOutline: (!e.hasPart?tag+"-details":tag), url, debug:false, ...!e.hasPart&&!e["tmp:hasNonVolumeParts"]?{}:{toggle:() => toggle(null,root,togId,!e.hasPart&&!e["tmp:hasNonVolumeParts"]?"open"/*"details"*/:"",false,e,top)} })}</span>
+                              <span>{this.uriformat(null,{noid:true, type:'uri', value:fUri, data: e, ...(e.partType==="bdr:PartTypeVolume"?{volumeNumber:e.volumeNumber}:{}), tmpAuthor:e.tmpAuthor, inOutline: (!e.hasPart?tag+"-details":tag), url, debug:false, ...!e.hasPart&&!e["tmp:hasNonVolumeParts"]?{}:{toggle:() => toggle(null,root,togId,!e.hasPart&&!e["tmp:hasNonVolumeParts"]?"open"/*"details"*/:"",false,e,top)} })}</span>
                               {e.id}
                               {this.samePopup(e.same,fUri)}
                               <div class="abs">

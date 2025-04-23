@@ -358,7 +358,8 @@
       "tmp:noPagination": "You may have to find the right page yourself, because this is an unaligned etext.",
       "tmp:BDRCworkId":"Work Page",
       "bdr:PartTypeCodicologicalVolume": "Codicological volume",
-      "tmp:topic": "Is About"
+      "tmp:topic": "Is About",
+      "tmp:by":" | by: "
    },
    "guided":{
       "keyword":"keyword",
