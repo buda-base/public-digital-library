@@ -209,7 +209,7 @@ body { overflow:auto !important;padding-right:0 !important; /*font-family:"Robot
    top:0;
 }
 .SearchPane #logo > div > div {
-   width:620px; height:230px; background:white;padding:0px 30px;box-sizing: border-box;
+   width:620px; height:auto; background:white;padding:30px 30px;box-sizing: border-box;
    font-size:24px;color:black;line-height:28px; display:flex; flex-direction: column; justify-content: center; align-items: flex-start;
 }
 
@@ -218,12 +218,18 @@ body { overflow:auto !important;padding-right:0 !important; /*font-family:"Robot
    line-height: 48px;margin-top:0; margin-bottom:14px;text-align: left;;
 }
 
-.SearchPane #logo h1[lang="bo"] {  font-size:61px; margin-bottom:32px; font-weight:500; line-height: 105px; }
+.SearchPane #logo h1[lang="bo"] {  font-size:52px; margin-bottom:18px; font-weight:500; line-height: 90px; }
 
 .SearchPane #logo h1 + div {
    font-weight:500;
    margin-bottom:15px;
 }
+
+.SearchPane #logo h1[lang="bo"] + div {
+   margin-bottom:18px;
+}
+
+
 .SearchPane #logo h1 ~ span {
    color: #4a4a4a;
    font-size: 16px;
@@ -234,9 +240,11 @@ body { overflow:auto !important;padding-right:0 !important; /*font-family:"Robot
    /* letter-spacing: 0.31px; */
 }
 
+/* 
 .SearchPane #logo h1[lang="bo"]~span {
    line-height:200%;
-}
+} 
+*/
 
 .infoPanel {
    background: #d73449;
