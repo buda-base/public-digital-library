@@ -165,7 +165,8 @@ export const searchClient = Client(
         console.log("requests?", requests, customizedRequest)
         //console.log("author?", customizedRequest.map(r => r.body?.aggs?.author))
 
-        return customizedRequest;
+        // #1029 force index not to be ""
+        return customizedRequest.map(r => ({ ...r, indexName:process.env.REACT_APP_ELASTICSEARCH_INDEX }));
       },
     },
   },
