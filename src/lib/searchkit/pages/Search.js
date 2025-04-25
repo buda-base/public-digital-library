@@ -161,7 +161,8 @@ export const searchClient = Client(
           }
           return getGenericRequest(request); //request;
         });
-        //console.log("requests?", requests, customizedRequest)
+        
+        console.log("requests?", requests, customizedRequest)
         //console.log("author?", customizedRequest.map(r => r.body?.aggs?.author))
 
         return customizedRequest;
@@ -539,7 +540,12 @@ export class SearchPage extends Component<State, Props>
                   <div className="pagination">
                     <Pagination />
                   </div>
-                  <MyConfigure hitsPerPage={window.innerWidth <= 665 ? 20 : 20} { ...{ pageFilters } }/>
+
+
+                    {/* disabling sending exclude_etexts while debugging (#1029) */}
+                  {/* <MyConfigure hitsPerPage={window.innerWidth <= 665 ? 20 : 20} { ...{ pageFilters } }/> */}
+                  <Configure hitsPerPage={window.innerWidth <= 665 ? 20 : 20} filters={pageFilters} />
+
                   <HitsWithLabels that={this} {...{ routing, sortItems, storageRef }} />
                   <div className="pagination" onClick={scrollToTop}>
                     <Pagination padding={window.innerWidth <= 665 ? 1 : 3}/>

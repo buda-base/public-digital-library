@@ -223,8 +223,11 @@ export class InnerSearchPage extends Component<State, Props>
                 <div className="main-content">
                   <SearchResultsHeader that={this} inner={true} recent={recent&&!sortByDefault} {...{ storageRef, forceSearch }} />
                   <div className="hits">
+                    
                     {/* TODO: use MyConfigure once bug with sorting is fixed (#1029) */}
+                    {/* <MyConfigure hitsPerPage={isOtherVersions ? 11 * (this.state.toggled ? 2 : 1) : (recent ? 20 : 5)} { ...{ pageFilters } }  /> */}
                     <Configure hitsPerPage={isOtherVersions ? 11 * (this.state.toggled ? 2 : 1) : (recent ? 20 : 5)} /*{ ...{ pageFilters } }*/ filters={pageFilters} />
+                    
                     <HitsWithLabels that={this} {...{ routing, recent:recent&&!sortByDefault, storageRef, isOtherVersions, srcVersionID }} />
                     { isOtherVersions 
                       ? <OtherVersionsNav {...{ that:this, RID, srcVersionID } }/>
