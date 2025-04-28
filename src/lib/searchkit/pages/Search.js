@@ -543,9 +543,9 @@ export class SearchPage extends Component<State, Props>
                   </div>
 
 
-                    {/* disabling sending exclude_etexts while debugging (#1029) */}
-                  {/* <MyConfigure hitsPerPage={window.innerWidth <= 665 ? 20 : 20} { ...{ pageFilters } }/> */}
-                  <Configure hitsPerPage={window.innerWidth <= 665 ? 20 : 20} filters={pageFilters} />
+                  <MyConfigure hitsPerPage={window.innerWidth <= 665 ? 20 : 20} { ...{ pageFilters } }/>
+                    {/* DONE: disable sending exclude_etexts while debugging (#1029) */}
+                  {/* <Configure hitsPerPage={window.innerWidth <= 665 ? 20 : 20} filters={pageFilters} /> */}
 
                   <HitsWithLabels that={this} {...{ routing, sortItems, storageRef }} />
                   <div className="pagination" onClick={scrollToTop}>
