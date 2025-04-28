@@ -832,7 +832,8 @@
       "workId1":"See the \"work\" page which combines all the different versions of this text.",
       "workId2":"The ID of this version is {{ id }}.",
       "workId3":"The overarching work ID is {{ id }}",
-      "searchTtrad":"Search the {{trad}}"
+      "searchTtrad":"Search the {{trad}}",
+      "wPageO":"Work page<sp> of {{of}}</sp>"
    },
    "tradition":{
       "boT":"Tibetan Tradition",

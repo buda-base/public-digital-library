@@ -11046,6 +11046,15 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
       else {
 
          const bcLabel = titlElem?.[0]?.value && getLangLabel(this, skos+"prefLabel", titlElem) 
+
+         let iof = this.getResourceElem(bdo+"instanceOf")
+         if(iof?.length) iof = shortUri(iof[0].value)
+         else iof = null
+
+         if(iof) { 
+            breadcrumbs.push(<Link to={"/show/"+iof} class="can-shrink"><Trans i18nKey="resource.wPageO" values={{of: bcLabel?.value, interpolation: {escapeValue: false}}} components={{sp: <u/>}} /></Link>)
+         }
+
          breadcrumbs.push(<span class="can-shrink">{bcLabel?.value ?? this.props.IRI}</span>)
 
          let legal = this.getResourceElem(adm+"metadataLegal"), legalD, sameLegalD
@@ -11073,10 +11082,6 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
             //theOutline = <div data-prop="tmp:outline"><h3><span>Outline:</span></h3><div class="group">{theOutline}</div></div>
          }
 
-
-         let iof = this.getResourceElem(bdo+"instanceOf")
-         if(iof?.length) iof = shortUri(iof[0].value)
-         else iof = null
 
          let findText, shouldShowOtherInstances = _T == "Work" && !serial?.length && !isSerialWork
          if(![/*"Instance",*/ "Images", "Etext"].includes(_T) /*&& (_T != "Work" || serial?.length || isSerialWork)*/ && (_T != "Instance" || this.getResourceElem(bdo+"workHasInstance")?.length && (!this.props.loading||this.state.collapse["findText-"+this.props.IRI]) )) {            

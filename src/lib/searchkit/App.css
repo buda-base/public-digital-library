@@ -1563,7 +1563,7 @@ header[data-hits="0"] ~ .hits .pagination,
 
 .resource [data-prop="tmp:workHasInstance"] .AppSK .result .data .names > .label + span,
 .resource [data-prop="tmp:workHasInstance"] .AppSK .result .data .names > .label {
-  font-size:14px;
+  font-size:13px;
 }
 
 .resource [data-prop="tmp:workHasInstance"] .AppSK .result .data .T + span {
@@ -1789,6 +1789,8 @@ header[data-hits="0"] ~ .hits .pagination,
 #root .ariane .can-shrink:nth-last-child(1):nth-child(4) {
   max-width:40%;
 }
+
+
 
 /*
 #viewer.mirador-container .mirador-viewer {
@@ -2695,6 +2697,9 @@ header[data-hits="0"] ~ .hits .pagination,
 
 @media (max-width:800px){
   
+  #root .ariane .can-shrink u {
+    display:none;
+  }
 
   .home-tradi-grid ~ .AppSK.InnerSearchPage .searchbox {
     padding:0 20px;
