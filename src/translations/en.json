@@ -833,7 +833,7 @@
       "workId2":"The ID of this version is {{ id }}.",
       "workId3":"The overarching work ID is {{ id }}",
       "searchTtrad":"Search the {{trad}}",
-      "wPageO":"Work page<sp> of {{of}}</sp>"
+      "wPageO":"<nomob>(</nomob>Work<nomob>)</nomob><sp> {{of}}</sp>"
    },
    "tradition":{
       "boT":"Tibetan Tradition",

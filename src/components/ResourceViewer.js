@@ -11052,7 +11052,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
          else iof = null
 
          if(iof) { 
-            breadcrumbs.push(<Link to={"/show/"+iof} class="can-shrink"><Trans i18nKey="resource.wPageO" values={{of: bcLabel?.value, interpolation: {escapeValue: false}}} components={{sp: <u/>}} /></Link>)
+            breadcrumbs.push(<Link to={"/show/"+iof} class="can-shrink"><Trans i18nKey="resource.wPageO" values={{of: bcLabel?.value, interpolation: {escapeValue: false}}} components={{nomob:<u/>,sp: <i/>}} /></Link>)
          }
 
          breadcrumbs.push(<span class="can-shrink">{bcLabel?.value ?? this.props.IRI}</span>)
@@ -11083,8 +11083,8 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
          }
 
 
-         let findText, shouldShowOtherInstances = _T == "Work" && !serial?.length && !isSerialWork
-         if(![/*"Instance",*/ "Images", "Etext"].includes(_T) /*&& (_T != "Work" || serial?.length || isSerialWork)*/ && (_T != "Instance" || this.getResourceElem(bdo+"workHasInstance")?.length && (!this.props.loading||this.state.collapse["findText-"+this.props.IRI]) )) {            
+         let findText, hasInstances = this.getResourceElem(bdo+"workHasInstance")?.length > 0, shouldShowOtherInstances = _T == "Work" && !serial?.length && !isSerialWork && hasInstances
+         if(![/*"Instance",*/ "Images", "Etext"].includes(_T) /*&& (_T != "Work" || serial?.length || isSerialWork)*/ && (_T != "Instance" || hasInstances && (!this.props.loading||this.state.collapse["findText-"+this.props.IRI]) )) {            
             findText = <InnerSearchPageContainer isOtherVersions={_T === "Instance" || shouldShowOtherInstances} srcVersionID={_T === "Instance" ? this.props.IRI.split(":")[1] : undefined} location={this.props.location} /*history={this.props.history}*/ auth={this.props.auth} isOsearch={true} RID={iof ?? this.props.IRI} T={_T} />          
             if(_T == "Instance" || shouldShowOtherInstances) {
                if(!this.state.collapse["findText-"+this.props.IRI]) this.setState({collapse:{...this.state.collapse,["findText-"+this.props.IRI]:true}})
