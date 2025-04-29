@@ -10720,7 +10720,14 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
       }
 
       const breadcrumbs = [
-         <Link to="/">{I18n.t("topbar.home")}</Link>         
+         <Link to="/" onClick={(ev) => { 
+            this.props.navigate({pathname:"/",search:""}); 
+            if(this.props.keyword) { this.props.onResetSearch(); } 
+            this.setState({blurSearch:false, forceFocus: true})
+            ev.preventDefault()
+            ev.stopPropagation()
+            return false
+         }}>{I18n.t("topbar.home")}</Link>         
       ]
 
       if(this.props.previewEtext || this.props.disableInfiniteScroll || topLevel || this.props.openEtext || hasChunks && hasChunks.length && this.state.openEtext) {         
