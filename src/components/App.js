@@ -1186,7 +1186,7 @@ export function top_right_menu(that,etextTitle,backUrl,etextres,isMirador,locati
    let onZhMirror = (that.props.config && that.props.config.chineseMirror)
    let onKhmerServer = (that.props.config && that.props.config.khmerServer)
 
-   let feedbucket = <div id="feedback" title={I18n.t("topbar.feedback")} className={that.props.feedbucket + (that.props.keyword&&!that.props.IRI?" top":"")} onClick={(ev) => {
+   let feedbucket = <div id="feedback" title={I18n.t("topbar.feedback")} className={that.props.feedbucket /*+ (that.props.keyword&&!that.props.IRI?" top":"")*/} onClick={(ev) => {
       if(!document.querySelector('feedbucket-app')) {
          $("#feedback .tooltip").toggleClass("on")
       } else {
@@ -1204,7 +1204,7 @@ export function top_right_menu(that,etextTitle,backUrl,etextres,isMirador,locati
          }}>{I18n.t("viewer.mustLoginFeedback")}</a>
       </div></div>
 
-   let feedbucketTop = <div id="feedback" title={I18n.t("topbar.feedback")} className={"top "+ that.props.feedbucket + (that.props.keyword&&!that.props.IRI?" top":"")} onClick={(ev) => {
+   let feedbucketTop = <div id="feedback" title={I18n.t("topbar.feedback")} className={"top " + that.props.feedbucket} onClick={(ev) => {
       if(!document.querySelector('feedbucket-app')) {
          $("#feedback .tooltip").toggleClass("on")
       } else {
