@@ -413,13 +413,53 @@ export const langProfile = [
 ]
 */
 
+export const popupIsHidden = (that, m, lab) => {
+
+   //console.log("pih:",that,m,lab)
+   
+   // condition to show popup 
+   let condition      
+   if(!m.condition) 
+      condition = true
+   else if(m.condition && m.condition.match(/^[.a-zA-Z]+$/)) {         
+      condition = eval(m.condition) ? true: false;
+   } 
+   //loggergen.log("condition:", m.condition, condition)
+
+   let hidden = that.state.collapse?.["msgPopup"+(m.id?"-"+m.id:"")]
+
+   if(m.popup) {         
+      let showEveryNDay = 30
+      if(m.showEveryNDay != undefined) showEveryNDay = m.showEveryNDay
+      const wasClosed = localStorage.getItem("msg-popup-closed"+(m.id?"-"+m.id:"")) 
+      const tooOld = showEveryNDay != -1 && Date.now() - wasClosed > showEveryNDay * 24 * 3600 * 1000
+      //loggergen.log("sENd:",m.id,hidden,showEveryNDay,m.showEveryNDay,wasClosed,Date.now(),tooOld)         
+      if(!hidden && condition && (!wasClosed || tooOld)) {
+         //loggergen.log("show!",hidden) 
+         hidden = false               
+      } else if(condition === undefined && !hidden || condition == false && !hidden || condition && wasClosed && !tooOld && !hidden) {
+         //loggergen.log("hide!")                
+         hidden = true
+      } else if(condition && hidden && !wasClosed) {
+         hidden = false
+         //loggergen.log("show!!",hidden) 
+      }
+   }
+   
+   hidden = hidden || isProxied(that) && lab.value.includes("/donation/") 
+
+   //console.log("pih!",hidden)
+
+   return hidden
+}
 
 export const renderBanner = (that, infoPanel, isResourcePage) => {
 
    const collapse = {}
    const res = (<div class={"infoPanel "+(isResourcePage?"inRes":"")}>{ infoPanel.map((m,i) => {
-      let lab = getLangLabel(that,tmp+"bannerMessage",m.text) 
       let icon 
+
+      let lab = getLangLabel(that,tmp+"bannerMessage",m.text) 
 
       //loggergen.log("popup/m:",m.id,m,lab,m.text,that.props.locale,that)
       
@@ -459,36 +499,7 @@ export const renderBanner = (that, infoPanel, isResourcePage) => {
 
 
          // check if popup has it recently been closed + #829
-         let hidden = that.state.collapse?.["msgPopup"+(m.id?"-"+m.id:"")]
-
-         // condition to show popup 
-         let condition      
-         if(!m.condition) 
-            condition = true
-         else if(m.condition && m.condition.match(/^[.a-zA-Z]+$/)) {         
-            condition = eval(m.condition) ? true: false;
-         } 
-         //loggergen.log("condition:", m.condition, condition)
-
-         if(m.popup) {         
-            let showEveryNDay = 30
-            if(m.showEveryNDay != undefined) showEveryNDay = m.showEveryNDay
-            const wasClosed = localStorage.getItem("msg-popup-closed"+(m.id?"-"+m.id:"")) 
-            const tooOld = showEveryNDay != -1 && Date.now() - wasClosed > showEveryNDay * 24 * 3600 * 1000
-            //loggergen.log("sENd:",m.id,hidden,showEveryNDay,m.showEveryNDay,wasClosed,Date.now(),tooOld)         
-            if(!hidden && condition && (!wasClosed || tooOld)) {
-               //loggergen.log("show!",hidden) 
-               hidden = false               
-            } else if(condition === undefined && !hidden || condition == false && !hidden || condition && wasClosed && !tooOld && !hidden) {
-               //loggergen.log("hide!")                
-               hidden = true
-            } else if(condition && hidden && !wasClosed) {
-               hidden = false
-               //loggergen.log("show!!",hidden) 
-            }
-         }
-         
-         hidden = hidden || isProxied(that) && lab.value.includes("/donation/") 
+         let hidden = popupIsHidden(that, m, lab)
 
          if(hidden != that.state.collapse["msgPopup"+(m.id?"-"+m.id:"")]) { 
             //console.log("stt:",hidden)
@@ -1277,7 +1288,12 @@ export function top_right_menu(that,etextTitle,backUrl,etextres,isMirador,locati
 
    let msgPopupOn = !location.pathname.includes("/static/") 
       && !location.pathname.includes("/buda-user-guide") 
-      && that.props.config?.msg?.some((m,i) => (!sourcePage || m.display?.includes(sourcePage)) && m.popup && (!m.condition || eval(m.condition)) && !that.state.collapse["msgPopup"+(m.id?"-"+m.id:"")])
+      && that.props.config?.msg?.some(m => { 
+         let lab = getLangLabel(that,tmp+"bannerMessage",m.text) 
+         return (!sourcePage || m.display?.includes(sourcePage)) && m.popup && !popupIsHidden(that, m, lab) 
+      })
+      
+      //that.props.config?.msg?.some((m,i) => (!sourcePage || m.display?.includes(sourcePage)) && m.popup && (!m.condition || eval(m.condition)) && !that.state.collapse["msgPopup"+(m.id?"-"+m.id:"")])
 
    //console.log("mpo:",JSON.stringify(that.state.collapse),msgPopupOn, that.state.collapse, that.props.config?.msg?.some((m,i) => m.popup && (!m.condition || eval(m.condition)) && that.state.collapse["msgPopup"+(m.id?"-"+m.id:"")] != true))
 
@@ -7564,7 +7580,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       
       if(this.props.config && this.props.config.msg && !this.props.simple && !this.props.preview) {
          if(message.length == 0 && !this.props.loading && !this.props.keyword) infoPanelH = this.props.config.msg.filter(m => m.display && m.display.includes("home") && this.props.location.pathname === "/" )
-         else infoPanelR = this.props.config.msg.filter(m => m.display && m.display.includes("home") && this.props.location.pathname === "/")
+         else infoPanelR = this.props.config.msg.filter(m => m.display && ["search"].some(p => m.display.includes(p))&& this.props.location.pathname === "/search"  )
          
          if(infoPanelH && infoPanelH.length) infoPanelH = renderBanner(this, infoPanelH)
          if(infoPanelR && infoPanelR.length) infoPanelR = renderBanner(this, infoPanelR)

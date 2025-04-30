@@ -325,7 +325,7 @@ body { overflow:auto !important;padding-right:0 !important; /*font-family:"Robot
 }
 .msg-popup .front .close { color:#555; position:absolute; right:15px; top:15px; cursor: pointer;}
 
-.nav.nav:not(.etext-nav).msgPopupOn ~ :not(.etext-outline) + div:last-child {
+:not(.advanced) > .nav.nav:not(.etext-nav).msgPopupOn ~ :not(.etext-outline) + div:last-child {
    position: relative;
    z-index:100000;
 }
