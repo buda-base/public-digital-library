@@ -16,6 +16,8 @@ const mapStateToProps = (state,ownProps) => {
    let config = state.data.config
    let locale = state.i18next.lang   
 
+   let keyword = state.data.keyword
+
    let profileName
    if(auth && auth.userProfile) {
       if(auth.userProfile.name) profileName = auth.userProfile.name
@@ -41,7 +43,9 @@ const mapStateToProps = (state,ownProps) => {
    let props = { config, locale, profileName, portraitPopupClosed, isNewUser, feedbucket, 
       langPreset,langIndex,langExt,etextLang,
       dictionary,
-      advancedSearch, advKeyword
+      advancedSearch, advKeyword,
+
+      keyword
    }
 
    return props

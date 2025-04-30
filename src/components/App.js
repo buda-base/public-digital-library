@@ -1236,13 +1236,17 @@ export function top_right_menu(that,etextTitle,backUrl,etextres,isMirador,locati
 
    let logo = [
             <div id="logo">
-               <Link to="/?sortBy=firstScanSyncDate_desc&type%5B0%5D=Instance" {...(that?.props?.advancedSearch || that?.state?.filters) ? {onClick:(ev) => { 
-                  that.props.navigate({pathname:"/",search:""}); 
+               <Link to="/?sortBy=firstScanSyncDate_desc&type%5B0%5D=Instance" {...(that?.props?.advancedSearch || that?.state?.filters || that?.props?.keyword) ? {onClick:(ev) => { 
                   if(that.props.keyword) { that.props.onResetSearch(); } 
                   that.setState({blurSearch:false, forceFocus: true})
-                  ev.preventDefault()
-                  ev.stopPropagation()
-                  return false
+                  /*
+                  if(that?.state?.filters) {
+                     that.props.navigate({pathname:"/",search:""}); 
+                     ev.preventDefault()
+                     ev.stopPropagation()
+                     return false
+                  }
+                  */
                }}:{}} ><img src="/icons/BUDA-small.svg"/><span class="buda-caption"><span>BUDA</span><span class="buda-small">{I18n.t("home.buda")}</span></span></Link>                                  
                
                {/* <a id="by">
@@ -1994,15 +1998,14 @@ class App extends Component<Props,State> {
       if(!this.state.blurSearch) {
          if(window.innerWidth > 1024) {
 
-            let elem = document.querySelector(".ais-SearchBox-form input")
-            if(elem) { 
-               if(this.state.forceFocus) elem.focus()
+            let 
+            elem = document.querySelector("#search-bar input")
+            if(!elem) { 
+               elem = document.querySelector(".ais-SearchBox-form input")
+               if(elem && this.state.forceFocus) elem.focus()
             } else {
-               elem = document.querySelector("#search-bar input")
-               if(elem) {
-                  elem.focus()
-                  $("#search-bar input[type=text][placeholder]").attr("placeholder",I18n.t("home.start"));
-               }
+               elem.focus()
+               $("#search-bar input[type=text][placeholder]").attr("placeholder",I18n.t("home.start"));
             }            
          }
       }
