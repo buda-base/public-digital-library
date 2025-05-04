@@ -55,55 +55,66 @@
           "to": "/osearch/search?associatedTradition%5B0%5D=:rid&type%5B0%5D=Instance",
           "content": [
             {
-              "id":"bdr:TraditionBon",
-              "img":"/tbrc/bon.jpg",
-              "to":"/tradition/bo/bon"
-           },{
-              "id":"bdr:TraditionNyingma",
-              "img":"/tbrc/nyingma.jpg",
-              "to":"/tradition/bo/nyingma"
-           },{
-              "id":"bdr:TraditionGeluk",
-              "img":"/tbrc/gelug.jpg",
-              "to":"/tradition/bo/geluk"
-           },{
-              "id":"bdr:TraditionKagyu",
-              "img":"/tbrc/kagyu.jpg",
-              "to":"/tradition/bo/kagyu"
-           },{
-              "id":"bdr:TraditionSakya",
-              "img":"/tbrc/sakya.jpg",
-              "to":"/tradition/bo/sakya"
-           },{
-              "id":"bdr:TraditionJonang",
-              "img":"/tbrc/jonang2.jpg",
-              "to":"/tradition/bo/jonang"
-           },{
-              "id":"bdr:TraditionRime",
-              "img":"/tbrc/rismed.jpg",
-              "to":"/tradition/bo/rime"
-           },{
-             "id":"bdr:TraditionKadam",
-             "img":"/tbrc/kadam.jpg",
-              "to":"/tradition/bo/kadampa"
-           },{
-              "id":"bdr:TraditionZhije",
-              "img":"/tbrc/shije.jpg",
-              "to":"/tradition/bo/zhije"
-           },{
-              "id":"tmp:T281",
-              "img":"/tbrc/poetry.jpg",
-              "to":"/tradition/bo/poetry"
-            },{
-              "id":"tmp:T1134",
-              "img":"/tbrc/history.jpg",
-              "to":"/tradition/bo/history"
-            },{
-              "id":"tmp:T13",
-              "img":"/tbrc/karchak.jpg",
-              "to":"/tradition/bo/karchak"
+              "id": "bdr:TraditionBon",
+              "img": "/tbrc/bon.jpg",
+              "to": "/tradition/bo/bon"
+            },
+            {
+              "id": "bdr:TraditionNyingma",
+              "img": "/tbrc/nyingma.jpg",
+              "to": "/tradition/bo/nyingma"
+            },
+            {
+              "id": "bdr:TraditionGeluk",
+              "img": "/tbrc/gelug.jpg",
+              "to": "/tradition/bo/geluk"
+            },
+            {
+              "id": "bdr:TraditionKagyu",
+              "img": "/tbrc/kagyu.jpg",
+              "to": "/tradition/bo/kagyu"
+            },
+            {
+              "id": "bdr:TraditionSakya",
+              "img": "/tbrc/sakya.jpg",
+              "to": "/tradition/bo/sakya"
+            },
+            {
+              "id": "bdr:TraditionJonang",
+              "img": "/tbrc/jonang2.jpg",
+              "to": "/tradition/bo/jonang"
+            },
+            {
+              "id": "bdr:TraditionRime",
+              "img": "/tbrc/rismed.jpg",
+              "to": "/tradition/bo/rime"
+            },
+            {
+              "id": "bdr:TraditionKadam",
+              "img": "/tbrc/kadam.jpg",
+              "to": "/tradition/bo/kadampa"
+            },
+            {
+              "id": "bdr:TraditionZhije",
+              "img": "/tbrc/shije.jpg",
+              "to": "/tradition/bo/zhije"
+            },
+            {
+              "id": "tmp:T281",
+              "img": "/tbrc/poetry.jpg",
+              "to": "/tradition/bo/poetry"
+            },
+            {
+              "id": "tmp:T1134",
+              "img": "/tbrc/history.jpg",
+              "to": "/tradition/bo/history"
+            },
+            {
+              "id": "tmp:T13",
+              "img": "/tbrc/karchak.jpg",
+              "to": "/tradition/bo/karchak"
             }
-           ]
+          ]
         },
         {
           "id": "all",
@@ -186,48 +197,27 @@
                 ],
                 "content": [
                   {
+                    "id": "bdr:MW21939"
+                  },
+                  {
                     "id": "bdr:MW1PD159541"
-                  },
-                  {
-                    "id": "bdr:MW25983"
-                  },
-                  {
-                    "id": "bdr:MW21508"
-                  },
-                  {
-                    "id": "bdr:MW2PD20866"
                   },
                   {
                     "id": "bdr:MW3CN53"
                   },
                   {
-                    "id": "bdr:MW1KG16449"
-                  },
-                  {
-                    "id": "bdr:MW21521"
-                  },
-                  {
-                    "id": "bdr:MW23445"
-                  },
-                  {
                     "id": "bdr:MW1KG14"
-                  },
-                  {
-                    "id": "bdr:MW20578"
                   },
                   {
                     "id": "bdr:MW30199"
                   },
                   {
-                    "id": "bdr:MW22247"
-                  },
-                  {
-                    "id": "bdr:MW1KG22609"
+                    "id": "bdr:MW2PD20866"
                   }
                 ]
               },
               {
-                "id": "tmp:tradiCat0_17",
+                "id": "tmp:tradiCat0_9",
                 "to": "/show/bdr::rid",
                 "label": [
                   {
@@ -241,25 +231,94 @@
                 ],
                 "content": [
                   {
+                    "id": "bdr:MW2PD17514"
+                  },
+                  {
                     "id": "bdr:MW8870"
+                  },
+                  {
+                    "id": "bdr:MW2DB16631"
+                  },
+                  {
+                    "id": "bdr:MW00KG03612"
                   },
                   {
                     "id": "bdr:MW3CN2409"
                   },
                   {
+                    "id": "bdr:MW20869"
+                  },
+                  {
                     "id": "bdr:MW8CZ54"
+                  },
+                  {
+                    "id": "bdr:MW3KG227"
+                  },
+                  {
+                    "id": "bdr:MW3KG230"
+                  },
+                  {
+                    "id": "bdr:MW3KG229"
+                  },
+                  {
+                    "id": "bdr:MW9140"
                   },
                   {
                     "id": "bdr:MW3CN21303"
                   },
                   {
+                    "id": "bdr:MW3PD247"
+                  },
+                  {
                     "id": "bdr:MW1AC320"
+                  },
+                  {
+                    "id": "bdr:MW3CN4120"
+                  },
+                  {
+                    "id": "bdr:MW8CZ57"
+                  },
+                  {
+                    "id": "bdr:MW8LS76097"
+                  },
+                  {
+                    "id": "bdr:MW3KG226"
+                  },
+                  {
+                    "id": "bdr:MW3CN21680"
+                  },
+                  {
+                    "id": "bdr:MW8LS32718"
+                  },
+                  {
+                    "id": "bdr:MW29701"
                   },
                   {
                     "id": "bdr:MW2PD20174"
                   },
                   {
+                    "id": "bdr:MW2PD20179"
+                  },
+                  {
+                    "id": "bdr:MW3CN26451"
+                  },
+                  {
+                    "id": "bdr:MW3CN2957"
+                  },
+                  {
                     "id": "bdr:MW2PD17369"
+                  },
+                  {
+                    "id": "bdr:MW3CN2890"
+                  },
+                  {
+                    "id": "bdr:MW3CN26344"
+                  },
+                  {
+                    "id": "bdr:MW3CN3335"
+                  },
+                  {
+                    "id": "bdr:MW3KG231"
                   },
                   {
                     "id": "bdr:MW4PD2021"
@@ -286,6 +345,18 @@
                     "id": "bdr:MW1LT3414"
                   },
                   {
+                    "id": "bdr:MW1PD159426"
+                  },
+                  {
+                    "id": "bdr:MW22389"
+                  },
+                  {
+                    "id": "bdr:MW23627"
+                  },
+                  {
+                    "id": "bdr:MW29248"
+                  },
+                  {
                     "id": "bdr:MW2PD17502"
                   },
                   {
@@ -296,6 +367,9 @@
                   },
                   {
                     "id": "bdr:MW4PD2187"
+                  },
+                  {
+                    "id": "bdr:MW6475"
                   },
                   {
                     "id": "bdr:MW8LS75659"
@@ -416,15 +490,27 @@
                   },
                   {
                     "id": "bdr:MW2PD20138"
+                  },
+                  {
+                    "id": "bdr:MW22096"
+                  },
+                  {
+                    "id": "bdr:MW3CN21680"
+                  },
+                  {
+                    "id": "bdr:MW23893"
+                  },
+                  {
+                    "id": "bdr:MW2PD17461"
                   }
                 ]
               },
               {
-                "id": "tmp:tradiCat0_77",
+                "id": "tmp:tradiCat0_104",
                 "to": "/show/bdr::rid",
                 "label": [
                   {
-                    "value": "Terbum ",
+                    "value": "Revelations of Concealed Teachings",
                     "lang": "en"
                   },
                   {
@@ -437,16 +523,22 @@
                     "id": "bdr:MW2PD16917"
                   },
                   {
+                    "id": "bdr:MW1PD289"
+                  },
+                  {
                     "id": "bdr:MW8751"
                   },
                   {
                     "id": "bdr:MW4CZ1042"
                   },
                   {
-                    "id": "bdr:MW1PD181209"
+                    "id": "bdr:MW3PD1003"
                   },
                   {
-                    "id": "bdr:MW2PD17538"
+                    "id": "bdr:MW21728"
+                  },
+                  {
+                    "id": "bdr:MW2PD20144"
                   },
                   {
                     "id": "bdr:MW21974"
@@ -461,7 +553,13 @@
                     "id": "bdr:MW3CN2967"
                   },
                   {
+                    "id": "bdr:MW1KG22609"
+                  },
+                  {
                     "id": "bdr:MW27903"
+                  },
+                  {
+                    "id": "bdr:MW23445"
                   },
                   {
                     "id": "bdr:MW21826"
@@ -500,9 +598,6 @@
                     "id": "bdr:MW2PD19434"
                   },
                   {
-                    "id": "bdr:MW3CN26451"
-                  },
-                  {
                     "id": "bdr:MW1PD89990"
                   },
                   {
@@ -522,9 +617,6 @@
                   },
                   {
                     "id": "bdr:MW1AC343"
-                  },
-                  {
-                    "id": "bdr:MW1KG15420"
                   },
                   {
                     "id": "bdr:MW2PD17477"
@@ -555,15 +647,21 @@
                   },
                   {
                     "id": "bdr:MW9209"
+                  },
+                  {
+                    "id": "bdr:MW22247"
+                  },
+                  {
+                    "id": "bdr:MW23618"
                   }
                 ]
               },
               {
-                "id": "tmp:tradiCat0_120",
+                "id": "tmp:tradiCat0_153",
                 "to": "/show/bdr::rid",
                 "label": [
                   {
-                    "value": "The Philosophic Traditions",
+                    "value": "The Philosophical Traditions",
                     "lang": "en"
                   },
                   {
@@ -574,9 +672,6 @@
                 "content": [
                   {
                     "id": "bdr:MW3CN18525"
-                  },
-                  {
-                    "id": "bdr:MW1AC16"
                   },
                   {
                     "id": "bdr:MW00EGS1016286"
@@ -616,13 +711,22 @@
                 ],
                 "content": [
                   {
+                    "id": "bdr:MW2KG201051"
+                  },
+                  {
                     "id": "bdr:MW1KG4313"
                   },
                   {
-                    "id": "bdr:MW23649"
+                    "id": "bdr:MW1KG13617"
+                  },
+                  {
+                    "id": "bdr:MW2PD14777"
                   },
                   {
                     "id": "bdr:MW4PD3593"
+                  },
+                  {
+                    "id": "bdr:MW1KG17189"
                   },
                   {
                     "id": "bdr:MW3CN751"
@@ -643,19 +747,19 @@
                     "id": "bdr:MW4PD2084"
                   },
                   {
-                    "id": "bdr:MW00CHZ0103345"
+                    "id": "bdr:MW23863"
                   },
                   {
-                    "id": "bdr:MW23863"
+                    "id": "bdr:MW3CN12981"
                   }
                 ]
               },
               {
-                "id": "tmp:tradiCat1_14",
+                "id": "tmp:tradiCat1_17",
                 "to": "/show/bdr::rid",
                 "label": [
                   {
-                    "value": "Sungbum",
+                    "value": "Collected Writings",
                     "lang": "en"
                   },
                   {
@@ -664,6 +768,63 @@
                   }
                 ],
                 "content": [
+                  {
+                    "id": "bdr:MW00EGS1017151"
+                  },
+                  {
+                    "id": "bdr:MW1PD159398"
+                  },
+                  {
+                    "id": "bdr:MW3KG228"
+                  },
+                  {
+                    "id": "bdr:MW1KG8897"
+                  },
+                  {
+                    "id": "bdr:MW2KG229024"
+                  },
+                  {
+                    "id": "bdr:MW00KG02390"
+                  },
+                  {
+                    "id": "bdr:MW1KG12986"
+                  },
+                  {
+                    "id": "bdr:MW00EGS1016703"
+                  },
+                  {
+                    "id": "bdr:MW4PD2097"
+                  },
+                  {
+                    "id": "bdr:MW4CZ57142"
+                  },
+                  {
+                    "id": "bdr:MW3CN2659"
+                  },
+                  {
+                    "id": "bdr:MW3CN3328"
+                  },
+                  {
+                    "id": "bdr:MW00KG01660"
+                  },
+                  {
+                    "id": "bdr:MW10347"
+                  },
+                  {
+                    "id": "bdr:MW24054"
+                  },
+                  {
+                    "id": "bdr:MW2PD17532"
+                  },
+                  {
+                    "id": "bdr:MW1KG11900"
+                  },
+                  {
+                    "id": "bdr:MW1KG1880"
+                  },
+                  {
+                    "id": "bdr:MW1KG8900"
+                  },
                   {
                     "id": "bdr:MW00KG03846"
                   },
@@ -699,9 +860,25 @@
                   },
                   {
                     "id": "bdr:MW00EGS1017070"
+                  }
+                ]
+              },
+              {
+                "id": "tmp:tradiCat1_50",
+                "to": "/show/bdr::rid",
+                "label": [
+                  {
+                    "value": "Ngorpa Tradition",
+                    "lang": "en"
                   },
                   {
-                    "id": "bdr:MW00EGS1016238"
+                    "value": "ངོར་པའི་དཔེ་ཚོགས།",
+                    "lang": "bo"
+                  }
+                ],
+                "content": [
+                  {
+                    "id": "bdr:MW1PD1725"
                   },
                   {
                     "id": "bdr:MW1KG16714"
@@ -721,7 +898,7 @@
                 ]
               },
               {
-                "id": "tmp:tradiCat1_34",
+                "id": "tmp:tradiCat1_58",
                 "to": "/show/bdr::rid",
                 "label": [
                   {
@@ -773,6 +950,9 @@
                   },
                   {
                     "id": "bdr:MW1KG4335"
+                  },
+                  {
+                    "id": "bdr:MW20749"
                   },
                   {
                     "id": "bdr:MW1KG4336"
@@ -850,7 +1030,7 @@
                 "to": "/show/bdr::rid",
                 "label": [
                   {
-                    "value": "Sungbum",
+                    "value": "Collected Writings",
                     "lang": "en"
                   },
                   {
@@ -860,7 +1040,7 @@
                 ],
                 "content": [
                   {
-                    "id": "bdr:MW1KG8321"
+                    "id": "bdr:MW3PD1288"
                   },
                   {
                     "id": "bdr:MW3KG225"
@@ -873,12 +1053,6 @@
                   },
                   {
                     "id": "bdr:MW00KG03990"
-                  },
-                  {
-                    "id": "bdr:MW3CN684"
-                  },
-                  {
-                    "id": "bdr:MW4CZ307422"
                   },
                   {
                     "id": "bdr:MW3CN477"
@@ -896,12 +1070,6 @@
                     "id": "bdr:MW3CN4059"
                   },
                   {
-                    "id": "bdr:MW22139"
-                  },
-                  {
-                    "id": "bdr:MW00KG03990"
-                  },
-                  {
                     "id": "bdr:MW3PD1004"
                   },
                   {
@@ -917,16 +1085,7 @@
                     "id": "bdr:MW3CN17900"
                   },
                   {
-                    "id": "bdr:MW3CN26897"
-                  },
-                  {
                     "id": "bdr:MW10982"
-                  },
-                  {
-                    "id": "bdr:MW1KG21300"
-                  },
-                  {
-                    "id": "bdr:MW1KG4280"
                   },
                   {
                     "id": "bdr:MW2PD17512"
@@ -938,12 +1097,6 @@
                     "id": "bdr:MW8LS18007"
                   },
                   {
-                    "id": "bdr:MW3CN684"
-                  },
-                  {
-                    "id": "bdr:MW4CZ307422"
-                  },
-                  {
                     "id": "bdr:MW23651"
                   },
                   {
@@ -951,9 +1104,6 @@
                   },
                   {
                     "id": "bdr:MW3CN12693"
-                  },
-                  {
-                    "id": "bdr:MW3CN613"
                   },
                   {
                     "id": "bdr:MW1CZ1117"
@@ -980,9 +1130,6 @@
                     "id": "bdr:MW3CN17906"
                   },
                   {
-                    "id": "bdr:MW3CN17918"
-                  },
-                  {
                     "id": "bdr:MW3CN26792"
                   },
                   {
@@ -992,25 +1139,7 @@
                     "id": "bdr:MW3CN631"
                   },
                   {
-                    "id": "bdr:MW2KG238066"
-                  },
-                  {
                     "id": "bdr:MW23439"
-                  },
-                  {
-                    "id": "bdr:MW23566"
-                  },
-                  {
-                    "id": "bdr:MW23444"
-                  },
-                  {
-                    "id": "bdr:MW2PD17541"
-                  },
-                  {
-                    "id": "bdr:MW8LS16354"
-                  },
-                  {
-                    "id": "bdr:MW23346"
                   },
                   {
                     "id": "bdr:MW1CZ1006"
@@ -1022,25 +1151,7 @@
                     "id": "bdr:MW26673"
                   },
                   {
-                    "id": "bdr:MW1KG10016"
-                  },
-                  {
                     "id": "bdr:MW23930"
-                  },
-                  {
-                    "id": "bdr:MW23743"
-                  },
-                  {
-                    "id": "bdr:MW1KG11912"
-                  },
-                  {
-                    "id": "bdr:MW1KG3644"
-                  },
-                  {
-                    "id": "bdr:MW30101"
-                  },
-                  {
-                    "id": "bdr:MW1KG10019"
                   },
                   {
                     "id": "bdr:MW1KG4282"
@@ -1053,9 +1164,6 @@
                   },
                   {
                     "id": "bdr:MW3KG56"
-                  },
-                  {
-                    "id": "bdr:MW21993"
                   },
                   {
                     "id": "bdr:MW22249"
@@ -1073,16 +1181,10 @@
                     "id": "bdr:MW2KG209839"
                   },
                   {
-                    "id": "bdr:MW1GS61404"
-                  },
-                  {
                     "id": "bdr:MW23928"
                   },
                   {
                     "id": "bdr:MW8LS32729"
-                  },
-                  {
-                    "id": "bdr:MW23661"
                   },
                   {
                     "id": "bdr:MW23784"
@@ -1106,12 +1208,6 @@
                     "id": "bdr:MW1CZ902"
                   },
                   {
-                    "id": "bdr:MW20511"
-                  },
-                  {
-                    "id": "bdr:MW3CN18526"
-                  },
-                  {
                     "id": "bdr:MW4CZ307766"
                   },
                   {
@@ -1119,9 +1215,6 @@
                   },
                   {
                     "id": "bdr:MW4CZ355760"
-                  },
-                  {
-                    "id": "bdr:MW23759"
                   },
                   {
                     "id": "bdr:MW23795"
@@ -1136,9 +1229,6 @@
                     "id": "bdr:MW23891"
                   },
                   {
-                    "id": "bdr:MW1KG10493"
-                  },
-                  {
                     "id": "bdr:MW23778"
                   },
                   {
@@ -1148,16 +1238,10 @@
                     "id": "bdr:MW23996"
                   },
                   {
-                    "id": "bdr:MW23998"
-                  },
-                  {
                     "id": "bdr:MW27481"
                   },
                   {
                     "id": "bdr:MW24012"
-                  },
-                  {
-                    "id": "bdr:MW24013"
                   },
                   {
                     "id": "bdr:MW1CZ1187"
@@ -1166,25 +1250,7 @@
                     "id": "bdr:MW23919"
                   },
                   {
-                    "id": "bdr:MW23918"
-                  },
-                  {
-                    "id": "bdr:MW4CZ302710"
-                  },
-                  {
                     "id": "bdr:MW2DB16431"
-                  },
-                  {
-                    "id": "bdr:MW2PD17530"
-                  },
-                  {
-                    "id": "bdr:MW23621"
-                  },
-                  {
-                    "id": "bdr:MW00KG03940"
-                  },
-                  {
-                    "id": "bdr:MW29248"
                   },
                   {
                     "id": "bdr:MW27486"
@@ -1199,16 +1265,10 @@
                     "id": "bdr:MW19975"
                   },
                   {
-                    "id": "bdr:MW3CN418"
-                  },
-                  {
                     "id": "bdr:MW7532"
                   },
                   {
                     "id": "bdr:MW10979"
-                  },
-                  {
-                    "id": "bdr:MW1KG17449"
                   },
                   {
                     "id": "bdr:MW23654"
@@ -1223,22 +1283,10 @@
                     "id": "bdr:MW3CN18491"
                   },
                   {
-                    "id": "bdr:MW4PD1388"
-                  },
-                  {
-                    "id": "bdr:MW2PD17524"
-                  },
-                  {
-                    "id": "bdr:MW23769"
-                  },
-                  {
                     "id": "bdr:MW2PD20109"
                   },
                   {
                     "id": "bdr:MW23897"
-                  },
-                  {
-                    "id": "bdr:MW10736"
                   },
                   {
                     "id": "bdr:MW1KG89189"
@@ -1277,22 +1325,10 @@
                     "id": "bdr:MW4CZ321174"
                   },
                   {
-                    "id": "bdr:MW1KG6204"
-                  },
-                  {
                     "id": "bdr:MW10954"
                   },
                   {
-                    "id": "bdr:MW1KG26084"
-                  },
-                  {
                     "id": "bdr:MW1KG22086"
-                  },
-                  {
-                    "id": "bdr:MW1KG22489"
-                  },
-                  {
-                    "id": "bdr:MW1KG26084"
                   },
                   {
                     "id": "bdr:MW1KG5372"
@@ -1307,16 +1343,10 @@
                     "id": "bdr:MW1CZ1980"
                   },
                   {
-                    "id": "bdr:MW3CN2194"
-                  },
-                  {
                     "id": "bdr:MW18167"
                   },
                   {
                     "id": "bdr:MW23446"
-                  },
-                  {
-                    "id": "bdr:MW3CN12918"
                   },
                   {
                     "id": "bdr:MW3CN22921"
@@ -1340,13 +1370,7 @@
                     "id": "bdr:MW4CZ294736"
                   },
                   {
-                    "id": "bdr:MW3JT13381"
-                  },
-                  {
                     "id": "bdr:MW2KG5049"
-                  },
-                  {
-                    "id": "bdr:MW8CZ102"
                   },
                   {
                     "id": "bdr:MW8CZ113"
@@ -1354,11 +1378,11 @@
                 ]
               },
               {
-                "id": "tmp:tradiCat2_217",
+                "id": "tmp:tradiCat2_145",
                 "to": "/show/bdr::rid",
                 "label": [
                   {
-                    "value": "Transmission of instructions.",
+                    "value": "Transmission of instructions",
                     "lang": "en"
                   },
                   {
@@ -1369,18 +1393,6 @@
                 "content": [
                   {
                     "id": "bdr:MW3CN15345"
-                  },
-                  {
-                    "id": "bdr:MW1KG13019"
-                  },
-                  {
-                    "id": "bdr:MW1KG5451"
-                  },
-                  {
-                    "id": "bdr:MW4CZ355761"
-                  },
-                  {
-                    "id": "bdr:MW26627"
                   },
                   {
                     "id": "bdr:MW4CZ294923"
@@ -1404,9 +1416,6 @@
                     "id": "bdr:MW26626"
                   },
                   {
-                    "id": "bdr:MW26678"
-                  },
-                  {
                     "id": "bdr:MW2KG207344"
                   },
                   {
@@ -1420,9 +1429,6 @@
                   },
                   {
                     "id": "bdr:MW4CZ355759"
-                  },
-                  {
-                    "id": "bdr:MW4CZ355765"
                   },
                   {
                     "id": "bdr:MW8LS16413"
@@ -1552,9 +1558,6 @@
                   },
                   {
                     "id": "bdr:MW21962"
-                  },
-                  {
-                    "id": "bdr:MW23177"
                   },
                   {
                     "id": "bdr:MW23752"
@@ -1697,11 +1700,11 @@
                 ]
               },
               {
-                "id": "tmp:tradiCat2_329",
+                "id": "tmp:tradiCat2_250",
                 "to": "/show/bdr::rid",
                 "label": [
                   {
-                    "value": "Biographies and spiritual songs.",
+                    "value": "Biographies and spiritual songs",
                     "lang": "en"
                   },
                   {
@@ -1729,12 +1732,6 @@
                     "id": "bdr:MW3CN22990"
                   },
                   {
-                    "id": "bdr:MW8LS16002"
-                  },
-                  {
-                    "id": "bdr:MW21718"
-                  },
-                  {
                     "id": "bdr:MW1NLM963"
                   },
                   {
@@ -1751,9 +1748,6 @@
                   },
                   {
                     "id": "bdr:MW2CZ7838"
-                  },
-                  {
-                    "id": "bdr:MW2CZ6598"
                   },
                   {
                     "id": "bdr:MW2KG217489"
@@ -1867,9 +1861,6 @@
                     "id": "bdr:MW1KG3830"
                   },
                   {
-                    "id": "bdr:MW1CZ1886"
-                  },
-                  {
                     "id": "bdr:MW1KG3831"
                   },
                   {
@@ -1924,9 +1915,6 @@
                     "id": "bdr:MW1KG2843"
                   },
                   {
-                    "id": "bdr:MW29634"
-                  },
-                  {
                     "id": "bdr:MW8LS18237"
                   },
                   {
@@ -1966,9 +1954,6 @@
                     "id": "bdr:MW23154"
                   },
                   {
-                    "id": "bdr:MW23809"
-                  },
-                  {
                     "id": "bdr:MW23827"
                   },
                   {
@@ -1988,9 +1973,6 @@
                   },
                   {
                     "id": "bdr:MW2CZ7951"
-                  },
-                  {
-                    "id": "bdr:MW8LS32737"
                   },
                   {
                     "id": "bdr:MW30164"
@@ -2014,19 +1996,10 @@
                     "id": "bdr:MW3CN17364"
                   },
                   {
-                    "id": "bdr:MW30123"
-                  },
-                  {
-                    "id": "bdr:MW1KG2230"
-                  },
-                  {
                     "id": "bdr:MW19222"
                   },
                   {
                     "id": "bdr:MW23861"
-                  },
-                  {
-                    "id": "bdr:MW8LS15791"
                   },
                   {
                     "id": "bdr:MW30112"
@@ -2036,15 +2009,6 @@
                   },
                   {
                     "id": "bdr:MW4CZ295072"
-                  },
-                  {
-                    "id": "bdr:MW23564"
-                  },
-                  {
-                    "id": "bdr:MW4CZ57660"
-                  },
-                  {
-                    "id": "bdr:MW2PD17526"
                   },
                   {
                     "id": "bdr:MW19988"
@@ -2076,11 +2040,11 @@
                 ]
               },
               {
-                "id": "tmp:tradiCat2_452",
+                "id": "tmp:tradiCat2_360",
                 "to": "/show/bdr::rid",
                 "label": [
                   {
-                    "value": "Sectarian writings",
+                    "value": "Sectarian groups",
                     "lang": "en"
                   },
                   {
@@ -2118,9 +2082,6 @@
                   },
                   {
                     "id": "bdr:MW8LS15882"
-                  },
-                  {
-                    "id": "bdr:MW8CZ101"
                   },
                   {
                     "id": "bdr:MW1KG12969"
@@ -2220,6 +2181,9 @@
                   },
                   {
                     "id": "bdr:MW1KG12220"
+                  },
+                  {
+                    "id": "bdr:MW8CZ102"
                   }
                 ]
               }
@@ -2230,11 +2194,11 @@
             "classes": "display-block",
             "content": [
               {
-                "id": "tmp:tradiCat3_9",
+                "id": "tmp:tradiCat3_1",
                 "to": "/show/bdr::rid",
                 "label": [
                   {
-                    "value": "Sungbum",
+                    "value": "Collected Writings",
                     "lang": "en"
                   },
                   {
@@ -2244,25 +2208,64 @@
                 ],
                 "content": [
                   {
-                    "id": "bdr:MW1KG15908"
+                    "id": "bdr:MW2KG5037"
+                  },
+                  {
+                    "id": "bdr:MW4CZ302670"
+                  },
+                  {
+                    "id": "bdr:MW1KG10279"
+                  },
+                  {
+                    "id": "bdr:MW4CZ2710"
+                  },
+                  {
+                    "id": "bdr:MW3CN4076"
                   },
                   {
                     "id": "bdr:MW24890"
                   },
                   {
+                    "id": "bdr:MW1KG14505"
+                  },
+                  {
+                    "id": "bdr:MW1CZ2857"
+                  },
+                  {
+                    "id": "bdr:MW1KG18135"
+                  },
+                  {
+                    "id": "bdr:MW2CZ5990"
+                  },
+                  {
+                    "id": "bdr:MW1KG14506"
+                  },
+                  {
+                    "id": "bdr:MW26001"
+                  },
+                  {
                     "id": "bdr:MW29228"
                   },
                   {
-                    "id": "bdr:MW1022"
+                    "id": "bdr:MW1GS103597"
                   },
                   {
-                    "id": "bdr:MW23430"
+                    "id": "bdr:MW3KG164"
+                  },
+                  {
+                    "id": "bdr:MW1KG15900"
+                  },
+                  {
+                    "id": "bdr:MW4CZ302664"
+                  },
+                  {
+                    "id": "bdr:MW4CZ302665"
+                  },
+                  {
+                    "id": "bdr:MW1KG15909"
                   },
                   {
                     "id": "bdr:MW1KG15901"
-                  },
-                  {
-                    "id": "bdr:MW2872"
                   },
                   {
                     "id": "bdr:MW1KG9580"
@@ -2271,22 +2274,46 @@
                     "id": "bdr:MW23864"
                   },
                   {
-                    "id": "bdr:MW1KG11666"
+                    "id": "bdr:MW29035"
+                  },
+                  {
+                    "id": "bdr:MW1KG1321"
+                  },
+                  {
+                    "id": "bdr:MW1KG24277"
+                  },
+                  {
+                    "id": "bdr:MW2KG209131"
+                  },
+                  {
+                    "id": "bdr:MW1KG15906"
                   },
                   {
                     "id": "bdr:MW22203"
                   },
                   {
-                    "id": "bdr:MW2519"
+                    "id": "bdr:MW1KG1132"
+                  },
+                  {
+                    "id": "bdr:MW4CZ302655"
                   },
                   {
                     "id": "bdr:MW21505"
                   },
                   {
-                    "id": "bdr:MW1KG15904"
+                    "id": "bdr:MW29702"
                   },
                   {
-                    "id": "bdr:MW29186"
+                    "id": "bdr:MW2KG5036"
+                  },
+                  {
+                    "id": "bdr:MW3CN3031"
+                  },
+                  {
+                    "id": "bdr:MW1KG1657"
+                  },
+                  {
+                    "id": "bdr:MW1KG15904"
                   },
                   {
                     "id": "bdr:MW1KG89110"
@@ -2296,9 +2323,6 @@
                   },
                   {
                     "id": "bdr:MW1KG14961"
-                  },
-                  {
-                    "id": "bdr:MW23477"
                   },
                   {
                     "id": "bdr:MW1GS135531"
@@ -2313,19 +2337,22 @@
                     "id": "bdr:MW1KG15817"
                   },
                   {
-                    "id": "bdr:MW1KG16205"
+                    "id": "bdr:MW1KG14507"
                   },
                   {
-                    "id": "bdr:MW8LS77430"
+                    "id": "bdr:MW8LS76156"
+                  },
+                  {
+                    "id": "bdr:MW8LS73547"
+                  },
+                  {
+                    "id": "bdr:MW1KG16205"
                   },
                   {
                     "id": "bdr:MW1KG22351"
                   },
                   {
                     "id": "bdr:MW8LS73541"
-                  },
-                  {
-                    "id": "bdr:MW21027"
                   },
                   {
                     "id": "bdr:MW8LS75598"
@@ -2343,9 +2370,6 @@
                     "id": "bdr:MW1KG18136"
                   },
                   {
-                    "id": "bdr:MW22949"
-                  },
-                  {
                     "id": "bdr:MW3CN6624"
                   },
                   {
@@ -2355,7 +2379,19 @@
                     "id": "bdr:MW4CZ74318"
                   },
                   {
+                    "id": "bdr:MW1KG10787"
+                  },
+                  {
                     "id": "bdr:MW25273"
+                  },
+                  {
+                    "id": "bdr:MW23471"
+                  },
+                  {
+                    "id": "bdr:MW29227"
+                  },
+                  {
+                    "id": "bdr:MW8LS76416"
                   },
                   {
                     "id": "bdr:MW8LS75669"
@@ -2367,16 +2403,10 @@
                     "id": "bdr:MW23879"
                   },
                   {
-                    "id": "bdr:MW1229"
-                  },
-                  {
                     "id": "bdr:MW30107"
                   },
                   {
                     "id": "bdr:MW1KG1658"
-                  },
-                  {
-                    "id": "bdr:MW26034"
                   },
                   {
                     "id": "bdr:MW1KG25311"
@@ -2427,9 +2457,6 @@
                     "id": "bdr:MW3CN25692"
                   },
                   {
-                    "id": "bdr:MW6457"
-                  },
-                  {
                     "id": "bdr:MW8CZ53"
                   },
                   {
@@ -2439,7 +2466,7 @@
                     "id": "bdr:MW23608"
                   },
                   {
-                    "id": "bdr:MW4CZ346743"
+                    "id": "bdr:MW3CN25680"
                   },
                   {
                     "id": "bdr:MW13528"
@@ -2451,7 +2478,7 @@
                     "id": "bdr:MW30103"
                   },
                   {
-                    "id": "bdr:MW22116"
+                    "id": "bdr:MW14376"
                   },
                   {
                     "id": "bdr:MW19357"
@@ -2493,13 +2520,16 @@
                     "id": "bdr:MW3CN26313"
                   },
                   {
-                    "id": "bdr:MW11128"
-                  },
-                  {
                     "id": "bdr:MW00EGS1017359"
                   },
                   {
                     "id": "bdr:MW23880"
+                  },
+                  {
+                    "id": "bdr:MW3CN476"
+                  },
+                  {
+                    "id": "bdr:MW00EGS1017401"
                   },
                   {
                     "id": "bdr:MW3KG217"
@@ -2521,9 +2551,6 @@
                   },
                   {
                     "id": "bdr:MW1PD159430"
-                  },
-                  {
-                    "id": "bdr:MW1KG9862"
                   },
                   {
                     "id": "bdr:MW1KG1656"
@@ -2550,12 +2577,6 @@
                     "id": "bdr:MW8LS17463"
                   },
                   {
-                    "id": "bdr:MW22250"
-                  },
-                  {
-                    "id": "bdr:MW24890"
-                  },
-                  {
                     "id": "bdr:MW8LS75641"
                   },
                   {
@@ -2563,9 +2584,6 @@
                   },
                   {
                     "id": "bdr:MW3KG224"
-                  },
-                  {
-                    "id": "bdr:MW8LS75642"
                   },
                   {
                     "id": "bdr:MW8LS17501"
@@ -2589,6 +2607,9 @@
                     "id": "bdr:MW1KG14641"
                   },
                   {
+                    "id": "bdr:MW22117"
+                  },
+                  {
                     "id": "bdr:MW1KG14964"
                   },
                   {
@@ -2596,9 +2617,6 @@
                   },
                   {
                     "id": "bdr:MW1KG6060"
-                  },
-                  {
-                    "id": "bdr:MW1KG4218"
                   },
                   {
                     "id": "bdr:MW1KG4219"
@@ -2610,22 +2628,16 @@
                     "id": "bdr:MW1KG4205"
                   },
                   {
+                    "id": "bdr:MW22204"
+                  },
+                  {
                     "id": "bdr:MW1KG4234"
                   },
                   {
                     "id": "bdr:MW24052"
                   },
                   {
-                    "id": "bdr:MW3572"
-                  },
-                  {
                     "id": "bdr:MW8LS16869"
-                  },
-                  {
-                    "id": "bdr:MW447"
-                  },
-                  {
-                    "id": "bdr:MW1KG2144"
                   },
                   {
                     "id": "bdr:MW4CZ30835"
@@ -2709,9 +2721,6 @@
                     "id": "bdr:MW1KG1320"
                   },
                   {
-                    "id": "bdr:MW3PD1091"
-                  },
-                  {
                     "id": "bdr:MW4CZ1039"
                   },
                   {
@@ -2765,11 +2774,11 @@
                 ]
               },
               {
-                "id": "tmp:tradiCat3_246",
+                "id": "tmp:tradiCat3_191",
                 "to": "/show/bdr::rid",
                 "label": [
                   {
-                    "value": "The instruction texts",
+                    "value": "Instruction texts",
                     "lang": "en"
                   },
                   {
@@ -2823,11 +2832,11 @@
                 ]
               },
               {
-                "id": "tmp:tradiCat3_261",
+                "id": "tmp:tradiCat3_207",
                 "to": "/show/bdr::rid",
                 "label": [
                   {
-                    "value": "The Vajrayana",
+                    "value": "Vajrayana",
                     "lang": "en"
                   },
                   {
@@ -2869,7 +2878,7 @@
                 ]
               },
               {
-                "id": "tmp:tradiCat3_272",
+                "id": "tmp:tradiCat3_219",
                 "to": "/show/bdr::rid",
                 "label": [
                   {
@@ -2930,7 +2939,7 @@
                 ]
               },
               {
-                "id": "tmp:tradiCat3_289",
+                "id": "tmp:tradiCat3_236",
                 "to": "/show/bdr::rid",
                 "label": [
                   {
@@ -2943,9 +2952,6 @@
                   }
                 ],
                 "content": [
-                  {
-                    "id": "bdr:MW2CZ7504"
-                  },
                   {
                     "id": "bdr:MW26573"
                   },
@@ -3091,9 +3097,6 @@
                     "id": "bdr:MW2CZ6656"
                   },
                   {
-                    "id": "bdr:MW2CZ6759"
-                  },
-                  {
                     "id": "bdr:MW2CZ6760"
                   },
                   {
@@ -3123,11 +3126,11 @@
                 ]
               },
               {
-                "id": "tmp:tradiCat3_350",
+                "id": "tmp:tradiCat3_296",
                 "to": "/show/bdr::rid",
                 "label": [
                   {
-                    "value": "Sectarian writings",
+                    "value": "Sectarian groups",
                     "lang": "en"
                   },
                   {
@@ -3217,7 +3220,7 @@
                 ]
               },
               {
-                "id": "tmp:tradiCat3_377",
+                "id": "tmp:tradiCat3_324",
                 "to": "/show/bdr::rid",
                 "label": [
                   {
@@ -3294,7 +3297,7 @@
                 "to": "/show/bdr::rid",
                 "label": [
                   {
-                    "value": "The Book of the Kadampas.",
+                    "value": "The Book of the Kadampas",
                     "lang": "en"
                   },
                   {
@@ -3304,19 +3307,29 @@
                 ],
                 "content": [
                   {
-                    "id": "bdr:MW1KG4473"
-                  },
-                  {
                     "id": "bdr:MW3CN22337"
                   },
                   {
                     "id": "bdr:MW3CN22733"
+                  }
+                ]
+              },
+              {
+                "id": "tmp:tradiCat4_4",
+                "to": "/show/bdr::rid",
+                "label": [
+                  {
+                    "value": "་",
+                    "lang": "en"
                   },
+                  {
+                    "value": "བཀའ་གདམས་གླེགས་བམ་ལས་བཏུས་པའི་ཆོས་སྐོར།",
+                    "lang": "bo"
+                  }
+                ],
+                "content": [
                   {
                     "id": "bdr:MW1KG12514"
-                  },
-                  {
-                    "id": "bdr:MW1KG10779"
                   },
                   {
                     "id": "bdr:MW1KG13160"
@@ -3340,16 +3353,10 @@
                     "id": "bdr:MW1NLM2581"
                   },
                   {
-                    "id": "bdr:MW1NLM289"
-                  },
-                  {
                     "id": "bdr:MW6469"
                   },
                   {
                     "id": "bdr:MW8LS76743"
-                  },
-                  {
-                    "id": "bdr:MW23747"
                   },
                   {
                     "id": "bdr:MW1KG12224"
@@ -3369,11 +3376,11 @@
                 ]
               },
               {
-                "id": "tmp:tradiCat4_23",
+                "id": "tmp:tradiCat4_20",
                 "to": "/show/bdr::rid",
                 "label": [
                   {
-                    "value": "Sungbum",
+                    "value": "Collected Writings",
                     "lang": "en"
                   },
                   {
@@ -3395,9 +3402,6 @@
                     "id": "bdr:MW00EGS1017426"
                   },
                   {
-                    "id": "bdr:MW1CZ1041"
-                  },
-                  {
                     "id": "bdr:MW3CN26206"
                   },
                   {
@@ -3407,25 +3411,13 @@
                     "id": "bdr:MW1KG13682"
                   },
                   {
-                    "id": "bdr:MW3CN3030"
-                  },
-                  {
-                    "id": "bdr:MW1KG13826"
-                  },
-                  {
                     "id": "bdr:MW4PD922"
                   },
                   {
                     "id": "bdr:MW3CN2940"
                   },
                   {
-                    "id": "bdr:MW24053"
-                  },
-                  {
                     "id": "bdr:MW1KG9858"
-                  },
-                  {
-                    "id": "bdr:MW24053"
                   },
                   {
                     "id": "bdr:MW2PD17520"
@@ -3433,7 +3425,7 @@
                 ]
               },
               {
-                "id": "tmp:tradiCat4_40",
+                "id": "tmp:tradiCat4_33",
                 "to": "/show/bdr::rid",
                 "label": [
                   {
@@ -3459,9 +3451,6 @@
                     "id": "bdr:MW26621"
                   },
                   {
-                    "id": "bdr:MW2CZ7692"
-                  },
-                  {
                     "id": "bdr:MW2CZ7976"
                   },
                   {
@@ -3479,11 +3468,11 @@
                 ]
               },
               {
-                "id": "tmp:tradiCat4_51",
+                "id": "tmp:tradiCat4_44",
                 "to": "/show/bdr::rid",
                 "label": [
                   {
-                    "value": "The stages of the path and mind training.",
+                    "value": "The stages of the path and mind training",
                     "lang": "en"
                   },
                   {
@@ -3532,7 +3521,7 @@
                 "to": "/show/bdr::rid",
                 "label": [
                   {
-                    "value": "Canonical Writings",
+                    "value": "Canonical Collections",
                     "lang": "en"
                   },
                   {
@@ -3580,11 +3569,11 @@
                 ]
               },
               {
-                "id": "tmp:tradiCat5_14",
+                "id": "tmp:tradiCat5_15",
                 "to": "/show/bdr::rid",
                 "label": [
                   {
-                    "value": "Sungbum",
+                    "value": "Collected Writings",
                     "lang": "en"
                   },
                   {
@@ -3597,13 +3586,7 @@
                     "id": "bdr:MW4CZ58530"
                   },
                   {
-                    "id": "bdr:MW2CZ7988"
-                  },
-                  {
                     "id": "bdr:MW4CZ58736"
-                  },
-                  {
-                    "id": "bdr:MW8LS16918"
                   },
                   {
                     "id": "bdr:MW8LS18418"
@@ -3669,7 +3652,7 @@
                 ]
               },
               {
-                "id": "tmp:tradiCat5_35",
+                "id": "tmp:tradiCat5_36",
                 "to": "/show/bdr::rid",
                 "label": [
                   {
@@ -3677,7 +3660,7 @@
                     "lang": "en"
                   },
                   {
-                    "value": "ལོ་རྒྱུས་དང་རྣམ་ཐར།",
+                    "value": "རྣམ་ཐར་དང་ལོ་རྒྱུས།",
                     "lang": "bo"
                   }
                 ],
@@ -3760,7 +3743,7 @@
                 ]
               },
               {
-                "id": "tmp:tradiCat5_61",
+                "id": "tmp:tradiCat5_63",
                 "to": "/show/bdr::rid",
                 "label": [
                   {
@@ -3800,7 +3783,7 @@
                 ]
               },
               {
-                "id": "tmp:tradiCat5_70",
+                "id": "tmp:tradiCat5_73",
                 "to": "/show/bdr::rid",
                 "label": [
                   {
@@ -3843,7 +3826,7 @@
                 ]
               },
               {
-                "id": "tmp:tradiCat5_80",
+                "id": "tmp:tradiCat5_84",
                 "to": "/show/bdr::rid",
                 "label": [
                   {
@@ -3890,7 +3873,7 @@
                 "to": "/show/bdr::rid",
                 "label": [
                   {
-                    "value": "Sungbum",
+                    "value": "Collected Writings",
                     "lang": "en"
                   },
                   {
@@ -3899,6 +3882,27 @@
                   }
                 ],
                 "content": [
+                  {
+                    "id": "bdr:MW22276"
+                  },
+                  {
+                    "id": "bdr:MW23899"
+                  },
+                  {
+                    "id": "bdr:MW1PD96085"
+                  },
+                  {
+                    "id": "bdr:MW2KG232483"
+                  },
+                  {
+                    "id": "bdr:MW19762"
+                  },
+                  {
+                    "id": "bdr:MW3KG184"
+                  },
+                  {
+                    "id": "bdr:MW1KG5698"
+                  },
                   {
                     "id": "bdr:MW21208"
                   },
@@ -3923,11 +3927,11 @@
                 ]
               },
               {
-                "id": "tmp:tradiCat6_10",
+                "id": "tmp:tradiCat6_17",
                 "to": "/show/bdr::rid",
                 "label": [
                   {
-                    "value": "Commentarial Works",
+                    "value": "Commentaries",
                     "lang": "en"
                   },
                   {
@@ -3951,7 +3955,7 @@
                 ]
               },
               {
-                "id": "tmp:tradiCat6_16",
+                "id": "tmp:tradiCat6_23",
                 "to": "/show/bdr::rid",
                 "label": [
                   {
@@ -3991,7 +3995,7 @@
                 ]
               },
               {
-                "id": "tmp:tradiCat6_26",
+                "id": "tmp:tradiCat6_33",
                 "to": "/show/bdr::rid",
                 "label": [
                   {
@@ -4016,7 +4020,7 @@
                 ]
               },
               {
-                "id": "tmp:tradiCat6_31",
+                "id": "tmp:tradiCat6_38",
                 "to": "/show/bdr::rid",
                 "label": [
                   {
@@ -4172,9 +4176,6 @@
                     "id": "bdr:MW1NLM3057"
                   },
                   {
-                    "id": "bdr:MW1NLM3229"
-                  },
-                  {
                     "id": "bdr:MW1NLM3262"
                   },
                   {
@@ -4185,9 +4186,6 @@
                   },
                   {
                     "id": "bdr:MW1NLM3653"
-                  },
-                  {
-                    "id": "bdr:MW1NLM389"
                   },
                   {
                     "id": "bdr:MW1NLM3976"
@@ -4206,9 +4204,6 @@
                   },
                   {
                     "id": "bdr:MW2KG208139"
-                  },
-                  {
-                    "id": "bdr:MW2KG208159"
                   },
                   {
                     "id": "bdr:MW3CN25705"
@@ -4247,9 +4242,6 @@
                     "id": "bdr:MW8LS16535"
                   },
                   {
-                    "id": "bdr:MW8LS16565"
-                  },
-                  {
                     "id": "bdr:MW8LS17541"
                   },
                   {
@@ -4274,12 +4266,6 @@
                     "id": "bdr:MW1NLM459"
                   },
                   {
-                    "id": "bdr:MW1NLM5035"
-                  },
-                  {
-                    "id": "bdr:MW23755"
-                  },
-                  {
                     "id": "bdr:MW1NLM2678"
                   },
                   {
@@ -4291,7 +4277,7 @@
                 ]
               },
               {
-                "id": "tmp:tradiCat7_78",
+                "id": "tmp:tradiCat7_73",
                 "to": "/show/bdr::rid",
                 "label": [
                   {
@@ -4338,9 +4324,6 @@
                     "id": "bdr:MW8LS17119"
                   },
                   {
-                    "id": "bdr:MW1KG23030"
-                  },
-                  {
                     "id": "bdr:MW8LS18311"
                   },
                   {
@@ -4357,9 +4340,6 @@
                   },
                   {
                     "id": "bdr:MW8LS32722"
-                  },
-                  {
-                    "id": "bdr:MW8LS67530"
                   },
                   {
                     "id": "bdr:MW8LS67581"
@@ -4419,7 +4399,7 @@
                 "to": "/show/bdr::rid",
                 "label": [
                   {
-                    "value": "Sungbum",
+                    "value": "Collected Writings",
                     "lang": "en"
                   },
                   {
@@ -4430,9 +4410,6 @@
                 "content": [
                   {
                     "id": "bdr:MW1PD2074"
-                  },
-                  {
-                    "id": "bdr:MW3CN616"
                   },
                   {
                     "id": "bdr:MW3CN18504"
@@ -4447,19 +4424,10 @@
                     "id": "bdr:MW3KG228"
                   },
                   {
-                    "id": "bdr:MW3PD1002"
-                  },
-                  {
-                    "id": "bdr:MW21807"
-                  },
-                  {
                     "id": "bdr:MW2KG210027"
                   },
                   {
                     "id": "bdr:MW1KG12986"
-                  },
-                  {
-                    "id": "bdr:MW21813"
                   },
                   {
                     "id": "bdr:MW3KG53"
@@ -4469,9 +4437,6 @@
                   },
                   {
                     "id": "bdr:MW3CN4627"
-                  },
-                  {
-                    "id": "bdr:MW21814"
                   },
                   {
                     "id": "bdr:MW3CN4335"
@@ -4485,7 +4450,7 @@
                 ]
               },
               {
-                "id": "tmp:tradiCat8_20",
+                "id": "tmp:tradiCat8_16",
                 "to": "/show/bdr::rid",
                 "label": [
                   {
@@ -4502,9 +4467,6 @@
                     "id": "bdr:MW00KG01635"
                   },
                   {
-                    "id": "bdr:MW00KG09825"
-                  },
-                  {
                     "id": "bdr:MW27913"
                   },
                   {
@@ -4513,7 +4475,7 @@
                 ]
               },
               {
-                "id": "tmp:tradiCat8_25",
+                "id": "tmp:tradiCat8_21",
                 "to": "/show/bdr::rid",
                 "label": [
                   {
@@ -4530,16 +4492,7 @@
                     "id": "bdr:MW23723"
                   },
                   {
-                    "id": "bdr:MW8LS31030"
-                  },
-                  {
                     "id": "bdr:MW2PD17496"
-                  },
-                  {
-                    "id": "bdr:MW23605"
-                  },
-                  {
-                    "id": "bdr:MW21811"
                   },
                   {
                     "id": "bdr:MW1PD159424"
@@ -4548,10 +4501,7 @@
                     "id": "bdr:MW3CN22731"
                   },
                   {
-                    "id": "bdr:MW3CN626"
-                  },
-                  {
-                    "id": "bdr:MW1KG12962"
+                    "id": "bdr:MW3CN7099"
                   },
                   {
                     "id": "bdr:MW3CN3393"
@@ -4562,7 +4512,7 @@
                 ]
               },
               {
-                "id": "tmp:tradiCat8_38",
+                "id": "tmp:tradiCat8_30",
                 "to": "/show/bdr::rid",
                 "label": [
                   {
@@ -4588,9 +4538,6 @@
                     "id": "bdr:MW1KG5328"
                   },
                   {
-                    "id": "bdr:MW6460"
-                  },
-                  {
                     "id": "bdr:MW8LS17754"
                   },
                   {
@@ -4602,7 +4549,7 @@
                 ]
               },
               {
-                "id": "tmp:tradiCat8_47",
+                "id": "tmp:tradiCat8_39",
                 "to": "/show/bdr::rid",
                 "label": [
                   {
@@ -4662,9 +4609,6 @@
                     "id": "bdr:MW3KG210"
                   },
                   {
-                    "id": "bdr:MW1KG10728"
-                  },
-                  {
                     "id": "bdr:MW23560"
                   },
                   {
@@ -4705,9 +4649,6 @@
                   },
                   {
                     "id": "bdr:MW1KG26247"
-                  },
-                  {
-                    "id": "bdr:MW20489"
                   },
                   {
                     "id": "bdr:MW1KG26248"
@@ -4757,7 +4698,7 @@
                 ]
               },
               {
-                "id": "tmp:tradiCat9_37",
+                "id": "tmp:tradiCat9_36",
                 "to": "/show/bdr::rid",
                 "label": [
                   {
@@ -4817,9 +4758,6 @@
                     "id": "bdr:MW1KG23271"
                   },
                   {
-                    "id": "bdr:MW1NLM769"
-                  },
-                  {
                     "id": "bdr:MW29676"
                   },
                   {
@@ -4830,9 +4768,6 @@
                   },
                   {
                     "id": "bdr:MW2DB4592"
-                  },
-                  {
-                    "id": "bdr:MW1KG4531"
                   },
                   {
                     "id": "bdr:MW2KG230150"
@@ -4881,9 +4816,6 @@
                   },
                   {
                     "id": "bdr:MW8LS76287"
-                  },
-                  {
-                    "id": "bdr:MW2PD19113"
                   },
                   {
                     "id": "bdr:MW00EGS1016960"
@@ -5105,9 +5037,6 @@
                     "id": "bdr:MW00KG03692"
                   },
                   {
-                    "id": "bdr:MW00KG03700"
-                  },
-                  {
                     "id": "bdr:MW00KG03701"
                   },
                   {
@@ -5117,16 +5046,7 @@
                     "id": "bdr:MW3CN541"
                   },
                   {
-                    "id": "bdr:MW00KG03692"
-                  },
-                  {
-                    "id": "bdr:MW00KG03700"
-                  },
-                  {
                     "id": "bdr:MW00KG07636"
-                  },
-                  {
-                    "id": "bdr:MW1KG6143"
                   },
                   {
                     "id": "bdr:MW2PD19114"
@@ -5405,7 +5325,7 @@
                 ]
               },
               {
-                "id": "tmp:tradiCat10_85",
+                "id": "tmp:tradiCat10_86",
                 "to": "/show/bdr::rid",
                 "label": [
                   {
@@ -5709,11 +5629,11 @@
                 ]
               },
               {
-                "id": "tmp:tradiCat10_183",
+                "id": "tmp:tradiCat10_184",
                 "to": "/show/bdr::rid",
                 "label": [
                   {
-                    "value": "History of Nyingma",
+                    "value": "History of the Nyingma tradition",
                     "lang": "en"
                   },
                   {
@@ -5780,16 +5700,16 @@
                     "id": "bdr:MW1CZ2543"
                   },
                   {
-                    "id": "bdr:"
+                    "id": "bdr:སློབ་དཔོན་པདྨ་འབྱུང་གནས།"
                   }
                 ]
               },
               {
-                "id": "tmp:tradiCat10_204",
+                "id": "tmp:tradiCat10_206",
                 "to": "/show/bdr::rid",
                 "label": [
                   {
-                    "value": "History of Kagyu",
+                    "value": "History of the Kagyu Tradition",
                     "lang": "en"
                   },
                   {
@@ -5853,9 +5773,6 @@
                     "id": "bdr:MW24044"
                   },
                   {
-                    "id": "bdr:MW17276"
-                  },
-                  {
                     "id": "bdr:MW1CZ991"
                   },
                   {
@@ -5864,11 +5781,11 @@
                 ]
               },
               {
-                "id": "tmp:tradiCat10_227",
+                "id": "tmp:tradiCat10_228",
                 "to": "/show/bdr::rid",
                 "label": [
                   {
-                    "value": "History of Sakya",
+                    "value": "History of the Sakya Tradition",
                     "lang": "en"
                   },
                   {
@@ -5895,11 +5812,11 @@
                 ]
               },
               {
-                "id": "tmp:tradiCat10_234",
+                "id": "tmp:tradiCat10_235",
                 "to": "/show/bdr::rid",
                 "label": [
                   {
-                    "value": "History of Kadam",
+                    "value": "History of the Kadampa tradition",
                     "lang": "en"
                   },
                   {
@@ -5910,9 +5827,6 @@
                 "content": [
                   {
                     "id": "bdr:MW3CN22358"
-                  },
-                  {
-                    "id": "bdr:MW8LS32399"
                   },
                   {
                     "id": "bdr:MW1CZ3"
@@ -5929,11 +5843,11 @@
                 ]
               },
               {
-                "id": "tmp:tradiCat10_244",
+                "id": "tmp:tradiCat10_242",
                 "to": "/show/bdr::rid",
                 "label": [
                   {
-                    "value": "History of Gelug",
+                    "value": "History of the Gelug tradition",
                     "lang": "en"
                   },
                   {
@@ -6050,11 +5964,11 @@
                 ]
               },
               {
-                "id": "tmp:tradiCat10_280",
+                "id": "tmp:tradiCat10_279",
                 "to": "/show/bdr::rid",
                 "label": [
                   {
-                    "value": "History of Jonang",
+                    "value": "History of the Jonang tradition",
                     "lang": "en"
                   },
                   {
@@ -6088,11 +6002,11 @@
                 "to": "/show/bdr::rid",
                 "label": [
                   {
-                    "value": "Contents",
+                    "value": "Table of contents",
                     "lang": "en"
                   },
                   {
-                    "value": "དཀར་ཆག།",
+                    "value": "དཀར་ཆག",
                     "lang": "bo"
                   }
                 ],
@@ -6185,9 +6099,6 @@
                     "id": "bdr:MW8CZ189"
                   },
                   {
-                    "id": "bdr:MW8LS16180"
-                  },
-                  {
                     "id": "bdr:MW8LS17746"
                   },
                   {
@@ -6221,9 +6132,6 @@
                     "id": "bdr:MW1KG14982"
                   },
                   {
-                    "id": "bdr:MW1KG22580"
-                  },
-                  {
                     "id": "bdr:MW1KG13813"
                   },
                   {
@@ -6235,7 +6143,7 @@
                 ]
               },
               {
-                "id": "tmp:tradiCat11_47",
+                "id": "tmp:tradiCat11_46",
                 "to": "/show/bdr::rid",
                 "label": [
                   {
@@ -6243,7 +6151,7 @@
                     "lang": "en"
                   },
                   {
-                    "value": "གསུང་འབུམ་དཀར་ཆག།",
+                    "value": "གསུང་འབུམ་དཀར་ཆག",
                     "lang": "bo"
                   }
                 ],
