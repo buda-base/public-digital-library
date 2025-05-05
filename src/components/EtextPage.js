@@ -229,7 +229,11 @@ function EtextPage(props) {
               onCopy={(ev) => monlamPopup(ev, e.seq, pageVal)} >
             { state_monlam_hilight}
             {!e.value.match(/[\n\r]/) && !e.seq ?[<span class="startChar"><span>[&nbsp;<Link to={"/show/"+props_IRI+"?startChar="+e.start+"#open-viewer"}>@{e.start}</Link>&nbsp;]</span></span>]:null}{(e.chunks?.length?e.chunks:[e.value]).map(f => {
-              let h = f["@value"] ?? f              
+              let h = f["@value"] ?? f
+
+              // feedbucket-integration#128 fix conflict with htmlParse when < or > in chunk
+              h = h.replace(/[<]/g, "\u{FF1C}")
+              h = h.replace(/[>]/g, "\u{FF1E}")
               
               let tags = [ ...f?.tags ?? [] ]
               
