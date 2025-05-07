@@ -3442,6 +3442,8 @@ h4:not(:hover) > .lang
 .resource.preview .data h2 ~ a { display:flex; align-items: center;}
 
 
+.resource.preview .data h2 ~ a { width:100%; }
+
 .resource.preview .data h2 + .date { margin-top:0; }
 
 .resource.preview .data.top-props, 
