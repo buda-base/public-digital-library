@@ -11091,7 +11091,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
 
 
          let findText, hasInstances = this.getResourceElem(bdo+"workHasInstance")?.length > 0, shouldShowOtherInstances = _T == "Work" && !serial?.length && !isSerialWork && hasInstances
-         if(![/*"Instance",*/ "Images", "Etext"].includes(_T) /*&& (_T != "Work" || serial?.length || isSerialWork)*/ && (_T != "Instance" || hasInstances && (!this.props.loading||this.state.collapse["findText-"+this.props.IRI]) )) {            
+         if(!this.props.simple && ![/*"Instance",*/ "Images", "Etext"].includes(_T) /*&& (_T != "Work" || serial?.length || isSerialWork)*/ && (_T != "Instance" || hasInstances && (!this.props.loading||this.state.collapse["findText-"+this.props.IRI]) )) {            
             findText = <InnerSearchPageContainer isOtherVersions={_T === "Instance" || shouldShowOtherInstances} srcVersionID={_T === "Instance" ? this.props.IRI.split(":")[1] : undefined} location={this.props.location} /*history={this.props.history}*/ auth={this.props.auth} isOsearch={true} RID={iof ?? this.props.IRI} T={_T} />          
             if(_T == "Instance" || shouldShowOtherInstances) {
                if(!this.state.collapse["findText-"+this.props.IRI]) this.setState({collapse:{...this.state.collapse,["findText-"+this.props.IRI]:true}})

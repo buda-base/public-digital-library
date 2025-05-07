@@ -259,13 +259,44 @@ function HomeCompo(props = {}) {
    const navigate = useNavigate();
  
    useEffect(() => {
-     loggergen.log("refresh?");
      store.dispatch(initiateApp(qs.parse(location.search)));
    }, [location]); 
 
    return <AppContainer { ...{ ...props, location, navigate, auth } }/> 
 }
  
+function SimpleAdvancedSearchCompo() {
+   
+   const location = useLocation();
+   const navigate = useNavigate();   
+   const get = qs.parse(location.search)
+
+   useEffect(() => {
+     store.dispatch(initiateApp(get));
+   }, [location]); 
+      
+   return (<AppContainer simple={true} auth={auth} propid={get.for} { ...{ location, navigate } }/>)
+
+}
+
+function SimpleResourceViewerCompo() {
+   
+   const location = useLocation();
+   const navigate = useNavigate();   
+   const { IRI } = useParams()
+   const get = qs.parse(location.search)
+
+   useEffect(() => {
+      if(get.part && get.part !== IRI) get.root = IRI
+      store.dispatch(initiateApp(get,IRI));      
+
+   }, [location]); 
+      
+   return (<ResourceViewerContainer auth={auth} IRI={IRI} preview={true} simple={true} propid={get.for} onlyView={get.view} { ...{ location, navigate } } /> )
+
+}
+
+
 function BaseOSCompo() {
    const location = useLocation();
    const navigate = useNavigate();
@@ -471,8 +502,12 @@ const makeMainRoutes = () => {
                      <Route exact path="/iiifcookielogin" element={<IIIFCookieCompo />}/>
                      <Route exact path="/iiiftoken" element={<IIIFTokenCompo />}/>
 
-                     <Route path="/search" element={<HomeCompo advancedSearch={true} />}/>
+                     <Route path="/search" element={<HomeCompo advancedSearch={true} />} />
 
+                     <Route path="/simplesearch" element={<SimpleAdvancedSearchCompo />} />
+
+
+                     <Route path="/simple/:IRI"  element={<SimpleResourceViewerCompo />} />
 {/* 
 
                         <Route exact path="/static/:DIR1/:DIR2/:DIR3/:PAGE" render={(props) => {
@@ -504,12 +539,7 @@ const makeMainRoutes = () => {
                         }} />
                         <Route exact path="/browse" render={(props) => {
                            return (<BrowseContainer history={history} auth={auth}/> )
-                        }} />
-                        
-                        <Route path="/simplesearch" render={(props) => {
-                           let get = qs.parse(history.location.search)
-                           store.dispatch(initiateApp(qs.parse(history.location.search)))
-                           return (<AppContainer simple={true} history={history} auth={auth} propid={get.for}/> )}}/>
+                        }} />                     
                         <Route path="/latest" render={(props) => {
                            let get = qs.parse(history.location.search)
                            //if(!store.getState().data.ontology)
@@ -572,13 +602,6 @@ const makeMainRoutes = () => {
                         
                            return (<ResourceViewerContainer  auth={auth} history={history} IRI={IRI} preview={true} />)
                         }}/>
-                        <Route path="/simple/:IRI" render={(props) => {
-                           let IRI = props.match.params.IRI
-                           let get = qs.parse(history.location.search)
-                           if(get.part && get.part !== IRI) get.root = IRI
-                           store.dispatch(initiateApp(get,IRI));                     
-                           return (<ResourceViewerContainer  auth={auth} history={history} IRI={IRI} preview={true} simple={true} propid={get.for}  onlyView={get.view}/> )
-                           }}/>
                         <Route render={(props) => { return <Redirect404  history={history}  auth={auth}/> }}/>
                         <Route path="/scripts/" onEnter={() => window.location.reload(true)} /> 
                         */}

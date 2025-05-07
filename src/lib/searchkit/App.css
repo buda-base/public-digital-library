@@ -1396,6 +1396,9 @@ header[data-hits="0"] ~ .hits .pagination,
   min-height:0;
 }
 
+.over-nav.simpleAdvanced-true,
+.over-nav.simpleAdvanced-true + .nav,
+.over-nav.simpleAdvanced-true + .nav ~ .ISB,
 .ISB.advanced-true #data-checkbox,
 .ISB.advanced-true #res-header,
 .ISB.advanced-true #res-container,
@@ -1959,6 +1962,7 @@ header[data-hits="0"] ~ .hits .pagination,
 
 @media (max-width: 1024px) {
 
+  #root > div:not(#a) > :is(.resource:not(#a).simple.preview) { padding-top:0; }
 /*
   #root {
     background:white;
@@ -3078,7 +3082,7 @@ header[data-hits="0"] ~ .hits .pagination,
     height:200px;
   }
 
-  #otherR + div > .group {
+  .resource:not(.simple) #otherR + div > .group {
     padding-left:0;
   }
 

@@ -62,6 +62,8 @@ class MyTransporter extends ESTransporter {
         && !requests?.some(r => r.request.params.filters)         
         ||
         window.location.pathname == "/search" 
+        ||
+        window.location.pathname == "/simplesearch" 
       ) return [
       {
           "_shards": {
@@ -242,7 +244,7 @@ const routingConfig = () => ({
     createURL({ qsModule, location, routeState }) {
       
       let { origin, pathname, hash, search } = location, url;
-      if(!pathname.startsWith("/search")) {
+      if(!pathname.startsWith("/search") && !pathname.startsWith("/simplesearch")) {
 
         if(pathname.startsWith("/search") 
           || !pathname.endsWith("/search") && !pathname.startsWith("/show/") //&& !pathname.startsWith("/tradition/") 

@@ -526,7 +526,7 @@ else if(pathname.startsWith("/search") && params && params.p) {
 
    store.dispatch(dataActions.ontoSearch(params.p));
 }
-else if(pathname.startsWith("/search") && params && params.q) {
+else if((pathname.startsWith("/search") || pathname.startsWith("/simplesearch")) && params && params.q) {
 
    
    if(params.q == "-" && !state.data.searches["-@-"]) {
@@ -579,7 +579,7 @@ else if(pathname.startsWith("/search") && params && params.q) {
       }
    
       //store.dispatch(uiActions.selectType(pt));
-   }
+   } 
    else //if(params.t) { //} && ["Any"].indexOf(params.t) !== -1)   
    {
       if(!state.data.searches || !state.data.searches[params.q+"@"+params.lg])
@@ -591,7 +591,7 @@ else if(pathname.startsWith("/search") && params && params.q) {
       //store.dispatch(uiActions.selectType(params.t?params.t:"Any"));
    }
    /*
-   else if(params.t && ["Any"].indexOf(params.t) === -1)   
+   else if(pathname.startsWith("/simplesearch") && params.t && ["Any"].indexOf(params.t) === -1) 
    {
       if(!state.data.searches || !state.data.searches[params.q+"@"+params.lg])
          store.dispatch(dataActions.startSearch(params.q,params.lg)); //,params.t.split(",")));

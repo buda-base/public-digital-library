@@ -1306,7 +1306,7 @@ export function top_right_menu(that,etextTitle,backUrl,etextres,isMirador,locati
    else if(corpo_lang.startsWith("zh")) corpo_lang = "zh-hans"
 
    const overNav = (
-         <div class={"over-nav mirador-"+isMirador} style={{ ...isMirador?{position:"absolute"}:{} }}>
+         <div class={"over-nav mirador-"+isMirador + " simpleAdvanced-"+that?.props.simple} style={{ ...isMirador?{position:"absolute"}:{} }}>
             <div>
                <div><i>{I18n.t("topbar.preserving")}</i></div>
                <div style={{ textTransform: "capitalize" }}>

@@ -3427,6 +3427,9 @@ h4:not(:hover) > .lang
 .resource.preview :is(#head,#first-image) + div h2.on+h2,
 .resource.preview :is(#head,#first-image) + div h2.on { line-height: 16px; height:auto; font-size: 0; align-items: center; display: flex; padding-left:0; min-height:18px;}
 
+.resource.preview .data h2 + .date,
+.resource.preview .data h2 ~ a,
+.resource.preview .data h2.on span:not(.T):not(.lang):not(#a),
 .resource.preview :is(#head,#first-image) + div h2.on.intro,
 .resource.preview :is(#head,#first-image) + div h2.on+h2 span,
 .resource.preview :is(#head,#first-image) + div h2.on span { font-size:13px !important; }
@@ -3435,6 +3438,11 @@ h4:not(:hover) > .lang
 .resource.preview :is(#head,#first-image) + div h2.on ~ a { display: inline-flex; width: auto; font-size:13px; position: relative; height:18px; align-items: center;}
 .resource.preview :is(#head,#first-image) + div h2.on ~ a:hover { border:none; text-decoration: underline; }
 .resource.preview :is(#head,#first-image) + div h2.on ~ a img { min-height:24px;margin-top:0px; }
+
+.resource.preview .data h2 ~ a { display:flex; align-items: center;}
+
+
+.resource.preview .data h2 + .date { margin-top:0; }
 
 .resource.preview .data.top-props, 
 .resource.preview .data.bot-props { padding-left: 15px;}
