@@ -3427,6 +3427,8 @@ h4:not(:hover) > .lang
 .resource.preview :is(#head,#first-image) + div h2.on+h2,
 .resource.preview :is(#head,#first-image) + div h2.on { line-height: 16px; height:auto; font-size: 0; align-items: center; display: flex; padding-left:0; min-height:18px;}
 
+.resource.preview .data h2,
+.resource.preview .data h2 a span,
 .resource.preview .data h2 + .date,
 .resource.preview .data h2 ~ a,
 .resource.preview .data h2.on span:not(.T):not(.lang):not(#a),
