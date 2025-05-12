@@ -114,7 +114,7 @@ export async function logError(error, json) {
    json.version = localStorage.getItem('APP_VERSION')
    json.userAgent = window.navigator.userAgent
 
-   const lang = localStorage.getItem('lang');
+   const lang = localStorage.getItem('langs');
    const uilang = localStorage.getItem('uilang');
    const langpreset = localStorage.getItem('langpreset');
    const customlangpreset = localStorage.getItem('customlangpreset');

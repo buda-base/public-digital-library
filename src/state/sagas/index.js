@@ -195,7 +195,7 @@ async function initiateApp(params,iri,myprops,route,isAuthCallback) {
          // set data language preferences
          // 1-saved preference
          let list 
-         if((val = localStorage.getItem('langpreset')) && ((list = localStorage.getItem('lang')) || (list = [ ...config.language.data.presets[val] ]))) {
+         if((val = localStorage.getItem('langpreset')) && ((list = localStorage.getItem('langs')) || (list = [ ...config.language.data.presets[val] ]))) {
             if(list[locale]) list = list[locale]            
             else if(!Array.isArray(list)) list = list.split(/ *, */)
             store.dispatch(uiActions.langPreset(list, val))
@@ -857,7 +857,7 @@ export async function updateConfigFromProfile() {
       //localStorage.setItem('uilang', locale);
       //store.dispatch(i18nextChangeLanguage(locale));
 
-      localStorage.setItem('lang', litLangs);
+      localStorage.setItem('langs', litLangs);
       
       localStorage.setItem('langpreset', preset);
       store.dispatch(uiActions.langPreset(litLangs, preset));

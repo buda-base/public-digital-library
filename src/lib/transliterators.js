@@ -69,20 +69,23 @@ export const transliterators = {
    },
    
    "zh":{ 
-      "zh-latn-pinyin" : (val) => pinyin4js.convertToPinyinString(val, ' ', pinyin4js.WITH_TONE_MARK) 
+      "zh-latn-pinyin" : (val) => pinyin4js.convertToPinyinString(val, ' ', pinyin4js.WITH_TONE_MARK),
+      "zh-hani":(val) => val
    },
    "zh-hans":{ 
-      "zh-latn-pinyin" : (val) => pinyin4js.convertToPinyinString(val, ' ', pinyin4js.WITH_TONE_MARK) , 
-      "zh-hant" : (val) => hanziConv.sc2tc(val) 
+      "zh-latn-pinyin" : (val) => pinyin4js.convertToPinyinString(val, ' ', pinyin4js.WITH_TONE_MARK), 
+      "zh-hant" : (val) => hanziConv.sc2tc(val),
+      "zh-hani" : (val) => val
    },
    "zh-hant":{ 
-      "zh-latn-pinyin" : (val) => pinyin4js.convertToPinyinString(val, ' ', pinyin4js.WITH_TONE_MARK) , 
-      "zh-hans" : (val) => hanziConv.tc2sc(val) 
+      "zh-latn-pinyin" : (val) => pinyin4js.convertToPinyinString(val, ' ', pinyin4js.WITH_TONE_MARK), 
+      "zh-hans" : (val) => hanziConv.tc2sc(val),
+      "zh-hani" : (val) => val 
    },
    "zh-hani":{ 
-      "zh-latn-pinyin" : (val) => pinyin4js.convertToPinyinString(val, ' ', pinyin4js.WITH_TONE_MARK) , 
-      "zh-hant" : (val) => hanziConv.sc2tc(val) , 
-      "zh-hans" : (val) => hanziConv.tc2sc(val) 
+      "zh-latn-pinyin" : (val) => pinyin4js.convertToPinyinString(val, ' ', pinyin4js.WITH_TONE_MARK), 
+      "zh-hant" : (val) => hanziConv.sc2tc(val), 
+      "zh-hans" : (val) => hanziConv.tc2sc(val)
    },
 
    "km":{ "km-x-iast": (val) => Sanscript.t(val,"khmer","iast") },
@@ -133,8 +136,8 @@ export function ewtsToDisplay(src) {
 
 
 const presets = { 
-   "zh":[ "zh-hant", "bo" ],
-   "bo":[ "bo", "zh-hans" ],
+   "zh":[ "zh-hani", "bo" ],
+   "bo":[ "bo", "zh-hani" ],
    "km":[ "km", "pi-khmr", "en", "bo-x-ewts", "sa-x-iast" ],
    "en":[ "bo-x-ewts", "inc-x-iast" ]
 }

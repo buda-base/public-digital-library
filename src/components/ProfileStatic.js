@@ -210,7 +210,7 @@ export class Profile extends Component<Props,State> {
   async executePatch(e) {
 
 
-    localStorage.setItem('lang', this.props.langPreset);
+    localStorage.setItem('langs', this.props.langPreset);
     if( this.props.langIndex !== undefined) localStorage.setItem('langpreset', this.props.langIndex);
     if( this.props.langIndex == "custom") localStorage.setItem('customlangpreset', this.props.langPreset);
 

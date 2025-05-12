@@ -320,7 +320,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
          dispatch(i18nextChangeLanguage(lg));
       },
       onSetLangPreset:(langs:string[],i?:number) => {
-         localStorage.setItem('lang', langs);
+         localStorage.setItem('langs', langs);
          dispatch(ui.langPreset(langs,i))
       },
       onSetEtextLang:(lang:string) => {

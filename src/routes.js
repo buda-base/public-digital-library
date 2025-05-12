@@ -564,7 +564,7 @@ const makeMainRoutes = () => {
 
                               let get = qs.parse(history.location.search)
                               loggergen.log("props",props,get)
-                              let lang = get["lang"] || localStorage.getItem('lang')  || "bo-x-ewts,sa-x-ewts"
+                              let lang = get["langs"] || localStorage.getItem('langs')  || "bo-x-ewts,sa-x-ewts"
                               let uilang = get["uilang"] || localStorage.getItem('uilang') || "en"
                               if(lang) lang = lang.split(",")
                               let callerURI = get["callerURI"]
