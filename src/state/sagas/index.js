@@ -1291,6 +1291,10 @@ async function getPages(iri,next,meta) {
             if(start >= 0 && end >= 0) {
                let str = _cval.substring(start,end+1), pre = "", tags = []
                for(const s of sortedSpans) {
+                  
+                  // #1049 debug mode
+                  //s.data.rend = "unclear"
+
                   //console.log("s:",start,end,s,c.sourceAsMap,e.sourceAsMap)
                   if(e.sourceAsMap.cstart <= s.index && s.index < e.sourceAsMap.cend) {
                      //console.log("in page!")

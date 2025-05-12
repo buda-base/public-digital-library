@@ -5934,6 +5934,7 @@ html[lang="en"] .resource .data > [data-prop="bdo:creator"] h4[data-prop="bdo:ro
 .resource.etext-view .etextPage .rend-bold { font-weight:700; }
 .resource.etext-view .etextPage .rend-italic { font-style:italic; }
 .resource.etext-view .etextPage .rend-small:not(#a) { font-size:85%;  line-height:inherit; /*opacity:0.8;*/}
+.resource.etext-view .etextPage .rend-unclear { color:#606060; }
 
 
 .resource.etext-view .etextPage .overpage{ padding-top:5px;}
