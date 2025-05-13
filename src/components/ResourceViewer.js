@@ -3497,7 +3497,7 @@ class ResourceViewer extends Component<Props,State>
                   //if(pI) uri = this.props.IRI+"?part="+uri
                   //else uri = uri.replace(/^((bdr:MW[^_]+)_[^_]+)/,"$2?part=$1")
 
-                  loggergen.log("inOutL:",elem,info,uri,dico)
+                  //loggergen.log("inOutL:",elem,info,uri,dico)
 
                   if(info === uri) {                      
                      if(elem.volume) {
@@ -5472,6 +5472,8 @@ class ResourceViewer extends Component<Props,State>
           else  title = <h2 class="on" lang={this.props.locale}>{_T}<span>{loaded && (T_ === "Work" || T_ === "Instance")?I18n.t("resource.noT"):shortUri(other?other:this.props.IRI)}</span></h2>
       }
 
+      let resTitle
+      
       if(!title) {
          if(titlElem) {
             
@@ -5483,6 +5485,7 @@ class ResourceViewer extends Component<Props,State>
                titlElem = asArray.filter(a => !a.allSameAs || a.allSameAs.filter(b => b.includes(bdr)).length)
             }
             title = getLangLabel(this,"", titlElem, false, false, otherLabels)            
+            resTitle = title
          }
          
          //loggergen.log("titl:",title,kZprop,titlElem,otherLabels,other)
@@ -5506,7 +5509,7 @@ class ResourceViewer extends Component<Props,State>
 
       //loggergen.log("sT:",this.props.IRI,other,title,titlElem)
 
-      return { title, titlElem, otherLabels }
+      return { title, titlElem, otherLabels, resTitle }
    }
 
    setManifest = (kZprop,iiifpres, rid = this.props.IRI, fullRid = fullUri(this.props.IRI)) => {
@@ -7565,7 +7568,8 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
 
       let { doMap, doRegion, regBox } = this.getMapInfo(kZprop);
 
-      //loggergen.log("data!",kZprop)
+      //loggergen.log("data!",kZprop, otherLabels)
+
       let get = qs.parse(this.props.location.search)          
 
       let data = kZprop.map((k) => {
@@ -7648,7 +7652,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                         if(hasCano && !found && i < 10) { hasMaxDisplay = Number(i) ; break ; } 
                      }
 
-                     //loggergen.log("hMd",allLabels,hasMaxDisplay)
+                     //loggergen.log("hMd",allLabels,otherLabels,hasMaxDisplay)
 
                      /*
                      let sortLabel = []
@@ -10282,7 +10286,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
       let wTitle,iTitle,rTitle ;
       let _T = getEntiType(this.props.IRI)
       let titleRaw = { label:[] }
-      let { title,titlElem,otherLabels } = this.setTitle(kZprop,_T,null,null,true) ;
+      let { title,titlElem,otherLabels, resTitle } = this.setTitle(kZprop,_T,null,null,true) ;
       //console.log("tlm?",titlElem,_T)
       let versionTitle, ilabel 
       if(_T === "Instance") { 
@@ -10293,7 +10297,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
          
          if(titleRaw.label?.length) { 
             title = getLangLabel(this,"",titleRaw.label)
-            ilabel = getLangLabel(this,"",titlElem)
+            ilabel = getLangLabel(this,"",resTitle?.value ? [ resTitle ] : titlElem)
             if(ilabel?.value != title.value) versionTitle = ilabel
             title = <h2 class="on" title={title.value} lang={title.lang} >
                <span class={"newT "+_T.toLowerCase()}>
@@ -11052,7 +11056,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
       }
       else {
 
-         const bcLabel = titlElem?.[0]?.value && getLangLabel(this, skos+"prefLabel", titlElem) 
+         const bcLabel = (resTitle?.value ?? titlElem?.[0]?.value) && getLangLabel(this, skos+"prefLabel", resTitle?.value ? [resTitle] : titlElem) 
 
          let iof = this.getResourceElem(bdo+"instanceOf")
          if(iof?.length) iof = shortUri(iof[0].value)
