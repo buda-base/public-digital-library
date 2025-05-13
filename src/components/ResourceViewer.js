@@ -9932,7 +9932,17 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                      //loggergen.log("outline?",elem,outline)
 
                      outline = outline.map(e => {
-                        let url = this.props.IRI != "bdr:PR1ER12" ? "/show/"+e["@id"] : "/show/"+root+"?part="+e["@id"]
+                        let tLabel, pType = e["partType"]
+                        if(pType) {
+
+                           if(Array.isArray(pType)) pType = pType[0]
+
+                           tLabel = getOntoLabel(this.props.dictionary,this.props.locale,fullUri(pType))
+                           tLabel = tLabel[0].toUpperCase() + tLabel.slice(1)
+                           // TODO use translation from ontology
+                        }
+                        
+                        let url = this.props.IRI != "bdr:PR1ER12" || pType === "bdr:PartTypeText" ? "/show/"+e["@id"] : "/show/"+root+"?part="+e["@id"]
                         let togId = e["@id"]
                         if(e["@id"] && e["@id"].startsWith("bdr:I")) {                           
                            url = "/show/"+e["@id"].split(";")[0]
@@ -9943,17 +9953,9 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
 
                         let tag = "outline-"+root+"-"+togId
                         let ret = []
-                        let pType = e["partType"], fUri = fullUri(e["@id"])
+                        let fUri = fullUri(e["@id"])
                         if(e["@id"].includes(";")) fUri = fullUri(e["@id"].split(";")[0])
-                        let tLabel 
-                        if(pType) {
-
-                           if(Array.isArray(pType)) pType = pType[0]
-
-                           tLabel = getOntoLabel(this.props.dictionary,this.props.locale,fullUri(pType))
-                           tLabel = tLabel[0].toUpperCase() + tLabel.slice(1)
-                           // TODO use translation from ontology
-                        }
+                        
                         let open = this.state.collapse[tag] || (osearch &&  this.state.collapse[tag] === undefined && !e.notMatch)
                         if(pType && pType["@id"]) pType = pType["@id"]
 

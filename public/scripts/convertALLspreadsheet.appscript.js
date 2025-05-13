@@ -43,7 +43,7 @@ function processSheetData() {
         else topic.push({id: r})
       }
       elem = {
-        id: "bdr:MWALL_" + row[col_ID],
+        id: "bdr:MW1AL" + row[col_ID].toUpperCase(),
         "skos:prefLabel": [
           row[col_bo]
             ? { "@language": "bo-x-ewts", "@value": row[col_bo].toLowerCase() }
@@ -78,7 +78,7 @@ function processSheetData() {
       if(parent[parent.length - 1]?._type !== "C") {
 
         if (!parent[parent.length - 1].hasPart) parent[parent.length - 1].hasPart = []
-        parent[parent.length - 1].hasPart.push("bdr:MWALL_" + row[col_ID])
+        parent[parent.length - 1].hasPart.push("bdr:MW1AL" + row[col_ID].toUpperCase())
 
         const pID = parent[parent.length - 1].id
         if(!otherNodes[pID]) otherNodes[pID] = []
