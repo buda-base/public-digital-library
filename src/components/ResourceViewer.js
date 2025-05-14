@@ -6089,7 +6089,7 @@ class ResourceViewer extends Component<Props,State>
                if(i == 0) return <div {...rootID?{"data-rootID":rootID}:{}} data-prop={shortUri(k)} class={""}>               
                   <h3><span>{this.proplink(k,null,n)}{I18n.t("punc.colon")}</span> </h3>               
                   <div class={"group"}>
-                     { this.format("h4",k,"",false,"sub", [{type:"uri",value:_tmp+"notAvailableYet"}]) /*[elem[elem.length-1]])*/ }
+                     { this.format("h4",k,"",false,"sub", elem[elem.length-1]?.value === _tmp+"notAvailable" ? [elem[elem.length-1]] : [{type:"uri",value:_tmp+"notAvailableYet"}]) }
                   </div>
                </div>
                else return null
