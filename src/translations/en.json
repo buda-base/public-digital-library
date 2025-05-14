@@ -359,7 +359,8 @@
       "tmp:BDRCworkId":"Work Page",
       "bdr:PartTypeCodicologicalVolume": "Codicological volume",
       "tmp:topic": "Is About",
-      "tmp:by":" | by: "
+      "tmp:by":" | by: ",
+      "tmp:notAvailableYet":"Not available yet"
    },
    "guided":{
       "keyword":"keyword",
