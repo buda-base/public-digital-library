@@ -10736,7 +10736,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
          }}>{I18n.t("topbar.home")}</Link>         
       ]
 
-      if(this.props.previewEtext || this.props.disableInfiniteScroll || topLevel || this.props.openEtext || hasChunks && hasChunks.length && this.state.openEtext) {         
+      if(!this.props.simple && (this.props.previewEtext || this.props.disableInfiniteScroll || topLevel || this.props.openEtext || hasChunks && hasChunks.length && this.state.openEtext)) {         
 
          let hasPages = this.getResourceElem(bdo+"eTextHasPage")
          let etextRes = this.getResourceElem(bdo+"eTextInInstance")         
