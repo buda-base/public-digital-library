@@ -1610,8 +1610,9 @@ class ResourceViewer extends Component<Props,State>
          }
 
          // #754 don't need to get outline data when on sub-node record page
-         if(props.IRI && !props.outline && getEntiType(props.IRI) === "Instance" && props.config && !root?.length) {             
+         if(props.resources[props.IRI] != true && props.IRI && !props.outline && getEntiType(props.IRI) === "Instance" && props.config && !root?.length) {             
             let hasPartB = getElem(tmp+"hasNonVolumeParts",props.IRI)
+            //console.log("hpb:",props.IRI,hasPartB,props.resources[props.IRI])
             if(hasPartB?.length && hasPartB[0].value == "true") props.onGetOutline(props.IRI, { "tmp:hasNonVolumeParts": true})
             else props.onGetOutline(props.IRI)
          }
@@ -6106,7 +6107,7 @@ class ResourceViewer extends Component<Props,State>
                   return t?.some(l => l?.value?.endsWith("EtextInstance")) && !  outlineEtext?.some(o => this.getResourceElem(bdo+"eTextInInstance", shortUri(o.value), this.props.assocResources)?.some(n => n.value === i.value))
                }).filter(r => !snip || r.value?.endsWith(snip.etext_instance))
                
-               //console.log("inRoot?", root, possibleEtext, elem)
+               //console.log("inRoot?", root, possibleEtext, elem, snip)
 
                let outETvol = null , outETstart = null, outETscope = null, outETinst = null
 
@@ -6133,7 +6134,7 @@ class ResourceViewer extends Component<Props,State>
                      "type": "uri",
                      "value": fullUri("bdr:"+snip.etext_instance)
                   }]
-               } else if(snip && rootID && this.state.checkedEtext != rootID && !this.props.resources[rootID]) {
+               } else if(snip && snip != true && rootID && this.state.checkedEtext != rootID && !this.props.resources[rootID]) {
                   this.props.onGetResource(rootID);
                   this.setState({checkedEtext:rootID})
                }
