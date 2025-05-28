@@ -4,7 +4,10 @@
       "colon": ":",
       "num": "{{num}}",
       "lpar": "(",
-      "rpar": ")"
+      "rpar": ")",
+      "semic": "; ",
+      "nth": "{{num}}.",
+      "comma": ", "
    },
    "cookies":{
       "message":"This website uses a third party cookie to collect anonymous usage statistics and enhance the user experience (Google Analytics).",
@@ -55,7 +58,9 @@
       "female-authors":"Female authors",
       "works-by-female-authors":"Works by female authors",
       "instances-by-female-authors":"Versions by female authors",
-      "collec":"<h>BDRC offers a digital acquisition program for research libraries, the Core Text Collection (CTC), now with an updated interface for convenient searching and browsing.</h><h><bold>Each of the 18 CTC hard drives contains curated volumes from BDRC’s holdings curated by our librarians and drawn from our most recent acquisitions.</bold></h><h>Please ask your institution’s librarian about subscribing.<nl/>For more information and assistance, email <lk href='mailto:dechen@bdrc.io'>dechen@bdrc.io</lk>.</h>"
+      "collec":"<h>BDRC offers a digital acquisition program for research libraries, the Core Text Collection (CTC), now with an updated interface for convenient searching and browsing.</h><h><bold>Each of the 18 CTC hard drives contains curated volumes from BDRC’s holdings curated by our librarians and drawn from our most recent acquisitions.</bold></h><h>Please ask your institution’s librarian about subscribing.<nl/>For more information and assistance, email <lk href='mailto:dechen@bdrc.io'>dechen@bdrc.io</lk>.</h>",
+      "buda":"The Buddhist Digital Archives",
+      "subtitle_new":"Access almost any text from the major Buddhist traditions. BUDA contains 30 million pages scanned from the precious originals, and 5 million pages of etexts."
    },
    "types": {
       "any": "Any",
@@ -77,8 +82,8 @@
       "topic_plural": "Topics",
       "work": "Work",
       "work_plural": "Works",
-      "instance": "Version",
-      "instance_plural": "Versions",
+      "instance": "Text",
+      "instance_plural": "Texts",
       "images": "Scans",
       "volume": "Volume",
       "volume_num": "Volume {{num}} [{{id}}]",
@@ -89,7 +94,16 @@
       "scan": "Scan",
       "scan_plural": "Scans",
       "serial": "Series",
-      "match": "match"
+      "match": "match",
+      "ET":{
+         "Etext":"Text",
+         "EtextInstance":"Collection",
+         "EtextVolume":"Volume"
+      },
+      "parttypetext":"text",
+      "collection":"Collection",
+      "collection_plural":"Collections",
+      "tradition":"Tradition"
    },
    "topbar": {
       "about": "about us",
@@ -108,11 +122,55 @@
       "resources":"resources",
       "guided":"Guided search",
       "browse":"browse",
-      "home":"home",
+      "home":"Home",
       "collections":"",
       "update":"Update to latest version of BUDA",
       "guide":"user guide",
-      "feedback":"Feedback"
+      "feedback":"Feedback",
+      "resultsNoKW": "Search results",
+      "preserving":"Preserving Buddhist literature for the world",
+      "advanced":"Advanced search",
+      "simple":"Simple search",
+      "BDRC":"BDRC",
+      "aboutB":"About BUDA",
+      "news":"News",
+      "programs":"Programs",
+      "howToF":"How to find things?",
+      "phonetics":"Search Tibetan in phonetics!",
+      "new":"New",
+      "how":{
+         "tibetan":{
+            "title":"Tibetan: Unicode, Wylie or English phonetics",
+            "body":"Searching in Tibetan do not require exact orthography. Phonetics in English (ex: <ita>Chenrezig</ita>), approximate spelling in Tibetan or Wylie work.<nl/><nl/>Partial matches are returned in titles and names but only full matches are returned in etexts."
+         },
+         "codes": {
+            "title":"Codes and dates",
+            "body":"Searching ISBN numbers, BDRC numbers (ex: <ita>MW22084</ita>), Derge Canon numbers (ex: <ita>D24</ita>) and several other systems is supported. Dates should also return relevant results directly (ex: <ita>1745</ita>)."
+         },
+         "AND": {
+            "title":"Exact match and query combination",
+            "body":"Surrounding your query in double quotes (<ita>\"</ita>) will only find matches that are strictly identical to your query. Combining two or more phrases with the keyword <ita>AND</ita> (upper cased, as in <ita>sde dge AND bka' 'gyur</ita>) will find results that contain all the phrases but not necessarily adjacent (for instance they can be in different fields)."
+         },
+         "chinese": {
+            "title":"Chinese",
+            "body":"The search will return the same results for Traditional and Simplified characters but Pinyin search is not implemented."
+         },
+         "sanskrit": {
+            "title":"Sanskrit and Pali",
+            "body":"Sanskrit and Pali are searched in transliteration only, but diacritics are not required."
+         },
+         "khmer": {
+            "title":"Khmer and Burmese: Unicode",
+            "body":"Search in Khmer and Burmese works best in Unicode, but searching in transliteration will work to some extent."
+         },
+         "scope": {
+            "title":"Scopes of search",
+            "body":"When the search box is on a yellow background and says “Search the Digital Archives”, it covers everything we have. When the search bar is on white background it will search on a limited subset of the database and will indicate it (for example “Search in outline”)."
+         }
+      },
+      "donate2":"Donate to BDRC",
+      "support":"We need your support",
+      "placeHda":"Search the Digital Archives"
    },
    "Lsidebar": {
       "sortBy": {
@@ -280,7 +338,29 @@
       "tmp:RawOCR": "average",
       "tmp:CleanedOCR": "high",
       "tmp:ComputerInputOCR": "very high",
-      "tmp:subscribed":"Subscribed Collections"
+      "tmp:subscribed":"Subscribed Collections",
+      "tmp:otherInstance":"Other version",
+      "tmp:otherInstance_plural":"Other versions",
+      "tmp:containingOutline": "Containing outline",
+      "tmp:scans_access":"Scans",
+      "tmp:etext_access":"Etext",
+      "tmp:scans_quality":"Scans Quality",
+      "tmp:etext_quality":"Etext Quality",
+      "tmp:placeType":"Place Type",
+      "tmp:etext_search":"Etext",
+      "tmp:nocomm_search":"Exclude",
+      "tmp:firstScanSyncDate":"First scan date",
+      "bdr:PartTypeText": "Text in outline",
+      "tmp:associatedTradition":"Tradition",
+      "tmp:notAvailable":"Not available",
+      "tmp:hasInstance":"Version of this work",
+      "tmp:hasInstance_plural":"Versions of this work",
+      "tmp:noPagination": "You may have to find the right page yourself, because this is an unaligned etext.",
+      "tmp:BDRCworkId":"Work Page",
+      "bdr:PartTypeCodicologicalVolume": "Codicological volume",
+      "tmp:topic": "Is About",
+      "tmp:by":" | by: ",
+      "tmp:notAvailableYet":"Not available yet"
    },
    "guided":{
       "keyword":"keyword",
@@ -311,8 +391,8 @@
       "resource": "resource",
       "in": "in",
       "available": "Resource available at",
-      "inRootInstance": "In",
-      "workBy": "By",
+      "inRootInstance": "In Collection",
+      "workBy": "Author",
       "eTextIsForWork": "For Work",
       "year": "Year",
       "inInstance": "In $t(types.instance)",
@@ -331,7 +411,18 @@
       "bDate":"b. {{num}}",
       "bDateCentury":"b. {{num}}",
       "dDate":"d. {{num}}",
-      "fDate":"fl. {{num}}"
+      "fDate":"fl. {{num}}",
+      "assocNoT": "Search Results Related To: <res>{{- name}}<\/res>",
+      "hit":"{{count}} hit",
+      "hit_plural":"{{count}} hits",
+      "filter":"Filter Results",
+      "search":"Search Results",
+      "hitKW":"{{count}} hit for \"{{kw}}\"",
+      "hitKW_plural":"{{count}} hits for \"{{kw}}\"",
+      "added":"{{date}}",
+      "inRootInstanceS": "in",
+      "nHitET":"Match in etext",
+      "nHitET_plural":"Matches in etext"
    },
    "map": {
       "touch": "Use two fingers to move the map",
@@ -348,7 +439,8 @@
       "userP": "User Profile",
       "personalI": "Personal Information",
       "relatedM": "Collection members of {{resLabel.value}}",
-      "relatedS": "Serial members of {{resLabel.value}}"
+      "relatedS": "Serial members of {{resLabel.value}}",
+      "openViewerFU": "Open Preview on BDRC"
    },
    "user": {
       "photo": {
@@ -450,7 +542,11 @@
       "tilt1":"Please rotate your device",
       "tilt2":"This content is optimised for landscape mode",
       "DLD":"This text is not available on your DLD.\nWould you like to open it online instead?",
-      "expand":"Expand"
+      "expand":"Expand",
+      "otherR":"Other resource",
+      "otherR_plural":"Other resources",
+      "see10MoreN": "See {{count}} More",
+      "cbET": "Link to this page copied to clipboard."
    },
    "lang": {
       "en": "English",
@@ -556,7 +652,8 @@
          "facets":" with the filters you set",
          "persons":"<parag>BDRC contains thousands of person records, you may want to try modifying your search to get the best results.<newline/><list>Search on a shorter string of syllables by eliminating titles, geographical names, and so on<newline/>Ex: <ita>'jam dbyangs nor bu</ita> instead of <ita>co ne sa skyong 'jam dbyangs nor bu</ita></list><list>Double check your search for typos</list><list>Try searching <lnk>in English</lnk> instead of pure Extended Wylie</list></parag>",
          "instances":"<parag>BDRC contains thousands of texts, you may want to try modifying your search to get the best results.<newline/><list>Search on a shorter string of syllables, preferably the core part of the title<newline/>Ex: <ita>lam rim chung ngu'i zin bris</ita> instead of <ita>lam rim chung ngu'i zin bris blo gsal rgya mtsho'i 'jug ngogs</ita></list><list>Double check your search for typos</list><list>Try searching <lnk>in English</lnk> instead of pure Extended Wylie</list></parag>",
-         "error": "There was an error processing your search: {{keyword}} [{{language}}] {{type}}<newline/>Please check syntax or try another search"
+         "error": "There was an error processing your search: {{keyword}} [{{language}}] {{type}}<newline/>Please check syntax or try another search",
+         "generic":"<parag>BDRC contains thousands of records, you may want to try modifying your search to get the best results.<newline/><list>Search on a shorter string of syllables, preferably the core part of the title<newline/>Ex: <ita>lam rim chung ngu'i zin bris</ita> instead of <ita>lam rim chung ngu'i zin bris blo gsal rgya mtsho'i 'jug ngogs</ita></list><list>You can also search on a shorter string of syllables by eliminating titles, geographical names, and so on<newline/>Ex: <ita>'jam dbyangs nor bu</ita> instead of <ita>co ne sa skyong 'jam dbyangs nor bu</ita></list><list>Double check your search for typos</list></parag>"   
       },
       "seeO": "See results in other data types",
       "backToW": "Back to Works",
@@ -574,7 +671,16 @@
       "hidden":"Some results were hidden because they currently are not released.",
       "showU":"Show non-released items",
       "toggleM": "Toggle Map",
-      "kw":"(Search any)"
+      "kw":"(Search any)",
+      "nocomm_search":{
+         "true":"Exclude commentaries"
+      },
+      "etext_search":{
+         "true":"Search inside etext, exclude titles and metadata"
+      },
+      "exclude_etexts":{
+         "true":"Exclude etexts"
+      }
    },
    "Rsidebar": {
       "title": "Display Preferences",
@@ -622,7 +728,7 @@
       "extended": "Extended Properties",
       "showD": "Show Details",
       "hideD": "Hide Details",
-      "searchO": "Search in outline",
+      "searchO": "Search these texts",
       "start": "Start search",
       "reset": "Reset search",
       "otherN": "Load non-matching subparts",
@@ -691,7 +797,109 @@
       "redirecting": "Redirecting...",
       "openW":"Open Work",
       "fullR":"Full record",
-      "notInList":"This PDF is not part of a collection subscribed to by your institution.<nl/>Please <lk>visit the BDRC platform</lk> and log in for access."
+      "notInList":"This PDF is not part of a collection subscribed to by your institution.<nl/>Please <lk>visit the BDRC platform</lk> and log in for access.",
+      "continue":"Continue reading",
+      "seeIn":"See this text in {{- txt}}",
+      "closeO":"Close outline",
+      "downloadFU": "Download Preview",
+      "findT":"Find Texts Related to this {{type}}",
+      "findTbyP":"Find texts created by this person",
+      "findTaboutT":"Find texts about this topic",
+      "findTrecent":"Find Texts in the Recent Acquisitions",
+      "searchT":"Search this {{type}}",
+      "goB":"Back",
+      "prev":"Prev",
+      "text":"text",
+      "pagesN":"{{i}} / {{count}} page",
+      "pagesN_plural":"{{i}} / {{count}} pages",
+      "noR":"No results",
+      "pageRvol":"Page {{p}} from Volume {{v}}",
+      "explain":"Showing the most popular items. Make a new search or use the filters on the left to find what you are looking for.",
+      "explainR":"Showing the most recent items. Use the filters on the left to find what you are looking for.",
+      "searchTn":{
+         "topic": "Search texts about this topic",
+         "person": "Search texts by this person or about this person",
+         "place": "Search material related to this place",
+         "product": "Search texts in this collection"
+      },
+      "inCollection":"In collection",
+      "inCollection_plural":"In collections",
+      "outLn":"{{n}}) ",
+      "checkET":"Click to check availability",
+      "checkETlong":"Click to check the availability of another etext",
+      "noOtherET":"No other etext available",
+      "loginToPreview":"You must be logged in to open preview on BDRC",
+      "helpWorkId":"A <italic>Work</italic> in the BDRC context represents the conceptual essence of the cataloged resource: authors, languages, and what it is about (subjects). It connects together all the versions. See the user guide for more.",
+      "workId1":"See the \"work\" page which combines all the different versions of this text.",
+      "workId2":"The ID of this version is {{ id }}.",
+      "workId3":"The overarching work ID is {{ id }}",
+      "searchTtrad":"Search the {{trad}}",
+      "wPageO":"<nomob>(</nomob>Work<nomob>)</nomob><sp> {{of}}</sp>"
+   },
+   "tradition":{
+      "boT":"Tibetan Tradition",
+      "piT":"Pali / SEA Tradition",
+      "saT":"Sanskrit Tradition",
+      "zhT":"Chinese Tradition",
+      "title":{
+         "boT":"Tibetan Tradition",
+         "piT":"Pali and South East Asian Tradition",
+         "saT":"Sanskrit Tradition",
+         "zhT":"Chinese Tradition",
+         "recent":"Recent Acquisitions"
+      },
+      "all":"All texts",
+      "links":"Quick Links",
+      "persons":"Persons",
+      "places":"Places",
+      "selected":"Selected Works by School",
+      "recent":"Recent Acquisitions",
+      "byTopic":"By Topic",
+      "byAuthor":"By Author",
+      "byCollection":"By Collection",
+      "allK":"All Kangyurs",
+      "allT":"All Tengyurs",
+      "school":"By School",
+      "type":"By Type",
+      "canon":"Canon",
+      "misc":"Miscellaneous",
+      "past7d":"Past 7 Days",
+      "past30d":"Past 30 Days",
+      "past6m":"Past 6 Months",
+      "past12m":"Past 12 Months",
+      "contemporary":"Contemporary Places",
+      "monasteries":"Monasteries by School",
+      "printeries":"Printeries",
+      "century":"By Century",
+      "id_topic":"By Topic",
+      "id_author":"By Author",
+      "id_collection":"By Collection",
+      "t_persons":"Persons",
+      "t_places":"Places",
+      "t_texts":"Texts",
+      "natural-features":"Natural Features",
+      "sites":"Sites",
+      "regions":"Regions",
+      "contemporary-places":"Contemporary Places",
+      "8th":"8th Century",
+      "9th":"9th Century",
+      "10th":"10th Century",
+      "11th":"11th Century",
+      "12th":"12th Century",
+      "13th":"13th Century",
+      "14th":"14th Century",
+      "15th":"15th Century",
+      "16th":"16th Century",
+      "17th":"17th Century",
+      "18th":"18th Century",
+      "19th":"19th Century",
+      "20th":"20th Century",
+      "21st":"21st Century",
+      "nothing":"Nothing added in the {{time}}.",
+      "t_selected":"Selected Works",
+      "tmp:T13":"Notice of Contents",
+      "tmp:T281":"Poetry",
+      "tmp:T1134":"History"
    },
    "mirador": {
       "return": "return to BUDA",
@@ -706,7 +914,10 @@
       "manip": "image manipulation",
       "increaseFont": "Increase Etext font size",
       "decreaseFont": "Decrease Etext font size",
-      "downloadE": "Download Etext"
+      "downloadE": "Download Etext",
+      "saveF": "Save downloaded file",
+      "noDL": "Download available from the viewer",
+      "noDLviewer": "Please select a volume or a text within a volume for download"
    },
    "access": {
       "fairuse1": "BDRC <bold>restricts access<\/bold> to this work (only the first and last 20 images are available online) because the work is under <bold>copyright<\/bold>.",
@@ -716,15 +927,77 @@
       "limited20": "Access limited to first & last 20 pages.",
       "credentials": "if you have sufficient credentials to get access to all scans from this work.",
       "notyet": "Images not yet available.",
-      "error": "An error occurred while trying to access the images.",
+      "error": "An error occurred while trying to access the images",
       "generic": "BDRC has restricted access to this work in accordance with our access policies. You can read those policies here: <policies href='https://bdrc.io/access-policies/' target='_blank'>https://bdrc.io/access-policies/<\/policies>",
       "OCR": "",
       "quality0": "We apologize for the poor quality of these scans, which might be in the wrong order or have other issues which may make them difficult to read. Because these may still be useful for scholarship, research or practice, we have chosen to make these available, while we continue to search for higher quality images.",
       "fairUseIA1": "This work is <bold>copyrighted by a third party<\/bold>. As a result, BDRC can only make very limited portions available for private research and study. The full text of the work is viewable on Internet Archive, a close partner of ours, through their Open Library program.",
-      "fairUseIA2": "Access this work on Internet Archive",
+      "fairUseIA2": "Borrow this text from Internet Archive",
+      "fairUseIA3": "The scans are available through the <lk>Internet Archive's Open Library Program <icon /></lk>",
+      "fairUseIA4": "BDRC can make limited portions available for private research and study upon request.",
       "not": "Images not available.",
       "imageN":"(this image is copyrighted and not available)",
-      "fairuseEtext": "BDRC <bold>restricts access<\/bold> to this work because the work is under <bold>copyright<\/bold>."
+      "fairuseEtext": "BDRC <bold>restricts access<\/bold> to this work because the work is under <bold>copyright<\/bold>.",
+      "snippetV":"View a small snippet at BDRC",
+      "snippetH":"Hide snippet",
+      "scans":{
+         "5":"Open Access",
+         "4":"Open Access",
+         "3":"Internet Archive only",
+         "2":"40 pages extract",
+         "1":"Not Available",
+         "hit":{
+            "5":"open access",
+            "4":"open access",
+            "3":"archive.org",
+            "2":"40 pages extract",
+            "1":"not available"
+         },
+         "quality":{
+            "0":{
+               "66-1":{"01":"good quality"},
+               "33-0":{"66":"average quality"},
+               "0-0":{"33":"poor quality"}
+            }
+         }
+      },
+      "etext":{
+         "3":"Has etext of any quality",
+         "2":"Search only",
+         "1":"Not Available",
+         "hit":{
+            "2":"search only",
+            "1":"not available"
+         },
+         "quality":{
+            "3":{"99-4":{"01":"best quality"}},
+            "2":{"99-3":{"01":"best quality, unaligned"}},
+            "1":{
+               "99-2":{"01":"excellent quality"},
+               "99-4":{"01":"manually reviewed"}
+            },
+            "0":{
+               "95-1":{"01":"good OCR"},
+               "8-0":{"95":"mediocre quality"},
+               "0-0":{
+                  "8":"poor quality",
+                  "95":"lesser OCR"
+               }
+            }
+         },
+         "quality_new":{
+            "6":"best quality",
+            "5":"best quality, unaligned",
+            "4":"excellent quality",
+            "3":"good quality",
+            "2":"mediocre quality",
+            "1":"poor quality"
+         }
+      },
+      "restrictedC":"Restricted by Copyright",
+      "OCRnew": "<bold>These etexts were created through OCR (optical character recognition), not manually input, and have not been edited.</bold><nl/>OCR for Tibetan script is not 100% perfect but it is accurate enough to create text that will enhance the BDRC database. We hope that etexts like these improve the discoverability and usefulness of the BDRC archive for you.",
+      "errorE": "An error occurred while trying to access the etext",
+      "redirect":"This is an internal page, please go to<nl/><lnk>{{url}}</lnk><nl/>for the user page."
    },
    "location": {
       "beginV": "Begin volume: {{num}}",
