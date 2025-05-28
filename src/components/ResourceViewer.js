@@ -2594,6 +2594,10 @@ class ResourceViewer extends Component<Props,State>
                               
                               let value = assoR[w.value][bdo+"eventWhen"][0].value, obj, edtfObj, readable = value
                               if(value?.includes("XX?")) value = value.replace(/XX\?/,"?") // #771
+
+                              // feedbucket-integration#143
+                              if(value?.length === 3 && value?.match(/^[0-9]{3}$/)) value = "0"+value
+
                               try {
                                  obj = parse(value)
                                  edtfObj = edtf(value)
