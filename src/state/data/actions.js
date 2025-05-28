@@ -330,9 +330,10 @@ export const getResultsById = (date:string,t:string): Action => {
 }
 
 TYPES.getLatestSyncsAsResults = 'GET_LATEST_SYNCS_AS_RESULTS';
-export const getLatestSyncsAsResults = (): Action => {
+export const getLatestSyncsAsResults = (meta): Action => {
     return {
-        type: TYPES.getLatestSyncsAsResults
+        type: TYPES.getLatestSyncsAsResults,
+        meta
     }
 }
 
@@ -347,18 +348,19 @@ export const getStaticQueryAsResults = (route:string, datatype:string): Action =
 
 
 TYPES.getLatestSyncs = 'GET_LATEST_SYNCS';
-export const getLatestSyncs = (): Action => {
+export const getLatestSyncs = (meta): Action => {
     return {
-        type: TYPES.getLatestSyncs
+        type: TYPES.getLatestSyncs,
+        meta
     }
 }
 
 TYPES.gotLatestSyncs = 'GOT_LATEST_SYNCS';
-export const gotLatestSyncs = (res,nb): Action => {
+export const gotLatestSyncs = (res,meta): Action => {
     return {
         type: TYPES.gotLatestSyncs,
         payload:res,
-        meta:nb
+        meta
     }
 }
 
@@ -549,6 +551,25 @@ export const gotContext = (search:string, iri: string,start:integer,end:integer,
     }
 }
 
+TYPES.getSnippet = 'GET_SNIPPET';
+export const getSnippet = (iri: string): Action => {
+
+    return {
+        type: TYPES.getSnippet,
+        payload: iri
+    }
+}
+
+TYPES.gotSnippet = 'GOT_SNIPPET';
+export const gotSnippet = (iri: string, data: {}): Action => {
+
+    return {
+        type: TYPES.gotSnippet,
+        payload: iri,
+        meta: data
+    }
+}
+
 TYPES.getChunks = 'GET_CHUNKS';
 export const getChunks = (iri: string,next:number=0): Action => {
 
@@ -562,14 +583,14 @@ export const getChunks = (iri: string,next:number=0): Action => {
 }
 
 TYPES.getPages = 'GET_PAGES';
-export const getPages = (iri: string,next:number=0): Action => {
+export const getPages = (iri: string,next:number=0,reset?:boolean,bounds): Action => {
 
-   loggergen.log("getP",iri,next)
+   loggergen.log("getP",iri,next,reset)
 
     return {
         type: TYPES.getPages,
         payload: iri,
-        meta: next
+        meta: { next, reset, bounds }
     }
 }
 

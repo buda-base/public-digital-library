@@ -1,6 +1,9 @@
 
 
-const ldspdi = "//ldspdi.bdrc.io"
+const ldspdi = ["localhost","library-dev"].some(h => window.location.hostname.startsWith(h))
+   ? "//ldspdi-dev.bdrc.io" 
+   : "//ldspdi.bdrc.io"
+
 let iiifpres = "//iiifpres.bdrc.io"
 
 
@@ -309,7 +312,8 @@ async function hasEtextPage(manifest, resID) {
       let ut  = await check.json()
       if(ut) ut = ut[IRI.replace(/bdr:/,bdr)]
       if(!ut) ut = {}
-      let etextRes = ut[tmp+"hasEtextRes"]
+      let etextRes = ut[tmp+"hasEtextVolume"] 
+      //let etextRes = ut[tmp+"hasEtextRes"]
       ut = etextRes
       if(ut && ut.length) { 
          etextRes = etextRes.map(u => u.value.replace(new RegExp(bdr),"bdr:"))
@@ -412,7 +416,8 @@ async function hasEtextPage(manifest, resID) {
             while(id > 0 && start - id < NB_PAGES && !etextPages[ut][id - 1] ) { id -- ; } 
             for(let i = id ; i <= id+NB_PAGES /*-1*/ ; i++) etextPages[ut][i] = true ; 
 
-            let data = await window.fetch(ldspdi+"/lib/ChunksByPage?R_RES="+ut+"&I_START="+id+"&I_END="+(id+NB_PAGES /*-1*/), { 
+            //let data = await window.fetch(ldspdi+"/lib/ChunksByPage?R_RES="+ut+"&I_START="+id+"&I_END="+(id+NB_PAGES /*-1*/), { 
+            let data = await window.fetch(ldspdi+"/osearch/etextpages?id="+ut+"&pstart="+id+"&pend="+(id+NB_PAGES /*-1*/),{
                headers:new Headers({
                   accept:"application/ld+json",               
                   ...( id_token && expires_at > Date.now() ? { Authorization:"Bearer "+id_token }:{} )
@@ -421,7 +426,7 @@ async function hasEtextPage(manifest, resID) {
             
             let json = await data.json() ;
 
-            //loggergen.log("DATA OK",start,json);
+            loggergen.log("DATA OK",start,json);
 
             if(json && json["@graph"]) json = json["@graph"]
             if(json.status === 404 || !json.filter) {
@@ -429,35 +434,58 @@ async function hasEtextPage(manifest, resID) {
                //console.error("Etext ERROR",json)
                return ; //[{"@language":"en","@value":"no data found (yet !?)"}]
             }
-            let pages = json.filter(e => e.type && e.type === "EtextPage")
-            pages = __.orderBy(pages,['seqNum'],['asc'])
-            let chunks = json.filter(e => e.chunkContents)
-            chunks = __.orderBy(chunks,['sliceStartChar'],['asc'])
+            
+            //let pages = json.filter(e => e.type && e.type === "EtextPage")
+            //pages = __.orderBy(pages,['seqNum'],['asc'])            
+            //let chunks = json.filter(e => e.chunkContents)
+            //chunks = __.orderBy(chunks,['sliceStartChar'],['asc'])
+
+            let pages = [], chunks = []
+            for(const j of json) {
+               for(const p of j.innerHits.etext_pages.hits) {
+                  if(!pages.some(q => q.sourceAsMap.pnum === p.sourceAsMap.pnum)) pages.push(p)
+               }
+               for(const c of j.innerHits.chunks.hits) {
+                  if(!chunks.some(d => c.sourceAsMap.cstart === d.sourceAsMap.cstart)) chunks.push(c)
+               }
+            }
+            pages = __.orderBy(pages, (val) => val.sourceAsMap.cstart, ['asc'])            
+            chunks = __.orderBy(chunks, (val) => val.sourceAsMap.cstart, ['asc'])
+            console.log("p/c:",pages,chunks)
+            
+
             for(let p of pages) {               
-               etextPages[ut][p["seqNum"]] = p
+               //etextPages[ut][p["seqNum"]] = p
+               etextPages[ut][p.sourceAsMap.pnum] = p
                
                if(!p.chunks) p.chunks = []
                for(let c of chunks) {
-                  //loggergen.log(p,c)
-                  let content = c["chunkContents"], start = -1, end = -1
+                  //loggergen.log(p,c)                  
+                  //let content = c["chunkContents"], start = -1, end = -1
+                  let start = -1, end = -1
+                  let k = Object.keys(c.sourceAsMap ?? {}).filter(t => t.startsWith("text_")).[0]
+                  let content = c.sourceAsMap[k]
+                  let _cval = c.sourceAsMap[k] //e.chunkContents["@value"]
+                  let _clang = k.split("_")[1] //e.chunkContents["@language"]
                   
-                  if( p.sliceStartChar >= c.sliceStartChar && p.sliceStartChar <= c.sliceEndChar 
-                  || p.sliceEndChar >= c.sliceStartChar   && p.sliceEndChar <= c.sliceEndChar  ) {
+                  if( p.sourceAsMap.cstart >= c.sourceAsMap.cstart && p.sourceAsMap.cstart <= c.sourceAsMap.cend 
+                  || p.sourceAsMap.cend >= c.sourceAsMap.cstart   && p.sourceAsMap.cend <= c.sourceAsMap.cend  ) {
 
-                     if(p.sliceStartChar < c.sliceStartChar) start = 0
-                     else start = p.sliceStartChar - c.sliceStartChar
+                     if(p.sourceAsMap.cstart < c.sourceAsMap.cstart) start = 0
+                     else start = p.sourceAsMap.cstart - c.sourceAsMap.cstart
 
-                     if(p.sliceEndChar > c.sliceEndChar) end = c.sliceEndChar - c.sliceStartChar
-                     else end = p.sliceEndChar - c.sliceStartChar
+                     if(p.sourceAsMap.cend > c.sourceAsMap.cend) end = c.sourceAsMap.cend - c.sourceAsMap.cstart
+                     else end = p.sourceAsMap.cend - c.sourceAsMap.cstart
                   }
-                  else if( p.sliceStartChar <= c.sliceStartChar && p.sliceEndChar >= c.sliceEndChar )
+                  else if( p.sourceAsMap.cstart <= c.sourceAsMap.cstart && p.sourceAsMap.cend >= c.sourceAsMap.cend )
                   {
                      start = 0
-                     end = c.sliceEndChar - c.sliceStartChar
+                     end = c.sourceAsMap.cend - c.sourceAsMap.cstart
                   }
 
                   if(start >= 0 && end >= 0) {
-                     if(content["@value"] && content["@language"]) p.chunks.push({"@language":content["@language"],"@value":content["@value"].substring(start,end)})
+                     //if(content["@value"] && content["@language"]) p.chunks.push({"@language":content["@language"],"@value":content["@value"].substring(start,end)})
+                     if(_cval && _clang) p.chunks.push({"@language":_clang,"@value":_cval.substring(start,end)})
                      else p.chunks.push({"@language":"en", "@value":"issue with chunk data " + JSON.stringify(c,null,3)})
                   }
                   

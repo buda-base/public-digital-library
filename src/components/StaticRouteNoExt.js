@@ -7,7 +7,7 @@ import HTMLparse from 'html-react-parser';
 import qs from 'query-string'
 import I18n from 'i18next';
 
-import history from "../history"
+//import history from "../history"
 import store from '../index';
 import { top_right_menu } from './App'
 import { auth, Redirect404 } from '../routes'
@@ -41,9 +41,9 @@ export class StaticRouteNoExt extends Component<State, Props>
 
     constructor(props) {
         super(props);
-        this._urlParams = qs.parse(history.location.search) 
+        this._urlParams = qs.parse(props.location.search) 
         this.state = { content: "", collapse:{}, hash:"" } //"loading..."+props.dir+"/"+props.page }
-        if(!this.props.config) store.dispatch(initiateApp(this._urlParams,null,null,"static"))
+        //if(!this.props.config) store.dispatch(initiateApp(this._urlParams,null,null,"static"))
 
         let i18nLoaded = setInterval(() => {
             loggergen.log("i18n",I18n,I18n.language,I18n.languages);
@@ -70,7 +70,7 @@ export class StaticRouteNoExt extends Component<State, Props>
     }
 
     componentDidUpdate() { 
-        this._urlParams = qs.parse(history.location.search) 
+        this._urlParams = qs.parse(this.props.location.search) 
         //loggergen.log("u:", I18n.language, this.state.locale, this.props.locale)
         if(I18n.language && this.state.locale !== this.props.locale || this.state.route != this.props.dir+"/"+this.props.page ) {
             if(this.state.route != this.props.dir+"/"+this.props.page) { 
@@ -120,9 +120,9 @@ export class StaticRouteNoExt extends Component<State, Props>
     handleHashChange(ev) {
         // Perform actions based on the changed hash
         console.log("hash:",ev, _that)
-        if(history.location.hash != _that.state.hash) {
+        if(this.props.location.hash != _that.state.hash) {
             if(!ev) {
-                const hash = history.location.hash.replace(/^#/,"")
+                const hash = this.props.location.hash.replace(/^#/,"")
                 _that.setState({scroll:hash, hash})
             }
         }
@@ -131,7 +131,7 @@ export class StaticRouteNoExt extends Component<State, Props>
     componentDidMount() {
         _that = this
         window.addEventListener('hashchange', this.handleHashChange);
-        if(history.location.hash) this.handleHashChange()
+        if(this.props.location.hash) this.handleHashChange()
     }
 
     compounentDidUnmount() {
@@ -222,22 +222,24 @@ export class StaticRouteNoExt extends Component<State, Props>
     }
 
     render(props) {         
-        if(I18n.language && this.props.locale && this.state.error) return <Redirect404  history={history}  auth={auth}/>
+        if(I18n.language && this.props.locale && this.state.error) return <Redirect404  navigate={this.props.navigate} location={this.props.location} auth={auth}/>
         else return (
-            <div>
-                { (!I18n.language || !this.props.locale || !this.state.content) && <Loader loaded={false} /> }
-                <div class={"App home static"+(this.props.config && this.props.config.khmerServer ? " khmer":"")}>
-                    <div class="SearchPane">
-                        <div className="static-container" data-dir={this.props.dir} data-page={this.props.page}>
-                            <div {...!this.props.config || !this.props.config.khmerServer?{id:"samples"}:{}} >
-                                {HTMLparse(this.props.dir.includes("budax/")?"<div>"+this.state.content+"</div>":this.state.content)}
-                            </div>
-                        </div> 
+            <>
+                { top_right_menu(this, null,null,null,null, this.props.location) }
+                <div>
+                    { (!I18n.language || !this.props.locale || !this.state.content) && <Loader loaded={false} /> }
+                    <div class={"App home static"+(this.props.config && this.props.config.khmerServer ? " khmer":"")}>
+                        <div class="SearchPane">
+                            <div className="static-container" data-dir={this.props.dir} data-page={this.props.page}>
+                                <div {...!this.props.config || !this.props.config.khmerServer?{id:"samples"}:{}} >
+                                    {HTMLparse(this.props.dir.includes("budax/")?"<div>"+this.state.content+"</div>":this.state.content)}
+                                </div>
+                            </div> 
+                        </div>
                     </div>
+                    { this.props.config && this.props.config.khmerServer && <Footer locale={this.props.locale} hasSyncs={true}/> }
                 </div>
-                { top_right_menu(this) }
-                { this.props.config && this.props.config.khmerServer && <Footer locale={this.props.locale} hasSyncs={true}/> }
-            </div>
+            </>
         );
     }
 }

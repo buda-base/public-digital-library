@@ -15,7 +15,7 @@ import {auth} from '../../routes';
 import {shortUri,fullUri,isGroup,sublabels,subtime,isProxied} from '../../components/App'
 import {getQueryParam, GUIDED_LIMIT} from '../../components/GuidedSearch'
 import qs from 'query-string'
-import history from '../../history.js'
+//import history from '../../history.js'
 import {locales} from '../../components/ResourceViewer';
 
 
@@ -58,6 +58,7 @@ const _tmp = tmp ;
 let IIIFurl = "//iiif.bdrc.io" ;
 
 const handleAuthentication = (nextState, isAuthCallback) => {
+   //console.log("hA:",nextState)
    if (nextState && /access_token|id_token|error/.test(nextState.location.hash)) {
       auth.handleAuthentication();      
    } else if(auth && !isAuthCallback && !auth.isAuthenticated()) { 
@@ -102,7 +103,7 @@ async function initiateApp(params,iri,myprops,route,isAuthCallback) {
       } 
 
       if(useDLD) {
-         window.top.postMessage(JSON.stringify({"url":{"path":history.location.pathname,"search":history.location.search}}),"*")
+         window.top.postMessage(JSON.stringify({"url":{"path":window.location.pathname,"search":window.location.search}}),"*")
          
          new MutationObserver(function() {
             //loggergen.log("newT:",document.title);
@@ -110,7 +111,8 @@ async function initiateApp(params,iri,myprops,route,isAuthCallback) {
          }).observe(document.querySelector('title'),{ childList: true });
       }
 
-      if(!state.data.hunspellBo) initHunspellBo()
+      // deprecated
+      //if(!state.data.hunspellBo) initHunspellBo()
 
       if(!state.data.config)
       {
@@ -192,8 +194,8 @@ async function initiateApp(params,iri,myprops,route,isAuthCallback) {
          
          // set data language preferences
          // 1-saved preference
-         let list 
-         if((val = localStorage.getItem('langpreset')) && ((list = localStorage.getItem('lang')) || (list = [ ...config.language.data.presets[val] ]))) {
+         let list, uival = val
+         if((val = localStorage.getItem('langpreset')) && ((list = localStorage.getItem('langs')) || (list = [ ...config.language.data.presets[val]?.[uival] ?? [] ]).length > 0)) {
             if(list[locale]) list = list[locale]            
             else if(!Array.isArray(list)) list = list.split(/ *, */)
             store.dispatch(uiActions.langPreset(list, val))
@@ -213,13 +215,13 @@ async function initiateApp(params,iri,myprops,route,isAuthCallback) {
 
       }
 
-      if( ["static", "mirador", "guidedsearch", "browse" ].includes(route)) {
+      if( ["static", "mirador", "guidedsearch", "browse", "tradition" ].includes(route)) {
          
          if(route === "mirador" && params.backToViewer) {
             if(!auth.isAuthenticated()) auth.login(decodeURIComponent(params.backToViewer))
          }
 
-         if(route === "guidedsearch") {
+         if(["guidedsearch","tradition","static"].includes(route)) {
             if(!state.data.dictionary) {
                const dico = await api.loadDictionary()
                store.dispatch(dataActions.loadedDictionary(dico));                       
@@ -243,62 +245,83 @@ async function initiateApp(params,iri,myprops,route,isAuthCallback) {
          store.dispatch(dataActions.loadedDictionary(dico));         
          
       }
+      
+      let { pathname, search } = { ...window.location }
 
       // #765
-      if(params && params.p && params.p.includes("purl.bdrc.io/resource")) {     
+      if(pathname.startsWith("/search") && params && params.p && params.p.includes("purl.bdrc.io/resource")) {     
          let iri = shortUri(params.p.replace(/"/g,""))
          if(iri.startsWith("bdr:")) {
-            history.replace({ pathname: "/show/"+iri })
+            window.history.replace({ pathname: "/show/"+iri })
             return
          }
       }
 
-      // #757
-      if(params && params.s && Array.isArray(params.s)) {
-         let { pathname, search } = { ...history.location }
+      // #757      
+      if(pathname.startsWith("/search") && params && params.s && Array.isArray(params.s)) {
          let s = params.s.filter(p => p.includes("%"))
          if(!s.length) s = params.s
          search = search.replace(/([&?])s=[^&]+/g, "") + "s=" + encodeURIComponent(s[0])
-         history.replace({ pathname, search })
+         window.history.replace({ pathname, search })
          return
       }
 
       // #756
-      if(params && params.t === "Version") {
-         let { pathname, search } = { ...history.location }
+      if(pathname.startsWith("/search") &&  params && params.t === "Version") {
          search = search.replace(/t=Version/, "t=Instance") 
-         history.replace({ pathname, search })
+         window.history.replace({ pathname, search })
          return
       }
 
       // #756
-      if(params && params.q && params.q.match(/^(["(]+[^"]*)"([^"]*[")]+[~0-9]*)$/)) {
-         let { pathname, search } = { ...history.location }
+      if(pathname.startsWith("/search") && params && params.q && params.q.match(/^(["(]+[^"]*)"([^"]*[")]+[~0-9]*)$/)) {
          search = search.replace(/q=[^&]+/, "q="+params.q.replace(/^(["(]+[^"]*)"([^"]*[")~0-9]+)$/g,(m,g1,g2) => g1+(g2.includes('"')?g2:'"'+g2)))
-         if(search != history.location.search) {
-            history.replace({ pathname, search })
+         if(search != window.location.search) {
+            window.history.replace({ pathname, search })
             return
          }
       }
+
+      //loggergen.log("mid:init", params, iri)
 
       // [TODO] load only missing info when needed (see click on "got to annotation" for WCBC2237)
       if(iri) // || (params && params.r)) // && (!state.data.resources || !state.data.resources[iri]))
       {
+         store.dispatch(uiActions.loading(null, true));
+
          let res,Etext ;
          if(!iri) iri = params.r
 
-         Etext = iri.match(/^([^:]+:)?UT/)
+         Etext = iri.match(/^([^:]+:)?(UT|V)/)
+
+         if(Etext) {
+            let get = qs.parse(window.location.search), currentText
+            if(params.backToEtext && !get.openEtext) {
+               const loc = window.location;
+               loc.search = loc.search?.replace(/(openEtext|backToEtext)=[^&]+/g,"") ?? ""
+               console.log("loc:",loc)
+               window.history.replace({ ...loc,
+                  pathname:"/show/"+params.backToEtext, 
+                  search: (loc.search!="?"?loc.search+"&":"?")+"openEtext="+loc.pathname.replace(/\/show\//,"")
+               })
+               return
+            }
+         }
 
          try {
 
             // TODO do not load resource again
 
             if(!Etext) res = await api.loadResource(iri, params.preview)
-            else res = await api.loadEtextInfo(iri)         
+            else res = await api.loadEtextInfo(iri)      
+         
+            store.dispatch(uiActions.loading(null, false));
          }
          catch(e){
             logError(e)
             store.dispatch(dataActions.noResource(iri,e));
+
+            store.dispatch(uiActions.loading(null, false));
             return
          }
 
@@ -320,12 +343,25 @@ async function initiateApp(params,iri,myprops,route,isAuthCallback) {
          */
 
 
+         let {assocRes, _res, multi } = extractAssoRes(iri,res) //= await api.loadAssocResources(iri)
+
+         //console.log("multi?",assocRes, _res, multi)
+
          if(!Etext)
          {
-            let {assocRes, _res } = extractAssoRes(iri,res) //= await api.loadAssocResources(iri)
-            store.dispatch(dataActions.gotResource(iri,_res))
-            store.dispatch(dataActions.gotAssocResources(iri,{ data: assocRes }))
-            sameAsR[iri] = true ;
+            if(!state.data.resources?.[iri]) { 
+               if(!multi) {
+                  store.dispatch(dataActions.gotResource(iri,_res))
+                  store.dispatch(dataActions.gotAssocResources(iri,{ data: assocRes }))
+                  sameAsR[iri] = true ;
+               } else {
+                  for(let { iri:i , res:r, assoc:a} of multi) {
+                     store.dispatch(dataActions.gotResource(i,r))
+                     store.dispatch(dataActions.gotAssocResources(i,{ data: a }))
+                     sameAsR[i] = true ; // ??
+                  }
+               }
+            }
 
             /* //deprecated
             let url = fullUri(iri)
@@ -355,6 +391,9 @@ async function initiateApp(params,iri,myprops,route,isAuthCallback) {
 
          }
          else {
+
+            if(!state.data.resources?.[iri]) store.dispatch(dataActions.gotAssocResources(iri,{ data: assocRes }))
+            
             /*
             let res0 = { [ bdr+iri] : {...res["@graph"].reduce(
             (acc,e) => {
@@ -397,7 +436,8 @@ async function initiateApp(params,iri,myprops,route,isAuthCallback) {
 
       //loggergen.log("gotAR",JSON.stringify(assoRes,null,3));
 
-      store.dispatch(dataActions.gotAssocResources(iri,assoRes));
+      // no need anymore with "standalone" etext viewer (#859)
+      // store.dispatch(dataActions.gotAssocResources(iri,assoRes));
 
       res = { [bdrIRI] : _.sortBy(Object.keys(res)).reduce((acc,e) => {
 
@@ -413,7 +453,7 @@ async function initiateApp(params,iri,myprops,route,isAuthCallback) {
          },{})})*/
       },{}) }
 
-
+      loggergen.log("res:etext",res,bdrIRI,iri,params)
 
       if(res[bdrIRI]) {
          
@@ -429,17 +469,23 @@ async function initiateApp(params,iri,myprops,route,isAuthCallback) {
             }
          }
 
-         if(!res[bdrIRI][bdo+"eTextHasPage"]) store.dispatch(dataActions.getChunks(iri,next));
+         let useIri = iri
+         if(iri.startsWith("bdr:IE") && (params.openEtext?.startsWith("bdr:UT")||params.openEtext?.startsWith("bdr:V"))) useIri = params.openEtext
+         
+         //console.log("res:", res[bdrIRI], params, next)
+
+         if(!res[bdrIRI][_tmp+"etextIsPaginated"]) store.dispatch(dataActions.getChunks(useIri,next));
          else {
             res[bdrIRI][bdo+"eTextHasPage"] = []
-            store.dispatch(dataActions.getPages(iri,next)); 
+            store.dispatch(dataActions.getPages(useIri,next,true)); 
          }
+         
 
       }         
 
       //loggergen.log("res::",iri,JSON.stringify(res[Object.keys(res)[0]][skos+"prefLabel"],null,3))
 
-      store.dispatch(dataActions.gotResource(iri,res));
+      if(!state.data.resources?.[iri]) store.dispatch(dataActions.gotResource(iri,res));
 
    }
 
@@ -450,7 +496,7 @@ async function initiateApp(params,iri,myprops,route,isAuthCallback) {
 }
 
 
-if(params && params.osearch) {
+if(params && params.osearch && !iri.match(/^([^:]+:)?UT/)) {
    let p = params.osearch.split("@")
    let r = iri
    if(params.root) r = params.root
@@ -462,12 +508,12 @@ if(params && params.osearch) {
 }
 
 
-if(params && params.t /*&& !params.i */) {
+if(pathname.startsWith("/search") && params && params.t /*&& !params.i */) {
    //loggergen.log("uSb:",params)
    store.dispatch(uiActions.updateSortBy(params.s?params.s.toLowerCase():(params.i?"year of publication reverse":(params.t==="Etext"?(!params.lg?"title":"closest matches"):(params.t==="Scan"?(route ==="latest"?"release date":"popularity"):"popularity"))),params.t))
 }
 
-if(params && params.i) {
+if(pathname.startsWith("/search") && params && params.i) {
    let t = getEntiType(params.i)
 
    if(["Work"].indexOf(t) !== -1
@@ -476,11 +522,11 @@ if(params && params.i) {
       store.dispatch(dataActions.getInstances(params.i,true));
    }
 }
-else if(params && params.p) {
+else if(pathname.startsWith("/search") && params && params.p) {
 
    store.dispatch(dataActions.ontoSearch(params.p));
 }
-else if(params && params.q) {
+else if((pathname.startsWith("/search") || pathname.startsWith("/simplesearch")) && params && params.q) {
 
    
    if(params.q == "-" && !state.data.searches["-@-"]) {
@@ -497,10 +543,10 @@ else if(params && params.q) {
             if(p) url += "&"+p+"="+facets[k].join(",")
          }
          loggergen.log("facets:",url,params.f, facets)
-         store.dispatch(dataActions.checkResults({init:true,url,route:history.location.pathname+history.location.search}))
+         store.dispatch(dataActions.checkResults({init:true,url,route:window.location.pathname+window.location.search}))
          return
       } else {
-         history.push("/guidedsearch")
+         window.history.push("/guidedsearch")
          return
       }
    }
@@ -533,7 +579,7 @@ else if(params && params.q) {
       }
    
       //store.dispatch(uiActions.selectType(pt));
-   }
+   } 
    else //if(params.t) { //} && ["Any"].indexOf(params.t) !== -1)   
    {
       if(!state.data.searches || !state.data.searches[params.q+"@"+params.lg])
@@ -545,7 +591,7 @@ else if(params && params.q) {
       //store.dispatch(uiActions.selectType(params.t?params.t:"Any"));
    }
    /*
-   else if(params.t && ["Any"].indexOf(params.t) === -1)   
+   else if(pathname.startsWith("/simplesearch") && params.t && ["Any"].indexOf(params.t) === -1) 
    {
       if(!state.data.searches || !state.data.searches[params.q+"@"+params.lg])
          store.dispatch(dataActions.startSearch(params.q,params.lg)); //,params.t.split(",")));
@@ -560,8 +606,8 @@ else if(params && params.q) {
    }
    */
 }
-else if(params && params.r) {
-   let t = getEntiType(params.r)
+else if(pathname.startsWith("/search") && params && params.r) {
+   let t = params.u ?? getEntiType(params.r)
    if(["Instance", "Images", "Volume", "Scan"].includes(t) || ["bdo:SerialWork"].includes(params.r) ) t = "Work"
    if(params.r === "tmp:subscriptions") t = "Product"
 
@@ -583,12 +629,12 @@ else if(params && params.r) {
       }
    }
 }
-else if(params && params.date && params.t) {
+else if(pathname.startsWith("/search") && params && params.date && params.t) {
 
    store.dispatch(dataActions.getResultsByDate(params.date, params.t));
 
 }
-else if(params && params.id && params.t) {
+else if(pathname.startsWith("/search") && params && params.id && params.t) {
 
    store.dispatch(dataActions.getResultsById(params.id, params.t));
 
@@ -597,22 +643,22 @@ else if(route === "latest") {
    let sortBy = "release date"
    if(params && params.s) sortBy = params.s
    store.dispatch(uiActions.updateSortBy(sortBy,"Scan"))
-   store.dispatch(dataActions.getLatestSyncsAsResults());
+   store.dispatch(dataActions.getLatestSyncsAsResults(params?.tf ? { timeframe: params?.tf } : undefined));
 }
 else if(staticQueries[route]?.length === 2) {   
    
    let sortBy = "popularity" 
    if(params && params.s) sortBy = params.s
    if(!params.t) {
-      let {pathname,search} = history.location         
-      history.replace({pathname,search:(search?"&":"")+"t="+staticQueries[route][1]})
+      let {pathname,search} = window.location         
+      window.history.replace({pathname,search:(search?"&":"")+"t="+staticQueries[route][1]})
       return
    }
    store.dispatch(uiActions.updateSortBy(sortBy,params.t))
    
    store.dispatch(dataActions.getStaticQueryAsResults(route,params.t));
 }
-else if(!iri) {
+else if(pathname.startsWith("/search") && !iri) {
 
    let state = store.getState()
    
@@ -643,19 +689,37 @@ function* watchInitiateApp() {
 
 function extractAssoRes(iri,res) {
 
-   let longIri = fullUri(iri);
+   //console.log("ear:", iri, JSON.stringify(res, null, 3))
+
+   let longIri = fullUri(iri), multi;
 
    let assocRes = {}, _res = {}
    let allowK = [ skos+"prefLabel", skos+"altLabel", tmp+"withSameAs", bdo+"inRootInstance", bdo+"language", adm+"canonicalHtml", bdo+"partIndex", bdo+"volumeNumber", tmp+"thumbnailIIIFService", bdo+"instanceHasReproduction",
                   tmp+"nbTranslations", tmp+"provider", rdfs+"comment", rdf+"type", bdo+"note", bdo+"script", bdo+"partOf", bdo+"partType", bdo+"isComplete", bdo+"instanceOf", bdo+"instanceEvent", bdo+"instanceHasItem",
                   bdo+"material", bdo+"biblioNote", bdo+"sponsoshipStatement", bdo+"sponsorshipStatement", bdo+"ownershipStatement", rdfs+"seeAlso",
-                  bdo+"creator", 
+                  bdo+"creator",
                   // #562 there must be something weird in the data here... but can't apply same fix as usual because it removes data (from ToL)
                   //bdo+"personGender", bdo+"personName", bdo+"personStudentOf", bdo+"personTeacherOf", tmp+"hasAdminData", owl+"sameAs"
                    ]
-   let allowR = [ skos+"prefLabel", bdo+"partIndex", bdo+"volumeNumber",  tmp+"thumbnailIIIFService" ]
+   let allowR = [ skos+"prefLabel", bdo+"partIndex", bdo+"volumeNumber",  tmp+"thumbnailIIIFService", bdo+"eTextVolumeForImageGroup" ]
 
-   for(let k of Object.keys(res)) {                  
+   if(iri.startsWith("bdr:MW")) { 
+      multi = [{ iri }]
+      if(res[longIri]?.[bdo+"instanceHasReproduction"]) {
+         for(const r of res[longIri][bdo+"instanceHasReproduction"]) {
+            multi.push({ iri: shortUri(r.value)})            
+         }
+      }
+      if(res[longIri]?.[bdo+"instanceOf"]) {
+         for(const r of res[longIri][bdo+"instanceOf"]) {
+            multi.push({ iri: shortUri(r.value)})
+         }
+      }
+   }
+
+   for(let k of Object.keys(res)) {  
+      const shortK = shortUri(k)
+      //console.log("res:k",k,res[k],multi)                
       _res[k] = { ...res[k], ..._res[k] }
       if(_res[k][bdo+"instanceEvent"]) {
          _res[k][bdo+"instanceEvent"] = _res[k][bdo+"instanceEvent"].reduce( (acc,e) => {             
@@ -679,8 +743,8 @@ function extractAssoRes(iri,res) {
          })
          */
          loggergen.log("preformat",_res[k][bdo+"instanceEvent"])
-      }
-      if(k !== longIri) {
+      }      
+      if(k !== longIri && (!multi || !multi.some(m => m.iri === shortK))) {
          let resK = Object.keys(res[k])
          if(allowR.filter(e => resK.includes(e)).length) assocRes[k] = Object.keys(res[k]).reduce( (acc,f) => ([ ...acc, ...res[k][f].map(e => ({...e,type:f}))]), [])
          if(!resK.filter(k => !allowK.includes(k)).length) delete _res[k]
@@ -691,7 +755,7 @@ function extractAssoRes(iri,res) {
       }
    }
 
-   return { assocRes, _res} ;
+   return { assocRes, _res, multi: multi?.map(m => ({ iri: m.iri, assoc:assocRes, res: _res }) )  } ;
 }
 
 async function getResetLink(id,user,profile)
@@ -749,7 +813,7 @@ function jsonld2turtle( jsonldString, rdfStore, uri ){
 
   
 export async function updateConfigFromProfile() {
-   if(/*history.location.pathname === "/user" ||*/ store.getState().data.profile) return 
+   if(/*window.location.pathname === "/user" ||*/ store.getState().data.profile) return 
    const { userProfile, getProfile } = auth;
 
    const toArray = (allNodes, node) => {
@@ -793,13 +857,13 @@ export async function updateConfigFromProfile() {
       //localStorage.setItem('uilang', locale);
       //store.dispatch(i18nextChangeLanguage(locale));
 
-      localStorage.setItem('lang', litLangs);
+      localStorage.setItem('langs', litLangs);
       
       localStorage.setItem('langpreset', preset);
       store.dispatch(uiActions.langPreset(litLangs, preset));
 
 
-      loggergen.log("state:", state, res, litLangs, locale, isCustom,litLangs.toString(),state.data.config.language.data.presets[locale])
+      //loggergen.log("state:", state, res, litLangs, locale, isCustom,litLangs.toString(),state.data.config.language.data.presets[locale])
    }
 
    try {
@@ -1016,6 +1080,20 @@ export function* watchGetContext() {
 }
 
 
+async function getSnippet(iri) {
+
+   try {     
+      
+      let data = await api.loadEtextSnippet(iri);
+
+      store.dispatch(dataActions.gotSnippet(iri,data))
+
+   } catch(e) {
+      logError(e)
+      console.error("ERRROR with snippet",iri,e)
+      store.dispatch(dataActions.gotSnippet(iri,false))
+   }
+}
 
 async function getChunks(iri,next,nb = 10000,useContext = false) {
 
@@ -1032,8 +1110,9 @@ async function getChunks(iri,next,nb = 10000,useContext = false) {
 
       let data = await api.loadEtextChunks(iri,next,nb,useContext);
 
+      
+      /*
       let sav = data["@graph"]
-
       data = _.sortBy(data["@graph"],'sliceStartChar')
       .filter(e => e.chunkContents)
       .map(e => { 
@@ -1052,8 +1131,39 @@ async function getChunks(iri,next,nb = 10000,useContext = false) {
 
          return ({ value:cval, lang:clang, start:e.sliceStartChar, end:e.sliceEndChar, id:fullUri(e.id)}) 
       }); //+ " ("+e.seqNum+")" }))
+      */
+     
+      let sav = data
+      //data = data?.[0].innerHits?.chunks?.hits ?? []
 
-      //loggergen.log("dataC",iri,next,data)
+      let chunk = []
+      for(const j of data) {
+         for(const c of j.innerHits.chunks.hits) {
+            if(!chunk.some(d => c.sourceAsMap.cstart === d.sourceAsMap.cstart)) chunk.push(c)
+         }
+      }
+      chunk = _.orderBy(chunk, (val) => val.sourceAsMap.cstart, ['asc'])
+
+      data = chunk.map(e => {
+         
+         let k = Object.keys(e.sourceAsMap ?? {}).filter(t => t.startsWith("text_")).[0]
+         let cval = e.sourceAsMap[k] //e.chunkContents["@value"]
+         let clang = k.split("_")[1] //e.chunkContents["@language"]
+
+         //loggergen.log("hi?",cval,clang,hilight,e)
+
+         if(hilight && hilight.lang !== clang) { 
+            let langs = extendedPresets([clang])
+            hilight = sortLangScriptLabels([hilight],langs.flat,langs.translit)
+            if(hilight && hilight[0]) hilight = hilight[0]
+         }
+
+         if(hilight && hilight.lang === clang && cval) cval = cval.replace(new RegExp("("+hilight.value+")","g"),"↦$1↤")
+
+         return ({ value:cval, lang:clang, start:e.sourceAsMap.cstart, end:e.sourceAsMap.cend, id:fullUri("bdr:"+e.id)}) 
+      }); 
+
+      loggergen.log("dataC", iri, next, data, sav)
 
       if(!useContext) store.dispatch(dataActions.gotNextChunks(iri,data,next < 0))
       else { 
@@ -1070,9 +1180,12 @@ async function getChunks(iri,next,nb = 10000,useContext = false) {
 
 }
 
-async function getPages(iri,next) {
+async function getPages(iri,next,meta) {
+   
+   store.dispatch(uiActions.loading("etext pages", true));
+
    try {
-      let data, chunk, pages ;
+      let data, chunk, pages, spans ;
       /*
       if(next == 0) {
          data = await api.loadEtextChunks(iri,next,1000);  
@@ -1091,49 +1204,127 @@ async function getPages(iri,next) {
 
 
       data = await api.loadEtextChunks(iri,next);
-      chunk = _.sortBy(data["@graph"].filter(e => e.chunkContents),'sliceStartChar')                  
-      pages = _.sortBy(data["@graph"].filter(e => e.type && e.type === "EtextPage"),'sliceStartChar')
+      
+      spans = []
+      pages = []
+      for(const j of data) {
+         chunk = []
+         for(const c of j.innerHits.chunks.hits) {
+            if(!chunk.some(d => c.sourceAsMap.cstart === d.sourceAsMap.cstart)) chunk.push(c)
+         }
+         for(const p of j.innerHits.etext_pages.hits) {
+            if(!pages.some(q => q.sourceAsMap.pnum === p.sourceAsMap.pnum)) { 
+               pages.push(p)
+               p.chunk = chunk
+            }
+         }
+         for(const c of j.innerHits.etext_spans.hits) {
+            spans.push(c)
+         }
+      }
+      pages = _.orderBy(pages, (val) => val.sourceAsMap.cstart, ['asc'])            
+      //chunk = _.orderBy(chunk, [(val) => val.id,(val) => val.sourceAsMap.cstart], ['asc', 'asc'])
 
-      let lang = chunk[0].chunkContents["@language"]
+      let sortedSpans = []
+      if(spans.length) {
+         for(const s of spans) {
+            //if(e.sourceAsMap.cstart <= s.sourceAsMap.cstart && s.sourceAsMap.cstart < e.sourceAsMap.cend) {
+               sortedSpans.push({data:s.sourceAsMap, index:s.sourceAsMap.cstart, mode:"open"})  
+            //}
+            //if(e.sourceAsMap.cstart <= s.sourceAsMap.cend && s.sourceAsMap.cend < e.sourceAsMap.cend) {
+               sortedSpans.push({data:s.sourceAsMap, index:s.sourceAsMap.cend, mode:"close"})  
+            //}
+         }
+         sortedSpans = _.orderBy(sortedSpans, "index", "desc")
+         //for(const s of sorted) {
+         //   value = value.substring(0, s.index) + (s.mode === "open" ? "<span class='rend>" : "</span>" ) + value.substring(s.index) 
+         //}
+      }
+
+      //loggergen.log("pages:",iri,pages,chunk,sortedSpans)
+
+      let lang //= chunk[0].chunkContents["@language"]
 
       //let start = chunk[0].sliceStartChar
       //chunk = chunk.map(e => e.chunkContents["@value"]).join() //.replace(/..$/,"--")).join()      
       //loggergen.log("chunk@"+start,chunk)
 
-
-      loggergen.log("pages",pages)
-
       data = pages.map(e => {
+
+         //console.log("p:e", e, e.sourceAsMap.cstart, e.sourceAsMap.cend)
 
          let cval
          let clang 
          let chunks = []
          
-         let value = chunk.reduce( (acc,c) => { 
+         let value = e.chunk.reduce( (acc,c) => { 
             
-            if(!cval && c.chunkContents["@value"]) cval = c.chunkContents["@value"]
-            if(!clang && c.chunkContents["@language"]) clang = c.chunkContents["@language"]
+            let k = Object.keys(c.sourceAsMap ?? {}).filter(t => t.startsWith("text_")).[0]
+            let _cval = c.sourceAsMap[k] //e.chunkContents["@value"]
+            let _clang = k.split("_")[1] //e.chunkContents["@language"]
+
+            if(!cval && _cval) cval = _cval     //c.chunkContents["@value"]) cval = c.chunkContents["@value"]
+            if(!clang && _clang) clang = _clang //c.chunkContents["@language"]) clang = c.chunkContents["@language"]
          
-            let content = c["chunkContents"], start = -1, end = -1
+            // TODO: case when multiple languages?
+            if(!lang && clang) lang = clang
+
+            //console.log("p:c", c, c.sourceAsMap.cstart, c.sourceAsMap.cend, cval, clang)
+
+            let start = -1, end = -1
                   
-            if( e.sliceStartChar >= c.sliceStartChar && e.sliceStartChar <= c.sliceEndChar 
-            || e.sliceEndChar >= c.sliceStartChar   && e.sliceEndChar <= c.sliceEndChar  ) {
+            if( e.sourceAsMap.cstart >= c.sourceAsMap.cstart && e.sourceAsMap.cstart <= c.sourceAsMap.cend 
+            || e.sourceAsMap.cend >= c.sourceAsMap.cstart   && e.sourceAsMap.cend <= c.sourceAsMap.cend  ) {
 
-               if(e.sliceStartChar < c.sliceStartChar) start = 0
-               else start = e.sliceStartChar - c.sliceStartChar
+               if(e.sourceAsMap.cstart < c.sourceAsMap.cstart) start = 0
+               else start = e.sourceAsMap.cstart - c.sourceAsMap.cstart
 
-               if(e.sliceEndChar > c.sliceEndChar) end = c.sliceEndChar - c.sliceStartChar
-               else end = e.sliceEndChar - c.sliceStartChar
+               if(e.sourceAsMap.cend > c.sourceAsMap.cend) end = c.sourceAsMap.cend - c.sourceAsMap.cstart
+               else end = e.sourceAsMap.cend - c.sourceAsMap.cstart
             }
-            else if( e.sliceStartChar <= c.sliceStartChar && e.sliceEndChar >= c.sliceEndChar )
+            else if( e.sourceAsMap.cstart <= c.sourceAsMap.cstart && e.sourceAsMap.cend >= c.sourceAsMap.cend )
             {
                start = 0
-               end = c.sliceEndChar - c.sliceStartChar
+               end = c.sourceAsMap.cend - c.sourceAsMap.cstart
             }
 
             if(start >= 0 && end >= 0) {
-               acc += content["@value"].substring(start,end+1) ;
-               chunks.push({"@value":content["@value"].substring(start,end+1),"@language":c.chunkContents["@language"]})
+               let str = _cval.substring(start,end+1), pre = "", tags = []
+               for(const s of sortedSpans) {
+                  
+                  // #1049 debug mode
+                  //s.data.rend = "unclear"
+
+                  //console.log("s:",start,end,s,c.sourceAsMap,e.sourceAsMap)
+                  if(e.sourceAsMap.cstart <= s.index && s.index < e.sourceAsMap.cend) {
+                     //console.log("in page!")
+                     if(start+c.sourceAsMap.cstart <= s.index && s.index < end+c.sourceAsMap.cstart) {
+                        //console.log("display!")
+
+                        // TODO: do this after results are highlighted
+                        //str = str.substring(0, s.index - start - c.sourceAsMap.cstart) + (s.mode === "open" ? "</span><span class='rend-"+s.data.rend+"'>" : "</span><span>" ) +str.substring(s.index - start - c.sourceAsMap.cstart)    
+                        tags.push({span:s, index:s.index - start - c.sourceAsMap.cstart})
+                     }
+                  }
+
+                  // TODO: handle spans over multiple subchunks
+
+                  // if(start <= s.index - c.sourceAsMap.cstart && s.index - c.sourceAsMap.cstart < end) {
+                  //    str = str.substring(0, s.index - c.sourceAsMap.cstart) + (s.mode === "open" ? "|span class='rend-"+s.data.rend+"'|" : "|/span|" ) +str.substring(s.index - c.sourceAsMap.cstart)
+                  //    if(s.mode === "close" && s.data.start < c.sourceAsMap.cstart) {
+                  //       pre += "|span class='rend-"+s.data.rend+"'|"
+                  //    }
+                  // } 
+               }
+               
+               // console.log("pre:",pre,c,e)
+
+               // TODO: do this after search results are highlighted
+               //str = pre + "<span>" + str + "</span>"
+               
+               acc += str ;
+               chunks.push({tags, "@value":/*"|CHUNK "+c.sourceAsMap.cstart+"-"+c.sourceAsMap.cend+" ~ "+start+"-"+end+"|"+*/ str /*+"|/CHUNK|"*/,"@language":_clang})
+               
             }
 
             return acc ; 
@@ -1148,24 +1339,28 @@ async function getPages(iri,next) {
          
          if(hilight && hilight.lang === clang && value) value = value.replace(new RegExp("("+hilight.value+")","g"),"↦$1↤")
 
-         //loggergen.log("page?",e,e.sliceStartChar,e.sliceEndChar,start)
-         if(e.sliceEndChar <= chunk[chunk.length - 1].sliceEndChar) 
+         //loggergen.log("page?",e,e.cstart,e.cend,start)
+
+         if(e.sourceAsMap.cend <= chunk[chunk.length - 1].sourceAsMap.cend) 
             return {
-               //value:(chunk.substring(e.sliceStartChar - start,e.sliceEndChar - start - 1)).replace(/[\n\r]+/,"\n").replace(/(^\n)|(\n$)/,""),
+               //value:(chunk.substring(e.cstart - start,e.cend - start - 1)).replace(/[\n\r]+/,"\n").replace(/(^\n)|(\n$)/,""),
                value,
                language:lang,
-               seq:e.seqNum,
-               start:e.sliceStartChar,
-               end:e.sliceEndChar,
-               id: fullUri(e.id),
+               seq:e.sourceAsMap.pnum,
+               pname:e.sourceAsMap.pname,
+               start:e.sourceAsMap.cstart,
+               end:e.sourceAsMap.cend,
+               id: fullUri("bdr:"+e.id),
                chunks
             }
          
-      }).filter(e => e); //+ " ("+e.seqNum+")" }))
+      }).filter(e => e) //+ " ("+e.seqNum+")" }))
+      .filter(p => (meta?.firstC === undefined || p.start >= meta.firstC) && (meta?.lastC === undefined || p.start < meta?.lastC) )
 
-      loggergen.log("dataP",iri,next,data)
+      loggergen.log("dataP",iri,next,data,meta)
 
       store.dispatch(dataActions.gotNextPages(iri,data,next < 0))
+
    }
    catch(e){
 
@@ -1178,6 +1373,7 @@ async function getPages(iri,next) {
       }
    }
 
+   store.dispatch(uiActions.loading("etext pages", false));
 }
 
 
@@ -1434,7 +1630,7 @@ async function getManifest(url,iri,thumb) {
             // #869 catch error when fetching thumbnail
             try {
                //throw new ResourceNotFound('Problem fetching the resource (code:'+500+')',500); 
-               test = await api.getURLContents(image+"?t="+Date.now(),null,null,null,true)
+               test = await api.getURLContents(image+(image.includes("bdrc.io")?"?t="+Date.now():""),null,null,null,true)
             } catch(e) {
                console.error("server error fetching thumbnail", e, image)
             }
@@ -2212,7 +2408,7 @@ function sortResultsByYear(results,reverse,aux) {
       },{})
       keys = _.orderBy(keys,['ctx','n','p'],[(reverse?'desc':'desc'), (reverse?'desc':'asc'), (reverse?'asc':'desc')])
       
-      loggergen.log("keysY:",keys)
+      //loggergen.log("keysY:",keys)
 
       let sortRes = {}
       for(let k of keys) sortRes[k.k] = results[k.k]
@@ -2371,7 +2567,7 @@ function rewriteAuxMain(result,keyword,datatype,sortBy,language)
             //const dataVar = keys.reduce( (acc,k) => ({...acc, [k]: result[e][k].filter(e => e.type === skos+"altLabel" || e.type === skos+"prefLabel") }),{})  // > 4sec!
             let dataVar = {} 
             for(let k of keys) { 
-              dataVar[k] = result[e][k].filter(e => e.type === skos+"altLabel" || e.type === skos+"prefLabel")  // < 0.05sec!
+              dataVar[k] = result[e][k].filter(e => [bdo+"inRootInstance",tmp+"provider",tmp+"thumbnailIIIFService",skos+"altLabel",skos+"prefLabel"].includes(e.type))  // < 0.05sec!
             }
             store.dispatch(dataActions.gotAssocResources(keyword,{ data: dataVar  }))
          }
@@ -2588,8 +2784,8 @@ function rewriteAuxMain(result,keyword,datatype,sortBy,language)
          //loggergen.log("dWa:",language,t,dataWithAsset,sortBy,reverse,canPopuSort)
 
          if(!canPopuSort && sortBy.startsWith("popularity")) {            
-            let {pathname,search} = history.location         
-            history.push({pathname,search:search.replace(/(([&?])s=[^&]+)/g,"$2")+(!search.match(/[?&]s=/)?"&":"")+"s="+(sortBy=(language?"closest matches":"title")+" forced")})   
+            let {pathname,search} = window.location         
+            window.history.pushState({},"",pathname+search.replace(/(([&?])s=[^&]+)/g,"$2")+(!search.match(/[?&]s=/)?"&":"")+"s="+(sortBy=(language?"closest matches":"title")+" forced"))
          }
 
          if(language !== undefined) { 
@@ -2946,7 +3142,7 @@ async function checkResults(params, route) {
 
             if(!params.init && store.getState().data.checkResults !== false) {
                store.dispatch(dataActions.checkResults({count, loading:false, route: route+"&q=-&lg=-"}));                     
-               if(route) history.push(route+"&q=-&lg=-")
+               if(route) window.history.pushState({},"",route+"&q=-&lg=-")
             } else {
                if(params.init) store.dispatch(dataActions.checkResults({init:true, route:params.route}));         
                else store.dispatch(dataActions.checkResults(false));         
@@ -3270,7 +3466,7 @@ export function* watchGetStaticQueryAsResults() {
 
 
 
-async function getLatestSyncsAsResults() {
+async function getLatestSyncsAsResults(meta) {
 
    let state = store.getState()
    let sortBy = state.ui.sortBy
@@ -3278,7 +3474,7 @@ async function getLatestSyncsAsResults() {
 
    store.dispatch(uiActions.loading(null, true));
 
-   let res = await api.loadLatestSyncsAsResults()
+   let res = await api.loadLatestSyncsAsResults(meta)
       
    res = rewriteAuxMain(res,"(latest)",["Scan"],sortBy)
 
@@ -3302,15 +3498,15 @@ export function* watchGetLatestSyncsAsResults() {
 
    yield takeLatest(
       dataActions.TYPES.getLatestSyncsAsResults,
-      (action) => getLatestSyncsAsResults()
+      (action) => getLatestSyncsAsResults(action.meta)
    );
 }
 
 
 
-async function getLatestSyncs() {
+async function getLatestSyncs(meta) {
 
-   let res = await api.loadLatestSyncs() 
+   let res = await api.loadLatestSyncs(meta) 
    
    let nb = res[tmp+"totalRes"]
    if(nb) nb = nb[tmp+"totalSyncs"]
@@ -3321,9 +3517,9 @@ async function getLatestSyncs() {
    let sorted = {}
    keys.map(k => { sorted[k.id] = res[k.id]; })
       
-   loggergen.log("syncs",res,sorted,nb)
+   loggergen.log("syncs",res,sorted,nb,meta)
 
-   store.dispatch(dataActions.gotLatestSyncs(sorted,nb))
+   store.dispatch(dataActions.gotLatestSyncs(sorted,{nb,...meta??{}}))
 
 }
 
@@ -3332,7 +3528,7 @@ export function* watchGetLatestSyncs() {
 
    yield takeLatest(
       dataActions.TYPES.getLatestSyncs,
-      (action) => getLatestSyncs()
+      (action) => getLatestSyncs(action.meta)
    );
 }
 
@@ -3400,7 +3596,11 @@ async function getETextRefs(iri) {
    
    loggergen.log("ETextRefs",res)
 
-   store.dispatch(dataActions.gotETextRefs(iri,res))
+   if(res) {
+      store.dispatch(dataActions.gotETextRefs(iri,res))
+   } else {
+      store.dispatch(dataActions.etextError(404,iri))
+   }
 
 }
 
@@ -3610,9 +3810,16 @@ async function getResource(iri:string) {
    try {
       let res = await api.loadResource(iri) //.replace(/bdr:/,""));
 
-      let {assocRes, _res } = extractAssoRes(iri,res) //= await api.loadAssocResources(iri)
-      store.dispatch(dataActions.gotResource(iri,_res))
-      store.dispatch(dataActions.gotAssocResources(iri,{ data: assocRes }))
+      let {assocRes, _res, multi } = extractAssoRes(iri,res) //= await api.loadAssocResources(iri)
+      if(!multi) {
+         store.dispatch(dataActions.gotResource(iri,_res))
+         store.dispatch(dataActions.gotAssocResources(iri,{ data: assocRes }))
+      } else {
+         for(let { iri:i , res:r, assoc:a} of multi) {
+            store.dispatch(dataActions.gotResource(i,r))
+            store.dispatch(dataActions.gotAssocResources(i,{ data: a }))
+         }
+      }
 
       //store.dispatch(dataActions.gotResource(iri, res));
    }
@@ -3756,6 +3963,14 @@ export function* watchGetResource() {
    );
 }
 
+export function* watchGetSnippet() {
+
+   yield takeLatest(
+      dataActions.TYPES.getSnippet,
+      (action) => getSnippet(action.payload)
+   );
+}
+
 export function* watchGetChunks() {
 
    yield takeLatest(
@@ -3768,7 +3983,7 @@ export function* watchGetPages() {
 
    yield takeLatest(
       dataActions.TYPES.getPages,
-      (action) => getPages(action.payload,action.meta)
+      (action) => getPages(action.payload,action.meta.next,action.meta.bounds)
    );
 }
 
@@ -3828,6 +4043,7 @@ export default function* rootSaga() {
       watchGetCitationData(),
       //watchChoosingHost(),
       //watchGetDatatypes(),
+      watchGetSnippet(),
       watchGetChunks(),
       watchGetPages(),
       watchGetFacetInfo(),

@@ -95,7 +95,7 @@ class LanguageSidePane extends Component<Props,State> {
       //loggergen.log("gDsFp:",state,state.custom)
       if(props.langIndex === "custom" && Array.isArray(props.langPriority?.presets["custom"]) && !state.custom?.length) { //.toString() !== props.langPriority?.presets["custom"]?.toString())
          //loggergen.log("custom:",props.langPriority?.presets["custom"])
-         return ({...state, custom: [ ...props.langPriority?.presets["custom"] ]})
+         return ({...state, custom: [ ...props.langPriority?.presets["custom"]??{} ]})
       } else if(props.langIndex != "custom" && state.custom.length && Array.isArray(state.custom)) {
          let defPref = props.langPriority?.presets["custom"]
          if(defPref) defPref = defPref[props.locale]
@@ -229,7 +229,7 @@ class LanguageSidePane extends Component<Props,State> {
             ]
          }
 
-         loggergen.log("props:", this.props, k, i, this.props.langIndex)
+         //loggergen.log("props:", this.props, k, i, this.props.langIndex)
 
          let checked = k === this.props.langIndex || i === this.props.langIndex  
 

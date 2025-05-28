@@ -55,7 +55,8 @@
       "female-authors":"Female authors",
       "works-by-female-authors":"Works by female authors",
       "instances-by-female-authors":"Versions by female authors",
-      "collec":"<h>BDRC offers a digital acquisition program for research libraries, the Core Text Collection (CTC), now with an updated interface for convenient searching and browsing.</h><h><bold>Each of the 18 CTC hard drives contains curated volumes from BDRC’s holdings curated by our librarians and drawn from our most recent acquisitions.</bold></h><h>Please ask your institution’s librarian about subscribing.<nl/>For more information and assistance, email <lk href='mailto:dechen@bdrc.io'>dechen@bdrc.io</lk>.</h>"
+      "collec":"<h>BDRC offers a digital acquisition program for research libraries, the Core Text Collection (CTC), now with an updated interface for convenient searching and browsing.</h><h><bold>Each of the 18 CTC hard drives contains curated volumes from BDRC’s holdings curated by our librarians and drawn from our most recent acquisitions.</bold></h><h>Please ask your institution’s librarian about subscribing.<nl/>For more information and assistance, email <lk href='mailto:dechen@bdrc.io'>dechen@bdrc.io</lk>.</h>",
+      "buda":"佛教数字档案馆"
    },
    "types": {
       "any": "任意",

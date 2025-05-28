@@ -1,6 +1,6 @@
 
 import React, { Component } from 'react';
-import history from "../history"
+//import history from "../history"
 import store from "../index"
 import * as data  from "../state/data/actions"
 import * as ui from "../state/ui/actions"
@@ -117,7 +117,7 @@ export class Profile extends Component<Props,State> {
   componentDidUpdate() {
 
       loggergen.log("didU",this.props)
-      report_GA(this.props.config,this.props.history.location);
+      report_GA(this.props.config,this.props.location);
   }
 
   static getDerivedStateFromProps(props,state) {
@@ -210,7 +210,7 @@ export class Profile extends Component<Props,State> {
   async executePatch(e) {
 
 
-    localStorage.setItem('lang', this.props.langPreset);
+    localStorage.setItem('langs', this.props.langPreset);
     if( this.props.langIndex !== undefined) localStorage.setItem('langpreset', this.props.langIndex);
     if( this.props.langIndex == "custom") localStorage.setItem('customlangpreset', this.props.langPreset);
 
@@ -414,32 +414,36 @@ export class Profile extends Component<Props,State> {
         if(this.props.profile && this.props.profile[skos+"prefLabel"]) title =  this.props.profile[skos+"prefLabel"][0].value
 
         return (
-        <div>
+        <div class="profile static">
+          {top_right_menu(this,null,null,null,null,this.props.location, undefined, "profile")}
+          {getGDPRconsent(this)}
           <div class="resource user">
             <div class="index">
+              {/* 
               <div class="title">
                 <h2 class="on"><span class="T user">{I18n.t("index.userP")}</span></h2>
                 <div>
                   <h3><a href="/user#main-info">{I18n.t("index.personalI")}</a></h3>
                   <h3><a href="/user#display">Display Preferences</a></h3>
                 </div>
-              </div>
+              </div> 
+              */}
             </div>
             <div>
-          {[top_left_menu(this),
-           top_right_menu(this),
-           getGDPRconsent(this),
-          <div className="profile-container">
+          {[//top_left_menu(this),
+           <div className="profile-container">
             <div class="title"></div>
+            {/* 
             <div class="data" id="head">
               <div class="header">
                 <div class="before">
                   <img referrerpolicy="no-referrer" src={picUrl}/>
                 </div>
-              </div>
+              </div> 
             </div>
+             */}
               <div class="data">
-                <h2>{title}</h2>
+                <h2><span class="newT"><span>{I18n.t("index.userP")}</span></span>{title}</h2>
               </div>
               <div id="main-info" className="profile-area data">
 

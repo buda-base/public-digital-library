@@ -2,8 +2,10 @@
 import store from '../index';
 import {auth} from '../routes'
 import qs from 'query-string'
-import history from '../history';
+//import history from '../history';
 import {shortUri,isAdmin} from '../components/App';
+import { fetchLabels } from "../lib/searchkit/api/LabelAPI";
+
 
 import * as rdflib from "rdflib"
 
@@ -11,7 +13,7 @@ import logdown from 'logdown'
 
 const loggergen = new logdown('gen', { markdown: false });
 
-const urlParams = qs.parse(history.location.search)
+const urlParams = qs.parse(window.location.search)
 
 const onKhmerUrl = (
       window.location.host.startsWith("khmer-manuscripts")
@@ -23,6 +25,7 @@ const onKhmerUrl = (
 require('formdata-polyfill')
 
 const CONFIG_PATH = onKhmerUrl?'/config-khmer_v2.json':'/config_v2.json'
+const TRADI_PATH = '/traditions.json'
 const CONFIGDEFAULTS_PATH = '/config-defaults.json'
 const ONTOLOGY_PATH = '/ontology/core.json'
 const DICTIONARY_PATH = '/ontology/data/json' //  '/graph/ontologySchema.json'
@@ -46,6 +49,7 @@ export const dPrefix = {
       "C" : "Corporation",
       "E" : "Etext",
       "IE" : "Etext",
+      "VE": "Volume",
       "VL": "Volume",
       "I" : "Volume", // = image group
       "L" : "Lineage",
@@ -110,16 +114,16 @@ export async function logError(error, json) {
    json.version = localStorage.getItem('APP_VERSION')
    json.userAgent = window.navigator.userAgent
 
-
-   const lang = localStorage.getItem('lang');
+   const lang = localStorage.getItem('langs');
    const uilang = localStorage.getItem('uilang');
    const langpreset = localStorage.getItem('langpreset');
    const customlangpreset = localStorage.getItem('customlangpreset');
-   json.localStorage = { lang, uilang, langpreset, customlangpreset }
+   
+   if(!json.payload) json.localStorage = { lang, uilang, langpreset, customlangpreset }
 
    const state = store?.getState()
 
-   if(state) {
+   if(state && !json.payload) {
       const locale = state.i18next?.lang
       const langIndex = state.ui?.langIndex
       const langPreset = state.ui?.langPreset   
@@ -149,7 +153,8 @@ export async function logError(error, json) {
             "Content-Type": "application/json",
             //...( isAuthenticated() && {"Authorization":"Bearer "+id_token } )
          }),
-         body: JSON.stringify(json)
+         body: JSON.stringify(json),
+         keepalive:true // #864 executed even after closing the tab (see navigator.sendBeacon)
       })
    } else {
       loggergen.log("(localhost/not sending)")
@@ -331,6 +336,8 @@ export default class API {
     {
       try {
          let config =  JSON.parse(await this.getURLContents(this._configPath,false));
+         let tradiObj =  JSON.parse(await this.getURLContents(this._tradiPath,false));
+         config.tradition = tradiObj.tradition
          loggergen.log("config",config)
          return config ;
       }
@@ -434,11 +441,13 @@ export default class API {
 
    }
 
-    async loadLatestSyncsAsResults(): Promise<string>
+    async loadLatestSyncsAsResults(meta): Promise<string>
     {
          try {
             
-            const dateA = new Date(Date.now() - 1000 * 3600 * 24 * 7)
+            let days = 7
+            if(meta?.timeframe) days = Number(meta?.timeframe.replace(/[^0-9]/g,"")) * (meta?.timeframe.endsWith("m") ? 30 : 1)
+            const dateA = new Date(Date.now() - 1000 * 3600 * 24 * days)
             const dateB = new Date(Date.now() + 1000 * 3600 * 24 * 2)
 
             let config = store.getState().data.config.ldspdi
@@ -471,11 +480,13 @@ export default class API {
    
   }
 
-    async loadLatestSyncs(): Promise<string>
+    async loadLatestSyncs(meta): Promise<string>
     {
          try {
             
-            const date = new Date(Date.now() - 1000 * 3600 * 24 * 7)
+            let days = 7
+            if(meta?.timeframe) days = Number(meta?.timeframe.replace(/[^0-9]/g,"")) * (meta?.timeframe.endsWith("m") ? 30 : 1)
+            const date = new Date(Date.now() - 1000 * 3600 * 24 * days)
 
             let config = store.getState().data.config.ldspdi
             // DONE remove ldspdi-dev --> ldspdi 
@@ -489,19 +500,29 @@ export default class API {
          {
             logError(e)         
             //throw(e)
-            console.error("ERROR outline",e)
+            console.error("ERROR latest syncs",e)
             return true
          }
 
    }
 
-
     async loadOutline(IRI:string,node?:{},volFromUri?:string): Promise<string>
     {
+
+         const pathToRoot = (id, outline) => {
+            if(id === "bdr:PR1ER12") return []
+            else {
+               const parent = outline.find(n => n.hasPart?.includes(id))
+               if(parent) return [parent].concat(pathToRoot(parent["@id"]??parent.id, outline))
+               return []
+            }
+         }
+
          try {
             
             if(!IRI.indexOf(':') === -1 ) IRI = "bdr:"+IRI
-            let config = store.getState().data.config.ldspdi
+            let state = store.getState()
+            let config = state.data.config.ldspdi
             let url = config.endpoints[config.index]+"/query/graph" ;            
             let searchType = "Outline_root", extraParam, isTaishoNode
             const initParams = { IRI, searchType } 
@@ -523,7 +544,48 @@ export default class API {
             let data 
             // #730 fallback for case when hasNonVolumePart is true but Outline_root_volumes returns 404
             try { 
-               if(IRI === "tmp:uri") {
+               if(IRI === "bdr:PR1ER12" || volFromUri === "bdr:PR1ER12" || node?.rid === "bdr:PR1ER12" || node?.useRid === "bdr:PR1ER12") {
+                  const nodes = (state.data.outlines?.["bdr:PR1ER12"]?.["@nodes"]) ?? (await(await this._fetch("/sungbum_ALL.json")).json()??{}) ?? []
+                  await new Promise(r => setTimeout(r, 1));
+                  const top = nodes.find(n => (n["@id"] ?? n.id) === IRI)
+                  let graph = [top].concat(nodes.filter(m => top.hasPart?.includes(m["@id"] ?? m.id)))
+                  graph = graph.concat(nodes.filter(m => graph.some(g => g["bf:identifiedBy"]?.some(idb => (idb["@id"] ?? idb.id) === (m["@id"] ?? m.id)))))
+                  graph = graph.concat(pathToRoot(top["@id"]??top.id, nodes))
+                  let more = [], extra = graph.map(g => { 
+                     for(const p of ["tmp:author", "tmp:topic"]) if(g[p]) {
+                        if(!Array.isArray(g[p])) g[p] = [ g[p] ]
+                        for(const v of g[p]) {
+                           more.push(v["@id"]??v.id)
+                        }                     
+                     }
+                     if(g["instanceOf"]) more.push(g["instanceOf"])
+                     return more
+                  }).flat().filter(n => n).map(n => n.split(":")[1]??n)
+                  //console.log("nodes:",nodes,JSON.stringify(top,null,3),IRI,JSON.stringify(graph,null,3), extra, more)
+                  if(extra?.length) {
+                     const attribute = "outline-bdr:PR1ER12"
+                     if (!sessionStorage.getItem(attribute)) {
+                        sessionStorage.setItem(attribute, JSON.stringify({}));
+                     }      
+                     let storage = JSON.parse(sessionStorage.getItem(attribute));
+                     let fetching = extra.filter(i => i && !storage[i])
+                     if(fetching.length) {
+                        const fetchedItems = await fetchLabels(fetching, attribute)
+                        const newStorage = { ...storage, ...fetchedItems }
+                        sessionStorage.setItem(attribute, JSON.stringify(newStorage));   
+                        storage = newStorage      
+                     }
+                     const labels = extra.reduce((acc,k) => ({...acc, [k]:storage[k]}),{})
+                     //console.log("extra:",extra,labels,fetching,storage)
+                     extra = Object.keys(labels).map(k => ({"id":"bdr:"+k, "skos:prefLabel":(labels[k]?.label??[]).map(l => ({"@language":l.lang,"@value":l.value}))}))
+                     graph = graph.concat(extra)
+                  }
+                  data = { 
+                     "@context": "http://purl.bdrc.io/context.jsonld",
+                     "@graph": graph,
+                     ...IRI === "bdr:PR1ER12"?{"@nodes": nodes}:{}
+                    };
+               } else if(IRI === "tmp:uri") {
                   console.warn("tmp:uri?outline",IRI,node,volFromUri)
                   data = {"@graph":[]}
                } else {
@@ -600,7 +662,7 @@ export default class API {
          //let resource =  JSON.parse(await this.getURLContents(this._resourcePath(IRI),false));try {
          try {
             
-            let query = preview ? "ResInfo-preview":"ResInfo-SameAs"            
+            let query = preview ? "ResInfo-preview":(IRI.startsWith("bdr:MW")?"ResInfo-SameAs_MW":"ResInfo-SameAs")
             //let get = qs.parse(history.location.search)
             //if(get["cw"] === "none") query = "ResInfo"
 
@@ -676,6 +738,27 @@ export default class API {
 
    }
 
+   async loadEtextSnippet(IRI:string): Promise<string>
+   {
+      try {
+         let config = store.getState().data.config.ldspdi
+         let url = config.endpoints[config.index]+ "/osearch" 
+         let param = {"searchType": "snippet", "id": IRI, osearch: true }
+         
+         let data = await this.getQueryResults(url, IRI, param,"GET","application/ld+json");
+
+         loggergen.log("etextsnippet",JSON.stringify(data,null,3))
+
+         return data ;
+      }
+      catch(e){
+         throw(e)
+      }
+
+   }
+
+
+
    async loadEtextChunks(IRI:string,next:number=0,nb:number=10000,useContext:boolean=false): Promise<string>
    {
       //let resource =  JSON.parse(await this.getURLContents(this._etextPath(IRI),false));
@@ -688,8 +771,10 @@ export default class API {
 
       try {
          let config = store.getState().data.config.ldspdi
-         let url = config.endpoints[config.index]+(!useContext?"/lib":"/query/graph") ;
-         let param = {"searchType":useContext?"chunkContext":"Chunks",...(useContext?{"R_UT":IRI}:{"R_RES":IRI}),"I_START":next,"I_END":next+nb,"L_NAME":"","LG_NAME":"", "I_LIM":"" }
+         let url = config.endpoints[config.index]+ "/osearch" //(!useContext?"/lib":"/query/graph") ;
+         //let param = {"searchType":useContext?"chunkContext":Chunks",...(useContext?{"R_UT":IRI}:{"R_RES":IRI}),"I_START":next,"I_END":next+nb*1,"L_NAME":"","LG_NAME":"", "I_LIM":"" }
+         let param = {"searchType": "etextchunks","cstart": next,"cend": next+nb*1, "id": IRI, osearch: true }
+         
          let data = await this.getQueryResults(url, IRI, param,"GET","application/ld+json");
 
          //loggergen.log("etextchunks",JSON.stringify(data,null,3))
@@ -744,8 +829,8 @@ export default class API {
          {
             logError(e)
             //throw(e)
-            console.error("ERROR etextrefs",e)
-            return true
+            console.error("ERROR etextrefs",e)            
+            return false
          }
 
    }
@@ -818,28 +903,38 @@ export default class API {
       //loggergen.log("key",key, param)
 
       let res = {}
-      param = { "searchType":"Res_withType","LG_NAME":"bo-x-ewts","I_LIM":500, ...param }
 
-      if(key.indexOf("\"") === -1 && !param["NO_QUOTES"]) key = "\""+key+"\""
-      if(param["L_NAME"] != "") param["L_NAME"] = key ;
-      else { delete param["L_NAME"] ; delete param["LG_NAME"] ;  }
+      if(!param.osearch) {
 
-      if(param["I_LIM"] === "") delete param["I_LIM"]
+         param = { "searchType":"Res_withType","LG_NAME":"bo-x-ewts","I_LIM":500, ...param }
+         
+         if(key.indexOf("\"") === -1 && !param["NO_QUOTES"]) key = "\""+key+"\""
+         if(param["L_NAME"] != "") param["L_NAME"] = key ;
+         else { delete param["L_NAME"] ; delete param["LG_NAME"] ;  }
 
-      if(param["searchType"] != "") url += "/"+param["searchType"];
-      else delete param["I_LIM"] ;
-
-      if(param["I_LIM"] === "") delete param["I_LIM"]
-
-      if(param["NO_QUOTES"]) delete param["NO_QUOTES"]
-
-      if(param["GY_RES"] || param["L_ID"]) {
-         delete param["LG_NAME"]
-         delete param["L_NAME"]
-         //delete param["I_LIM"]
+         if(param["I_LIM"] === "") delete param["I_LIM"]
+         
+         if(param["searchType"] != "") url += "/"+param["searchType"];
+         else delete param["I_LIM"] ;
+         
+         if(param["I_LIM"] === "") delete param["I_LIM"]
+         
+         if(param["NO_QUOTES"]) delete param["NO_QUOTES"]
+         
+         if(param["GY_RES"] || param["L_ID"]) {
+            delete param["LG_NAME"]
+            delete param["L_NAME"]
+            //delete param["I_LIM"]
+         }
+         
+      } else {
+         url += "/"+param["searchType"];
+         delete param.osearch
       }
 
       delete param["searchType"]
+
+
 
       if(accept === "application/json") param["format"] = "json"
 
@@ -1559,6 +1654,15 @@ export default class API {
 
       return path;
   }
+
+  get _tradiPath(): string {
+   let path = TRADI_PATH;
+   if (this._server) {
+       path = this._server + TRADI_PATH;
+   }
+   return path;
+  }
+
   get _configDefaultsPath(): string {
       let path = CONFIGDEFAULTS_PATH;
       if (this._server) {

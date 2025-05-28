@@ -1,0 +1,6733 @@
+{
+  "tradition": {
+    "bo": {
+      "content": [
+        {
+          "id": "links",
+          "classes": "display-block",
+          "content": [
+            {
+              "label": [
+                {
+                  "value": "bka' 'gyur (sde dge par phud)",
+                  "lang": "bo-x-ewts"
+                }
+              ],
+              "to": "/show/bdr:MW22084"
+            },
+            {
+              "label": [
+                {
+                  "value": "bstan 'gyur/ (sde dge/)",
+                  "lang": "bo-x-ewts"
+                },
+                {
+                  "value": "丹珠尔(德格版)",
+                  "lang": "zh-hans"
+                }
+              ],
+              "to": "/show/bdr:MW23703"
+            },
+            {
+              "id": "allK",
+              "_old_to": "/search?i=bdr:WA0BC001&t=Work",
+              "to": "/osearch/associated/WA0BC001/search"
+            },
+            {
+              "id": "allT",
+              "_old_to": "/search?i=bdr:WA0BC002&t=Work",
+              "to": "/osearch/associated/WA0BC002/search"
+            },
+            {
+              "label": [
+                {
+                  "value": "kun dpal spyod 'jug",
+                  "lang": "bo-x-ewts"
+                }
+              ],
+              "to": "/show/bdr:MW00KG0545"
+            }
+          ]
+        },
+        {
+          "id": "selected",
+          "_old_to": "texts/:id/",
+          "to": "/osearch/search?associatedTradition%5B0%5D=:rid&type%5B0%5D=Instance",
+          "content": [
+            {
+              "id": "bdr:TraditionBon",
+              "img": "/tbrc/bon.jpg",
+              "to": "/tradition/bo/bon"
+            },
+            {
+              "id": "bdr:TraditionNyingma",
+              "img": "/tbrc/nyingma.jpg",
+              "to": "/tradition/bo/nyingma"
+            },
+            {
+              "id": "bdr:TraditionGeluk",
+              "img": "/tbrc/gelug.jpg",
+              "to": "/tradition/bo/geluk"
+            },
+            {
+              "id": "bdr:TraditionKagyu",
+              "img": "/tbrc/kagyu.jpg",
+              "to": "/tradition/bo/kagyu"
+            },
+            {
+              "id": "bdr:TraditionSakya",
+              "img": "/tbrc/sakya.jpg",
+              "to": "/tradition/bo/sakya"
+            },
+            {
+              "id": "bdr:TraditionJonang",
+              "img": "/tbrc/jonang2.jpg",
+              "to": "/tradition/bo/jonang"
+            },
+            {
+              "id": "bdr:TraditionRime",
+              "img": "/tbrc/rismed.jpg",
+              "to": "/tradition/bo/rime"
+            },
+            {
+              "id": "bdr:TraditionKadam",
+              "img": "/tbrc/kadam.jpg",
+              "to": "/tradition/bo/kadampa"
+            },
+            {
+              "id": "bdr:TraditionZhije",
+              "img": "/tbrc/shije.jpg",
+              "to": "/tradition/bo/zhije"
+            },
+            {
+              "id": "tmp:T281",
+              "img": "/tbrc/poetry.jpg",
+              "to": "/tradition/bo/poetry"
+            },
+            {
+              "id": "tmp:T1134",
+              "img": "/tbrc/history.jpg",
+              "to": "/tradition/bo/history"
+            },
+            {
+              "id": "tmp:T13",
+              "img": "/tbrc/karchak.jpg",
+              "to": "/tradition/bo/karchak"
+            }
+          ]
+        },
+        {
+          "id": "all",
+          "classes": "display-block",
+          "content": [
+            {
+              "id": "byTopic",
+              "to": "texts/topic/",
+              "_old_img": "/tbrc/by-category.jpg"
+            },
+            {
+              "id": "byAuthor",
+              "to": "texts/author/",
+              "_old_img": "/tbrc/by-author.jpg",
+              "classes": "disabled"
+            },
+            {
+              "id": "byCollection",
+              "to": "texts/collection/",
+              "_old_img": "/tbrc/by-work.jpg"
+            }
+          ]
+        },
+        {
+          "id": "persons",
+          "classes": "display-block",
+          "content": [
+            {
+              "id": "school",
+              "to": "persons/school/"
+            },
+            {
+              "id": "century",
+              "to": "persons/century/"
+            }
+          ]
+        },
+        {
+          "id": "places",
+          "classes": "display-block",
+          "content": [
+            {
+              "id": "type",
+              "to": "places/type/"
+            },
+            {
+              "id": "contemporary",
+              "to": "places/contemporary-places/"
+            },
+            {
+              "id": "monasteries",
+              "to": "places/monasteries/"
+            },
+            {
+              "id": "printeries",
+              "_old_to": "/search?r=bdr:PT0059&t=Place&u=Place&f=placeType,inc,bdr:PT0059",
+              "to": "/osearch/search?type%5B0%5D=Place&placeType%5B0%5D=PT0059"
+            }
+          ]
+        }
+      ],
+      "subContent": {
+        "selected": {
+          "nyingma": {
+            "id": "bdr:TraditionNyingma",
+            "classes": "display-block",
+            "content": [
+              {
+                "id": "tmp:tradiCat0_1",
+                "to": "/show/bdr::rid",
+                "label": [
+                  {
+                    "value": "Compilations (Kama, etc.)",
+                    "lang": "en"
+                  },
+                  {
+                    "value": "ཕྱོགས་བསྒྲིགས། ༼བཀའ་མ་ལ་སོགས།༽",
+                    "lang": "bo"
+                  }
+                ],
+                "content": [
+                  {
+                    "id": "bdr:MW21939"
+                  },
+                  {
+                    "id": "bdr:MW1PD159541"
+                  },
+                  {
+                    "id": "bdr:MW3CN53"
+                  },
+                  {
+                    "id": "bdr:MW1KG14"
+                  },
+                  {
+                    "id": "bdr:MW30199"
+                  },
+                  {
+                    "id": "bdr:MW2PD20866"
+                  }
+                ]
+              },
+              {
+                "id": "tmp:tradiCat0_9",
+                "to": "/show/bdr::rid",
+                "label": [
+                  {
+                    "value": "Collected Writings",
+                    "lang": "en"
+                  },
+                  {
+                    "value": "གསུང་འབུམ།",
+                    "lang": "bo"
+                  }
+                ],
+                "content": [
+                  {
+                    "id": "bdr:MW2PD17514"
+                  },
+                  {
+                    "id": "bdr:MW8870"
+                  },
+                  {
+                    "id": "bdr:MW2DB16631"
+                  },
+                  {
+                    "id": "bdr:MW00KG03612"
+                  },
+                  {
+                    "id": "bdr:MW3CN2409"
+                  },
+                  {
+                    "id": "bdr:MW20869"
+                  },
+                  {
+                    "id": "bdr:MW8CZ54"
+                  },
+                  {
+                    "id": "bdr:MW3KG227"
+                  },
+                  {
+                    "id": "bdr:MW3KG230"
+                  },
+                  {
+                    "id": "bdr:MW3KG229"
+                  },
+                  {
+                    "id": "bdr:MW9140"
+                  },
+                  {
+                    "id": "bdr:MW3CN21303"
+                  },
+                  {
+                    "id": "bdr:MW3PD247"
+                  },
+                  {
+                    "id": "bdr:MW1AC320"
+                  },
+                  {
+                    "id": "bdr:MW3CN4120"
+                  },
+                  {
+                    "id": "bdr:MW8CZ57"
+                  },
+                  {
+                    "id": "bdr:MW8LS76097"
+                  },
+                  {
+                    "id": "bdr:MW3KG226"
+                  },
+                  {
+                    "id": "bdr:MW3CN21680"
+                  },
+                  {
+                    "id": "bdr:MW8LS32718"
+                  },
+                  {
+                    "id": "bdr:MW29701"
+                  },
+                  {
+                    "id": "bdr:MW2PD20174"
+                  },
+                  {
+                    "id": "bdr:MW2PD20179"
+                  },
+                  {
+                    "id": "bdr:MW3CN26451"
+                  },
+                  {
+                    "id": "bdr:MW3CN2957"
+                  },
+                  {
+                    "id": "bdr:MW2PD17369"
+                  },
+                  {
+                    "id": "bdr:MW3CN2890"
+                  },
+                  {
+                    "id": "bdr:MW3CN26344"
+                  },
+                  {
+                    "id": "bdr:MW3CN3335"
+                  },
+                  {
+                    "id": "bdr:MW3KG231"
+                  },
+                  {
+                    "id": "bdr:MW4PD2021"
+                  },
+                  {
+                    "id": "bdr:MW4PD759"
+                  },
+                  {
+                    "id": "bdr:MW1KG15420"
+                  },
+                  {
+                    "id": "bdr:MW1KG17151"
+                  },
+                  {
+                    "id": "bdr:MW2PD17471"
+                  },
+                  {
+                    "id": "bdr:MW3KG54"
+                  },
+                  {
+                    "id": "bdr:MW3KG55"
+                  },
+                  {
+                    "id": "bdr:MW1LT3414"
+                  },
+                  {
+                    "id": "bdr:MW1PD159426"
+                  },
+                  {
+                    "id": "bdr:MW22389"
+                  },
+                  {
+                    "id": "bdr:MW23627"
+                  },
+                  {
+                    "id": "bdr:MW29248"
+                  },
+                  {
+                    "id": "bdr:MW2PD17502"
+                  },
+                  {
+                    "id": "bdr:MW3CN21415"
+                  },
+                  {
+                    "id": "bdr:MW4CZ354420"
+                  },
+                  {
+                    "id": "bdr:MW4PD2187"
+                  },
+                  {
+                    "id": "bdr:MW6475"
+                  },
+                  {
+                    "id": "bdr:MW8LS75659"
+                  },
+                  {
+                    "id": "bdr:MW00JR625"
+                  },
+                  {
+                    "id": "bdr:MW1KG3654"
+                  },
+                  {
+                    "id": "bdr:MW21957"
+                  },
+                  {
+                    "id": "bdr:MW22139"
+                  },
+                  {
+                    "id": "bdr:MW1KG3655"
+                  },
+                  {
+                    "id": "bdr:MW30407"
+                  },
+                  {
+                    "id": "bdr:MW3CN17866"
+                  },
+                  {
+                    "id": "bdr:MW23919"
+                  },
+                  {
+                    "id": "bdr:MW1KG4185"
+                  },
+                  {
+                    "id": "bdr:MW1KG5776"
+                  },
+                  {
+                    "id": "bdr:MW1KG5787"
+                  },
+                  {
+                    "id": "bdr:MW1PD96438"
+                  },
+                  {
+                    "id": "bdr:MW23156"
+                  },
+                  {
+                    "id": "bdr:MW3CN12691"
+                  },
+                  {
+                    "id": "bdr:MW3PD444"
+                  },
+                  {
+                    "id": "bdr:MW2KG210282"
+                  },
+                  {
+                    "id": "bdr:MW2PD17453"
+                  },
+                  {
+                    "id": "bdr:MW2PD17472"
+                  },
+                  {
+                    "id": "bdr:MW2KG210272"
+                  },
+                  {
+                    "id": "bdr:MW27486"
+                  },
+                  {
+                    "id": "bdr:MW23946"
+                  },
+                  {
+                    "id": "bdr:MW3CN12692"
+                  },
+                  {
+                    "id": "bdr:MW3CN22961"
+                  },
+                  {
+                    "id": "bdr:MW3CN22967"
+                  },
+                  {
+                    "id": "bdr:MW3CN4073"
+                  },
+                  {
+                    "id": "bdr:MW00KG04001"
+                  },
+                  {
+                    "id": "bdr:MW00KG04068"
+                  },
+                  {
+                    "id": "bdr:MW11208"
+                  },
+                  {
+                    "id": "bdr:MW1GS66367"
+                  },
+                  {
+                    "id": "bdr:MW27511"
+                  },
+                  {
+                    "id": "bdr:MW27514"
+                  },
+                  {
+                    "id": "bdr:MW27873"
+                  },
+                  {
+                    "id": "bdr:MW29578"
+                  },
+                  {
+                    "id": "bdr:MW2CZ6597"
+                  },
+                  {
+                    "id": "bdr:MW2KG210271"
+                  },
+                  {
+                    "id": "bdr:MW2KG210273"
+                  },
+                  {
+                    "id": "bdr:MW2KG210274"
+                  },
+                  {
+                    "id": "bdr:MW2KG210281"
+                  },
+                  {
+                    "id": "bdr:MW2PD20138"
+                  },
+                  {
+                    "id": "bdr:MW22096"
+                  },
+                  {
+                    "id": "bdr:MW3CN21680"
+                  },
+                  {
+                    "id": "bdr:MW23893"
+                  },
+                  {
+                    "id": "bdr:MW2PD17461"
+                  }
+                ]
+              },
+              {
+                "id": "tmp:tradiCat0_104",
+                "to": "/show/bdr::rid",
+                "label": [
+                  {
+                    "value": "Revelations of Concealed Teachings",
+                    "lang": "en"
+                  },
+                  {
+                    "value": "གཏེར་འབུམ།",
+                    "lang": "bo"
+                  }
+                ],
+                "content": [
+                  {
+                    "id": "bdr:MW2PD16917"
+                  },
+                  {
+                    "id": "bdr:MW1PD289"
+                  },
+                  {
+                    "id": "bdr:MW8751"
+                  },
+                  {
+                    "id": "bdr:MW4CZ1042"
+                  },
+                  {
+                    "id": "bdr:MW3PD1003"
+                  },
+                  {
+                    "id": "bdr:MW21728"
+                  },
+                  {
+                    "id": "bdr:MW2PD20144"
+                  },
+                  {
+                    "id": "bdr:MW21974"
+                  },
+                  {
+                    "id": "bdr:MW1KG1958"
+                  },
+                  {
+                    "id": "bdr:MW21810"
+                  },
+                  {
+                    "id": "bdr:MW3CN2967"
+                  },
+                  {
+                    "id": "bdr:MW1KG22609"
+                  },
+                  {
+                    "id": "bdr:MW27903"
+                  },
+                  {
+                    "id": "bdr:MW23445"
+                  },
+                  {
+                    "id": "bdr:MW21826"
+                  },
+                  {
+                    "id": "bdr:MW3PD1100"
+                  },
+                  {
+                    "id": "bdr:MW1PD181180"
+                  },
+                  {
+                    "id": "bdr:MW3CN4180"
+                  },
+                  {
+                    "id": "bdr:MW3PD1099"
+                  },
+                  {
+                    "id": "bdr:MW27736"
+                  },
+                  {
+                    "id": "bdr:MW4PD2050"
+                  },
+                  {
+                    "id": "bdr:MW21888"
+                  },
+                  {
+                    "id": "bdr:MW00EGS1016625"
+                  },
+                  {
+                    "id": "bdr:MW3PD1098"
+                  },
+                  {
+                    "id": "bdr:MW1KG16650"
+                  },
+                  {
+                    "id": "bdr:MW2PD19434"
+                  },
+                  {
+                    "id": "bdr:MW1PD89990"
+                  },
+                  {
+                    "id": "bdr:MW29031"
+                  },
+                  {
+                    "id": "bdr:MW3CN7614"
+                  },
+                  {
+                    "id": "bdr:MW3PD991"
+                  },
+                  {
+                    "id": "bdr:MW4PD1389"
+                  },
+                  {
+                    "id": "bdr:MW00EGS1017093"
+                  },
+                  {
+                    "id": "bdr:MW1AC343"
+                  },
+                  {
+                    "id": "bdr:MW2PD17477"
+                  },
+                  {
+                    "id": "bdr:MW3KG207"
+                  },
+                  {
+                    "id": "bdr:MW1PD159387"
+                  },
+                  {
+                    "id": "bdr:MW23695"
+                  },
+                  {
+                    "id": "bdr:MW23453"
+                  },
+                  {
+                    "id": "bdr:MW3PD994"
+                  },
+                  {
+                    "id": "bdr:MW9558"
+                  },
+                  {
+                    "id": "bdr:MW3CN21538"
+                  },
+                  {
+                    "id": "bdr:MW3PD1001"
+                  },
+                  {
+                    "id": "bdr:MW9209"
+                  },
+                  {
+                    "id": "bdr:MW22247"
+                  },
+                  {
+                    "id": "bdr:MW23618"
+                  }
+                ]
+              },
+              {
+                "id": "tmp:tradiCat0_153",
+                "to": "/show/bdr::rid",
+                "label": [
+                  {
+                    "value": "The Philosophical Traditions",
+                    "lang": "en"
+                  },
+                  {
+                    "value": "གཞུང་ལུགས།",
+                    "lang": "bo"
+                  }
+                ],
+                "content": [
+                  {
+                    "id": "bdr:MW3CN18525"
+                  },
+                  {
+                    "id": "bdr:MW00EGS1016286"
+                  },
+                  {
+                    "id": "bdr:MW12827"
+                  },
+                  {
+                    "id": "bdr:MW1KG13603"
+                  },
+                  {
+                    "id": "bdr:MW23760"
+                  },
+                  {
+                    "id": "bdr:MW1KG13017"
+                  }
+                ]
+              }
+            ]
+          },
+          "sakya": {
+            "id": "bdr:TraditionSakya",
+            "classes": "display-block",
+            "content": [
+              {
+                "id": "tmp:tradiCat1_1",
+                "to": "/show/bdr::rid",
+                "label": [
+                  {
+                    "value": "Compilations",
+                    "lang": "en"
+                  },
+                  {
+                    "value": "ཕྱོགས་བསྒྲིགས།",
+                    "lang": "bo"
+                  }
+                ],
+                "content": [
+                  {
+                    "id": "bdr:MW2KG201051"
+                  },
+                  {
+                    "id": "bdr:MW1KG4313"
+                  },
+                  {
+                    "id": "bdr:MW1KG13617"
+                  },
+                  {
+                    "id": "bdr:MW2PD14777"
+                  },
+                  {
+                    "id": "bdr:MW4PD3593"
+                  },
+                  {
+                    "id": "bdr:MW1KG17189"
+                  },
+                  {
+                    "id": "bdr:MW3CN751"
+                  },
+                  {
+                    "id": "bdr:MW3CN3019"
+                  },
+                  {
+                    "id": "bdr:MW23635"
+                  },
+                  {
+                    "id": "bdr:MW1KG4312"
+                  },
+                  {
+                    "id": "bdr:MW3CN15305"
+                  },
+                  {
+                    "id": "bdr:MW4PD2084"
+                  },
+                  {
+                    "id": "bdr:MW23863"
+                  },
+                  {
+                    "id": "bdr:MW3CN12981"
+                  }
+                ]
+              },
+              {
+                "id": "tmp:tradiCat1_17",
+                "to": "/show/bdr::rid",
+                "label": [
+                  {
+                    "value": "Collected Writings",
+                    "lang": "en"
+                  },
+                  {
+                    "value": "གསུང་འབུམ།",
+                    "lang": "bo"
+                  }
+                ],
+                "content": [
+                  {
+                    "id": "bdr:MW00EGS1017151"
+                  },
+                  {
+                    "id": "bdr:MW1PD159398"
+                  },
+                  {
+                    "id": "bdr:MW3KG228"
+                  },
+                  {
+                    "id": "bdr:MW1KG8897"
+                  },
+                  {
+                    "id": "bdr:MW2KG229024"
+                  },
+                  {
+                    "id": "bdr:MW00KG02390"
+                  },
+                  {
+                    "id": "bdr:MW1KG12986"
+                  },
+                  {
+                    "id": "bdr:MW00EGS1016703"
+                  },
+                  {
+                    "id": "bdr:MW4PD2097"
+                  },
+                  {
+                    "id": "bdr:MW4CZ57142"
+                  },
+                  {
+                    "id": "bdr:MW3CN2659"
+                  },
+                  {
+                    "id": "bdr:MW3CN3328"
+                  },
+                  {
+                    "id": "bdr:MW00KG01660"
+                  },
+                  {
+                    "id": "bdr:MW10347"
+                  },
+                  {
+                    "id": "bdr:MW24054"
+                  },
+                  {
+                    "id": "bdr:MW2PD17532"
+                  },
+                  {
+                    "id": "bdr:MW1KG11900"
+                  },
+                  {
+                    "id": "bdr:MW1KG1880"
+                  },
+                  {
+                    "id": "bdr:MW1KG8900"
+                  },
+                  {
+                    "id": "bdr:MW00KG03846"
+                  },
+                  {
+                    "id": "bdr:MW2PD19471"
+                  },
+                  {
+                    "id": "bdr:MW4PD1492"
+                  },
+                  {
+                    "id": "bdr:MW00KG02358"
+                  },
+                  {
+                    "id": "bdr:MW1KG24361"
+                  },
+                  {
+                    "id": "bdr:MW2CZ7958"
+                  },
+                  {
+                    "id": "bdr:MW2PD17536"
+                  },
+                  {
+                    "id": "bdr:MW1KG11946"
+                  },
+                  {
+                    "id": "bdr:MW3CN15302"
+                  },
+                  {
+                    "id": "bdr:MW4PD920"
+                  },
+                  {
+                    "id": "bdr:MW00EGS1016747"
+                  },
+                  {
+                    "id": "bdr:MW00EGS1017070"
+                  }
+                ]
+              },
+              {
+                "id": "tmp:tradiCat1_50",
+                "to": "/show/bdr::rid",
+                "label": [
+                  {
+                    "value": "Ngorpa Tradition",
+                    "lang": "en"
+                  },
+                  {
+                    "value": "ངོར་པའི་དཔེ་ཚོགས།",
+                    "lang": "bo"
+                  }
+                ],
+                "content": [
+                  {
+                    "id": "bdr:MW1PD1725"
+                  },
+                  {
+                    "id": "bdr:MW1KG16714"
+                  },
+                  {
+                    "id": "bdr:MW1KG17190"
+                  },
+                  {
+                    "id": "bdr:MW4PD1494"
+                  },
+                  {
+                    "id": "bdr:MW00EGS1016236"
+                  },
+                  {
+                    "id": "bdr:MW30267"
+                  }
+                ]
+              },
+              {
+                "id": "tmp:tradiCat1_58",
+                "to": "/show/bdr::rid",
+                "label": [
+                  {
+                    "value": "Tsharpa Tradition",
+                    "lang": "en"
+                  },
+                  {
+                    "value": "ཚར་པའི་དཔེ་ཚོགས།",
+                    "lang": "bo"
+                  }
+                ],
+                "content": [
+                  {
+                    "id": "bdr:MW23636"
+                  },
+                  {
+                    "id": "bdr:MW3CN5138"
+                  }
+                ]
+              }
+            ]
+          },
+          "kagyu": {
+            "id": "bdr:TraditionKagyu",
+            "classes": "display-block",
+            "content": [
+              {
+                "id": "tmp:tradiCat2_1",
+                "to": "/show/bdr::rid",
+                "label": [
+                  {
+                    "value": "Compilations",
+                    "lang": "en"
+                  },
+                  {
+                    "value": "ཕྱོགས་བསྒྲིགས།",
+                    "lang": "bo"
+                  }
+                ],
+                "content": [
+                  {
+                    "id": "bdr:MW1KG4334"
+                  },
+                  {
+                    "id": "bdr:MW3CN13006"
+                  },
+                  {
+                    "id": "bdr:MW3CN12210"
+                  },
+                  {
+                    "id": "bdr:MW1KG4335"
+                  },
+                  {
+                    "id": "bdr:MW20749"
+                  },
+                  {
+                    "id": "bdr:MW1KG4336"
+                  },
+                  {
+                    "id": "bdr:MW2KG763"
+                  },
+                  {
+                    "id": "bdr:MW20876"
+                  },
+                  {
+                    "id": "bdr:MW2KG200899"
+                  },
+                  {
+                    "id": "bdr:MW4PD1417"
+                  },
+                  {
+                    "id": "bdr:MW4PD1386"
+                  },
+                  {
+                    "id": "bdr:MW00JW501203"
+                  },
+                  {
+                    "id": "bdr:MW1KG22609"
+                  },
+                  {
+                    "id": "bdr:MW23189"
+                  },
+                  {
+                    "id": "bdr:MW23792"
+                  },
+                  {
+                    "id": "bdr:MW3CN2232"
+                  },
+                  {
+                    "id": "bdr:MW23779"
+                  },
+                  {
+                    "id": "bdr:MW3CN26795"
+                  },
+                  {
+                    "id": "bdr:MW23894"
+                  },
+                  {
+                    "id": "bdr:MW3CN12887"
+                  },
+                  {
+                    "id": "bdr:MW23952"
+                  },
+                  {
+                    "id": "bdr:MW27483"
+                  },
+                  {
+                    "id": "bdr:MW3CN2201"
+                  },
+                  {
+                    "id": "bdr:MW3CN2221"
+                  },
+                  {
+                    "id": "bdr:MW3CN2403"
+                  },
+                  {
+                    "id": "bdr:MW3CN2409"
+                  },
+                  {
+                    "id": "bdr:MW1KG4284"
+                  },
+                  {
+                    "id": "bdr:MW1PD166109"
+                  }
+                ]
+              },
+              {
+                "id": "tmp:tradiCat2_31",
+                "to": "/show/bdr::rid",
+                "label": [
+                  {
+                    "value": "Collected Writings",
+                    "lang": "en"
+                  },
+                  {
+                    "value": "གསུང་འབུམ།",
+                    "lang": "bo"
+                  }
+                ],
+                "content": [
+                  {
+                    "id": "bdr:MW3PD1288"
+                  },
+                  {
+                    "id": "bdr:MW3KG225"
+                  },
+                  {
+                    "id": "bdr:MW8039"
+                  },
+                  {
+                    "id": "bdr:MW30541"
+                  },
+                  {
+                    "id": "bdr:MW00KG03990"
+                  },
+                  {
+                    "id": "bdr:MW3CN477"
+                  },
+                  {
+                    "id": "bdr:MW4CZ302668"
+                  },
+                  {
+                    "id": "bdr:MW26630"
+                  },
+                  {
+                    "id": "bdr:MW22081"
+                  },
+                  {
+                    "id": "bdr:MW3CN4059"
+                  },
+                  {
+                    "id": "bdr:MW3PD1004"
+                  },
+                  {
+                    "id": "bdr:MW1KG12222"
+                  },
+                  {
+                    "id": "bdr:MW2KG238067"
+                  },
+                  {
+                    "id": "bdr:MW3CN12559"
+                  },
+                  {
+                    "id": "bdr:MW3CN17900"
+                  },
+                  {
+                    "id": "bdr:MW10982"
+                  },
+                  {
+                    "id": "bdr:MW2PD17512"
+                  },
+                  {
+                    "id": "bdr:MW3CN26205"
+                  },
+                  {
+                    "id": "bdr:MW8LS18007"
+                  },
+                  {
+                    "id": "bdr:MW23651"
+                  },
+                  {
+                    "id": "bdr:MW23927"
+                  },
+                  {
+                    "id": "bdr:MW3CN12693"
+                  },
+                  {
+                    "id": "bdr:MW1CZ1117"
+                  },
+                  {
+                    "id": "bdr:MW3CN26813"
+                  },
+                  {
+                    "id": "bdr:MW3CN730"
+                  },
+                  {
+                    "id": "bdr:MW1CZ2407"
+                  },
+                  {
+                    "id": "bdr:MW23163"
+                  },
+                  {
+                    "id": "bdr:MW2CZ6597"
+                  },
+                  {
+                    "id": "bdr:MW2PD20096"
+                  },
+                  {
+                    "id": "bdr:MW3CN17906"
+                  },
+                  {
+                    "id": "bdr:MW3CN26792"
+                  },
+                  {
+                    "id": "bdr:MW3CN551"
+                  },
+                  {
+                    "id": "bdr:MW3CN631"
+                  },
+                  {
+                    "id": "bdr:MW23439"
+                  },
+                  {
+                    "id": "bdr:MW1CZ1006"
+                  },
+                  {
+                    "id": "bdr:MW23699"
+                  },
+                  {
+                    "id": "bdr:MW26673"
+                  },
+                  {
+                    "id": "bdr:MW23930"
+                  },
+                  {
+                    "id": "bdr:MW1KG4282"
+                  },
+                  {
+                    "id": "bdr:MW22082"
+                  },
+                  {
+                    "id": "bdr:MW23892"
+                  },
+                  {
+                    "id": "bdr:MW3KG56"
+                  },
+                  {
+                    "id": "bdr:MW22249"
+                  },
+                  {
+                    "id": "bdr:MW23172"
+                  },
+                  {
+                    "id": "bdr:MW23173"
+                  },
+                  {
+                    "id": "bdr:MW1KG14647"
+                  },
+                  {
+                    "id": "bdr:MW2KG209839"
+                  },
+                  {
+                    "id": "bdr:MW23928"
+                  },
+                  {
+                    "id": "bdr:MW8LS32729"
+                  },
+                  {
+                    "id": "bdr:MW23784"
+                  },
+                  {
+                    "id": "bdr:MW1KG3983"
+                  },
+                  {
+                    "id": "bdr:MW3CN22956"
+                  },
+                  {
+                    "id": "bdr:MW23785"
+                  },
+                  {
+                    "id": "bdr:MW2PD19458"
+                  },
+                  {
+                    "id": "bdr:MW1CZ1099"
+                  },
+                  {
+                    "id": "bdr:MW1CZ902"
+                  },
+                  {
+                    "id": "bdr:MW4CZ307766"
+                  },
+                  {
+                    "id": "bdr:MW1KG5793"
+                  },
+                  {
+                    "id": "bdr:MW4CZ355760"
+                  },
+                  {
+                    "id": "bdr:MW23795"
+                  },
+                  {
+                    "id": "bdr:MW3CN2954"
+                  },
+                  {
+                    "id": "bdr:MW10206"
+                  },
+                  {
+                    "id": "bdr:MW23891"
+                  },
+                  {
+                    "id": "bdr:MW23778"
+                  },
+                  {
+                    "id": "bdr:MW1KG3234"
+                  },
+                  {
+                    "id": "bdr:MW23996"
+                  },
+                  {
+                    "id": "bdr:MW27481"
+                  },
+                  {
+                    "id": "bdr:MW24012"
+                  },
+                  {
+                    "id": "bdr:MW1CZ1187"
+                  },
+                  {
+                    "id": "bdr:MW23919"
+                  },
+                  {
+                    "id": "bdr:MW2DB16431"
+                  },
+                  {
+                    "id": "bdr:MW27486"
+                  },
+                  {
+                    "id": "bdr:MW23769"
+                  },
+                  {
+                    "id": "bdr:MW27514"
+                  },
+                  {
+                    "id": "bdr:MW19975"
+                  },
+                  {
+                    "id": "bdr:MW7532"
+                  },
+                  {
+                    "id": "bdr:MW10979"
+                  },
+                  {
+                    "id": "bdr:MW23654"
+                  },
+                  {
+                    "id": "bdr:MW4PD1388"
+                  },
+                  {
+                    "id": "bdr:MW2PD17524"
+                  },
+                  {
+                    "id": "bdr:MW3CN18491"
+                  },
+                  {
+                    "id": "bdr:MW2PD20109"
+                  },
+                  {
+                    "id": "bdr:MW23897"
+                  },
+                  {
+                    "id": "bdr:MW1KG89189"
+                  },
+                  {
+                    "id": "bdr:MW23556"
+                  },
+                  {
+                    "id": "bdr:MW3CN2822"
+                  },
+                  {
+                    "id": "bdr:MW8684"
+                  },
+                  {
+                    "id": "bdr:MW23440"
+                  },
+                  {
+                    "id": "bdr:MW4PD923"
+                  },
+                  {
+                    "id": "bdr:MW24027"
+                  },
+                  {
+                    "id": "bdr:MW1KG4191"
+                  },
+                  {
+                    "id": "bdr:MW10754"
+                  },
+                  {
+                    "id": "bdr:MW27299"
+                  },
+                  {
+                    "id": "bdr:MW3CN18484"
+                  },
+                  {
+                    "id": "bdr:MW4CZ321174"
+                  },
+                  {
+                    "id": "bdr:MW10954"
+                  },
+                  {
+                    "id": "bdr:MW1KG22086"
+                  },
+                  {
+                    "id": "bdr:MW1KG5372"
+                  },
+                  {
+                    "id": "bdr:MW23218"
+                  },
+                  {
+                    "id": "bdr:MW2CZ7858"
+                  },
+                  {
+                    "id": "bdr:MW1CZ1980"
+                  },
+                  {
+                    "id": "bdr:MW18167"
+                  },
+                  {
+                    "id": "bdr:MW23446"
+                  },
+                  {
+                    "id": "bdr:MW3CN22921"
+                  },
+                  {
+                    "id": "bdr:MW4CZ1107"
+                  },
+                  {
+                    "id": "bdr:MW8773"
+                  },
+                  {
+                    "id": "bdr:MW8LS15972"
+                  },
+                  {
+                    "id": "bdr:MW00KG0571"
+                  },
+                  {
+                    "id": "bdr:MW3CN4063"
+                  },
+                  {
+                    "id": "bdr:MW4CZ294736"
+                  },
+                  {
+                    "id": "bdr:MW2KG5049"
+                  },
+                  {
+                    "id": "bdr:MW8CZ113"
+                  }
+                ]
+              },
+              {
+                "id": "tmp:tradiCat2_145",
+                "to": "/show/bdr::rid",
+                "label": [
+                  {
+                    "value": "Transmission of instructions",
+                    "lang": "en"
+                  },
+                  {
+                    "value": "ཁྲིད་ཡིག།",
+                    "lang": "bo"
+                  }
+                ],
+                "content": [
+                  {
+                    "id": "bdr:MW3CN15345"
+                  },
+                  {
+                    "id": "bdr:MW4CZ294923"
+                  },
+                  {
+                    "id": "bdr:MW00KG03592"
+                  },
+                  {
+                    "id": "bdr:MW3CN677"
+                  },
+                  {
+                    "id": "bdr:MW1NLM3675"
+                  },
+                  {
+                    "id": "bdr:MW23177"
+                  },
+                  {
+                    "id": "bdr:MW23656"
+                  },
+                  {
+                    "id": "bdr:MW26626"
+                  },
+                  {
+                    "id": "bdr:MW2KG207344"
+                  },
+                  {
+                    "id": "bdr:MW3CN18523"
+                  },
+                  {
+                    "id": "bdr:MW3CN26810"
+                  },
+                  {
+                    "id": "bdr:MW3CN26817"
+                  },
+                  {
+                    "id": "bdr:MW4CZ355759"
+                  },
+                  {
+                    "id": "bdr:MW8LS16413"
+                  },
+                  {
+                    "id": "bdr:MW23660"
+                  },
+                  {
+                    "id": "bdr:MW00KG03995"
+                  },
+                  {
+                    "id": "bdr:MW00KG04018"
+                  },
+                  {
+                    "id": "bdr:MW00KG09748"
+                  },
+                  {
+                    "id": "bdr:MW13942"
+                  },
+                  {
+                    "id": "bdr:MW1CZ1044"
+                  },
+                  {
+                    "id": "bdr:MW1KG26103"
+                  },
+                  {
+                    "id": "bdr:MW1KG4608"
+                  },
+                  {
+                    "id": "bdr:MW1KG12530"
+                  },
+                  {
+                    "id": "bdr:MW1KG12546"
+                  },
+                  {
+                    "id": "bdr:MW1KG12721"
+                  },
+                  {
+                    "id": "bdr:MW1KG12912"
+                  },
+                  {
+                    "id": "bdr:MW23736"
+                  },
+                  {
+                    "id": "bdr:MW24123"
+                  },
+                  {
+                    "id": "bdr:MW2KG209128"
+                  },
+                  {
+                    "id": "bdr:MW8CZ207"
+                  },
+                  {
+                    "id": "bdr:MW1CZ1095"
+                  },
+                  {
+                    "id": "bdr:MW00EGS1017051"
+                  },
+                  {
+                    "id": "bdr:MW1GS56154"
+                  },
+                  {
+                    "id": "bdr:MW23904"
+                  },
+                  {
+                    "id": "bdr:MW2KG5008"
+                  },
+                  {
+                    "id": "bdr:MW3CN26786"
+                  },
+                  {
+                    "id": "bdr:MW3CN26876"
+                  },
+                  {
+                    "id": "bdr:MW0TTBBC0061"
+                  },
+                  {
+                    "id": "bdr:MW0TTBBC0060"
+                  },
+                  {
+                    "id": "bdr:MW1CZ1047"
+                  },
+                  {
+                    "id": "bdr:MW23869"
+                  },
+                  {
+                    "id": "bdr:MW4PD1382"
+                  },
+                  {
+                    "id": "bdr:MW1KG21958"
+                  },
+                  {
+                    "id": "bdr:MW1KG22060"
+                  },
+                  {
+                    "id": "bdr:MW23619"
+                  },
+                  {
+                    "id": "bdr:MW30095"
+                  },
+                  {
+                    "id": "bdr:MW4PD2014"
+                  },
+                  {
+                    "id": "bdr:MW23158"
+                  },
+                  {
+                    "id": "bdr:MW00EGS1017136"
+                  },
+                  {
+                    "id": "bdr:MW30420"
+                  },
+                  {
+                    "id": "bdr:MW00EGS1017014"
+                  },
+                  {
+                    "id": "bdr:MW00KG03672"
+                  },
+                  {
+                    "id": "bdr:MW1KG10446"
+                  },
+                  {
+                    "id": "bdr:MW1KG12172"
+                  },
+                  {
+                    "id": "bdr:MW1KG9729"
+                  },
+                  {
+                    "id": "bdr:MW21962"
+                  },
+                  {
+                    "id": "bdr:MW23752"
+                  },
+                  {
+                    "id": "bdr:MW23833"
+                  },
+                  {
+                    "id": "bdr:MW23837"
+                  },
+                  {
+                    "id": "bdr:MW27489"
+                  },
+                  {
+                    "id": "bdr:MW29222"
+                  },
+                  {
+                    "id": "bdr:MW19223"
+                  },
+                  {
+                    "id": "bdr:MW1KG4277"
+                  },
+                  {
+                    "id": "bdr:MW1KG21995"
+                  },
+                  {
+                    "id": "bdr:MW21141"
+                  },
+                  {
+                    "id": "bdr:MW1KG10423"
+                  },
+                  {
+                    "id": "bdr:MW1KG21956"
+                  },
+                  {
+                    "id": "bdr:MW1KG22346"
+                  },
+                  {
+                    "id": "bdr:MW1KG3940"
+                  },
+                  {
+                    "id": "bdr:MW1KG12531"
+                  },
+                  {
+                    "id": "bdr:MW1KG12538"
+                  },
+                  {
+                    "id": "bdr:MW1KG12539"
+                  },
+                  {
+                    "id": "bdr:MW1KG12633"
+                  },
+                  {
+                    "id": "bdr:MW21512"
+                  },
+                  {
+                    "id": "bdr:MW21549"
+                  },
+                  {
+                    "id": "bdr:MW23652"
+                  },
+                  {
+                    "id": "bdr:MW23683"
+                  },
+                  {
+                    "id": "bdr:MW23734"
+                  },
+                  {
+                    "id": "bdr:MW23761"
+                  },
+                  {
+                    "id": "bdr:MW23767"
+                  },
+                  {
+                    "id": "bdr:MW23768"
+                  },
+                  {
+                    "id": "bdr:MW0TTBBC0050"
+                  },
+                  {
+                    "id": "bdr:MW2KG232484"
+                  },
+                  {
+                    "id": "bdr:MW3CN15307"
+                  },
+                  {
+                    "id": "bdr:MW23922"
+                  },
+                  {
+                    "id": "bdr:MW00KG01616"
+                  },
+                  {
+                    "id": "bdr:MW00KG01617"
+                  },
+                  {
+                    "id": "bdr:MW00KG01624"
+                  },
+                  {
+                    "id": "bdr:MW00KG01634"
+                  },
+                  {
+                    "id": "bdr:MW23917"
+                  },
+                  {
+                    "id": "bdr:MW4CZ58783"
+                  },
+                  {
+                    "id": "bdr:MW8LS16295"
+                  },
+                  {
+                    "id": "bdr:MW8LS32723"
+                  },
+                  {
+                    "id": "bdr:MW8LS32725"
+                  },
+                  {
+                    "id": "bdr:MW8LS36545"
+                  },
+                  {
+                    "id": "bdr:MW8LS36548"
+                  },
+                  {
+                    "id": "bdr:MW21550"
+                  },
+                  {
+                    "id": "bdr:MW1KG15922"
+                  },
+                  {
+                    "id": "bdr:MW21551"
+                  },
+                  {
+                    "id": "bdr:MW23188"
+                  },
+                  {
+                    "id": "bdr:MW3CN2682"
+                  },
+                  {
+                    "id": "bdr:MW8LS16434"
+                  }
+                ]
+              },
+              {
+                "id": "tmp:tradiCat2_250",
+                "to": "/show/bdr::rid",
+                "label": [
+                  {
+                    "value": "Biographies and spiritual songs",
+                    "lang": "en"
+                  },
+                  {
+                    "value": "རྣམ་ཐར་དང་མགུར་འབུམ།",
+                    "lang": "bo"
+                  }
+                ],
+                "content": [
+                  {
+                    "id": "bdr:MW30121"
+                  },
+                  {
+                    "id": "bdr:MW3CN22290"
+                  },
+                  {
+                    "id": "bdr:MW3CN15304"
+                  },
+                  {
+                    "id": "bdr:MW3CN15676"
+                  },
+                  {
+                    "id": "bdr:MW2KG229490"
+                  },
+                  {
+                    "id": "bdr:MW3CN22990"
+                  },
+                  {
+                    "id": "bdr:MW1NLM963"
+                  },
+                  {
+                    "id": "bdr:MW2CZ7978"
+                  },
+                  {
+                    "id": "bdr:MW1CZ1988"
+                  },
+                  {
+                    "id": "bdr:MW3CN25681"
+                  },
+                  {
+                    "id": "bdr:MW0TTBBC0050"
+                  },
+                  {
+                    "id": "bdr:MW2CZ7838"
+                  },
+                  {
+                    "id": "bdr:MW2KG217489"
+                  },
+                  {
+                    "id": "bdr:MW30535"
+                  },
+                  {
+                    "id": "bdr:MW30534"
+                  },
+                  {
+                    "id": "bdr:MW4CZ299886"
+                  },
+                  {
+                    "id": "bdr:MW0TTBBC0077"
+                  },
+                  {
+                    "id": "bdr:MW1KG2848"
+                  },
+                  {
+                    "id": "bdr:MW1KG2849"
+                  },
+                  {
+                    "id": "bdr:MW8LS32737"
+                  },
+                  {
+                    "id": "bdr:MW1CZ1861"
+                  },
+                  {
+                    "id": "bdr:MW22245"
+                  },
+                  {
+                    "id": "bdr:MW7487"
+                  },
+                  {
+                    "id": "bdr:MW10892"
+                  },
+                  {
+                    "id": "bdr:MW2CZ6240"
+                  },
+                  {
+                    "id": "bdr:MW1KG4869"
+                  },
+                  {
+                    "id": "bdr:MW2CZ7840"
+                  },
+                  {
+                    "id": "bdr:MW2CZ7975"
+                  },
+                  {
+                    "id": "bdr:MW23698"
+                  },
+                  {
+                    "id": "bdr:MW00KG09767"
+                  },
+                  {
+                    "id": "bdr:MW0TTBBC0091"
+                  },
+                  {
+                    "id": "bdr:MW1KG4229"
+                  },
+                  {
+                    "id": "bdr:MW1KG21889"
+                  },
+                  {
+                    "id": "bdr:MW1KG13838"
+                  },
+                  {
+                    "id": "bdr:MW1KG10253"
+                  },
+                  {
+                    "id": "bdr:MW4CZ299890"
+                  },
+                  {
+                    "id": "bdr:MW3CN5096"
+                  },
+                  {
+                    "id": "bdr:MW3CN2636"
+                  },
+                  {
+                    "id": "bdr:MW30161"
+                  },
+                  {
+                    "id": "bdr:MW2CZ7972"
+                  },
+                  {
+                    "id": "bdr:MW2CZ7973"
+                  },
+                  {
+                    "id": "bdr:MW23815"
+                  },
+                  {
+                    "id": "bdr:MW2CZ7839"
+                  },
+                  {
+                    "id": "bdr:MW2CZ7970"
+                  },
+                  {
+                    "id": "bdr:MW2CZ7971"
+                  },
+                  {
+                    "id": "bdr:MW29246"
+                  },
+                  {
+                    "id": "bdr:MW26570"
+                  },
+                  {
+                    "id": "bdr:MW1KG3815"
+                  },
+                  {
+                    "id": "bdr:MW1KG3830"
+                  },
+                  {
+                    "id": "bdr:MW1KG3831"
+                  },
+                  {
+                    "id": "bdr:MW00KG09387"
+                  },
+                  {
+                    "id": "bdr:MW1KG4202"
+                  },
+                  {
+                    "id": "bdr:MW2PD20109"
+                  },
+                  {
+                    "id": "bdr:MW8LS32724"
+                  },
+                  {
+                    "id": "bdr:MW23435"
+                  },
+                  {
+                    "id": "bdr:MW8LS18017"
+                  },
+                  {
+                    "id": "bdr:MW24002"
+                  },
+                  {
+                    "id": "bdr:MW1CZ2043"
+                  },
+                  {
+                    "id": "bdr:MW1CZ674"
+                  },
+                  {
+                    "id": "bdr:MW1CZ675"
+                  },
+                  {
+                    "id": "bdr:MW30263"
+                  },
+                  {
+                    "id": "bdr:MW2CZ7877"
+                  },
+                  {
+                    "id": "bdr:MW19231"
+                  },
+                  {
+                    "id": "bdr:MW0TTBBC0084"
+                  },
+                  {
+                    "id": "bdr:MW1KG2827"
+                  },
+                  {
+                    "id": "bdr:MW1KG2834"
+                  },
+                  {
+                    "id": "bdr:MW1KG2843"
+                  },
+                  {
+                    "id": "bdr:MW8LS18237"
+                  },
+                  {
+                    "id": "bdr:MW3CN18492"
+                  },
+                  {
+                    "id": "bdr:MW8LS16390"
+                  },
+                  {
+                    "id": "bdr:MW1KG3868"
+                  },
+                  {
+                    "id": "bdr:MW1KG3869"
+                  },
+                  {
+                    "id": "bdr:MW1KG3870"
+                  },
+                  {
+                    "id": "bdr:MW1KG4193"
+                  },
+                  {
+                    "id": "bdr:MW1KG6290"
+                  },
+                  {
+                    "id": "bdr:MW20905"
+                  },
+                  {
+                    "id": "bdr:MW1KG8824"
+                  },
+                  {
+                    "id": "bdr:MW22182"
+                  },
+                  {
+                    "id": "bdr:MW22189"
+                  },
+                  {
+                    "id": "bdr:MW23154"
+                  },
+                  {
+                    "id": "bdr:MW23827"
+                  },
+                  {
+                    "id": "bdr:MW29254"
+                  },
+                  {
+                    "id": "bdr:MW2CZ5987"
+                  },
+                  {
+                    "id": "bdr:MW8683"
+                  },
+                  {
+                    "id": "bdr:MW2CZ5988"
+                  },
+                  {
+                    "id": "bdr:MW8LS32732"
+                  },
+                  {
+                    "id": "bdr:MW2CZ7951"
+                  },
+                  {
+                    "id": "bdr:MW30164"
+                  },
+                  {
+                    "id": "bdr:MW30168"
+                  },
+                  {
+                    "id": "bdr:MW30169"
+                  },
+                  {
+                    "id": "bdr:MW1KG21929"
+                  },
+                  {
+                    "id": "bdr:MW1PD44712"
+                  },
+                  {
+                    "id": "bdr:MW21026"
+                  },
+                  {
+                    "id": "bdr:MW3CN17364"
+                  },
+                  {
+                    "id": "bdr:MW19222"
+                  },
+                  {
+                    "id": "bdr:MW23861"
+                  },
+                  {
+                    "id": "bdr:MW30112"
+                  },
+                  {
+                    "id": "bdr:MW4CZ301822"
+                  },
+                  {
+                    "id": "bdr:MW4CZ295072"
+                  },
+                  {
+                    "id": "bdr:MW19988"
+                  },
+                  {
+                    "id": "bdr:MW3CN674"
+                  },
+                  {
+                    "id": "bdr:MW4CZ302233"
+                  },
+                  {
+                    "id": "bdr:MW2PD17544"
+                  },
+                  {
+                    "id": "bdr:MW8LS32728"
+                  },
+                  {
+                    "id": "bdr:MW1KG4247"
+                  },
+                  {
+                    "id": "bdr:MW1KG1286"
+                  },
+                  {
+                    "id": "bdr:MW23708"
+                  },
+                  {
+                    "id": "bdr:MW23181"
+                  }
+                ]
+              },
+              {
+                "id": "tmp:tradiCat2_360",
+                "to": "/show/bdr::rid",
+                "label": [
+                  {
+                    "value": "Sectarian groups",
+                    "lang": "en"
+                  },
+                  {
+                    "value": "དགོན་སྡེ་སོ་སོའི་ལུགས།",
+                    "lang": "bo"
+                  }
+                ],
+                "content": [
+                  {
+                    "id": "bdr:MW1KG11958"
+                  },
+                  {
+                    "id": "bdr:MW1KG22298"
+                  },
+                  {
+                    "id": "bdr:MW00EGS1016263"
+                  },
+                  {
+                    "id": "bdr:MW1NLM3074"
+                  },
+                  {
+                    "id": "bdr:MW23657"
+                  },
+                  {
+                    "id": "bdr:MW25185"
+                  },
+                  {
+                    "id": "bdr:MW3CN26903"
+                  },
+                  {
+                    "id": "bdr:MW3CN641"
+                  },
+                  {
+                    "id": "bdr:MW4CZ355766"
+                  },
+                  {
+                    "id": "bdr:MW8LS15882"
+                  },
+                  {
+                    "id": "bdr:MW1KG12969"
+                  },
+                  {
+                    "id": "bdr:MW1KG15890"
+                  },
+                  {
+                    "id": "bdr:MW1KG5662"
+                  },
+                  {
+                    "id": "bdr:MW1KG5663"
+                  },
+                  {
+                    "id": "bdr:MW2PD19981"
+                  },
+                  {
+                    "id": "bdr:MW00EGS1016759"
+                  },
+                  {
+                    "id": "bdr:MW24025"
+                  },
+                  {
+                    "id": "bdr:MW4PD1390"
+                  },
+                  {
+                    "id": "bdr:MW4CZ58846"
+                  },
+                  {
+                    "id": "bdr:MW1KG11865"
+                  },
+                  {
+                    "id": "bdr:MW1KG17447"
+                  },
+                  {
+                    "id": "bdr:MW1KG9675"
+                  },
+                  {
+                    "id": "bdr:MW8CZ105"
+                  },
+                  {
+                    "id": "bdr:MW23685"
+                  },
+                  {
+                    "id": "bdr:MW23777"
+                  },
+                  {
+                    "id": "bdr:MW23658"
+                  },
+                  {
+                    "id": "bdr:MW1KG11881"
+                  },
+                  {
+                    "id": "bdr:MW23437"
+                  },
+                  {
+                    "id": "bdr:MW27522"
+                  },
+                  {
+                    "id": "bdr:MW24042"
+                  },
+                  {
+                    "id": "bdr:MW3CN5222"
+                  },
+                  {
+                    "id": "bdr:MW1KG4231"
+                  },
+                  {
+                    "id": "bdr:MW4CZ57651"
+                  },
+                  {
+                    "id": "bdr:MW3CN2456"
+                  },
+                  {
+                    "id": "bdr:MW1KG3724"
+                  },
+                  {
+                    "id": "bdr:MW00KG01613"
+                  },
+                  {
+                    "id": "bdr:MW00KG01614"
+                  },
+                  {
+                    "id": "bdr:MW1KG1751"
+                  },
+                  {
+                    "id": "bdr:MW23916"
+                  },
+                  {
+                    "id": "bdr:MW3CN2837"
+                  },
+                  {
+                    "id": "bdr:MW00KG01615"
+                  },
+                  {
+                    "id": "bdr:MW00EGS1016261"
+                  },
+                  {
+                    "id": "bdr:MW1KG12220"
+                  },
+                  {
+                    "id": "bdr:MW8CZ102"
+                  }
+                ]
+              }
+            ]
+          },
+          "geluk": {
+            "id": "bdr:TraditionGeluk",
+            "classes": "display-block",
+            "content": [
+              {
+                "id": "tmp:tradiCat3_1",
+                "to": "/show/bdr::rid",
+                "label": [
+                  {
+                    "value": "Collected Writings",
+                    "lang": "en"
+                  },
+                  {
+                    "value": "གསུང་འབུམ།",
+                    "lang": "bo"
+                  }
+                ],
+                "content": [
+                  {
+                    "id": "bdr:MW2KG5037"
+                  },
+                  {
+                    "id": "bdr:MW4CZ302670"
+                  },
+                  {
+                    "id": "bdr:MW1KG10279"
+                  },
+                  {
+                    "id": "bdr:MW4CZ2710"
+                  },
+                  {
+                    "id": "bdr:MW3CN4076"
+                  },
+                  {
+                    "id": "bdr:MW24890"
+                  },
+                  {
+                    "id": "bdr:MW1KG14505"
+                  },
+                  {
+                    "id": "bdr:MW1CZ2857"
+                  },
+                  {
+                    "id": "bdr:MW1KG18135"
+                  },
+                  {
+                    "id": "bdr:MW2CZ5990"
+                  },
+                  {
+                    "id": "bdr:MW1KG14506"
+                  },
+                  {
+                    "id": "bdr:MW26001"
+                  },
+                  {
+                    "id": "bdr:MW29228"
+                  },
+                  {
+                    "id": "bdr:MW1GS103597"
+                  },
+                  {
+                    "id": "bdr:MW3KG164"
+                  },
+                  {
+                    "id": "bdr:MW1KG15900"
+                  },
+                  {
+                    "id": "bdr:MW4CZ302664"
+                  },
+                  {
+                    "id": "bdr:MW4CZ302665"
+                  },
+                  {
+                    "id": "bdr:MW1KG15909"
+                  },
+                  {
+                    "id": "bdr:MW1KG15901"
+                  },
+                  {
+                    "id": "bdr:MW1KG9580"
+                  },
+                  {
+                    "id": "bdr:MW23864"
+                  },
+                  {
+                    "id": "bdr:MW29035"
+                  },
+                  {
+                    "id": "bdr:MW1KG1321"
+                  },
+                  {
+                    "id": "bdr:MW1KG24277"
+                  },
+                  {
+                    "id": "bdr:MW2KG209131"
+                  },
+                  {
+                    "id": "bdr:MW1KG15906"
+                  },
+                  {
+                    "id": "bdr:MW22203"
+                  },
+                  {
+                    "id": "bdr:MW1KG1132"
+                  },
+                  {
+                    "id": "bdr:MW4CZ302655"
+                  },
+                  {
+                    "id": "bdr:MW21505"
+                  },
+                  {
+                    "id": "bdr:MW29702"
+                  },
+                  {
+                    "id": "bdr:MW2KG5036"
+                  },
+                  {
+                    "id": "bdr:MW3CN3031"
+                  },
+                  {
+                    "id": "bdr:MW1KG1657"
+                  },
+                  {
+                    "id": "bdr:MW1KG15904"
+                  },
+                  {
+                    "id": "bdr:MW1KG89110"
+                  },
+                  {
+                    "id": "bdr:MW1KG1624"
+                  },
+                  {
+                    "id": "bdr:MW1KG14961"
+                  },
+                  {
+                    "id": "bdr:MW1GS135531"
+                  },
+                  {
+                    "id": "bdr:MW1CZ1101"
+                  },
+                  {
+                    "id": "bdr:MW00KG08430"
+                  },
+                  {
+                    "id": "bdr:MW1KG15817"
+                  },
+                  {
+                    "id": "bdr:MW1KG14507"
+                  },
+                  {
+                    "id": "bdr:MW8LS76156"
+                  },
+                  {
+                    "id": "bdr:MW8LS73547"
+                  },
+                  {
+                    "id": "bdr:MW1KG16205"
+                  },
+                  {
+                    "id": "bdr:MW1KG22351"
+                  },
+                  {
+                    "id": "bdr:MW8LS73541"
+                  },
+                  {
+                    "id": "bdr:MW8LS75598"
+                  },
+                  {
+                    "id": "bdr:MW22145"
+                  },
+                  {
+                    "id": "bdr:MW1KG15903"
+                  },
+                  {
+                    "id": "bdr:MW22352"
+                  },
+                  {
+                    "id": "bdr:MW1KG18136"
+                  },
+                  {
+                    "id": "bdr:MW3CN6624"
+                  },
+                  {
+                    "id": "bdr:MW23872"
+                  },
+                  {
+                    "id": "bdr:MW4CZ74318"
+                  },
+                  {
+                    "id": "bdr:MW1KG10787"
+                  },
+                  {
+                    "id": "bdr:MW25273"
+                  },
+                  {
+                    "id": "bdr:MW23471"
+                  },
+                  {
+                    "id": "bdr:MW29227"
+                  },
+                  {
+                    "id": "bdr:MW8LS76416"
+                  },
+                  {
+                    "id": "bdr:MW8LS75669"
+                  },
+                  {
+                    "id": "bdr:MW8LS18013"
+                  },
+                  {
+                    "id": "bdr:MW23879"
+                  },
+                  {
+                    "id": "bdr:MW30107"
+                  },
+                  {
+                    "id": "bdr:MW1KG1658"
+                  },
+                  {
+                    "id": "bdr:MW1KG25311"
+                  },
+                  {
+                    "id": "bdr:MW7335"
+                  },
+                  {
+                    "id": "bdr:MW1KG24600"
+                  },
+                  {
+                    "id": "bdr:MW29272"
+                  },
+                  {
+                    "id": "bdr:MW1KG14717"
+                  },
+                  {
+                    "id": "bdr:MW28897"
+                  },
+                  {
+                    "id": "bdr:MW1KG25307"
+                  },
+                  {
+                    "id": "bdr:MW29200"
+                  },
+                  {
+                    "id": "bdr:MW16912"
+                  },
+                  {
+                    "id": "bdr:MW5926"
+                  },
+                  {
+                    "id": "bdr:MW1NLM537"
+                  },
+                  {
+                    "id": "bdr:MW3CN17691"
+                  },
+                  {
+                    "id": "bdr:MW29192"
+                  },
+                  {
+                    "id": "bdr:MW2CZ7855"
+                  },
+                  {
+                    "id": "bdr:MW2DB25419"
+                  },
+                  {
+                    "id": "bdr:MW3CN25692"
+                  },
+                  {
+                    "id": "bdr:MW8CZ53"
+                  },
+                  {
+                    "id": "bdr:MW3CN18518"
+                  },
+                  {
+                    "id": "bdr:MW23608"
+                  },
+                  {
+                    "id": "bdr:MW3CN25680"
+                  },
+                  {
+                    "id": "bdr:MW13528"
+                  },
+                  {
+                    "id": "bdr:MW30102"
+                  },
+                  {
+                    "id": "bdr:MW30103"
+                  },
+                  {
+                    "id": "bdr:MW14376"
+                  },
+                  {
+                    "id": "bdr:MW19357"
+                  },
+                  {
+                    "id": "bdr:MW30184"
+                  },
+                  {
+                    "id": "bdr:MW1AC32"
+                  },
+                  {
+                    "id": "bdr:MW14110"
+                  },
+                  {
+                    "id": "bdr:MW8LS16848"
+                  },
+                  {
+                    "id": "bdr:MW8LS16855"
+                  },
+                  {
+                    "id": "bdr:MW8LS17500"
+                  },
+                  {
+                    "id": "bdr:MW3CN17697"
+                  },
+                  {
+                    "id": "bdr:MW3CN22786"
+                  },
+                  {
+                    "id": "bdr:MW3CN25671"
+                  },
+                  {
+                    "id": "bdr:MW1AC29"
+                  },
+                  {
+                    "id": "bdr:MW1GS135873"
+                  },
+                  {
+                    "id": "bdr:MW3CN26313"
+                  },
+                  {
+                    "id": "bdr:MW00EGS1017359"
+                  },
+                  {
+                    "id": "bdr:MW23880"
+                  },
+                  {
+                    "id": "bdr:MW3CN476"
+                  },
+                  {
+                    "id": "bdr:MW00EGS1017401"
+                  },
+                  {
+                    "id": "bdr:MW3KG217"
+                  },
+                  {
+                    "id": "bdr:MW1KG13759"
+                  },
+                  {
+                    "id": "bdr:MW23726"
+                  },
+                  {
+                    "id": "bdr:MW1PD94"
+                  },
+                  {
+                    "id": "bdr:MW14592"
+                  },
+                  {
+                    "id": "bdr:MW1KG10720"
+                  },
+                  {
+                    "id": "bdr:MW1PD159430"
+                  },
+                  {
+                    "id": "bdr:MW1KG1656"
+                  },
+                  {
+                    "id": "bdr:MW1KG3535"
+                  },
+                  {
+                    "id": "bdr:MW2DB4589"
+                  },
+                  {
+                    "id": "bdr:MW3CN22850"
+                  },
+                  {
+                    "id": "bdr:MW3CN25686"
+                  },
+                  {
+                    "id": "bdr:MW3CN26290"
+                  },
+                  {
+                    "id": "bdr:MW19341"
+                  },
+                  {
+                    "id": "bdr:MW8LS17463"
+                  },
+                  {
+                    "id": "bdr:MW8LS75641"
+                  },
+                  {
+                    "id": "bdr:MW8LS75684"
+                  },
+                  {
+                    "id": "bdr:MW3KG224"
+                  },
+                  {
+                    "id": "bdr:MW8LS17501"
+                  },
+                  {
+                    "id": "bdr:MW1KG18134"
+                  },
+                  {
+                    "id": "bdr:MW1GS136667"
+                  },
+                  {
+                    "id": "bdr:MW1KG18137"
+                  },
+                  {
+                    "id": "bdr:MW2KG207430"
+                  },
+                  {
+                    "id": "bdr:MW1KG14498"
+                  },
+                  {
+                    "id": "bdr:MW1KG14641"
+                  },
+                  {
+                    "id": "bdr:MW22117"
+                  },
+                  {
+                    "id": "bdr:MW1KG14964"
+                  },
+                  {
+                    "id": "bdr:MW1KG1608"
+                  },
+                  {
+                    "id": "bdr:MW1KG6060"
+                  },
+                  {
+                    "id": "bdr:MW1KG4219"
+                  },
+                  {
+                    "id": "bdr:MW1KG4201"
+                  },
+                  {
+                    "id": "bdr:MW1KG4205"
+                  },
+                  {
+                    "id": "bdr:MW22204"
+                  },
+                  {
+                    "id": "bdr:MW1KG4234"
+                  },
+                  {
+                    "id": "bdr:MW24052"
+                  },
+                  {
+                    "id": "bdr:MW8LS16869"
+                  },
+                  {
+                    "id": "bdr:MW4CZ30835"
+                  },
+                  {
+                    "id": "bdr:MW5CN18"
+                  },
+                  {
+                    "id": "bdr:MW2KG209782"
+                  },
+                  {
+                    "id": "bdr:MW3CN18552"
+                  },
+                  {
+                    "id": "bdr:MW3CN2037"
+                  },
+                  {
+                    "id": "bdr:MW22177"
+                  },
+                  {
+                    "id": "bdr:MW8LS75677"
+                  },
+                  {
+                    "id": "bdr:MW8LS76403"
+                  },
+                  {
+                    "id": "bdr:MW3PD1092"
+                  },
+                  {
+                    "id": "bdr:MW4CZ74170"
+                  },
+                  {
+                    "id": "bdr:MW2KG209783"
+                  },
+                  {
+                    "id": "bdr:MW2KG209784"
+                  },
+                  {
+                    "id": "bdr:MW4CZ74316"
+                  },
+                  {
+                    "id": "bdr:MW5424"
+                  },
+                  {
+                    "id": "bdr:MW24765"
+                  },
+                  {
+                    "id": "bdr:MW8LS16860"
+                  },
+                  {
+                    "id": "bdr:MW4CZ58525"
+                  },
+                  {
+                    "id": "bdr:MW2KG209785"
+                  },
+                  {
+                    "id": "bdr:MW3CN22359"
+                  },
+                  {
+                    "id": "bdr:MW3CN22707"
+                  },
+                  {
+                    "id": "bdr:MW3CN22781"
+                  },
+                  {
+                    "id": "bdr:MW3CN22834"
+                  },
+                  {
+                    "id": "bdr:MW7797"
+                  },
+                  {
+                    "id": "bdr:MW3CN22900"
+                  },
+                  {
+                    "id": "bdr:MW3CN25677"
+                  },
+                  {
+                    "id": "bdr:MW3CN25689"
+                  },
+                  {
+                    "id": "bdr:MW1KG1320"
+                  },
+                  {
+                    "id": "bdr:MW4CZ1039"
+                  },
+                  {
+                    "id": "bdr:MW4CZ354432"
+                  },
+                  {
+                    "id": "bdr:MW4CZ354444"
+                  },
+                  {
+                    "id": "bdr:MW2PD17371"
+                  },
+                  {
+                    "id": "bdr:MW4CZ65545"
+                  },
+                  {
+                    "id": "bdr:MW4CZ65546"
+                  },
+                  {
+                    "id": "bdr:MW4CZ65547"
+                  },
+                  {
+                    "id": "bdr:MW4CZ65553"
+                  },
+                  {
+                    "id": "bdr:MW4CZ65555"
+                  },
+                  {
+                    "id": "bdr:MW1NLM4033"
+                  },
+                  {
+                    "id": "bdr:MW8LS75666"
+                  },
+                  {
+                    "id": "bdr:MW8LS76303"
+                  },
+                  {
+                    "id": "bdr:MW8LS76392"
+                  },
+                  {
+                    "id": "bdr:MW8LS18336"
+                  },
+                  {
+                    "id": "bdr:MW8LS18339"
+                  },
+                  {
+                    "id": "bdr:MW3CN22742"
+                  },
+                  {
+                    "id": "bdr:MW2MS811"
+                  }
+                ]
+              },
+              {
+                "id": "tmp:tradiCat3_191",
+                "to": "/show/bdr::rid",
+                "label": [
+                  {
+                    "value": "Instruction texts",
+                    "lang": "en"
+                  },
+                  {
+                    "value": "ཁྲིད་ཡིག",
+                    "lang": "bo"
+                  }
+                ],
+                "content": [
+                  {
+                    "id": "bdr:MW2CZ8092"
+                  },
+                  {
+                    "id": "bdr:MW3CN9311"
+                  },
+                  {
+                    "id": "bdr:MW00KG03884"
+                  },
+                  {
+                    "id": "bdr:MW23873"
+                  },
+                  {
+                    "id": "bdr:MW2PD20790"
+                  },
+                  {
+                    "id": "bdr:MW1CZ2398"
+                  },
+                  {
+                    "id": "bdr:MW1CZ885"
+                  },
+                  {
+                    "id": "bdr:MW1NLM3767"
+                  },
+                  {
+                    "id": "bdr:MW1NLM3994"
+                  },
+                  {
+                    "id": "bdr:MW1NLM5552"
+                  },
+                  {
+                    "id": "bdr:MW1NLM5555"
+                  },
+                  {
+                    "id": "bdr:MW1NLM5556"
+                  },
+                  {
+                    "id": "bdr:MW1NLM5557"
+                  },
+                  {
+                    "id": "bdr:MW1NLM3225"
+                  }
+                ]
+              },
+              {
+                "id": "tmp:tradiCat3_207",
+                "to": "/show/bdr::rid",
+                "label": [
+                  {
+                    "value": "Vajrayana",
+                    "lang": "en"
+                  },
+                  {
+                    "value": "རྡོ་རྗེ་ཐེག་པ།",
+                    "lang": "bo"
+                  }
+                ],
+                "content": [
+                  {
+                    "id": "bdr:MW4CZ74550"
+                  },
+                  {
+                    "id": "bdr:MW1NLM2879"
+                  },
+                  {
+                    "id": "bdr:MW8LS32556"
+                  },
+                  {
+                    "id": "bdr:MW1NLM5498"
+                  },
+                  {
+                    "id": "bdr:MW1NLM5507"
+                  },
+                  {
+                    "id": "bdr:MW1NLM350"
+                  },
+                  {
+                    "id": "bdr:MW1NLM5520"
+                  },
+                  {
+                    "id": "bdr:MW1NLM5537"
+                  },
+                  {
+                    "id": "bdr:MW1NLM5551"
+                  },
+                  {
+                    "id": "bdr:MW2CZ5666"
+                  }
+                ]
+              },
+              {
+                "id": "tmp:tradiCat3_219",
+                "to": "/show/bdr::rid",
+                "label": [
+                  {
+                    "value": "Obligatory curricular texts",
+                    "lang": "en"
+                  },
+                  {
+                    "value": "ཡིག་ཆ།",
+                    "lang": "bo"
+                  }
+                ],
+                "content": [
+                  {
+                    "id": "bdr:MW3CN21631"
+                  },
+                  {
+                    "id": "bdr:MW3CN22977"
+                  },
+                  {
+                    "id": "bdr:MW30177"
+                  },
+                  {
+                    "id": "bdr:MW30179"
+                  },
+                  {
+                    "id": "bdr:MW1KG550"
+                  },
+                  {
+                    "id": "bdr:MW30178"
+                  },
+                  {
+                    "id": "bdr:MW1KG8724"
+                  },
+                  {
+                    "id": "bdr:MW1KG12076"
+                  },
+                  {
+                    "id": "bdr:MW30172"
+                  },
+                  {
+                    "id": "bdr:MW8LS75609"
+                  },
+                  {
+                    "id": "bdr:MW1NLM5509"
+                  },
+                  {
+                    "id": "bdr:MW1NLM5516"
+                  },
+                  {
+                    "id": "bdr:MW29231"
+                  },
+                  {
+                    "id": "bdr:MW3CN25701"
+                  },
+                  {
+                    "id": "bdr:MW4CZ302667"
+                  }
+                ]
+              },
+              {
+                "id": "tmp:tradiCat3_236",
+                "to": "/show/bdr::rid",
+                "label": [
+                  {
+                    "value": "Biographies",
+                    "lang": "en"
+                  },
+                  {
+                    "value": "རྣམ་ཐར།",
+                    "lang": "bo"
+                  }
+                ],
+                "content": [
+                  {
+                    "id": "bdr:MW26573"
+                  },
+                  {
+                    "id": "bdr:MW17157"
+                  },
+                  {
+                    "id": "bdr:MW25577"
+                  },
+                  {
+                    "id": "bdr:MW1KG1645"
+                  },
+                  {
+                    "id": "bdr:MW15960"
+                  },
+                  {
+                    "id": "bdr:MW16470"
+                  },
+                  {
+                    "id": "bdr:MW2CZ7860"
+                  },
+                  {
+                    "id": "bdr:MW2CZ7861"
+                  },
+                  {
+                    "id": "bdr:MW27927"
+                  },
+                  {
+                    "id": "bdr:MW2CZ7933"
+                  },
+                  {
+                    "id": "bdr:MW1KG9087"
+                  },
+                  {
+                    "id": "bdr:MW2CZ7841"
+                  },
+                  {
+                    "id": "bdr:MW2CZ7847"
+                  },
+                  {
+                    "id": "bdr:MW28956"
+                  },
+                  {
+                    "id": "bdr:MW2CZ7846"
+                  },
+                  {
+                    "id": "bdr:MW5331"
+                  },
+                  {
+                    "id": "bdr:MW2CZ6023"
+                  },
+                  {
+                    "id": "bdr:MW2CZ7859"
+                  },
+                  {
+                    "id": "bdr:MW9752"
+                  },
+                  {
+                    "id": "bdr:MW6206"
+                  },
+                  {
+                    "id": "bdr:MW1CZ2000"
+                  },
+                  {
+                    "id": "bdr:MW22098"
+                  },
+                  {
+                    "id": "bdr:MW20533"
+                  },
+                  {
+                    "id": "bdr:MW26459"
+                  },
+                  {
+                    "id": "bdr:MW27212"
+                  },
+                  {
+                    "id": "bdr:MW30166"
+                  },
+                  {
+                    "id": "bdr:MW30171"
+                  },
+                  {
+                    "id": "bdr:MW22358"
+                  },
+                  {
+                    "id": "bdr:MW25006"
+                  },
+                  {
+                    "id": "bdr:MW2DB25420"
+                  },
+                  {
+                    "id": "bdr:MW2CZ7939"
+                  },
+                  {
+                    "id": "bdr:MW00EGS1016695"
+                  },
+                  {
+                    "id": "bdr:MW00EGS1016969"
+                  },
+                  {
+                    "id": "bdr:MW4CZ74204"
+                  },
+                  {
+                    "id": "bdr:MW00EGS1017043"
+                  },
+                  {
+                    "id": "bdr:MW00EGS1017150"
+                  },
+                  {
+                    "id": "bdr:MW00KG03151"
+                  },
+                  {
+                    "id": "bdr:MW1GS58283"
+                  },
+                  {
+                    "id": "bdr:MW1KG5109"
+                  },
+                  {
+                    "id": "bdr:MW1KG5132"
+                  },
+                  {
+                    "id": "bdr:MW1KG5133"
+                  },
+                  {
+                    "id": "bdr:MW24046"
+                  },
+                  {
+                    "id": "bdr:MW29256"
+                  },
+                  {
+                    "id": "bdr:MW29257"
+                  },
+                  {
+                    "id": "bdr:MW29262"
+                  },
+                  {
+                    "id": "bdr:MW2CZ6639"
+                  },
+                  {
+                    "id": "bdr:MW2CZ6640"
+                  },
+                  {
+                    "id": "bdr:MW2CZ6656"
+                  },
+                  {
+                    "id": "bdr:MW2CZ6760"
+                  },
+                  {
+                    "id": "bdr:MW30295"
+                  },
+                  {
+                    "id": "bdr:MW1GS58292"
+                  },
+                  {
+                    "id": "bdr:MW1KG12160"
+                  },
+                  {
+                    "id": "bdr:MW8140"
+                  },
+                  {
+                    "id": "bdr:MW8LS31068"
+                  },
+                  {
+                    "id": "bdr:MW1KG10037"
+                  },
+                  {
+                    "id": "bdr:MW8LS20731"
+                  },
+                  {
+                    "id": "bdr:MW8LS17772"
+                  }
+                ]
+              },
+              {
+                "id": "tmp:tradiCat3_296",
+                "to": "/show/bdr::rid",
+                "label": [
+                  {
+                    "value": "Sectarian groups",
+                    "lang": "en"
+                  },
+                  {
+                    "value": "དགོན་སྡེ་སོ་སོའི་ལུགས།",
+                    "lang": "bo"
+                  }
+                ],
+                "content": [
+                  {
+                    "id": "bdr:MW1PD53265"
+                  },
+                  {
+                    "id": "bdr:MW00EGS1016244"
+                  },
+                  {
+                    "id": "bdr:MW1KG988"
+                  },
+                  {
+                    "id": "bdr:MW00EGS1016246"
+                  },
+                  {
+                    "id": "bdr:MW00EGS1016248"
+                  },
+                  {
+                    "id": "bdr:MW1KG1011"
+                  },
+                  {
+                    "id": "bdr:MW29609"
+                  },
+                  {
+                    "id": "bdr:MW00EGS1016242"
+                  },
+                  {
+                    "id": "bdr:MW1KG10780"
+                  },
+                  {
+                    "id": "bdr:MW00KG04059"
+                  },
+                  {
+                    "id": "bdr:MW1KG12783"
+                  },
+                  {
+                    "id": "bdr:MW1KG14555"
+                  },
+                  {
+                    "id": "bdr:MW1NLM1338"
+                  },
+                  {
+                    "id": "bdr:MW1NLM602"
+                  },
+                  {
+                    "id": "bdr:MW22350"
+                  },
+                  {
+                    "id": "bdr:MW2KG209119"
+                  },
+                  {
+                    "id": "bdr:MW1NLM1573"
+                  },
+                  {
+                    "id": "bdr:MW1NLM1625"
+                  },
+                  {
+                    "id": "bdr:MW1NLM2358"
+                  },
+                  {
+                    "id": "bdr:MW1NLM3977"
+                  },
+                  {
+                    "id": "bdr:MW1NLM3996"
+                  },
+                  {
+                    "id": "bdr:MW1NLM5502"
+                  },
+                  {
+                    "id": "bdr:MW1NLM57"
+                  },
+                  {
+                    "id": "bdr:MW3CN26652"
+                  },
+                  {
+                    "id": "bdr:MW4CZ369493"
+                  },
+                  {
+                    "id": "bdr:MW4CZ58738"
+                  }
+                ]
+              },
+              {
+                "id": "tmp:tradiCat3_324",
+                "to": "/show/bdr::rid",
+                "label": [
+                  {
+                    "value": "Various rituals",
+                    "lang": "en"
+                  },
+                  {
+                    "value": "ཆོ་ག་སྣ་ཚོགས།",
+                    "lang": "bo"
+                  }
+                ],
+                "content": [
+                  {
+                    "id": "bdr:MW1NLM1235"
+                  },
+                  {
+                    "id": "bdr:MW1NLM1346"
+                  },
+                  {
+                    "id": "bdr:MW1NLM2451"
+                  },
+                  {
+                    "id": "bdr:MW1NLM2676"
+                  },
+                  {
+                    "id": "bdr:MW1NLM2682"
+                  },
+                  {
+                    "id": "bdr:MW1NLM3213"
+                  },
+                  {
+                    "id": "bdr:MW1NLM3630"
+                  },
+                  {
+                    "id": "bdr:MW1NLM3647"
+                  },
+                  {
+                    "id": "bdr:MW1NLM5504"
+                  },
+                  {
+                    "id": "bdr:MW1NLM5505"
+                  },
+                  {
+                    "id": "bdr:MW1NLM5515"
+                  },
+                  {
+                    "id": "bdr:MW1NLM5521"
+                  },
+                  {
+                    "id": "bdr:MW1NLM5538"
+                  },
+                  {
+                    "id": "bdr:MW1NLM5545"
+                  },
+                  {
+                    "id": "bdr:MW1NLM560"
+                  },
+                  {
+                    "id": "bdr:MW1NLM566"
+                  },
+                  {
+                    "id": "bdr:MW4CZ295770"
+                  }
+                ]
+              }
+            ]
+          },
+          "kadampa": {
+            "id": "bdr:TraditionKadam",
+            "classes": "display-block",
+            "content": [
+              {
+                "id": "tmp:tradiCat4_1",
+                "to": "/show/bdr::rid",
+                "label": [
+                  {
+                    "value": "The Book of the Kadampas",
+                    "lang": "en"
+                  },
+                  {
+                    "value": "བཀའ་གདམས་པའི་གཞུང་།",
+                    "lang": "bo"
+                  }
+                ],
+                "content": [
+                  {
+                    "id": "bdr:MW3CN22337"
+                  },
+                  {
+                    "id": "bdr:MW3CN22733"
+                  }
+                ]
+              },
+              {
+                "id": "tmp:tradiCat4_4",
+                "to": "/show/bdr::rid",
+                "label": [
+                  {
+                    "value": "་",
+                    "lang": "en"
+                  },
+                  {
+                    "value": "བཀའ་གདམས་གླེགས་བམ་ལས་བཏུས་པའི་ཆོས་སྐོར།",
+                    "lang": "bo"
+                  }
+                ],
+                "content": [
+                  {
+                    "id": "bdr:MW1KG12514"
+                  },
+                  {
+                    "id": "bdr:MW1KG13160"
+                  },
+                  {
+                    "id": "bdr:MW1KG14730"
+                  },
+                  {
+                    "id": "bdr:MW1KG5964"
+                  },
+                  {
+                    "id": "bdr:MW3CN9726"
+                  },
+                  {
+                    "id": "bdr:MW1KG3958"
+                  },
+                  {
+                    "id": "bdr:MW1KG12954"
+                  },
+                  {
+                    "id": "bdr:MW1NLM2581"
+                  },
+                  {
+                    "id": "bdr:MW6469"
+                  },
+                  {
+                    "id": "bdr:MW8LS76743"
+                  },
+                  {
+                    "id": "bdr:MW1KG12224"
+                  },
+                  {
+                    "id": "bdr:MW29550"
+                  },
+                  {
+                    "id": "bdr:MW3CN18548"
+                  },
+                  {
+                    "id": "bdr:MW11848"
+                  },
+                  {
+                    "id": "bdr:MW1NLM3860"
+                  }
+                ]
+              },
+              {
+                "id": "tmp:tradiCat4_20",
+                "to": "/show/bdr::rid",
+                "label": [
+                  {
+                    "value": "Collected Writings",
+                    "lang": "en"
+                  },
+                  {
+                    "value": "གསུང་འབུམ།",
+                    "lang": "bo"
+                  }
+                ],
+                "content": [
+                  {
+                    "id": "bdr:MW3CN17921"
+                  },
+                  {
+                    "id": "bdr:MW8LS73746"
+                  },
+                  {
+                    "id": "bdr:MW3CN17879"
+                  },
+                  {
+                    "id": "bdr:MW00EGS1017426"
+                  },
+                  {
+                    "id": "bdr:MW3CN26206"
+                  },
+                  {
+                    "id": "bdr:MW3CN18534"
+                  },
+                  {
+                    "id": "bdr:MW1KG13682"
+                  },
+                  {
+                    "id": "bdr:MW4PD922"
+                  },
+                  {
+                    "id": "bdr:MW3CN2940"
+                  },
+                  {
+                    "id": "bdr:MW1KG9858"
+                  },
+                  {
+                    "id": "bdr:MW2PD17520"
+                  }
+                ]
+              },
+              {
+                "id": "tmp:tradiCat4_33",
+                "to": "/show/bdr::rid",
+                "label": [
+                  {
+                    "value": "Biographies",
+                    "lang": "en"
+                  },
+                  {
+                    "value": "རྣམ་ཐར།",
+                    "lang": "bo"
+                  }
+                ],
+                "content": [
+                  {
+                    "id": "bdr:MW1KG5180"
+                  },
+                  {
+                    "id": "bdr:MW1KG25255"
+                  },
+                  {
+                    "id": "bdr:MW26461"
+                  },
+                  {
+                    "id": "bdr:MW26621"
+                  },
+                  {
+                    "id": "bdr:MW2CZ7976"
+                  },
+                  {
+                    "id": "bdr:MW25589"
+                  },
+                  {
+                    "id": "bdr:MW2CZ7977"
+                  },
+                  {
+                    "id": "bdr:MW2KG217490"
+                  },
+                  {
+                    "id": "bdr:MW3CN22358"
+                  }
+                ]
+              },
+              {
+                "id": "tmp:tradiCat4_44",
+                "to": "/show/bdr::rid",
+                "label": [
+                  {
+                    "value": "The stages of the path and mind training",
+                    "lang": "en"
+                  },
+                  {
+                    "value": "ལམ་རིམ་དང་བློ་སྦྱོང་།",
+                    "lang": "bo"
+                  }
+                ],
+                "content": [
+                  {
+                    "id": "bdr:MW3CN22789"
+                  },
+                  {
+                    "id": "bdr:MW1KG25144"
+                  },
+                  {
+                    "id": "bdr:MW8LS76624"
+                  },
+                  {
+                    "id": "bdr:MW4CZ321182"
+                  },
+                  {
+                    "id": "bdr:MW3CN26207"
+                  },
+                  {
+                    "id": "bdr:MW4CZ294919"
+                  },
+                  {
+                    "id": "bdr:MW1NLM706"
+                  },
+                  {
+                    "id": "bdr:MW23216"
+                  },
+                  {
+                    "id": "bdr:MW1CZ1114"
+                  }
+                ]
+              }
+            ]
+          },
+          "bon": {
+            "id": "bdr:TraditionBon",
+            "classes": "display-block",
+            "content": [
+              {
+                "id": "tmp:tradiCat5_1",
+                "to": "/show/bdr::rid",
+                "label": [
+                  {
+                    "value": "Canonical Collections",
+                    "lang": "en"
+                  },
+                  {
+                    "value": "བཀའ་བརྟེན།",
+                    "lang": "bo"
+                  }
+                ],
+                "content": [
+                  {
+                    "id": "bdr:MW30498"
+                  },
+                  {
+                    "id": "bdr:MW4CZ58532"
+                  },
+                  {
+                    "id": "bdr:MW4CZ58520"
+                  },
+                  {
+                    "id": "bdr:MW21872"
+                  },
+                  {
+                    "id": "bdr:MW3CN2688"
+                  },
+                  {
+                    "id": "bdr:MW1KG14500"
+                  },
+                  {
+                    "id": "bdr:MW3CN4061"
+                  },
+                  {
+                    "id": "bdr:MW23469"
+                  },
+                  {
+                    "id": "bdr:MW23546"
+                  },
+                  {
+                    "id": "bdr:MW23545"
+                  },
+                  {
+                    "id": "bdr:MW23547"
+                  },
+                  {
+                    "id": "bdr:MW23434"
+                  }
+                ]
+              },
+              {
+                "id": "tmp:tradiCat5_15",
+                "to": "/show/bdr::rid",
+                "label": [
+                  {
+                    "value": "Collected Writings",
+                    "lang": "en"
+                  },
+                  {
+                    "value": "གསུང་འབུམ།",
+                    "lang": "bo"
+                  }
+                ],
+                "content": [
+                  {
+                    "id": "bdr:MW4CZ58530"
+                  },
+                  {
+                    "id": "bdr:MW4CZ58736"
+                  },
+                  {
+                    "id": "bdr:MW8LS18418"
+                  },
+                  {
+                    "id": "bdr:MW8LS73712"
+                  },
+                  {
+                    "id": "bdr:MW8LS16849"
+                  },
+                  {
+                    "id": "bdr:MW1KG18518"
+                  },
+                  {
+                    "id": "bdr:MW4CZ321179"
+                  }
+                ]
+              },
+              {
+                "id": "tmp:tradiCat5_24",
+                "to": "/show/bdr::rid",
+                "label": [
+                  {
+                    "value": "Dzogchen",
+                    "lang": "en"
+                  },
+                  {
+                    "value": "རྫོགས་ཆེན། ༼བོན།༽",
+                    "lang": "bo"
+                  }
+                ],
+                "content": [
+                  {
+                    "id": "bdr:MW19674"
+                  },
+                  {
+                    "id": "bdr:MW00KG04064"
+                  },
+                  {
+                    "id": "bdr:MW1KG10569"
+                  },
+                  {
+                    "id": "bdr:MW23550"
+                  },
+                  {
+                    "id": "bdr:MW8LS66718"
+                  },
+                  {
+                    "id": "bdr:MW8LS67596"
+                  },
+                  {
+                    "id": "bdr:MW28802"
+                  },
+                  {
+                    "id": "bdr:MW23421"
+                  },
+                  {
+                    "id": "bdr:MW00EGS1016835"
+                  },
+                  {
+                    "id": "bdr:MW1KG3971"
+                  }
+                ]
+              },
+              {
+                "id": "tmp:tradiCat5_36",
+                "to": "/show/bdr::rid",
+                "label": [
+                  {
+                    "value": "History and Biography",
+                    "lang": "en"
+                  },
+                  {
+                    "value": "རྣམ་ཐར་དང་ལོ་རྒྱུས།",
+                    "lang": "bo"
+                  }
+                ],
+                "content": [
+                  {
+                    "id": "bdr:MW23506"
+                  },
+                  {
+                    "id": "bdr:MW23557"
+                  },
+                  {
+                    "id": "bdr:MW8LS18415"
+                  },
+                  {
+                    "id": "bdr:MW1KG116069"
+                  },
+                  {
+                    "id": "bdr:MW2CZ7869"
+                  },
+                  {
+                    "id": "bdr:MW4CZ332266"
+                  },
+                  {
+                    "id": "bdr:MW4CZ332268"
+                  },
+                  {
+                    "id": "bdr:MW23562"
+                  },
+                  {
+                    "id": "bdr:MW30158"
+                  },
+                  {
+                    "id": "bdr:MW1KG3988"
+                  },
+                  {
+                    "id": "bdr:MW2KG209130"
+                  },
+                  {
+                    "id": "bdr:MW4CZ354439"
+                  },
+                  {
+                    "id": "bdr:MW1KG11965"
+                  },
+                  {
+                    "id": "bdr:MW23422"
+                  },
+                  {
+                    "id": "bdr:MW4CZ354442"
+                  },
+                  {
+                    "id": "bdr:MW4CZ355853"
+                  },
+                  {
+                    "id": "bdr:MW8LS18400"
+                  },
+                  {
+                    "id": "bdr:MW1CZ2330"
+                  },
+                  {
+                    "id": "bdr:MW3CN9986"
+                  },
+                  {
+                    "id": "bdr:MW1KG12308"
+                  },
+                  {
+                    "id": "bdr:MW8LS67515"
+                  },
+                  {
+                    "id": "bdr:MW1KG1794"
+                  },
+                  {
+                    "id": "bdr:MW29522"
+                  },
+                  {
+                    "id": "bdr:MW1KG13840"
+                  },
+                  {
+                    "id": "bdr:MW1KG12385"
+                  }
+                ]
+              },
+              {
+                "id": "tmp:tradiCat5_63",
+                "to": "/show/bdr::rid",
+                "label": [
+                  {
+                    "value": "Curricular Writings",
+                    "lang": "en"
+                  },
+                  {
+                    "value": "ཡིག་ཆ།",
+                    "lang": "bo"
+                  }
+                ],
+                "content": [
+                  {
+                    "id": "bdr:MW3CN2507"
+                  },
+                  {
+                    "id": "bdr:MW23425"
+                  },
+                  {
+                    "id": "bdr:MW23424"
+                  },
+                  {
+                    "id": "bdr:MW23426"
+                  },
+                  {
+                    "id": "bdr:MW23427"
+                  },
+                  {
+                    "id": "bdr:MW8LS16926"
+                  },
+                  {
+                    "id": "bdr:MW8LS67541"
+                  },
+                  {
+                    "id": "bdr:MW1KG6139"
+                  }
+                ]
+              },
+              {
+                "id": "tmp:tradiCat5_73",
+                "to": "/show/bdr::rid",
+                "label": [
+                  {
+                    "value": "New Bon",
+                    "lang": "en"
+                  },
+                  {
+                    "value": "བོན་གསར།",
+                    "lang": "bo"
+                  }
+                ],
+                "content": [
+                  {
+                    "id": "bdr:MW1KG11871"
+                  },
+                  {
+                    "id": "bdr:MW23464"
+                  },
+                  {
+                    "id": "bdr:MW23420"
+                  },
+                  {
+                    "id": "bdr:MW23506"
+                  },
+                  {
+                    "id": "bdr:MW23457"
+                  },
+                  {
+                    "id": "bdr:MW23459"
+                  },
+                  {
+                    "id": "bdr:MW23458"
+                  },
+                  {
+                    "id": "bdr:MW4CZ74529"
+                  },
+                  {
+                    "id": "bdr:MW8LS67548"
+                  }
+                ]
+              },
+              {
+                "id": "tmp:tradiCat5_84",
+                "to": "/show/bdr::rid",
+                "label": [
+                  {
+                    "value": "Collections",
+                    "lang": "en"
+                  },
+                  {
+                    "value": "ཕྱོགས་བསྒྲིགས།",
+                    "lang": "bo"
+                  }
+                ],
+                "content": [
+                  {
+                    "id": "bdr:MW3CN21413"
+                  },
+                  {
+                    "id": "bdr:MW3CN4081"
+                  },
+                  {
+                    "id": "bdr:MW3CN2546"
+                  },
+                  {
+                    "id": "bdr:MW1KG14365"
+                  },
+                  {
+                    "id": "bdr:MW1KG588"
+                  },
+                  {
+                    "id": "bdr:MW1KG23023"
+                  },
+                  {
+                    "id": "bdr:MW1KG12021"
+                  }
+                ]
+              }
+            ]
+          },
+          "jonang": {
+            "id": "bdr:TraditionJonang",
+            "classes": "display-block",
+            "content": [
+              {
+                "id": "tmp:tradiCat6_1",
+                "to": "/show/bdr::rid",
+                "label": [
+                  {
+                    "value": "Collected Writings",
+                    "lang": "en"
+                  },
+                  {
+                    "value": "གསུང་འབུམ།",
+                    "lang": "bo"
+                  }
+                ],
+                "content": [
+                  {
+                    "id": "bdr:MW22276"
+                  },
+                  {
+                    "id": "bdr:MW23899"
+                  },
+                  {
+                    "id": "bdr:MW1PD96085"
+                  },
+                  {
+                    "id": "bdr:MW2KG232483"
+                  },
+                  {
+                    "id": "bdr:MW19762"
+                  },
+                  {
+                    "id": "bdr:MW3KG184"
+                  },
+                  {
+                    "id": "bdr:MW1KG5698"
+                  },
+                  {
+                    "id": "bdr:MW21208"
+                  },
+                  {
+                    "id": "bdr:MW2MS2274"
+                  },
+                  {
+                    "id": "bdr:MW1KG11959"
+                  },
+                  {
+                    "id": "bdr:MW1KG606"
+                  },
+                  {
+                    "id": "bdr:MW2KG210288"
+                  },
+                  {
+                    "id": "bdr:MW00KG01048"
+                  },
+                  {
+                    "id": "bdr:MW1CZ996"
+                  }
+                ]
+              },
+              {
+                "id": "tmp:tradiCat6_17",
+                "to": "/show/bdr::rid",
+                "label": [
+                  {
+                    "value": "Commentaries",
+                    "lang": "en"
+                  },
+                  {
+                    "value": "འགྲེལ་བཤད།",
+                    "lang": "bo"
+                  }
+                ],
+                "content": [
+                  {
+                    "id": "bdr:MW3KG162"
+                  },
+                  {
+                    "id": "bdr:MW1KG1869"
+                  },
+                  {
+                    "id": "bdr:MW1KG4242"
+                  },
+                  {
+                    "id": "bdr:MW3CN26827"
+                  }
+                ]
+              },
+              {
+                "id": "tmp:tradiCat6_23",
+                "to": "/show/bdr::rid",
+                "label": [
+                  {
+                    "value": "Ritual and Liturgical Works",
+                    "lang": "en"
+                  },
+                  {
+                    "value": "ཆོ་ག་དང་འདོན་ཆ།",
+                    "lang": "bo"
+                  }
+                ],
+                "content": [
+                  {
+                    "id": "bdr:MW24008"
+                  },
+                  {
+                    "id": "bdr:MW22434"
+                  },
+                  {
+                    "id": "bdr:MW8LS29398"
+                  },
+                  {
+                    "id": "bdr:MW1CZ1098"
+                  },
+                  {
+                    "id": "bdr:MW1CZ1300"
+                  },
+                  {
+                    "id": "bdr:MW1KG13102"
+                  },
+                  {
+                    "id": "bdr:MW1KG13768"
+                  },
+                  {
+                    "id": "bdr:MW1KG4267"
+                  }
+                ]
+              },
+              {
+                "id": "tmp:tradiCat6_33",
+                "to": "/show/bdr::rid",
+                "label": [
+                  {
+                    "value": "Compilations",
+                    "lang": "en"
+                  },
+                  {
+                    "value": "ཕྱོགས་བསྒྲིགས།",
+                    "lang": "bo"
+                  }
+                ],
+                "content": [
+                  {
+                    "id": "bdr:MW00KG0638"
+                  },
+                  {
+                    "id": "bdr:MW1KG5814"
+                  },
+                  {
+                    "id": "bdr:MW1KG18290"
+                  }
+                ]
+              },
+              {
+                "id": "tmp:tradiCat6_38",
+                "to": "/show/bdr::rid",
+                "label": [
+                  {
+                    "value": "History",
+                    "lang": "en"
+                  },
+                  {
+                    "value": "རྒྱལ་རབས་དང་ཆོས་འབྱུང་།",
+                    "lang": "bo"
+                  }
+                ],
+                "content": [
+                  {
+                    "id": "bdr:MW1CZ2328"
+                  },
+                  {
+                    "id": "bdr:MW19816"
+                  },
+                  {
+                    "id": "bdr:MW1KG4278"
+                  },
+                  {
+                    "id": "bdr:MW00KG03794"
+                  },
+                  {
+                    "id": "bdr:MW00KG09216"
+                  },
+                  {
+                    "id": "bdr:MW1KG4250"
+                  }
+                ]
+              }
+            ]
+          },
+          "zhije": {
+            "id": "bdr:TraditionZhije",
+            "classes": "display-block",
+            "content": [
+              {
+                "id": "tmp:tradiCat7_1",
+                "to": "/show/bdr::rid",
+                "label": [
+                  {
+                    "value": "Zhije",
+                    "lang": "en"
+                  },
+                  {
+                    "value": "ཞི་བྱེད་ཀྱི་ཆོས་སྐོར།",
+                    "lang": "bo"
+                  }
+                ],
+                "content": [
+                  {
+                    "id": "bdr:MW1KG22147"
+                  },
+                  {
+                    "id": "bdr:MW3CN4080"
+                  },
+                  {
+                    "id": "bdr:MW23911"
+                  },
+                  {
+                    "id": "bdr:MW4CZ355852"
+                  },
+                  {
+                    "id": "bdr:MW4CZ58528"
+                  },
+                  {
+                    "id": "bdr:MW00EGS1016278"
+                  },
+                  {
+                    "id": "bdr:MW00EGS1016290"
+                  },
+                  {
+                    "id": "bdr:MW00KG01632"
+                  },
+                  {
+                    "id": "bdr:MW0TTBBC0054"
+                  },
+                  {
+                    "id": "bdr:MW19811"
+                  },
+                  {
+                    "id": "bdr:MW1CZ1065"
+                  },
+                  {
+                    "id": "bdr:MW1KG15887"
+                  },
+                  {
+                    "id": "bdr:MW1KG1646"
+                  },
+                  {
+                    "id": "bdr:MW1KG1756"
+                  },
+                  {
+                    "id": "bdr:MW1KG17585"
+                  },
+                  {
+                    "id": "bdr:MW1KG22083"
+                  },
+                  {
+                    "id": "bdr:MW1KG22476"
+                  },
+                  {
+                    "id": "bdr:MW1KG22486"
+                  },
+                  {
+                    "id": "bdr:MW1KG23704"
+                  },
+                  {
+                    "id": "bdr:MW1KG24644"
+                  },
+                  {
+                    "id": "bdr:MW1KG25107"
+                  },
+                  {
+                    "id": "bdr:MW1KG25228"
+                  },
+                  {
+                    "id": "bdr:MW1KG3410"
+                  },
+                  {
+                    "id": "bdr:MW1NLM1697"
+                  },
+                  {
+                    "id": "bdr:MW1NLM1825"
+                  },
+                  {
+                    "id": "bdr:MW1NLM1873"
+                  },
+                  {
+                    "id": "bdr:MW1NLM1973"
+                  },
+                  {
+                    "id": "bdr:MW1NLM1997"
+                  },
+                  {
+                    "id": "bdr:MW1NLM21"
+                  },
+                  {
+                    "id": "bdr:MW1NLM228"
+                  },
+                  {
+                    "id": "bdr:MW1NLM2566"
+                  },
+                  {
+                    "id": "bdr:MW1NLM2609"
+                  },
+                  {
+                    "id": "bdr:MW1NLM2680"
+                  },
+                  {
+                    "id": "bdr:MW1NLM3057"
+                  },
+                  {
+                    "id": "bdr:MW1NLM3262"
+                  },
+                  {
+                    "id": "bdr:MW1NLM3466"
+                  },
+                  {
+                    "id": "bdr:MW1NLM3530"
+                  },
+                  {
+                    "id": "bdr:MW1NLM3653"
+                  },
+                  {
+                    "id": "bdr:MW1NLM3976"
+                  },
+                  {
+                    "id": "bdr:MW23755"
+                  },
+                  {
+                    "id": "bdr:MW27418"
+                  },
+                  {
+                    "id": "bdr:MW27477"
+                  },
+                  {
+                    "id": "bdr:MW27506"
+                  },
+                  {
+                    "id": "bdr:MW2KG208139"
+                  },
+                  {
+                    "id": "bdr:MW3CN25705"
+                  },
+                  {
+                    "id": "bdr:MW3CN2624"
+                  },
+                  {
+                    "id": "bdr:MW4CZ294727"
+                  },
+                  {
+                    "id": "bdr:MW4CZ332376"
+                  },
+                  {
+                    "id": "bdr:MW4CZ45236"
+                  },
+                  {
+                    "id": "bdr:MW4PD1120"
+                  },
+                  {
+                    "id": "bdr:MW4PD1121"
+                  },
+                  {
+                    "id": "bdr:MW8LS16250"
+                  },
+                  {
+                    "id": "bdr:MW8LS16253"
+                  },
+                  {
+                    "id": "bdr:MW8LS16336"
+                  },
+                  {
+                    "id": "bdr:MW8LS16458"
+                  },
+                  {
+                    "id": "bdr:MW8LS16535"
+                  },
+                  {
+                    "id": "bdr:MW8LS17541"
+                  },
+                  {
+                    "id": "bdr:MW8LS17706"
+                  },
+                  {
+                    "id": "bdr:MW8LS18341"
+                  },
+                  {
+                    "id": "bdr:MW8LS36317"
+                  },
+                  {
+                    "id": "bdr:MW8LS67516"
+                  },
+                  {
+                    "id": "bdr:MW1NLM4154"
+                  },
+                  {
+                    "id": "bdr:MW1NLM4158"
+                  },
+                  {
+                    "id": "bdr:MW1NLM459"
+                  },
+                  {
+                    "id": "bdr:MW1NLM2678"
+                  },
+                  {
+                    "id": "bdr:MW1NLM158"
+                  },
+                  {
+                    "id": "bdr:MW8LS32601"
+                  }
+                ]
+              },
+              {
+                "id": "tmp:tradiCat7_73",
+                "to": "/show/bdr::rid",
+                "label": [
+                  {
+                    "value": "Miscellaneous Chod",
+                    "lang": "en"
+                  },
+                  {
+                    "value": "གཅོད་གཞུང་སྣ་ཚོགས།",
+                    "lang": "bo"
+                  }
+                ],
+                "content": [
+                  {
+                    "id": "bdr:MW8LS66618"
+                  },
+                  {
+                    "id": "bdr:MW1KG3511"
+                  },
+                  {
+                    "id": "bdr:MW1KG9609"
+                  },
+                  {
+                    "id": "bdr:MW3CN4053"
+                  },
+                  {
+                    "id": "bdr:MW3JT13604"
+                  },
+                  {
+                    "id": "bdr:MW1KG9670"
+                  },
+                  {
+                    "id": "bdr:MW8LS67530"
+                  },
+                  {
+                    "id": "bdr:MW8LS16597"
+                  },
+                  {
+                    "id": "bdr:MW8LS16654"
+                  },
+                  {
+                    "id": "bdr:MW8LS16673"
+                  },
+                  {
+                    "id": "bdr:MW8LS17119"
+                  },
+                  {
+                    "id": "bdr:MW8LS18311"
+                  },
+                  {
+                    "id": "bdr:MW8LS31015"
+                  },
+                  {
+                    "id": "bdr:MW8LS31378"
+                  },
+                  {
+                    "id": "bdr:MW8LS32601"
+                  },
+                  {
+                    "id": "bdr:MW8LS32702"
+                  },
+                  {
+                    "id": "bdr:MW8LS32722"
+                  },
+                  {
+                    "id": "bdr:MW8LS67581"
+                  },
+                  {
+                    "id": "bdr:MW8LS75943"
+                  },
+                  {
+                    "id": "bdr:MW2PD20562"
+                  },
+                  {
+                    "id": "bdr:MW2PD20785"
+                  },
+                  {
+                    "id": "bdr:MW23756"
+                  },
+                  {
+                    "id": "bdr:MW23820"
+                  },
+                  {
+                    "id": "bdr:MW1KG3709"
+                  },
+                  {
+                    "id": "bdr:MW1KG3982"
+                  },
+                  {
+                    "id": "bdr:MW3CN1353"
+                  },
+                  {
+                    "id": "bdr:MW1NLM3646"
+                  },
+                  {
+                    "id": "bdr:MW1NLM3648"
+                  },
+                  {
+                    "id": "bdr:MW1NLM2890"
+                  },
+                  {
+                    "id": "bdr:MW1NLM3649"
+                  },
+                  {
+                    "id": "bdr:MW1KG10548"
+                  },
+                  {
+                    "id": "bdr:MW2KG201049"
+                  }
+                ]
+              }
+            ]
+          },
+          "rime": {
+            "id": "bdr:TraditionRime",
+            "classes": "display-block",
+            "content": [
+              {
+                "id": "tmp:tradiCat8_1",
+                "to": "/show/bdr::rid",
+                "label": [
+                  {
+                    "value": "Collected Writings",
+                    "lang": "en"
+                  },
+                  {
+                    "value": "གསུང་འབུམ།",
+                    "lang": "bo"
+                  }
+                ],
+                "content": [
+                  {
+                    "id": "bdr:MW1PD2074"
+                  },
+                  {
+                    "id": "bdr:MW3CN18504"
+                  },
+                  {
+                    "id": "bdr:MW1KG10854"
+                  },
+                  {
+                    "id": "bdr:MW5CN4"
+                  },
+                  {
+                    "id": "bdr:MW3KG228"
+                  },
+                  {
+                    "id": "bdr:MW2KG210027"
+                  },
+                  {
+                    "id": "bdr:MW1KG12986"
+                  },
+                  {
+                    "id": "bdr:MW3KG53"
+                  },
+                  {
+                    "id": "bdr:MW3CN2800"
+                  },
+                  {
+                    "id": "bdr:MW3CN4627"
+                  },
+                  {
+                    "id": "bdr:MW3CN4335"
+                  },
+                  {
+                    "id": "bdr:MW1KG16587"
+                  },
+                  {
+                    "id": "bdr:MW3CN2908"
+                  }
+                ]
+              },
+              {
+                "id": "tmp:tradiCat8_16",
+                "to": "/show/bdr::rid",
+                "label": [
+                  {
+                    "value": "Religious History",
+                    "lang": "en"
+                  },
+                  {
+                    "value": "ཆོས་འབྱུང་།",
+                    "lang": "bo"
+                  }
+                ],
+                "content": [
+                  {
+                    "id": "bdr:MW00KG01635"
+                  },
+                  {
+                    "id": "bdr:MW27913"
+                  },
+                  {
+                    "id": "bdr:MW29706"
+                  }
+                ]
+              },
+              {
+                "id": "tmp:tradiCat8_21",
+                "to": "/show/bdr::rid",
+                "label": [
+                  {
+                    "value": "Treasures",
+                    "lang": "en"
+                  },
+                  {
+                    "value": "མཛོད་ཚོགས།",
+                    "lang": "bo"
+                  }
+                ],
+                "content": [
+                  {
+                    "id": "bdr:MW23723"
+                  },
+                  {
+                    "id": "bdr:MW2PD17496"
+                  },
+                  {
+                    "id": "bdr:MW1PD159424"
+                  },
+                  {
+                    "id": "bdr:MW3CN22731"
+                  },
+                  {
+                    "id": "bdr:MW3CN7099"
+                  },
+                  {
+                    "id": "bdr:MW3CN3393"
+                  },
+                  {
+                    "id": "bdr:MW8LS76112"
+                  }
+                ]
+              },
+              {
+                "id": "tmp:tradiCat8_30",
+                "to": "/show/bdr::rid",
+                "label": [
+                  {
+                    "value": "Liturgical texts",
+                    "lang": "en"
+                  },
+                  {
+                    "value": "ཆོས་སྤྱོད།",
+                    "lang": "bo"
+                  }
+                ],
+                "content": [
+                  {
+                    "id": "bdr:MW3CN25675"
+                  },
+                  {
+                    "id": "bdr:MW8CZ111"
+                  },
+                  {
+                    "id": "bdr:MW3CN26903"
+                  },
+                  {
+                    "id": "bdr:MW1KG5328"
+                  },
+                  {
+                    "id": "bdr:MW8LS17754"
+                  },
+                  {
+                    "id": "bdr:MW8LS75904"
+                  },
+                  {
+                    "id": "bdr:MW3CN7481"
+                  }
+                ]
+              },
+              {
+                "id": "tmp:tradiCat8_39",
+                "to": "/show/bdr::rid",
+                "label": [
+                  {
+                    "value": "Biography",
+                    "lang": "en"
+                  },
+                  {
+                    "value": "རྣམ་ཐར།",
+                    "lang": "bo"
+                  }
+                ],
+                "content": [
+                  {
+                    "id": "bdr:MW2CZ6604"
+                  },
+                  {
+                    "id": "bdr:MW4CZ355877"
+                  },
+                  {
+                    "id": "bdr:MW2PD17417"
+                  },
+                  {
+                    "id": "bdr:MW3CN2945"
+                  }
+                ]
+              }
+            ]
+          },
+          "poetry": {
+            "id": "tmp:T281",
+            "classes": "display-block",
+            "content": [
+              {
+                "id": "tmp:tradiCat9_1",
+                "to": "/show/bdr::rid",
+                "label": [
+                  {
+                    "value": "Kavya early Masters",
+                    "lang": "en"
+                  },
+                  {
+                    "value": "སྔ་རབས་པའི་སྙན་འགྲེལ།",
+                    "lang": "bo"
+                  }
+                ],
+                "content": [
+                  {
+                    "id": "bdr:MW19464"
+                  },
+                  {
+                    "id": "bdr:MW1KG10763"
+                  },
+                  {
+                    "id": "bdr:MW1KG8762"
+                  },
+                  {
+                    "id": "bdr:MW3KG210"
+                  },
+                  {
+                    "id": "bdr:MW23560"
+                  },
+                  {
+                    "id": "bdr:MW1CZ2743"
+                  },
+                  {
+                    "id": "bdr:MW1EE12"
+                  },
+                  {
+                    "id": "bdr:MW1KG6050"
+                  },
+                  {
+                    "id": "bdr:MW3CN8784"
+                  },
+                  {
+                    "id": "bdr:MW3CN7087"
+                  },
+                  {
+                    "id": "bdr:MW20515"
+                  },
+                  {
+                    "id": "bdr:MW27415"
+                  },
+                  {
+                    "id": "bdr:MW0TTBBC0052"
+                  },
+                  {
+                    "id": "bdr:MW8LS24668"
+                  },
+                  {
+                    "id": "bdr:MW0TTBBC0052"
+                  },
+                  {
+                    "id": "bdr:MW1KG10728"
+                  },
+                  {
+                    "id": "bdr:MW27221"
+                  },
+                  {
+                    "id": "bdr:MW1KG26247"
+                  },
+                  {
+                    "id": "bdr:MW1KG26248"
+                  },
+                  {
+                    "id": "bdr:MW20487"
+                  },
+                  {
+                    "id": "bdr:MW30290"
+                  },
+                  {
+                    "id": "bdr:MW2PD9561"
+                  },
+                  {
+                    "id": "bdr:MW30294"
+                  },
+                  {
+                    "id": "bdr:MW3CN657"
+                  },
+                  {
+                    "id": "bdr:MW3JT13695"
+                  },
+                  {
+                    "id": "bdr:MW4CZ354988"
+                  },
+                  {
+                    "id": "bdr:MW27478"
+                  },
+                  {
+                    "id": "bdr:MW3CN3201"
+                  },
+                  {
+                    "id": "bdr:MW29249"
+                  },
+                  {
+                    "id": "bdr:MW1KG4474"
+                  },
+                  {
+                    "id": "bdr:MW1KG23599"
+                  },
+                  {
+                    "id": "bdr:MW1KG6044"
+                  },
+                  {
+                    "id": "bdr:MW1KG1251"
+                  }
+                ]
+              },
+              {
+                "id": "tmp:tradiCat9_36",
+                "to": "/show/bdr::rid",
+                "label": [
+                  {
+                    "value": "Kavya later Masters",
+                    "lang": "en"
+                  },
+                  {
+                    "value": "ཕྱི་རབས་པའི་སྙན་འགྲེལ།",
+                    "lang": "bo"
+                  }
+                ],
+                "content": [
+                  {
+                    "id": "bdr:MW30433"
+                  },
+                  {
+                    "id": "bdr:MW3CN22793"
+                  },
+                  {
+                    "id": "bdr:MW3CN15671"
+                  },
+                  {
+                    "id": "bdr:MW3CN15684"
+                  },
+                  {
+                    "id": "bdr:MW3CN15709"
+                  },
+                  {
+                    "id": "bdr:MW3CN7078"
+                  }
+                ]
+              },
+              {
+                "id": "tmp:tradiCat9_44",
+                "to": "/show/bdr::rid",
+                "label": [
+                  {
+                    "value": "Modern poets",
+                    "lang": "en"
+                  },
+                  {
+                    "value": "དེང་དུས་ཀྱི་སྙན་རྩོམ།",
+                    "lang": "bo"
+                  }
+                ],
+                "content": [
+                  {
+                    "id": "bdr:MW3KG236"
+                  },
+                  {
+                    "id": "bdr:MW1KG18623"
+                  },
+                  {
+                    "id": "bdr:MW1KG20872"
+                  },
+                  {
+                    "id": "bdr:MW1KG23271"
+                  },
+                  {
+                    "id": "bdr:MW29676"
+                  },
+                  {
+                    "id": "bdr:MW00KG03611"
+                  },
+                  {
+                    "id": "bdr:MW3CN9999"
+                  },
+                  {
+                    "id": "bdr:MW2DB4592"
+                  },
+                  {
+                    "id": "bdr:MW2KG230150"
+                  },
+                  {
+                    "id": "bdr:MW3CN15705"
+                  },
+                  {
+                    "id": "bdr:MW3CN15709"
+                  },
+                  {
+                    "id": "bdr:MW3CN21708"
+                  },
+                  {
+                    "id": "bdr:MW3CN21709"
+                  },
+                  {
+                    "id": "bdr:MW3CN21710"
+                  },
+                  {
+                    "id": "bdr:MW3CN21711"
+                  },
+                  {
+                    "id": "bdr:MW3CN21713"
+                  },
+                  {
+                    "id": "bdr:MW3CN697"
+                  },
+                  {
+                    "id": "bdr:MW3CN9796"
+                  },
+                  {
+                    "id": "bdr:MW8LS16796"
+                  },
+                  {
+                    "id": "bdr:MW8LS18230"
+                  },
+                  {
+                    "id": "bdr:MW8LS32550"
+                  },
+                  {
+                    "id": "bdr:MW8LS41972"
+                  },
+                  {
+                    "id": "bdr:MW8LS76163"
+                  },
+                  {
+                    "id": "bdr:MW8LS76287"
+                  },
+                  {
+                    "id": "bdr:MW00EGS1016960"
+                  },
+                  {
+                    "id": "bdr:MW00EGS1017210"
+                  },
+                  {
+                    "id": "bdr:MW00EGS1017300"
+                  },
+                  {
+                    "id": "bdr:MW00KG04"
+                  },
+                  {
+                    "id": "bdr:MW1GS45957"
+                  },
+                  {
+                    "id": "bdr:MW1KG116067"
+                  },
+                  {
+                    "id": "bdr:MW1KG116068"
+                  },
+                  {
+                    "id": "bdr:MW1KG13804"
+                  },
+                  {
+                    "id": "bdr:MW1KG13814"
+                  },
+                  {
+                    "id": "bdr:MW1KG13816"
+                  },
+                  {
+                    "id": "bdr:MW1KG14524"
+                  },
+                  {
+                    "id": "bdr:MW1KG18627"
+                  },
+                  {
+                    "id": "bdr:MW1KG18760"
+                  },
+                  {
+                    "id": "bdr:MW1KG18761"
+                  },
+                  {
+                    "id": "bdr:MW1KG20790"
+                  },
+                  {
+                    "id": "bdr:MW1KG20856"
+                  },
+                  {
+                    "id": "bdr:MW1KG21292"
+                  },
+                  {
+                    "id": "bdr:MW1KG2160"
+                  },
+                  {
+                    "id": "bdr:MW1KG23020"
+                  },
+                  {
+                    "id": "bdr:MW1KG26110"
+                  },
+                  {
+                    "id": "bdr:MW1KG4531"
+                  },
+                  {
+                    "id": "bdr:MW1KG4861"
+                  },
+                  {
+                    "id": "bdr:MW1KG5002"
+                  },
+                  {
+                    "id": "bdr:MW1KG5369"
+                  },
+                  {
+                    "id": "bdr:MW1KG545"
+                  },
+                  {
+                    "id": "bdr:MW1KG6143"
+                  },
+                  {
+                    "id": "bdr:MW1PD53274"
+                  },
+                  {
+                    "id": "bdr:MW1PD53275"
+                  },
+                  {
+                    "id": "bdr:MW20075"
+                  },
+                  {
+                    "id": "bdr:MW20221"
+                  },
+                  {
+                    "id": "bdr:MW21500"
+                  },
+                  {
+                    "id": "bdr:MW21864"
+                  },
+                  {
+                    "id": "bdr:MW25138"
+                  },
+                  {
+                    "id": "bdr:MW25148"
+                  },
+                  {
+                    "id": "bdr:MW26003"
+                  },
+                  {
+                    "id": "bdr:MW26004"
+                  },
+                  {
+                    "id": "bdr:MW2KG761"
+                  },
+                  {
+                    "id": "bdr:MW2PD19887"
+                  },
+                  {
+                    "id": "bdr:MW2PD19891"
+                  },
+                  {
+                    "id": "bdr:MW30050"
+                  },
+                  {
+                    "id": "bdr:MW30063"
+                  },
+                  {
+                    "id": "bdr:MW30495"
+                  },
+                  {
+                    "id": "bdr:MW30496"
+                  },
+                  {
+                    "id": "bdr:MW3CN5192"
+                  },
+                  {
+                    "id": "bdr:MW3CN5195"
+                  },
+                  {
+                    "id": "bdr:MW3CN5198"
+                  },
+                  {
+                    "id": "bdr:MW3CN5201"
+                  },
+                  {
+                    "id": "bdr:MW3CN5207"
+                  },
+                  {
+                    "id": "bdr:MW3CN5216"
+                  },
+                  {
+                    "id": "bdr:MW3CN5237"
+                  },
+                  {
+                    "id": "bdr:MW3CN5261"
+                  },
+                  {
+                    "id": "bdr:MW3CN5279"
+                  },
+                  {
+                    "id": "bdr:MW3CN8018"
+                  },
+                  {
+                    "id": "bdr:MW3CN8021"
+                  },
+                  {
+                    "id": "bdr:MW3CN8027"
+                  },
+                  {
+                    "id": "bdr:MW3CN9989"
+                  },
+                  {
+                    "id": "bdr:MW3KG114"
+                  },
+                  {
+                    "id": "bdr:MW4CZ368760"
+                  },
+                  {
+                    "id": "bdr:MW4CZ368773"
+                  },
+                  {
+                    "id": "bdr:MW4CZ368775"
+                  },
+                  {
+                    "id": "bdr:MW4CZ295449"
+                  },
+                  {
+                    "id": "bdr:MW8LS18210"
+                  },
+                  {
+                    "id": "bdr:MW8LS18211"
+                  },
+                  {
+                    "id": "bdr:MW8LS18213"
+                  },
+                  {
+                    "id": "bdr:MW8LS18222"
+                  },
+                  {
+                    "id": "bdr:MW8LS18231"
+                  },
+                  {
+                    "id": "bdr:MW8LS18232"
+                  },
+                  {
+                    "id": "bdr:MW8LS18234"
+                  },
+                  {
+                    "id": "bdr:MW8LS18236"
+                  },
+                  {
+                    "id": "bdr:MW8LS18238"
+                  },
+                  {
+                    "id": "bdr:MW8LS18240"
+                  },
+                  {
+                    "id": "bdr:MW4CZ368762"
+                  },
+                  {
+                    "id": "bdr:MW00KG03692"
+                  },
+                  {
+                    "id": "bdr:MW00KG03701"
+                  },
+                  {
+                    "id": "bdr:MW2PD19113"
+                  },
+                  {
+                    "id": "bdr:MW3CN541"
+                  },
+                  {
+                    "id": "bdr:MW00KG07636"
+                  },
+                  {
+                    "id": "bdr:MW2PD19114"
+                  }
+                ]
+              }
+            ]
+          },
+          "history": {
+            "id": "tmp:T1134",
+            "classes": "display-block",
+            "content": [
+              {
+                "id": "tmp:tradiCat10_1",
+                "to": "/show/bdr::rid",
+                "label": [
+                  {
+                    "value": "Religious history",
+                    "lang": "en"
+                  },
+                  {
+                    "value": "ཆོས་འབྱུང་།",
+                    "lang": "bo"
+                  }
+                ],
+                "content": [
+                  {
+                    "id": "bdr:MW1CZ2486"
+                  },
+                  {
+                    "id": "bdr:MW1CZ897"
+                  },
+                  {
+                    "id": "bdr:MW8LS17664"
+                  },
+                  {
+                    "id": "bdr:MW1KG4781"
+                  },
+                  {
+                    "id": "bdr:MW3KG154"
+                  },
+                  {
+                    "id": "bdr:MW27610"
+                  },
+                  {
+                    "id": "bdr:MW00EGS1017241"
+                  },
+                  {
+                    "id": "bdr:MW1CZ1850"
+                  },
+                  {
+                    "id": "bdr:MW1CZ2855"
+                  },
+                  {
+                    "id": "bdr:MW10316"
+                  },
+                  {
+                    "id": "bdr:MW10314"
+                  },
+                  {
+                    "id": "bdr:MW24031"
+                  },
+                  {
+                    "id": "bdr:MW10345"
+                  },
+                  {
+                    "id": "bdr:MW00EGS1017077"
+                  },
+                  {
+                    "id": "bdr:MW1KG16208"
+                  },
+                  {
+                    "id": "bdr:MW23745"
+                  },
+                  {
+                    "id": "bdr:MW3CN3204"
+                  },
+                  {
+                    "id": "bdr:MW20540"
+                  },
+                  {
+                    "id": "bdr:MW1PD181192"
+                  },
+                  {
+                    "id": "bdr:MW21492"
+                  },
+                  {
+                    "id": "bdr:MW28792"
+                  },
+                  {
+                    "id": "bdr:MW1KG3926"
+                  },
+                  {
+                    "id": "bdr:MW00KG09733"
+                  },
+                  {
+                    "id": "bdr:MW00KG09751"
+                  },
+                  {
+                    "id": "bdr:MW1NLM2846"
+                  },
+                  {
+                    "id": "bdr:MW1CZ1983"
+                  },
+                  {
+                    "id": "bdr:MW25570"
+                  },
+                  {
+                    "id": "bdr:MW3CN22325"
+                  },
+                  {
+                    "id": "bdr:MW3CN2591"
+                  },
+                  {
+                    "id": "bdr:MW1KG4232"
+                  },
+                  {
+                    "id": "bdr:MW2DB20790"
+                  },
+                  {
+                    "id": "bdr:MW10160"
+                  },
+                  {
+                    "id": "bdr:MW3CN22284"
+                  },
+                  {
+                    "id": "bdr:MW1CZ1852"
+                  },
+                  {
+                    "id": "bdr:MW15651"
+                  },
+                  {
+                    "id": "bdr:MW1KG20999"
+                  },
+                  {
+                    "id": "bdr:MW21509"
+                  },
+                  {
+                    "id": "bdr:MW1KG20991"
+                  },
+                  {
+                    "id": "bdr:MW1KG4780"
+                  },
+                  {
+                    "id": "bdr:MW1KG10871"
+                  },
+                  {
+                    "id": "bdr:MW1KG25150"
+                  },
+                  {
+                    "id": "bdr:MW3KG158"
+                  },
+                  {
+                    "id": "bdr:MW23714"
+                  },
+                  {
+                    "id": "bdr:MW1KG10141"
+                  },
+                  {
+                    "id": "bdr:MW1CZ689"
+                  },
+                  {
+                    "id": "bdr:MW8LS15820"
+                  },
+                  {
+                    "id": "bdr:MW29203"
+                  },
+                  {
+                    "id": "bdr:MW21959"
+                  },
+                  {
+                    "id": "bdr:MW00EGS1016952"
+                  },
+                  {
+                    "id": "bdr:MW4CZ48435"
+                  },
+                  {
+                    "id": "bdr:MW4CZ302236"
+                  },
+                  {
+                    "id": "bdr:MW1KG1247"
+                  },
+                  {
+                    "id": "bdr:MW1KG17090"
+                  },
+                  {
+                    "id": "bdr:MW913"
+                  },
+                  {
+                    "id": "bdr:MW19825"
+                  },
+                  {
+                    "id": "bdr:MW1NLM3080"
+                  },
+                  {
+                    "id": "bdr:MW3CN22799"
+                  },
+                  {
+                    "id": "bdr:MW1KG20788"
+                  },
+                  {
+                    "id": "bdr:MW4CZ368849"
+                  },
+                  {
+                    "id": "bdr:MW1KG3381"
+                  },
+                  {
+                    "id": "bdr:MW25583"
+                  },
+                  {
+                    "id": "bdr:MW8LS77212"
+                  },
+                  {
+                    "id": "bdr:MW00CHZ0103344"
+                  },
+                  {
+                    "id": "bdr:MW3CN22306"
+                  },
+                  {
+                    "id": "bdr:MW1KG12370"
+                  },
+                  {
+                    "id": "bdr:MW3CN26463"
+                  },
+                  {
+                    "id": "bdr:MW8LS15821"
+                  },
+                  {
+                    "id": "bdr:MW2PD19115"
+                  },
+                  {
+                    "id": "bdr:MW24003"
+                  },
+                  {
+                    "id": "bdr:MW8LS15954"
+                  },
+                  {
+                    "id": "bdr:MW23682"
+                  },
+                  {
+                    "id": "bdr:MW1KG4851"
+                  },
+                  {
+                    "id": "bdr:MW00KG01635"
+                  },
+                  {
+                    "id": "bdr:MW27913"
+                  },
+                  {
+                    "id": "bdr:MW1KG13782"
+                  },
+                  {
+                    "id": "bdr:MW3CN17912"
+                  },
+                  {
+                    "id": "bdr:MW1KG9412"
+                  },
+                  {
+                    "id": "bdr:MW1KG13996"
+                  },
+                  {
+                    "id": "bdr:MW1KG11938"
+                  },
+                  {
+                    "id": "bdr:MW1KG5172"
+                  },
+                  {
+                    "id": "bdr:MW1KG5774"
+                  },
+                  {
+                    "id": "bdr:MW1KG15408"
+                  },
+                  {
+                    "id": "bdr:MW8722"
+                  }
+                ]
+              },
+              {
+                "id": "tmp:tradiCat10_86",
+                "to": "/show/bdr::rid",
+                "label": [
+                  {
+                    "value": "History ",
+                    "lang": "en"
+                  },
+                  {
+                    "value": "རྒྱལ་རབས་དང་ལོ་རྒྱུས།",
+                    "lang": "bo"
+                  }
+                ],
+                "content": [
+                  {
+                    "id": "bdr:MW1KG14788"
+                  },
+                  {
+                    "id": "bdr:MW2KG228734"
+                  },
+                  {
+                    "id": "bdr:MW1KG26250"
+                  },
+                  {
+                    "id": "bdr:MW3CN17321"
+                  },
+                  {
+                    "id": "bdr:MW1KG17091"
+                  },
+                  {
+                    "id": "bdr:MW23934"
+                  },
+                  {
+                    "id": "bdr:MW29643"
+                  },
+                  {
+                    "id": "bdr:MW3CN26663"
+                  },
+                  {
+                    "id": "bdr:MW1KG5926"
+                  },
+                  {
+                    "id": "bdr:MW2CZ8008"
+                  },
+                  {
+                    "id": "bdr:MW8LS41741"
+                  },
+                  {
+                    "id": "bdr:MW1GS44554"
+                  },
+                  {
+                    "id": "bdr:MW00KG03673"
+                  },
+                  {
+                    "id": "bdr:MW8LS15814"
+                  },
+                  {
+                    "id": "bdr:MW4CZ369308"
+                  },
+                  {
+                    "id": "bdr:MW16476"
+                  },
+                  {
+                    "id": "bdr:MW1KG13108"
+                  },
+                  {
+                    "id": "bdr:MW7494"
+                  },
+                  {
+                    "id": "bdr:MW00KG09734"
+                  },
+                  {
+                    "id": "bdr:MW1KG23184"
+                  },
+                  {
+                    "id": "bdr:MW3CN10668"
+                  },
+                  {
+                    "id": "bdr:MW1KG24212"
+                  },
+                  {
+                    "id": "bdr:MW1KG24110"
+                  },
+                  {
+                    "id": "bdr:MW1KG26105"
+                  },
+                  {
+                    "id": "bdr:MW20430"
+                  },
+                  {
+                    "id": "bdr:MW1GS60864"
+                  },
+                  {
+                    "id": "bdr:MW19710"
+                  },
+                  {
+                    "id": "bdr:MW2CZ8073"
+                  },
+                  {
+                    "id": "bdr:MW10159"
+                  },
+                  {
+                    "id": "bdr:MW1KG18757"
+                  },
+                  {
+                    "id": "bdr:MW1KG23516"
+                  },
+                  {
+                    "id": "bdr:MW1KG22124"
+                  },
+                  {
+                    "id": "bdr:MW1KG22297"
+                  },
+                  {
+                    "id": "bdr:MW22074"
+                  },
+                  {
+                    "id": "bdr:MW8LS41720"
+                  },
+                  {
+                    "id": "bdr:MW1KG6149"
+                  },
+                  {
+                    "id": "bdr:MW2CZ7848"
+                  },
+                  {
+                    "id": "bdr:MW1GS66375"
+                  },
+                  {
+                    "id": "bdr:MW1GS75055"
+                  },
+                  {
+                    "id": "bdr:MW1KG5737"
+                  },
+                  {
+                    "id": "bdr:MW1KG13754"
+                  },
+                  {
+                    "id": "bdr:MW3CN22895"
+                  },
+                  {
+                    "id": "bdr:MW21499"
+                  },
+                  {
+                    "id": "bdr:MW1KG13774"
+                  },
+                  {
+                    "id": "bdr:MW3CN17756"
+                  },
+                  {
+                    "id": "bdr:MW00EGS1017172"
+                  },
+                  {
+                    "id": "bdr:MW1KG110450"
+                  },
+                  {
+                    "id": "bdr:MW1KG1419"
+                  },
+                  {
+                    "id": "bdr:MW8LS42258"
+                  },
+                  {
+                    "id": "bdr:MW20851"
+                  },
+                  {
+                    "id": "bdr:MW8LS41724"
+                  },
+                  {
+                    "id": "bdr:MW22054"
+                  },
+                  {
+                    "id": "bdr:MW00KG09757"
+                  },
+                  {
+                    "id": "bdr:MW1KG14802"
+                  },
+                  {
+                    "id": "bdr:MW29205"
+                  },
+                  {
+                    "id": "bdr:MW1KG4200"
+                  },
+                  {
+                    "id": "bdr:MW1KG22908"
+                  },
+                  {
+                    "id": "bdr:MW23958"
+                  },
+                  {
+                    "id": "bdr:MW1KG1459"
+                  },
+                  {
+                    "id": "bdr:MW25107"
+                  },
+                  {
+                    "id": "bdr:MW00CHZ0103341"
+                  },
+                  {
+                    "id": "bdr:MW3CN5063"
+                  },
+                  {
+                    "id": "bdr:MW4CZ296090"
+                  },
+                  {
+                    "id": "bdr:MW2DB5088"
+                  },
+                  {
+                    "id": "bdr:MW27301"
+                  },
+                  {
+                    "id": "bdr:MW1KG13605"
+                  },
+                  {
+                    "id": "bdr:MW23895"
+                  },
+                  {
+                    "id": "bdr:MW2CZ8028"
+                  },
+                  {
+                    "id": "bdr:MW1KG5697"
+                  },
+                  {
+                    "id": "bdr:MW16478"
+                  },
+                  {
+                    "id": "bdr:MW00KG09731"
+                  },
+                  {
+                    "id": "bdr:MW30165"
+                  },
+                  {
+                    "id": "bdr:MW1KG17093"
+                  },
+                  {
+                    "id": "bdr:MW1KG25914"
+                  },
+                  {
+                    "id": "bdr:MW22715"
+                  },
+                  {
+                    "id": "bdr:MW1KG17094"
+                  },
+                  {
+                    "id": "bdr:MW23737"
+                  },
+                  {
+                    "id": "bdr:MW4CZ328536"
+                  },
+                  {
+                    "id": "bdr:MW26569"
+                  },
+                  {
+                    "id": "bdr:MW8LS26117"
+                  },
+                  {
+                    "id": "bdr:MW00EGS1016728"
+                  },
+                  {
+                    "id": "bdr:MW25120"
+                  },
+                  {
+                    "id": "bdr:MW2DB25465"
+                  },
+                  {
+                    "id": "bdr:MW1KG13440"
+                  },
+                  {
+                    "id": "bdr:MW2KG230200"
+                  },
+                  {
+                    "id": "bdr:MW1KG9562"
+                  },
+                  {
+                    "id": "bdr:MW30136"
+                  },
+                  {
+                    "id": "bdr:MW3CN656"
+                  },
+                  {
+                    "id": "bdr:MW1KG5129"
+                  },
+                  {
+                    "id": "bdr:MW1KG23268"
+                  },
+                  {
+                    "id": "bdr:MW1KG14743"
+                  },
+                  {
+                    "id": "bdr:MW2DB25463"
+                  },
+                  {
+                    "id": "bdr:MW25989"
+                  },
+                  {
+                    "id": "bdr:MW20835"
+                  },
+                  {
+                    "id": "bdr:MW3CN10551"
+                  },
+                  {
+                    "id": "bdr:MW3CN8796"
+                  }
+                ]
+              },
+              {
+                "id": "tmp:tradiCat10_184",
+                "to": "/show/bdr::rid",
+                "label": [
+                  {
+                    "value": "History of the Nyingma tradition",
+                    "lang": "en"
+                  },
+                  {
+                    "value": "རྙིང་མའི་ཆོས་འབྱུང་དང་ལོ་རྒྱུས།",
+                    "lang": "bo"
+                  }
+                ],
+                "content": [
+                  {
+                    "id": "bdr:MW8LS19018"
+                  },
+                  {
+                    "id": "bdr:MW24036"
+                  },
+                  {
+                    "id": "bdr:MW00KG09970"
+                  },
+                  {
+                    "id": "bdr:MW19709"
+                  },
+                  {
+                    "id": "bdr:MW8LS32731"
+                  },
+                  {
+                    "id": "bdr:MW3CN4040"
+                  },
+                  {
+                    "id": "bdr:MW4CZ355891"
+                  },
+                  {
+                    "id": "bdr:MW00KG03798"
+                  },
+                  {
+                    "id": "bdr:MW00KG03797"
+                  },
+                  {
+                    "id": "bdr:MW00EGS1016717"
+                  },
+                  {
+                    "id": "bdr:MW3CN9768"
+                  },
+                  {
+                    "id": "bdr:MW29679"
+                  },
+                  {
+                    "id": "bdr:MW8LS16204"
+                  },
+                  {
+                    "id": "bdr:MW28801"
+                  },
+                  {
+                    "id": "bdr:MW3CN5423"
+                  },
+                  {
+                    "id": "bdr:MW1KG18534"
+                  },
+                  {
+                    "id": "bdr:MW3KG143"
+                  },
+                  {
+                    "id": "bdr:MW00KG07866"
+                  },
+                  {
+                    "id": "bdr:MW1CZ2543"
+                  },
+                  {
+                    "id": "bdr:སློབ་དཔོན་པདྨ་འབྱུང་གནས།"
+                  }
+                ]
+              },
+              {
+                "id": "tmp:tradiCat10_206",
+                "to": "/show/bdr::rid",
+                "label": [
+                  {
+                    "value": "History of the Kagyu Tradition",
+                    "lang": "en"
+                  },
+                  {
+                    "value": "བཀའ་བརྒྱུད་ཀྱི་ཆོས་འབྱུང་དང་ལོ་རྒྱུས།",
+                    "lang": "bo"
+                  }
+                ],
+                "content": [
+                  {
+                    "id": "bdr:MW3CN26789"
+                  },
+                  {
+                    "id": "bdr:MW3CN5096"
+                  },
+                  {
+                    "id": "bdr:MW00EGS1016959"
+                  },
+                  {
+                    "id": "bdr:MW3CN561"
+                  },
+                  {
+                    "id": "bdr:MW7445"
+                  },
+                  {
+                    "id": "bdr:MW1KG5929"
+                  },
+                  {
+                    "id": "bdr:MW2KG228736"
+                  },
+                  {
+                    "id": "bdr:MW00EGS1016931"
+                  },
+                  {
+                    "id": "bdr:MW4CZ294738"
+                  },
+                  {
+                    "id": "bdr:MW2CZ6031"
+                  },
+                  {
+                    "id": "bdr:MW1KG23845"
+                  },
+                  {
+                    "id": "bdr:MW00EGS1016678"
+                  },
+                  {
+                    "id": "bdr:MW1KG3958"
+                  },
+                  {
+                    "id": "bdr:MW19809"
+                  },
+                  {
+                    "id": "bdr:MW1GS140301"
+                  },
+                  {
+                    "id": "bdr:MW1KG4304"
+                  },
+                  {
+                    "id": "bdr:MW1KG4328"
+                  },
+                  {
+                    "id": "bdr:MW24044"
+                  },
+                  {
+                    "id": "bdr:MW1CZ991"
+                  },
+                  {
+                    "id": "bdr:MW27214"
+                  }
+                ]
+              },
+              {
+                "id": "tmp:tradiCat10_228",
+                "to": "/show/bdr::rid",
+                "label": [
+                  {
+                    "value": "History of the Sakya Tradition",
+                    "lang": "en"
+                  },
+                  {
+                    "value": "ས་སྐྱའི་ཆོས་འབྱུང་དང་ལོ་རྒྱུས།",
+                    "lang": "bo"
+                  }
+                ],
+                "content": [
+                  {
+                    "id": "bdr:MW1KG3706"
+                  },
+                  {
+                    "id": "bdr:MW1KG25918"
+                  },
+                  {
+                    "id": "bdr:MW1KG1597"
+                  },
+                  {
+                    "id": "bdr:MW1KG17212"
+                  },
+                  {
+                    "id": "bdr:MW00KG09736"
+                  }
+                ]
+              },
+              {
+                "id": "tmp:tradiCat10_235",
+                "to": "/show/bdr::rid",
+                "label": [
+                  {
+                    "value": "History of the Kadampa tradition",
+                    "lang": "en"
+                  },
+                  {
+                    "value": "བཀའ་གདམས་ཀྱི་ཆོས་འབྱུང་དང་ལོ་རྒྱུས།",
+                    "lang": "bo"
+                  }
+                ],
+                "content": [
+                  {
+                    "id": "bdr:MW3CN22358"
+                  },
+                  {
+                    "id": "bdr:MW1CZ3"
+                  },
+                  {
+                    "id": "bdr:MW8LS32399"
+                  },
+                  {
+                    "id": "bdr:MW3CN22303"
+                  },
+                  {
+                    "id": "bdr:MW23748"
+                  }
+                ]
+              },
+              {
+                "id": "tmp:tradiCat10_242",
+                "to": "/show/bdr::rid",
+                "label": [
+                  {
+                    "value": "History of the Gelug tradition",
+                    "lang": "en"
+                  },
+                  {
+                    "value": "དགེ་ལུགས་ཀྱི་ཆོས་འབྱུང་དང་ལོ་རྒྱུས།",
+                    "lang": "bo"
+                  }
+                ],
+                "content": [
+                  {
+                    "id": "bdr:MW1KG21011"
+                  },
+                  {
+                    "id": "bdr:MW1KG4864"
+                  },
+                  {
+                    "id": "bdr:MW3CN3037"
+                  },
+                  {
+                    "id": "bdr:MW1NLM3256"
+                  },
+                  {
+                    "id": "bdr:MW1GS53093"
+                  },
+                  {
+                    "id": "bdr:MW21636"
+                  },
+                  {
+                    "id": "bdr:MW18611"
+                  },
+                  {
+                    "id": "bdr:MW1KG1610"
+                  },
+                  {
+                    "id": "bdr:MW14457"
+                  },
+                  {
+                    "id": "bdr:MW1KG24216"
+                  },
+                  {
+                    "id": "bdr:MW22378"
+                  },
+                  {
+                    "id": "bdr:MW2KG1678"
+                  },
+                  {
+                    "id": "bdr:MW2DB15921"
+                  },
+                  {
+                    "id": "bdr:MW29636"
+                  },
+                  {
+                    "id": "bdr:MW2DB25391"
+                  },
+                  {
+                    "id": "bdr:MW8LS44143"
+                  },
+                  {
+                    "id": "bdr:MW1KG22127"
+                  },
+                  {
+                    "id": "bdr:MW2KG212713"
+                  },
+                  {
+                    "id": "bdr:MW20137"
+                  },
+                  {
+                    "id": "bdr:MW8LS22416"
+                  },
+                  {
+                    "id": "bdr:MW1KG4998"
+                  },
+                  {
+                    "id": "bdr:MW3KG186"
+                  },
+                  {
+                    "id": "bdr:MW00EGS1017102"
+                  },
+                  {
+                    "id": "bdr:MW2KG229167"
+                  },
+                  {
+                    "id": "bdr:MW1KG26067"
+                  },
+                  {
+                    "id": "bdr:MW1KG24250"
+                  },
+                  {
+                    "id": "bdr:MW00KG04060"
+                  },
+                  {
+                    "id": "bdr:MW22078"
+                  },
+                  {
+                    "id": "bdr:MW8LS77119"
+                  },
+                  {
+                    "id": "bdr:MW4CZ333424"
+                  },
+                  {
+                    "id": "bdr:MW28810"
+                  },
+                  {
+                    "id": "bdr:MW1KG5945"
+                  },
+                  {
+                    "id": "bdr:MW8LS17977"
+                  },
+                  {
+                    "id": "bdr:MW8LS43873"
+                  },
+                  {
+                    "id": "bdr:MW00KG03702"
+                  }
+                ]
+              },
+              {
+                "id": "tmp:tradiCat10_279",
+                "to": "/show/bdr::rid",
+                "label": [
+                  {
+                    "value": "History of the Jonang tradition",
+                    "lang": "en"
+                  },
+                  {
+                    "value": "ཇོ་ནང་གི་ཆོས་འབྱུང་དང་ལོ་རྒྱུས།",
+                    "lang": "bo"
+                  }
+                ],
+                "content": [
+                  {
+                    "id": "bdr:MW2CZ8089"
+                  },
+                  {
+                    "id": "bdr:MW1CZ2328"
+                  },
+                  {
+                    "id": "bdr:MW30090"
+                  },
+                  {
+                    "id": "bdr:MW3CN22287"
+                  }
+                ]
+              }
+            ]
+          },
+          "karchak": {
+            "id": "tmp:T13",
+            "classes": "display-block",
+            "content": [
+              {
+                "id": "tmp:tradiCat11_1",
+                "to": "/show/bdr::rid",
+                "label": [
+                  {
+                    "value": "Table of contents",
+                    "lang": "en"
+                  },
+                  {
+                    "value": "དཀར་ཆག",
+                    "lang": "bo"
+                  }
+                ],
+                "content": [
+                  {
+                    "id": "bdr:MW4CZ7370"
+                  },
+                  {
+                    "id": "bdr:MW1KG22580"
+                  },
+                  {
+                    "id": "bdr:MW1KG10093"
+                  },
+                  {
+                    "id": "bdr:MW1KG9772"
+                  },
+                  {
+                    "id": "bdr:MW12641"
+                  },
+                  {
+                    "id": "bdr:MW1CZ881"
+                  },
+                  {
+                    "id": "bdr:MW1KG12301"
+                  },
+                  {
+                    "id": "bdr:MW1KG14821"
+                  },
+                  {
+                    "id": "bdr:MW1KG15037"
+                  },
+                  {
+                    "id": "bdr:MW1KG15233"
+                  },
+                  {
+                    "id": "bdr:MW1KG17605"
+                  },
+                  {
+                    "id": "bdr:MW1KG25919"
+                  },
+                  {
+                    "id": "bdr:MW1KG4333"
+                  },
+                  {
+                    "id": "bdr:MW1KG8537"
+                  },
+                  {
+                    "id": "bdr:MW1KG9563"
+                  },
+                  {
+                    "id": "bdr:MW1NLM1716"
+                  },
+                  {
+                    "id": "bdr:MW1NLM803"
+                  },
+                  {
+                    "id": "bdr:MW20425"
+                  },
+                  {
+                    "id": "bdr:MW27919"
+                  },
+                  {
+                    "id": "bdr:MW2CZ7507"
+                  },
+                  {
+                    "id": "bdr:MW2KG1679"
+                  },
+                  {
+                    "id": "bdr:MW3CN1314"
+                  },
+                  {
+                    "id": "bdr:MW3CN1328"
+                  },
+                  {
+                    "id": "bdr:MW3CN1332"
+                  },
+                  {
+                    "id": "bdr:MW3CN3089"
+                  },
+                  {
+                    "id": "bdr:MW3CN7979"
+                  },
+                  {
+                    "id": "bdr:MW4CZ2732"
+                  },
+                  {
+                    "id": "bdr:MW4CZ332269"
+                  },
+                  {
+                    "id": "bdr:MW8CZ189"
+                  },
+                  {
+                    "id": "bdr:MW8LS17746"
+                  },
+                  {
+                    "id": "bdr:MW8LS20918"
+                  },
+                  {
+                    "id": "bdr:MW8LS32647"
+                  },
+                  {
+                    "id": "bdr:MW1KG4769"
+                  },
+                  {
+                    "id": "bdr:MW1KG10387"
+                  },
+                  {
+                    "id": "bdr:MW1KG15464"
+                  },
+                  {
+                    "id": "bdr:MW21606"
+                  },
+                  {
+                    "id": "bdr:MW3CN1923"
+                  },
+                  {
+                    "id": "bdr:MW3CN26467"
+                  },
+                  {
+                    "id": "bdr:MW2DB4583"
+                  },
+                  {
+                    "id": "bdr:MW1KG14982"
+                  },
+                  {
+                    "id": "bdr:MW1KG13813"
+                  },
+                  {
+                    "id": "bdr:MW1KG13833"
+                  },
+                  {
+                    "id": "bdr:MW1NLM786"
+                  }
+                ]
+              },
+              {
+                "id": "tmp:tradiCat11_46",
+                "to": "/show/bdr::rid",
+                "label": [
+                  {
+                    "value": "Contents of collected writings",
+                    "lang": "en"
+                  },
+                  {
+                    "value": "གསུང་འབུམ་དཀར་ཆག",
+                    "lang": "bo"
+                  }
+                ],
+                "content": [
+                  {
+                    "id": "bdr:MW19822"
+                  },
+                  {
+                    "id": "bdr:MW1AC348"
+                  },
+                  {
+                    "id": "bdr:MW1KG6159"
+                  },
+                  {
+                    "id": "bdr:MW27905"
+                  },
+                  {
+                    "id": "bdr:MW3CN25695"
+                  },
+                  {
+                    "id": "bdr:MW3KG174"
+                  },
+                  {
+                    "id": "bdr:MW4CZ302239"
+                  },
+                  {
+                    "id": "bdr:MW4CZ355876"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "texts": {
+          "collection": {
+            "id": "textCollections",
+            "_old_to": "/search?r=:id&t=Scan",
+            "to": "/osearch/search?inCollection%5B0%5D=:rid",
+            "content": [
+              {
+                "id": "bdr:PR1NLM00",
+                "label": [
+                  {
+                    "value": "National Library of Mongolia",
+                    "lang": "en"
+                  }
+                ],
+                "img": "/tbrc/352-thumb.jpg"
+              },
+              {
+                "id": "bdr:PR1FPL01",
+                "label": [
+                  {
+                    "value": "Fragile Palm Leaves Project Collection",
+                    "lang": "en"
+                  }
+                ],
+                "img": "/tbrc/358-thumb.jpg"
+              },
+              {
+                "id": "bdr:PR1EAP1150",
+                "label": [
+                  {
+                    "value": "British Library Endangered Archives Program #1150",
+                    "lang": "en"
+                  }
+                ],
+                "img": "/tbrc/756-thumb.jpg"
+              },
+              {
+                "id": "bdr:PR1NGMPP00",
+                "label": [
+                  {
+                    "value": "Nepal German Manuscript Preservation Project (NGMPP)",
+                    "lang": "en"
+                  }
+                ],
+                "img": "/tbrc/928-thumb.jpg"
+              },
+              {
+                "id": "bdr:PR1PEMAKO00",
+                "label": [
+                  {
+                    "value": "Pemako Collection",
+                    "lang": "en"
+                  }
+                ],
+                "img": "/tbrc/974-thumb.jpg"
+              },
+              {
+                "id": "bdr:PR1TIBET00",
+                "label": [
+                  {
+                    "value": "TiBET / TTBBC Collection",
+                    "lang": "en"
+                  }
+                ],
+                "img": "/tbrc/65619-thumb.jpg"
+              },
+              {
+                "id": "bdr:PR1LOKESH01",
+                "label": [
+                  {
+                    "value": "Lokesh Chandra Collection",
+                    "lang": "en"
+                  }
+                ],
+                "img": "/tbrc/nagas.jpg"
+              },
+              {
+                "id": "bdr:PR1CIHTS00",
+                "label": [
+                  {
+                    "value": "Central Institute of Higher Tibetan Studies (CIHTS)",
+                    "lang": "en"
+                  }
+                ],
+                "img": "/tbrc/topics-beings-gurus.jpg"
+              },
+              {
+                "id": "bdr:PR1VIENNA00",
+                "label": [
+                  {
+                    "value": "University of Vienna - Tibetan Manuscript Project Vienna (TMPV)",
+                    "lang": "en"
+                  }
+                ],
+                "img": "/tbrc/topics-beings-local.jpg"
+              }
+            ]
+          },
+          "topic": {
+            "id": "bdr:O9TAXTBRC201605",
+            "to": "texts/topic/:id/",
+            "content": [
+              {
+                "id": "bdr:O9TAXTBRC2016052KG225324",
+                "img": "/tbrc/Catalogs.jpg"
+              },
+              {
+                "id": "bdr:O9TAXTBRC2016052KG225372",
+                "img": "/tbrc/Canon.jpg"
+              },
+              {
+                "id": "bdr:O9TAXTBRC2016052KG225383",
+                "img": "/tbrc/Buddhist-Teachings.jpg"
+              },
+              {
+                "id": "bdr:O9TAXTBRC2016052KG226384",
+                "img": "/tbrc/Pramana.jpg"
+              },
+              {
+                "id": "bdr:O9TAXTBRC2016052KG226418",
+                "img": "/tbrc/Grammar-Linguistics.jpg"
+              },
+              {
+                "id": "bdr:O9TAXTBRC2016052KG226531",
+                "img": "/tbrc/Fine-Art.jpg"
+              },
+              {
+                "id": "bdr:O9TAXTBRC2016052KG226586",
+                "img": "/tbrc/Medicine.jpg"
+              },
+              {
+                "id": "bdr:O9TAXTBRC2016052KG226667",
+                "img": "/tbrc/Poetics.jpg"
+              },
+              {
+                "id": "bdr:O9TAXTBRC2016052KG226784",
+                "img": "/tbrc/History-Biography-A .jpg"
+              },
+              {
+                "id": "bdr:O9TAXTBRC2016052KG226920",
+                "img": "/tbrc/Collected-Works-B.jpg"
+              },
+              {
+                "id": "bdr:O9TAXTBRC2016052KG227157",
+                "img": "/tbrc/tradition-misc.jpg"
+              },
+              {
+                "id": "bdr:O9TAXTBRC2016052KG228264",
+                "img": "/tbrc/Collections.jpg"
+              },
+              {
+                "id": "bdr:O9TAXTBRC2016052KG228290",
+                "img": "/tbrc/Law.jpg"
+              },
+              {
+                "id": "bdr:O9TAXTBRC2016052KG228410",
+                "img": "/tbrc/Astrology.jpg"
+              },
+              {
+                "id": "bdr:O9TAXTBRC2016052KG228444",
+                "img": "/tbrc/Litrerature.jpg"
+              }
+            ]
+          }
+        },
+        "persons": {
+          "school": {
+            "id": "personSchool",
+            "_old_to": "/search?r=:id&t=Person&u=Person",
+            "to": "/osearch/search?associatedTradition%5B0%5D=:rid&type%5B0%5D=Person",
+            "content": "selected"
+          },
+          "century": {
+            "id": "personCenturies",
+            "_old_to": "persons/:id/",
+            "to": "/osearch/search?associatedCentury%5B0%5D=:n",
+            "content": [
+              {
+                "id": "8th",
+                "img": "/tbrc/person-8th-thumb.png"
+              },
+              {
+                "id": "9th",
+                "img": "/tbrc/person-9th-thumb.png"
+              },
+              {
+                "id": "10th",
+                "img": "/tbrc/person-10th-thumb.png"
+              },
+              {
+                "id": "11th",
+                "img": "/tbrc/person-11th-thumb.png"
+              },
+              {
+                "id": "12th",
+                "img": "/tbrc/person-12th-thumb.png"
+              },
+              {
+                "id": "13th",
+                "img": "/tbrc/person-13th-thumb.png"
+              },
+              {
+                "id": "14th",
+                "img": "/tbrc/person-14th-thumb.png"
+              },
+              {
+                "id": "15th",
+                "img": "/tbrc/person-15th-thumb.png"
+              },
+              {
+                "id": "16th",
+                "img": "/tbrc/person-16th-thumb.png"
+              },
+              {
+                "id": "17th",
+                "img": "/tbrc/person-17th-thumb.png"
+              },
+              {
+                "id": "18th",
+                "img": "/tbrc/person-18th-thumb.png"
+              },
+              {
+                "id": "19th",
+                "img": "/tbrc/person-19th-thumb.png"
+              },
+              {
+                "id": "20th",
+                "img": "/tbrc/person-20th-thumb.png"
+              },
+              {
+                "id": "21st",
+                "img": "/tbrc/person-21st-thumb.png"
+              }
+            ]
+          }
+        },
+        "places": {
+          "monasteries": {
+            "id": "monasteries",
+            "_old_to": "/search?r=:id&t=Place&f=tradition,inc,:id&f=placeType,inc,bdr:PT0037",
+            "to": "/osearch/search?associatedTradition%5B0%5D=:rid&type%5B0%5D=Place&placeType%5B0%5D=PT0037",
+            "content": "selected"
+          },
+          "type": {
+            "id": "placeTypes",
+            "to": "places/:id/",
+            "content": [
+              {
+                "id": "natural-features",
+                "img": "/tbrc/NaturalRegions.gif"
+              },
+              {
+                "id": "regions",
+                "img": "/tbrc/Regions.gif"
+              },
+              {
+                "id": "sites",
+                "img": "/tbrc/Sites.gif"
+              },
+              {
+                "id": "contemporary-places",
+                "img": "/tbrc/ContemporaryPlaces.gif"
+              }
+            ]
+          },
+          "natural-features": {
+            "id": "placesNaturalFeatures",
+            "classes": "display-block",
+            "_old_to": "/search?r=:id&t=Place&u=Place&f=placeType,inc,:id",
+            "to": "/osearch/search?type%5B0%5D=Place&placeType%5B0%5D=:rid",
+            "parent": "type",
+            "content": [
+              {
+                "id": "bdr:PT0044"
+              },
+              {
+                "id": "bdr:PT0042"
+              },
+              {
+                "id": "bdr:PT0062"
+              },
+              {
+                "id": "bdr:PT0065"
+              },
+              {
+                "id": "bdr:PT0066"
+              },
+              {
+                "id": "bdr:PT0028"
+              },
+              {
+                "id": "bdr:PT0055"
+              },
+              {
+                "id": "bdr:PT0005"
+              },
+              {
+                "id": "bdr:PT0083"
+              },
+              {
+                "id": "bdr:PT0082"
+              },
+              {
+                "id": "bdr:PT0031"
+              }
+            ]
+          },
+          "regions": {
+            "id": "placesRegions",
+            "classes": "display-block",
+            "_old_to": "/search?r=:id&t=Place&u=Place&f=placeType,inc,:id",
+            "to": "/osearch/search?type%5B0%5D=Place&placeType%5B0%5D=:rid",
+            "parent": "type",
+            "content": [
+              {
+                "id": "bdr:PT0078"
+              },
+              {
+                "id": "bdr:PT0079"
+              },
+              {
+                "id": "bdr:PT0010"
+              },
+              {
+                "id": "bdr:PT0026"
+              },
+              {
+                "id": "bdr:PT0007"
+              },
+              {
+                "id": "bdr:PT0013"
+              },
+              {
+                "id": "bdr:PT0061"
+              },
+              {
+                "id": "bdr:PT0032"
+              },
+              {
+                "id": "bdr:PT0073"
+              },
+              {
+                "id": "bdr:PT0019"
+              },
+              {
+                "id": "bdr:PT0001"
+              },
+              {
+                "id": "bdr:PT0057"
+              },
+              {
+                "id": "bdr:PT0029"
+              },
+              {
+                "id": "bdr:PT0070"
+              },
+              {
+                "id": "bdr:PT0027"
+              },
+              {
+                "id": "bdr:PT0058"
+              },
+              {
+                "id": "bdr:PT0046"
+              },
+              {
+                "id": "bdr:PT0056"
+              },
+              {
+                "id": "bdr:PT0015"
+              },
+              {
+                "id": "bdr:PT0081"
+              },
+              {
+                "id": "bdr:PT0048"
+              },
+              {
+                "id": "bdr:PT0068"
+              },
+              {
+                "id": "bdr:PT0085"
+              }
+            ]
+          },
+          "sites": {
+            "id": "placesSites",
+            "classes": "display-block",
+            "_old_to": "/search?r=:id&t=Place&u=Place&f=placeType,inc,:id",
+            "to": "/osearch/search?type%5B0%5D=Place&placeType%5B0%5D=:rid",
+            "parent": "type",
+            "content": [
+              {
+                "id": "bdr:PT0037"
+              },
+              {
+                "id": "bdr:PT0050"
+              },
+              {
+                "id": "bdr:PT0074"
+              },
+              {
+                "id": "bdr:PT0075"
+              },
+              {
+                "id": "bdr:PT0072"
+              },
+              {
+                "id": "bdr:PT0040"
+              },
+              {
+                "id": "bdr:PT0038"
+              },
+              {
+                "id": "bdr:PT0064"
+              },
+              {
+                "id": "bdr:PT0041"
+              },
+              {
+                "id": "bdr:PT0039"
+              },
+              {
+                "id": "bdr:PT0059"
+              },
+              {
+                "id": "bdr:PT0053"
+              },
+              {
+                "id": "bdr:PT0022"
+              },
+              {
+                "id": "bdr:PT0080"
+              },
+              {
+                "id": "bdr:PT0033"
+              },
+              {
+                "id": "bdr:PT0021"
+              },
+              {
+                "id": "bdr:PT0036"
+              },
+              {
+                "id": "bdr:PT0071"
+              },
+              {
+                "id": "bdr:PT0020"
+              },
+              {
+                "id": "bdr:PT0051"
+              },
+              {
+                "id": "bdr:PT0018"
+              },
+              {
+                "id": "bdr:PT0034"
+              },
+              {
+                "id": "bdr:PT0025"
+              },
+              {
+                "id": "bdr:PT0054"
+              },
+              {
+                "id": "bdr:PT0076"
+              },
+              {
+                "id": "bdr:PT0006"
+              },
+              {
+                "id": "bdr:PT0035"
+              },
+              {
+                "id": "bdr:PT0023"
+              },
+              {
+                "id": "bdr:PT0067"
+              },
+              {
+                "id": "bdr:PT0052"
+              },
+              {
+                "id": "bdr:PT0017"
+              },
+              {
+                "id": "bdr:PT0030"
+              },
+              {
+                "id": "bdr:PT0043"
+              },
+              {
+                "id": "bdr:PT0016"
+              },
+              {
+                "id": "bdr:PT0004"
+              }
+            ]
+          },
+          "contemporary-places": {
+            "id": "placesContemporary",
+            "classes": "display-block",
+            "_old_to": "/search?r=:id&t=Place&u=Place&f=placeType,inc,:id",
+            "to": "/osearch/search?type%5B0%5D=Place&placeType%5B0%5D=:rid",
+            "parent": "type",
+            "content": [
+              {
+                "id": "bdr:PT0060"
+              },
+              {
+                "id": "bdr:PT0003"
+              },
+              {
+                "id": "bdr:PT0014"
+              },
+              {
+                "id": "bdr:PT0002"
+              },
+              {
+                "id": "bdr:PT0008"
+              },
+              {
+                "id": "bdr:PT0011"
+              },
+              {
+                "id": "bdr:PT0045"
+              },
+              {
+                "id": "bdr:PT0012"
+              },
+              {
+                "id": "bdr:PT0077"
+              },
+              {
+                "id": "bdr:PT0084"
+              }
+            ]
+          }
+        }
+      }
+    },
+    "pi": {},
+    "sa": {},
+    "zh": {}
+  }
+}

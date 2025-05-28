@@ -63,6 +63,16 @@ export const langPreset = (lang: string[],i?:number): Action => {
    }
 }
 
+TYPES.advancedSearch = 'ADVANCED_SEARCH';
+export const advancedSearch = (s: boolean, k:string): Action => {
+   return {
+      type: TYPES.advancedSearch,
+      payload: s,
+      meta:k
+   }
+}
+
+
 TYPES.logEvent = 'LOG_EVENT';
 export const logEvent = (login: boolean): Action => {
    return {

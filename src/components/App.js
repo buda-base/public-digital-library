@@ -88,10 +88,12 @@ import { Trans } from 'react-i18next'
 import axios from "axios"
 
 
+import InnerSearchPageContainer from '../containers/InnerSearchPageContainer'
 import LanguageSidePaneContainer from '../containers/LanguageSidePaneContainer';
 import ResourceViewerContainer from '../containers/ResourceViewerContainer';
 import {getOntoLabel,provImg as img,providers,provNoLogo as nologo} from './ResourceViewer';
 import {humanizeEDTF, locales} from './ResourceViewer';
+import StickyElement from './StickyElement';
 import {getQueryParam} from './GuidedSearch';
 import {getEntiType, logError, staticQueries} from '../lib/api';
 import {narrowWithString} from "../lib/langdetect"
@@ -100,6 +102,17 @@ import './App.css';
 import Footer from "./Footer"
 import store from "../index"
 import {closePortraitPopup} from "../state/ui/actions"
+import analytics from "./Analytics"
+
+import { InstantSearch, useSearchBox } from "react-instantsearch";
+import AutocompleteKeywordInput from "./AutocompleteKeywordInput"
+import { searchClient, FiltersSidebar, HomeCompo, QueryRefCompo } from '../lib/searchkit/pages/Search';
+import SearchBoxAutocomplete from "../lib/searchkit/components/SearchBoxAutocomplete";
+import { routingConfig } from "../lib/searchkit/searchkit.config";
+
+import LatestSyncs from "./LatestSyncs"
+
+import { topics } from "../lib/topics"
 
 import {svgEtextS,svgImageS} from "./icons"
 
@@ -164,6 +177,10 @@ const src   = "https://sakyaresearch.org/"
 const tol   = "http://api.treasuryoflives.org/resource/";
 const wc    = "https://www.worldcat.org/identities/";
 
+
+const customTradLink = {
+   "bo": "?type[0]=Instance&language[0]=LangBo&sortBy=firstScanSyncDate_desc"
+}
 
 export const prefixesMap = { adm, bda, bdac, bdan, bdo, bdou, bdr, bdu, bf, cbcp, cbct, dila, eftr, foaf, oa, mbbt, owl, rdf, rdfs, rkts, skos, wd, ola, viaf, xsd, tmp, 
    bn, cbeta, har, idp, loc, lul, ngmpp, sat, sats, sbb, src, tol, wc }
@@ -396,14 +413,55 @@ export const langProfile = [
 ]
 */
 
+export const popupIsHidden = (that, m, lab) => {
+
+   //console.log("pih:",that,m,lab)
+   
+   // condition to show popup 
+   let condition      
+   if(!m.condition) 
+      condition = true
+   else if(m.condition && m.condition.match(/^[.a-zA-Z]+$/)) {         
+      condition = eval(m.condition) ? true: false;
+   } 
+   //loggergen.log("condition:", m.condition, condition)
+
+   let hidden = that.state.collapse?.["msgPopup"+(m.id?"-"+m.id:"")]
+
+   if(m.popup) {         
+      let showEveryNDay = 30
+      if(m.showEveryNDay != undefined) showEveryNDay = m.showEveryNDay
+      const wasClosed = localStorage.getItem("msg-popup-closed"+(m.id?"-"+m.id:"")) 
+      const tooOld = showEveryNDay != -1 && Date.now() - wasClosed > showEveryNDay * 24 * 3600 * 1000
+      //loggergen.log("sENd:",m.id,hidden,showEveryNDay,m.showEveryNDay,wasClosed,Date.now(),tooOld)         
+      if(!hidden && condition && (!wasClosed || tooOld)) {
+         //loggergen.log("show!",hidden) 
+         hidden = false               
+      } else if(condition === undefined && !hidden || condition == false && !hidden || condition && wasClosed && !tooOld && !hidden) {
+         //loggergen.log("hide!")                
+         hidden = true
+      } else if(condition && hidden && !wasClosed) {
+         hidden = false
+         //loggergen.log("show!!",hidden) 
+      }
+   }
+   
+   hidden = hidden || isProxied(that) && lab.value.includes("/donation/") 
+
+   //console.log("pih!",hidden)
+
+   return hidden
+}
 
 export const renderBanner = (that, infoPanel, isResourcePage) => {
 
-   return (<div class={"infoPanel "+(isResourcePage?"inRes":"")}>{ infoPanel.map((m,i) => {
-      let lab = getLangLabel(that,tmp+"bannerMessage",m.text) 
+   const collapse = {}
+   const res = (<div class={"infoPanel "+(isResourcePage?"inRes":"")}>{ infoPanel.map((m,i) => {
       let icon 
 
-      //loggergen.log("popup/m:",m,lab,m.text,that.props.locale,that)
+      let lab = getLangLabel(that,tmp+"bannerMessage",m.text) 
+
+      //loggergen.log("popup/m:",m.id,m,lab,m.text,that.props.locale,that)
       
       if(m.severity=="info") icon = <InfoIcon className="info"/>
       else if(m.severity=="warning") icon = <WarnIcon className="warn"/>
@@ -441,40 +499,16 @@ export const renderBanner = (that, infoPanel, isResourcePage) => {
 
 
          // check if popup has it recently been closed + #829
-         let hidden = that.state.collapse?.["msgPopup"+(m.id?"-"+m.id:"")]
+         let hidden = popupIsHidden(that, m, lab)
 
-         // condition to show popup 
-         let condition      
-         if(!m.condition) 
-            condition = true
-         else if(m.condition && m.condition.match(/^[.a-zA-Z]+$/)) {         
-            condition = eval(m.condition) ? true: false;
-         } 
-         //loggergen.log("condition:", m.condition, condition)
-
-         if(m.popup) {         
-            let showEveryNDay = 30
-            if(m.showEveryNDay != undefined) showEveryNDay = m.showEveryNDay
-            const wasClosed = localStorage.getItem("msg-popup-closed"+(m.id?"-"+m.id:"")) 
-            const tooOld = showEveryNDay != -1 && Date.now() - wasClosed > showEveryNDay * 24 * 3600 * 1000
-            //loggergen.log("sENd:",showEveryNDay,m.showEveryNDay,wasClosed,Date.now(),tooOld)         
-            if(!hidden && condition && (!wasClosed || tooOld)) {
-               //loggergen.log("show!",hidden) 
-               hidden = false               
-            } else if(condition === undefined && !hidden || condition == false && !hidden || condition && wasClosed && !tooOld && !hidden) {
-               //loggergen.log("hide!")                
-               hidden = true
-            } else if(condition && hidden && !wasClosed) {
-               hidden = false
-               //loggergen.log("show!!",hidden) 
-            }
+         if(hidden != that.state.collapse["msgPopup"+(m.id?"-"+m.id:"")]) { 
+            //console.log("stt:",hidden)
+            //that.setState({collapse:{ ...that.state.collapse, ["msgPopup"+(m.id?"-"+m.id:"")]: hidden }})
+            collapse["msgPopup"+(m.id?"-"+m.id:"")] =  hidden 
          }
-         
-         hidden = hidden || isProxied(that) && lab.value.includes("/donation/") 
-
-         if(hidden != that.state.collapse["msgPopup"+(m.id?"-"+m.id:"")]) that.setState({collapse:{ ...that.state.collapse, ["msgPopup"+(m.id?"-"+m.id:"")]: hidden }})
 
          const closePopup = (ev) => {
+            //console.log("cpp:",that,m)            
             that.setState({collapse:{ ...that.state.collapse, ["msgPopup"+(m.id?"-"+m.id:"")]: true }})
             localStorage.setItem("msg-popup-closed"+(m.id?"-"+m.id:""), Date.now())
          }
@@ -501,6 +535,11 @@ export const renderBanner = (that, infoPanel, isResourcePage) => {
          </div>
       }
    }) }</div>)
+
+   //console.log("rbr:",JSON.stringify(collapse))
+
+   if(Object.keys(collapse).length) that.setState({collapse:{ ...that.state.collapse, ...collapse }})
+   return res
 }
 
 
@@ -514,7 +553,7 @@ export function report_GA(config,location) {
       return ({...acc,[k[0]]:k[1]})
    },{})
    
-   loggergen.log("ck?",ck,config,location,_GA)
+   // loggergen.log("ck?",ck,config,location,_GA)
 
    if(!config || !location) return
 
@@ -535,13 +574,20 @@ export function report_GA(config,location) {
 
 
 
-export function highlight(val,k,expand,newline,force)
+export function highlight(val,k,expand,newline,force,lang)
 {
    if(k == "-") return val
 
    //loggergen.log("hi:",val,k,expand)
 
+   if(lang && !lang?.startsWith("bo")) {
+      val = val?.replace(/\[/g, "_OSQRBRCK_")
+      val = val?.replace(/\]/g, "_CSQRBRCK_")
+   }
+
    if(expand && expand.value) val = expand.value.replace(/([^\n])[\n]([^\n])/g,"$1$2")
+
+   if(!val) val = ""
 
    if(!val.match(/↤/) && k ) { 
 
@@ -574,6 +620,11 @@ export function highlight(val,k,expand,newline,force)
    val = val.replace(/(↦↤)|(\[ *\])/g,"");
    val = val.replace(/\[( *\(…\) *)\]/g," $1 ");
 
+   if(lang && !lang?.startsWith("bo")) {
+      val = val?.replace(/_OSQRBRCK_/g,"[")
+      val = val?.replace(/_CSQRBRCK_/g,"]")
+   }
+
    val = val.split(/↦/)
    val = val.map((e,_idx) => { 
             
@@ -591,11 +642,12 @@ export function highlight(val,k,expand,newline,force)
       }
 
       if(e.length) {
-         let f = e.split(/↤/)
+         let f = e.split(/↤/), NLexp = newline && typeof newline === "string"? new RegExp(newline) : null
          if(f.length > 1) {
             let tail 
-            if(newline && f[1].indexOf("\n\n") !== -1) { 
-               tail = f[1].split(/\n\n/)
+            if(newline && (f[1].indexOf("\n\n") !== -1 || NLexp && f[1].match(NLexp))) { 
+               if(!NLexp) tail = f[1].split(/\n\n/)
+               else tail = f[1].split(NLexp)
                tail = tail.map((i,idx) => [<span>{i}</span>, ...(idx==tail.length - 1 ?[]:[<br data-last={_idx >= val.length - 1 && idx === tail.length - 1}/>,<br/>]) ])
             }
             else tail = [ <span>{force?prepNewL(f[1]):f[1]}</span> ]
@@ -603,8 +655,9 @@ export function highlight(val,k,expand,newline,force)
          }
          else {
             let tail 
-            if(newline && f[0].indexOf("\n\n") !== -1) { 
-               tail = f[0].split(/\n\n/)
+            if(newline && (f[0].indexOf("\n\n") !== -1 || NLexp && f[0].match(NLexp))) { 
+               if(!NLexp) tail = f[0].split(/\n\n/)
+               else tail = f[0].split(NLexp)
                tail = tail.map( (i,idx) => [<span>{i}</span>, ...(idx==tail.length - 1 ?[]:[<br data-last={_idx >= val.length - 1 && idx === tail.length - 1}/>,<br/>]) ])
             }
             else tail = [ <span>{force?prepNewL(f[0]):f[0]}</span> ]
@@ -642,7 +695,7 @@ export function getLangLabel(that:{},prop:string="",labels:[],proplang:boolean=f
 {
    if(labels && labels.length)
    {
-      //loggergen.log("getL",prop,labels,proplang,uilang,dontUseUI);
+      //loggergen.log("getL:",prop,labels,proplang,uilang,dontUseUI);
 
       let langs = []
       if(that.state.langPreset) langs = that.state.langPreset
@@ -654,7 +707,7 @@ export function getLangLabel(that:{},prop:string="",labels:[],proplang:boolean=f
       }            
 
       
-      if(that.props.etextLang && (prop == bdo+"eTextHasPage" || prop == bdo+"eTextHasChunk")) { 
+      if(that.props.etextLang && [bdo+"eTextHasPage", bdo+"eTextHasChunk", _tmp+"bestMatch", _tmp+"textMatch", _tmp+"withEtextPrefLang"].includes(prop)) { 
          langs = that.props.etextLang 
          if(!Array.isArray(langs)) langs = [ langs ]
          //loggergen.log("prop:",langs,prop,labels)
@@ -722,11 +775,12 @@ function pretty(str:string) {
 }
 
 
-export function getPropLabel(that, i, withSpan = true, withLang = false) {
+export function getPropLabel(that, i, withSpan = true, withLang = false, useI18n = "", useI18n_count = 1, storage, defaultToRID = false, matchingLabels, preferUIlang = true) {
 
+   
    if(!that.props.dictionary) return 
 
-   let sTmp = shortUri(i), trad = I18n.t("prop."+sTmp)
+   let sTmp = shortUri(i), trad = I18n.t("prop."+sTmp), rid = sTmp.split(":")[1]
    if("prop."+sTmp !== trad) return trad
 
    let label = that.props.dictionary[i], labels
@@ -734,35 +788,73 @@ export function getPropLabel(that, i, withSpan = true, withLang = false) {
       labels = label[skos+"prefLabel"]
       if(!labels) labels = label["http://www.w3.org/2000/01/rdf-schema#label"]
    }
+   else if(rid && topics && topics[rid]) labels = topics[rid].label
    else if(that.props.assoRes && that.props.assoRes[i]) labels = that.props.assoRes[i]
    else if(that.props.resources && that.props.resources[i]) { 
       labels = that.props.resources[i]
       if(labels) labels = labels[fullUri(i)]
       if(labels) labels = labels[skos+"prefLabel"]
+   } else if(useI18n) {
+      const t = I18n.t(useI18n, { count: useI18n_count })
+      labels = [{ value:t, lang:that.props.locale }]
+   } else if(storage) {
+      
+      label = "storage?"
+
+      if(storage[rid]?.label) labels = storage[rid].label 
+      else if(!defaultToRID) return false
+
    }
-
-   let lang
-   if(labels) {
-      // fix for "Author: False" in facets on /search?r=bdr:P1KG13161&t=Work
-      let filteredLabels = labels.filter(l => l.lang != undefined || l.fromKey == skos+"prefLabel")
-      if(!filteredLabels.length) filteredLabels = labels
-      label = getLangLabel(that,"",filteredLabels,true)
-
-      //loggergen.log("label:",i,label,labels)
-
-      if(label) {
-         if(label.lang) lang = label.lang
-         else if(label["@language"]) lang = label["@language"]
-         else if(label["xml:lang"]) lang = label["xml:lang"]
-
-         if(label.value) label = label.value
-         else if(label["@value"]) label = label["@value"]
-
+   
+   let lang, foundMatch
+   
+   if(labels && matchingLabels?.length) {
+      //console.log("gpl:",i,labels,matchingLabels)
+      for(const l of labels) {
+         const tmp = getLangLabel(that,"",[l])
+         for(const m of matchingLabels) {
+            if(m.k === tmp.value) {
+               label = m.value
+               lang = m.lang
+               foundMatch = true
+               break ;
+            }
+         }
+         if(foundMatch) break;
       }
    }
-   else label = that.pretty?that.pretty(i):pretty(i)
+   
+   //console.log("labels:", labels, i)
 
-   if(withSpan) return <span {...lang?{lang}:{}} >{label}</span>
+   if(!foundMatch) {
+
+      if(labels) {
+            
+         if(!Array.isArray(labels)) labels = [ labels ]
+
+         // fix for "Author: False" in facets on /search?r=bdr:P1KG13161&t=Work
+         let filteredLabels = labels.filter(l => l.lang != undefined || l.fromKey == skos+"prefLabel")
+         if(!filteredLabels.length) filteredLabels = labels
+         label = getLangLabel(that,"",filteredLabels,preferUIlang)
+         
+         //loggergen.log("label:",i,label,labels)
+         
+         if(label) {
+            if(label.lang) lang = label.lang
+            else if(label["@language"]) lang = label["@language"]
+            else if(label["xml:lang"]) lang = label["xml:lang"]
+
+            if(label.value) label = label.value
+            else if(label["@value"]) label = label["@value"]
+            
+         }
+      } else { 
+         
+         label = that.pretty?that.pretty(i):pretty(i)
+      }
+   }
+
+   if(withSpan) return <span {...lang?{lang}:{}} class={label?.includes(" ") ? "hasSpace":""}>{foundMatch ? highlight(label) : label}</span>
    else if(!withLang) return label
    else return {value:label,lang}
 }
@@ -818,10 +910,10 @@ export function lang_selec(that,black:boolean = false,inPopup:false, useCheckbox
                               }
                            }
 
-                           let loca = { ...that.props.history.location }
+                           let loca = { ...that.props.location }
                            if(loca.search.includes("uilang")) loca.search = loca.search.replace(/uilang=[^&]+/,"uilang="+i)
                            else loca.search += (loca.search&&loca.search.match(/[?]./)?"&":"?")+"uilang="+i
-                           that.props.history.push(loca)
+                           that.props.navigate(loca)
 
                            if(callback) callback()
                         }
@@ -853,7 +945,7 @@ export function lang_selec(that,black:boolean = false,inPopup:false, useCheckbox
 
    if(inPopup) return form
    else return [
-         <span id="lang" title={I18n.t("home.choose")} onClick={(e) => that.setState({...that.state,anchorLang:e.currentTarget, collapse: {...that.state.collapse, lang:!that.state.collapse.lang } } ) }><img src={"/icons/LANGUE"+(onKhmerUrl?"km":"")+(black?"b":"")+".svg"}/></span>
+         <IconButton id="lang" title={I18n.t("home.choose")} onClick={(e) => that.setState({...that.state,anchorLang:e.currentTarget, collapse: {...that.state.collapse, lang:!that.state.collapse.lang } } ) }><img src={"/icons/LANGUE"+(onKhmerUrl?"km":"")+(black?"b":"")+".svg"}/></IconButton>
          ,
          <Popover
             id="popLang"
@@ -932,37 +1024,69 @@ export function etext_lang_selec(that,black:boolean = false, elem, DL)
 
                                  const token = localStorage.getItem('id_token');
                                  
-                                 that.props.onLoading("outline",true)
+                                 that.props.onLoading("etext DL",true)
 
                                  await axios
-                                 .request({
-                                   method: "get",
-                                   responseType: "blob",
-                                   timeout: 4000,
-                                   baseURL: DL.replace(/^(https:..[^/]+).*$/,"$1"),
-                                   url: DL.replace(/^https:..[^/]+(.*)$/,"$1")+"?prefLangs="+i,
-                                   ...token?{headers: {Authorization: `Bearer ${token}`}}:{},
-                                 })
-                                 .then(function (response) {
-                                   //loggergen.log("loaded:", response.data)
-                         
-                                   // download file
-                                   const temp = window.URL.createObjectURL(new Blob([response.data]))
-                                   const link = document.createElement("a")
-                                   link.href = temp
-                                   let filename = DL.split(/[/]/).pop().split(/[.]/)[0]+"_"+i+".txt"
-                                   link.setAttribute("download", filename)
-                                   link.click()
-                                   //loggergen.log("filename:",filename,link,link.click)
-                                   window.URL.revokeObjectURL(link)
-                         
-                                 })
-                                 .catch(function (error) {
-                                    logError(error)
-                                    //console.error("error:", error.message)
-                                 })
+                                    .request({
+                                       method: "get",
+                                       responseType: "blob",
+                                       timeout: 4000,
+                                       baseURL: DL.replace(/^(https:..[^/]+).*$/,"$1"),
+                                       url: DL.replace(/^https:..[^/]+(.*)$/,"$1")+"?prefLangs="+i,
+                                       ...token?{headers: {Authorization: `Bearer ${token}`}}:{},
+                                    })
+                                    .then(function (response) {
+                                       //loggergen.log("et loaded:", response.data)
+                           
+                                       // download file
+                                       const temp = window.URL.createObjectURL(new Blob([response.data]))
+                                       const link = document.createElement("a")
+                                       link.href = temp
+                                       let filename = DL.split(/[/]/).pop().split(/[.]/)[0]+"_"+i+".txt"
+                                       
+                                       //loggergen.log("filename:",filename,link,link.click)
 
-                                 that.props.onLoading("outline",false)
+                                       link.setAttribute("download", filename)
+                                       link.textContent = I18n.t("mirador.saveF")
+                                       
+                                       // #864 handle case when ad blocker prevents programmatically clicking the link
+                                       
+                                       const linkContainer = document.createElement("div")
+                                       linkContainer.setAttribute("class", "download-etext-confirmation")
+                                       const linkBG = document.createElement("div")
+                                       const linkFG = document.createElement("div")
+                                       const pop = document.createElement("div")
+                                       const close = document.createElement("div")
+                                       close.setAttribute("class","close")
+                                                                          
+                                       link.addEventListener("click", (event) => {
+                                          linkContainer.remove()
+                                          setTimeout(() => { 
+                                             window.URL.revokeObjectURL(link)
+                                          }, 1000)
+                                       })
+                                       
+                                       close.addEventListener("click", (event) => {
+                                          window.URL.revokeObjectURL(link)
+                                          linkContainer.remove()
+                                       })
+
+                                       pop.append(link)
+                                       pop.append(close)
+                                       linkFG.append(pop)
+                                       linkContainer.append(linkBG)
+                                       linkContainer.append(linkFG)
+                                       document.querySelector("body").append(linkContainer)
+
+                                       link.click()                    
+                           
+                                    })
+                                    .catch(function (error) {
+                                       logError(error)
+                                       //console.error("et error:", error.message)
+                                    })
+
+                                 that.props.onLoading("etext DL",false)
                               }}>
                                  {label}
                               </MenuItem> 
@@ -985,10 +1109,10 @@ export function etext_lang_selec(that,black:boolean = false, elem, DL)
 
                                        /*
                                        // not sure we need a url param
-                                       let loca = { ...that.props.history.location }
+                                       let loca = { ...that.props.location }
                                        if(loca.search.includes("etextlang")) loca.search = loca.search.replace(/etextlang=[^&]+/,"etextlang="+i)
                                        else loca.search += (loca.search&&loca.search.match(/[?]./)?"&":"?")+"etextlang="+i
-                                       that.props.history.push(loca)
+                                       that.props.navigate(loca)
                                        */
                                     }} >{label}</MenuItem> ) 
                   } ) } 
@@ -1006,7 +1130,7 @@ export function getGDPRconsent(that) {
    if(that.props.config && that.props.config.GA && !that.props.simple && !that.props.preview && !isProxied(that)) return (
       <CookieConsent
          location="bottom"
-         onAccept={() => { loggergen.log("accept!"); if(that) { report_GA(that.props.config,that.props.history.location); that.forceUpdate(); } } }
+         onAccept={() => { loggergen.log("accept!"); if(that) { report_GA(that.props.config,that.props.location); that.forceUpdate(); } } }
          cookieName="BDRC-GDPR-consent"
          style={{ background: "#2B373B",zIndex:100000,  }}
          buttonText={I18n.t("cookies.yes")}
@@ -1022,12 +1146,58 @@ export function getGDPRconsent(that) {
    )
 }
 
-export function top_right_menu(that,etextTitle,backUrl,etextres)
+const routing = routingConfig()
+
+function InstantSearchBox(props) {
+
+   const { isMirador, that } = props
+
+   //console.log("ISB:",props,that)
+
+   if(isMirador) return <div></div>
+
+   return <div class={"ISB "+("advanced-"+that.props.advancedSearch)+(" etextNav-"+(that.state.collapse.etextNav))}>      
+      { that.props.advancedSearch 
+      ? <HomeCompo auth={that.props.auth} SKquery={that.state.SKquery} />
+      : <InstantSearch         
+         key={that.props.IRI ?? that.props.tradition ?? window.location.pathname}
+         indexName={process.env.REACT_APP_ELASTICSEARCH_INDEX}
+         routing={routing}
+         searchClient={searchClient}
+         future={{ preserveSharedStateOnUnmount: true }}
+         /*
+         initialUiState={routing.stateMapping.routeToState(qs.parse(that.props.location.search, {arrayFormat: 'index'}))}                           
+         onStateChange={(_ref) => {
+            console.log("oScA:",window.lastRouteState,_ref)
+            const uiState = _ref.uiState;
+            var routeState = routingConfig.stateMapping.stateToRoute(uiState);
+            if (window.lastRouteState === undefined || !_.isEqual(window.lastRouteState, routeState)) {
+               console.log("writing:", JSON.stringify(routeState, null, 3))
+               //routingConfig.router.write(routeState)
+               //that.props.navigate(that.props.location,{state:routeState})
+               window.lastRouteState = routeState;
+               _ref.setUiState(uiState)
+            }
+          }
+         }
+         */
+      >
+         <QueryRefCompo that={that} />
+         <div className="search inner-search-bar fromAdvanced" style={{ ...isMirador?{position:"absolute"}:{} }}>
+            <div>
+               <SearchBoxAutocomplete searchAsYouType={false} {...props} {...{that, routing}} />
+            </div>
+         </div>
+      </InstantSearch> }
+   </div>
+}
+
+export function top_right_menu(that,etextTitle,backUrl,etextres,isMirador,location,infoPanel,sourcePage)
 {
    let onZhMirror = (that.props.config && that.props.config.chineseMirror)
    let onKhmerServer = (that.props.config && that.props.config.khmerServer)
 
-   let feedbucket = <div id="feedback" title={I18n.t("topbar.feedback")} className={that.props.feedbucket + (that.props.keyword&&!that.props.IRI?" top":"")} onClick={(ev) => {
+   let feedbucket = <div id="feedback" title={I18n.t("topbar.feedback")} className={that.props.feedbucket /*+ (that.props.keyword&&!that.props.IRI?" top":"")*/} onClick={(ev) => {
       if(!document.querySelector('feedbucket-app')) {
          $("#feedback .tooltip").toggleClass("on")
       } else {
@@ -1040,19 +1210,47 @@ export function top_right_menu(that,etextTitle,backUrl,etextres)
             e.stopPropagation()
          }}></div>
          <a onClick={(e) => { 
-            that.props.auth.login(that.props.history.location)            
+            that.props.auth.login(location)            
             e.stopPropagation()
          }}>{I18n.t("viewer.mustLoginFeedback")}</a>
       </div></div>
 
+   let feedbucketTop = <div id="feedback" title={I18n.t("topbar.feedback")} className={"top " + that.props.feedbucket} onClick={(ev) => {
+      if(!document.querySelector('feedbucket-app')) {
+         $("#feedback .tooltip").toggleClass("on")
+      } else {
+         $("feedbucket-app").toggleClass("on")
+         that.props.onFeedbucketClick("on "+(that.props.feedbucket?.endsWith("X")?"":"X"))
+      }
+   }}><IconButton><Feedback /></IconButton>{/*<Close />*/}<div class="tooltip mustLogin">      
+         <div class="bg" onClick={(e) => {
+            $("#feedback .tooltip").removeClass("on")
+            e.stopPropagation()
+         }}></div>
+         <a onClick={(e) => { 
+            that.props.auth.login(location)            
+            e.stopPropagation()
+         }}>{I18n.t("viewer.mustLoginFeedback")}</a>
+      </div></div>
+
+
    let logo = [
             <div id="logo">
-               <Link to="/"  onClick={() => { 
-                  that.props.history.push({pathname:"/",search:""}); 
+               <Link to="/?sortBy=firstScanSyncDate_desc&type%5B0%5D=Instance" {...(that?.props?.advancedSearch || that?.state?.filters || that?.props?.keyword) ? {onClick:(ev) => { 
                   if(that.props.keyword) { that.props.onResetSearch(); } 
-                  that.setState({blurSearch:false})
-               } }><img src="/icons/BUDA-small.svg"/><span>BUDA</span></Link>                                  
-               <a id="by"><span>by</span></a>
+                  that.setState({blurSearch:false, forceFocus: true})
+                  /*
+                  if(that?.state?.filters) {
+                     that.props.navigate({pathname:"/",search:""}); 
+                     ev.preventDefault()
+                     ev.stopPropagation()
+                     return false
+                  }
+                  */
+               }}:{}} ><img src="/icons/BUDA-small.svg"/><span class="buda-caption"><span>BUDA</span><span class="buda-small">{I18n.t("home.buda")}</span></span></Link>                                  
+               
+               {/* <a id="by">
+                  <span>by</span></a>
                { !onZhMirror && [
                   <a href={"https://bdrc.io/"} target="_blank" id="BDRC"><span>BDRC</span></a>,
                   <a href={"https://bdrc.io/"} target="_blank"><img src="/BDRC-Logo_.png"/></a>
@@ -1060,7 +1258,7 @@ export function top_right_menu(that,etextTitle,backUrl,etextres)
                { onZhMirror && [
                   <Link to={"/static/about"} id="BDRC"><span>BDRC</span></Link>,
                   <Link to={"/static/about"} ><img src="/BDRC-Logo_.png"/></Link>
-               ]}
+               ]} */}
             </div>,
 
    ]
@@ -1092,19 +1290,72 @@ export function top_right_menu(that,etextTitle,backUrl,etextres)
    // no need anymore
    const portrait = null //<div class="portrait-warn" onClick={()=>store.dispatch(closePortraitPopup())}><div><span></span><p data-tilt1={I18n.t("misc.tilt1")} data-tilt2={I18n.t("misc.tilt2")}></p></div></div>
 
-   let msgPopupOn = !that.props.history.location.pathname.includes("/static/") 
-      && !that.props.history.location.pathname.includes("/buda-user-guide") 
-      && that.props.config?.msg?.some((m,i) => m.popup && (!m.condition || eval(m.condition)) && !that.state.collapse["msgPopup"+(m.id?"-"+m.id:"")])
-   
+   let msgPopupOn = !location.pathname.includes("/static/") 
+      && !location.pathname.includes("/buda-user-guide") 
+      && that.props.config?.msg?.some(m => { 
+         let lab = getLangLabel(that,tmp+"bannerMessage",m.text) 
+         return (!sourcePage || m.display?.includes(sourcePage)) && m.popup && !popupIsHidden(that, m, lab) 
+      })
+      
+      //that.props.config?.msg?.some((m,i) => (!sourcePage || m.display?.includes(sourcePage)) && m.popup && (!m.condition || eval(m.condition)) && !that.state.collapse["msgPopup"+(m.id?"-"+m.id:"")])
 
-   if(etextTitle)
+   //console.log("mpo:",JSON.stringify(that.state.collapse),msgPopupOn, that.state.collapse, that.props.config?.msg?.some((m,i) => m.popup && (!m.condition || eval(m.condition)) && that.state.collapse["msgPopup"+(m.id?"-"+m.id:"")] != true))
+
+   let corpo_lang = that.props.locale
+   if(corpo_lang.startsWith("bo")) corpo_lang = "bo"
+   else if(corpo_lang.startsWith("zh")) corpo_lang = "zh-hans"
+
+   const overNav = (
+         <div class={"over-nav mirador-"+isMirador + " simpleAdvanced-"+that?.props.simple} style={{ ...isMirador?{position:"absolute"}:{} }}>
+            <div>
+               <div><i>{I18n.t("topbar.preserving")}</i></div>
+               <div style={{ textTransform: "capitalize" }}>
+                  <a href={"https://www.bdrc.io?lang="+corpo_lang} target="_blank" rel="nofollow" class="BDRC-link"><img src="/BDRC-Logo_.png"/>{I18n.t("topbar.BDRC")}</a>
+                  <a href={"https://www.bdrc.io/buda-archive?lang="+corpo_lang} target="_blank" rel="nofollow">{I18n.t("topbar.aboutB")}</a>
+                  <a href={"https://www.bdrc.io/news?lang="+corpo_lang} target="_blank" rel="nofollow">{I18n.t("topbar.news")}</a>
+                  <a href={"https://www.bdrc.io/programs?lang="+corpo_lang} target="_blank" rel="nofollow">{I18n.t("topbar.programs")}</a>
+                  {/* <Link to="/buda-user-guide">{I18n.t("topbar.guide")}</Link> */}
+                  <a href={"https://bdrc.io/donation?lang="+corpo_lang} target="_blank" rel="nofollow">{I18n.t("topbar.donate")}</a>
+               </div>
+            </div>
+         </div>
+      ),
+      innerNav = (
+
+         <div className="inner-nav">
+            { ["bo","pi","sa","zh"].map(t => <div><Link onClick={() => that.state.collapse.burgerOn && that.setState({collapse:{...that.state.collapse, burgerOn:false}})} className={that.props.tradition === t ? "active": ""} to={"/tradition/"+t+"/"+(customTradLink[t]??"")}>{I18n.t("tradition."+t+"T")}</Link></div>) }
+         </div>
+      ),
+      innerSearch = (
+         that?.state.filters && !that?.props.keyword || that?.state.filters && that.props.advancedSearch || that.props.isOsearch
+         ? null 
+         : <InstantSearchBox {...{ that, isMirador }}/>                       
+               /*
+               <div class={'inner-search-bar in-search-'+(that.state.filters?"true":"false")}>
+                  <div>
+                     <span>Search</span>
+                     <span>                  
+                        <AutocompleteKeywordInput { ...{ that } }/> 
+                        <IconButton>
+                           <SearchIcon />
+                        </IconButton>
+                     </span>
+                  </div>
+               </div>
+               */
+      )
+
+   if(false && etextTitle)
       return (<>
       {!that.props.portraitPopupClosed && portrait}
-      <div class={"mobile-button top"+(!that.state.collapse.navMenu?" off":" on")} onClick={()=>that.setState({collapse:{...that.state.collapse,navMenu:!that.state.collapse.navMenu}})}><img src="/icons/burger.svg" /></div>
-      <div class={"nav etext-nav"+(onZhMirror?" zhMirror":"")+(that.state.collapse.navMenu?" on":"") +(msgPopupOn?" msgPopupOn":"") }>
-         {uiLangPopup}
+      {/* <div class={"mobile-button top"+(!that.state.collapse.navMenu?" off":" on")} onClick={()=>that.setState({collapse:{...that.state.collapse,navMenu:!that.state.collapse.navMenu}})}><img src="/icons/burger.svg" /></div>       */}
+      {uiLangPopup}
+      {overNav}
+      <StickyElement className={"nav etext-nav"+(onZhMirror?" zhMirror":"")+(that.state.collapse.navMenu?" on":"") +(msgPopupOn?" msgPopupOn":"") }>
          <div>
             {logo}
+
+            { innerNav}
 
             <span id="back">{ backUrl && <><span>&lt;</span> <a //{...etextres?{href:"/show/"+etextres}:{}}
                onClick={(ev   ) => {
@@ -1129,7 +1380,7 @@ export function top_right_menu(that,etextTitle,backUrl,etextres)
                      setTimeout(() => { 
                         
                         if(backUrl) {
-                           that.props.history.push({pathname:"/search",search:"?"+backUrl}) ; 
+                           that.props.navigate({pathname:"/osearch/search",search:"?"+backUrl}) ; 
                         }
 
                         that.props.onLoading("search",false)
@@ -1147,12 +1398,14 @@ export function top_right_menu(that,etextTitle,backUrl,etextres)
                   // #743 TODO: use burger-like icon instead
                   //that.setState({collapse:{...that.state.collapse,navMenu:false}})
 
+                  if(window.myAnalytics.unloadEtextViewer) window.myAnalytics.unloadEtextViewer()
+
                   that.props.onLoading("search",true,etextres)
 
                   //if(!etextres) 
                   setTimeout(() => { 
                      
-                     let loca = { ...that.props.history.location }, rid                  
+                     let loca = { ...location }, rid                  
                      const urlParams = new URLSearchParams(loca.search)
                      if(rid = urlParams.get("backToEtext")) {
                         loca.pathname = "/show/"+rid
@@ -1163,17 +1416,24 @@ export function top_right_menu(that,etextTitle,backUrl,etextres)
                            loca.search = "?fromText="+that.props.IRI
                         }
                         loggergen.log("loca:",loca)
-                        that.props.history.push(loca) ; 
+                        that.props.navigate(loca) ; 
                      }
                      else {
                         delete loca.hash
-                        that.props.history.push(loca) ; 
+                        that.props.navigate(loca) ; 
                      }                        
                      
 
                      if(that.state.openEtext) { 
-                        that.setState({ enableDicoSearch: false, openEtext: false, ...that.state.monlam?{monlam:null}:{}, noHilight: false  });
-                        that.props.onCloseMonlam()
+                        // that.setState({ enableDicoSearch: false, openEtext: false, ...that.state.monlam?{monlam:null}:{}, noHilight: false  });
+                        // that.props.onCloseMonlam()
+
+
+                        let reprOf = that.getResourceElem(bdo+"instanceReproductionOf")
+                        console.log("reprof:",reprOf)
+                        if(reprOf?.length) {
+                           that.props.navigate("/show/"+shortUri(reprOf[0].value)) ; 
+                        }
                      }
                   
 
@@ -1184,8 +1444,8 @@ export function top_right_menu(that,etextTitle,backUrl,etextres)
                   
                   
                }}>+</div> 
-         </div>
-      </div>{feedbucket}</>)
+         </div>      
+      </StickyElement>{feedbucket}{ infoPanel }{innerSearch}</>)
    else {
 
       const toggleHoverLogin = (hoverLogin,e) => {
@@ -1199,41 +1459,53 @@ export function top_right_menu(that,etextTitle,backUrl,etextres)
       //loggergen.log("proxied?",!window.location.host.includes("localhost"), that.props.config?.primaryUrl, that.props.config?.primaryUrl != window.location.host)
 
       let login       
-      if(that.props.auth) login = <div id="login" {...(proxied?{class:"proxied"}:{})}>
-         {
+      if(that.props.auth) login = <><IconButton id="login" {...(proxied?{class:"proxied"}:{})}>
+          <AccountCircleIcon style={{color:"black", width:28, height:28, /*marginLeft:10*/}} onClick={(ev) => that.setState({
+               anchor:{...that.state.anchor??{}, account:ev.currentTarget},
+               collapse:{...that.state.collapse, account:!that.state.account}
+            })}/>
+         </IconButton>
+         <Popover open={that.state.collapse.account}
+            transformOrigin={{ vertical: 'top', horizontal: 'right'}} 
+            anchorOrigin={{vertical: 'bottom', horizontal: 'right'}} 
+            anchorEl={that.state.anchor?.account}
+            id="pop-login"
+            onClose={(ev) => that.setState({ collapse:{...that.state.collapse, account:false} })}
+         > {
             !that.props.auth.isAuthenticated() && // TODO check redirection
                <div class="not-logged">
-                  <span onClick={() => that.props.auth.login(that.props.history.location,true)} >
+                  <MenuItem onClick={() => that.props.auth.login(location,true)} >
                      {I18n.t("topbar.register")}
                      <svg style={{fill:"#d73449", width:"22px", padding:"1px", border: "2px solid #d73449", borderRadius:"50%"}} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" ><path d="M0 0h24v24H0z" fill="none"/><path d="M15 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm-9-2V7H4v3H1v2h3v3h2v-3h3v-2H6zm9 4c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
-                  </span>
-                  <span onClick={() => that.props.auth.login(that.props.history.location)} >
+                  </MenuItem>
+                  <MenuItem onClick={() => that.props.auth.login(location)} >
                      {I18n.t("topbar.login")}
                      <svg style={{fill:"#d73449", width:"28px"}} xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 24 24" viewBox="0 0 24 24"><g><rect fill="none" height="24" width="24"/></g><g><path d="M11,7L9.6,8.4l2.6,2.6H2v2h10.2l-2.6,2.6L11,17l5-5L11,7z M20,19h-8v2h8c1.1,0,2-0.9,2-2V5c0-1.1-0.9-2-2-2h-8v2h8V19z"/></g></svg>
-                  </span>
+                  </MenuItem>
                </div>
          }
          {
             that.props.auth.isAuthenticated() && 
                <div class="logged">
-                  <span onClick={(e) => { that.props.onUserProfile(that.props.history.location); that.props.history.push("/user");    }}>
+                  <MenuItem onClick={(e) => { that.props.onUserProfile(location); that.props.navigate("/user");    }}>
                      {profileName}
                      <AccountCircleIcon style={{ fontSize:"28px" }}/>
-                  </span>
-                  <span onClick={(e) => { that.props.auth.logout(that.props.history.location.pathname!=="/user"?window.location.href:window.location.origin) }} >
+                  </MenuItem>
+                  <MenuItem onClick={(e) => { that.props.auth.logout(location.pathname!=="/user"?window.location.href:window.location.origin) }} >
                      {I18n.t("topbar.logout")}
                      <svg style={{fill:"#d73449", width:"28px"}} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M0 0h24v24H0z" fill="none"/><path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/></svg>
-                  </span>
+                  </MenuItem>
                </div>
          }
-      </div>
+         </Popover>
+      </>
 
       if(proxied) {
          const dot = '.'
          login = <Tooltip id="hoverLogin" open={that.state.collapse.hoverLogin === undefined?false:that.state.collapse.hoverLogin} 
                      placement="center" 
                      onOpen={(e)=>toggleHoverLogin(true,e)} onClose={(e)=>toggleHoverLogin(false,e)} 
-                     title={<span style={{ whiteSpace:"normal" }} onMouseEnter={(e)=>toggleHoverLogin(true, e)} onMouseLeave={(e)=>toggleHoverLogin(false,e)}><Trans i18nKey="topbar.proxied" values={{library: "library"+dot+"bdrc"+dot+"io"}} components={{ tag: <a /> }} /></span>}  >{login}</Tooltip>
+                     title={<IconButton style={{ whiteSpace:"normal" }} onMouseEnter={(e)=>toggleHoverLogin(true, e)} onMouseLeave={(e)=>toggleHoverLogin(false,e)}><Trans i18nKey="topbar.proxied" values={{library: "library"+dot+"bdrc"+dot+"io"}} components={{ tag: <a /> }} /></IconButton>}  >{login}</Tooltip>
       }
 
       let khmerLinks 
@@ -1249,7 +1521,7 @@ export function top_right_menu(that,etextTitle,backUrl,etextres)
       }
 
       const newSearchFunc = (ev) => { 
-         that.props.history.push({pathname:"/",search:""}); 
+         that.props.navigate({pathname:"/",search:""}); 
          if(that.props.keyword) { that.props.onResetSearch();}
          if(window.innerWidth > 0)  setTimeout(() => {
             $("#search-bar input").click()
@@ -1279,13 +1551,18 @@ export function top_right_menu(that,etextTitle,backUrl,etextres)
 
       return ([
       !that.props.portraitPopupClosed? portrait:null,
-      <div class={"mobile-button top"+(!that.state.collapse.navMenu?" off":" on")} onClick={() => that.setState({collapse:{...that.state.collapse,navMenu:!that.state.collapse.navMenu}})}><img src="/icons/burger.svg" /></div>,
-      <div class={"nav"+(onZhMirror?" zhMirror":"")+ (that.state.collapse.navMenu?" on":"")+(onKhmerServer||onKhmerUrl?" khmerServer":"")
-               +(msgPopupOn?" msgPopupOn":"")
-         }>
-         {uiLangPopup}
+      // <div class={"mobile-button top"+(!that.state.collapse.navMenu?" off":" on")} onClick={() => that.setState({collapse:{...that.state.collapse,navMenu:!that.state.collapse.navMenu}})}><img src="/icons/burger.svg" /></div>,
+      uiLangPopup,
+      overNav,
+      <StickyElement className={"nav"+(onZhMirror?" zhMirror":"")+ (that.state.collapse.navMenu?" on":"")+(onKhmerServer||onKhmerUrl?" khmerServer":"")
+               +(msgPopupOn?" msgPopupOn":"")+(that.state.collapse.burgerOn?" on":"")
+         }  rootMarginTop={60} style={{ ...isMirador?{position:"absolute"}:{} }} >
           <div>
          {logo}
+
+         { that.state.collapse.burgerOn && <div class="burgerBG" onClick={() => that.setState({collapse:{...that.state.collapse,burgerOn:false}})}></div> }
+
+         { innerNav}
 
          { !onKhmerServer && [
             !onZhMirror &&  aboutLink("about")
@@ -1330,19 +1607,28 @@ export function top_right_menu(that,etextTitle,backUrl,etextres)
             <span title={I18n.t("topbar.bookmarks")}><img src="/icons/fav.svg"/></span>
          </div>
 
-         { that.props.auth && login }
-
+         <div id="lang-login">
+         { feedbucketTop } 
          { lang_selec(that) }
+         { that.props.auth && login }
+         <IconButton id="burger" onClick={() => that.setState({collapse:{...that.state.collapse,burgerOn:!that.state.collapse.burgerOn}})}>
+            { !that.state.collapse.burgerOn ? <img src="/icons/burger.svg" /> : <Close style={{color:"#222222"}}/> }
+         </IconButton>         
+         </div>
 
          {(false && that.props.auth && isGroup(that.props.auth, "fullaccess")) 
             ? <a target="_blank" href="https://beta.bdrc.io/" id="donate" ><img style={{background:"white",borderRadius:"3px",verticalAlign:"-11px"}} width="33" src="/icons/BUDA-small.svg"/>BETA</a>
             : (!that.props.config || !that.props.config.chineseMirror) && <a target="_blank" href="https://bdrc.io/donation/" id="donate"><img src="/donate.svg"/>{I18n.t("topbar.donate")}</a>
          }
 
+
          { <div class="close" onClick={()=>that.setState({collapse:{...that.state.collapse,navMenu:false}})}>+</div> }
        </div>
-     </div>,
-     feedbucket]
+     </StickyElement>,
+     feedbucket,
+     infoPanel,
+     innerSearch,
+      ]
    )}
 }
 
@@ -1365,7 +1651,7 @@ function getVal(label)
 
 export function isGroup(auth, group) {
    let groups, result = group && auth && auth.isAuthenticated() && auth.userProfile && (groups = auth.userProfile["https://auth.bdrc.io/groups"]) && groups.includes(group)
-   loggergen.log("isGrp:", group, result)
+   //loggergen.log("isGrp:", group, result)
    return result
 }
 
@@ -1643,7 +1929,7 @@ class App extends Component<Props,State> {
       this.makeResult.bind(this);
       this.render_filters.bind(this);
 
-      if(!this._get) this._get = qs.parse(this.props.history.location.search)
+      if(!this._get) this._get = qs.parse(this.props.location.search)
       let get = this._get 
 
       let lg = "bo-x-ewts"
@@ -1688,7 +1974,8 @@ class App extends Component<Props,State> {
          anchor:{},
          LpanelWidth:375,
          //leftPane:false //(window.innerWidth > 1400 && this.props.keyword),
-         checked:{}
+         checked:{},
+         forceFocus:true
       };
 
 
@@ -1712,10 +1999,17 @@ class App extends Component<Props,State> {
 
    componentDidUpdate() {
       if(!this.state.blurSearch) {
-         let elem = document.querySelector("#search-bar input")
-         if(elem && window.innerWidth > 800) { 
-            elem.focus()
-            $("#search-bar input[type=text][placeholder]").attr("placeholder",I18n.t("home.start"));
+         if(window.innerWidth > 1024) {
+
+            let 
+            elem = document.querySelector("#search-bar input")
+            if(!elem) { 
+               elem = document.querySelector(".ais-SearchBox-form input")
+               if(elem && this.state.forceFocus) elem.focus()
+            } else {
+               elem.focus()
+               $("#search-bar input[type=text][placeholder]").attr("placeholder",I18n.t("home.start"));
+            }            
          }
       }
 
@@ -1740,12 +2034,12 @@ class App extends Component<Props,State> {
             const toph = $("#filters-UI").height() 
             const navh = window.innerWidth <= 1024 ? -10 : $(".nav").height()
             const headh = $("#res-header").height()
-            if(this._refs["header"].current) $(this._refs["header"].current).css("top",(toph+navh+15)+"px") //
+            if(this._refs["header"].current) $(this._refs["header"].current).css("top",0) //(toph+navh+15)+"px") //
             
             if(window.innerWidth > 1024)
                $(ref)
                .height(window.innerHeight - rect.y + (window.innerWidth <= 1024 ? 0 : 0))
-               .css("top",(toph+navh+(window.innerWidth > 1024 ? headh+15 : 5)+"px"))
+               .css("top",70) //(toph+navh+(window.innerWidth > 1024 ? headh+15 : 5)+"px"))
             else 
                $(ref)
                .height(window.innerHeight)
@@ -1806,10 +2100,10 @@ class App extends Component<Props,State> {
       } 
       
 
-      report_GA(this.props.config,this.props.history.location);
+      report_GA(this.props.config,this.props.location);
 
 
-      this._get = qs.parse(this.props.history.location.search)
+      this._get = qs.parse(this.props.location.search)
       let get = this._get 
 
       let n, scrolled
@@ -1980,7 +2274,7 @@ class App extends Component<Props,State> {
       if(dataInfo) {
          loggergen.log("new route:",dataInfo)
 
-         this.props.history.push({pathname:"/search",search:"?"+(dataInfo==="date"?"date":"id")+"="+key+"&t="+label+khmerCollec+proxiedCollec})
+         this.props.navigate({pathname:"/search",search:"?"+(dataInfo==="date"?"date":"id")+"="+key+"&t="+label+khmerCollec+proxiedCollec})
       }
       else if(_key.match(RIDregexp) || prefixesMap[key.replace(/^([^:]+):.*$/,"$1")])
       {
@@ -1990,16 +2284,16 @@ class App extends Component<Props,State> {
          
          if(!forceSearch && !idx) { 
 
-            this.props.history.push({pathname:"/show/"+_key})
+            this.props.navigate({pathname:"/show/"+_key})
          }
          else {
             if(!label) label = this.state.filters.datatype.filter((f)=>["Person","Work"].indexOf(f) !== -1)[0]
-            this.props.history.push({pathname:"/search",search:"?r="+_key+(label?"&t="+label+khmerCollec+proxiedCollec+hasOpenPossibly:"")})
+            this.props.navigate({pathname:"/search",search:"?r="+_key+(label?"&t="+label+khmerCollec+proxiedCollec+hasOpenPossibly:"")})
          }
       }
       else if(key.match(/^[^:]*:[^ ]+/))
       {
-         this.props.history.push({pathname:"/search",search:"?p="+key+khmerCollec+proxiedCollec})
+         this.props.navigate({pathname:"/search",search:"?p="+key+khmerCollec+proxiedCollec})
 
       }
       else {
@@ -2013,9 +2307,11 @@ class App extends Component<Props,State> {
          if(this.props.searches && this.props.searches[this.state.filters.datatype[0]] && this.props.searches[this.state.filters.datatype[0]][this.props.keyword+"@"+this.props.language] && this.props.searches[this.state.filters.datatype[0]][this.props.keyword+"@"+this.props.language].inEtext) {
             inEtext = this.props.searches[this.state.filters.datatype[0]][this.props.keyword+"@"+this.props.language].inEtext
          }
-         const newLoca = {pathname:"/search",search:"?q="+key+"&lg="+lang+"&t="+label+khmerCollec+proxiedCollec+hasOpenPossibly+(inEtext?"&r="+inEtext:"")}
+         const newLoca = label === "Etext" 
+            ? {pathname:"/osearch/search",search:"?q="+_key.replace(/(^\")|(\"$)/g,"")+"&etext_search[0]=true"+khmerCollec+proxiedCollec}
+            : {pathname:"/search",search:"?q="+key+"&lg="+lang+"&t="+label+khmerCollec+proxiedCollec+hasOpenPossibly+(inEtext?"&r="+inEtext:"")}
          loggergen.log("newL?",newLoca)
-         this.props.history.push(newLoca)
+         this.props.navigate(newLoca)
          
          // TODO add permanent filters (here ?)
       }
@@ -2028,17 +2324,17 @@ class App extends Component<Props,State> {
       /*
       else if(label === "Any") // || ( !label)) // && ( this.state.filters.datatype.length === 0 || this.state.filters.datatype.indexOf("Any") !== -1 ) ) )
       {
-         this.props.history.push({pathname:"/search",search:"?q="+key+"&lg="+this.getLanguage()+"&t=Any"})
+         this.props.navigate({pathname:"/search",search:"?q="+key+"&lg="+this.getLanguage()+"&t=Any"})
       }
       else if (label || this.state.filters.datatype.filter((f)=>["Person","Work","Etext"].indexOf(f) !== -1).length > 0)
       {
          if(!label) label = this.state.filters.datatype.filter((f)=>["Person","Work","Etext"].indexOf(f) !== -1)[0]
 
-         this.props.history.push({pathname:"/search",search:"?q="+key+"&lg="+this.getLanguage()+"&t="+label})
+         this.props.navigate({pathname:"/search",search:"?q="+key+"&lg="+this.getLanguage()+"&t="+label})
       }
       else 
       {
-         this.props.history.push({pathname:"/search",search:"?q="+key+"&lg="+this.getLanguage()+"&t=Any"})
+         this.props.navigate({pathname:"/search",search:"?q="+key+"&lg="+this.getLanguage()+"&t=Any"})
       }
       */
 
@@ -2201,17 +2497,23 @@ class App extends Component<Props,State> {
          }
       }
 
-
       if(!state.newKW || state.newKW !== props.keyword || props.keyword === null) { 
          if(!s) s = { ...state }
-         if(s.newKW !== props.keyword) {
+         if(s.newKW !== props.keyword ?? props.SKquery) {
             s.newKW = props.keyword
-            s.keyword = props.keyword
+            s.keyword = props.keyword ?? props.SKquery
             if(!props.keyword) s.leftPane = false ;
+         }
+         console.log("newKW:",s.newKW,s.keyword,props.keyword,props.SKquery,state.SKquery)
+         if(!props.loading && s.newKW !== undefined && s.newKW === props.keyword && props.SKquery !== undefined) {
+            s.keyword = props.SKquery
+         } else if(props.IRI && s.newKW === undefined && state.SKquery !== undefined){
+            s.keyword = state.SKquery
+         } else if(/*props.IRI &&*/ s.newKW === undefined && s.keyword === undefined &&  props.SKquery !== undefined){
+            s.keyword = props.SKquery
          }
 
       }
-
 
       //loggergen.log("collap?",JSON.stringify(state.collapse,null,3))
 
@@ -2584,7 +2886,7 @@ class App extends Component<Props,State> {
                         shadowSize: [41, 41]
                      });
 
-                     let sUri = shortUri(o), url = "/show/"+sUri+"?s="+ encodeURIComponent(window.location.href.replace(/^https?:[/][/][^?]+[?]?/gi,"").replace(/(&n=[^&]*)/g,"")+"&n="+(1+n))
+                     let sUri = shortUri(o), url = "/show/"+sUri+"?s="+ encodeURIComponent("/search?"+window.location.href.replace(/^https?:[/][/][^?]+[?]?/gi,"").replace(/(&n=[^&]*)/g,"")+"&n="+(1+n))
                      
                      const sendMsgMap = (ev) => {
                         if(this.props.simple) {
@@ -2786,11 +3088,11 @@ class App extends Component<Props,State> {
 
          this.setState({collapse:{...this.state.collapse, sortBy:false}})
 
-         let {pathname,search} = this.props.history.location
+         let {pathname,search} = this.props.location
          search = search.replace(/((&|[?])s=[^&#]+)/g,"")      
          search += (search === ""?"?":"&")+"s="+i.toLowerCase()
          search = search.replace(/(\?&)|(^&)/,"?")
-         this.props.history.push({pathname,search})         
+         this.props.navigate({pathname,search})         
          
       } 
    }
@@ -2932,10 +3234,10 @@ class App extends Component<Props,State> {
 
          state.filters.preload = true
 
-         let {pathname,search} = this.props.history.location
+         let {pathname,search} = this.props.location
          search = search.replace(/([&?]([nf]|pg)=[^&]+)/g,"")+"&pg=1"+getFacetUrl(state.filters,this.props.config.facets[state.filters.datatype[0]])+(this.props.latest&&!(""+search).match(/t=/)?"&t=Scan":"")
          search = search.replace(/(\?&)|(^&)/,"?")
-         this.props.history.push({pathname,search })
+         this.props.navigate({pathname,search })
       }
 
       this.setState(state);
@@ -3070,7 +3372,7 @@ class App extends Component<Props,State> {
       */
 
       this.setState(state)
-      loggergen.log("state::",JSON.stringify(state.collapse,null,3))
+      //loggergen.log("state::",JSON.stringify(state.collapse,null,3))
 
    }
 /*
@@ -3105,13 +3407,13 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             }
             else  {
 
-               this.props.history.push("/search?q="+this.props.keyword+"&lg="+this.getLanguage()+"&t="+lab);
+               this.props.navigate("/search?q="+this.props.keyword+"&lg="+this.getLanguage()+"&t="+lab);
             }
          }
          else {
 
 
-               this.props.history.push("/search?r="+this.props.keyword+"&t="+lab);
+               this.props.navigate("/search?r="+this.props.keyword+"&t="+lab);
 
          }
 
@@ -3125,11 +3427,11 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
 
    login() {
-      this.props.auth.login(this.props.history.location);
+      this.props.auth.login(this.props.location);
    }
 
    logout() {
-      this.props.auth.logout(this.props.history.location);
+      this.props.auth.logout(this.props.location);
    }
 
    handleLanguage = event => {
@@ -3350,10 +3652,10 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             ...this.state, uriPage:false, results:{...this.state.results[id], message:[] }, paginate:{...state, index:state.index - 1}
          }) 
 
-         let {pathname,search} = this.props.history.location
+         let {pathname,search} = this.props.location
          search = search.replace(/(([&?])(n|pg)=[^&]+)/g,"")
          if(search) search += "&"
-         this.props.history.push({pathname,search:search+"pg="+(state.index - 1 + 1)+"&n="+(state.n[state.index - 1]+1)})
+         this.props.navigate({pathname,search:search+"pg="+(state.index - 1 + 1)+"&n="+(state.n[state.index - 1]+1)})
       }
    }
 
@@ -3367,10 +3669,10 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             ...this.state, uriPage:false, results:{...this.state.results[id], message:[] }, paginate:{...state, index:i-1}
          }) 
 
-         let {pathname,search} = this.props.history.location
+         let {pathname,search} = this.props.location
          search = search.replace(/(([&?])(n|pg)=[^&]+)/g,"")
          if(search) search += "&"
-         this.props.history.push({pathname,search:search+"pg="+(i)+"&n="+(state.n[i-1]+1)})
+         this.props.navigate({pathname,search:search+"pg="+(i)+"&n="+(state.n[i-1]+1)})
       }
    }
 
@@ -3383,10 +3685,10 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             ...this.state, uriPage:false, results:{...this.state.results[id], message:[] }, paginate:{...state, index:state.index + 1}
          }) 
 
-         let {pathname,search} = this.props.history.location
+         let {pathname,search} = this.props.location
          search = search.replace(/(([&?])(n|pg)=[^&]+)/g,"")
          if(search) search += "&"
-         this.props.history.push({pathname,search:search+"pg="+(state.index + 1 + 1)+"&n="+(state.n[state.index + 1]+1)})
+         this.props.navigate({pathname,search:search+"pg="+(state.index + 1 + 1)+"&n="+(state.n[state.index + 1]+1)})
       }
    }
 
@@ -3811,7 +4113,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                
                ret.push(<div>{this.makeResult(iri /*i[0]["@id"]*/,n+"_"+cpt,null,"@"+startChar+"~"+endChar,"?",null,null,null,
                   [{lang,value:val,type:tmp+"textMatch",expand,context,startChar,endChar,inPart} ], //...i.filter(e => [bdo+"sliceStartChar",tmp+"matchScore"].includes(e.type) )],
-                  null,[...allProps.filter(a => [tmp+"hasReproAccess", adm+"access", tmp+"access"].includes(a.type))],null,true)}</div>)
+                  null,[...allProps.filter(a => [tmp+"hasReproAccess", adm+"access", tmp+"access", tmp+"inRootInstance"].includes(a.type))],null,true)}</div>)
 
                cpt++
             }
@@ -4046,7 +4348,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   let urilink
 
                   if(i.uri && !i.uri.includes(".bdrc.") && i.uri.startsWith("http")) urilink = <a target="_blank" href={i.uri}><span {...(i.lang?{lang:i.lang}:{})}>{i.value}</span></a> 
-                  else urilink =  <Link class="inRoot" to={"/show/"+i.uri}><span {...(i.lang?{lang:i.lang}:{})}>{i.value}</span></Link> 
+                  else urilink =  <Link class="inRoot" to={"/show/"+i.uri+"?s="+encodeURIComponent("/search?"+window.location.href.replace(/^https?:[/][/][^?]+[?]?/gi,""))}><span {...(i.lang?{lang:i.lang}:{})}>{i.value}</span></Link> 
 
                   if(outlineB !== undefined && (!T || T !== "Etext")) {
                      outlineB.push(<span class="sepa"/>)
@@ -4099,7 +4401,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          if(!lang) lang = m["xml:lang"]	
          if(!Array.isArray(m.value)) {
 
-            let mLit = getLangLabel(this,"",[m])	
+            let mLit = getLangLabel(this,_tmp+"bestMatch",[m])	
 
             expand = m.expand	
             if(expand && expand.value) {	
@@ -4124,12 +4426,12 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                
                if(!facet && this.props.keyword && !this.props.keyword.includes(" AND ")) {
                   facet = lucenequerytokeyword(this.props.keyword) 
-                  facet = getLangLabel(this,"",[{value:facet, lang:this.props.language}]) 
+                  facet = getLangLabel(this,_tmp+"bestMatch",[{value:facet, lang:this.props.language}]) 
                   facet = facet.value
                   //loggergen.log("facet2:",facet)
                } else if(!facet && this.props.keyword || facet && facet.indexOf(" AND ") !== -1) {
                   facet = []
-                  for(let k of lucenequerytokeywordmulti(this.props.keyword)) facet.push(getLangLabel(this,"",[{value:k, lang:this.props.language}]))
+                  for(let k of lucenequerytokeywordmulti(this.props.keyword)) facet.push(getLangLabel(this,_tmp+"bestMatch",[{value:k, lang:this.props.language}]))
                   if(facet.length) facet = facet.map(k => k.value)                  
                   //loggergen.log("facet1:",facet)
                }
@@ -4162,7 +4464,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             }), " ]" ]}<br/><br/></div>	
          }	
 
-         loggergen.log("acc:",prettId,access)
+         //loggergen.log("acc:",prettId,access)
 
          let urlBase, staticRegExp = new RegExp(".*?[/](latest|"+Object.keys(staticQueries).join("|")+")[/]?")  ;
          if(window.location.href.match(staticRegExp)) urlBase = window.location.href.replace(staticRegExp,"$1?");
@@ -4198,7 +4500,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      }</span>	
                   { openAccess && <>
                      <span> {I18n.t("misc.or")} </span>	
-                     <Link to={"/show/"+prettId+"?s="+ encodeURIComponent((urlBase.replace(/((([?])?&*|^)n=[^&]*)/g,"$3")+(!urlBase.match(/[\?&]$/)?"&":"")+"n="+n).replace(/\?+&?/,"?"))+(!bestM?"":"&"+bestM.replace(/^\?/,""))} class="uri-link">{I18n.t("result.openEin")}</Link>	
+                     <Link to={"/show/"+prettId+"?s="+ encodeURIComponent("/search?"+(urlBase.replace(/((([?])?&*|^)n=[^&]*)/g,"$3")+(!urlBase.match(/[\?&]$/)?"&":"")+"n="+n).replace(/\?+&?/,"?"))+(!bestM?"":"&"+bestM.replace(/^\?/,""))} class="uri-link">{I18n.t("result.openEin")}</Link>	
                   </> }
                   </> }</span>:null}</span>	                      	
             </div>)	
@@ -4310,7 +4612,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             viewUrl = allProps.filter(a => a.type === bdo+"instanceHasReproduction" && !a.value.includes("/resource/IE"))
             if(viewUrl.length) viewUrl = shortUri(viewUrl[0].value)
             else viewUrl = null
-            if(viewUrl && viewUrl.startsWith("bdr:")) viewUrl = "/show/" + viewUrl + "?s="+ encodeURIComponent(window.location.href.replace(/^https?:[/][/][^?]+[?]?/gi,"").replace(/(&n=[^&]*)/g,"")+"&n="+n)+"#open-viewer"
+            if(viewUrl && viewUrl.startsWith("bdr:")) viewUrl = "/show/" + viewUrl + "?s="+ encodeURIComponent("/show/"+viewUrl+"?s="+encodeURIComponent("/search?"+window.location.href.replace(/^https?:[/][/][^?]+[?]?/gi,"").replace(/(&n=[^&]*)/g,"")+"&n="+n))+"#open-viewer"
             else if(viewUrl) viewUrl = fullUri(viewUrl)
 
 
@@ -4358,22 +4660,30 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
     
 
 
-         let bestM = allProps.filter(e => e.type === tmp+"bestMatch")
-         if(!bestM.length) bestM = rmatch.filter(e => e.type === tmp+"textMatch")
+         let bestM = allProps.filter(e => e.type === tmp+"bestMatch"), realBestM = true
+         if(!bestM.length) { 
+            bestM = rmatch.filter(e => e.type === tmp+"textMatch")
+            realBestM = false
+         }
          let startC, endC 
-
-         //loggergen.log("bestM",bestM)
-
-
+         
          let inRoot = allProps.filter(e => e.type?.endsWith("inRootInstance"))
          if (inRoot.length > 0) inRoot = inRoot[0].value
          else inRoot = false
+         
+         //loggergen.log("bestM:", bestM, inRoot, allProps)
 
          if(bestM.length) { 
             endC = bestM[0].endChar
-            bestM = "?"+(inRoot?"backToEtext="+shortUri(inRoot)+"&":"") +"startChar="+((startC = bestM[0].startChar) - 1000) /*+"-"+bestM[0].endChar*/ +"&keyword="+this.props.keyword+"@"+this.props.language+"#open-viewer"
+            bestM = "?"/*+(inRoot?"backToEtext="+shortUri(inRoot)+"&":"")*/ +"startChar="+((startC = bestM[0].startChar) - 1000) /*+"-"+bestM[0].endChar*/ +"&keyword="+this.props.keyword+"@"+this.props.language+"#open-viewer"
          }
          else bestM = ""
+
+         // need the root instance to fix link, not to be displayed (in etext other matches)
+         if(!realBestM) { 
+            inRoot = false
+            allProps = allProps.filter(p => p.type != tmp+"inRootInstance")
+         }
 
          let prefix = prettId.replace(/:.*$/,""), resUrl
          
@@ -4404,11 +4714,19 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   urlpart = root+"?part="+prettId+"&"
                }
             }
+            let inRootE = allProps.filter(e => e.type === tmp+"inRootInstance")
+            if (inRootE.length > 0) {
+               let root = inRootE[0].value
+               if (root.startsWith(bdr)) {
+                  root = "bdr:"+root.substring(bdr_len)
+                  urlpart = root+"?scope="+prettId+"&"
+               }
+            }
             let urlBase, staticRegExp = new RegExp(".*?[/](latest|"+Object.keys(staticQueries).join("|")+")[/]?")  ;
             if(window.location.href.match(staticRegExp)) urlBase = window.location.href.replace(staticRegExp,"$1?");
             else urlBase = window.location.href.replace(/^https?:[/][/][^?]+[?]?/gi,"")+"&"
-            //loggergen.log("urlB",urlBase)
-            resUrl = "/show/"+urlpart+"s="+ encodeURIComponent((urlBase.replace(/((([?])?&*|^)n=[^&]*)/g,"$3")+(!urlBase.match(/[\?&]$/)?"&":"")+"n="+n).replace(/\?+&?/,"?"))+(!bestM?"":"&"+bestM.replace(/^\?/,""))
+            //loggergen.log("urlB",urlBase,urlpart,inRoot)
+            resUrl = "/show/"+urlpart+"s="+ encodeURIComponent("/search?"+(urlBase.replace(/((([?])?&*|^)n=[^&]*)/g,"$3")+(!urlBase.match(/[\?&]$/)?"&":"")+"n="+n).replace(/\?+&?/,"?"))+(!bestM?"":"&"+bestM.replace(/^\?/,""))
             //retList.push( <Link key={n} to={"/show/"+prettId+bestM} className="result">{ret}</Link> )
          }
          else
@@ -5357,7 +5675,29 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      txt = <Trans i18nKey="result.inEtext" components={{ res: <Link />, key: <span /> }} values={{keyword:this.props.keyword, language:"$t("+languages[this.props.language]+")", name:label.value,rid:inEtext}} /> 
                   }
                   //(false && displayTypes.length>=1&&counts["datatype"][t]?" ("+counts["datatype"][t]+")":""))}
-                  message.push(<MenuItem><h4>{txt}</h4></MenuItem>);
+                  message.push(<div style={{display:"flex"}}><MenuItem><h4>{txt}</h4></MenuItem>{
+                     this.props.latest && 
+                        <FormControl className={"recent-selector"} color={"secondary"} style={{marginTop:"7px"}}>
+                           <Select
+                              value={this.props.latestSyncsMeta?.timeframe ?? "past7d"}
+                              onChange={(ev) => { 
+                                 this.setState({ repage:true, paginate: undefined, results: { message:[] }})
+                                 this.props.navigate({
+                                    ...this.props.location, 
+                                    search:
+                                       "?tf="+ev.target.value.replace(/past/,"")
+                                       + this.props.location.search
+                                          .replace(/\?tf=[^&]+/,"")
+                                          .replace(/&(n|pg)=[^&]+/g,"")
+                                 })
+                              }}
+                           >
+                              {["past7d","past30d","past6m","past12m"].map(w => (
+                                 <MenuItem key={w} value={w}>{I18n.t("tradition."+w)}</MenuItem>
+                                 ))}
+                           </Select>
+                        </FormControl>
+                  }</div>);
                }
                
                if(t === "Place") {
@@ -6100,7 +6440,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
    resetFilters(e) {
       
-      let {pathname,search} = this.props.history.location
+      let {pathname,search} = this.props.location
       
       if(!this.props.isInstance) {
          search = (search.replace(/((&|(\?))([tfin]|pg)=[^&]+)/g,"$3")+"&t="+this.state.filters.datatype[0])            
@@ -6110,9 +6450,9 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             if(inEtext) search = search.replace(/((&|(\?))([r])=[^&]+)/g,"$3")
          }
          if(onKhmerUrl && this.props.keyword === "-" && this.props.checkResults?.route) search = this.props.checkResults?.route.replace(/^[^?]+[?]/,"?")
-         this.props.history.push({pathname,search:search.replace(/\?&/,"?")})
+         this.props.navigate({pathname,search:search.replace(/\?&/,"?")})
       }
-      else this.props.history.push({pathname,search:this.state.backToWorks})
+      else this.props.navigate({pathname,search:this.state.backToWorks})
       
       // TODO fix reset filters 
       //setTimeout(() => this.setState({...this.state, repage:true, uriPage:0, scrolled:1, filters:{ datatype: this.state.filters.datatype } }), 100 )
@@ -6457,12 +6797,15 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       this._refs["sidepane"] = React.createRef()
       this._refs["simplebar"] = React.createRef()
       
+      const closeSettings = () => this.setState({collapse:{...this.state.collapse, settings:false}})
+
       return ( <div ref={this._refs["sidepane"]} className={"SidePane left "+(!this.state.collapse.settings?"closed":"") + (this.state.stuck?" isTop":"")}>
+            <div className="adv-filter-BG" onClick={closeSettings}></div>
             <SimpleBar ref={this._refs["simplebar"]} /*forceVisible="y" autoHide={false}*/ >
                   {/* <IconButton className="close" onClick={e => this.setState({...this.state,leftPane:false,closeLeftPane:true})}><Close/></IconButton> */}
                { //this.props.datatypes && (results ? results.numResults > 0:true) &&
                   <div style={{ /*minWidth:"335px",*/ position:"relative"}}>                 
-                     <div id="closeSettings" onClick={() => this.setState({collapse:{...this.state.collapse, settings:false}})}><Close /></div>    
+                     <IconButton id="closeSettings" onClick={closeSettings}><Close /></IconButton>    
                      <Typography className="sidebar-title">
                         {I18n.t("Lsidebar.title")}
                      </Typography>
@@ -6936,7 +7279,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
       //loggergen.log(JSON.stringify(allSortByLists,null,3),JSON.stringify(tmpSort,null,3))
          
-      this._get = qs.parse(this.props.history.location.search)
+      this._get = qs.parse(this.props.location.search)
       let get = this._get 
       if(sortByList && tmpSort && get.s && get.s.includes("forced"))  {
 
@@ -6966,7 +7309,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       let reverseSort = false
       if(this.props.sortBy && this.props.sortBy.endsWith("reverse")) reverseSort = true
 
-      let {pathname,search} = this.props.history.location      
+      let {pathname,search} = this.props.location      
 
       this._refs["logo"] = React.createRef();
 
@@ -6983,6 +7326,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             ) value = ""
 
          loggergen.log("changeKW",value,keyEv,ev)
+
+         if(this.props.setIsFocused && !this.props.isFocused) this.props.setIsFocused(true)
          
          let dataSource = [] 
          let language = this.state.language
@@ -7038,7 +7383,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          if(value.match(/(^[0-9]{3,4}$)/) && Number(value) < 2100)  dataSource.unshift(value+"@find as a date")         
          if(value && this.state.searchTypes.some(d => ["Instance","Work"].includes(d))) dataSource.push(value.replace(/^d([0-9]+)/,"D$1")+"@find as an identifier")
 
-         this.setState({...this.state,keyword:value, language, dataSource, blurSearch:false, spellingError:[]  } ) 
+         this.setState({...this.state,keyword:value, language, dataSource, blurSearch:false, forceFocus:false,spellingError:[]  } ) 
          
          /*
          if(changeKWtimer) clearTimeout(changeKWtimer)
@@ -7094,10 +7439,6 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          )
       }
 
-
-      let syncSlide = (e) => {
-         this.setState({syncsSlided:!this.state.syncsSlided})
-      }
       
        //           let nbResu = this.state.paginate && this.state.paginate.nMax ? this.state.paginate.nMax:(this.state.results&&this.state.results[this.state.id]?this.state.results[this.state.id].resLength:"--")
       
@@ -7242,13 +7583,15 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
 
       let infoPanelH, infoPanelR
+      
       if(this.props.config && this.props.config.msg && !this.props.simple && !this.props.preview) {
-         if(message.length == 0 && !this.props.loading && !this.props.keyword) infoPanelH = this.props.config.msg.filter(m => m.display && m.display.includes("home"))
-         else infoPanelR = this.props.config.msg.filter(m => m.display && m.display.includes("search"))
+         if(message.length == 0 && !this.props.loading && !this.props.keyword) infoPanelH = this.props.config.msg.filter(m => m.display && m.display.includes("home") && this.props.location.pathname === "/" )
+         else infoPanelR = this.props.config.msg.filter(m => m.display && ["search"].some(p => m.display.includes(p))&& this.props.location.pathname === "/search"  )
          
          if(infoPanelH && infoPanelH.length) infoPanelH = renderBanner(this, infoPanelH)
          if(infoPanelR && infoPanelR.length) infoPanelR = renderBanner(this, infoPanelR)
       }
+      
 
 
 
@@ -7338,8 +7681,15 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
       if(!this._refs["barRef"]) this._refs["barRef"] = React.createRef()
 
-      const ret = (
-<div className={(this.props.simple?"simpleSearch":"")}>
+      const clearRef = React.createRef()
+
+      let corpo_lang = this.props.locale
+      if(corpo_lang.startsWith("bo")) corpo_lang = "bo"
+      else if(corpo_lang.startsWith("zh")) corpo_lang = "zh-hans"
+      
+      const ret = (<>
+{ top_right_menu(this,null,null,null,null,this.props.location, undefined, infoPanelH?.length ? "home" : infoPanelR?.length ? "resource" : undefined) }
+<div className={(this.props.simple?"simpleSearch":"")+(" settings-"+this.state.collapse.settings)}>
    {getGDPRconsent(this)}
    {/* <Link to="/about">About</Link> */}
 
@@ -7357,23 +7707,26 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             data-rotation="0"
             style={{width:"100%",height:"calc(100vh)",backgroundColor: "#000"}}/> */}
 
-          { top_right_menu(this) }
+          
 
          <div className={"App "+(message.length == 0 && !this.props.loading && !this.props.keyword ? "home":"") + (this.props.config.khmerServer?" khmerServer":"")} style={{display:"flex"}}>
             <div className={"SearchPane"+(this.props.keyword ?" resultPage":"") }  ref={this._refs["logo"]}>            
             { showMenus }
                { !this.props.config.khmerServer && 
                   <div class="fond-logo">
-                     <a id="logo" target="_blank" old-href="https://www.tbrc.org/">
+                     <a /*title="Photo by Ven. Matthieu Ricard"*/ id="logo" target="_blank" old-href="https://www.tbrc.org/"
+                        data-caption='Photo by Ven. Matthieu Ricard'>
                         {/* <img src="/logo.svg" style={{width:"200px"}} /> */}
-                        <img src="/pichome.jpg" />
+                        {/* <img src="/pichome.jpg" /> */}
+                        <img src="library-hero.jpg" />
                         <div>
                            <div>
                               {/* { I18n.t("home.BUDA") } */}
                               {/* <h1>{ I18n.t("home.titleBDRC1") }<br/>{ I18n.t("home.titleBDRC2") }<br/>{ I18n.t("home.titleBDRC3") }</h1> */}
-                              <h1 lang={this.props.locale}>{ I18n.t("home.archives1") }{this.props.locale==="en" && <br/>}{ I18n.t("home.archives2") }</h1>
+                              {/* <h1 lang={this.props.locale}>{ I18n.t("home.archives1") }{this.props.locale==="en" && <br/>}{ I18n.t("home.archives2") }</h1> */}
+                              <h1 lang={this.props.locale}>{ I18n.t("home.buda") }</h1>                              
                               <div>{ I18n.t("home.by") }</div>
-                              <span>{ I18n.t("home.subtitle") }</span>
+                              <span>{ I18n.t("home.subtitle_new") }</span>
                            </div>
                         </div>
                      </a>
@@ -7401,10 +7754,25 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   </div>
                }
                { infoPanelH }
+               { infoPanelR }
                {/* <h2>BUDA Platform</h2> */}
                {/* <h3>Buddhist Digital Resource Center</h3> */}
-               { (this.props.language && this.props.language != "-" || !this.props.keyword && !this.props.loading) && 
-               <div id="search-bar">
+               { (this.props.language && this.props.language != "-" || !this.props.keyword && !this.props.loading) && <>               
+               { !this.props.keyword && !this.props.advancedSearch && 
+                  <InstantSearchBox that={this} {...{ clearRef }} />
+               }
+                        {/* 
+               <div class='inner-search-bar in-search-true'>
+                  <div>
+                     <span>Search</span>
+                     <span>
+                        <InstantSearchBox that={this} />
+                        <AutocompleteKeywordInput { ...{ that: this } }/> 
+                        </span>
+                        </div>
+                        </div> }
+                        */}
+               { this.props.advancedSearch && <div id="search-bar">
                { this.props.config.khmerServer && !this.props.keyword &&  !this.props.loading && 
                   <span class="links">
                      <span><Link to="/guidedsearch">{I18n.t("topbar.guided")}</Link></span>
@@ -7414,14 +7782,23 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                {/* <IconButton style={{marginRight:"15px"}} className={this.state.leftPane?"hidden":""} onClick={e => this.setState({...this.state,leftPane:!this.state.leftPane,closeLeftPane:!this.state.closeLeftPane})}>                  
                   <FontAwesomeIcon style={{fontSize:"21px"}} icon={faSlidersH} title="Refine Your Search"/>
                </IconButton> */}
-               <div ref={this._refs["searchBar"]} style={{display:"inline-block",position:"relative"}}>
+               <h2>{I18n.t("topbar.advanced")}</h2>
+               <div ref={this._refs["searchBar"]} style={{display:"inline-block",position:"relative"}}>         
+                  <span id="simple-search" onClick={() => { 
+                     this.props.onAdvancedSearch(false, this.state.keyword)
+                  }}>{I18n.t("topbar.simple")}</span>
                   <SearchBar       
                      innerRef={this._refs.barRef}           
                      placeholder={I18n.t("home.search")}                        
-                     closeIcon={<Close className="searchClose" style={ {color:"rgba(0,0,0,1.0)",opacity:1} } onClick={() => { this.props.history.push({pathname:"/",search:""}); this.props.onResetSearch();} }/>}
+                     closeIcon={<Close className="searchClose" style={ {color:"rgba(0,0,0,1.0)",opacity:1} } onClick={() => { this.props.navigate({pathname:"/",search:""}); this.props.onResetSearch();} }/>}
                      disabled={this.props.hostFailure}
                      onClick={(ev) => { changeKW(this.state.keyword?lucenequerytokeyword(this.state.keyword):""); $("#search-bar input[type=text][placeholder]").attr("placeholder",I18n.t("home.start"));  } }
-                     onBlur={(ev) => { loggergen.log("BLUR"); setTimeout(() => this.setState({...this.state,dataSource:[],blurSearch:true}),100); $("#search-bar input[type=text][placeholder]").attr("placeholder", I18n.t("home.search"));  } }
+                     onBlur={(ev) => { loggergen.log("BLUR"); setTimeout(() => { 
+                           this.setState({...this.state,dataSource:[],blurSearch:true,forceFocus:false}) 
+                        },100); 
+                        $("#search-bar input[type=text][placeholder]").attr("placeholder", I18n.t("home.search"))
+                        if(this.props.setIsFocused && this.props.isFocused) this.props.setIsFocused(false)    
+                     }}
                      onChange={(value:string) => changeKW(value)}
                      onKeyDown={(ev) => { 
                         //loggergen.log("kd:",ev)
@@ -7458,6 +7835,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                            // this.setState({...this.state,dataSource:[]})}
                            //open={this.state.dataSource.length} 
                            id="suggestions" 
+                           class="advanced"
                            //anchorOrigin={{vertical:"bottom",horizontal:"left"}}
                            //anchorEl={() => this._refs["searchBar"].current} 
                            //onClose={()=>this.setState({...this.state,dataSource:[]})}
@@ -7559,7 +7937,9 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   inputRef={(str) => { this._customLang = str }}
                   onKeyPress={(e) => this.handleCustomLanguage(e)}
                /> */ }
-               </div> }
+               </div>
+               }
+            </> }
               { ( this.state.filters.facets || this.state.filters.datatype.indexOf("Any") === -1 )&& 
                         [ /*<Typography style={{fontSize:"23px",marginBottom:"20px",textAlign:"center"}}>
                            <Translate value="Lsidebar.activeF.title" />
@@ -7630,7 +8010,6 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                </section>
             </>
            }
-           { infoPanelR }
            {  (message.length > 0 || message.length == 0 && !this.props.loading ) && <div id="res-header" ref={this._refs["header"]}>
                <div>
                   <div id="settings" onClick={() => this.setState({collapse:{...this.state.collapse, settings:!this.state.collapse.settings}})}><img src="/icons/settings.svg"/></div>
@@ -7705,21 +8084,42 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                         <link rel="canonical" href={"https://library.bdrc.io"} />
                      </Helmet>
                      <List id="samples">
-                        {/* { messageD } */}
+                        {/* { messageD } 
                         <h3>{ I18n.t("home.message") }</h3>
                         <h4>{ I18n.t("home.submessage") }</h4>
                         { ((!this.props.config || !this.props.config.chineseMirror) && !this.props.auth?.isAuthenticated() && !isProxied(this)) && <h4 class="subsubtitleFront">
                            { I18n.t("home.subsubmessage_account1")}
                            {this.props.locale==="bo"?<span> </span>:""}
-                           <span class="uri-link" onClick={() => this.props.auth.login(this.props.history.location,true)} >{I18n.t("home.subsubmessage_account4")}</span>
+                           <span class="uri-link" onClick={() => this.props.auth.login(this.props.location,true)} >{I18n.t("home.subsubmessage_account4")}</span>
                            { I18n.t("home.subsubmessage_account2")}
-                           <span class="uri-link" style={{textTransform:"capitalize"}} onClick={() => this.props.auth.login(this.props.history.location,true)} >{I18n.t("home.subsubmessage_account5")}</span>
+                           <span class="uri-link" style={{textTransform:"capitalize"}} onClick={() => this.props.auth.login(this.props.location,true)} >{I18n.t("home.subsubmessage_account5")}</span>
                            { I18n.t("home.subsubmessage_account3")}</h4> }
                         <h4 class="subsubtitleFront feedB">{ I18n.t("home.subsubmessage") }<a title="email us" href="mailto:help@bdrc.io" lang={this.props.locale}>help@bdrc.io</a>{ I18n.t("home.subsubmessage_afteremail") }</h4>
                         <h4 class="subsubtitleFront"><Trans i18nKey="home.help" components={{bold:<b/>, lk:<a class='uri-link' target='_blank' />}}/></h4>
                         { this.props.subscribedCollections?.length >= 1 && 
                             <Trans i18nKey="home.collec" components={{h:<h4 class="subsubtitleFront"/>, nl:<br/>, bold:<b/>, lk:<a class='uri-link' target='_blank' />}}/>
                         }
+                            */}
+
+                        <div class="home-tradi-grid">
+                           { ["bo","pi","sa","zh"].map(t => (
+                              <Link /*{...t=="bo"?{title:"Photo by Ven. Matthieu Ricard"}:{}}*/ 
+                                 data-caption='Photo by Ven. Matthieu Ricard'
+                                 onClick={() => { document.documentElement.scrollTo({ top:0, left:0, behavior: "instant" }); }} 
+                                    className={this.props.tradition === t ? "active": ""} to={"/tradition/"+t+"/"+(customTradLink[t]??"")}>
+                                 <span>{I18n.t("tradition."+t+"T")}</span>
+                                 <img src={"/tradi/"+t+".jpg"}/>
+                              </Link>
+                           ))}
+                        </div>
+
+                        <div class="home-support">
+                           <span>{I18n.t("topbar.support")}</span>
+                           <a href={"https://bdrc.io/donation?lang="+corpo_lang} target="_blank" rel="nofollow">{I18n.t("topbar.donate2")}</a>
+                        </div>
+                        <h3>{I18n.t("tradition.recent")}</h3> 
+                        <InnerSearchPageContainer /*noScrollFilters={true}*/ customPholder={I18n.t("resource.searchTtrad", {trad:I18n.t("tradition.title.recent"),interpolation: {escapeValue: false} }) } forceSearch={true} location={this.props.location} auth={this.props.auth} isOsearch={true} recent={true} />  
+                           
                      </List> 
                   </>}
                { /* (this.props.datatypes && this.props.datatypes.hash && this.props.datatypes.metadata[bdo+this.state.filters.datatype[0]] && message.length === 0 && !this.props.loading) && 
@@ -7752,54 +8152,14 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                }
                </div>
                { !this.props.config.khmerServer && message.length == 0 && !this.props.loading && !this.props.keyword && (!this.props.config || !this.props.config.chineseMirror) && this.props.latestSyncsNb > 0 &&
-                  <div id="latest">
-                     <h3>{I18n.t("home.new")}</h3>
-                     <Link class="seeAll" to="/latest" onClick={()=>this.setState({filters:{...this.state.filters,datatype:["Scan"]}})}>{I18n.t("misc.seeAnum",{count:this.props.latestSyncsNb})}</Link>
-                     <div 
-                        onTouchStart={ev => {this.tx0 = ev.targetTouches[0].clientX; this.ty0 = ev.targetTouches[0].clientY; }} 
-                        onTouchMove={ev => {this.tx1 = ev.targetTouches[0].clientX; this.ty1 = ev.targetTouches[0].clientY; }} 
-                        onTouchEnd={ev => {if(Math.abs(this.ty0 - this.ty1) < Math.abs(this.tx0 - this.tx1) && Math.abs(this.tx0 - this.tx1) > 75) { syncSlide(); } }}
-                     >
-                        { this.props.latestSyncs === true && <Loader loaded={false}/> }
-                        { (this.props.latestSyncs && this.props.latestSyncs !== true) &&
-                           <div class={"slide-bg "+(this.state.syncsSlided?"slided":"")} >
-                              { Object.keys(this.props.latestSyncs).map(s => {
-                                 //loggergen.log("s:",s);
-                                 let label = getLangLabel(this,"",this.props.latestSyncs[s][skos+"prefLabel"])
-                                 let uri = "/show/"+shortUri(s), value = I18n.t("resource.noT"), lang = this.props.locale
-                                 if(label && label.value != "") {
-                                    lang = label.lang;
-                                    value = label.value;
-                                 }
-                                 // DONE use thumbnail when available
-                                 let thumb = this.props.latestSyncs[s][tmp+"thumbnailIIIFService"]
-                                 if(!thumb || !thumb.length) thumb = this.props.latestSyncs[s][tmp+"thumbnailIIIFSelected"]
-                                 if(thumb && thumb.length) thumb = thumb[0].value 
-                                 //loggergen.log("thumb",thumb)
-                                 return (
-                                    <div>
-                                       <Link to={uri}><div class={"header "+(thumb?"thumb":"")} {...thumb?{style:{"backgroundImage":"url("+ thumb+"/full/"+(thumb.includes(".bdrc.io/")?"!2000,195":",195")+"/0/default.jpg)"}}:{}}></div></Link>
-                                       <p lang={lang}>{value}</p>
-                                       <Link to={uri}>{I18n.t("misc.readM")}</Link>
-                                    </div>
-                                 )
-                              })}
-                           </div>
-                        }
-                     </div>
-                     { (this.props.latestSyncs && this.props.latestSyncs !== true && this.props.latestSyncsNb > 5) && 
-                        <div id="syncs-nav" >
-                           <span class={this.state.syncsSlided?"on":""} onClick={syncSlide}><img src="/icons/g.svg"/></span>
-                           <span class={this.state.syncsSlided||this.props.latestSyncsNb<=5?"":"on"} onClick={syncSlide}><img src="/icons/d.svg"/></span>
-                        </div>
-                     }
-                  </div>
+                  <LatestSyncs that={this} />
                }
             </div>
             {/* <LanguageSidePaneContainer /> */}
          </div>
          { message.length == 0 && !this.props.loading && !this.props.keyword && (!this.props.config || !this.props.config.chineseMirror) && <Footer locale={this.props.locale} hasSyncs={this.props.config.khmerServer || this.props.latestSyncsNb > 0}/> }
       </div>
+      </>
       );
 
       subtime("render")

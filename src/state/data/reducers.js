@@ -6,7 +6,7 @@ import * as actions from './actions';
 import _ from 'lodash';
 import {fullUri} from '../../components/App'
 import qs from 'query-string'
-import history from '../../history';
+//import history from '../../history';
 import { narrowWithString } from "../../lib/langdetect"
 
 import logdown from 'logdown'
@@ -285,9 +285,38 @@ reducers[actions.TYPES.getChunks] = getChunks;
 
 
 export const getPages = (state: DataState, action: Action) => {
+
+   let res ;
+
+   //loggergen.log("getP:",action, state)
+
+   if(action.meta.reset){
+
+      if(state && state.resources && state.resources[action.payload]
+         && state.resources[action.payload]["http://purl.bdrc.io/resource/"+action.payload.replace(/bdr:/,"")])
+      {
+         res = state.resources[action.payload]["http://purl.bdrc.io/resource/"+action.payload.replace(/bdr:/,"")]
+         res["http://purl.bdrc.io/ontology/core/eTextHasPage"] = []                  
+      }
+
+      
+      res = {
+        "resources": {
+           ...state.resources,
+           [action.payload]:{
+               ["http://purl.bdrc.io/resource/"+action.payload.replace(/bdr:/,"")]: res
+            }
+         }
+      }
+      
+      //loggergen.log("resetP",state,action,res)
+   }
+
+
    return {
        ...state,
-       "nextPage": action.meta
+       ...(res??{}),
+       "nextPage": action.meta.next
    }
 }
 reducers[actions.TYPES.getPages] = getPages;
@@ -373,7 +402,7 @@ export const gotResource = (state: DataState, action: Action) => {
       
       mergeAdminData(uri);
 
-      let get = qs.parse(history.location.search)            
+      let get = qs.parse(window.location.search)            
 
       // preventing from displaying sameAs resource as subproperties
       let keys 
@@ -611,6 +640,7 @@ export const initSpellcheckerBo = (state: DataState, action: Action) => {
 }
 reducers[actions.TYPES.initSpellcheckerBo] = initSpellcheckerBo
 
+/*
 export const gotAssocResources = (state: DataState, action: Action) => {
 
    let res = state.resources,oldRes
@@ -632,7 +662,7 @@ export const gotAssocResources = (state: DataState, action: Action) => {
            "assocResources": {
               ...state.assocResources,
               [action.payload]:{ ...assoR, ...action.meta.data, ...(res?Object.keys(res).reduce((acc,k) => {
-                     return { ...acc,[k]:Object.keys(res[k]).reduce( (accR,kR) => {
+                     return { ...acc,[k]:Object.keys(res[k]??{}).reduce( (accR,kR) => {
                         if(!kR.match(/(description|comment)$/)) return [ ...accR, ...res[k][kR].map(e => ({ 
                            ...e, 
                            "fromKey":kR, 
@@ -649,6 +679,81 @@ export const gotAssocResources = (state: DataState, action: Action) => {
 
        return state ;
 }
+       */
+
+export const gotAssocResources = (state: DataState, action: Action) => {
+   let res = state.resources?.[action.payload];
+   let oldRes = res ? { [action.payload]: res } : undefined;
+   let assoR = state.assocResources?.[action.payload];
+
+   const skos = "http://www.w3.org/2004/02/skos/core#";
+
+   // Transform resources if they exist
+   const transformedResources = res ? Object.fromEntries(
+      Object.entries(res).map(([k, resourceValue]) => {
+         // Filter and transform each resource entry
+         const transformedEntries = Object.entries(resourceValue ?? {})
+            .filter(([key]) => !key.match(/(description|comment)$/))
+            .flatMap(([key, values]) => {
+               return (Array.isArray(values) ? values : []).map(e => ({
+                  ...e??{},
+                  fromKey: key,
+                  ...(key === `${skos}prefLabel` && !e.lang && !e["@language"] && !e["xml:lang"] 
+                     ? { "xml:lang": " " } 
+                     : {})
+               }));
+            });
+
+         return [k, transformedEntries];
+      })
+   ) : {};
+
+   // Merge objects with value fusion
+   const mergeObjects = (obj1: any, obj2: any) => {
+      if (!obj1 || typeof obj1 !== 'object') return obj2;
+      if (!obj2 || typeof obj2 !== 'object') return obj1;
+      
+      return Object.fromEntries(
+         Object.entries({...obj1, ...obj2})
+            .map(([key, value]) => {
+               const value1 = obj1[key];
+               const value2 = obj2[key];
+               
+               if (value1 && value2 && typeof value1 === 'object' && typeof value2 === 'object') {
+                  return [key, Array.isArray(value1) && Array.isArray(value2) 
+                     ? [...value1??{}, ...value2??{}]
+                     : {...value1??{}, ...value2??{}}
+                  ];
+               }
+               return [key, value];
+            })
+      );
+   };
+
+   // Merge all data layers
+   const mergedData = mergeObjects(
+      mergeObjects(action.meta.data, assoR),
+      transformedResources
+   );
+
+   // Construct new state
+   state = {
+      ...state??{},
+      resources: {
+         ...state.resources??{},
+         ...oldRes??{}
+      },
+      assocResources: {
+         ...state.assocResources??{},
+         [action.payload]: mergedData
+      }
+   };
+
+   loggergen.log("assocR", res, state, action);
+
+   return state;
+}
+
 reducers[actions.TYPES.gotAssocResources] = gotAssocResources;
 
 
@@ -668,6 +773,37 @@ export const getAnnotations = (state: DataState, action: Action) => {
     return state ;
 }
 reducers[actions.TYPES.getAnnotations] = getAnnotations;
+
+
+export const getSnippet = (state: DataState, action: Action) => {
+
+   state = {
+       ...state,
+       "snippets":{
+          ...state.snippets ?? {},
+          [action.payload]: true
+        }
+     }
+
+   return state ;
+}
+reducers[actions.TYPES.getSnippet] = getSnippet;
+
+
+
+export const gotSnippet = (state: DataState, action: Action) => {
+
+   state = {
+       ...state,
+       "snippets":{
+          ...state.snippets ?? {},
+          [action.payload]:action.meta?{...action.meta}:false
+        }
+     }
+
+   return state ;
+}
+reducers[actions.TYPES.gotSnippet] = gotSnippet;
 
 
 export const gotAnnoResource = (state: DataState, action: Action) => {
@@ -942,6 +1078,13 @@ reducers[actions.TYPES.gotNextChunks] = gotNextChunks;
 export const gotNextPages = (state: DataState, action: Action) => {
 
    let res ;
+
+
+   if(state && state.resources && state.resources[action.payload]
+      && !state.resources[action.payload]["http://purl.bdrc.io/resource/"+action.payload.replace(/bdr:/,"")]) {
+         state.resources[action.payload]["http://purl.bdrc.io/resource/"+action.payload.replace(/bdr:/,"")] = {}
+      } 
+
    if(state && state.resources && state.resources[action.payload]
       && state.resources[action.payload]["http://purl.bdrc.io/resource/"+action.payload.replace(/bdr:/,"")])
       {
@@ -1054,9 +1197,12 @@ reducers[actions.TYPES.searchingKeyword] = searchingKeyword;
 
 export const getLatestSyncs = (state: DataState, action: Action) => {
 
+   if(state.latestSyncsNb != undefined) delete state.latestSyncsNb
+
    return {
       ...state,
-      latestSyncs:true
+      latestSyncs:true,
+      latestSyncsMeta:action.meta
    }
 }
 reducers[actions.TYPES.getLatestSyncs] = getLatestSyncs;
@@ -1067,7 +1213,8 @@ export const gotLatestSyncs = (state: DataState, action: Action) => {
    return {
       ...state,
       latestSyncs:action.payload,
-      latestSyncsNb:action.meta
+      latestSyncsNb:Number(action.meta.nb),
+      latestSyncsMeta:{ ...state.latestSyncsMeta??{}, ...action.meta.timeframe ? {timeframe:action.meta.timeframe}:{} }
    }
 }
 reducers[actions.TYPES.gotLatestSyncs] = gotLatestSyncs;

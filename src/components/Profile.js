@@ -1,6 +1,6 @@
 
 import React, { Component } from 'react';
-import history from "../history"
+//import history from "../history"
 import store from "../index"
 import * as data  from "../state/data/actions"
 import * as ui from "../state/ui/actions"
@@ -26,7 +26,7 @@ class Profile extends Component<Props,State> {
     this.state = { gender:"", region:"",affiliation:"",interest:"" }
   }
   
-  componentWillMount() {
+  componentDidMount() {
     this.setState({ profile: {} });
     const { userProfile, getProfile } = this.props.auth;
     if (!userProfile) {
@@ -41,7 +41,7 @@ class Profile extends Component<Props,State> {
   }
   render() {
     const { profile } = this.state;
-    console.log("profile",profile)
+    console.log("profile:",profile,this)
     let message = "Getting user info..."
     if(!profile || !Object.keys(profile).length) {
       if(!auth.isAuthenticated()) { 
@@ -69,7 +69,7 @@ class Profile extends Component<Props,State> {
         let user = this.props.userID
         if(!user) user = " "
 
-        return ( <UserViewerContainer auth={auth} history={history} IRI={user} authUser={userProfile}/> ) 
+        return ( <UserViewerContainer auth={auth} /*history={history}*/ IRI={user} authUser={userProfile}/> ) 
 
         // ResoruceViewer
 

@@ -71,10 +71,13 @@ function narrowWithChar(char, wordlen, lttotest) {
 	return lttotest.filter(lt => okforlt(char, wordlen, lt));
 }
 
-export function narrowWithString(strtoguess, transtotest = ['ewts', 'iast', 'pinyin']) {
+export function narrowWithString(strtoguess = "", transtotest = ['ewts', 'iast', 'pinyin']) {
 
-	// #756
-	strtoguess = strtoguess.replace(/[\[\]()|_]/g, " ")
+	
+	strtoguess = strtoguess
+		.replace(/[\[\]()|_#]/g, " ") // #756
+		.replace(/<[^>]+>/g,"")      // detection fails when str starts with "<em>"
+		.replace(/^[ \n\r0-9]+/,"")           // fails when leading space
 
 	//console.log("nWs?",strtoguess,transtotest)
 	var wordlen = 0;

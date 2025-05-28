@@ -48,10 +48,17 @@ const mapStateToProps = (state,ownProps) => {
    let portraitPopupClosed = state.ui.portraitPopupClosed
 
    let isNewUser = state.ui.isNewUser
+
+   let advancedSearch = state.ui.advancedSearch ?? ownProps.advancedSearch
+   let advKeyword = state.ui.advKeyword
    
    let feedbucket = state.ui.feedbucket
 
-   let props = { userID, profile, dictionary, rightPanel, resetLink, config, locale, profileName, langPreset, langIndex, portraitPopupClosed, isNewUser, feedbucket }
+   let props = { userID, profile, dictionary, rightPanel, resetLink, config, locale, profileName, langPreset, langIndex, 
+      portraitPopupClosed, isNewUser, feedbucket,
+
+      advancedSearch, advKeyword,
+   }
 
    return props
 
@@ -69,12 +76,15 @@ const mapDispatchToProps = (dispatch, ownProps) => {
          dispatch(ui.userProfile(url));
       },
       onSetLangPreset:(langs:string[],i?:number) => {
-         localStorage.setItem('lang', langs);
+         localStorage.setItem('langs', langs);
          dispatch(ui.langPreset(langs,i))
       },
       onFeedbucketClick(cls:string) {
          dispatch(ui.feedbucket(cls))
-      }
+      },
+      onAdvancedSearch(s:boolean) {
+         dispatch(ui.advancedSearch(s))
+      },
    }
 }
 

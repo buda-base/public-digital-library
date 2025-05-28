@@ -28,16 +28,19 @@ import ErrorOutlineIcon from '@material-ui/icons/Error';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import SpeakerNotes from '@material-ui/icons/SpeakerNotes';
 import SpeakerNotesOff from '@material-ui/icons/SpeakerNotesOff';
+import BlockIcon from '@material-ui/icons/Block';
 import Feedback from '@material-ui/icons/QuestionAnswer';
 //import NewWindow from 'react-new-window'
 import InfoIcon from '@material-ui/icons/InfoOutlined';
 import ErrorIcon from '@material-ui/icons/AddCircle';
 import Collapse from '@material-ui/core/Collapse';
 import ExpandLess from '@material-ui/icons/ExpandLess';
+import HelpIcon from '@material-ui/icons/Help';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 import MailIcon from '@material-ui/icons/MailOutline';
 import PrintIcon from '@material-ui/icons/LocalPrintshop';
 import CheckCircle from '@material-ui/icons/CheckCircle';
+import ChevronLeft from '@material-ui/icons/ChevronLeft';
 import PanoramaFishEye from '@material-ui/icons/PanoramaFishEye';
 import Paper from '@material-ui/core/Paper';
 import InfiniteScroll from 'react-infinite-scroller';
@@ -75,6 +78,8 @@ import {miradorConfig, miradorSetUI} from '../lib/miradorSetup';
 import { Redirect404 } from "../routes.js"
 import Footer from "./Footer"
 
+import TextToggle from "./TextToggle"
+
 import Loader from "react-loader"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faLanguage } from '@fortawesome/free-solid-svg-icons'
@@ -105,15 +110,23 @@ import { Swipeable, useSwipeable } from 'react-swipeable'
 import {svgEtextS,svgInstanceS,svgImageS} from "./icons"
 
 import {keywordtolucenequery,lucenequerytokeyword,lucenequerytokeywordmulti, isGroup} from './App';
+import ResourceViewerContainer from '../containers/ResourceViewerContainer'
+import InnerSearchPageContainer from '../containers/InnerSearchPageContainer'
+
+import { getAutocompleteRequest } from "../lib/searchkit/api/AutosuggestAPI";
+import { SuggestsList, updateHistory, formatResponseForURLSearchParams } from "../lib/searchkit/components/SearchBoxAutocomplete";
+import { debounce } from "../lib/searchkit/helpers/utils";
+
 
 import HTMLparse from 'html-react-parser';
-
 import logdown from 'logdown'
-
-
 import SimpleBar from 'simplebar-react';
 import 'simplebar/dist/simplebar.min.css';
 
+import EtextPage from "./EtextPage"
+
+import StickyElement from "./StickyElement"
+import {EtextSearchBox, EtextSearchResult } from "./EtextSearchBox"
 
 //import edtf, { parse } from "edtf/dist/../index.js" // finally got it to work!! not in prod...
 import edtf, { parse } from "edtf" // see https://github.com/inukshuk/edtf.js/issues/36#issuecomment-1073778277
@@ -376,7 +389,6 @@ let propOrder = {
       "bdo:personName",
       "skos:prefLabel",
       "skos:altLabel",
-      "bdo:personGender",
       "bdo:personEvent",
       "bdo:kinWith",
       // "bdo:incarnationActivities",
@@ -385,6 +397,9 @@ let propOrder = {
       // "bdo:incarnationGeneral",
       "bdo:personStudentOf",
       "bdo:personTeacherOf",
+      "bdo:associatedTradition",
+      "tmp:hasRole",
+      "bdo:personGender",
       "bdo:note",
       "rdfs:seeAlso",
     ],
@@ -425,6 +440,7 @@ let propOrder = {
       //"bdo:workType",
       "bdo:instanceHasReproduction",
       "bdo:instanceOf",
+      "bdo:workHasInstance",
       //"bdo:instanceReproductionOf",
       "tmp:siblingExpressions",
       "bdo:workHasParallelsIn",
@@ -443,7 +459,6 @@ let propOrder = {
       "bdo:script",
       "tmp:hasEtext",
       "bdo:hasReproduction",
-      "bdo:workHasInstance",
       "bdo:hasInstance",
       "bdo:contentLocation",
       //"bdo:inRootInstance",
@@ -492,17 +507,31 @@ propOrder["Instance"] = propOrder["Work"]
 propOrder["Images"] = propOrder["Work"]
 
 const topProperties = {
-   "Person": [ 
-      bdo+"personName", 
+   "Product":[
+      rdfs+"comment",
+      _tmp+"outline"
+   ],
+   "Topic": [ 
       skos+"prefLabel", 
       skos+"altLabel",
-      bdo+"personGender"
+      bdo+"note"
+   ],
+   "Person": [ 
+      //bdo+"personName", 
+      skos+"prefLabel", 
+      skos+"altLabel",
+      //bdo+"personGender"
    ],
    "Place": [ 
       skos+"prefLabel", 
       skos+"altLabel",
-      bdo+"placeType",
+      _tmp+"findText",
+      //bdo+"placeType",
       bdo+"placeLocatedIn",
+      bdo+"placeContains",
+      bdo+"placeEvent",
+      _tmp+"map",
+      _tmp+"GISCoordinates"
    ],
    "Work": [ 
       bdo+"hasTitle", 
@@ -511,24 +540,23 @@ const topProperties = {
       bdo+"language",
       bdo+"creator",
       bdo+"catalogInfo",
+      bdo+"workHasParallelsIn",
       bdo+"workTranslationOf",
-      bdo+"workHasInstance",
+      //bdo+"workHasTranslation",
+      //bdo+"workHasInstance",
    ],
    "Instance": [ 
+      bdo+"creator",
+      bdo+"extentStatement",
+      tmp+"containingOutline",
       bdo+"instanceHasReproduction",
+      tmp+"outline",
       tmp+"propHasScans",
       tmp+"propHasEtext",
-      //bdo+"instanceOf",
+      bdo+"workIsAbout",
+      bdo+"workGenre",
       bdo+"catalogInfo",
-      bdo+"creator",
-      bdo+"hasTitle", 
-      skos+"prefLabel", 
-      skos+"altLabel", 
-      //bdo+"contentLocation",
-      bdo+"instanceEvent",
-      bdo+"publisherName",
-      bdo+"publisherLocation",
-      bdo+"editionStatement",
+      bdo+"workHasParallelsIn",
    ],
    "Images": [ 
       bdo+"hasTitle", 
@@ -564,9 +592,34 @@ const topProperties = {
       
    ]
 }
-                       
+              
+let midProperties = {
+   "Instance": [ 
+      _tmp+"workHasInstance",
+      bdo+"workHasInstance",
+      //bdo+"instanceOf",
+      //bdo+"catalogInfo",
+      bdo+"hasTitle", 
+      skos+"prefLabel", 
+      skos+"altLabel", 
+      //bdo+"contentLocation",
+      bdo+"instanceEvent",
+      bdo+"publisherName",
+      bdo+"publisherLocation",
+      bdo+"editionStatement"
+   ],
+   "Person":[
+      bdo+"personName"
+   ],
+   "Work": [ 
+      _tmp+"workHasInstance",
+      bdo+"workHasInstance",
+   ]
+}
+
 let extProperties = {
    "Work": [
+      tmp+"BDRCworkId",
       bf+"identifiedBy",
       bdo+"contentMethod",
       bdo+"printMethod",
@@ -887,9 +940,43 @@ class OutlineSearchBar extends Component<Props,State>
 
       this.state = { 
          value: props.that.state.outlineKW?props.that.state.outlineKW:"", 
-         language: props.that.state.outlineKWlang?props.that.state.outlineKWlang:"", 
-         dataSource:[] 
+         language: props.that.state.outlineKWlang?props.that.state.outlineKWlang:"bo-x-ewts", 
+         dataSource:[],
+         suggestionSel: -1,
+         suggestionList: []
+
       }
+
+      this.handleChangeKW = debounce((newValue) => {
+         const pageFilters =  "associated_res:"+props.that.props.IRI.split(":")[1]
+         console.log("debounce!",props.that.props.IRI)
+         getAutocompleteRequest(newValue,pageFilters).then((requests) => {
+            console.log("requests:", requests)
+            this.setState({ autocomplete: { newValue, requests, pageFilters } })
+         });
+      }, 350)
+   
+   }
+   
+
+
+
+   cleanOutlineCollapse() {
+      let collapse = this.props.that.state.collapse
+      for(let k of Object.keys(collapse)) {
+         if(k.startsWith("outline-")) delete collapse[k]
+      }
+      return collapse
+   }
+
+   search(e, lang = this.state.language, val = this.state.value) {
+
+      updateHistory(val, "associated_res:"+this.props.that.props.IRI.split(":")[1])
+      
+      let collapse = this.cleanOutlineCollapse()
+      this.setState({dataSource:[], autocomplete: undefined, value: val, language: lang});
+      this.props.that.setState({collapse});
+      this.props.outlineSearch(e,lang,val)
    }
 
    changeOutlineKW(e, value) {
@@ -899,6 +986,15 @@ class OutlineSearchBar extends Component<Props,State>
       if(!this.props.that.state) return
 
       if(!value && e) value = e.target.value
+
+      // TODO: handle different language without autocomplete?
+      const language = "bo-x-ewts"
+
+      this.setState({ value, language })
+
+      this.handleChangeKW(value)
+
+      /* // with old query:
 
       //loggergen.log("value:",value)
 
@@ -923,7 +1019,7 @@ class OutlineSearchBar extends Component<Props,State>
          
          return [...acc, ...presets]
       }, [] ).concat(value.match(/[a-zA-Z]/)?["en"]:[]).map(p => '"'+value+'"@'+(p == "sa-x-iast"?"sa-x-ndia":p)) } ) 
-
+      */
    }
 
 
@@ -931,54 +1027,87 @@ class OutlineSearchBar extends Component<Props,State>
 
       loggergen.log("osb:",this,this.props,this.state)
 
-
-      let cleanOutlineCollapse = () => {
-         let collapse = this.props.that.state.collapse
-         for(let k of Object.keys(collapse)) {
-            if(k.startsWith("outline-")) delete collapse[k]
-         }
-         return collapse
-      }
-
-      let search = (e,val) => {
-         let collapse = cleanOutlineCollapse()
-         this.setState({dataSource:[]});
-         this.props.that.setState({collapse});
-         this.props.outlineSearch(e,val,this.state.value)
-      }
-
       return (
          <div class="search">
             <div>
                <input type="text" placeholder={I18n.t("resource.searchO")} value={this.state.value} //onChange={(e) => this.setState({value:e.target.value})}
+                  onFocus={this.changeOutlineKW.bind(this)} onBlur={() => setTimeout(() => this.setState({autocomplete: undefined}), 350)}
                   /*value={this.props.that.state.outlineKW} */ onChange={this.changeOutlineKW.bind(this)} 
-               onKeyPress={ (e) => { 
-                  if(e.key === 'Enter' && this.state.value) { 
+               onKeyDown={ (e) => { 
+                  if(e.key === 'Enter') {                     
+                     if(this.state.autocomplete && this.state.suggestionSel != -1) {
+                        if(! this.state.suggestionList?.length ) {
+                           if(this.state.value) { 
+                              this.search(e)
+                           }
+                        } else {
+                           //console.log("acp:",this.state.autocomplete)
+                           this.search(e,this.state.language, formatResponseForURLSearchParams(this.state.suggestionList[this.state.suggestionSel]?.res))
+                        }
+                      } else if(this.state.value){
+                        this.search(e)
+                      }
+                     /*
                      if(this.state.dataSource?.length) { search(e, this.state.dataSource[0].split("@")[1]) }
                      else this.changeOutlineKW(null,this.state.value)
-                  }
+                     */
+
+
+                  }  else if(e.key === "ArrowDown") {
+                     if(! this.state.suggestionList?.length ) return
+                     const newSel = (this.state.suggestionSel === -1 ? 0 : this.state.suggestionSel + 1) % this.state.suggestionList.length
+                     this.setState({suggestionSel:newSel})
+                   } else if(e.key === "ArrowUp") {
+                     if(! this.state.suggestionList?.length ) return
+                     const newSel = (this.state.suggestionSel === -1 ? this.state.suggestionList.length - 1 : this.state.suggestionSel - 1 + this.state.suggestionList.length) % this.state.suggestionList.length
+                     this.setState({suggestionSel:newSel})
+                   } 
+
                }}/>
-               <span class="button" onClick={(e) => { if(this.state.dataSource?.length) { search(e,this.state.dataSource[0].split("@")[1]) } }}  title={I18n.t("resource.start")}></span>
-               { (this.props.that.props.outlineKW || this.props.that.state.outlineKW) && <span class="button" title={I18n.t("resource.reset")} onClick={(e) => { 
-                  let collapse = cleanOutlineCollapse()
-                  this.setState({value:""})
+               <span class="button" onClick={(e) => { if(this.state.value) { this.search(e) } }}  title={I18n.t("resource.start")}></span>
+               { (this.props.that.props.outlineKW || this.props.that.state.outlineKW || this.state.value) && <span class="button" title={I18n.t("resource.reset")} onClick={(e) => { 
+                  if(!(this.props.that.props.outlineKW || this.props.that.state.outlineKW)) {
+                     this.setState({value:"", autocomplete: undefined})
+                     return
+                  }
+                  let collapse = this.cleanOutlineCollapse()
+                  this.setState({value:"", autocomplete: undefined})
                   this.props.that.setState({outlineKW:"",collapse})
                   if(this.props.that.props.outlineKW) {
                      this.props.that.props.onResetOutlineKW()
-                     let loca = { ...this.props.that.props.history.location }
+                     let loca = { ...this.props.that.props.location }
                      if(!loca.search) loca.search = ""
-                     loca.search = loca.search.replace(/(&osearch|osearch)=[^&]+/, "").replace(/[?]&/,"?")
-                     this.props.that.props.history.push(loca)
+                     loca.search = loca.search.replace(/((&?root)|(&?osearch))=[^&]+/g, "").replace(/[?]&/,"?")
+                     this.props.that.props.navigate(loca)
                   }
-               }}><Close/></span> }                  
-               { (this.state.value && this.state.dataSource && this.state.dataSource.length > 0) &&   
+               }}><Close/></span> }            
+               { this.state.autocomplete && <div>
+                     <Paper id="suggestions">
+                        { this.state.autocomplete && <SuggestsList
+                           query={this.state.autocomplete?.newValue}
+                           items={this.state.autocomplete?.requests}
+                           onClick={(item) => {
+                              console.log("item!",item)
+                              const value = item.res.replace(/<[^>]*>/g,"")
+                              const language = (item.lang ?? this.state.language).replace(/_/g,"-")
+                              this.search(item,language,value)
+                           }}
+                           setIsFocused={(f) => { if(!f) this.setState({autocomplete: undefined}) } }
+                           isVisible={true}
+                           setActualList={(n) => this.setState({suggestionList: n})}
+                           selected={this.state.suggestionSel}
+                           {...{ pageFilters: this.state.autocomplete?.pageFilters }}
+                           />}
+                     </Paper>
+                  </div> }
+               {/* (this.state.value && this.state.dataSource && this.state.dataSource.length > 0) &&   
                   <div><Paper id="suggestions">
                   { this.state.dataSource.map( (v) =>  {
                         let tab = v.split("@")
                         return (
                            <MenuItem key={v} style={{lineHeight:"1em"}} onClick={(e) => search(e,tab[1])}><span class="maxW">{ tab[0].replace(/["]/g,"")}</span> <SearchIcon style={{padding:"0 10px"}}/><span class="lang">{(I18n.t(""+(searchLangSelec[tab[1]]?searchLangSelec[tab[1]]:languages[tab[1]]))) }</span></MenuItem> ) 
                         } ) }
-                  </Paper></div> }
+                  </Paper></div> */}
             </div>
          </div>
       )
@@ -1069,7 +1198,7 @@ function MySwipeable(props) {
 }
 
 function GenericSwipeable(props) {
-   loggergen.log("sw:",props)
+   //loggergen.log("sw:",props)
    const { classN } = props
    let newProps = { ...props }
    if(classN) delete newProps.classN 
@@ -1080,7 +1209,7 @@ function GenericSwipeable(props) {
 }
 
 
-let oldScrollTop = 0
+let oldScrollTop = 0, ETreinit
 
 
 class ResourceViewer extends Component<Props,State>
@@ -1096,7 +1225,7 @@ class ResourceViewer extends Component<Props,State>
    {
       super(props);
 
-      this.state = { uviewer:false, imageLoaded:false, collapse:{}, pdfOpen:false, showAnno:true, errors:{},updates:{},title:{}, anchorEl:{}, enableDicoSearch: true }
+      this.state = { uviewer:false, imageLoaded:false, collapse:{etextNav:true}, pdfOpen:false, showAnno:true, errors:{},updates:{},title:{}, anchorEl:{}, enableDicoSearch: false /* // #1028 // true*/ }
 
       loggergen.log("props",props)
 
@@ -1105,8 +1234,10 @@ class ResourceViewer extends Component<Props,State>
       //loggergen.log("tmp",tmp)
       propOrder = tmp
 
-      window.closeViewer = (ev, gotoResults = false) => {
+      const oldClose = (ev, gotoResults = false) => {
          //delete window.mirador
+
+         if(window.myAnalytics.unloadMirador) window.myAnalytics.unloadMirador()
 
          document.getElementsByName("viewport")[0].content = "width=device-width, initial-scale=1, shrink-to-fit=no" ;
 
@@ -1114,12 +1245,12 @@ class ResourceViewer extends Component<Props,State>
 
          loggergen.log("ev:", ev, gotoResults)
 
-         let get = qs.parse(this.props.history.location.search)
+         let get = qs.parse(this.props.location.search)
          let hasQinS, backToPart
          if(get.s && !get.part) {
             get = qs.parse(get.s.replace(/^[^?]+[?]/,""))
             //loggergen.log("hQinS:",get) 
-            if((get.q || get.r || get.w)) { hasQinS = true
+            if((get.q || get.r || get.w || get.i)) { hasQinS = true
                //fromSearch = this.state.fromSearch               
             }                
          }
@@ -1139,28 +1270,28 @@ class ResourceViewer extends Component<Props,State>
 
             if(gotoResults) {
                let staticRegExp = new RegExp("^(latest|"+Object.keys(staticQueries).join("|")+")(.*)$"), m;
-               if(backTo.startsWith("latest")) this.props.history.push({pathname:"/latest",search:backTo.replace(/^latest/,"")})
-               else if(m = backTo.match(staticRegExp)) this.props.history.push({pathname:"/"+m[1],search:m[2]})
-               else if(backTo.startsWith("search")) this.props.history.push({pathname:"/search",search:backTo.replace(/^[^?]+[?]/,"")})                              
+               if(backTo.startsWith("latest")) this.props.navigate({pathname:"/latest",search:backTo.replace(/^latest/,"")})
+               else if(m = backTo.match(staticRegExp)) this.props.navigate({pathname:"/"+m[1],search:m[2]})
+               else if(backTo.startsWith("search")) this.props.navigate({pathname:"/search",search:backTo.replace(/^[^?]+[?]/,"")})                              
                else {
                   get = qs.parse(backTo.replace(/^[^?]+[?]/,""))
-                  this.props.history.push({pathname:"/search",search:get.s?get.s:backTo.replace(/^[^?]+[?]/,"")})   
+                  this.props.navigate({pathname:"/search",search:get.s?get.s:backTo.replace(/^[^?]+[?]/,"")})   
                }
             } else {
                if(backTo.startsWith("/show") && backTo.includes("backToOutline=true")) { 
                   const part = backTo.split("?")
-                  this.props.history.push({pathname:part[0],search:part[1].replace(/.backToOutline=true/,"")})
+                  this.props.navigate({pathname:part[0],search:part[1].replace(/.backToOutline=true/,"")})
                }
                
             }
 
             /*
-            if(backTo.startsWith("latest") && gotoResults) this.props.history.push({pathname:"/latest",search:backTo.replace(/^latest/,"")})
-            else if(!backTo.startsWith("/show") && hasQinS && gotoResults ) this.props.history.push({pathname:"/search",search:backTo})
+            if(backTo.startsWith("latest") && gotoResults) this.props.navigate({pathname:"/latest",search:backTo.replace(/^latest/,"")})
+            else if(!backTo.startsWith("/show") && hasQinS && gotoResults ) this.props.navigate({pathname:"/search",search:backTo})
             else if(hasQinS) {
                fromSearch = this.state.fromSearch
                let path = backTo.split("?")
-               this.props.history.push({pathname:hasQinS&& gotoResults?"/search":path[0],search:path[1]})
+               this.props.navigate({pathname:hasQinS&& gotoResults?"/search":path[0],search:path[1]})
             }
             else {
                fromSearch = backTo               
@@ -1172,11 +1303,16 @@ class ResourceViewer extends Component<Props,State>
          if(window.MiradorUseEtext) delete window.MiradorUseEtext ;
          if(window.currentZoom) delete window.currentZoom ;
 
-         let loca = { ...this.props.history.location }
+         let loca = { ...this.props.location }
          if(loca.hash == "#open-viewer") { 
-            loca.hash = ""
+            
+            loca.hash = ""            
             window.closeMirador = true;
-            this.props.history.push(loca);            
+            
+            let get = qs.parse(this.props.location.search)          
+            let s = get.s ? decodeURIComponent(get.s) : ""
+            if(s?.includes("/show/")) this.props.navigate(s)
+            else this.props.navigate(loca)
          }
 
          if(this.props.feedbucket && window.innerWidth <= 800) {
@@ -1463,6 +1599,9 @@ class ResourceViewer extends Component<Props,State>
       
       if(props.resources && props.resources[props.IRI]) {
 
+         if(props.IRI === "bdr:PR1ER12") {
+            if(!props.outlines?.[props.IRI]) props.onGetOutline(props.IRI)
+         }
          
          let root = getElem(bdo+"inRootInstance",props.IRI)
          if(root && root.length) {
@@ -1471,8 +1610,9 @@ class ResourceViewer extends Component<Props,State>
          }
 
          // #754 don't need to get outline data when on sub-node record page
-         if(props.IRI && !props.outline && getEntiType(props.IRI) === "Instance" && props.config && !root?.length) {             
+         if(props.resources[props.IRI] != true && props.IRI && !props.outline && getEntiType(props.IRI) === "Instance" && props.config && !root?.length) {             
             let hasPartB = getElem(tmp+"hasNonVolumeParts",props.IRI)
+            //console.log("hpb:",props.IRI,hasPartB,props.resources[props.IRI])
             if(hasPartB?.length && hasPartB[0].value == "true") props.onGetOutline(props.IRI, { "tmp:hasNonVolumeParts": true})
             else props.onGetOutline(props.IRI)
          }
@@ -1615,6 +1755,28 @@ class ResourceViewer extends Component<Props,State>
          s.ready = true
       }
 
+      let loadETres = props.disableInfiniteScroll?.outETvol
+      if(loadETres?.length) {
+         loadETres = shortUri(loadETres?.[0]?.value ?? "")
+         let startChar =  Number(props.disableInfiniteScroll?.outETstart?.[0].value ?? 0)
+         if(!props.resources[props.IRI] && state.currentText != loadETres || state.startChar != startChar) {  
+            
+            if(!props.that && props.snippets?.[props.IRI] === undefined) props.onGetSnippet(props.IRI);
+            
+            /*
+            else if((!props.snippets?.[props.IRI] || !props.snippets[props.IRI]?.length) && ETreinit != loadETres +"@"+ startChar) {
+               ETreinit = loadETres +"@"+ startChar
+               props.onLoading("etext", true)            
+               props.onReinitEtext(loadETres, { startChar }, true)
+            }
+            */
+
+            if(!s) s = { ...state }
+            s.currentText = loadETres
+            s.startChar = startChar
+         }
+      }
+
       if(s) return s
       else return null
    }
@@ -1673,21 +1835,21 @@ class ResourceViewer extends Component<Props,State>
       if(etext && etext.filter(e=> e.value.startsWith(bdo+"Etext")).length) etext = true
       else etext = false
 
-      loggergen.log("isEt?",etext)
+      //loggergen.log("isEt?",etext)
 
       return etext
    }
 
-   scrollToHashID(history) {
+   scrollToHashID(location) {
 
       // TODO scroll to top when IRI changed (and not on collapse open/close)
       // window.scrollTo(0, 0)
 
       //loggergen.log("histo?",JSON.stringify(history.location),this.state.openEtext)
 
-      if(!history) return
+      if(!location) return
 
-      let loca = { ...history.location }
+      let loca = { ...location }
       const hash = loca.hash.substring(1)
       
       if (hash && hash.length) {
@@ -1725,23 +1887,88 @@ class ResourceViewer extends Component<Props,State>
                   if(el) { 
                      el.scrollIntoView()      
                      delete loca.hash      
-                     history.replace(loca)
+                     this.props.navigate(loca, {replace: true})
                   }
                }), 
                3000 
             )
          }
       }
+      /*
       else if(this.state.openEtext) {         
          this.setState({openEtext:false })
       }
+      */
    }
 
 
 
    componentDidUpdate()  {
 
-      report_GA(this.props.config,this.props.history.location);
+      if(!this.props.pdfDownloadOnly && !this.props.outlineOnly) window.closeViewer = (ev, gotoResults = false) => {
+
+         loggergen.log("ev:", ev, gotoResults, this.props.location)
+
+         if(window.myAnalytics.unloadMirador) window.myAnalytics.unloadMirador()
+         if(window.mirador) delete window.mirador
+         if(window.MiradorUseEtext) delete window.MiradorUseEtext ;
+         if(window.currentZoom) delete window.currentZoom ;
+         
+         setTimeout( () => {
+            this.setState({ ...this.state, openMirador:false }); 
+         }, 15)
+
+         setTimeout( () => {
+
+            let loca = { ...this.props.location }
+            if(loca.hash == "#open-viewer") { 
+            
+               loca.hash = ""            
+               window.closeMirador = true;
+               
+               let get = qs.parse(this.props.location.search)
+               if(gotoResults) {
+                  let _get = qs.parse(get.s.split("?")[1])
+                  console.log("bTr:1",_get)
+                  if(_get.s?.includes("/search")) {
+                     this.props.navigate(decodeURIComponent(_get.s))         
+                     return
+                  }
+               } 
+               //console.log("bTr:2",this.props.location.search,get)
+               if(get.s?.includes("/show/")) this.props.navigate(get.s)
+               else this.props.navigate(loca)
+            }
+
+         }, 10)
+
+         
+         if(this.props.feedbucket && window.innerWidth <= 800) {
+            if(window.initFeedbucketInMirador) delete window.initFeedbucketInMirador;
+            $(".nav+#feedback").css("display","flex");
+            if(!$("#feedbucket.X").length) {
+               $("feedbucket-app").removeClass("on");
+               this.props.onFeedbucketClick("on");
+            } else {
+               this.props.onFeedbucketClick("on X");
+            }
+         
+         }
+      }
+      
+      //console.log("cdp:openMirador", this.props.IRI, this.props.pdfDownloadOnly, this.state.openMirador)
+
+      if(this.state.openMirador) { 
+         let t = getEntiType(this.props.IRI);  
+         let inRoot =  this.getResourceElem(bdo+"inRootInstance")
+         if(t && t != "Images" && !inRoot?.length) {
+            this.setState({openMirador:false})
+            return
+         }
+      }
+
+
+      report_GA(this.props.config,this.props.location);
       
       if(window.closeMirador) { 
          delete window.closeMirador
@@ -1750,7 +1977,7 @@ class ResourceViewer extends Component<Props,State>
          }
       }
 
-      let get = qs.parse(this.props.history.location.search)
+      let get = qs.parse(this.props.location.search)
       if(!get.osearch && this.props.outlineKW) {          
          //this.setState({outlineKW:"",dataSource:[]})
          this.props.onResetOutlineKW()
@@ -1759,21 +1986,21 @@ class ResourceViewer extends Component<Props,State>
          clear = true
       }
 
-      let s, clear
+      let s, clear, part = this.props.part ?? get.part
       
-      if(get.part && this.state.outlinePart !== get.part) { 
+      if(part && this.state.outlinePart !== part) { 
          if(!s) s = { ...this.state } 
          if(!s.title) s.title = {}
-         s.outlinePart = get.part
+         s.outlinePart = part
          clear = true
       }
       
-      if(!get.part && (!s && this.state.outlinePart || s && s.outlinePart) ) {
+      if(!part && (!s && this.state.outlinePart || s && s.outlinePart) ) {
          if(!s) s = { ...this.state } 
          s.outlinePart = false
          clear = true
       }
-      loggergen.log("outlinePart: ", s?s.outlinePart:"no s")
+      //loggergen.log("outlinePart: ", s?s.outlinePart:"no s")
       if(clear) {
          let collapse = { ...s.collapse }
          Object.keys(collapse).filter(k => k.startsWith("outline-")).map(k => { delete collapse[k]; })
@@ -1794,19 +2021,28 @@ class ResourceViewer extends Component<Props,State>
       // TODO
       // - expand '...' node already open by search
 
-      loggergen.log("update!!",s)
+      //loggergen.log("update!!",s)
+      
 
-
-      let loca = { ...this.props.history.location }
+      let loca = { ...this.props.location }
       const hash = loca.hash.substring(1)
       
-      if (hash && hash.length && hash === "open-viewer") {
+      if (hash && hash.length && hash === "open-viewer" && !this.props.pdfDownloadOnly && !this.props.outlineOnly) {
 
          let etext = this.isEtext()
-         loggergen.log("etxt?",etext, this.props.imageAsset,this.props.firstImage)
 
-         if(!etext && this.props.imageAsset /*&& this.props.firstImage*/ && !this.state.openMirador) {
-            this.showMirador()   
+         loggergen.log("etxt?",etext, this.props.imageAsset,this.props.firstImage,this.state.openMirador)
+
+         if(!etext && this.props.imageAsset /*&& this.props.firstImage*/) {
+            if(!this.state.openMirador) { 
+               let t = getEntiType(this.props.IRI);  
+               let inRoot =  this.getResourceElem(bdo+"inRootInstance")
+               if(t && (t == "Images" || t == "Instance" && inRoot?.length)) {
+                  console.log("call showM", this.props.IRI)
+                  this.showMirador()   
+               }
+            } 
+
             //delete loca.hash      
             //history.replace(loca)
          }
@@ -1825,23 +2061,34 @@ class ResourceViewer extends Component<Props,State>
          })
       }
       
-      this.scrollToHashID(this.props.history)
+      this.scrollToHashID(this.props.location)
 
       if(window.initFeedbucket) window.initFeedbucket()
    }
 
    componentWillUnmount() {
+      //console.log("cwu:openMirador",this.props.IRI, this.props.pdfDownloadOnly, this.state.openMirador)
       window.removeEventListener('popstate', this.onBackButtonEvent);
+
+      /* // not what's needed to reset the preview when only changing startChar
+      if(this.props.disableInfiniteScroll?.outETvol?.length) {
+         const id = shortUri(this.props.disableInfiniteScroll?.outETvol[0]?.value)
+         console.log("unmounting:",id,this)
+         setTimeout( () => this.props.onResetEtext(id), 1)
+      }
+      */
    }
    
    componentDidMount()
    {
-      loggergen.log("mount!!")
+      //console.log("cdm:openMirador",this.props.IRI,this.props.pdfDownloadOnly,this.state.openMirador)
       
       window.addEventListener('popstate', this.onBackButtonEvent);  
 
+      //console.log("props:", this.props)
+
       let s, timerScr
-      let get = qs.parse(this.props.history.location.search)
+      let get = qs.parse(this.props.location.search)
       if(get.tabs && get.tabs.length) {         
          s = ResourceViewer.setTitleFromTabs(this.props,{...this.state, tabs:get.tabs.split(",")})
       }
@@ -1870,12 +2117,24 @@ class ResourceViewer extends Component<Props,State>
 
       if(s) this.setState(s);
 
-      this.scrollToHashID(this.props.history)
+      this.scrollToHashID(this.props.location)
    }
 
    onBackButtonEvent(event) {      
       // DONE fix back button to page with open mirador not working
       if(window.location.hash !== "#open-viewer") window.closeMirador = true ;
+      else if(window.location.search.includes("openEtext")) { 
+         // quickfix for etext viewer
+         window.location.reload()
+
+         /*
+         // better fix? this.props looks undefined...
+         let ETres = window.location.search.replace(/^.*openEtext=([^#&]+)[#&].*$/,"$1")
+         this.props.onLoading("etext", true)
+         this.props.onReinitEtext(ETres)
+         this.setState({ currentText: ETres })
+         */
+      }
    }
 
    expand(str:string, useCfg:boolean = false) //,stripuri:boolean=true)
@@ -2007,7 +2266,7 @@ class ResourceViewer extends Component<Props,State>
          if(!prop[rdfs+"seeAlso"].length) delete prop[rdfs+"seeAlso"];
       }
 
-      if(prop[bdo+"instanceHasReproduction"]) {
+      if(prop[bdo+"instanceHasReproduction"] && !prop[rdf+"type"].some(t => t.value === bdo+"ImageInstance")) {
          let etexts = [ ...prop[bdo+"instanceHasReproduction"].filter(p => p.value && p.value.startsWith(bdr+"IE")) ] ;
          let images = [ ...prop[bdo+"instanceHasReproduction"].filter(p => p.value && p.value.startsWith(bdr+"W")) ] ;
 
@@ -2016,12 +2275,48 @@ class ResourceViewer extends Component<Props,State>
 
          //delete prop[bdo+"instanceHasReproduction"]
       }
-         
+
+      if(prop[bdo+"contentLocation"] && prop[bdo+"inRootInstance"] && prop[rdf+"type"].some(t => t.value === bdo+"Instance")) {
+
+         prop[tmp+"propHasScans"] = [{ type: "uri", value: this.props.IRI }]
+      }
+      
+      // #918
+      if(!prop[tmp+"propHasEtext"] && prop[tmp+"hasEtextInOutline"]?.length == 1) {
+         prop[tmp+"propHasEtext"] = prop[tmp+"hasEtextInOutline"]
+      }
+
+      if(prop[tmp+"propHasScans"]) {
+         if(!prop[tmp+"propHasEtext"]) { 
+            prop[tmp+"propHasEtext"] = []
+         }
+         if(!prop[tmp+"propHasEtext"].some(t => t.value === tmp+"notAvailable")) 
+            prop[tmp+"propHasEtext"].push({ value:tmp+"notAvailable"})
+      }
+
+      if(prop[bdo+"instanceOf"]) {
+         prop[tmp+"BDRCworkId"] = [{ 
+            type:"html", 
+            value:<span>
+               <Link to={window.location.hostname != "library.bdrc.io" 
+                     ? "/show/"+shortUri(prop[bdo+"instanceOf"]?.[0]?.value)
+                     : prop[bdo+"instanceOf"]?.[0]?.value}>
+                        {I18n.t("resource.workId1")}
+               </Link><span>&#32;</span>
+               {I18n.t("resource.workId2", {id:this.props.IRI.split(":")[1]})} 
+               <br/>
+               {I18n.t("resource.workId3", {id: shortUri(prop[bdo+"instanceOf"]?.[0]?.value).split(":")[1] } )} 
+               <Tooltip placement="bottom-start" classes={{tooltip:"commentT",popper:"commentP"}} title={<div><Trans i18nKey="resource.helpWorkId" components={{ italic: <i /> }} /></div>} >
+                  <HelpIcon class="material-icons help-workid"/>
+               </Tooltip>
+            </span>
+         }]
+      }
 
       if(sorted)
       {
 
-         let customSort = [ bdo+"hasPart", bdo+"instanceHasVolume", bdo+"workHasInstance", tmp+"siblingInstances", bdo+"hasTitle", bdo+"personName", bdo+"volumeHasEtext",
+         let customSort = [ bdo+"hasPart", bdo+"instanceHasVolume", bdo+"workHasInstance", tmp+"siblingInstances", bdo+"hasTitle", bdo+"personName", bdo+"volumeHasEtext", prop[tmp+"hasEtextInOutline"],
                             bdo+"personEvent", bdo+"placeEvent", bdo+"workEvent", bdo+"instanceEvent", bf+"identifiedBy", bdo+"lineageHolder", bdo+"creator" ]
 
          let sortLineageHolder = () => {
@@ -2097,23 +2392,32 @@ class ResourceViewer extends Component<Props,State>
 
 
 
-         let sortBySubPropNumber = (tag:string,idx:string) => {
+         let sortBySubPropNumber = (tag:string,idx:string,idx2?:string) => {
             let parts = prop[tag]
             if(parts) {
+
+               //console.log("sBspN:", tag, idx, parts, this.props.assocResources)
 
                let assoR = this.props.assocResources
                if (assoR) {
                   parts = parts.map((e) => {
 
-                     let index = assoR[e.value]
+                     let index = assoR[e.value], index2 = null
 
                      if(index) index = index.filter(e => e.type === idx || e.fromKey === idx)
                      if(index && index[0] && index[0].value) index = Number(index[0].value)
                      else index = null
 
-                     return ({ ...e, index })
+                     if(idx2) {
+                        index2 = assoR[e.value]
+                        if(index2) index2 = index2.filter(e => e.type === idx || e.fromKey === idx)
+                        if(index2 && index2[0] && index2[0].value) index2 = Number(index2[0].value)
+                        else index2 = null
+                     }
+
+                     return ({ ...e, index, index2 })
                   })
-                  parts = _.orderBy(parts,['index'],['asc'])
+                  parts = _.orderBy(parts,['index','index2'],['asc','asc'])
                }
                return parts ;
             }
@@ -2136,6 +2440,11 @@ class ResourceViewer extends Component<Props,State>
          }
 
          if(prop[bdo+"volumeHasEtext"]) prop[bdo+"volumeHasEtext"] = sortBySubPropNumber(bdo+"volumeHasEtext",bdo+"seqNum");
+
+         // #918
+         if(!prop[tmp+"propHasEtext"] && prop[tmp+"hasEtextInOutline"]?.length > 1 && this.props.assocResources) {
+            prop[tmp+"propHasEtext"] = [ sortBySubPropNumber(tmp+"hasEtextInOutline",tmp+"eTextInVolumeNumber",bdo+"sliceStartChar")[0] ];
+         }
 
          // TODO add partIndex in query
          if(prop[bdo+"hasPart"]) prop[bdo+"hasPart"] = sortBySubPropNumber(bdo+"hasPart",bdo+"partIndex");
@@ -2938,7 +3247,7 @@ class ResourceViewer extends Component<Props,State>
             return JSON.stringify(elem);
          }
 
-         //loggergen.log("uriformat",prop,elem.value,elem,dic,withProp,show)
+         //loggergen.log("uriformat",prop,elem.value,JSON.stringify(elem.data?.["skos:prefLabel"]?.[0]??{}),elem,dic,withProp,show)
          
          if(elem?.value?.startsWith("bdr:")) elem.value = elem.value.replace(/^bdr:/,bdr)
 
@@ -2969,7 +3278,7 @@ class ResourceViewer extends Component<Props,State>
          }
 
          let noLink = false
-         if(prop === adm+"logWho") noLink = true
+         if(prop === adm+"logWho" || elem.nolink) noLink = true
    
          // we need to know when info is from ontology (#360) 
          // + some properties are found both in query and ontology
@@ -3023,11 +3332,13 @@ class ResourceViewer extends Component<Props,State>
          else if(elem && elem.value && elem.value === bda+"LD_NGMPP_Metadata") { prefix = "ngmpp"; sameAsPrefix = "ngmpp hasIcon provider" ; }
 
          //loggergen.log("s?",prop,prefix,sameAsPrefix,pretty,elem,info,infoBase)         
+         
+         let sUri = shortUri(elem.value)
+         let inRoot =  this.getResourceElem(bdo+"inRootInstance", sUri, this.props.assocResources)
 
          let thumb, thumbV, hasThumbV, enti = getEntiType(elem.value)
          if(prop === bdo+"workHasInstance"  || prop === tmp+"propHasScans" || prop === tmp+"propHasEtext" ) {
             if(!info) info = [] 
-            let sUri = shortUri(elem.value)
 
             let prov = this.getResourceElem(tmp+"provider", sUri, this.props.assocResources)
             prov = this.getProviderID(prov);
@@ -3042,33 +3353,59 @@ class ResourceViewer extends Component<Props,State>
             if(enti === "Etext") {
                //ret = [<span class="svg">{svgEtextS}</span>]
                
-               //let vlink = "/"+show+"/"+prefix+":"+pretty+"?s="+encodeURIComponent(this.props.history.location.pathname+this.props.history.location.search)+"#open-viewer"    
+               //let vlink = "/"+show+"/"+prefix+":"+pretty+"?s="+encodeURIComponent(this.props.location.pathname+this.props.location.search)+"#open-viewer"    
                let vlink = "/"+show+"/"+prefix+":"+pretty+"?backToEtext="+this.props.IRI+"#open-reader"    
-               ret = [  <Link {...this.props.preview?{ target:"_blank" }:{}} to={"/show/"+sUri} class={"images-thumb no-thumb"} style={{"background-image":"url(/icons/etext.png)"}}></Link> ,
-                     <div class="images-thumb-links">
+               ret = [  <Link {...this.props.preview?{ target:"_blank" }:{}} to={"/show/"+sUri} class={"images-thumb no-thumb 1"} style={{"background-image":"url(/icons/etext.png)"}}></Link> ,
+                     <div class="images-thumb-links"  data-n={1}>
                         <Link {...this.props.preview?{ target:"_blank" }:{}} className={"urilink "+ prefix} to={vlink}>{I18n.t("resource.openViewer")}</Link>
-                        <Link {...this.props.preview?{ target:"_blank" }:{}} className={"urilink "+ prefix} to={"/"+show+"/"+prefix+":"+pretty}>{I18n.t("resource.openR")}</Link>
+                        {/* <Link {...this.props.preview?{ target:"_blank" }:{}} className={"urilink "+ prefix} to={"/"+show+"/"+prefix+":"+pretty}>{I18n.t("resource.openR")}</Link> */}                        
                      </div> ]
                if(prov) ret.push(prov)
             
             }
-            else if(enti === "Instance") { 
+            else if(enti === "Instance" && this.props.IRI === sUri )   { 
+               //ret = [<span class="svg">{svgInstanceS}</span>]
+               
+               
+               thumb =  this.getResourceElem(tmp+"thumbnailIIIFService", sUri, this.props.assocResources)
+               if(!thumb?.length) thumb = this.getResourceElem(tmp+"thumbnailIIIFSelected", sUri, this.props.assocResources)
+               if(!thumb?.length && this.props.firstImage) thumb = [{ value: this.props.firstImage }]
+                              
+               //console.log("noT?", thumb, !thumb?.length, sUri, this.props.assocResources, this.props.firstImage, this.props.IRI,this.props.manifestError)               
+
+               if(!thumb || !thumb.length)  ret = [  <Link {...this.props.preview?{ target:"_blank" }:{}} to={"/show/"+sUri+"#open-viewer"} class={"images-thumb no-thumb 2a"} style={{"background-image":"url(/icons/header/instance.svg)"}}></Link> ]
+               else {
+                  let thumbUrl = thumb[0].value
+                  if(!thumbUrl.match(/[/]default[.][^.]+$/)) thumbUrl += "/full/"+(thumb[0].value.includes(".bdrc.io/")?"!2000,145":",145")+"/0/default.jpg"
+                  else if(thumbUrl.match(/bdrc.io.*\/2000,\//)) thumbUrl = thumbUrl.replace(/\/2000,\//,"/!2000,145/")
+                  else thumbUrl = thumbUrl.replace(/[/]max[/]/,"/"+(thumbUrl.includes(".bdrc.io/")?"!2000,145":",145")+"/")
+                  ret = [  <Link {...this.props.preview?{ target:"_blank" }:{}} to={"/show/"+sUri+"#open-viewer"} class={"images-thumb"} style={{"background-image":"url("+thumbUrl+")"}}><img src={thumbUrl}/></Link> ]
+               }
+                           
+               if(prov) ret.push(prov)
+
+               //loggergen.log("thumbV:",thumbV,elem.value)
+
+            }
+            else if(enti === "Instance")  { 
                //ret = [<span class="svg">{svgInstanceS}</span>]
                
                
                thumbV =  this.getResourceElem(tmp+"thumbnailIIIFService", sUri, this.props.assocResources)
                if(!thumbV || !thumbV.length) thumbV = this.getResourceElem(tmp+"thumbnailIIIFSelected", sUri, this.props.assocResources)
-               
-               if(!thumbV || !thumbV.length)  ret = [  <Link {...this.props.preview?{ target:"_blank" }:{}} to={"/show/"+sUri} class={"images-thumb no-thumb"} style={{"background-image":"url(/icons/header/instance.svg)"}}></Link> ]
+                              
+               //console.log("noT?", !thumbV?.length, sUri, this.props.assocResources)               
+
+               if(!thumbV || !thumbV.length)  ret = [  <Link {...this.props.preview?{ target:"_blank" }:{}} to={"/show/"+sUri} class={"images-thumb no-thumb 2b"} style={{"background-image":"url(/icons/header/instance.svg)"}}></Link> ]
                else {
                   let thumbUrl = thumbV[0].value
                   if(!thumbUrl.match(/[/]default[.][^.]+$/)) thumbUrl += "/full/"+(thumbV[0].value.includes(".bdrc.io/")?"!2000,145":",145")+"/0/default.jpg"
+                  else if(thumbUrl.match(/bdrc.io.*\/2000,\//)) thumbUrl = thumbUrl.replace(/\/2000,\//,"/!2000,145/")
                   else thumbUrl = thumbUrl.replace(/[/]max[/]/,"/"+(thumbUrl.includes(".bdrc.io/")?"!2000,145":",145")+"/")
-                  ret = [  <Link {...this.props.preview?{ target:"_blank" }:{}} to={"/show/"+sUri} class={"images-thumb"} style={{"background-image":"url("+thumbUrl+")"}}></Link> ]
+                  ret = [  <Link {...this.props.preview?{ target:"_blank" }:{}} to={"/show/"+sUri} class={"images-thumb"} style={{"background-image":"url("+thumbUrl+")"}}><img src={thumbUrl}/></Link> ]
                }
-            
-               let inRoot =  this.getResourceElem(bdo+"inRootInstance", sUri, this.props.assocResources)
-               if(inRoot && inRoot.length && info && lang && lang === "bo-x-ewts" && info.match(/^([^ ]+ ){11}/)) info = [ info.replace(/^(([^ ]+ ){10}).*?$/,"$1"), <span class="ellip">{info.replace(/^([^ ]+ ){10}[^ ]+(.*?)$/,"$2")}</span> ]
+                           
+               if(inRoot && inRoot.length && info && lang && lang === "bo-x-ewts" && info.match(/^([^ ]+ ){11}/)) info = [ info.replace(/^(([^ ]+ ){10}).*?$/,"$1"), <span class="ellip">{info.replace(/^([^ ]+ ){10}([^ ]+.*?)$/,"$2")}</span> ]
 
                if(prov) ret.push(prov)
 
@@ -3097,7 +3434,7 @@ class ResourceViewer extends Component<Props,State>
          
          let noSpace
 
-         if(elem.inOutline || ((!thumbV || !thumbV.length) && enti != "Images" && ((info && infoBase && infoBase.filter(e=>e["xml:lang"]||e["lang"]).length >= 0) || (prop && prop.match && prop.match(/[/#]sameAs/))))) {
+         if(elem.inOutline || ((!thumbV || !thumbV.length) && enti != "Images" && (enti != "Instance" || sUri != this.props.IRI) && ((info && infoBase && infoBase.filter(e=>e["xml:lang"]||e["lang"]).length >= 0) || (prop && prop.match && prop.match(/[/#]sameAs/))))) {
 
             //loggergen.log("svg?",svgImageS)
 
@@ -3195,7 +3532,11 @@ class ResourceViewer extends Component<Props,State>
                      //loggergen.log("dico:",uri,info)
                   }
 
-                  link = <a class={"urilink prefLabel " } href={elem.url} onClick={(e) => { 
+                  if(elem.tmpAuthor?.length) {
+                     info = info+ I18n.t("prop.tmp:by") + elem.tmpAuthor
+                  }
+
+                  link = <Link class={"urilink prefLabel " } to={elem.url} onClick={(e) => { 
 
                      if(!elem.debug) {
 
@@ -3221,21 +3562,25 @@ class ResourceViewer extends Component<Props,State>
                         else collapse[elem.inOutline] = !collapse[elem.inOutline]
                         this.setState({ collapse }) // ,outlineKW:"" })
                         
-                        let loca = {...this.props.history.location}
+                        let loca = {...this.props.location}
 
                         loca.search = loca.search.replace(/((&part|part)=[^&]+)/,"") //|(&*osearch=[^&]+))/g,"")  ;
                         loca.search += "&part="+part
                         loca.search = loca.search.replace(/[?]&/,"?")
                         
                         loca.pathname = root
-                        this.props.history.push(loca)
+                        this.props.navigate(loca)
 
                         e.preventDefault();
                         e.stopPropagation();
                         return false;
                      }
                                                 
-                  } } data-info={info}>{info}</a>
+                  } } data-info={info}>{
+                        elem?.data?.partType === "bdr:PartTypeVolume" && (elem?.data?.partIndex ?? elem?.data?.index) != undefined && I18n.t("resource.outLn", {n:(""+(elem.data.partIndex?? elem?.data?.index)).padStart(2,'0')})
+                     }{
+                        elem?.data?.type === "EtextVolume" && elem?.data?.volumeNumber != undefined && I18n.t("resource.outLn", {n:(""+(elem?.data?.volumeNumber)).padStart(2,'0')})
+                     }{info}</Link>
                }
                else link = <Link {...this.props.preview?{ target:"_blank" }:{}} className={"urilink prefLabel " } to={"/"+show+"/"+uri}>{info}</Link>
 
@@ -3351,12 +3696,15 @@ class ResourceViewer extends Component<Props,State>
             if(!thumb && !thumbV) {
                ret = (<Link {...this.props.preview?{ target:"_blank" }:{}} className={"urilink "+ prefix} to={"/"+show+"/"+prefix+":"+pretty}><span lang="">{ret}{enti!="Etext"||prop?.endsWith("eTextInInstance")?prefix+":"+pretty:""}</span></Link>)
             }
-            else if(thumb && thumb.length) {
-               let thumbUrl = thumb[0].value
-               if(!thumbUrl.match(/[/]default[.][^.]+$/)) thumbUrl += "/full/"+(thumb[0].value.includes(".bdrc.io/")?"!2000,145":",145")+"/0/default.jpg"
-               else thumbUrl = thumbUrl.replace(/[/]max[/]/,"/"+(thumbUrl.includes(".bdrc.io/")?"!2000,145":",145")+"/")
-               let vlink = "/"+show+"/"+prefix+":"+pretty+"?s="+encodeURIComponent(this.props.history.location.pathname+this.props.history.location.search)+"#open-viewer"                
-               thumb = <div class="images-thumb" style={{"background-image":"url("+thumbUrl+")"}}/>;               
+            else if(thumb && thumb.length || this.props.manifestError?.error?.code === 401) {
+               let thumbUrl = thumb?.[0]?.value ?? ""
+               if(thumbUrl) {
+                  if(!thumbUrl.match(/[/]default[.][^.]+$/)) thumbUrl += "/full/"+(thumb[0].value.includes(".bdrc.io/")?"!2000,145":",145")+"/0/default.jpg"
+                  else if(thumbUrl.match(/bdrc.io.*\/2000,\//)) thumbUrl = thumbUrl.replace(/\/2000,\//,"/!2000,145/")
+                  else thumbUrl = thumbUrl.replace(/[/](max|(,600))[/]/,"/"+(thumbUrl.includes(".bdrc.io/")?"!2000,145":",145")+"/")
+               }
+               let vlink = "/"+show+"/"+prefix+":"+pretty+"?s="+encodeURIComponent(this.props.location.pathname+this.props.location.search)+"#open-viewer"                
+               thumb = <div class="images-thumb" style={{"background-image":"url("+thumbUrl+")"}}><img src={thumbUrl}/></div>;               
 
                const checkDLD = (ev) => {
                   loggergen.log("CDLD:",this.props.useDLD)
@@ -3380,11 +3728,135 @@ class ResourceViewer extends Component<Props,State>
                   } 
                }
 
-               ret = [<Link {...this.props.preview?{ target:"_blank" }:{}} className={"urilink "+ prefix} onClick={checkDLD.bind(this)} to={vlink}>{thumb}</Link>,
-                     <div class="images-thumb-links">
-                        <Link {...this.props.preview?{ target:"_blank" }:{}} className={"urilink "+ prefix} to={vlink} onClick={checkDLD.bind(this)}>{I18n.t("index.openViewer")}</Link>
-                        <Link {...this.props.preview?{ target:"_blank" }:{}} className={"urilink "+ prefix} to={"/"+show+"/"+prefix+":"+pretty}>{I18n.t("resource.openR")}</Link>
-                     </div>]
+               let scanInfo = this.getResourceElem(bdo+"scanInfo")
+               if(!scanInfo?.length) scanInfo = this.getResourceElem(bdo+"scanInfo", prefix+":"+pretty)
+               //console.log("scinfo:",this.props.IRI,scanInfo,this.props.resources,prefix+":"+pretty)
+               if(!scanInfo?.length) {   
+                  let loca = this.getResourceElem(bdo+"contentLocation")
+                  if(loca?.length) loca = this.getResourceBNode(loca[0].value)
+                  //console.log("loca:",this.props.IRI,loca,this.props.resources,prefix+":"+pretty)
+                  if(loca && loca[bdo+"contentLocationInstance"]?.length) {
+                     scanInfo = this.getResourceElem(bdo+"scanInfo", shortUri(loca[bdo+"contentLocationInstance"][0].value))
+                     //console.log("scan:",scanInfo,shortUri(loca[bdo+"contentLocationInstance"][0].value),this.props.resources)            
+                  }
+               }       
+
+               let inCollec = this.getResourceElem(bdo+"inCollection")
+               if(!inCollec?.length) inCollec = this.getResourceElem(bdo+"inCollection", prefix+":"+pretty)
+
+               let quality
+               elem = this.getResourceElem(bdo+"qualityGrade");
+               if(!elem?.length) elem = this.getResourceElem(bdo+"qualityGrade", prefix+":"+pretty)
+               if(elem && elem.length) elem = elem[0].value ;
+               if(elem === "0") {
+                  quality = <div class="data access"><h3><span style={{textTransform:"none"}}>{I18n.t("access.quality0")}</span></h3></div>
+               }
+
+               let fairUse = false, restrict = false, hasIA
+               let elem = this.getResourceElem(adm+"access")
+               if(!elem?.length) elem = this.getResourceElem(adm+"access", prefix+":"+pretty)
+               if(elem && elem.filter(e => e.value.match(/(AccessFairUse)$/)).length >= 1) fairUse = true
+               let accessLabel
+               if(elem?.length) accessLabel = getOntoLabel(this.props.dictionary,this.props.locale,elem[0].value)               
+
+               if(fairUse) { // && (!this.props.auth || this.props.auth && !this.props.auth.isAuthenticated()) ) { 
+
+                  let fairTxt, elem = this.getResourceElem(bdo+"digitalLendingPossible");
+                  if(!elem?.length) elem = this.getResourceElem(bdo+"digitalLendingPossible", prefix+":"+pretty)
+                  if(this.props.config && !this.props.config.chineseMirror) {
+                     if(!elem || elem.length && elem[0].value == "true" ) { 
+                        hasIA = true
+                     }
+                  }
+
+                  const toggleSnippet = () => this.setState({collapse:{...this.state.collapse, snippet:!this.state.collapse?.snippet}})
+
+                  if(!hasIA) {
+                     fairTxt = <>
+                        {/* 
+                        <a class="fairuse-IA-link no-IA" onClick={toggleSnippet}>{I18n.t("access.snippet"+(this.state.collapse.snippet?"H":"V"))}</a>
+                        <br/> 
+                        */}
+                        <Trans i18nKey="access.fairuse1" components={{ bold: <u /> }} /> { I18n.t("access.fairuse2")} <a href="mailto:help@bdrc.io">help@bdrc.io</a> { I18n.t("access.fairuse3")}
+                     </>
+                  } else {         
+                     let loca = this.getResourceElem(bdo+"contentLocation")
+                     if(loca?.length) loca = this.getResourceBNode(loca[0].value)
+                     let IAlink = this.getIAlink(loca, bdo)
+
+                     fairTxt = <>
+                        <span class="fairuse-IA-link-new">
+                           {/* <img class="ia" src="/IA.svg"/> */}
+                           {<Trans i18nKey="access.fairUseIA3" components={{ icon:<img class="link-out" src="/icons/link-out_fit.svg"/>, lk:<a target="_blank" href={IAlink} /> }} />}
+                           {/* <img class="link-out" src="/icons/link-out_fit.svg"/> */}
+                        </span>
+                        {/* <a class="fairuse-IA-link" onClick={toggleSnippet}>{I18n.t("access.snippet"+(this.state.collapse.snippet?"H":"V"))}</a>*/}
+                        <br/> 
+                        <Trans i18nKey="access.fairUseIA4" components={{ bold: <u /> }} />
+                     </>
+                  }
+
+                  fairUse = <div class= {"data access "+(hasIA?" hasIA newIA":" fairuse")}>
+                        <h3>
+                           <span style={{textTransform:"none"}}>
+                           {/* {I18n.t("access.limited20")}<br/> */}
+                           {fairTxt}
+                           { /*this.props.locale !== "bo" && [ I18n.t("misc.please"), " ", <a class="login" onClick={this.props.auth.login.bind(this,this.props.location)}>{I18n.t("topbar.login")}</a>, " ", I18n.t("access.credentials") ] }
+                           { this.props.locale === "bo" && [ I18n.t("access.credentials"), " ", <a class="login" onClick={this.props.auth.login.bind(this,this.props.location)}>{I18n.t("topbar.login")}</a> ] */ }
+                        </span>
+                        </h3>
+                     </div>
+               } else {
+                  if ( this.props.IIIFerrors && this.props.IIIFerrors[prefix+":"+pretty] && [404, 444].includes(this.props.IIIFerrors[prefix+":"+pretty]?.error.code))
+                        restrict =  <>
+                           <div class="data access notyet"><h3><span style={{textTransform:"none"}}>{I18n.t(this.props.outline?"access.not":"access.notyet")}</span></h3></div>
+                        </>
+                  else if ( this.props.IIIFerrors && this.props.IIIFerrors[prefix+":"+pretty] && (!this.props.auth || this.props.auth && (this.props.IIIFerrors[prefix+":"+pretty]?.error.code === 401 || this.props.IIIFerrors[prefix+":"+pretty]?.error.code === 403) )) 
+                     if(elem && elem.includes("RestrictedSealed")) 
+                        restrict =  <>
+                           <a class="urilink nolink noIA"><BlockIcon style={{width:"18px",verticalAlign:"top"}}/>{accessLabel}</a>
+                           <div class="data access sealed"><h3><span style={{textTransform:"none"}}><Trans i18nKey="access.sealed" components={{ bold: <u /> }} /> <a href="mailto:help@bdrc.io">help@bdrc.io</a>{I18n.t("punc.point")}</span></h3></div>
+                        </>
+                     else 
+                        //return  <div class="data access"><h3><span style={{textTransform:"none"}}>{I18n.t("misc.please")} <a class="login" {...(this.props.auth?{onClick:this.props.auth.login.bind(this,this.props.location)}:{})}>{I18n.t("topbar.login")}</a> {I18n.t("access.credentials")}</span></h3></div>
+                        restrict =  <>
+                           <a class="urilink nolink noIA"><BlockIcon style={{width:"18px",verticalAlign:"top"}}/>{accessLabel}</a>
+                           <div class="data access generic"><h3><span style={{textTransform:"none"}}><Trans i18nKey="access.generic" components={{ policies: <a /> }} /></span></h3></div>
+                        </>
+                        
+                  else if ( this.props.IIIFerrors && this.props.IIIFerrors[prefix+":"+pretty] && this.props.IIIFerrors[prefix+":"+pretty]?.error.code === 500 && this.props.IRI && !this.props.IRI.match(/^bdr:(IE|UT|V)/))
+                     restrict =  <>
+                        <div class="data access error"><h3><span style={{textTransform:"none"}}>{I18n.t("access.error")}</span></h3></div>
+                     </>
+                  
+               }
+
+               ret = [ 
+                        quality,
+                        fairUse,
+                        (!fairUse || this.state.collapse.snippet || true) &&(!this.props.IIIFerrors||!this.props.IIIFerrors[prefix+":"+pretty]|| this.props.IIIFerrors[prefix+":"+pretty].error?.code != 403)
+                        ? <Link {...this.props.preview?{ target:"_blank" }:{}} className={"urilink " + prefix + (this.props.IIIFerrors&&this.props.IIIFerrors[prefix+":"+pretty]?.error.code ? " error-"+this.props.IIIFerrors[prefix+":"+pretty]?.error?.code : "")} onClick={checkDLD.bind(this)} to={vlink}>{thumb}</Link>
+                        : null,
+                        (!fairUse || this.state.collapse.snippet || true || restrict) && <div class="images-thumb-links"  data-n={2}>
+                           { restrict 
+                              ? restrict 
+                              :  !this.props.IIIFerrors||!this.props.IIIFerrors[prefix+":"+pretty]                            
+                                 ?  <>
+                                       <Link {...this.props.preview?{ target:"_blank" }:{}} className={"urilink "+ prefix} to={vlink} onClick={checkDLD.bind(this)}>{I18n.t("index.openViewer"+(fairUse?"FU":""))}</Link>
+                                       <ResourceViewerContainer key={this.props.IRI+"_scans-"+prefix+":"+pretty} auth={this.props.auth} /*history={this.props.history}*/ location={this.props.location} navigate={this.props.navigate} IRI={prefix+":"+pretty} pdfDownloadOnly={true} />
+                                    </>
+                                 :  this.props.IIIFerrors[prefix+":"+pretty].error.code === 401 && (!this.props.auth || !this.props.auth.isAuthenticated())
+                                    ? <a class="urilink nolink"><BlockIcon style={{width:"18px",verticalAlign:"top"}}/>&nbsp;{I18n.t(hasIA?"resource.loginToPreview":"viewer.dlError401")}</a>                              
+                                    : [404,444].includes(this.props.IIIFerrors[prefix+":"+pretty].error.code) 
+                                       ? <a class="urilink nolink"><BlockIcon style={{width:"18px",verticalAlign:"top"}}/>&nbsp;{I18n.t("access.notyet")}</a>                              
+                                       : <a class="urilink nolink"><BlockIcon style={{width:"18px",verticalAlign:"top"}}/>&nbsp;{I18n.t("access.error")}</a>                              
+                                    // TODO: handle more access cases (fair use etc., see figma)
+                           }                        
+                           { scanInfo && //(!this.props.IIIFerrors||!this.props.IIIFerrors[prefix+":"+pretty]|| this.props.IIIFerrors[prefix+":"+pretty].error?.code != 403) && 
+                              <div>{scanInfo.map(s => <TextToggle text={getLangLabel(this,bdo+"scanInfo",[s])?.value}/>)}</div>}
+                           { inCollec?.length && <div>{I18n.t("resource.inCollection",{count:inCollec.length})} {inCollec.map((c,i) => ([i > 0 ? " | ":null,this.uriformat("", { type:"uri", value:c.value })]))}</div>}
+                           {/* <Link {...this.props.preview?{ target:"_blank" }:{}} className={"urilink "+ prefix} to={"/"+show+"/"+prefix+":"+pretty}>{I18n.t("resource.openR")}</Link> */}
+                        </div>]
             } else if(thumbV && thumbV.length) {
                let repro = this.getResourceElem(bdo+"instanceHasReproduction", shortUri(elem.value), this.props.assocResources)
                if(repro && repro.length) repro = shortUri(repro[0].value)
@@ -3394,11 +3866,11 @@ class ResourceViewer extends Component<Props,State>
                   else img = img.replace(/[/]max[/]/,"/"+(img.includes(".bdrc.io/")?"!2000,145":",145")+"/")
                }
                else hasT = false
-               let vlink = "/"+show+"/"+repro+"?s="+encodeURIComponent(this.props.history.location.pathname+this.props.history.location.search)+"#open-viewer"                
-               thumbV = <div class={"images-thumb"+(!hasT?" no-thumb":"")} style={{"background-image":"url("+img+")"}}/>;               
+               let vlink = "/"+show+"/"+repro+"?s="+encodeURIComponent(this.props.location.pathname+this.props.location.search)+"#open-viewer"                
+               thumbV = <div class={"images-thumb"+(!hasT?" no-thumb 3":"")} style={{"background-image":"url("+img+")"}}/>;               
 
                ret = [<Link {...this.props.preview?{ target:"_blank" }:{}} className={"urilink "+ prefix} to={hasT?vlink:"/"+show+"/"+prefix+":"+pretty}>{thumbV}</Link>,
-                     <div class="images-thumb-links">
+                     <div class="images-thumb-links" data-n={3}>
                         <Link {...this.props.preview?{ target:"_blank" }:{}} className={"urilink "+ prefix + (!hasT?" disable":"")} to={vlink}>{I18n.t("index.openViewer")}</Link>
                         <Link {...this.props.preview?{ target:"_blank" }:{}} className={"urilink "+ prefix} to={"/"+show+"/"+prefix+":"+pretty}>{I18n.t("resource.openR")}</Link>
                      </div>]
@@ -3426,8 +3898,9 @@ class ResourceViewer extends Component<Props,State>
    {
       let elem ;
 
-      if(!IRI) { 
-         IRI = this.props.IRI
+      if(!IRI || IRI && !useAssoc) { 
+
+         if(!IRI) IRI = this.props.IRI
              
          let longIRI = fullUri(IRI)
 
@@ -3459,7 +3932,7 @@ class ResourceViewer extends Component<Props,State>
 
       }
 
-      //loggergen.log("gR",prop,IRI,elem)
+      //loggergen.log("gR",prop,IRI,elem,useAssoc)
 
       return elem
    }
@@ -3659,9 +4132,9 @@ class ResourceViewer extends Component<Props,State>
 
       //loggergen.log("data",lang,data,other)                  
 
-      let loca = { ...this.props.history.location }
+      let loca = { ...this.props.location }
       if(e.start !== undefined) { 
-         loca.search = loca.search.replace(/(^[?])|(&*startChar=[^&]+)/g,"")
+         loca.search = loca.search.replace(/(^[?])|(startChar=[^&]+&*)/g,"")
          loca.search = "?startChar="+e.start+(loca.search?"&"+loca.search:"")
       }
 
@@ -3697,7 +4170,20 @@ class ResourceViewer extends Component<Props,State>
             {! hasTT && 
                <div /*style={{pointerEvents:"none"}}*/ >
                   <span id="anchor">
-                     { (e.start !== undefined) && <Link to={loca.pathname+loca.search+"#open-viewer"}><img style={{width:"16px"}} src="/icons/PLINK_small.svg"/></Link> }
+                     { (e.start !== undefined) && <Link to={loca.pathname+loca.search+"#open-viewer"} onClick={(ev) => {
+                              /*
+                              const ETres = e.link.replace(/^.*openEtext=([^#&]+)[#&].*$/,"$1")
+                              this.props.onLoading("etext", true)
+                              this.props.onReinitEtext(ETres) 
+                              */
+                              const text = window.location.origin+loca.pathname+loca.search+"#open-viewer"
+                              navigator.clipboard.writeText(text)
+                              prompt(I18n.t("misc.cbET"), text)
+                              ev.preventDefault()
+                              ev.stopPropagation()
+                              return false
+                           }}><img style={{width:"16px"}} src="/icons/PLINK_small.svg"/>
+                           </Link>}
                      <img src="/icons/info.svg" onClick={this.toggleHoverM(ID)} />
                   </span> 
                </div>
@@ -3890,7 +4376,8 @@ class ResourceViewer extends Component<Props,State>
          //loggergen.log("e",e,pretty,value)
 
          //if(this.props.assocResources && this.props.assocResources[value] && this.props.assocResources[value][0] && this.props.assocResources[value][0].fromKey && !prop.match(/[/#]sameAs/) ) 
-         if(this.props.resources && this.props.resources[this.props.IRI] && this.props.resources[this.props.IRI][value] && !prop.match(/[/#]sameAs/) ) 
+         if(this.props.resources && this.props.resources[this.props.IRI] && this.props.resources[this.props.IRI][value] && !prop.match(/[/#]sameAs/) 
+            && prop != _tmp+"propHasScans") 
          { 
             e.type = "bnode" 
 
@@ -4100,8 +4587,8 @@ class ResourceViewer extends Component<Props,State>
             }
             */
 
-            if(!txt) ret.push(<Tag onClick={this.toggleHoverM(ID,true)} onMouseEnter={this.toggleHoverMtooltip(ID,true)} onMouseLeave={this.toggleHoverMtooltip(ID,false)} className={(elem && elem.length > 1?"multiple ":"") + (sameAsPrefix?sameAsPrefix+" sameAs hasIcon":"") + " hasTogHovM"}>{befo}{tmp}{bdrcData}</Tag>)
-            else ret.push(<Tag onClick={this.toggleHoverM(ID,true)} onMouseEnter={this.toggleHoverMtooltip(ID,true)} onMouseLeave={this.toggleHoverMtooltip(ID,false)} className={(elem && elem.length > 1?"multiple ":"") +  (sameAsPrefix?sameAsPrefix+" sameAs hasIcon":"")+ " hasTogHovM" }>{befo}{tmp+" "+txt}{bdrcData}</Tag>)
+            if(!txt) ret.push(<Tag /*onClick={this.toggleHoverM(ID,true)}*/ onMouseEnter={this.toggleHoverMtooltip(ID,true)} onMouseLeave={this.toggleHoverMtooltip(ID,false)} className={(elem && elem.length > 1?"multiple ":"") + (sameAsPrefix?sameAsPrefix+" sameAs hasIcon":"") + " hasTogHovM"}>{befo}{tmp}{bdrcData}</Tag>)
+            else ret.push(<Tag /*onClick={this.toggleHoverM(ID,true)}*/ onMouseEnter={this.toggleHoverMtooltip(ID,true)} onMouseLeave={this.toggleHoverMtooltip(ID,false)} className={(elem && elem.length > 1?"multiple ":"") +  (sameAsPrefix?sameAsPrefix+" sameAs hasIcon":"")+ " hasTogHovM" }>{befo}{tmp+" "+txt}{bdrcData}</Tag>)
 
 
             //loggergen.log("ret",ret)
@@ -4222,7 +4709,7 @@ class ResourceViewer extends Component<Props,State>
 
                   let ID = "ID-"+subProp+"-"+tVal
 
-                  let sav = <Tag onClick={this.toggleHoverM(ID,true)} onMouseEnter={this.toggleHoverMtooltip(ID,true)} onMouseLeave={this.toggleHoverMtooltip(ID,false)} className={'label hasTogHovM'}>
+                  let sav = <Tag /*onClick={this.toggleHoverM(ID,true)}*/ onMouseEnter={this.toggleHoverMtooltip(ID,true)} onMouseLeave={this.toggleHoverMtooltip(ID,false)} className={'label hasTogHovM'}>
                         {tip}
                      </Tag>
                   sub.push(sav)
@@ -4345,7 +4832,7 @@ class ResourceViewer extends Component<Props,State>
                         let ID = "ID-"+prop+"-"+"note-i-"+nbN
                         
                         note.push(
-                            <div class="sub hasTogHovM"  onClick={this.toggleHoverM(ID,null,null,true)} onMouseEnter={this.toggleHoverMtooltip(ID,true)} onMouseLeave={this.toggleHoverMtooltip(ID,false)}>
+                            <div class="sub hasTogHovM"  /*onClick={this.toggleHoverM(ID,null,null,true)}*/ onMouseEnter={this.toggleHoverMtooltip(ID,true)} onMouseLeave={this.toggleHoverMtooltip(ID,false)}>
                             {sav}
                            </div>
                         )
@@ -4369,7 +4856,7 @@ class ResourceViewer extends Component<Props,State>
                         let ID = "ID-"+prop+"-"+"note-i-"+nbN
 
                         note.push(
-                           <div class="sub  hasTogHovM"  onClick={this.toggleHoverM(ID,null,null,true)} onMouseEnter={this.toggleHoverMtooltip(ID,true)} onMouseLeave={this.toggleHoverMtooltip(ID,false)}>
+                           <div class="sub  hasTogHovM"  /*onClick={this.toggleHoverM(ID,null,null,true)}*/ onMouseEnter={this.toggleHoverMtooltip(ID,true)} onMouseLeave={this.toggleHoverMtooltip(ID,false)}>
                               {sav}
                            </div>
                         )
@@ -4541,8 +5028,8 @@ class ResourceViewer extends Component<Props,State>
 
                            let ID = "ID-"+f+"-"+v.value
 
-                           if(!noVal) subsub.push(<Tag class="hasTogHovM"  onClick={this.toggleHoverM(ID,true)} onMouseEnter={this.toggleHoverMtooltip(ID,true)} onMouseLeave={this.toggleHoverMtooltip(ID,false)}>{txt}</Tag>)
-                           else sub.push(<Tag class="hasTogHovM"  onClick={this.toggleHoverM(ID,true)} onMouseEnter={this.toggleHoverMtooltip(ID,true)} onMouseLeave={this.toggleHoverMtooltip(ID,false)}>{txt}</Tag>)
+                           if(!noVal) subsub.push(<Tag class="hasTogHovM" /* onClick={this.toggleHoverM(ID,true)}*/ onMouseEnter={this.toggleHoverMtooltip(ID,true)} onMouseLeave={this.toggleHoverMtooltip(ID,false)}>{txt}</Tag>)
+                           else sub.push(<Tag class="hasTogHovM" /* onClick={this.toggleHoverM(ID,true)}*/ onMouseEnter={this.toggleHoverMtooltip(ID,true)} onMouseLeave={this.toggleHoverMtooltip(ID,false)}>{txt}</Tag>)
                         }
                      }
                   }
@@ -4721,9 +5208,8 @@ class ResourceViewer extends Component<Props,State>
 
    showMirador(num?:number,useManifest?:{},click) {
 
-
       let state = { ...this.state, openMirador:true, openDiva:false, openUV:false }
-
+      
       if(!this.state.openMirador) // || !$("#viewer").hasClass("hidden"))
       {
 
@@ -4732,11 +5218,11 @@ class ResourceViewer extends Component<Props,State>
          document.getElementsByName("viewport")[0].content = "width=device-width, initial-scale=1.0, maximum-scale=1.0" ;
 
          if(click && state.fromSearch && (state.fromSearch.startsWith("latest") || state.fromSearch.includes("t=Scan"))) {
-            let loca = {... this.props.history.location}
+            let loca = {... this.props.location}
             if(loca.search.match(/[?&]s=/)) loca.search = loca.search.replace(/[?&]s=[^&]+/,"")
             if(loca.search && !loca.search.endsWith("?")) loca.search += "&"            
             loca.search += "s="+encodeURIComponent(window.location.href.replace(/.*(\/show\/)/,"$1"))
-            this.props.history.push(loca)
+            this.props.navigate(loca)
          } else if(click) {
             state.fromClick = true ;
          } else {
@@ -4889,10 +5375,13 @@ class ResourceViewer extends Component<Props,State>
          });
    };
 
-   proplink = (k,txt,count?:integer=1,checkPlural = false) => {
-
+   proplink = (k,txt,count?:integer=1,checkPlural = false) => {      
 
       if(txt) console.warn("use of txt in proplink",k,txt)
+
+      const t = getEntiType(this.props.IRI)
+      if(t === "Instance" && k === bdo+"workHasInstance") k = _tmp + "otherInstance"
+      else if(t === "Work" && k === bdo+"workHasInstance") k = _tmp + "hasInstance"
 
       let tooltip
       if(this.props.dictionary && this.props.dictionary[k]) {
@@ -4916,7 +5405,7 @@ class ResourceViewer extends Component<Props,State>
          }
       }
 
-      let ret = (<a class="propref" {...(k.match(/purl[.]bdrc[.]io/) && !k.match(/[/]tmp[/]/) ? {"href":k}:{})} target="_blank">{txt?txt:this.fullname(k,false,false,true,true,count)}</a>)
+      let ret = (<a class="propref" {...(k.match(/purl[.]bdrc[.]io/) && !k.match(/[/]tmp[/]/) ? {"href":k}:{})} target="_blank">{txt?<span>{txt}</span>:this.fullname(k,false,false,true,true,count)}</a>)
 
       if(tooltip && tooltip.value) ret = <Tooltip placement="bottom-start" classes={{tooltip:"commentT",popper:"commentP"}} style={{marginLeft:"50px"}} title={<div>{tooltip.value}</div>}>{ret}</Tooltip>
 
@@ -4938,7 +5427,7 @@ class ResourceViewer extends Component<Props,State>
       }
 
       //loggergen.log("tabs?",_T,other,tabs)
-      let get = qs.parse(this.props.history.location.search)
+      let get = qs.parse(this.props.location.search)
 
       if(tabs.length) return "?tabs="+tabs.join(",")+(get.v?"&v="+get.v:"")
       else return ""
@@ -4949,23 +5438,28 @@ class ResourceViewer extends Component<Props,State>
       //loggergen.log("H2?",title, rootC, other)
 
       if(other) return <h2 title={title.value} lang={title.lang || this.props.locale}><Link {...this.props.preview?{ target:"_blank" }:{}}   {... rootC?{onClick:rootC}:{onClick:() => setTimeout(()=>window.scrollTo(0,0),10)}}  to={"/show/"+shortUri(other)+this.getTabs(T_,other)}>{_T}<span>{_befo}{title.value}</span>{this.tooltip(title.lang)}</Link></h2>
-      else return <h2 title={title.value} lang={title.lang || this.props.locale} class="on">{_T}<span>{_befo}{title.value}</span>{this.tooltip(title.lang)}</h2>
+      else return <><h2 title={title.value} lang={title.lang || this.props.locale} class="on">{_T}<span>{_befo}<span class="placeType">{title.value}</span></span>{this.tooltip(title.lang)}</h2>{ title.placeT?.length && <span class="date">{title.placeT.map(t => this.fullname(t.value, false, false, true)).map((s,i) => i > 0 ? ([I18n.t("punc.comma"), s]):s)}</span>}</>
    }
 
    setTitle = (kZprop,_T,other,rootC,noSame:boolean=false) => {
 
-      //loggergen.log("setT:", rootC, other)
+      //loggergen.log("setT:", rootC, this.props.IRI, other, kZprop, this.props.outlineOnly, )
+
+      let placeT ;
+      if(_T === "Place") {
+         placeT = this.getResourceElem(bdo+"placeType",other,this.props.assocResources);         
+      }
 
       let title,titlElem,otherLabels = [], T_ = _T ;
-      _T = [<span class={"T "+_T.toLowerCase()}>
+      _T = [<span class={"newT "+_T.toLowerCase()}>
          <span class="space-fix">
             <span>{I18n.t("types."+_T.toLowerCase())}</span>
-            <span class="RID">{shortUri(other?other:this.props.IRI)}</span>
-         </span>
+            {/* <span class="RID">{shortUri(other?other:this.props.IRI)}</span> */}
+         </span>         
       </span>]
 
-      if(kZprop.indexOf(skos+"prefLabel") !== -1)       {
-         titlElem = this.getResourceElem(skos+"prefLabel",other,this.props.assocResources);         
+      if(kZprop.indexOf(skos+"prefLabel") !== -1 || this.props.outlineOnly)       {
+         titlElem = this.getResourceElem(skos+"prefLabel",this.props.outlineOnly?this.props.IRI:other,this.props.assocResources);         
       }
       else if(kZprop.indexOf(bdo+"eTextTitle") !== -1)     {
          titlElem = this.getResourceElem(bdo+"eTextTitle",other,this.props.assocResources);
@@ -4979,6 +5473,8 @@ class ResourceViewer extends Component<Props,State>
           else  title = <h2 class="on" lang={this.props.locale}>{_T}<span>{loaded && (T_ === "Work" || T_ === "Instance")?I18n.t("resource.noT"):shortUri(other?other:this.props.IRI)}</span></h2>
       }
 
+      let resTitle
+      
       if(!title) {
          if(titlElem) {
             
@@ -4990,27 +5486,31 @@ class ResourceViewer extends Component<Props,State>
                titlElem = asArray.filter(a => !a.allSameAs || a.allSameAs.filter(b => b.includes(bdr)).length)
             }
             title = getLangLabel(this,"", titlElem, false, false, otherLabels)            
+            resTitle = title
          }
          
          //loggergen.log("titl:",title,kZprop,titlElem,otherLabels,other)
       
          let _befo
          if(title && title.value) {
-            if(!other && !document.title.includes(title.value) ) document.title = title.value + " - " + (this.props.config?.khmerServer?"Khmer Manuscript Heritage Project":"Buddhist Digital Archives")
+            if(!other /*&& !document.title.includes(title.value)*/) { 
+               document.title = title.value + " - " + (this.props.config?.khmerServer?"Khmer Manuscript Heritage Project":"Buddhist Digital Archives")
+            }
             if(title.fromSameAs && !title.fromSameAs.match(new RegExp(bdr))) {
                const {befo,bdrcData} = this.getSameLink(title,shortUri(title.fromSameAs).split(":")[0]+" sameAs hasIcon")            
                _befo = befo
             }
          }
          if(!title || title.value == "") title = { value: I18n.t("resource.noT"), lang: this.props.locale } // #825
+         if(placeT?.length) title.placeT = placeT //T[0].value
          title = this.getH2(title,_befo,_T,other,T_,rootC)         
 
       }
 
 
-      //loggergen.log("sT",other,title,titlElem)
+      //loggergen.log("sT:",this.props.IRI,other,title,titlElem)
 
-      return { title, titlElem, otherLabels }
+      return { title, titlElem, otherLabels, resTitle }
    }
 
    setManifest = (kZprop,iiifpres, rid = this.props.IRI, fullRid = fullUri(this.props.IRI)) => {
@@ -5357,7 +5857,7 @@ class ResourceViewer extends Component<Props,State>
                               {eL && <div><span>{I18n.t("location.endL",{num:eL})}</span></div>}
                            </div>
                         }>
-                           <h4>{str}{str && w && <span class="of"> {I18n.t("misc.of")}</span>} {w && this.uriformat(bdo+"contentLocationInstance",{value:w})}{this.hoverMenu()}</h4>
+                           <h4>{str}{/*str && w && <span class="of"> {I18n.t("misc.of")}</span>} {w && this.uriformat(bdo+"contentLocationInstance",{value:w})*/}{this.hoverMenu()}</h4>
                      </Tooltip>]
                );
             else if(w)
@@ -5453,7 +5953,7 @@ class ResourceViewer extends Component<Props,State>
    }
 
 
-   renderGenericProp = (elem, k, tags, hasMaxDisplay) => {
+   renderGenericProp = (elem, k, tags, hasMaxDisplay, get) => {
 
       let ret,isSub
       if(this.hasSub(k)) { 
@@ -5479,12 +5979,29 @@ class ResourceViewer extends Component<Props,State>
 
       let linkToVersions, maxVersions = 20
       if(k === bdo+"workHasInstance" && ret.length > 2) {
-         linkToVersions = <span class="expand linkToVersions"><Link {...this.props.preview?{ target:"_blank" }:{}} to={"/search?i="+this.props.IRI+"&t=Work"}>{I18n.t("misc.browseA",{count: ret.length})}</Link></span>
+         let wrid =  this.props.IRI 
+         const t = getEntiType(this.props.IRI)
+         if(t != "Work") {
+            let work = this.getResourceElem(bdo+"instanceOf")
+            if(work?.length) wrid = shortUri(work[0].value)
+         }
+         linkToVersions = <span class="expand linkToVersions">
+            <Link {...this.props.preview?{ target:"_blank" }:{}} 
+               to={/*"/search?i="+wrid+"&t=Work"*/"/osearch/associated/"+wrid?.split(":")[1]+"/search"}>
+                  {I18n.t("misc.browseA",{count: ret.length})}
+            </Link>
+         </span>
       }
       
       let linkToPlaces, maxPlaces = 20
       if(k === bdo+"placeContains" && ret.length >= 2) {
-         linkToPlaces = <span class="expand linkToPlaces"><Link {...this.props.preview?{ target:"_blank" }:{}} to={"/search?r="+this.props.IRI+"&t=Place&f=relation,inc,bdo:placeLocatedIn"}>{I18n.t("misc.browseA",{count: ret.length})}</Link></span>
+         linkToPlaces = <span class="expand linkToPlaces">
+            <Link {...this.props.preview?{ target:"_blank" }:{}} 
+               to={ //"/search?r="+this.props.IRI+"&t=Place&f=relation,inc,bdo:placeLocatedIn"
+                    "/osearch/associated/"+this.props.IRI.split(":")[1]+"/search?type%5B0%5D=Place"}> 
+                  {I18n.t("misc.browseA",{count: ret.length})}
+            </Link>
+         </span>
       }
 
       if(!isSub && n > maxDisplay) {      
@@ -5547,7 +6064,152 @@ class ResourceViewer extends Component<Props,State>
             </div>
          )
       }
-      else {
+      else if(k === _tmp+"propHasEtext") {
+                  
+         let outlineEtext = this.getResourceElem(tmp+"hasEtextInOutline")
+
+         let hasEtextAndNotAvail = elem.length > 1 && elem[elem.length - 1].value === _tmp+"notAvailable", hasPossibleET = false
+
+         let compo = ( elem.map((e,i) => {
+
+            let outETvol, outETinst, outETstart, outETscope 
+            if(outlineEtext?.length){
+               outETscope = shortUri(outlineEtext[i].value)
+               outETinst = this.getResourceElem(bdo+"eTextInInstance", outETscope, this.props.assocResources)
+               outETvol = this.getResourceElem(bdo+"eTextInVolume", outETscope, this.props.assocResources)
+               outETstart= this.getResourceElem(bdo+"sliceStartChar", outETscope, this.props.assocResources)              
+               //console.log("oEiv:", outETinst, outETvol, outETstart, outETscope)
+            }   
+            
+            let snip = this.props.snippets?.[this.props.IRI]  
+            if(snip === undefined && this._snip != this.props.IRI && !this.props.outlineOnly) { //} && get.unaligned === "true") {
+               this.props.onGetSnippet(this.props.IRI);
+               this._snip = this.props.IRI
+            }
+            if(snip === false) {
+               if(i == 0) return <div {...rootID?{"data-rootID":rootID}:{}} data-prop={shortUri(k)} class={""}>               
+                  <h3><span>{this.proplink(k,null,n)}{I18n.t("punc.colon")}</span> </h3>               
+                  <div class={"group"}>
+                     { this.format("h4",k,"",false,"sub", elem[elem.length-1]?.value === _tmp+"notAvailable" ? [elem[elem.length-1]] : [{type:"uri",value:_tmp+"notAvailableYet"}]) }
+                  </div>
+               </div>
+               else return null
+            }
+
+            let root = this.getResourceElem(bdo+"inRootInstance"), rootID = root?.length ? shortUri(root?.[0].value) : ""
+            
+            if(e.value === _tmp+"notAvailable" || snip === false) {
+               
+               if(snip != false && elem.length > 1) return
+
+               let possibleEtext = root?.length > 0 && snip != false && this.getResourceElem(bdo+"instanceHasReproduction", shortUri(root[0].value), this.props.assocResources)?.filter(i => {
+                  let t = this.getResourceElem(rdf+"type", shortUri(i.value), this.props.assocResources)
+                  return t?.some(l => l?.value?.endsWith("EtextInstance")) && !  outlineEtext?.some(o => this.getResourceElem(bdo+"eTextInInstance", shortUri(o.value), this.props.assocResources)?.some(n => n.value === i.value))
+               }).filter(r => !snip || r.value?.endsWith(snip.etext_instance))
+               
+               //console.log("inRoot?", root, possibleEtext, elem, snip)
+
+               let outETvol = null , outETstart = null, outETscope = null, outETinst = null
+
+               let ET, elem_
+               if(possibleEtext?.length) {
+                  hasPossibleET = true
+                  ET = shortUri(possibleEtext?.[0]?.value)
+                  elem_ = [{ value: _tmp+"noPagination" }]
+               } 
+
+               if(snip?.precision > 0) {
+                  
+                  outETvol = [{
+                     "type": "uri",
+                     "value": fullUri("bdr:"+snip.etext_vol)
+                  }]
+                  outETstart = [{
+                     "type": "literal",
+                     "value": "0",
+                     "datatype": "http://www.w3.org/2001/XMLSchema#integer"
+                  }]
+                  outETscope = "bdr:"+(snip.ut ?? snip.etext_vol)
+                  outETinst = [{
+                     "type": "uri",
+                     "value": fullUri("bdr:"+snip.etext_instance)
+                  }]
+               } else if(snip && snip != true && rootID && this.state.checkedEtext != rootID && !this.props.resources[rootID]) {
+                  this.props.onGetResource(rootID);
+                  this.setState({checkedEtext:rootID})
+               }
+
+               //console.log("snip:",rootID,snip,this.state.checkedEtext,this.props.resources?.[rootID])
+               
+               return <div {...rootID?{"data-rootID":rootID}:{}} data-prop={shortUri(k)} class={possibleEtext?.length > 0 ? "has-preview-true "+elem.length:""}>               
+                  <h3><span>{this.proplink(k,null,n)}{elem.length > 1 ? " "+I18n.t("punc.num",{num:i+1}) : ""}{I18n.t("punc.colon")}</span> </h3>               
+                     <div class={"group"+(possibleEtext?.length > 0 || snip? " preview-etext" : "")}>
+                        {possibleEtext?.length > 0 
+                           ?  <>
+                                 {!(snip?.precision > 1) && <h4><span>{I18n.t("prop.tmp:noPagination")}</span></h4> }
+                                 <ResourceViewerContainer key={this.props.IRI+"_etext"+"-"+i+"_"+ET}  auth={this.props.auth} /*history={this.props.history}*/ location={this.props.location} navigate={this.props.navigate} IRI={ET} previewEtext={{ outETvol: null, outETstart: null, outETscope: null, outETinst: null, snip }}/>  
+                              </>
+                           : rootID && (this.state.checkedEtext != rootID || this.props.resources[rootID] === true)
+                              ? <><h4 class="possibleEtext">
+                                    {rootID && this.props.resources[rootID] === true && <Loader className="etext-loader" loaded={false} /> }
+                                    {/* <a disabled={this.props.resources[rootID] === true} onClick={() => {                                  
+                                          this.props.onGetSnippet(this.props.IRI);
+                                       }}>
+                                          {I18n.t("resource.checkET"+(elem.length > 1 ? "long":""))}
+                                    </a> */}
+                                 </h4></>
+                              : snip
+                                 ? <>
+                                       { snip?.precision <= 1 && <h4><span>{I18n.t("prop.tmp:noPagination")}</span></h4> }
+                                       <ResourceViewerContainer key={this.props.IRI+"_etext"+"-"+i+"_"+snip.etext_instance}  auth={this.props.auth} /*history={this.props.history}*/ location={this.props.location} navigate={this.props.navigate} IRI={"bdr:"+snip.etext_instance} previewEtext={{ outETvol, outETstart, outETscope, outETinst, snip }}/>  
+                                    </>
+                                 : elem.length === 1 
+                                    ? this.format("h4",k,"",false,"sub",elem_) 
+                                    : rootID
+                                       ? <h4><span>{I18n.t("resource.noOtherET")}</span></h4>
+                                       : null}
+
+                     </div>
+                  </div>
+               }
+            
+               return  this.state.openMirador?<></>:( <div {...rootID?{"data-rootID":rootID}:{}} data-prop={shortUri(k)} class={hasEtextAndNotAvail?" etext-and-preview-not-available":""} >               
+               <h3><span>{this.proplink(k,null,n)}{elem.filter(e => e.value !== _tmp+"notAvailable").length > 1  || this.state.checkedEtext === rootID ? <span class="ETnum">{" "+I18n.t("punc.num",{num:i+1})}</span> : ""}{I18n.t("punc.colon")}</span> </h3>
+               {this.preprop(k,0,n)}
+               <div class="group preview-etext">
+                  {/* <Link to={"/show/"+shortUri(e.value)}>{shortUri(e.value)}</Link> */}
+                  <ResourceViewerContainer key={shortUri(outETvol?.[0]?.value ?? e.value)+"_preview"} auth={this.props.auth} /*history={this.props.history}*/ location={this.props.location} navigate={this.props.navigate} IRI={shortUri(outETvol?.[0]?.value ?? e.value)} previewEtext={{ outETvol, outETstart, outETscope, outETinst, snip }}/>  
+               </div>
+            </div>
+         )}))
+
+         return <>
+            { <span class={"has-possible-ET-"+hasPossibleET}></span>}
+            { compo }
+            </>
+      } else if(k === _tmp+"propHasScans") {
+         console.log("pHs")
+         return  this.state.openMirador?<></>:( ret.map((r,i) => (
+            <div  data-prop={shortUri(k)} >               
+               <h3><span>{this.proplink(k,null,n)}{ret.length > 1 ? " "+I18n.t("punc.num",{num:i+1}) : ""}{I18n.t("punc.colon")}</span> </h3>
+               {this.preprop(k,0,n)}
+               <div class="group">
+                  {r}                  
+               </div>
+            </div>
+         )))
+      } else if(k === _tmp+"containingOutline") {
+         let data
+         if(this.props.assocResources && elem?.length) { 
+            data = this.props.assocResources[elem[0].value]
+            if(data && data.length) data = getLangLabel(this,k,data.filter(d => [skos+"prefLabel",skos+"altLabel",rdfs+"label"].includes(d.type) || [skos+"prefLabel",skos+"altLabel",rdfs+"label"].includes(d.fromKey)))
+            console.log('ctnO:', data, elem)
+         }
+         return ( 
+            <ResourceViewerContainer key={shortUri(elem[0]?.value)+"_outline"} auth={this.props.auth} /*history={this.props.history}*/ location={this.props.location} navigate={this.props.navigate} IRI={shortUri(elem[0]?.value)} outlineOnly={true} part={this.props.IRI}/> 
+         )
+         
+      } else {
          let classN = k===bdo+"note"
             ? "has-collapse custom"
             :  linkToPlaces
@@ -5634,6 +6296,120 @@ class ResourceViewer extends Component<Props,State>
                } ) }
             </Popover>
          ])
+      }
+   }
+
+   otherResources(same,id,noS) {
+
+      let list = [], useRid = []
+
+      if(same && same.length) { 
+         
+         let viaf = same.filter(s => s.value.includes("viaf.org/"))
+         if(viaf.length) {
+            viaf = viaf[0].value
+            if(viaf && !same.filter(s => s.value.includes("worldcat.org/")).length) same.push({value:viaf.replace(/^.*\/([^/]+)$/,"https://www.worldcat.org/identities/containsVIAFID/$1"),type:"uri"})
+         } 
+         
+         let mapSame = same.map(s => {
+            //loggergen.log("s.val:",s.value)
+
+            if(s.value.startsWith(bdr)) return
+
+            let prefix = shortUri(s.value).split(":")[0]            
+            if(prefix === "sats") prefix = "sat" // #570
+            if(prefix.startsWith("http") && s.fromSeeOther) prefix = s.fromSeeOther
+            // TODO fix Sakya Research Center
+            if(!list.includes(prefix)) {
+               list.push(prefix)
+               let link = s.value, prov = shortUri(s.value).split(":")[0], name = I18n.t("result.resource")
+               if(prov === "sats") prov = "sat" // #570
+               if(prov.startsWith("http") && s.fromSeeOther) prov = s.fromSeeOther
+               let data,tab ;
+               if(this.props.assocResources) data = this.props.assocResources[s.value]                  
+               if(data && (tab=data.filter(t => t.fromKey === adm+"canonicalHtml")).length) link = tab[0].value                       
+               
+               // DONE case when more than on resource from a given provider (cf RKTS)
+               let useR = !useRid.includes(prov)
+               
+               if(this.props.config && this.props.config.chineseMirror) link = link.replace(new RegExp(cbeta), "http://cbetaonline.cn/")
+               
+               let ID = "ID-tmp:otherResources-"+link      
+   
+
+               let ret = <a target="_blank" href={link} className="otherRlink">                     
+                  <span class={"provider "+prefix}>{provImg[prefix]?<img src={provImg[prefix]}/>:<span class="img">{prefix.replace(/^cbc.$/,"cbc@").toUpperCase()}</span>}</span>
+                  {/* {I18n.t("result.open")} {useR && name} {!useR && <emph> {shortUri(s.value)} </emph>}{I18n.t("misc.in")} &nbsp; */}
+                  {providers[prov]}
+                  <img src="/icons/link-out.svg"/>
+               </a>
+            
+               const sav = [ ret ]
+               sav.push(this.hoverMenu("tmp:otherResources",{value:link}, [ ret ]))
+
+               return (<h4 class="multiple hasTogHovM" /*onClick={this.toggleHoverM(ID,true)}*/ onMouseEnter={this.toggleHoverMtooltip(ID,true)} onMouseLeave={this.toggleHoverMtooltip(ID,false)}>
+                     { sav }
+                  </h4>
+                  )
+
+               //loggergen.log("permaSame",s,data,tab,link,name,prov) 
+
+
+            } else {
+               useRid.push(prefix)
+            }
+         }).filter(s => s)
+         
+         if(mapSame.length) return (
+            <div id="otherR" data-prop="tmp:otherResources">
+               <h3>
+                  <span>
+                      <Tooltip placement="bottom-start" classes={{tooltip:"commentT",popper:"commentP"}} style={{marginLeft:"50px"}} title={<div>{I18n.t("resource.sameL",{count:mapSame.length})}</div>}>
+                        <a class="propref"><span>{I18n.t("misc.otherR",{count:mapSame.length})}</span></a>
+                     </Tooltip>
+                     {I18n.t("punc.colon")}
+                  </span>
+               </h3> 
+               <div class="group">{ mapSame }</div>
+            </div>
+         )
+      
+
+         /*
+         return ([
+   
+
+            <Popover
+               id="popSame"
+               open={this.state.collapse["permaSame-"+id]?true:false}
+               transformOrigin={{vertical:'bottom',horizontal:'right'}}
+               anchorOrigin={{vertical:'top',horizontal:'right'}}
+               anchorEl={this.state.anchorPermaSame}
+               onClose={e => { this.setState({...this.state,anchorPermaSame:null,collapse: {...this.state.collapse, ["permaSame-"+id]:false } } ) }}
+               >
+               { same.map(s => { 
+                     let link = s.value, prov = shortUri(s.value).split(":")[0], name = I18n.t("result.resource")
+                     if(prov === "sats") prov = "sat" // #570
+                     if(prov.startsWith("http") && s.fromSeeOther) prov = s.fromSeeOther
+                     let data,tab ;
+                     if(this.props.assocResources) data = this.props.assocResources[s.value]                  
+                     if(data && (tab=data.filter(t => t.fromKey === adm+"canonicalHtml")).length) link = tab[0].value                       
+                     
+                     // DONE case when more than on resource from a given provider (cf RKTS)
+                     let useR = !useRid.includes(prov)
+                     
+                     let open = <MenuItem>{I18n.t("result.open")} {useR && name} {!useR && <emph> {shortUri(s.value)} </emph>}{I18n.t("misc.in")} &nbsp;<b>{providers[prov]}</b><img src="/icons/link-out.svg"/></MenuItem>
+                     if(s.isOrig) open = <MenuItem style={{display:"block",height:"32px",lineHeight:"12px"}}>{I18n.t("popover.imported")} <b>{providers[prov]}</b><br/>{I18n.t("popover.seeO")}<img style={{verticalAlign:"middle"}} src="/icons/link-out.svg"/></MenuItem>
+
+                     //loggergen.log("permaSame",s,data,tab,link,name,prov) 
+
+                     if(this.props.config && this.props.config.chineseMirror) link = link.replace(new RegExp(cbeta), "http://cbetaonline.cn/")
+
+                     if(prov != "bdr") return (<a target="_blank" href={link}>{open}</a>) // keep original http/s prefix (#381)
+               } ) }
+            </Popover>
+         ])
+         */
       }
    }
 
@@ -5841,37 +6617,8 @@ renderPopupPrint(IRI,place = "bottom-start") {
    )
 }
 
-perma_menu(pdfLink,monoVol,fairUse,other,accessET)
+prepareSame(other, sameLegalD) 
 {
-   let that = this
-
-
-   let legal = this.getResourceElem(adm+"metadataLegal"), legalD, sameLegalD
-   if(legal && legal.length) legal = legal.filter(p => !p.fromSameAs)
-   if(legal && legal.length && legal[0].value && this.props.dictionary) { 
-      legalD = this.props.dictionary[legal[0].value]
-      sameLegalD = legalD
-      if(legalD) legalD = legalD[adm+"license"]
-      if(legalD && legalD.length && legalD[0].value) legalD = legalD[0].value
-   }
-
-   let cLegal = this.getResourceElem(adm+"contentLegal"), cLegalD
-   if(cLegal && cLegal.length) cLegal = cLegal.filter(p => !p.fromSameAs)
-   if(cLegal && cLegal.length && cLegal[0].value && this.props.dictionary) { 
-      cLegalD = this.props.dictionary[cLegal[0].value]
-      if(cLegalD) cLegalD = cLegalD[adm+"license"]
-      if(cLegalD && cLegalD.length && cLegalD[0].value) cLegalD = cLegalD[0].value
-   }
-
-   let copyR = ""  //"open_unknown" ;
-   if((cLegalD && cLegalD.endsWith("CC0"))||(!cLegalD && legalD && legalD.endsWith("CC0"))) copyR = "open" ;
-   else if((cLegalD && cLegalD.endsWith("PublicDomain"))||(!cLegalD && legalD && legalD.endsWith("PublicDomain"))) copyR = "open" ;
-   else if((cLegalD && cLegalD.endsWith("AllRightsReserved"))||(!cLegalD && legalD && legalD.endsWith("AllRightsReserved"))) copyR = "not_open" ;
-   else if((cLegalD && cLegalD.endsWith("Undetermined"))||(!cLegalD && legalD && legalD.endsWith("Undetermined"))) copyR = "open_unknown" ;
-   // TODO other kind of licenses ?
-
-   //loggergen.log("legal",cLegal,cLegalD,legal,legalD)
-
    let same = this.getResourceElem(owl+"sameAs")
    if(!same || !same.length) same = [] 
    for(let o of other) { 
@@ -5907,6 +6654,42 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
    } else {
       if(!same.some(s => s.value && !s.value.startsWith(bdr))) noS = true
    }
+
+   return {same, noS}
+}
+
+perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
+{
+   let that = this
+
+
+   let legal = this.getResourceElem(adm+"metadataLegal"), legalD, sameLegalD
+   if(legal && legal.length) legal = legal.filter(p => !p.fromSameAs)
+   if(legal && legal.length && legal[0].value && this.props.dictionary) { 
+      legalD = this.props.dictionary[legal[0].value]
+      sameLegalD = legalD
+      if(legalD) legalD = legalD[adm+"license"]
+      if(legalD && legalD.length && legalD[0].value) legalD = legalD[0].value
+   }
+
+   let cLegal = this.getResourceElem(adm+"contentLegal"), cLegalD
+   if(cLegal && cLegal.length) cLegal = cLegal.filter(p => !p.fromSameAs)
+   if(cLegal && cLegal.length && cLegal[0].value && this.props.dictionary) { 
+      cLegalD = this.props.dictionary[cLegal[0].value]
+      if(cLegalD) cLegalD = cLegalD[adm+"license"]
+      if(cLegalD && cLegalD.length && cLegalD[0].value) cLegalD = cLegalD[0].value
+   }
+
+   let copyR = ""  //"open_unknown" ;
+   if((cLegalD && cLegalD.endsWith("CC0"))||(!cLegalD && legalD && legalD.endsWith("CC0"))) copyR = "open" ;
+   else if((cLegalD && cLegalD.endsWith("PublicDomain"))||(!cLegalD && legalD && legalD.endsWith("PublicDomain"))) copyR = "open" ;
+   else if((cLegalD && cLegalD.endsWith("AllRightsReserved"))||(!cLegalD && legalD && legalD.endsWith("AllRightsReserved"))) copyR = "not_open" ;
+   else if((cLegalD && cLegalD.endsWith("Undetermined"))||(!cLegalD && legalD && legalD.endsWith("Undetermined"))) copyR = "open_unknown" ;
+   // TODO other kind of licenses ?
+
+   //loggergen.log("legal",cLegal,cLegalD,legal,legalD)
+
+   let { same, noS } = this.prepareSame(other, sameLegalD) 
 
    let isEtextVol = false
    if(this.props.IRI && getEntiType(this.props.IRI) === "Etext") {
@@ -5953,7 +6736,165 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
    // + fix bdr:G3176 (sameAs Shakya Research Center)
    // + use <Tooltip/> instead of title="""
 
-   return (
+   const popupPdf = (that.props.pdfVolumes && that.props.pdfVolumes.length > 0) &&
+      <Popover
+         className="poPdf"
+         open={that.state.pdfOpen == true || that.props.pdfReady == true}
+         anchorEl={that.state.anchorPermaDL}
+         //anchorOrigin={{ vertical: 'bottom' }}
+         //transformOrigin={{ vertical: 'top' }}
+         onClose={that.handleRequestClosePdf.bind(this)}
+      >
+         <List>
+            {/*
+            that.props.pdfUrl &&
+            [<MenuItem onClick={e => that.setState({...that.state,pdfOpen:false})}><a href={that.props.pdfUrl} target="_blank">Download</a></MenuItem>
+            ,<hr/>]
+            */}
+            { !this.props.useDLD && authError && (
+            isProxied(that)
+               ? <ListItem><div className="mustLogin"><Trans i18nKey="resource.notInList" components={{lk:<a class='uri-link' target='_blank' href={"https://library"+"."+"bdrc"+"."+"io/show/"+that.props.IRI} />, nl:<br/>}}/></div></ListItem>
+               : <ListItem><a className="mustLogin" onClick={() => that.props.auth.login(that.props.location)}>{I18n.t("resource.mustLogin")}</a></ListItem>
+            )}
+            {
+            (!authError || this.props.useDLD) && that.props.pdfVolumes.map(e => {
+
+               let Ploading = e.pdfFile && e.pdfFile == true
+               let Ploaded = e.pdfFile && e.pdfFile != true
+               let Perror = e.pdfFile && e.pdfError || e.pdfError === 501
+               let Prange = this.state.collapse["pdf_"+e.link]
+
+               let Zloading = e.zipFile && e.zipFile == true
+               let Zloaded = e.zipFile && e.zipFile != true
+               let Zerror = e.zipFile && e.zipError || e.zipError === 501
+               let Zrange = this.state.collapse["zip_"+e.link]
+
+
+               let pdfMsg = I18n.t("resource.gener1pdf")
+               let zipMsg = I18n.t("resource.gener0zip")
+
+               if(Prange) {
+                  pdfMsg = <PdfZipSelector type="pdf" that={that} elem={e}/>                                 
+               }
+
+               if(Ploading) {
+                  pdfMsg = I18n.t("resource.gener2pdf")
+                  zipMsg =  I18n.t("resource.gener1zip")
+               }
+
+               if(Ploaded) {
+                  pdfMsg = <>{I18n.t("resource.gener3pdf")}<Close onClick={(ev) => {
+                     this.props.onResetPdf(e,"pdf")
+                     ev.preventDefault()
+                     ev.stopPropagation()
+                  }}/></>
+                  zipMsg =  I18n.t("resource.gener1zip")
+               }
+
+               if(Perror) {
+                  Ploading = false
+                  pdfMsg = pdfZipError(e,e.pdfError,"pdf")
+                  
+               }
+
+               if(Zrange) {
+                  zipMsg = <PdfZipSelector type="zip" that={that} elem={e}/>
+               }
+
+               if(Zloading) {
+                  zipMsg = I18n.t("resource.gener2zip")
+               }
+
+               if(Zloaded) {                                 
+                  zipMsg =  <>{(Ploaded?I18n.t("resource.gener0zip"):I18n.t("resource.gener3zip"))}<Close  onClick={(ev) => { 
+                     this.props.onResetPdf(e,"zip")
+                     ev.preventDefault()
+                     ev.stopPropagation()
+                  }}/></>
+               }
+
+               if(Zerror) {
+                  Zloading = false
+                  zipMsg = pdfZipError(e,e.zipError,"zip")
+                  
+               }
+
+               //loggergen.log("pdfMenu:",e)
+
+               const nbVol = (e.volume !== undefined?e.volume:monoVol.replace(/[^0-9]+/,""))
+               if(this.props.useDLD)  return (<ListItem className="pdfMenu">
+                     <b>{(e.volume !== undefined?(!e.volume.match || e.volume.match(/^[0-9]+$/)?"Volume ":"")+(e.volume):monoVol)}{I18n.t("punc.colon")}</b>
+                     <a href="#" onClick={(ev) => {
+                        window.top.postMessage(JSON.stringify({"download":{nbVol:""+nbVol,"rid":this.props.IRI.replace(/^bdr:/,"")}}),"*")        
+                        ev.preventDefault()
+                        ev.stopPropagation()
+                     }}><span class="on">{I18n.t("resource.gener3pdf")}</span></a>                                     
+                  </ListItem>)                              
+               else  return (<ListItem className="pdfMenu">
+                        <b>{(e.volume !== undefined?(!e.volume.match || e.volume.match(/^[0-9]+$/)?"Volume ":"")+(e.volume):monoVol)}{I18n.t("punc.colon")}</b>
+                        <a onClick={ev => that.handlePdfClick(ev,e.link,e.pdfFile)}
+                           {...(Ploaded ?{href:e.pdfFile}:{})}
+                        >
+                           { Ploading && <Loader className="pdfSpinner" loaded={Ploaded} scale={0.35}/> }
+                           <span {... (Ploading?{className:"pdfLoading"}:{className: this.state.collapse["pdf_"+e.link]?"on":""})} >{pdfMsg}</span>
+                           { Ploading && e.pdfPercent !== undefined && <span>&nbsp;{e.pdfPercent}%</span>}
+                        </a>
+                        <a onClick={ev => that.handlePdfClick(ev,e.link,e.zipFile,"zip")}
+                           {...(Zloaded ?{href:e.zipFile}:{})}
+                        >
+                           { Zloading && <Loader className="zipSpinner" loaded={Zloaded} scale={0.35}/> }
+                           <span {... (Zloading?{className:"zipLoading"}:{className:this.state.collapse["zip_"+e.link]?"on":""})}>{zipMsg}</span>
+                           { Zloading && e.zipPercent !== undefined && <span>&nbsp;{e.zipPercent}%</span>}
+                        </a>
+                        { that.props.IRI && getEntiType(that.props.IRI) === "Etext" && // TODO fix download etext
+                           <div> 
+
+                              &nbsp;&nbsp;|&nbsp;&nbsp;
+
+                              <a target="_blank" download={that.props.IRI?that.props.IRI.replace(/bdr:/,"")+".txt":""} 
+                                    href={that.props.IRI?that.props.IRI.replace(/bdr:/,bdr)+".txt":""} >
+                                 <span>TXT</span>
+                              </a>
+                           </div>
+                        }
+                     </ListItem>)
+               })
+            }
+         </List>
+      </Popover>
+
+   if(this.props.outlineOnly){
+      return popupCitation;
+   } else if(onlyDownload) { 
+      return (<>
+       { popupPdf }
+       { pdfLink && 
+            ( (!(that.props.manifestError && that.props.manifestError.error.message.match(/Restricted access/)) /*&& !fairUse*/) )
+            ? <a href="#" class="urilink" onClick={ev =>
+                  {
+                     //if(that.props.createPdf) return ;
+                     if((monoVol && monoVol.match && monoVol.match(/[^0-9]/)) || monoVol > 0){
+                        that.props.onInitPdf({iri:that.props.IRI,vol:monoVol},pdfLink)
+                     }
+                     else if(!that.props.pdfVolumes) {
+                        that.props.onRequestPdf(that.props.IRI,pdfLink)
+                     }
+                     that.setState({...that.state, collapse:{...this.state.collapse,permaDL:false}, pdfOpen:true,anchorPermaDL:ev.currentTarget,anchorElPdf:ev.currentTarget})
+
+                     ev.stopPropagation()
+                     ev.preventDefault()
+                     return false
+                  }
+               }>
+               {I18n.t("resource.download"+(fairUse?"FU":""))}
+            </a>
+            : that.props.manifestError && !that.props.manifestError.error.message.match(/Restricted access/) 
+               ? <a class="urilink nolink">{I18n.t("viewer.pdferror2")} ({I18n.t("user.errors.server2")})</a>
+               : <Loader  className="scans-viewer-loader" loaded={that.props.firstImage && !that.props.firstImage.includes("bdrc.io") || !( (!(that.props.manifestError && that.props.manifestError.error.message.match(/Restricted access/)) /*&& !fairUse*/) || (that.props.auth && that.props.auth.isAuthenticated())) || that.props.loading === false} />
+         }      
+      </>)
+   }
+   else return (
 
     <div>
 
@@ -5973,7 +6914,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
       <span class="NL nl-dl"></span>
 
       <span id="DL" ref={this._refs["perma_DL"]} onClick={(e) => this.setState({...this.state,anchorPermaDL:e.currentTarget, collapse: {...this.state.collapse, permaDL:!this.state.collapse.permaDL } } ) }>
-         <img src="/icons/DL_.svg"/>{I18n.t("resource.download")} { this.state.collapse.permaDL ? <ExpandLess/>:<ExpandMore/>}
+         <img src="/icons/DL_.svg"/>{I18n.t("resource.exportData",{data: "metadata" })} { this.state.collapse.permaDL ? <ExpandLess/>:<ExpandMore/>}
       </span>
 
       { that.props.IRI && that.props.IRI.match(/bdr:((MW)|(W[0-9])|(IE))/) && 
@@ -6080,133 +7021,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
             
             { popupCitation }
    
-           { (that.props.pdfVolumes && that.props.pdfVolumes.length > 0) &&
-                   <Popover
-                      className="poPdf"
-                      open={that.state.pdfOpen == true || that.props.pdfReady == true}
-                      anchorEl={that.state.anchorPermaDL}
-                      //anchorOrigin={{ vertical: 'bottom' }}
-                      //transformOrigin={{ vertical: 'top' }}
-                      onClose={that.handleRequestClosePdf.bind(this)}
-                   >
-                      <List>
-                         {/*
-                           that.props.pdfUrl &&
-                          [<MenuItem onClick={e => that.setState({...that.state,pdfOpen:false})}><a href={that.props.pdfUrl} target="_blank">Download</a></MenuItem>
-                          ,<hr/>]
-                         */}
-                         { !this.props.useDLD && authError && (
-                           isProxied(that)
-                              ? <ListItem><div className="mustLogin"><Trans i18nKey="resource.notInList" components={{lk:<a class='uri-link' target='_blank' href={"https://library"+"."+"bdrc"+"."+"io/show/"+that.props.IRI} />, nl:<br/>}}/></div></ListItem>
-                              : <ListItem><a className="mustLogin" onClick={() => that.props.auth.login(that.props.history.location)}>{I18n.t("resource.mustLogin")}</a></ListItem>
-                         )}
-                         {
-                           (!authError || this.props.useDLD) && that.props.pdfVolumes.map(e => {
-
-                              let Ploading = e.pdfFile && e.pdfFile == true
-                              let Ploaded = e.pdfFile && e.pdfFile != true
-                              let Perror = e.pdfFile && e.pdfError || e.pdfError === 501
-                              let Prange = this.state.collapse["pdf_"+e.link]
-
-                              let Zloading = e.zipFile && e.zipFile == true
-                              let Zloaded = e.zipFile && e.zipFile != true
-                              let Zerror = e.zipFile && e.zipError || e.zipError === 501
-                              let Zrange = this.state.collapse["zip_"+e.link]
-
-
-                              let pdfMsg = I18n.t("resource.gener1pdf")
-                              let zipMsg = I18n.t("resource.gener0zip")
-
-                              if(Prange) {
-                                 pdfMsg = <PdfZipSelector type="pdf" that={that} elem={e}/>                                 
-                              }
-
-                              if(Ploading) {
-                                 pdfMsg = I18n.t("resource.gener2pdf")
-                                 zipMsg =  I18n.t("resource.gener1zip")
-                              }
-
-                              if(Ploaded) {
-                                 pdfMsg = <>{I18n.t("resource.gener3pdf")}<Close onClick={(ev) => {
-                                    this.props.onResetPdf(e,"pdf")
-                                    ev.preventDefault()
-                                    ev.stopPropagation()
-                                 }}/></>
-                                 zipMsg =  I18n.t("resource.gener1zip")
-                              }
-
-                              if(Perror) {
-                                 Ploading = false
-                                 pdfMsg = pdfZipError(e,e.pdfError,"pdf")
-                                 
-                              }
-
-                              if(Zrange) {
-                                 zipMsg = <PdfZipSelector type="zip" that={that} elem={e}/>
-                              }
-
-                              if(Zloading) {
-                                 zipMsg = I18n.t("resource.gener2zip")
-                              }
-
-                              if(Zloaded) {                                 
-                                 zipMsg =  <>{(Ploaded?I18n.t("resource.gener0zip"):I18n.t("resource.gener3zip"))}<Close  onClick={(ev) => { 
-                                    this.props.onResetPdf(e,"zip")
-                                    ev.preventDefault()
-                                    ev.stopPropagation()
-                                 }}/></>
-                              }
-
-                              if(Zerror) {
-                                 Zloading = false
-                                 zipMsg = pdfZipError(e,e.zipError,"zip")
-                                 
-                              }
-
-                              //loggergen.log("pdfMenu:",e)
-
-                              const nbVol = (e.volume !== undefined?e.volume:monoVol.replace(/[^0-9]+/,""))
-                              if(this.props.useDLD)  return (<ListItem className="pdfMenu">
-                                    <b>{(e.volume !== undefined?(!e.volume.match || e.volume.match(/^[0-9]+$/)?"Volume ":"")+(e.volume):monoVol)}{I18n.t("punc.colon")}</b>
-                                    <a href="#" onClick={(ev) => {
-                                       window.top.postMessage(JSON.stringify({"download":{nbVol:""+nbVol,"rid":this.props.IRI.replace(/^bdr:/,"")}}),"*")        
-                                       ev.preventDefault()
-                                       ev.stopPropagation()
-                                    }}><span class="on">{I18n.t("resource.gener3pdf")}</span></a>                                     
-                                 </ListItem>)                              
-                              else  return (<ListItem className="pdfMenu">
-                                     <b>{(e.volume !== undefined?(!e.volume.match || e.volume.match(/^[0-9]+$/)?"Volume ":"")+(e.volume):monoVol)}{I18n.t("punc.colon")}</b>
-                                     <a onClick={ev => that.handlePdfClick(ev,e.link,e.pdfFile)}
-                                        {...(Ploaded ?{href:e.pdfFile}:{})}
-                                     >
-                                        { Ploading && <Loader className="pdfSpinner" loaded={Ploaded} scale={0.35}/> }
-                                        <span {... (Ploading?{className:"pdfLoading"}:{className: this.state.collapse["pdf_"+e.link]?"on":""})} >{pdfMsg}</span>
-                                        { Ploading && e.pdfPercent !== undefined && <span>&nbsp;{e.pdfPercent}%</span>}
-                                     </a>
-                                     <a onClick={ev => that.handlePdfClick(ev,e.link,e.zipFile,"zip")}
-                                        {...(Zloaded ?{href:e.zipFile}:{})}
-                                     >
-                                        { Zloading && <Loader className="zipSpinner" loaded={Zloaded} scale={0.35}/> }
-                                        <span {... (Zloading?{className:"zipLoading"}:{className:this.state.collapse["zip_"+e.link]?"on":""})}>{zipMsg}</span>
-                                        { Zloading && e.zipPercent !== undefined && <span>&nbsp;{e.zipPercent}%</span>}
-                                       </a>
-                                       { that.props.IRI && getEntiType(that.props.IRI) === "Etext" && // TODO fix download etext
-                                          <div> 
-
-                                             &nbsp;&nbsp;|&nbsp;&nbsp;
-
-                                             <a target="_blank" download={that.props.IRI?that.props.IRI.replace(/bdr:/,"")+".txt":""} 
-                                                   href={that.props.IRI?that.props.IRI.replace(/bdr:/,bdr)+".txt":""} >
-                                                <span>TXT</span>
-                                             </a>
-                                          </div>
-                                       }
-                                  </ListItem>)
-                            })
-                         }
-                      </List>
-                   </Popover>
-                }
+           { popupPdf }
          
    </div>
   )
@@ -6227,7 +7042,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
       if(!prev) prev = -1
 
 
-      //loggergen.log("etext",prev,next,elem,this.props.nextChunk,tags,this.hasSub(k))
+      loggergen.log("etext",prev,next,elem,this.props.nextChunk,tags,this.hasSub(k))
 
       // + sort etext by sliceStartchar not seqNum
       // DONE 
@@ -6245,7 +7060,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
             
                //loggergen.log("next?",this.props.nextChunk,next,JSON.stringify(elem,null,3))
 
-               if(next && this.props.nextChunk !== next) {                               
+               if(!this.props.disableInfiniteScroll && next && this.props.nextChunk !== next) {                               
                   this.props.onGetChunks(this.props.IRI,next); 
                } 
             }
@@ -6265,17 +7080,49 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
 
    renderEtextHasPage = (elem, kZprop, iiifpres) => {
 
+      const inst = this.getResourceElem(bdo+"eTextInInstance") ?? this.getResourceElem(bdo+"volumeOf") 
+      let info = this.props.allETrefs?.[shortUri(inst?.[0]?.value ?? "")]?.["@graph"]?.filter(n => n["@id"] === this.props.IRI) ?? []
+      const get = qs.parse(this.props.location.search)
+      let firstC = 0, lastC = 10000000, text
+      if(info?.[0]?.type === "EtextVolume") {
+         //console.log("info:",info)
+         let vhet = info[0].volumeHasEtext
+         if(vhet) {
+            if(!Array.isArray(vhet)) vhet = [ vhet ]
+            text = this.props.allETrefs?.[shortUri(inst?.[0]?.value)]?.["@graph"]?.filter(n => vhet.includes(n["@id"])) ?? []
+            //const sc = this.props.that.state.scope === text[@id] ? Number(get.startChar) ?? 0 : 0
+            //text = text.filter(t => t.sliceStartChar <= sc && sc < t.sliceEndChar)
+            let _text = text?.filter(t => t["@id"] === this.props.that?.state?.scope)            
+            if(_text.length) {
+               firstC = _text[0].sliceStartChar
+               lastC =  _text[0].sliceEndChar - 1
+            } else {
+               text = _.orderBy(text, "sliceStartChar", "asc")
+               firstC = text[0].sliceStartChar
+               lastC =  text[text.length - 1].sliceEndChar - 1
+            }
+         }
+      } else if(info?.[0]?.type === "Etext" || Array.isArray(info?.[0]?.type) && info[0].type.includes("Etext")) {
+         firstC = info[0].sliceStartChar
+         lastC = info[0].sliceEndChar - 1
+      }
+
+      
       let next, prev;
-      if(elem && elem.length) { 
+      if(elem && elem.length && !this.props.disableInfiniteScroll?.snip) { 
+         elem = elem.filter(e => e.value && e.start !== undefined && e.start >= firstC && e.start < lastC)
          prev = elem.filter(e => e.value && e.start !== undefined)
          next = elem.filter(e => e.value && e.end)
       }
       if(next && next.length) next = next[next.length - 1].end + 1
       else next = 0
-
+      
       if(prev && prev.length) prev = -prev[0].start
       if(!prev) prev = -1
+      
+      //loggergen.log("epage:", elem, kZprop, iiifpres, this.props.IRI, inst, info, get, text, prev, next, firstC, lastC)
 
+      if(prev === -firstC) prev = - 1
       
       let imageLinks ;
       if(this.state.imageLinks) imageLinks = this.state.imageLinks[this.props.IRI]
@@ -6291,6 +7138,18 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
             for(let e of elem) {
                this.props.onImageVolumeManifest(iiifpres+"/v:"+ e.value.replace(new RegExp(bdr), "bdr:") + "/manifest",this.props.IRI);
             }
+         } else {
+            elem = this.getResourceElem(bdo+"eTextInVolume")
+            console.log("eiv:1",elem)
+            if(elem?.length) elem = this.getResourceElem(bdo+"eTextVolumeForImageGroup", shortUri(elem[0].value), this.props.assocResources)
+            else elem = this.getResourceElem(bdo+"eTextVolumeForImageGroup")
+            console.log("eiv:2",elem)
+            if(elem && elem.length) {
+               //loggergen.log("elem",elem)
+               for(let e of elem) {
+                  this.props.onImageVolumeManifest(iiifpres+"/v:"+ e.value.replace(new RegExp(bdr), "bdr:") + "/manifest",this.props.IRI);
+               }
+            }
          }
       }
       else if(this.props.imageVolumeManifests !== true) for(let id of Object.keys(this.props.imageVolumeManifests)) {
@@ -6301,7 +7160,9 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
             let imageList = this.props.imageLists, iiifpres = "//iiifpres.bdrc.io", iiif = "//iiif.bdrc.io"            
             if(imageList) imageList = imageList[id]
             
-            //loggergen.log("k:",id,manif,imageList)
+            loggergen.log("k:",id,manif,imageList)
+
+            if(!this.props.previewEtext && this.props.resources && !this.props.resources[id]) this.props.onGetResource(id);
 
             if(this.props.config && this.props.config.iiifpres) iiifpres = this.props.config.iiifpres.endpoints[this.props.config.iiifpres.index]      
             if(this.props.config && this.props.config.iiif) iiif = this.props.config.iiif.endpoints[this.props.config.iiif.index]      
@@ -6374,19 +7235,222 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
       let unpag = this.unpaginated()
 
       let firstPageUrl 
-      let loca = { ...this.props.history.location }
+      let loca = { ...this.props.location }
       //if(prev!==-1) {
-         loca.search = loca.search.replace(/(^[?])|(&*startChar=[^&]+)&*/g,"")
-         firstPageUrl = "?startChar=0"+(loca.search?"&"+loca.search:"") + "#open-viewer"
+         loca.search = loca.search.replace(/(^[?])|(&*startChar=[^&]+)(&&+)?/g,"")
+         firstPageUrl = "?startChar="+(firstC ?? 0)+(loca.search?"&"+loca.search:"") + "#open-viewer"
       //}
 
-      let last = this.getResourceElem(tmp+"lastChunk");
+      //let last = this.getResourceElem(tmp+"lastChunk");
       let lastPageUrl 
-      loca = { ...this.props.history.location }
-      if(last?.length) { //} && next <= Number(last[0].value)) {
-         loca.search = loca.search.replace(/(^[?])|(&*startChar=[^&]+)&*/g,"")
-         lastPageUrl = "?startChar="+last[0].value+(loca.search?"&"+loca.search:"") + "#open-viewer"
+      loca = { ...this.props.location }
+      if(lastC) {//(last?.length) { //} && next <= Number(last[0].value)) {
+         loca.search = loca.search.replace(/(^[?])|(&*startChar=[^&]+)(&&+)?/g,"")
+         lastPageUrl = "?startChar="+lastC+(loca.search?"&"+loca.search:"") + "#open-viewer"
       }
+
+      const monlamPopup = (ev, seq, pageVal) => {
+
+         // #1036
+         pageVal = pageVal?.replace(/<[^>]+>/g,"")
+
+         ev.persist()
+
+         const MAX_SELECTION_LENGTH = 120
+         const MIN_CONTEXT_LENGTH = 40
+         const selection = window.getSelection();
+         
+         //loggergen.log("closest:",ev.target.closest(".popper"),ev.currentTarget,ev.target)
+
+         if(!this.props.config.useMonlam || !this.state.enableDicoSearch || this.props.disableInfiniteScroll || ev.target.closest(".popper")) return
+         
+         let langElem = selection.anchorNode?.parentElement?.getAttribute("lang")
+         if(!langElem) langElem = selection.anchorNode?.parentElement?.parentElement?.getAttribute("lang")
+         
+         // #818
+         if(langElem && !langElem.startsWith("bo")) return
+
+         let parent = selection.anchorNode?.parentElement
+         if(!parent?.getAttribute("lang")) parent = parent?.parentElement
+
+         //loggergen.log("parent:",langElem,ev.currentTarget,parent,selection.toString(),selection,parent.children,selection.anchorNode)
+         
+         const getAbsOffset = (node, nodeOffset) => {
+
+            // case when multiple bo-x-ewts span in a row inside page (bdr:UT3JT13384_014_0001)                             
+            let rootPage = ev.currentTarget, startFromRoot = 0                  
+            for(let n of rootPage.children) {
+               if(n == parent) break ;
+               startFromRoot += n.textContent?.length || 0
+            }
+
+            // case when there are already some highlighted keyword from search
+            let start = startFromRoot, nodes = parent?.children ? Array.from(parent?.children) : []
+            if(nodes?.length) for(let i in nodes) {
+               if(nodes[i] == node.parentElement) break ;
+               start += nodes[i].textContent?.length || 0
+               //loggergen.log("i:",i,start)
+            }
+            
+            // case when there are <br/>, must count inner nodes as well 
+            let previousElement = node?.previousSibling
+            while (previousElement) {
+               //loggergen.log("prev:",previousElement)
+               if (previousElement.nodeType === Node.TEXT_NODE) {
+                  start += previousElement.nodeValue.length;
+               } 
+               if (previousElement.nodeName === "BR") {
+                  start += 1
+               }
+               previousElement = previousElement.previousSibling;
+            }
+            start += nodeOffset
+
+            return start
+         }
+
+         let start = getAbsOffset(selection.anchorNode, selection.anchorOffset)
+         let end = getAbsOffset(selection.focusNode, selection.focusOffset)                
+
+         // DONE: check case when selection is made backwards? right to left 
+         let invert = false
+         if(start > end) {
+
+            invert = true
+
+            let tmp = start
+            start = end
+            end = tmp
+
+            if(start + selection.toString().length != end) console.warn(start,end,start + selection.toString().length)
+
+         } 
+         else if(start === end) {
+
+            
+            // #800 keep open until closed with cross
+            /*  
+            if(this.state.monlam && this.state.collapse.monlamPopup) { 
+               this.setState({ noHilight:false, monlam:null })
+               this.props.onCloseMonlam()
+            }
+            */                 
+            if(this.state.monlam) {
+               this.setState({ monlam:null, ...this.state.noHilight && seq != this.state.noHilight?{noHilight:false}:{} })
+            }
+
+            return
+         } 
+
+         let range = selection.getRangeAt(0);
+
+         if(end > start + MAX_SELECTION_LENGTH) { 
+            try {
+               let sameElem = range.startContainer === range.endContainer || range.startContainer.parentElement === range.endContainer.parentElement
+               loggergen.log("range:", sameElem, range, start, end, range.startOffset + MAX_SELECTION_LENGTH)
+               if(!invert) {
+                  end = start + MAX_SELECTION_LENGTH
+                  
+                  /*
+                  // use rangy in every case 
+                  if(sameElem) range.setEnd(range.startContainer, range.startOffset + MAX_SELECTION_LENGTH);
+                  else {
+                  */
+
+                     let mutRange = rangy.createRange();
+                     mutRange.setStart(range.startContainer, range.startOffset) 
+                     mutRange.setEnd(range.endContainer, range.endOffset)                      
+                     mutRange.moveEnd("character", MAX_SELECTION_LENGTH - range.toString().length)
+                     range.setEnd(mutRange.endContainer, mutRange.endOffset)
+                     //loggergen.log(mutRange, mutRange.toString(), mutRange.toString().length, range, range.toString(), range.toString().length)     
+                  //}
+               } else {
+                  start = end - MAX_SELECTION_LENGTH
+                  //if(sameElem) range.setStart(range.endContainer, range.endOffset - MAX_SELECTION_LENGTH);
+                  //else {
+                     let mutRange = rangy.createRange();
+                     mutRange.setStart(range.startContainer, range.startOffset) 
+                     mutRange.setEnd(range.endContainer, range.endOffset)                      
+                     mutRange.moveStart("character", range.toString().length - MAX_SELECTION_LENGTH)
+                     range.setStart(mutRange.startContainer, mutRange.startOffset)
+                  //}
+               }
+            } catch(err) {                  
+               console.warn("can't update range", err, start, end, range, selection)     
+               if(this.state.enableDicoSearch) selection.removeAllRanges()
+               if(this.state.monlam) {
+                  this.setState({ monlam:null, ...this.state.noHilight && seq != this.state.noHilight?{noHilight:false}:{} })
+               }
+               return
+            }
+         }
+
+         
+         const startOff = Math.max(0, start - MIN_CONTEXT_LENGTH)
+         const endOff = Math.min(pageVal.length, end + MIN_CONTEXT_LENGTH)
+
+         // let's use indexOf to get exact coordinates of selection in page
+         const chunk =  pageVal.substring(startOff, endOff).replace(/[\r\n]/g," ");
+         let cursor_start = chunk.indexOf(selection.toString())
+         if(cursor_start < 0) cursor_start = start - startOff 
+         let cursor_end =  cursor_start + selection.toString().length
+
+         const updateHilightCoords = (target = this.state.monlam?.target, _range = this.state.monlam?.range) => {
+
+            const { top, left } = target.getBoundingClientRect()
+            let coords = Array.from(_range.getClientRects()).map(r => ({ 
+               ...r, 
+               px:{
+                  top:(r.top - top)+"px",
+                  left:(r.left - left)+"px",
+                  height:r.height+"px",
+                  width:r.width+"px"
+               }
+            }))
+         
+            let ref = React.createRef()
+            coords = coords.map( (c,i) => { 
+               if(i > 0) ref = null
+               return <div {...ref?{ref}:{}} style={{...c.px, scrollMargin:"50vh 50px 50vh 50px", pointerEvents:"none", position:"absolute", background: "rgba(252,224,141,0.65)", display:"block", zIndex: 1, mixBlendMode: "darken" }}></div>
+            })
+
+            loggergen.log("coords:",coords,ev.currentTarget,start,end,startOff,endOff,pageVal.substring(startOff, endOff))
+            
+            return { hilight:coords, ref, popupCoords:Array.from(_range.getClientRects()) }
+         }
+     
+         
+         if (selection.rangeCount > 0) {
+            range = range.cloneRange();
+         }
+
+         const data = { 
+            target: ev.currentTarget,
+            seq,
+            range,
+            ...updateHilightCoords(ev.currentTarget, selection.getRangeAt(0)),
+            updateHilightCoords,
+            api: {chunk, lang: langElem, cursor_start, cursor_end },
+         }
+
+         this.setState({ 
+            collapse:{...this.state.collapse, monlamPopup: false},
+            monlamTab:null, 
+            monlam: data,
+            ...this.state.monlam && this.state.noHilight && seq != this.state.noHilight?{noHilight:false}:{} 
+         })               
+
+         if(this.state.enableDicoSearch) selection.removeAllRanges()
+
+         if(this.props.monlamResults) this.callMonlam(data)
+      }
+
+      const thatGetLangLabel = (...args) => getLangLabel(this, ...args)
+      const thatSetState = (arg) => this.setState(arg)
+      const uriformat = (...args) => this.uriformat(...args) 
+      const hoverMenu = (...args) => this.hoverMenu(...args)
+      const onGetContext = this.props.onGetContext      
+      const ETSBresults = this.state.ETSBresults 
 
       return (
          
@@ -6398,398 +7462,50 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
             
                //loggergen.log("next?",this.props.nextChunk,next,JSON.stringify(elem,null,3))
 
-               if(next && this.props.nextPage !== next) {                               
-                  this.props.onGetPages(this.props.IRI,next); 
+               if(!this.props.disableInfiniteScroll && next && this.props.nextPage !== next) {                               
+                  this.props.onGetPages(this.props.IRI,next,undefined,{firstC, lastC}); 
                } 
             }
          }
          //loader={<Loader loaded={false} />}
          >
-         <div style={{display:"flex", justifyContent:"space-between", width:"100%" }}>
-            <h3 style={{marginBottom:"20px",textAlign:"right"}}>{ firstPageUrl && <Link to={firstPageUrl}>{I18n.t("resource.firstP")}</Link>}</h3>
-            <h3 style={{marginBottom:"20px",textAlign:"right"}}>{ prev!==-1 && <a onClick={(e) => this.props.onGetPages(this.props.IRI,prev)} class="download" style={{fontWeight:700,border:"none",textAlign:"right"}}>{I18n.t("resource.loadP")}</a>}</h3>
-            <h3 style={{marginBottom:"20px",textAlign:"right"}}>{ lastPageUrl && <Link to={lastPageUrl}>{I18n.t("resource.lastP")}</Link>}</h3>
-         </div>
+         { !this.props.disableInfiniteScroll && <div style={{display:"flex", justifyContent:"space-between", width:"100%", scrollMargin:"160px" }}>
+            <h3 style={{marginBottom:"20px",textAlign:"right"}}>{ firstPageUrl && <Link onClick={(e) => this.props.onGetPages(this.props.IRI,firstC,true,{firstC, lastC})} to={firstPageUrl}>{I18n.t("resource.firstP")}</Link>}</h3>
+            <h3 style={{marginBottom:"20px",textAlign:"right"}}>{ prev!==-1 && <a onClick={(e) => this.props.onGetPages(this.props.IRI, prev, true, {firstC, lastC} )} class="download" style={{fontWeight:700,border:"none",textAlign:"right"}}>{I18n.t("resource.loadP")}</a>}</h3>
+            <h3 style={{marginBottom:"20px",textAlign:"right"}}>{ lastPageUrl && <Link to={lastPageUrl} onClick={(e) => this.props.onGetPages(this.props.IRI,lastC-999 /* TODO: use the other query here (mirador/num page)*/,true,{firstC, lastC})} >{I18n.t("resource.lastP")}</Link>}</h3>
+         </div> }
          {/* {this.hasSub(k)?this.subProps(k):tags.map((e)=> [e," "] )} */}
-         { elem.map( e => { 
+         { elem.filter((e,i) => !this.props.disableInfiniteScroll || i > 0 || !e.chunks?.some(c => c["@value"].includes("Text Scan Input Form" /*" - Title Page"*/))).filter((e,i) => !this.props.disableInfiniteScroll || i < 2).map( (e,_i) => { 
+            
+            const state_monlam_hilight = e.seq == this.state.monlam?.seq && this.state.enableDicoSearch ? this.state.monlam?.hilight : null
 
-            let pageVal ="", pageLang = "", current = []
+            //console.log("this:",this)
 
-            let showIm = ((this.state.showEtextImages && !(this.state.collapse["image-"+this.props.IRI+"-"+e.seq] === false)) || this.state.collapse["image-"+this.props.IRI+"-"+e.seq])
-
-            const that = this
-            const handleImageError = (evt, src, num) => {
-               //loggergen.log("Image URL '" + src + "' is invalid.");
-               $.ajax({
-                  type: 'GET',
-                  url: src,
-                  data: null,
-                  error:function (xhr, ajaxOptions, thrownError){
-                     //loggergen.log("code:",xhr.status)
-                     switch (xhr.status) {
-                        case 401:
-                        case 403:
-                           let errors = that.state.errors[that.props.IRI]
-                           if(!errors) errors = {}
-                           if(!errors[num]) errors[num] = {} 
-                           errors[num][src] = xhr.status
-                           that.setState({errors:{...that.state.errors, [that.props.IRI]:errors}})
-                           // Take action, referencing xhr.responseText as needed.
-                           break;
-                        case 404:
-                           // Take action, referencing xhr.responseText as needed.
-                           break;
-
-                        case 500:
-                           // Take action, referencing xhr.responseText as needed.
-                           break;
-                        default:
-                           break;
-                     }
-                  }
-               });
-            }
-
-            let imgErr = that.state.errors[that.props.IRI]
-            if(imgErr) imgErr = imgErr[e.seq]
-
-            //loggergen.log("links:",imageLinks,e)
-
-            const imgElem = !unpag && !imgErr && <h5><a title={I18n.t("misc."+(!showIm?"show":"hide"))+" "+I18n.t("available scans for this page")} onClick={(eve) => {
-               let id = "image-"+this.props.IRI+"-"+e.seq
-               this.setState({...this.state, collapse:{...this.state.collapse, [id]:!showIm}}) 
-            }}>{I18n.t("resource.page",{num:e.seq})}</a>                                             
-            </h5>
-
-
-            const monlamPopup = (ev, seq) => {
-
-               ev.persist()
-
-               const MAX_SELECTION_LENGTH = 120
-               const MIN_CONTEXT_LENGTH = 40
-               const selection = window.getSelection();
-               
-               //loggergen.log("closest:",ev.target.closest(".popper"),ev.currentTarget,ev.target)
-
-               if(!this.props.config.useMonlam || !this.state.enableDicoSearch || ev.target.closest(".popper")) return
-               
-               let langElem = selection.anchorNode?.parentElement?.getAttribute("lang")
-               if(!langElem) langElem = selection.anchorNode?.parentElement?.parentElement?.getAttribute("lang")
-               
-               // #818
-               if(langElem && !langElem.startsWith("bo")) return
-
-               let parent = selection.anchorNode?.parentElement
-               if(!parent?.getAttribute("lang")) parent = parent?.parentElement
-
-               //loggergen.log("parent:",langElem,ev.currentTarget,parent,selection.toString(),selection,parent.children,selection.anchorNode)
-               
-               const getAbsOffset = (node, nodeOffset) => {
-
-                  // case when multiple bo-x-ewts span in a row inside page (bdr:UT3JT13384_014_0001)                             
-                  let rootPage = ev.currentTarget, startFromRoot = 0                  
-                  for(let n of rootPage.children) {
-                     if(n == parent) break ;
-                     startFromRoot += n.textContent?.length || 0
-                  }
-
-                  // case when there are already some highlighted keyword from search
-                  let start = startFromRoot, nodes = parent?.children ? Array.from(parent?.children) : []
-                  if(nodes?.length) for(let i in nodes) {
-                     if(nodes[i] == node.parentElement) break ;
-                     start += nodes[i].textContent?.length || 0
-                     //loggergen.log("i:",i,start)
-                  }
+            return <EtextPage 
+                  { ...{ e, _i, unpag, imageLinks, kw, monlamPopup, preview:this.props.disableInfiniteScroll?true:false } } 
                   
-                  // case when there are <br/>, must count inner nodes as well 
-                  let previousElement = node?.previousSibling
-                  while (previousElement) {
-                     //loggergen.log("prev:",previousElement)
-                     if (previousElement.nodeType === Node.TEXT_NODE) {
-                        start += previousElement.nodeValue.length;
-                     } 
-                     if (previousElement.nodeName === "BR") {
-                        start += 1
-                     }
-                     previousElement = previousElement.previousSibling;
-                  }
-                  start += nodeOffset
+                  state_showEtextImages={this.state.showEtextImages}
+                  //state_monlam={this.state.monlam}
+                  state_monlam_hilight={state_monlam_hilight}
+                  //state_noHilight={this.state.noHilight}
+                  state_enableDicoSearch={this.state.enableDicoSearch} 
+                  state_etextHasBo={this.state.etextHasBo}
+                  state_etextSize={this.state.etextSize}
+                  //state_collapse={this.state.collapse}
 
-                  return start
-               }
+                  props_IRI={this.props.IRI} 
+                  props_location={this.props.location} 
+                  props_config={this.props.config} 
+                  props_highlight={this.props.highlight}
+                  props_monlamResults={this.props.monlamResults}
+                  props_disableInfiniteScroll={this.props.disableInfiniteScroll}
+                  props_manifestError={this.props.manifestError} 
+                  props_assocResources={this.props.assocResources}
 
-               let start = getAbsOffset(selection.anchorNode, selection.anchorOffset)
-               let end = getAbsOffset(selection.focusNode, selection.focusOffset)                
+                  { ...{ thatGetLangLabel, thatSetState, uriformat, hoverMenu, onGetContext, ETSBresults:ETSBresults?.filter(r => "bdr:"+r.volumeId === this.props.that?.state?.currentText && r.startPnum <= e.seq && e.seq <= r.endPnum && e.start - 5 <= r.startPageCstart && r.startPageCstart <= e.start + 5) } }
 
-               // DONE: check case when selection is made backwards? right to left 
-               let invert = false
-               if(start > end) {
-
-                  invert = true
-
-                  let tmp = start
-                  start = end
-                  end = tmp
-
-                  if(start + selection.toString().length != end) console.warn(start,end,start + selection.toString().length)
-
-               } 
-               else if(start === end) {
-
-                  
-                  // #800 keep open until closed with cross
-                  /*  
-                  if(this.state.monlam && this.state.collapse.monlamPopup) { 
-                     this.setState({ noHilight:false, monlam:null })
-                     this.props.onCloseMonlam()
-                  }
-                  */                 
-                  if(this.state.monlam) {
-                     this.setState({ monlam:null, ...this.state.noHilight && seq != this.state.noHilight?{noHilight:false}:{} })
-                  }
-
-                  return
-               } 
-
-               let range = selection.getRangeAt(0);
-
-               if(end > start + MAX_SELECTION_LENGTH) { 
-                  try {
-                     let sameElem = range.startContainer === range.endContainer || range.startContainer.parentElement === range.endContainer.parentElement
-                     loggergen.log("range:", sameElem, range, start, end, range.startOffset + MAX_SELECTION_LENGTH)
-                     if(!invert) {
-                        end = start + MAX_SELECTION_LENGTH
-                        
-                        /*
-                        // use rangy in every case 
-                        if(sameElem) range.setEnd(range.startContainer, range.startOffset + MAX_SELECTION_LENGTH);
-                        else {
-                        */
-
-                           let mutRange = rangy.createRange();
-                           mutRange.setStart(range.startContainer, range.startOffset) 
-                           mutRange.setEnd(range.endContainer, range.endOffset)                      
-                           mutRange.moveEnd("character", MAX_SELECTION_LENGTH - range.toString().length)
-                           range.setEnd(mutRange.endContainer, mutRange.endOffset)
-                           //loggergen.log(mutRange, mutRange.toString(), mutRange.toString().length, range, range.toString(), range.toString().length)     
-                        //}
-                     } else {
-                        start = end - MAX_SELECTION_LENGTH
-                        //if(sameElem) range.setStart(range.endContainer, range.endOffset - MAX_SELECTION_LENGTH);
-                        //else {
-                           let mutRange = rangy.createRange();
-                           mutRange.setStart(range.startContainer, range.startOffset) 
-                           mutRange.setEnd(range.endContainer, range.endOffset)                      
-                           mutRange.moveStart("character", range.toString().length - MAX_SELECTION_LENGTH)
-                           range.setStart(mutRange.startContainer, mutRange.startOffset)
-                        //}
-                     }
-                  } catch(err) {                  
-                     console.warn("can't update range", err, start, end, range, selection)     
-                     if(this.state.enableDicoSearch) selection.removeAllRanges()
-                     if(this.state.monlam) {
-                        this.setState({ monlam:null, ...this.state.noHilight && seq != this.state.noHilight?{noHilight:false}:{} })
-                     }
-                     return
-                  }
-               }
-
-               
-               const startOff = Math.max(0, start - MIN_CONTEXT_LENGTH)
-               const endOff = Math.min(pageVal.length, end + MIN_CONTEXT_LENGTH)
-
-               // let's use indexOf to get exact coordinates of selection in page
-               const chunk =  pageVal.substring(startOff, endOff).replace(/[\r\n]/g," ");
-               let cursor_start = chunk.indexOf(selection.toString())
-               if(cursor_start < 0) cursor_start = start - startOff 
-               let cursor_end =  cursor_start + selection.toString().length
-
-               const updateHilightCoords = (target = this.state.monlam?.target, _range = this.state.monlam?.range) => {
-
-                  const { top, left } = target.getBoundingClientRect()
-                  let coords = Array.from(_range.getClientRects()).map(r => ({ 
-                     ...r, 
-                     px:{
-                        top:(r.top - top)+"px",
-                        left:(r.left - left)+"px",
-                        height:r.height+"px",
-                        width:r.width+"px"
-                     }
-                  }))
-               
-                  let ref = React.createRef()
-                  coords = coords.map( (c,i) => { 
-                     if(i > 0) ref = null
-                     return <div {...ref?{ref}:{}} style={{...c.px, scrollMargin:"50vh 50px 50vh 50px", pointerEvents:"none", position:"absolute", background: "rgba(252,224,141,0.65)", display:"block", zIndex: 1, mixBlendMode: "darken" }}></div>
-                  })
-
-                  return { hilight:coords, ref, popupCoords:Array.from(_range.getClientRects()) }
-               }
-           
-               //loggergen.log("coords:",coords,ev.currentTarget,start,end,startOff,endOff,pageVal.substring(startOff, endOff))
-               
-               if (selection.rangeCount > 0) {
-                  range = range.cloneRange();
-               }
-
-               const data = { 
-                  target: ev.currentTarget,
-                  seq,
-                  range,
-                  ...updateHilightCoords(ev.currentTarget, selection.getRangeAt(0)),
-                  updateHilightCoords,
-                  api: {chunk, lang: langElem, cursor_start, cursor_end },
-               }
-
-               this.setState({ 
-                  collapse:{...this.state.collapse, monlamPopup: false},
-                  monlamTab:null, 
-                  monlam: data,
-                  ...this.state.monlam && this.state.noHilight && seq != this.state.noHilight?{noHilight:false}:{} 
-               })               
-
-               if(this.state.enableDicoSearch) selection.removeAllRanges()
-
-               if(this.props.monlamResults) this.callMonlam(data)
-            }
-
-            // #807 debug mode
-            let get = qs.parse(this.props.history.location.search)
-
-            // #818 etext in sa-deva --> disable Monlam
-            let hasBo = this.state.etextHasBo
-
-            return (
-            <div class={"etextPage"+(this.props.manifestError&&!imageLinks?" manifest-error":"")+ (!e.value.match(/[\n\r]/)?" unformated":"") + (e.seq?" hasSeq":"")/*+(e.language === "bo"?" lang-bo":"")*/ }>
-               {/*                                          
-                  e.seq && this.state.collapse["image-"+this.props.IRI+"-"+e.seq] && imageLinks[e.seq] &&
-                  <img title="Open image+text view in Mirador" onClick={eve => { openMiradorAtPage(imageLinks[e.seq].id) }} style={{maxWidth:"100%"}} src={imageLinks[e.seq].image} />
-               */}
-               {
-                  e.seq && showIm && Object.keys(imageLinks).sort().map(id => {
-                     if(!this.state.collapse["imageVolume-"+id] && imageLinks[id][e.seq]) 
-                        if(!imgErr || !imgErr[imageLinks[id][e.seq].image]) { 
-                           const ref = React.createRef()
-                           return (
-                              <div class="imagePage">
-                                 {/* // TODO: use openseadragon 
-                                    <img class="page" title="Open image+text reading view" src={imageLinks[id][e.seq].image} onError={(ev)=> handleImageError(ev,imageLinks[id][e.seq].image,e.seq)} onClick={eve => { 
-                                    let manif = this.props.imageVolumeManifests[id]
-                                    window.MiradorUseEtext = "open" ;                                 
-                                    this.showMirador(imageLinks[id][e.seq].id,manif["@id"]);
-                                 }}/>     */}
-                                 <a href={imageLinks[id][e.seq].image} target="_blank" rel="noopener noreferrer">
-                                    <img class="page" ref={ref} src={imageLinks[id][e.seq].image} onLoad={(ev) => { if(ref.current) {
-                                       if(ref.current.naturalWidth < ref.current.naturalHeight) {
-                                          const elem = ref.current.closest(".imagePage")
-                                          elem.classList.add("portrait")
-                                          if(get.right) elem.classList.add("right")
-                                       }
-                                    }}} onError={(ev)=> handleImageError(ev,imageLinks[id][e.seq].image,e.seq)} />
-                                 </a>
-
-                                 {/*}
-                                 <div class="small"><a title="Open image+text reading view" onClick={eve => { 
-                                    let manif = this.props.imageVolumeManifests[id]
-                                    openMiradorAtPage(imageLinks[id][e.seq].id,manif["@id"])
-                                 }}>p.{e.seq}</a> from {this.uriformat(null,{value:id.replace(/bdr:/,bdr).replace(/[/]V([^_]+)_I.+$/,"/W$1")})}                                                      
-                                 { imageLinks && Object.keys(imageLinks).length > 1 && <span class="button hide" title={"Hide this image volume"} 
-                                    onClick={(eve) => {
-                                       this.setState({...this.state, collapse:{...this.state.collapse, ["imageVolume-"+id]:true}}) 
-                                    }}> 
-                                    <VisibilityOff/>
-                                 </span>  }
-                                 <br/>
-                                 </div>
-                                 */}        
-                              </div>
-                           )
-                        }
-                        //else return <p class="copyrighted">copyrighted</p>
-                  })
-               }
-               { e.seq && <div> 
-                  { !unpag && !imgErr && <span class="button" title={I18n.t("misc."+(!showIm?"show":"hide"))+" "+I18n.t("available scans for this page")} 
-                  onClick={(eve) => {
-                        let id = "image-"+this.props.IRI+"-"+e.seq
-                        this.setState({...this.state, collapse:{...this.state.collapse, [id]:!showIm}}) 
-                     }}> 
-                     <img src="/icons/image.svg"/>
-                  </span> }
-                  {/* { <h5><a title="Open image+text view in Mirador" onClick={eve => { openMiradorAtPage(imageLinks[e.seq].id) }}>p.{e.seq}</a></h5> } */}
-                  {   !unpag && !imgErr && imgElem }
-                     { (unpag || imgErr ) && <h5><a class="unpag" title={I18n.t("resource.unpag")}>{I18n.t("resource.pageN",{num:e.seq})}</a></h5>}
-                     &nbsp;
-                     { Object.keys(imageLinks).sort().map(id => {
-                        //loggergen.log("id:",id,e)
-                        let iIp = this.props.assocResources[e.id]
-                        const withHoverM = <>{I18n.t("misc.from")} {this.uriformat(null,{noid:true,value:id.replace(/bdr:/,bdr).replace(/[/]V([^_]+)_I.+$/,"/W$1")})} </>
-                        if( /* !this.state.collapse["imageVolume-"+id] &&*/ imageLinks[id][e.seq]) 
-                           return (
-                                 <h5 className="withHoverM">
-                                    {withHoverM}
-                                    <span onClick={() => { 
-                                       //loggergen.log("elem:",e,iIp)
-                                       if(!iIp) this.props.onGetContext(this.props.IRI,e.start,e.end, 1650)	
-                                    }}>
-                                       {this.hoverMenu(" "+e.id,{ value:"etextMoreInfo", elem: e },[ imgElem, <>&nbsp;</>, withHoverM ])}
-                                    </span>
-                                 </h5>
-                           )
-                     })}
-                     {imgErr &&  Object.values(imgErr).some(v => [401,403].includes(v)) && <span class="copyrighted">{I18n.t("access.imageN")}</span>}
-                     { imageLinks && Object.keys(imageLinks).length > 1 && <span class="button close" data-seq={"image-"+this.props.IRI+"-"+e.seq} title="Configure which image volumes to display" 
-                        onClick={e => { 
-                           $(e.target).closest(".button").addClass("show");
-                           this.setState({...this.state,
-                              collapse:{...this.state.collapse, imageVolumeDisplay:!this.state.collapse.imageVolumeDisplay},
-                              anchorElemImaVol:e.target
-                           })} }
-                        >
-                        <SettingsApp/>
-                     </span> }
-
-               </div> }
-               <div class="overpage">
-                  <h4 class="page"  
-                        onMouseEnter={ev => { if(!this.state.monlam && this.state.enableDicoSearch  && this.state.noHilight != e.seq) this.setState({ noHilight: e.seq})}} 
-                        onMouseDown={ev => { if((!this.state.monlam || this.state.monlam.seq != e.seq) && this.state.enableDicoSearch && this.state.noHilight != e.seq) this.setState({ noHilight: e.seq})}} 
-                        onMouseUp={(ev) => monlamPopup(ev, e.seq)} 
-                        onCopy={(ev) => monlamPopup(ev, e.seq)} >
-                     {e.seq == this.state.monlam?.seq && this.state.enableDicoSearch ? this.state.monlam?.hilight : null}
-                     {!e.value.match(/[\n\r]/) && !e.seq ?[<span class="startChar"><span>[&nbsp;<Link to={"/show/"+this.props.IRI+"?startChar="+e.start+"#open-viewer"}>@{e.start}</Link>&nbsp;]</span></span>]:null}{(e.chunks?.length?e.chunks:[e.value]).map(f => {
-
-                        // #771 multiple language in one page
-                        let lang = e.language
-                        if(f["@language"]) lang = f["@language"]                        
-                        if(f["@value"] != undefined) f = f["@value"];
-
-                        let label = getLangLabel(this,bdo+"eTextHasPage",[{"lang":lang,"value":f}]), chunkVal
-
-                        if(label) { lang = label["lang"] ; if(!pageLang) pageLang = lang; 
-                           // #818
-                           if(!hasBo && lang?.startsWith("bo") && label.value.match(/[^0-9\n \[\]]/)) this.setState({etextHasBo: label}) ; 
-                        }
-                        if(label) { label = label["value"]; pageVal += " "+label ; chunkVal = label }
-                        if(label && this.props.highlight && this.props.highlight.key /*&& this.state.noHilight != e.seq*/) { 
-                           label = highlight(label,kw.map(k => k.replace(/(.)/g,"$1\\n?")),null,false,true); 
-                           current.push(label); }
-                        else if(label) { 
-                           label = [ label.startsWith("\n") ? <br/>:""].concat(label.split(/[\n\r]/))                           
-                           label = label.map( (e,i) =>(e?[e,i > 0 && i < label.length-1?<br/>:null]:[])).filter(e => e)
-                        } 
-                        //label = f
-                        let size = this.state.etextSize
-
-                        //loggergen.log("page:",e.seq,pageVal,e,current)
-                        
-                        if(lang === "bo") { size += 0.4 ; }
-                        return ([<span lang={lang} {...this.state.etextSize?{style:{ fontSize:size+"em", lineHeight:(size * 1.0)+"em" }}:{}}>{label}</span>])})}
-                        {this.hoverMenu(bdo+"EtextHasPage",{value:pageVal,lang:pageLang,start:e.start,end:e.end},current)}
-                  </h4>
-               </div>
-            </div>)})  }
+               />
+         })  }
             {/* // import make test fail...
                <div class="sub">
                <AnnotatedEtextContainer dontSelect={true} chunks={elem}/>
@@ -6849,15 +7565,27 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
          )
    }
 
-   renderData = (kZprop, iiifpres, title, otherLabels, div = "", hash = "") => {
+   renderData = (returnLen, kZprop, iiifpres, title, otherLabels, div = "", hash = "", prepend = [], append = [], customData = {}) => {
 
       let { doMap, doRegion, regBox } = this.getMapInfo(kZprop);
 
-      //loggergen.log("data!",kZprop)
+      //loggergen.log("data!",kZprop, otherLabels)
+
+      let get = qs.parse(this.props.location.search)          
 
       let data = kZprop.map((k) => {
 
             let elem = this.getResourceElem(k);
+
+            if(k === bdo+"eTextHasPage" && this.props.disableInfiniteScroll?.snip?.snippet?.length) {
+               elem = [{ value:"", chunks: this.props.disableInfiniteScroll?.snip?.snippet.map((p,i) => ({"@language":p[1], "@value":p[0] })) }]
+                  //, seq:i+(this.props.disableInfiniteScroll?.snip?.start_page_num ?? 0)}))
+            }
+
+            if(!elem && customData[k]) {
+               return customData[k]
+            }
+
             // #783 + #851
             if(k === tmp+"outlineAuthorshipStatement" && this.props.outlines /*&& !elem?.length*/) {
                let nodes = this.props.outlines[this.props.IRI]
@@ -6880,7 +7608,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
             //if(!k.match(new RegExp("Revision|Entry|prefLabel|"+rdf+"|toberemoved"))) {
                if(elem && 
                (![bdo+"placeLong",bdo+"placeLat"].includes(k) || !kZprop.includes(tmp+"GISCoordinates")) &&
-               (!k.match(new RegExp(adm+"|adm:|isRoot$|SourcePath|"+rdf+"|toberemoved|entityScore|associatedCentury|lastSync|dateCreated|qualityGrade|digitalLendingPossible|inRootInstance|workPagination|partIndex|partTreeIndex|legacyOutlineNodeRID|sameAs|thumbnailIIIFSe|instanceOf|instanceReproductionOf|instanceHasReproduction|seeOther|(Has|ction)Member$|serialHasInstance|withSameAs|hasNonVolumeParts|hasPartB|addIALink|lastChunk|hasOutline|first(Text|Vol)N?"+(this._dontMatchProp?"|"+this._dontMatchProp:"")))
+               (!k.match(new RegExp(adm+"|adm:|isRoot$|SourcePath|"+rdf+"|toberemoved|entityScore|associatedCentury|lastSync|dateCreated|qualityGrade|digitalLendingPossible|inRootInstance|workPagination|partIndex|partTreeIndex|legacyOutlineNodeRID|sameAs|thumbnailIIIFSe|instanceOf|instanceReproductionOf|instanceHasReproduction|seeOther|(Has|ction)Member$|serialHasInstance|withSameAs|hasNonVolumeParts|hasPartB|hasEtextInOutline|addIALink|lastChunk|provider|hasOutline|first(Text|Vol)N?"+(this._dontMatchProp?"|"+this._dontMatchProp:"")))
                ||k.match(/(metadataLegal|contentProvider)$/) // |replaceWith
                //||k.match(/([/]see|[/]sameAs)[^/]*$/) // quickfix [TODO] test property ancestors
                || (this.props.IRI.match(/^bda:/) && (k.match(new RegExp(adm+"|adm:"))) && !k.match(/\/(git[RP]|adminAbout|logEntry|graphId|facetIndex)/)))
@@ -6925,7 +7653,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
                         if(hasCano && !found && i < 10) { hasMaxDisplay = Number(i) ; break ; } 
                      }
 
-                     //loggergen.log("hMd",allLabels,hasMaxDisplay)
+                     //loggergen.log("hMd",allLabels,otherLabels,hasMaxDisplay)
 
                      /*
                      let sortLabel = []
@@ -6950,16 +7678,16 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
                   if((!this.props.config || !this.props.config.chineseMirror) && (k == bdo+"placeRegionPoly" || (k == bdo+"placeLong" && !doRegion))) {
                      return this.renderMap(elem, k, tags, kZprop, doMap, doRegion, regBox, title)
                   }
-                  else if(this.state.openEtext && k == bdo+"eTextHasPage") {
+                  else if(/*this.state.openEtext &&*/ k == bdo+"eTextHasPage") {
                      return this.renderEtextHasPage(elem, kZprop, iiifpres /*+"/2.1.1"*/)
                   }
-                  else if(this.state.openEtext && k == bdo+"eTextHasChunk" && kZprop.indexOf(bdo+"eTextHasPage") === -1) {
+                  else if(/*this.state.openEtext &&*/ k == bdo+"eTextHasChunk" && kZprop.indexOf(bdo+"eTextHasPage") === -1) {
                      return this.renderEtextHasChunk(elem, k, tags)                     
                   }
                   else if(k !== bdo+"eTextHasChunk" && k !== bdo+"eTextHasPage" && (k !== bdo+"instanceHasVolume" || this.props.logged === "admin")) {
                      let disable
                      if(k === bdo+"scanInfo") disable = elem?.length && elem.some(l => l.value?.startsWith("Scanned or acquired in Tibetan areas of China by BDRC") )
-                     if(!disable) return this.renderGenericProp(elem, k, tags, hasMaxDisplay) //div!=="ext-props"?hasMaxDisplay:-1)
+                     if(!disable) return this.renderGenericProp(elem, k, tags, hasMaxDisplay, get) //div!=="ext-props"?hasMaxDisplay:-1)
                   }
                }
             }
@@ -7002,7 +7730,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
                   logs = sortByTypeAndDate(logs);
                   
                   let tags = this.format("h4",adm+"logEntry","",false,"sub",logs)
-                  logs = this.renderGenericProp(logs, adm+"logEntry", tags, -1)                   
+                  logs = this.renderGenericProp(logs, adm+"logEntry", tags, -1, get)                   
 
                   if(this.state.collapse["commit"]) data.push(logs)
                   else if(logs /*&& logs.length*/ ) data.push(<div></div>)
@@ -7024,13 +7752,20 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
 
       //loggergen.log("data:",data)      
 
-      if(data && data.length) return <div className={div!=="header"?"data "+div:div} {...hash?{id:hash}:{}}>
+      const html = <div className={div!=="header"?"data "+div:div} {...hash?{id:hash}:{}}>
+         {prepend}
          {data}
          {/* // TODO not working anymore
          { this.renderRoles() } 
          */}
-         { this.renderPostData() }           
+         { this.renderPostData() }       
+         {append}    
       </div>
+
+      if(data && data.length || append?.length || prepend?.length) { 
+         if(returnLen) return ({ html, nbChildren: data?.length + prepend?.length + append?.length })
+         else return html
+      }
       
    }
    
@@ -7203,8 +7938,8 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
                }
             } 
             
-            let location = { ...this.props.history.location, hash:"open-viewer" }
-            this.props.history.push(location)
+            let location = { ...this.props.location, hash:"open-viewer" }
+            this.props.navigate(location)
             //this.showMirador(null,null,true)
             ev.preventDefault();
             ev.stopPropagation();
@@ -7213,7 +7948,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
       }
 
 
-      let viewUrl = { ...this.props.history.location }
+      let viewUrl = { ...this.props.location }
       viewUrl.pathname = viewUrl.pathname.replace(/\/show\//,"/view/")
       viewUrl.search = "" 
       // DONE do we really need this now? no we don't
@@ -7278,7 +8013,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
                { rootWarn }
             </div>
          )
-      else if(!this.props.manifestError && this.props.imageAsset && !etext)
+      else if(!this.props.manifestError && this.props.imageAsset && !etext && T === "Images")
          return  ( 
          <div class="data" id="first-image">
             { /*(prov && prov !== "BDRC" && orig) &&*/  src }
@@ -7323,9 +8058,9 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
          </div>
          )
       else if(!this.props.preview && kZprop.length && (!this.props.config || !this.props.config.chineseMirror))
-         return <div class="data" id="map">{this.renderData(kZprop,null,null,null,"header")}</div>
+         return <div class="data" id="map">{this.renderData(false, kZprop,null,null,null,"header")}</div>
       else if(etext && !(prov !== "BDRC" && prov && orig)) {
-         let loca = this.props.history.location
+         let loca = this.props.location
          let view = loca.pathname+loca.search+"#open-viewer"
          if(etextUT) view = etextUT+"#open-viewer"
          return <div class="data" id="head"><Link title='View Etext' to={view}><div class={"header "+(!this.state.ready?"loading":"")}>{ !this.state.ready && <Loader loaded={false} /> }{src}{copyRicon}</div></Link></div>
@@ -7359,23 +8094,23 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
             let IAlink = this.getIAlink(loca, bdo)
 
             fairTxt = <>
-               <Trans i18nKey="access.fairUseIA1" components={{ bold: <u /> }} />
+               <Trans i18nKey="access.fairUseIA4" components={{ bold: <u /> }} />
                <br/><br/>
-               <a class="fairuse-IA-link" target="_blank" href={IAlink}>
-                  <img class="ia" src="/IA.svg"/>
-                  {I18n.t("access.fairUseIA2")}
-                  <img class="link-out" src="/icons/link-out_fit.svg"/>
-               </a>
+               <span class="fairuse-IA-link-new">
+                  {/* <img class="ia" src="/IA.svg"/> */}
+                  {<Trans i18nKey="access.fairUseIA3" components={{ icon:<img class="link-out" src="/icons/link-out_fit.svg"/>, lk:<a target="_blank"  href={IAlink} /> }} />}
+                  {/* <img class="link-out" src="/icons/link-out_fit.svg"/> */}
+               </span>
             </>
          }
 
-         return <div class= {"data access "+(hasIA?" hasIA":" fairuse")}>
+         return <div class= {"data access "+(hasIA?" hasIA newIA":" fairuse")}>
                   <h3>
                      <span style={{textTransform:"none"}}>
                      {/* {I18n.t("access.limited20")}<br/> */}
                      {fairTxt}
-                     { /*this.props.locale !== "bo" && [ I18n.t("misc.please"), " ", <a class="login" onClick={this.props.auth.login.bind(this,this.props.history.location)}>{I18n.t("topbar.login")}</a>, " ", I18n.t("access.credentials") ] }
-                     { this.props.locale === "bo" && [ I18n.t("access.credentials"), " ", <a class="login" onClick={this.props.auth.login.bind(this,this.props.history.location)}>{I18n.t("topbar.login")}</a> ] */ }
+                     { /*this.props.locale !== "bo" && [ I18n.t("misc.please"), " ", <a class="login" onClick={this.props.auth.login.bind(this,this.props.location)}>{I18n.t("topbar.login")}</a>, " ", I18n.t("access.credentials") ] }
+                     { this.props.locale === "bo" && [ I18n.t("access.credentials"), " ", <a class="login" onClick={this.props.auth.login.bind(this,this.props.location)}>{I18n.t("topbar.login")}</a> ] */ }
                    </span>
                   </h3>
                </div>
@@ -7394,9 +8129,19 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
       }
    }
 
-   renderOCR = () => {
+   renderScanPage = () => {
+
+      let repro = this.getResourceElem(bdo+"instanceReproductionOf")
+      if(repro?.length) {
+         let rid = shortUri(repro[0].value)
+         return <div class="data access redirect"><h3><InfoIcon /><span style={{textTransform:"none"}}><Trans i18nKey="access.redirect" components={{ lnk: <Link to={"/show/"+rid}/>, nl: <br/> }} values={{url:window.location.hostname+"/show/"+rid,interpolation: {escapeValue: false}}}/></span></h3></div>
+      }
+   }
+
+   renderOCR = (extra) => {
       // #817
       let elem = this.getResourceElem(bdo+"OPFOCRWordMedianConfidenceIndex")
+      if(!elem?.length) elem = this.getResourceElem(bdo+"OPFOCRWordMedianConfidenceIndex", this.props.IRI, this.props.assocResources)
       /*
       let elem = this.getResourceElem(bdo+"contentMethod");            
       if(elem && elem.length) elem = elem[0].value ;
@@ -7405,8 +8150,8 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
 
       //loggergen.log("OCR:",elem)
 
-      if(elem) {
-         return <div class="data access"><h3><span style={{textTransform:"none"}}>{I18n.t("access.OCR")}</span></h3></div>
+      if(elem?.length) {
+         return <div class="data access"><h3><span style={{textTransform:"none"}}>{extra ?? I18n.t("access.OCR")}</span></h3></div>
       }
    }
 
@@ -7429,10 +8174,10 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
          if(elem && elem.includes("RestrictedSealed"))
             return  <div class="data access sealed"><h3><span style={{textTransform:"none"}}><Trans i18nKey="access.sealed" components={{ bold: <u /> }} /> <a href="mailto:help@bdrc.io">help@bdrc.io</a>{I18n.t("punc.point")}</span></h3></div>
          else 
-            //return  <div class="data access"><h3><span style={{textTransform:"none"}}>{I18n.t("misc.please")} <a class="login" {...(this.props.auth?{onClick:this.props.auth.login.bind(this,this.props.history.location)}:{})}>{I18n.t("topbar.login")}</a> {I18n.t("access.credentials")}</span></h3></div>
+            //return  <div class="data access"><h3><span style={{textTransform:"none"}}>{I18n.t("misc.please")} <a class="login" {...(this.props.auth?{onClick:this.props.auth.login.bind(this,this.props.location)}:{})}>{I18n.t("topbar.login")}</a> {I18n.t("access.credentials")}</span></h3></div>
             return  <div class="data access generic"><h3><span style={{textTransform:"none"}}><Trans i18nKey="access.generic" components={{ policies: <a /> }} /></span></h3></div>
             
-      else if ( this.props.manifestError && this.props.manifestError.error.code === 500 && this.props.IRI && !this.props.IRI.match(/^bdr:(IE|UT)/))
+      else if ( this.props.manifestError && this.props.manifestError.error.code === 500 && this.props.IRI && !this.props.IRI.match(/^bdr:(IE|UT|V)/))
          return  <div class="data access error"><h3><span style={{textTransform:"none"}}>{I18n.t("access.error")}</span></h3></div>
       
    }
@@ -7487,7 +8232,56 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
    // to be redefined in subclass
    renderPostData = () => {}
 
-   renderEtextNav = (accessError) => {
+   renderEtextLink = (etextRes) => {
+      let base = etextRes
+      let back = this.props.location?.pathname?.split("/")?.[2]
+
+      if(this.props.disableInfiniteScroll?.outETscope) {
+         let coords = this.props.disableInfiniteScroll
+         base = base + "?scope="+coords.outETscope
+                     + "&openEtext="+shortUri(coords.outETvol?.[0]?.value ?? "")
+                     + "&startChar="+coords.outETstart?.[0]?.value
+                     + (back?"&back="+encodeURIComponent(back):"")
+         
+      }
+      return "/show/"  + base
+   }
+
+   renderEtextDLlink = (accessError, noIcon = false) => { 
+      let ldspdi = this.props.config.ldspdi, base 
+      if(ldspdi) base = ldspdi.endpoints[ldspdi.index]
+      let noDL, url = "", id = this.props.that?.state?.scope ?? this.props.disableInfiniteScroll?.outETscope ?? this.props.IRI
+      if(id) {          
+         let etrefs = this.props.that?.props?.eTextRefs?.["@graph"]?.find(r => r["@id"]===id)
+         if(!this.props.disableInfiniteScroll && etrefs && etrefs.instanceHasVolume) {
+            if(!Array.isArray(etrefs.instanceHasVolume)) id = etrefs.instanceHasVolume
+            else if(etrefs.instanceHasVolume?.length === 1) id = etrefs.instanceHasVolume[0]
+         } 
+         //console.log("etR?",etrefs)
+         if(this.props.disableInfiniteScroll) {
+            etrefs = this.props?.that?.getResourceElem(bdo+"instanceHasVolume")
+            if(etrefs && Array.isArray(etrefs) && etrefs?.length > 1) noDL = true 
+            else if(etrefs && Array.isArray(etrefs) && etrefs.length === 1) id = shortUri(etrefs[0].value) 
+            else if(etrefs && !Array.isArray(etrefs)) id = shortUri(etrefs.value)
+         } else {
+            if(etrefs?.instanceHasVolume && Array.isArray(etrefs.instanceHasVolume) && etrefs.instanceHasVolume.length > 1) noDL = true
+         }
+         //console.log("etdl:",this.props.IRI,id,url,this,etrefs)
+         if(base.includes("-dev")) url = base + "/resource/" + id.split(":")[1] +".txt"
+         else url = fullUri(id).replace(/^http:/,"https:")+".txt"
+         url = url.replace(/^\/\//,"https://")
+      }
+      return (
+         <a id="DL" class={!accessError&&!noDL?"on":""} onClick={(e) => !noDL && this.setState({...this.state,anchorLangDL:e.currentTarget, collapse: {...this.state.collapse, langDL:!this.state.collapse.langDL } } ) }>
+            {etext_lang_selec(this,true,<>
+                  {I18n.t(!noDL?"mirador.downloadE":this.props.disableInfiniteScroll?"mirador.noDL":"mirador.noDLviewer")}
+                  {!noIcon && <img src="/icons/DLw.png"/>}
+               </>, url)}
+            </a>
+      )
+   }
+
+   renderEtextNav = (accessError, breadcrumbs) => {
     
       let etextSize = (inc:boolean=true) => {
          let size = this.state.etextSize ;
@@ -7506,10 +8300,24 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
 
       let size = this.state.etextSize
 
-      // DONE remove "show images" when not needed
-      let showToggleScan = this.getResourceElem(bdo+"eTextHasPage")
-      if(showToggleScan && showToggleScan.length && !this.unpaginated()) showToggleScan = (showToggleScan[0].seq !== undefined)
+      let showToggleScan = this.getResourceElem(bdo+"eTextVolumeForImageGroup") //(_tmp+"etextIsPaginated")
+      if(showToggleScan?.length) showToggleScan = true
       else showToggleScan = false
+
+      /*
+      // DONE remove "show images" when not needed
+      if(!showToggleScan?.length) {
+         const inst = this.getResourceElem(bdo+"eTextInInstance") ?? this.getResourceElem(bdo+"volumeOf")          
+         if(inst?.length) showToggleScan = this.getResourceElem(_tmp+"etextIsPaginated", shortUri(inst[0].value), this.props.assocResources)
+      }
+         if(showToggleScan?.length && showToggleScan[0].value == "true" ) showToggleScan = true // (bdo+"eTextHasPage")
+         else showToggleScan = false
+
+         //if(showToggleScan && showToggleScan.length && !this.unpaginated()) showToggleScan = (showToggleScan[0].seq !== undefined)
+         //else showToggleScan = false
+      */
+
+
 
       let monlamPop
       if(this.state.monlam?.popupCoords) {
@@ -7530,7 +8338,10 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
                   if(!this.props.monlamResults) {
                      setTimeout( () => {
                         const { ref, hilight } = this.state.monlam.updateHilightCoords()
-                        this.setState({ monlam: { ...this.state.monlam, ref, hilight } })
+                        this.setState({ 
+                           monlam: { ...this.state.monlam, ref, hilight },
+                           ...this.state.ETSBresults ? { collapse: { ...this.state.collapse, ETSBresults: true }}:{}
+                        })
                         setTimeout(() => {
                            if(ref?.current && window.innerWidth > 800) ref.current.scrollIntoView(({behavior:"smooth",block:"nearest",inline:"start"}))
                         }, 10)
@@ -7542,40 +8353,192 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
             </Popover>
       }
 
-      return (<>
+      const inst = this.getResourceElem(bdo+"eTextInInstance") ?? this.getResourceElem(bdo+"volumeOf") 
+      let repro = this.getResourceElem(bdo+"instanceReproductionOf")
+      if(!repro?.length && inst?.length) repro = this.getResourceElem(bdo+"instanceReproductionOf", shortUri(inst[0].value), this.props.assocResources)
+
+      if(repro?.length) {
+         const mwUri = shortUri(repro[0].value)
+         if(this.props.resources && !this.props.resources[mwUri]) this.props.onGetResource(mwUri);
+      }
+
+            
+      let label = [{ value: this.props.that?.state?.scope, lang:"" }], back = "", t,
+         labelSticky = [{ value: shortUri(inst?.[0]?.value ?? ""), lang:"" }]
+      
+      const refs = this.props.that?.props?.eTextRefs?.["@graph"]?.filter(n => n["@id"] === label[0].value)
+      let ETtype = refs?.[0]?.type
+      if(Array.isArray(ETtype)) {
+         const possibleET = { 
+            "EtextInstance": "etext_instance",
+            "EtextVolume": "etext_vol",
+            "Etext":"id"
+         } 
+         ETtype = ETtype.find(t => possibleET[t])
+      }
+
+      if(repro?.length) { 
+         back = repro.filter(r => (t=(this.getResourceElem(rdf+"type", shortUri(r.value), this.props.assocResources) ?? [])).some(s => s.value === bdo+"Instance") && !t.some(s => s.value === bdo+"ImageInstance" )  )
+         if(back?.length) back = "/show/"+shortUri(back[0].value)
+         labelSticky = repro.map(r => this.getResourceElem(skos+"prefLabel", shortUri(r.value), this.props.assocResources) ?? []).flatten() 
+         if(inst[0].value.endsWith(this.props.that?.state?.scope?.split(":")[1])) {
+            label = labelSticky
+         } else {            
+            label = refs?.[0]?.["skos:prefLabel"] ?? label
+         }
+      }
+
+      let get = qs.parse(this.props.location.search)          
+      if(get.s) back = decodeURIComponent(get.s)
+      else if(get.back) back = "/show/" + decodeURIComponent(get.back)
+      
+      label = getLangLabel(this, skos+"prefLabel", label) ?? {}    
+      labelSticky = getLangLabel(this, skos+"prefLabel", labelSticky) ?? {}    
+      
+      if(label.value?.startsWith("bdr:")) {
+         //console.log("ethdr:",label,refs,this.props.that?.props?.eTextRefs)
+         if(refs?.[0]?.eTextInVolume) {
+            const volN = this.props.that?.props?.eTextRefs?.["@graph"]?.filter(n => n["@id"] === refs?.[0]?.eTextInVolume)?.[0].volumeNumber
+            label.value = I18n.t("types.volume_num_noid",{num:volN})
+            label.lang = this.props.locale
+         } else if(refs?.[0]?.volumeNumber) {
+            const volN = refs?.[0]?.volumeNumber
+            label.value = I18n.t("types.volume_num_noid",{num:volN})
+            label.lang = this.props.locale
+         }
+
+      }
+
+      //console.log("rEtN:",this.props.that?.state?.scope,this.props,this.props.resources[this.props.IRI], repro, this.props.assocResources, label, back)
+            
+      if(!this.props.that.props.previewEtext) document.title = label.value + " - " + (this.props.config?.khmerServer?"Khmer Manuscript Heritage Project":"Buddhist Digital Archives")
+
+      const title =({value: text, lang}) => <h2 title={text} lang={lang} class="on">
+         <span class={"newT etext "+ETtype}>
+            <span class="space-fix">
+               <span>{ETtype ? I18n.t("types.ET."+ETtype) : I18n.t("types.etext")}</span>
+            </span>
+            <div class="etext-header-breadcrumbs" >
+               <div class="ariane" /*data-level={level}*/>
+                  {breadcrumbs}
+               </div>
+            </div>
+         </span>
+         <span><span class="placeType">{text}</span></span>
+      </h2>
+   
+      const header = (l) => <div>
+         <span>
+            <Link className="urilink" to={back} onClick={(e) => {
+               this.props.onLoading("etext", true)
+               setTimeout(() => {
+                  this.props.navigate(back)                  
+               }, 10)
+               e.preventDefault()
+               e.stopPropagation()
+               return false
+            }} ><ChevronLeft />{I18n.t("resource.goB")}</Link>
+            {title(l)}
+         </span>
+      </div>
+
+      return (!this.props.disableInfiniteScroll && <>
          { monlamPop }
-         <div id="settings" onClick={() => this.setState({collapse:{...this.state.collapse, etextNav:!this.state.collapse.etextNav}})}><img src="/icons/settings.svg"/></div>
-         <GenericSwipeable onSwipedRight={() => this.setState({ collapse:{ ...this.state.collapse, etextNav:!this.state.collapse.etextNav }})}>
+          {/* <GenericSwipeable onSwipedRight={() => this.setState({ collapse:{ ...this.state.collapse, etextNav:!this.state.collapse.etextNav }})}> */}
+         <div class="etext-header">
+            {header(label)}
+         </div>
+         <StickyElement className="etext-nav-parent">
+            <div class="etext-header sticky">
+               {header(label /*Sticky*/)}
+            </div>
             <div id="etext-nav" class={this.state.collapse.etextNav?"on":""}>
                <div>
-                  <a id="DL" class={!accessError?"on":""} onClick={(e) => this.setState({...this.state,anchorLangDL:e.currentTarget, collapse: {...this.state.collapse, langDL:!this.state.collapse.langDL } } ) }>{etext_lang_selec(this,true,<>{I18n.t("mirador.downloadE")}<img src="/icons/DLw.png"/></>,this.props.IRI?fullUri(this.props.IRI).replace(/^http:/,"https:")+".txt":"")}</a>
+                  { this.renderEtextDLlink(accessError) }
                   {/* // <a id="DL" class={!accessError?"on":""} target="_blank" rel="alternate" type="text" download href={this.props.IRI?fullUri(this.props.IRI).replace(/^http:/,"https:")+".txt":""}>{I18n.t("mirador.downloadE")}<img src="/icons/DLw.png"/></a>) */}
                   { this.props.config.useMonlam && this.state.etextHasBo && <a id="dico" class="on" onClick={(e) => { 
                      if(this.state.enableDicoSearch) this.props.onCloseMonlam()
                      this.setState({noHilight:false, enableDicoSearch:!this.state.enableDicoSearch, ...this.state.enableDicoSearch?{monlam:null}:{}})
-                  }}><div class="new">{I18n.t("viewer.new")}</div>{this.state.enableDicoSearch?<img id="check" src="/icons/check.svg"/>:<span id="check"></span>}{I18n.t("viewer.monlam")}<span><img class="ico" src="/icons/monlam.png"/></span></a> }
+                  }}>
+                     {/* <div class="new">{I18n.t("viewer.new")}</div> */}
+                     {this.state.enableDicoSearch?<img id="check" src="/icons/check.svg"/>:<span id="check"></span>}<span>{I18n.t("viewer.monlam")}</span><span><img class="ico" src="/icons/monlam.png"/></span></a> }
                   <div id="control">
                      <span title={I18n.t("mirador.decreaseFont")} class={!size||size > 0.6?"on":""} onClick={(e)=>etextSize(false)}><img src="/icons/Zm.svg"/></span>
                      <span title={I18n.t("mirador.increaseFont")} class={!size||size < 2.4?"on":""} onClick={(e)=>etextSize(true)}><img src="/icons/Zp.svg"/></span>
                      {etext_lang_selec(this,true)}
                   </div>
-                  <a class={showToggleScan?"on":""} onClick={(e) => this.setState({showEtextImages:!this.state.showEtextImages})}>{this.state.showEtextImages?<img id="check" src="/icons/check.svg"/>:<span id="check"></span>}{I18n.t("mirador.showI")}<img width="42" src="/icons/search/images_b.svg"/></a>
-                  <span class="X" onClick={() => this.setState({ collapse:{ ...this.state.collapse, etextNav:!this.state.collapse.etextNav }})}></span>
+                  <a class={showToggleScan?"on":""} onClick={(e) => this.setState({showEtextImages:!this.state.showEtextImages})}>{this.state.showEtextImages?<img id="check" src="/icons/check.svg"/>:<span id="check"></span>}<span>{I18n.t("mirador.showI")}</span><img width="42" src="/icons/search/images_b.svg"/></a>
+                  <EtextSearchBox that={this} scopeId={this.props?.that?.state?.scope} ETrefs={this.props.that?.props.eTextRefs?.["@graph"]} setETSBpage={(p,v,i,s) => { if(!this.state.ETSBpage || this.state.ETSBpage?.start != s || this.state.ETSBpage?.page != p || this.state.ETSBpage?.vol != v || this.state.ETSBpage?.idx != i) this.setState({ ETSBpage:{page:p, vol:v, idx:i, start:s } }) }} />
+                  <span class="X" onClick={() => this.props.that.setState({ collapse:{ ...this.props.that.state.collapse, etextNav:!this.props.that.state.collapse.etextNav }})}></span>
                </div>
             </div>
-         </GenericSwipeable>
+         </StickyElement>
+         <div id="settings" onClick={() => this.props.that.setState({collapse:{...this.props.that.state.collapse, etextNav:!this.props.that.state.collapse.etextNav}})}><img src="/icons/settings.svg"/></div>
+         
+         {/* </GenericSwipeable>  */}
       </>)
    }
 
 
-   renderEtextRefs(access = true) {
+   renderEtextRefs(access = true, useRoot = this.props.IRI) {
 
-      let toggle = (e,r,i,x = "",force) => {         
+      let openText = (e, redirect, id) => {
+         let ETres = id ?? e.link.replace(/^.*openEtext=([^#&]+)[#&].*$/,"$1")
+         this.props.onLoading("etext", true)
+         setTimeout(() => this.props.onReinitEtext(ETres), 150)                        
+         this.setState({ currentText: ETres, scope:e.scope ?? e["@id"] })
+         if(redirect) this.props.navigate((!e.link.startsWith("/show/")?"/show/":"")+e.link)
+         
+      }
+
+      let toggle = (e,r,i,x = "",force,el,openT = true) => {                 
+
+         console.log("el:",el,e,r,i,x,force,this.props.eTextRefs,this.state.scope)
+
          let tag = "etextrefs-"+r+"-"+i+(x?"-"+x:"")
-         let val = this.state.collapse[tag];
+         let val = this.state.collapse[tag];         
+
          //loggergen.log("tog:",e,force,val,tag,JSON.stringify(this.state.collapse),this.state.collapse[tag]);
-         if((r === i || force) && val === undefined) val = true ;
-         this.setState( { collapse:{...this.state.collapse, [tag]:!val } })         
+         
+         if(x.endsWith("details")) {
+            if((r === i || force) && val === undefined ) val = true ;
+            this.setState( { collapse:{...this.state.collapse, [tag]:!val }})                     
+         } else {            
+            if(this.state.scope === i) { 
+               if(val === undefined) val = true
+               val = !val
+            }
+            else val = true
+            let firstVol = null
+            if(i == r) {
+               firstVol = this.props.eTextRefs?.["@graph"]?.filter(n => n["@id"] === r)
+               if(firstVol?.[0]?.instanceHasVolume) {
+                  firstVol = firstVol?.[0]?.instanceHasVolume
+                  if(!Array.isArray(firstVol)) firstVol = [ firstVol ]
+                  firstVol = this.props.eTextRefs?.["@graph"]?.filter(n => firstVol.includes(n["@id"]) )
+                  firstVol = _.orderBy(firstVol, ["volumeNumber","sliceStartChar"])
+                  firstVol = firstVol[0]["@id"]
+                  //console.log("fV:",firstVol)
+               } else {
+                  firstVol = null
+               }
+            }
+            
+            if(!openT) {
+               
+               this.setState( { collapse: { ...this.state.collapse, [tag]: this.state.scope === i?val:!this.state.collapse[tag] } })         
+            
+            } else {
+               this.setState( { scope:i, ...(val != this.state.collapse[tag] ? { collapse: { ...this.state.collapse, [tag]:val }}:{}) })         
+            
+               if(i != r) { 
+                  if(this.state.scope != i) openText(el, true)
+               } else {
+                  openText({ link:"/show/"+r, "@id":r }, true, firstVol)               
+               }
+            }
+
+         }
       }
       
       let title = this.state.title.instance
@@ -7585,28 +8548,32 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
          if(title?.length) title = title[0].value
       }
       if(title?.length) title = this.getResourceElem(skos+"prefLabel", title, this.props.assocResources)
-      if(title?.length) title = getLangLabel(this,"",title)
+      if(title?.length) title = getLangLabel(this,_tmp+"withEtextPrefLang",title)
       if(title?.value) title = <h2><a><span>{title.value}</span></a></h2>
 
       // TODO fix for UTxyz
-      let root = this.props.IRI 
+      let root = useRoot 
 
 
       const parts = {
          "bdo:EtextVolume":"vol",
          "bdo:VolumeEtextAsset":"vol",
          "bdo:EtextRef":"txt",
+         "bdo:Etext":"txt",
          "?":"unk",
       }
 
+      let get = qs.parse(this.props.location.search,{decode:false})
+      const back = (get.s ? "s="+get.s+"&" : "") + (get.back ? "back="+get.back+"&" : "")
 
       let makeNodes = (top,parent) => {               
          let elem = this.props.eTextRefs["@graph"]
          let node = []
          if(elem) node = elem.filter(e => e["@id"] === top) 
          let etextrefs = []
+         let loadETres
 
-         //loggergen.log("node:",this.props.eTextRefs,node,top)
+         //loggergen.log("node:",this.props.IRI,this.props.eTextRefs,node,top)
 
          if(node.length && (node[0].instanceHasVolume || node[0].volumeHasEtext))
          {
@@ -7632,7 +8599,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
                   }
 
                   if(!g.details) {
-                     g.rid = this.props.IRI
+                     g.rid = useRoot //this.props.IRI
                      g.lang = this.props.locale
                   }
 
@@ -7641,42 +8608,67 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
                   /*
                   if(g.contentLocation) {
                      if(!g.details) g.details = []
-                     g.hasImg = "/show/"+g["@id"].replace(/^((bdr:MW[^_]+)_[^_]+)$/,"$1")+"?s="+encodeURIComponent(this.props.history.location.pathname+this.props.history.location.search)+"#open-viewer"
+                     g.hasImg = "/show/"+g["@id"].replace(/^((bdr:MW[^_]+)_[^_]+)$/,"$1")+"?s="+encodeURIComponent(this.props.location.pathname+this.props.location.search)+"#open-viewer"
                      nav.push(<Link to={g.hasImg} class="ulink">{I18n.t("copyright.view")}</Link>)
                   }
                   else if (g.instanceHasReproduction) {
                      if(!g.details) g.details = []
-                     g.hasImg = "/show/"+g.instanceHasReproduction+"?s="+encodeURIComponent(this.props.history.location.pathname+this.props.history.location.search)+"#open-viewer"
+                     g.hasImg = "/show/"+g.instanceHasReproduction+"?s="+encodeURIComponent(this.props.location.pathname+this.props.location.search)+"#open-viewer"
                      nav.push(<Link to={g.hasImg} class="ulink">{I18n.t("copyright.view")}</Link>)  
                   }
                   */
 
-                  const etextDL = (qname) => (
-                     <a  {...!access?{disabled:true}:{}} onClick={(e) => this.setState({...this.state,anchorLangDL:e.currentTarget, collapse: {...this.state.collapse, langDL:!this.state.collapse.langDL } } ) } 
-                        class="ulink" style={{cursor:"pointer"}}>
-                           {etext_lang_selec(this,true,<>{I18n.t("mirador.downloadE")}</>,fullUri(qname).replace(/^http:/,"https:")+".txt")}
-                     </a>
-                  )
+                  const etextDL = (qname) => { 
+
+                     let ldspdi = this.props.config.ldspdi, base 
+                     if(ldspdi) base = ldspdi.endpoints[ldspdi.index]
+                     let url = ""
+                     if(qname) { 
+                        if(base.includes("-dev")) url = base + "/resource/" + qname.split(":")[1] +".txt"
+                        else url = fullUri(qname).replace(/^http:/,"https:")+".txt"
+                        url = url.replace(/^\/\//,"https://")
+                     }
+
+                     return (
+                        <a  {...!access?{disabled:true}:{}} onClick={(e) => this.setState({...this.state,anchorLangDL:e.currentTarget, collapse: {...this.state.collapse, langDL:!this.state.collapse.langDL } } ) } 
+                           class="ulink" style={{cursor:"pointer"}}>
+                              {etext_lang_selec(this,true,<>{I18n.t("mirador.downloadE")}</>,url)}
+                        </a>
+                     )
+                  }
 
 
                   if(g.volumeNumber) { 
                      g.index = g.volumeNumber
-                     g.link = g["@id"]
+                     g.link =  useRoot+"?"+back+"openEtext="+ g["@id"] + "#open-viewer"
                      if(g.volumeHasEtext) {
                         if(!Array.isArray(g.volumeHasEtext)) {
                            let txt = elem.filter(e => e["@id"] === g.volumeHasEtext)                           
-                           const ETres = txt[0]?.eTextResource?.["@id"] ?? txt[0]?.eTextResource;
-                           if(ETres) {
+                           const ETres = txt[0]?.["@id"] //txt[0]?.eTextResource || txt[0]?.etextResource["@id"]
+                           if(txt[0]?.["skos:prefLabel"]) g.hasPart = true
 
-                              if(txt.length) g.link = ETres + "?backToEtext="+this.props.IRI + "#open-viewer"
+                        } else if(false && !Array.isArray(g.volumeHasEtext)) {
+
+                           let txt = elem.filter(e => e["@id"] === g.volumeHasEtext)                           
+                           const ETres = txt[0]?.["@id"] //txt[0]?.eTextResource || txt[0]?.etextResource["@id"]
+                           if(ETres) {                                                            
+
+                              g.link = useRoot+"?"+back+"openEtext="+ETres /*this.props.IRI*/ + "#open-viewer"
+                              g.scope = ETres
                               
                               //nav.push(<Link to={"/show/"+txt[0].eTextResource} class="ulink">{I18n.t("resource.openR")}</Link>)
                               //nav.push(<span>|</span>)
-                              nav.push(<Link  {...!access?{disabled:true}:{}} to={"/show/"+ETres+"?backToEtext="+this.props.IRI+"#open-viewer"} class="ulink">{I18n.t("result.openE")}</Link>)
+                              nav.push(<Link  {...!access?{disabled:true}:{}} to={"/show/"+g.link} class="ulink" onClick={(ev) => {                                 
+                                 this.props.onLoading("etext", true)
+                                 this.props.onReinitEtext(ETres)
+                                 this.setState({currentText: ETres, scope:ETres})
+                              }}>{I18n.t("result.openE")}</Link>)
                               nav.push(<span>|</span>)
                               //nav.push(<a href={fullUri(txt[0].eTextResource).replace(/^http:/,"https:")+".txt"} class="ulink"  download type="text" target="_blank">{I18n.t("mirador.downloadE")}</a>)
                               nav.push(etextDL(ETres))
 
+                           } else {
+                              console.log("not ETres",g)
                            }
                         }
                         else {
@@ -7686,18 +8678,45 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
                      }
                   } else if(g.seqNum && (g.eTextResource || g.etextResource && g.etextResource["@id"])) {
                      g.index = g.seqNum
-                     const ETres = g.etextResource?.["@id"] ?? g.eTextResource 
-                     g.link = ETres + "?backToEtext="+this.props.IRI + "#open-viewer"
-
+                     const ETres = g.etextResource["@id"] ?? g.eTextResource  
+                     g.link = useRoot+"?"+back+"openEtext="+ETres /*this.props.IRI*/ + "#open-viewer"
+                              
+         
                      //nav.push(<Link to={"/show/"+g.eTextResource} class="ulink">{I18n.t("resource.openR")}</Link>)
                      //nav.push(<span>|</span>)
-                     nav.push(<Link {...!access?{disabled:true}:{}} to={"/show/"+ETres+"?backToEtext="+this.props.IRI+"#open-viewer"} class="ulink">{I18n.t("result.openE")}</Link>)
+                     nav.push(<Link {...!access?{disabled:true}:{}} to={"/show/"+g.link} class="ulink" onClick={(ev) => {                                                         
+                        this.props.onLoading("etext", true)
+                        this.props.onReinitEtext(ETres)                        
+                        this.setState({currentText: ETres, scope:g["@id"]})
+                     }}>{I18n.t("result.openE")}</Link>)
                      nav.push(<span>|</span>)
                      //nav.push(<a href={fullUri(g.eTextResource).replace(/^http:/,"https:")+".txt"} class="ulink" download type="text" target="_blank">{I18n.t("mirador.downloadE")}</a>)                     
                      nav.push(etextDL(ETres))
 
-                  } else {
+                  } else if(g.eTextInVolume){
+                     g.index = g.seqNum
+
+                     //loggergen.log("default link:", g)
+
+                     const ETres = g.eTextInVolume
+                     g.link = useRoot+"?"+back+"scope="+g["@id"]+"&openEtext="+ETres /*this.props.IRI*/ 
+                     g.link += "&startChar="+(g.sliceStartChar ?? 0)
+                     //if(g.sliceEndChar) g.link += "&endChar="+g.sliceEndChar
+                     g.link += "#open-viewer"
+                     
+                     nav.push(<Link {...!access?{disabled:true}:{}} to={"/show/" + g.link} class="ulink" onClick={(ev) => {                                                         
+                        this.props.onLoading("etext", true)
+                        setTimeout(() => this.props.onReinitEtext(ETres), 150)                        
+                        this.setState({ currentText: ETres, scope:g["@id"] })
+                     }}>{I18n.t("result.openE")}</Link>)
+                     nav.push(<span>|</span>)
+                     //nav.push(<a href={fullUri(g.eTextResource).replace(/^http:/,"https:")+".txt"} class="ulink" download type="text" target="_blank">{I18n.t("mirador.downloadE")}</a>)                     
+                     nav.push(etextDL(g["@id"]))
+         
+                     
+                  }else {
                      loggergen.log("no link:", g)
+
                   }
 
 
@@ -7713,23 +8732,55 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
                   etextrefs.push(g)
                }
             }         
-         } 
-         
-         let get = qs.parse(this.props.history.location.search)
+         }                   
 
-         etextrefs = _.orderBy(etextrefs,["index"],["asc"]).map(e => {
-            
+         etextrefs = _.orderBy(etextrefs,["index"],["asc"])
+
+         if(!this.state.currentText && etextrefs.length) {
+            let g = etextrefs[0], tag = "etextrefs-"+root+"-"+g['@id']
+            if(!loadETres) { 
+               if(g.volumeNumber) { 
+                  if(g.volumeHasEtext) {
+                     if(!Array.isArray(g.volumeHasEtext)) {
+                        let txt = elem.filter(e => e["@id"] === g.volumeHasEtext)                           
+                        loadETres = txt[0]?.["@id"] //txt[0]?.eTextResource || txt[0]?.etextResource["@id"]
+                     } else if(etextrefs.length === 1 && !this.state.collapse[tag]){
+                        console.log("RETURN:", tag)
+                        this.setState({collapse: { ...this.state.collapse, [tag]:true }})                     
+                        return      
+                     } else {
+                        loadETres = g["@id"]
+                     }
+                  } else {
+                     loadETres = g["@id"]
+                  }
+               } else if(g.seqNum && (g.eTextResource || g.etextResource && g.etextResource["@id"])) {
+                  loadETres = g.eTextResource || g.etextResource["@id"]
+               } else if(g.eTextInVolume){
+                  loadETres = g.eTextInVolume
+               }
+            }
+            if(loadETres && this.state.currentText != loadETres) {
+               this.props.onLoading("etext", true)            
+               this.props.onReinitEtext(loadETres)
+               this.setState({currentText: loadETres})
+               return
+            }
+         }
+
+         etextrefs = etextrefs.map(e => {            
+
             let tag = "etextrefs-"+root+"-"+e['@id']
             let ret = []
             let pType = e["type"], fUri = fullUri(e["@id"])
             let gUri = fUri ;
-            if(e.link) gUri = fullUri(e.link).replace(/#.*/,"")
+            if(e.link) gUri = fullUri(e.link).replace(/^.*openEtext=([^#]+)#.*$/,"$1")
             if(pType && pType["@id"]) pType = pType["@id"]
             else pType = "bdo:"+pType
             let tLabel 
             //loggergen.log("e:",e,tag,pType,parts);
             if(pType) {
-               if(Array.isArray(pType)) pType = pType[0]
+               if(Array.isArray(e["type"])) pType = "bdo:"+e["type"].find(p => parts['bdo:'+p])
                tLabel = getOntoLabel(this.props.dictionary,this.props.locale,fullUri(pType))
                tLabel = tLabel[0].toUpperCase() + tLabel.slice(1)
                // TODO use translation from ontology
@@ -7752,7 +8803,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
                   else ut = null
                } else if(e.eTextResource == get.fromText || e.etextResource && e.etextResource["@id"] == get.fromText ) {
                   ut = true
-               }
+               } 
 
                if(ut) {
                   this._refs["fromText"] = React.createRef()
@@ -7761,36 +8812,58 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
 
             } else {
                if(this._refs["fromText"] && this._refs["fromText"].current) this._refs["fromText"].current = null
-            }
-            
+            }          
 
+            let isCurrent = e.link?.includes("openEtext="+this.state.scope + "#") || e["@id"] === this.state.scope  // e.link?.includes("openEtext="+this.state.currentText + "#") //e.link.endsWith(this.state.currentText)            
             
             let open = this.state.collapse[tag] || this.state.collapse[tag]  === undefined && ut // #821
-            let mono = etextrefs.length === 1
-            let openD = this.state.collapse[tag+"-details"] || this.state.collapse[tag+"-details"]  === undefined && (mono || ut) // #821
+                        || e.link?.includes("openEtext="+this.state.currentText + "#") && this.state.scope != root && this.state.collapse[tag] != false
+                        || e.link.endsWith(this.state.currentText)  && this.state.scope != root && this.state.collapse[tag] != false
+            let mono = false // etextrefs.length === 1
+            let openD = this.state.collapse[tag+"-details"] // || this.state.collapse[tag+"-details"]  === undefined && (mono || ut) // #821          
+                        //|| isCurrent                 
+                        //|| e.link?.includes("openEtext="+this.state.currentText + "#") && this.state.collapse[tag+"-details"] != false
+            
+            let terminal = e.type === "Etext" || !Array.isArray(e.volumeHasEtext) ||  e.volumeHasEtext.length === 1
 
+            /*
+            if(e.link?.includes("openEtext="+this.state.currentText + "&")) {
+               let nextP = this.getResourceElem(bdo+"eTextHasPage", this.state.currentText)?.[0]?.start 
+               //console.log("nxp:",nextP)
+               if(nextP != undefined) isCurrent = isCurrent || e.link?.includes("openEtext="+this.state.currentText + "&") && nextP >= e.sliceStartChar && nextP < e.sliceEndChar
+            }
+            */
 
-            ret.push(<span {...ref} class={'top'+ (this.state.collapse[tag]?" on":"") }>
-                  {(e.hasPart && !open) && <img src="/icons/triangle.png" onClick={(ev) => toggle(null,root,e["@id"],!e.hasPart?"details":"",!e.hasPart && mono)} className="xpd right"/>}
-                  {(e.hasPart && open) && <img src="/icons/triangle_.png" onClick={(ev) => toggle(null,root,e["@id"],!e.hasPart?"details":"",!e.hasPart && mono)} className="xpd"/>}
-                  <span class={"parTy "+(e.details?"on":"")} {...e.details?{title: I18n.t("resource."+(openD?"hideD":"showD")), onClick:(ev) => toggle(ev,root,e["@id"],"details",!e.hasPart && mono)}:{title:tLabel}} >
-                     {pType && parts[pType] ? <div>{parts[pType]}</div> : <div>{parts["?"]}</div> }
+            let pT = <div>{parts["?"]}</div>
+            if(pType && parts[pType]) pT = <div>{parts[pType]}</div>
+            else pT = <div>{pType}</div>
+
+            ret.push(<span {...ref} class={'top' + (/*this.state.collapse[tag]*/ isCurrent?" on":"") }>
+                  {(e.hasPart && !open) && <img src="/icons/triangle.png" onClick={(ev) => toggle(null,root,e["@id"],!e.hasPart?"details":"",!e.hasPart && mono, e, false)} className="xpd right"/>}
+                  {(e.hasPart && open) && <img src="/icons/triangle_.png" onClick={(ev) => toggle(null,root,e["@id"],!e.hasPart?"details":"",!e.hasPart && mono, e, false)} className="xpd"/>}
+                  <span class={"parTy "+(/*e.details*/isCurrent?"on":"") } {...e.details?{title: I18n.t("resource."+(openD?"hideD":"showD")), onClick:(ev) => toggle(ev,root,e["@id"],"details",!e.hasPart && mono,e) /*openText()*/ }:{title:tLabel}} >
+                  {pT}
                   </span>
-                  <span>{this.uriformat(null,{type:'uri', value:gUri, volume:fUri, inOutline: (!e.hasPart?tag+"-details":tag), url:"/show/"+e.link, debug:false, toggle:() => toggle(null,root,e["@id"],!e.hasPart?"details":"",!e.hasPart && (mono || ut)) })}</span>
+                  <span>{this.uriformat(_tmp+"withEtextPrefLang",{type:'uri', value:gUri, volume:fUri, data:e, inOutline: (!e.hasPart?tag+"-details":tag), /*url:"/show/"+e.link,*/ debug:false, noid:true, toggle:(ev) => toggle(null,root,e["@id"],/*!e.hasPart?"details":*/"",!e.hasPart && (mono || ut), e)  })}</span>
                   <div class="abs">                  
                      { !e.hasPart && (
                            access 
-                           ?  <Link className="hasImg hasTxt" title={I18n.t("result.openE")}  to={"/show/"+e.link}>
+                           ?  <Link className="hasImg hasTxt" title={I18n.t("result.openE")}  to={"/show/"+e.link} onClick={(ev) => openText(e) /*{                                                         
+                              const ETres = e.link.replace(/^.*openEtext=([^#]+)#.*$/, "$1")
+                              this.props.onLoading("etext", true)
+                              this.props.onReinitEtext(ETres)
+                              this.setState({currentText: ETres})
+                           }*/}>
                                  <img src="/icons/search/etext.svg"/><img src="/icons/search/etext_r.svg"/>
                               </Link> 
                            :  <a disabled="true" className="hasImg hasTxt" title={I18n.t("access.fairuseEtext").replace(/<[^>]+>/g,"")}>
                                  <img src="/icons/search/etext.svg"/><img src="/icons/search/etext.svg"/>
                               </a> 
                      )}                   
-                     { e.details && <span id="anchor" title={I18n.t("resource."+(openD?"hideD":"showD"))} onClick={(ev) => toggle(ev,root,e["@id"],"details",!e.hasPart && (mono || ut))}>
+                     { e.details && <span id="anchor" title={I18n.t("resource."+(openD?"hideD":"showD"))} onClick={(ev) => toggle(ev,root,e["@id"],"details",!e.hasPart && (mono || ut), e)}>
                         <img src="/icons/info.svg"/>
                      </span> }
-                     <CopyToClipboard text={gUri} onCopy={(e) => prompt(I18n.t("misc.clipboard"),gUri)}>
+                     <CopyToClipboard text={fullUri(gUri)} onCopy={(e) => prompt(I18n.t("misc.clipboard"),fullUri(gUri))}>
                         <a class="permalink" title={I18n.t("misc.permalink")}>
                            <img src="/icons/PLINK_small.svg"/>
                            <img src="/icons/PLINK_small_r.svg"/>
@@ -7803,7 +8876,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
                ret.push(<div class="details">
                      {e.details}
                   </div>)
-            if(e.hasPart && open) ret.push(<div style={{paddingLeft:"33px"}}>{makeNodes(e["@id"],top)}</div>)
+            if(e.hasPart && open) ret.push(<div style={{paddingLeft:"26px"}}>{makeNodes(e["@id"],top)}</div>)
             return ret
          })
 
@@ -7812,65 +8885,71 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
 
       let etextRefs = makeNodes(root,root)
 
-      let colT = <span class={"parTy"} title={I18n.t("types.etext")}><div>TXT</div></span>
-      if(!this.props.eTextRefs.mono) colT = <span class={"parTy"} title={I18n.t("Lsidebar.collection.title")}><div>COL</div></span>
+      let isCurrent = this.state.scope == this.props.IRI
+      let colT = <span class={"parTy " + (isCurrent?"on":"")} title={I18n.t("types.etext")}><div>TXT</div></span>
+      if(!this.props.eTextRefs.mono) colT = <span class={"parTy "} title={I18n.t("Lsidebar.collection.title")}><div>COL</div></span>
       let open = this.state.collapse["etextrefs-"+root+"-"+root] === undefined || this.state.collapse["etextrefs-"+root+"-"+root];
+
+            
+            // <h2>{I18n.t("home.search")}</h2>
+            // <div class="search on">
+            //    <div>
+            //       <input type="text" placeholder={I18n.t("resource.searchE")} value={this.state.outlineKW} onChange={this.changeOutlineKW.bind(this)} onKeyPress={ (e) => { 
+            //          if(e.key === 'Enter' && this.state.outlineKW) { 
+            //             if(this.state.dataSource&&this.state.dataSource.length) { 
+            //                let param = this.state.dataSource[0].split("@")
+            //                let loca = { pathname:"/search", search:"?q="+keywordtolucenequery(param[0])+"&lg="+param[1]+"&r="+this.props.IRI+"&t=Etext" }
+            //                this.props.navigate(loca)
+            //             }
+            //             else this.changeOutlineKW(null,this.state.outlineKW)
+            //          }
+            //       }} />
+            //       <span class="button" /*onClick={outlineSearch}*/  title={I18n.t("resource.start")}></span>
+            //       { (this.state.outlineKW || this.props.outlineKW) && <span class="button" title={I18n.t("resource.reset")} onClick={(e) => { 
+            //          this.setState({outlineKW:"",dataSource:[]})
+            //          if(this.props.outlineKW) {
+            //             this.props.onResetOutlineKW()
+            //             let loca = { ...this.props.location }
+            //             if(!loca.search) loca.search = ""
+            //             loca.search = loca.search.replace(/(&osearch|osearch)=[^&]+/, "").replace(/[?]&/,"?")
+            //             this.props.navigate(loca)
+            //          }
+            //       }}><Close/></span> }                  
+            //       { (this.state.outlineKW && this.state.dataSource && this.state.dataSource.length > 0) &&   
+            //          <div><Paper id="suggestions">
+            //          { this.state.dataSource.map( (v,i) =>  {
+            //                let tab = v.split("@")
+            //                return (
+            //                   <MenuItem key={v} style={{lineHeight:"1em"}} onClick={(e)=>{ 
+            //                      this.setState({dataSource:[]});
+            //                      let param = this.state.dataSource[i].split("@")
+            //                      let loca = { pathname:"/search", search:"?q="+keywordtolucenequery(param[0])+"&lg="+param[1]+"&r="+useRoot /*this.props.IRI*/+"&t=Etext" }
+            //                      this.props.navigate(loca)
+            //                   }}>{ tab[0].replace(/["]/g,"")} <SearchIcon style={{padding:"0 10px"}}/><span class="lang">{(I18n.t(""+(searchLangSelec[tab[1]]?searchLangSelec[tab[1]]:languages[tab[1]]))) }</span></MenuItem> ) 
+            //                } ) }
+            //          </Paper></div> }
+            //    </div>
+            // </div>
+            // <h2>{I18n.t("resource.browsE")}</h2>
+            // <div class="search">
+            //    <div>
+            //       <input type="text" class="disabled" placeholder={I18n.t("resource.searchO")}  />
+            //       <span class="button" title={I18n.t("resource.start")}></span> 
+            //    </div>
+            // </div>
 
       return (
          <div class="data etextrefs" id="outline">
-            {this.props.loading && <Loader  options={{position:"fixed",left:"calc(50% + 100px)",top:"calc(50% - 20px)"}} loaded={!this.props.loading}/>}
-            <h2>{I18n.t("home.search")}</h2>
-            <div class="search on">
-               <div>
-                  <input type="text" placeholder={I18n.t("resource.searchE")} value={this.state.outlineKW} onChange={this.changeOutlineKW.bind(this)} onKeyPress={ (e) => { 
-                     if(e.key === 'Enter' && this.state.outlineKW) { 
-                        if(this.state.dataSource&&this.state.dataSource.length) { 
-                           let param = this.state.dataSource[0].split("@")
-                           let loca = { pathname:"/search", search:"?q="+keywordtolucenequery(param[0])+"&lg="+param[1]+"&r="+this.props.IRI+"&t=Etext" }
-                           this.props.history.push(loca)
-                        }
-                        else this.changeOutlineKW(null,this.state.outlineKW)
-                     }
-                  }} />
-                  <span class="button" /*onClick={outlineSearch}*/  title={I18n.t("resource.start")}></span>
-                  { (this.state.outlineKW || this.props.outlineKW) && <span class="button" title={I18n.t("resource.reset")} onClick={(e) => { 
-                     this.setState({outlineKW:"",dataSource:[]})
-                     if(this.props.outlineKW) {
-                        this.props.onResetOutlineKW()
-                        let loca = { ...this.props.history.location }
-                        if(!loca.search) loca.search = ""
-                        loca.search = loca.search.replace(/(&osearch|osearch)=[^&]+/, "").replace(/[?]&/,"?")
-                        this.props.history.push(loca)
-                     }
-                  }}><Close/></span> }                  
-                  { (this.state.outlineKW && this.state.dataSource && this.state.dataSource.length > 0) &&   
-                     <div><Paper id="suggestions">
-                     { this.state.dataSource.map( (v,i) =>  {
-                           let tab = v.split("@")
-                           return (
-                              <MenuItem key={v} style={{lineHeight:"1em"}} onClick={(e)=>{ 
-                                 this.setState({dataSource:[]});
-                                 let param = this.state.dataSource[i].split("@")
-                                 let loca = { pathname:"/search", search:"?q="+keywordtolucenequery(param[0])+"&lg="+param[1]+"&r="+this.props.IRI+"&t=Etext" }
-                                 this.props.history.push(loca)
-                              }}>{ tab[0].replace(/["]/g,"")} <SearchIcon style={{padding:"0 10px"}}/><span class="lang">{(I18n.t(""+(searchLangSelec[tab[1]]?searchLangSelec[tab[1]]:languages[tab[1]]))) }</span></MenuItem> ) 
-                           } ) }
-                     </Paper></div> }
-               </div>
-            </div>
-            <h2>{I18n.t("resource.browsE")}</h2>
-            <div class="search">
-               <div>
-                  <input type="text" class="disabled" placeholder={I18n.t("resource.searchO")}  />
-                  <span class="button" title={I18n.t("resource.start")}></span> 
-               </div>
-            </div>
+            <IconButton className="close-etext-outline" onClick={() => this.setState({collapse:{...this.state.collapse, etextRefs:true}})}>
+               <Close width="24" />
+            </IconButton>
+            {/* <Loader  options={{position:"fixed",left:"calc(50% + 100px)",top:"calc(50% - 20px)"}} loaded={!this.props.loading === "etext"}/> */}
             <div>
-               <div class={"root is-root"} onClick={(e) => toggle(e,root,root)} >                     
+               <div class={"root is-root "+ (isCurrent?"on":"")} onClick={(e) => toggle(e,root,root)} >                     
                   { !open && [<img src="/icons/triangle.png" className="xpd right" />,colT,<span >{title}</span>]}
-                  {  open && [<img src="/icons/triangle_.png" className="xpd"  />,colT,<span class='on'>{title}</span>]}
+                  {  open && [<img src="/icons/triangle_.png" className="xpd"  />,colT,<span /* class='on' */>{title}</span>]}
                </div>
-               { open && <div style={{paddingLeft:"50px"}}>{etextRefs}</div> }
+               { open && <div style={{paddingLeft:"43px"}}>{etextRefs}</div> }
             </div>
          </div> 
          )
@@ -7948,6 +9027,11 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
          if(this.props.outlineKW) osearch = this.props.outlineKW
 
          let toggle = (e,r,i,x = "",force = false, node, volFromUri) => {
+
+            if(x === "open") {
+               return
+            }
+
             let tag = "outline-"+r+"-"+i+(x?"-"+x:"")
             let val = this.state.collapse[tag]
             if(osearch) {
@@ -7998,10 +9082,10 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
             
             //this.props.onResetOutlineKW()
 
-            let loca = { ...this.props.history.location }
+            let loca = { ...this.props.location }
             loca.search = loca.search.replace(/(&part|part)=[^&]+/g, "") 
             loca.search = loca.search.replace(/[?]&/,"?")
-            this.props.history.push(loca)
+            this.props.navigate(loca)
             */
 
             e.preventDefault();
@@ -8025,7 +9109,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
 
          //loggergen.log("renderO?",osearch,opart,title)
          
-         let get = qs.parse(this.props.history.location.search)
+         let get = qs.parse(this.props.location.search)
 
          if(opart && opart !== root && this.state.collapse["outline-"+root+"-"+root] === undefined) toggle(null,root,root)         
 
@@ -8054,8 +9138,9 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
                      }
                   }
                   */
-               } else {                     
-                  this.props.onGetOutline(opart);
+               } else {                  
+                  if(this.props.IRI === "bdr:PR1ER12") this.props.onGetOutline(opart,{ useRid: "bdr:PR1ER12" })   
+                  else this.props.onGetOutline(opart);
                }
 
             }
@@ -8110,7 +9195,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
 
                Object.keys(collapse).filter(k => k.startsWith("outline-"+root)).map(k => { delete collapse[k]; })
                collapse["outline-"+root+"-"+opart] = true
-               collapse["outline-"+root+"-"+opart+"-details"] = true          
+               collapse["outline-"+root+"-"+opart+"-details"] = false // true          
 
                let nodes = this.props.outlines[opart], preloading = false, update = false
                if(nodes && nodes["@graph"]) nodes = nodes["@graph"]
@@ -8168,7 +9253,10 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
                               }
                            }
                            else parent_head = null
-                           if(!this.props.outlines[head]) this.props.onGetOutline(head, head_node, parent_head);
+                           if(!this.props.outlines[head]) {
+                              if(this.props.IRI != "bdr:PR1ER12") this.props.onGetOutline(head, head_node, parent_head);
+                              else this.props.onGetOutline(head, {...head_node, useRid:"bdr:PR1ER12"}, parent_head);
+                           }
                            child_node = head_node
                         }
                         done_opart = true
@@ -8180,7 +9268,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
                loggergen.log("collapse?",JSON.stringify(collapse,null,3))
 
                
-               if(opart && this.state.outlinePart && !osearch) {
+               if(opart && this.state.outlinePart && !osearch && !this.props.outlineOnly) {
                   const el = document.querySelector("#outline")
                   if(el) el.scrollIntoView()      
                }
@@ -8205,7 +9293,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
                         if(collapse["outline-"+root+"-"+opart+";"+n["@id"]+"-details"]) {
                            //break ;
                         } else if(collapse["outline-"+root+"-"+opart+";"+n["@id"]+"-details"] === undefined) {
-                           collapse["outline-"+root+"-"+opart+";"+n["@id"]+"-details"] = true
+                           collapse["outline-"+root+"-"+opart+";"+n["@id"]+"-details"] = false //true
                            //loggergen.log("hello:","outline-"+root+"-"+opart+";"+n["@id"]+"-details")
                            update = true
                            //break ;
@@ -8493,7 +9581,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
 
                               let warn
                               if(g.contentLocation && (!this.state.catalogOnly || !this.state.catalogOnly[this.props.IRI])) {
-                                 g.hasImg = "/show/"+g["@id"].split(";")[0].replace(/^((bdr:MW[^_]+)_[^_]+)$/,"$1")+"?s="+encodeURIComponent(this.props.history.location.pathname+this.props.history.location.search)+"#open-viewer"
+                                 g.hasImg = "/show/"+g["@id"].split(";")[0].replace(/^((bdr:MW[^_]+)_[^_]+)$/,"$1")+"?s="+encodeURIComponent(this.props.location.pathname+this.props.location.search)+"#open-viewer"
                                  g.hasDetails = true
                                  if(showDetails) {
                                     if(!g.details) g.details = []
@@ -8502,7 +9590,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
                                  }
                               }
                               else if(g.instanceHasReproduction) {
-                                 g.hasImg = "/show/"+g.instanceHasReproduction.split(";")[0]+"?s="+encodeURIComponent(this.props.history.location.pathname+this.props.history.location.search)+"#open-viewer"
+                                 g.hasImg = "/show/"+g.instanceHasReproduction.split(";")[0]+"?s="+encodeURIComponent(this.props.location.pathname+this.props.location.search)+"#open-viewer"
                                  g.hasDetails = true
                                  if(showDetails) {
                                     if(!g.details) g.details = []
@@ -8513,13 +9601,13 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
                               else if(!g.contentLocation) {
                                  let repro = this.getResourceElem(bdo+"instanceHasReproduction")
                                  if(repro?.length && repro[0].value) {
-                                    let backToUrl = this.props.history.location.search.replace(/([?&])(part|backToOutline)=[^&]+/,"$1")
+                                    let backToUrl = this.props.location.search.replace(/([?&])(part|backToOutline)=[^&]+/,"$1")
                                     if(!backToUrl.endsWith("&")) {
                                        if(backToUrl && backToUrl.includes("?")) backToUrl += "&"
                                        else backToUrl += "?"
                                     }
                                     backToUrl += "part="+g["@id"]+"&backToOutline=true"
-                                    backToUrl = this.props.history.location.pathname+backToUrl
+                                    backToUrl = this.props.location.pathname+backToUrl
                                     g.hasImg = "/show/"+shortUri(repro[0].value)+"?s="+encodeURIComponent(backToUrl)+"#open-viewer"
                                     g.hasDetails = true
                                     if(showDetails) {
@@ -8751,12 +9839,22 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
                               subtime(5)
 
 
-                              if(showDetails && g["tmp:author"]) {
-                                 //loggergen.log("g:",g["tmp:author"],g["@id"]);
-                                 if(!Array.isArray(g["tmp:author"])) g["tmp:author"] = [ g["tmp:author"] ]
-                                 g.hidden.push(<div class="sub"><h4 class="first type">{this.proplink(tmp+"author", undefined, g["tmp:author"].length)}{I18n.t("punc.colon")} </h4>{this.format("h4","instacO","",false, "sub", 
-                                    g["tmp:author"].map(aut => ({type:"uri",value:fullUri(aut["@id"])}))
-                                 )}</div>)
+                              if(showDetails || this.props.IRI === "bdr:PR1ER12") for(let p of ["tmp:author", "tmp:topic"]) if(g[p]) {
+                                 //loggergen.log("g:",g[p],g["@id"]);
+                                 if(!Array.isArray(g[p])) g[p] = [ g[p] ]
+                                 if(p === "tmp:author") g.tmpAuthor = []
+                                 for(const _i in g[p]) {
+                                    const aut = g[p][_i]
+                                    if(g.hidden) g.hidden.push(<div class={"sub "+(_i > 0 ? "hideT" : "")}>
+                                       <h4 class="first type">{this.proplink(fullUri(p), undefined, g[p].length)}{I18n.t("punc.colon")} </h4>
+                                       {this.format("h4","instacO","",false, "sub",({type:"uri",value:fullUri(aut["@id"])}))}
+                                    </div>)
+                                    if(p === "tmp:author" && this.props.IRI === "bdr:PR1ER12") {
+                                       let labels = (this.props.assocResources[fullUri(aut["@id"])]??[]).filter(a => a.type === skos+"prefLabel")
+                                       if(labels?.length) labels = getLangLabel(this,skos+"prefLabel",labels)
+                                       if(labels?.value) g.tmpAuthor.push(labels.value)
+                                    }
+                                 } 
                               }
 
                               subtime(6)
@@ -8821,7 +9919,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
                            }
 
                            // #784
-                           if(g.details?.length === 1 && g.hidden?.length) {
+                           if(g.details?.length === 1 && g.hidden?.length || this.props.IRI === "bdr:PR1ER12" && g.hidden?.length) {
                               g.details = g.details.concat(g.hidden)
                               g.hidden = []
                            }
@@ -8835,7 +9933,17 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
                      //loggergen.log("outline?",elem,outline)
 
                      outline = outline.map(e => {
-                        let url = "/show/"+root+"?part="+e["@id"]
+                        let tLabel, pType = e["partType"]
+                        if(pType) {
+
+                           if(Array.isArray(pType)) pType = pType[0]
+
+                           tLabel = getOntoLabel(this.props.dictionary,this.props.locale,fullUri(pType))
+                           tLabel = tLabel[0].toUpperCase() + tLabel.slice(1)
+                           // TODO use translation from ontology
+                        }
+                        
+                        let url = this.props.IRI != "bdr:PR1ER12" || pType === "bdr:PartTypeText" ? "/show/"+e["@id"] : "/show/"+root+"?part="+e["@id"]
                         let togId = e["@id"]
                         if(e["@id"] && e["@id"].startsWith("bdr:I")) {                           
                            url = "/show/"+e["@id"].split(";")[0]
@@ -8846,17 +9954,9 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
 
                         let tag = "outline-"+root+"-"+togId
                         let ret = []
-                        let pType = e["partType"], fUri = fullUri(e["@id"])
+                        let fUri = fullUri(e["@id"])
                         if(e["@id"].includes(";")) fUri = fullUri(e["@id"].split(";")[0])
-                        let tLabel 
-                        if(pType) {
-
-                           if(Array.isArray(pType)) pType = pType[0]
-
-                           tLabel = getOntoLabel(this.props.dictionary,this.props.locale,fullUri(pType))
-                           tLabel = tLabel[0].toUpperCase() + tLabel.slice(1)
-                           // TODO use translation from ontology
-                        }
+                        
                         let open = this.state.collapse[tag] || (osearch &&  this.state.collapse[tag] === undefined && !e.notMatch)
                         if(pType && pType["@id"]) pType = pType["@id"]
 
@@ -8874,7 +9974,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
                               <span class={"parTy "+(e.details?"on":"")}  ref={citeRef} {...e.details?{title:/*tLabel+" - "+*/ I18n.t("resource."+(this.state.collapse[tag+"-details"]?"hideD":"showD")), onClick:(ev) => toggle(ev,root,e["@id"],"details",false,e)}:{title:tLabel}} >
                                  {pType && parts[pType] ? <div>{parts[pType]}</div> : <div>{parts["?"]}</div> }
                               </span>
-                              <span>{this.uriformat(null,{noid:true, type:'uri', value:fUri, ...(e.partType==="bdr:PartTypeVolume"?{volumeNumber:e.volumeNumber}:{}), inOutline: (!e.hasPart?tag+"-details":tag), url, debug:false, toggle:() => toggle(null,root,togId,!e.hasPart&&!e["tmp:hasNonVolumeParts"]?"details":"",false,e,top)})}</span>
+                              <span>{this.uriformat(null,{noid:true, type:'uri', value:fUri, data: e, ...(e.partType==="bdr:PartTypeVolume"?{volumeNumber:e.volumeNumber}:{}), tmpAuthor:e.tmpAuthor, inOutline: (!e.hasPart?tag+"-details":tag), url, debug:false, ...!e.hasPart&&!e["tmp:hasNonVolumeParts"]?{}:{toggle:() => toggle(null,root,togId,!e.hasPart&&!e["tmp:hasNonVolumeParts"]?"open"/*"details"*/:"",false,e,top)} })}</span>
                               {e.id}
                               {this.samePopup(e.same,fUri)}
                               <div class="abs">
@@ -8950,7 +10050,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
                            )
                         //loggergen.log("will loop:",e["@id"], top, this.props.outlines[e["@id"]],tag,this.state.collapse[tag])
                         if((osearch && this.state.collapse[tag] !== false) || (this.props.outlines[e["@id"]] && this.props.outlines[e["@id"]] !== true && this.state.collapse[tag]) ) 
-                           ret.push(<div style={{paddingLeft:"33px"}}>{makeNodes(e["@id"],top)}</div>)                        
+                           ret.push(<div style={{paddingLeft:"28px"/*"33px"*/}}>{makeNodes(e["@id"],top)}</div>)                        
                         return ( ret )
                      })
                   }
@@ -8965,7 +10065,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
          let tag = "outline-"+root+"-"+root
 
          let outlineSearch = (e, lg = "bo-x-ewts", val = this.state.outlineKW) => {
-            loggergen.log("outlineS",val)
+            loggergen.log("outlineS:",val)
 
             // NOTO
             // x search either from root or current node
@@ -8977,19 +10077,19 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
             if(val) { 
 
 
-               let loca = { ...this.props.history.location }
+               let loca = { ...this.props.location }
 
-               loca.search = loca.search.replace(/&*osearch=[^&]+/, "") 
+               loca.search = loca.search.replace(/((&?root)|(&?osearch))=[^&]+/g, "") 
 
                if(!loca.search) loca.search = "?"
                else if(loca.search !== "?") loca.search += "&"
 
-               loca.search += "osearch="+keywordtolucenequery(val.trim(), lg)+"@"+lg
+               loca.search += "root="+root+"&osearch="+encodeURIComponent(keywordtolucenequery(val.trim(), lg))+"@"+lg
 
                loggergen.log("loca!",loca)
 
                this.setState({dataSource:[], outlineKW:val.trim()});
-               this.props.history.push(loca)
+               this.props.navigate(loca)
                
                //this.props.onOutlineSearch(root, this.state.outlineKW,lg)
             }
@@ -9032,20 +10132,30 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
          } 
 
 
-         return ( 
-         <div class="data" id="outline">
-            <h2>{I18n.t("index.outline")}</h2>
-               <OutlineSearchBar that={this} outlineSearch={outlineSearch}/>
-               <div>
-                  <Loader  options={{position:"fixed",left:"calc(50% + 100px)",top:"calc(50% - 20px)"}} loaded={this.props.loading !== "outline"}/>
+         return ( <>
+            {this.props.IRI != "bdr:PR1ER12" && <div data-prop="tmp:outlineSearch">
+               <h3><span>Outline Search:</span></h3>
+               <div class="group">
+                  <OutlineSearchBar that={this} outlineSearch={outlineSearch}/>
+               </div>
+            </div> }
+            <div class="data" id="outline" data-prop="tmp:outline">
+               <h3><span>{(this.props.IRI != "bdr:PR1ER12" ? I18n.t("index.outline") : "Sungbum")+I18n.t("punc.colon")}</span></h3>
+               <div class="group">
+                  <Loader  options={{
+                        position:this.props.outlineOnly?"absolute":"fixed",
+                        left:"calc(50% "+(this.props.outlineOnly?")":"+ 100px)"),
+                        top:"calc(50% - 20px)"}
+                     } loaded={this.props.loading !== "outline"}/>
                   <div class={"root " +(this.state.outlinePart === root || (!this.state.outlinePart && this.props.IRI===root)?"is-root":"")} >
                      { (osearch && open && (this.props.outlines[root] && !this.props.outlines[osearch].reloaded)) && <span onClick={(ev) => toggle(ev,root,root,"",true)} className="xpd" title={I18n.t("resource.otherN")}><RefreshIcon /></span>}
                      { !open && [<img src="/icons/triangle.png" className="xpd right" onClick={(e) => toggle(e,root,root)} />,colT,<span onClick={rootClick}>{title}</span>]}
                      {  open && [<img src="/icons/triangle_.png" className="xpd" onClick={(e) => toggle(e,root,root)} />,colT,<span onClick={rootClick} class='on'>{title}</span>]}
                   </div>
-                  { open && <div style={{paddingLeft:"50px"}}>{outline}</div> }
+                  { open && <div style={{paddingLeft:"45px" /*"50px"*/}}>{outline}</div> }
                </div>
-         </div> )
+            </div>
+         </> )
       }
    }
 
@@ -9053,7 +10163,8 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
    getWtitle(baseW,rootC,titleRaw) {
       if(baseW && baseW.length && baseW[0].value) {
          let wUri = shortUri(baseW[0].value);
-         if(this.props.resources && !this.props.resources[wUri]) this.props.onGetResource(wUri);
+         // DONE: work loaded with instance
+         //if(this.props.resources && !this.props.resources[wUri]) this.props.onGetResource(wUri);
          
          //loggergen.log("is?",baseW[0].value,this.props.assocResources?this.props.assocResources[baseW[0].value]:null)
 
@@ -9066,7 +10177,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
          let _T = getEntiType(shortUri(baseW[0].value))
          let { title,titlElem,otherLabels } = this.setTitle(baseData,_T,baseW[0].value,rootC,titleRaw) ;
          
-         //loggergen.log("tEl:",titlElem)
+         // loggergen.log("tEl:",titlElem)
 
          if(titleRaw && titlElem) titleRaw.label = titlElem
          return title
@@ -9095,13 +10206,21 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
       if(unpag && unpag.length && unpag.filter(u => u.value === bdo+"EtextNonPaginated").length) unpag = true
       else unpag = false
 
+      if(!unpag) {
+         unpag = this.getResourceElem(bdo+"eTextVolumeForImageGroup")
+         if(!unpag?.length) unpag = this.props.resources?.[this.props.IRI] && this.props.resources?.[this.props.IRI] != true
+         else unpag = false
+      }
+
       return unpag
    }
 
 
    render()
    {
-      loggergen.log("render",this.props,this.state,this._refs)
+      let isMirador = (!this.props.manifestError || (this.props.imageVolumeManifests && Object.keys(this.props.imageVolumeManifests).length)) && (this.props.imageAsset || this.props.imageVolumeManifests) && this.state.openMirador
+
+      loggergen.log("render",this.props.IRI,this.props.pdfDownloadOnly,isMirador,this.state.openMirador,this.props,this.state,this._refs)
    
       this._annoPane = []
 
@@ -9113,24 +10232,29 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
          let msg = "IRI undefined" ;
          if(this.props.IRI) msg = "Resource "+this.props.IRI+" does not exist."
          return (
-            <Redirect404 propid={this.props.propid} from={this.props.IRI} simple={this.props.simple} history={this.props.history} message={msg}/>
+            <Redirect404 propid={this.props.propid} from={this.props.IRI} simple={this.props.simple} navigate={this.props.navigate} location={this.props.location}  message={msg}/>
          )
       }
 
       let redir, withdrawn
       if(this.props.resources && (redir = this.props.resources[this.props.IRI]) && (redir = redir[fullUri(this.props.IRI)]))
       {
-         loggergen.log("WithD?",redir);
+         //loggergen.log("WithD?",redir);
          if(redir[adm+"replaceWith"]) {
             redir = shortUri(redir[adm+"replaceWith"][0].value)                        
-            
+           
+            //loggergen.log("rw:", redir, this.props);
+
             let path = "/show/" 
             if(this.props.simple) path = "/simple/"
-            else if(this.props.preview) path = "/preview/"
+            if(this.props.preview && !this.props.simple) path = "/preview/"
 
             if(redir != this.props.IRI) {
-               return (               
-                  <Redirect404 history={this.props.history} message={"Record withdrawn in favor of "+redir} to={path+redir+this.props.history.location.search+this.props.history.location.hash} />
+               if(this.props.pdfDownloadOnly) {
+                  return <ResourceViewerContainer key={this.props.IRI+"_scans-redir-"+redir} IRI={redir} auth={this.props.auth} location={this.props.location} navigate={this.props.navigate} pdfDownloadOnly={true} />
+               }
+               else return (               
+                  <Redirect404 navigate={this.props.navigate} location={this.props.location} message={"Record withdrawn in favor of "+redir} to={path+redir+this.props.location.search+this.props.location.hash} />
                )
             }
          }
@@ -9165,12 +10289,30 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
       let wTitle,iTitle,rTitle ;
       let _T = getEntiType(this.props.IRI)
       let titleRaw = { label:[] }
-      let { title,titlElem,otherLabels } = this.setTitle(kZprop,_T,null,null,true) ;
+      let { title,titlElem,otherLabels, resTitle } = this.setTitle(kZprop,_T,null,null,true) ;
+      //console.log("tlm?",titlElem,_T)
+      let versionTitle, ilabel 
       if(_T === "Instance") { 
          iTitle = title ; 
 
-         let baseW = this.state.title.work 
-         wTitle = getWtitle(baseW);
+         let baseW = this.state.title.work
+         wTitle = getWtitle(baseW, undefined, titleRaw)
+         
+         if(titleRaw.label?.length) { 
+            title = getLangLabel(this,"",titleRaw.label)
+            ilabel = getLangLabel(this,"",resTitle?.value ? [ resTitle ] : titlElem)
+            if(ilabel?.value != title.value) versionTitle = ilabel
+            title = <h2 class="on" title={title.value} lang={title.lang} >
+               <span class={"newT "+_T.toLowerCase()}>
+                  <span class="space-fix">
+                     <span>{I18n.t("types."+_T.toLowerCase())}</span>
+                  </span>
+               </span>
+               <span>{title.value}</span>
+            </h2> 
+         } else if(this.props.outlineOnly && titlElem?.length) {
+            ilabel = getLangLabel(this,"",titlElem)
+         }
 
          if(this.state.catalogOnly  && this.state.catalogOnly[this.props.IRI]) {
             rTitle = <h2 class="catalogOnly" title={I18n.t("resource.noImages")}><span class="T catalog">{I18n.t("types.images")}<span class="RID">{I18n.t("prop.tmp:catalogOnly")}</span></span></h2>
@@ -9215,6 +10357,22 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
       //loggergen.log("_T!!",_T)
       if(this.props.resources && this.props.resources[this.props.IRI] && _T !== "Etext") this.setManifest(kZprop,iiifpres)    
 
+      if(this.props.previewEtext) {
+         // DONE: should be already loaded with the MW query
+         //if(this.props.resources && !this.props.resources[this.props.IRI]) this.props.onGetResource(this.props.IRI);
+      }
+
+      if(this.props.outlineOnly) {
+         // delayed until outline is toggled
+         //if(this.props.resources && !this.props.resources[this.props.IRI] /*&& this.state.collapse.containingOutline*/) this.props.onGetResource(this.props.IRI);
+      }
+
+      if(this.props.pdfDownloadOnly) {
+         console.log("render perma", this.props.feedbucket)
+         // DONE: scans loaded with instance
+         //if(this.props.resources && !this.props.resources[this.props.IRI]) this.props.onGetResource(this.props.IRI);
+         return this.perma_menu(pdfLink,monoVol,fairUse,kZprop.filter(k => k.startsWith(adm+"seeOther")), accessET && !etextAccessError, true)
+      }
 
       let resLabel = getLangLabel(this,"",titlElem)
 
@@ -9224,6 +10382,9 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
                            
       let topProps = topProperties[_T]
       if(!topProps) topProps = []
+
+      let midProps = midProperties[_T]
+      if(!midProps) midProps = []
 
       let extProps = extProperties[_T]
       if(!extProps) extProps = []
@@ -9246,7 +10407,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
       // - use '...' to tell it's just an overview
       // - use prefLabel in tabs title 
 
-      let related = [], createdBy = [], wUrl = fullUri(this.props.IRI), serial
+      let related = [], createdBy = [], wUrl = fullUri(this.props.IRI), serial, isSerialWork
       if(this.state.title.work && this.state.title.work[0].value) wUrl = this.state.title.work[0].value
 
       if(this.props.assocResources) {
@@ -9279,6 +10440,9 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
          serial = this.getResourceElem(bdo+"serialHasInstance");
          if(!serial) serial = this.getResourceElem(bdo+"collectionMember");
          if(!serial) serial = this.getResourceElem(bdo+"corporationHasMember");
+
+         const resType = this.getResourceElem(rdf+"type")
+         isSerialWork = resType && resType.some(e=> e.value?.endsWith("SerialWork"))
          
          // #871 
          const isEtextCollection = serial && serial.some(k => k.value?.includes("/resource/IE")) ;
@@ -9371,7 +10535,8 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
 
       let hasRel = ((related && related.length > 0)||(createdBy && createdBy.length > 0))
       if(!this.props.preview && (!hasRel || this.state.relatedTabAll) && !["Instance","Images","Etext"].includes(_T)) {
-         if(this.props.assocResources && this.props.config &&  !this.props.assocTypes) this.props.onGetAssocTypes(this.props.IRI, "assocTypes")
+         // deprecated
+         //if(this.props.assocResources && this.props.config &&  !this.props.assocTypes) this.props.onGetAssocTypes(this.props.IRI, "assocTypes")
       }  
       
       let onKhmerServer = (this.props.config && this.props.config.khmerServer)
@@ -9429,7 +10594,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
 
       let sideMenu = (rid,tag,rel,ext,outL,openV,etextUT) => {
          let sRid = shortUri(rid)
-         let loca = this.props.history.location
+         let loca = this.props.location
          let url = "/show/"+sRid+this.getTabs(tag)
          //if(sRid === this.props.IRI) url = ""
          let view = "/show/"+sRid+loca.search+"#open-viewer"
@@ -9466,6 +10631,10 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
 
       let inTitle 
       //loggergen.log("root?",root)
+
+      
+      /*
+      // new UX
       if(root && root.length) {
          inTitle  = [ 
             <h3 class="inT">
@@ -9476,8 +10645,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
             //<h3 class="outline-link"><Link class="urilink" to={"/show/"+shortUri(root[0].value)+"?part="+this.props.IRI+"#outline"}>{"View in the outline"}</Link></h3>
          ]
       }
-
-      let isMirador = (!this.props.manifestError || (this.props.imageVolumeManifests && Object.keys(this.props.imageVolumeManifests).length)) && (this.props.imageAsset || this.props.imageVolumeManifests) && this.state.openMirador
+      */
 
       let searchUrl, searchTerm
       
@@ -9499,14 +10667,16 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
          } catch(e) {
             console.error("pb:",oldUrl)
          }
-         if(decoded && !decoded.startsWith("/show/")) {
+         if(decoded && (!decoded.startsWith("/show/") || decoded.includes("?")) && !decoded.startsWith(this.props.location.pathname)) {
             let withW = backTo.replace(/^.*[?&](w=[^&]+)&?.*$/,"$1")
             //loggergen.log("fromS",this.state.fromSearch,backTo,withW)
             if(backTo === withW) { 
                backTo = decodeURIComponent(backTo)
                searchUrl = backTo
-               if(searchUrl.match(/q=/))               
-                  searchTerm = lucenequerytokeyword(searchUrl.replace(/.*q=([^&]+).*/,"$1")) 
+               if(searchUrl.match(/q=/)) {
+                  if(searchUrl?.startsWith("/search")) searchTerm = lucenequerytokeyword(decodeURIComponent(searchUrl.replace(/.*q=([^&]+).*/,"$1"))) 
+                  else searchTerm = decodeURIComponent(searchUrl.replace(/.*q=([^&]+).*/,"$1")) 
+               }    
                else if(searchUrl.match(/r=/))               
                   searchTerm = lucenequerytokeyword(searchUrl.replace(/.*r=([^&]+).*/,"$1")) 
                else if(searchUrl.match(/i=/))               
@@ -9534,21 +10704,150 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
       if(accessET && accessET.filter(e => e.value.match(/(AccessFairUse)|(Restricted.*)$/)).length) accessET = false
       else accessET = true
 
-      loggergen.log("chunks?",hasChunks,accessET)
+      //loggergen.log("chunks?",hasChunks,accessET)
 
       let etextAccessError = !accessET || this.props.etextErrors && this.props.etextErrors[this.props.IRI] && [401, 403].includes(this.props.etextErrors[this.props.IRI])
 
-      if(hasChunks && hasChunks.length && this.state.openEtext) {
-         
-         let hasPages = this.getResourceElem(bdo+"eTextHasPage")
-         let etext_data = this.renderData([!hasPages?bdo+"eTextHasChunk":bdo+"eTextHasPage"],iiifpres,title,otherLabels,"etext-data")
-         let etextRes = this.getResourceElem(bdo+"eTextInInstance")
-         if(etextRes && etextRes.length) etextRes = shortUri(etextRes[0].value)
-         else etextRes = null
+      let resType = this.getResourceElem(rdf+"type"), topLevel = false
+      if(resType && resType.some(e=> e.value?.endsWith("EtextInstance"))) {
+         topLevel = true
+         if(!this.state.openEtext) {
+            let get = qs.parse(this.props.location.search), currentText, scope = this.props.IRI
+            if(get.openEtext && get.openEtext != this.props.IRI) { 
+               currentText = get.openEtext
+               scope = get.scope || currentText                
+            }
+            this.setState({openEtext:true,currentText,scope})
+            if(currentText) {
+               this.props.onLoading("etext", true)
+               this.props.onReinitEtext(currentText)
+            }
+            return null
+         }
+      }
 
+      const breadcrumbs = [
+         <Link to="/" onClick={(ev) => { 
+            this.props.navigate({pathname:"/",search:""}); 
+            if(this.props.keyword) { this.props.onResetSearch(); } 
+            this.setState({blurSearch:false, forceFocus: true})
+            ev.preventDefault()
+            ev.stopPropagation()
+            return false
+         }}>{I18n.t("topbar.home")}</Link>         
+      ]
+
+      if(!this.props.simple && (this.props.previewEtext || this.props.disableInfiniteScroll || topLevel || this.props.openEtext || hasChunks && hasChunks.length && this.state.openEtext)) {         
+
+         let hasPages = this.getResourceElem(bdo+"eTextHasPage")
+         let etextRes = this.getResourceElem(bdo+"eTextInInstance")         
+         if(!etextRes?.length) etextRes = this.getResourceElem(bdo+"volumeOf") 
+         if(etextRes && etextRes.length) etextRes = shortUri(etextRes[0].value)               
+         else if(this.props.disableInfiniteScroll?.etextRes) etextRes = this.props.disableInfiniteScroll.etextRes    
+         else if(this.props.disableInfiniteScroll?.outETinst?.length) etextRes = shortUri(this.props.disableInfiniteScroll.outETinst[0].value)
+         else etextRes = null
+         
+         let etext_data = this.renderData(false, [!hasPages&&!this.props.disableInfiniteScroll?.snip?bdo+"eTextHasChunk":bdo+"eTextHasPage"],iiifpres,title,otherLabels,"etext-data",undefined,undefined,
+            this.props.disableInfiniteScroll&&etextRes?[<div class="etext-continue"><Link onClick={() => {                
+               if(this.props.disableInfiniteScroll?.outETvol?.length) { 
+                  const loadETres = shortUri(this.props.disableInfiniteScroll.outETvol[0].value)
+                  this.props.onGetResource(loadETres)
+                  //this.props.onReinitEtext(loadETres, { startChar: this.props.disableInfiniteScroll.outETstart[0].value})                  
+               }
+            }} to={this.renderEtextLink(etextRes)}>{I18n.t("resource.continue")}</Link></div>]:[])
+            
+         if(topLevel || this.props.previewEtext) etextRes = this.props.IRI
+
+         let etRefs 
+         if(!this.props.eTextRefs && etextRes && topLevel && !this.props.previewEtext && !this.props.disableInfiniteScroll) {
+            this.props.onGetETextRefs(etextRes);
+         } else if(this.props.eTextRefs && this.props.eTextRefs !== true && !this.props.previewEtext && !this.props.disableInfiniteScroll) { 
+            //extProps = extProps.filter(p => p !== bdo+"instanceHasVolume")
+            etRefs = this.renderEtextRefs(accessET, etextRes)
+
+         }
+
+
+         const inst = this.getResourceElem(bdo+"eTextInInstance") ?? this.getResourceElem(bdo+"volumeOf") 
+         let repro = this.getResourceElem(bdo+"instanceReproductionOf"), back, t
+         if(!repro?.length && inst?.length) repro = this.getResourceElem(bdo+"instanceReproductionOf", shortUri(inst[0].value), this.props.assocResources)      
+         if(repro?.length) { 
+            back = repro.filter(r => (t=(this.getResourceElem(rdf+"type", shortUri(r.value), this.props.assocResources) ?? [])).some(s => s.value === bdo+"Instance") && !t.some(s => s.value === bdo+"ImageInstance" )  )
+            if(back?.length) back = shortUri(back[0].value)
+            else back = ""
+         }   
+      
+         let level = 0
+         if(back && this.props.that) { 
+            let labelMW, labelVL, labelUT, vol
+            labelMW = this.props.that.getResourceElem(skos+"prefLabel", back)
+            if(labelMW && !Array.isArray(labelMW)) labelMW = [labelMW]
+            labelMW = getLangLabel(this,skos+"prefLabel",labelMW) 
+            if(this.props.that.props.eTextRefs?.["@graph"]) {
+               if(this.props.that.state.scope != etextRes) {
+                  for(const n of this.props.that.props.eTextRefs?.["@graph"]) {
+                     if(n["@id"] === this.props.that.state.currentText && (!n.etextInVolume || this.props.that.state.scope != this.props.that.state.currentText) 
+                        || n.volumeHasEtext === this.props.that.state.currentText) {
+                        vol = n
+                        labelVL = n["skos:prefLabel"] 
+                        if(!labelVL && n.volumeNumber) labelVL = { "@language":this.props.locale, "@value": I18n.t("types.volume_num_noid",{num:n.volumeNumber}) }
+                        if(labelVL && !Array.isArray(labelVL)) labelVL = [labelVL]
+                        labelVL = getLangLabel(this,skos+"prefLabel",labelVL) 
+                     }
+                     if(n["@id"] === this.props.that.state.scope) { 
+                        labelUT = n["skos:prefLabel"] ?? []
+                        if(labelUT && !Array.isArray(labelUT)) labelUT = [labelUT]
+                        labelUT = getLangLabel(this,skos+"prefLabel",labelUT) 
+                     }
+                     if(labelVL && labelUT || labelVL && this.props.that.state.currentText == this.props.that.state.scope)
+                        break;
+                  }
+               }
+            }
+            //console.log("lbls:", back, repro, vol, labelMW, this.props.that.props.eTextRefs, labelVL, labelUT)
+            breadcrumbs.push(<Link  class="can-shrink" to={"/show/"+back}>{labelMW?.value ?? back}</Link>)         
+            if(this.props.that.state.scope != etextRes) {
+               let openText = (ev,ETres,reset) => {
+                  this.props.onLoading("etext", true)
+                  setTimeout(() => this.props.that.props.onReinitEtext(ETres), 150)                        
+                  this.props.that.setState({ currentText: reset?null:ETres, scope: ETres })                       
+               }
+               breadcrumbs.push(<Link to={"/show/"+etextRes+"#open-viewer"} onClick={(ev,)=>openText(ev,etextRes,true)}>{I18n.t("types.etext")}</Link>)
+               if(this.props.that.state.currentText != this.props.that.state.scope && vol && Array.isArray(vol?.volumeHasEtext ?? []) && vol?.volumeHasEtext?.length > 1 ) {
+                  breadcrumbs.push(<Link  class="can-shrink" to={"/show/"+etextRes+"?openEtext="+this.props.that.state.currentText+"#open-viewer"} onClick={(ev)=>openText(ev,this.props.that.state.currentText)}>{labelVL?.value ?? this.props.that.state.currentText}</Link>)
+                  breadcrumbs.push(<span class="can-shrink">{labelUT?.value ?? this.props.that.state.scope}</span>)
+                  level = 3
+               } else if(labelVL?.value) {
+                  breadcrumbs.push(<span class="can-shrink">{labelVL?.value}</span>)
+                  level = 2
+               } else {
+                  //this.props.that.state.currentText
+               }
+            } else {
+               breadcrumbs.push(<span>Etext</span>)
+               level = 1
+            }
+         }
+
+         //loggergen.log("eR:", topLevel, etextRes, this.state.currentText, hasPages, etext_data, this.props.eTextRefs, etRefs, this.props, this.state)
+
+         let ETSBresults 
+         if(this.state.ETSBresults) {
+            ETSBresults = <div>
+               <IconButton className="close-etext-results" onClick={() => this.setState({collapse:{...this.state.collapse, ETSBresults:true}})}>
+                  <Close width="24" />
+               </IconButton>
+               {this.state.ETSBresults.map((r,i) => (
+               <EtextSearchResult page={this.state.ETSBpage.page} vol={this.state.ETSBpage.vol} start={this.state.ETSBpage.start} res={r} n={i} 
+                  setETSBpage={(p,v,i,s) => { if(!this.state.ETSBpage || this.state.ETSBpage?.start != s || this.state.ETSBpage?.page != p || this.state.ETSBpage?.vol != v || this.state.ETSBpage?.idx != i) this.setState({ ETSBpage:{page:p, vol:v, idx:i, start:s } }) }}
+                  getLabel={(l) => getLangLabel(this,bdo+"eTextHasPage",l)}
+                  etextLang={this.props.etextLang} pages={this.getResourceElem(bdo+"eTextHasPage")}
+               />
+            ))}</div>
+         }
 
          let monlamResults 
-         if(!this.state.enableDicoSearch) { 
+         if(!this.state.enableDicoSearch || this.props.disableInfiniteScroll) { 
 
          } else if(Array.isArray(this.props.monlamResults) && this.props.monlamResults.length > 0) { 
             let renderMonlamResults = (j, res) => res.map( (w,i) => { 
@@ -9560,7 +10859,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
                let kw = getLangLabel(this,bdo+"eTextHasPage",[ { ...this.props.monlamKeyword }])
                if(kw?.value) kw = kw.value 
                else kw = this.props.monlamKeyword?.value                  
-               kw = kw.replace(/(^[ ་།/]+)|([ ་།/]+$)/g, "")
+               kw = kw?.replace(/(^[ ་།/]+)|([ ་།/]+$)/g, "") 
 
                //loggergen.log("kw:",kw,word?.value)
 
@@ -9616,59 +10915,210 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
          } else if(this.state.monlam && this.state.collapse.monlamPopup) {
             monlamResults = <div></div>
          }
+         //loggergen.log("monlamR:",monlamResults,this.props.monlamResults)
 
-         loggergen.log("monlamR:",monlamResults,this.props.monlamResults)
-
+      
          // TODO fix loader not hiding when closing then opening again
 
-         return ([
-            getGDPRconsent(this),
-            <div class={monlamResults ? "withMonlam" : ""}>               
-               { monlamResults && <link rel="stylesheet" href="https://monlamdictionary.com/files/css/basic.css" /> }
-               { top_right_menu(this,title,searchUrl,etextRes) }               
-               { this.renderMirador(isMirador) }           
-               <div class="resource etext-view" >
-                  <Loader loaded={!this.props.loading}  options={{position:"fixed",left:"50%",top:"50%"}} />      
-                  <div class="">
-                     { this.unpaginated() && <h4 style={{fontSize:"16px",fontWeight:600,textAlign:"center", marginBottom:"50px",top:"-15px"}}>{I18n.t("resource.unpag")}</h4>}
-                     { etextAccessError && <h4 style={{fontSize:"16px",fontWeight:600,textAlign:"center",marginTop:"80px"}}>
-                        <><img style={{height:"50px", verticalAlign:"middle", marginRight:"10px"}} src="/icons/unknown.svg"/><Trans i18nKey="access.fairuseEtext" components={{ bold: <u /> }} /></>
-                     </h4> }
-                     { !etextAccessError && etext_data }
-                  </div>                  
-               </div>
-               { this.renderEtextNav(etextAccessError) }
-               <GenericSwipeable classN={"monlamResults "+(this.state.enableDicoSearch && (this.state.monlam && this.state.collapse.monlamPopup || monlamResults) ? "visible" : "")} onSwipedRight={() => { 
-                     this.setState({noHilight:false, monlam:null, collapse:{ ...this.state.collapse, monlamPopup: true }})
-                     this.props.onCloseMonlam()
-                  }}>                  
-                  <SimpleBar>
-                     <h2>
-                        <a href="https://monlamdic.com" target="_blank" rel="noopener noreferrer"><img width="32" src="/icons/monlam.png" title="monlamdic.com"/></a>
-                        <a href="https://monlamdic.com" target="_blank" rel="noopener noreferrer">{I18n.t("viewer.monlamTitle")}</a>
-                        {/* <a href="https://monlamdic.com" target="_blank" rel="noopener noreferrer"><img width="32" src="/icons/monlam.png" title="monlamdic.com"/></a> */}
-                        <Close width="32" onClick={() => { 
-                           this.setState({noHilight:false, monlam:null, collapse:{ ...this.state.collapse, monlamPopup: true }})
-                           this.props.onCloseMonlam()
-                        }}/>
-                     </h2>
-                     { this.props.monlamResults == true && <Loader  /> }
-                     { monlamResults }
-                  </SimpleBar>
-               </GenericSwipeable>
-            </div>,
-         ])
+         const monlamVisible = this.state.enableDicoSearch && (this.state.monlam && this.state.collapse.monlamPopup || monlamResults)   
+         
+         if(this.props.previewEtext) { 
+            let vols
+            if(!this.state.currentText && !this.props.previewEtext?.outETvol?.length) {
+               // just get the first volume
+               vols = this.getResourceElem(bdo+"instanceHasVolume")
+               if(vols?.length){
+                  vols = _.orderBy(vols.map(v => {
+                     return ({ v, n:this.getResourceElem(bdo+"volumeNumber", shortUri(v.value), this.props.assocResources)?.[0]})
+                  }).filter(f => f.n != undefined).map(f => ({f, n:Number(f.n.value)})), ["n"], ["asc"])
+                  console.log("vols:",vols)
+               }
+            }
+            const iri = this.state.currentText ?? (vols?.length ? shortUri(vols[0].f.v.value) : shortUri(this.props.previewEtext?.outETvol?.[0]?.value ?? ""))
+            return (<>            
+               { this.state.currentText || this.props.previewEtext?.outETvol?.length || vols?.length
+                  ? <>
+                     <ResourceViewerContainer key={this.props.IRI+"_currentText-"+iri}  auth={this.props.auth} location={this.props.location} navigate={this.props.navigate} /*history={this.props.history}*/ IRI={iri} openEtext={true} openEtextRefs={false} disableInfiniteScroll={vols?.length ? {snip: this.props.previewEtext?.snip, etextRes:this.props.IRI,outETscope:this.props.IRI, outETvol:[vols[0].f.v], outETstart:[{value:1}] } : this.props.previewEtext} that={this}/> 
+                  </>
+                  : this.props.etextErrors?.[this.props.IRI] 
+                     ? <h4><div class="images-thumb-links"  data-n={4} style={{ marginLeft:0 }}><a class="urilink nolink"><BlockIcon style={{width:"18px",verticalAlign:"top"}}/>&nbsp;{I18n.t("access.errorE")}</a></div></h4>
+                     : <Loader className="etext-viewer-loader preview" loaded={false}  //options={{position:"fixed",left:"calc(200px)",top:"50%"}} 
+                  />      
+               }
+            </>) 
+         } else if(topLevel) { 
+            const outline = <>
+               {/* {this.state.collapse.etextRefs &&  */}
+                  <IconButton width="32" className={"show-outline-etext collapseETr-"+this.state.collapse.etextRefs} onClick={() => this.setState({collapse:{...this.state.collapse,etextRefs:false}})}><img src="/icons/collecN.svg" /></IconButton>
+               {/* }  */}
+               <SimpleBar class={"resource etext-outline "+(this.state.collapse.etextRefs ? "withOutline-false":"withOutline-true")+(" collapseETr-"+this.state.collapse.etextRefs)}>
+               { etRefs }          
+               </SimpleBar>
+               {/* <div></div> */}
+            </>
+            return (<>            
+               {getGDPRconsent(this)}
+               {top_right_menu(this,title,searchUrl,etextRes,null,this.props.location, undefined, "resource")}                       
+                  
+                  { this.state.currentText 
+                     ? <ResourceViewerContainer key={this.props.IRI+"_currentText_sub_" /*+this.state.currentText*/ }  auth={this.props.auth} /*history={this.props.history}*/ location={this.props.location} navigate={this.props.navigate} IRI={this.state.currentText} openEtext={true} openEtextRefs={!this.state.collapse.etextRefs} topEtextRefs={outline} that={this}/> 
+                     : <>
+                        { outline }
+                        <Loader className="etext-viewer-loader" loaded={!this.props.loading} 
+                           {...!this.props.disableInfiniteScroll ? {options:{position:"fixed",left:"calc(50% + 200px)",top:"50%"}}:{}}
+                        />      
+                     </>
+                  }
+               </>) 
+         }
+         else { 
+            let inCollec = this.getResourceElem(bdo+"inCollection")
+            if(!inCollec?.length) inCollec = this.getResourceElem(bdo+"inCollection", this.props.disableInfiniteScroll?.etextRes)
+         
+            return ([           
+                        
+               !this.props.previewEtext && !this.props.disableInfiniteScroll && <div class="etext-header-breadcrumbs" >
+                  <div class="ariane" data-level={level}>
+                     {breadcrumbs}
+                  </div>
+               </div>,
+
+               this.renderEtextNav(etextAccessError, breadcrumbs),
+               this.props.topEtextRefs,
+               <div class={(monlamResults ? "withMonlam " : "")+(this.props.openEtextRefs ? "withOutline ":"")+(this.state.ETSBresults && !this.state.collapse.ETSBresults ? "withETSBresults ":"")}>               
+                  { monlamResults && <link rel="stylesheet" href="https://monlamdictionary.com/files/css/basic.css" /> }               
+                  { this.renderMirador(isMirador) }           
+                  <div class="resource etext-view" >                                    
+                     { this.props.disableInfiniteScroll && etextRes && !etextAccessError && <>
+                        <div style={{ lineHeight:"23px"}}>
+                        { this.renderOCR(<Trans i18nKey="access.OCRnew" components={{ bold: <b style={{ fontWeight:600 }}/>, nl: <br /> }} />) }
+                        </div>
+                        <div class={"etext-top-links"}>
+                           <Link to={this.renderEtextLink(etextRes)} onClick={() => { 
+                              if(this.props.disableInfiniteScroll?.outETvol?.length) {
+                                 const loadETres = shortUri(this.props.disableInfiniteScroll.outETvol[0].value)
+                                 this.props.onGetResource(loadETres)
+                                 //this.props.onReinitEtext(loadETres, { startChar: this.props.disableInfiniteScroll.outETstart[0].value})                  
+                              }
+                           }}>{I18n.t("resource.openViewer")}</Link>
+                           { this.renderEtextDLlink(etextAccessError, true) }
+                           { inCollec?.length && <div>{I18n.t("resource.inCollection",{count:inCollec.length})} {inCollec.map((c,i) => ([i > 0 ? " | ":null,this.uriformat("", { type:"uri", value:c.value })]))}</div>}
+                        </div> 
+                     </>}
+                     <div class="">
+                        { //(this.props.disableInfiniteScroll ? this.props.loading?.startsWith && this.props.loading?.startsWith("etext") : this.props.loading ) 
+                           this.props.loading && <Loader className="etext-viewer-loader"  loaded={!this.props.loading}  
+                              {...!this.props.disableInfiniteScroll ? {options:{position:"fixed",left:"calc(50% + 200px)",top:"50%"}}:{}}
+                           />  }
+                        { this.unpaginated() && !this.props.disableInfiniteScroll && <h4 style={{fontSize:"16px",fontWeight:600,textAlign:"center", marginBottom:"50px",top:"20px"}}>{I18n.t("resource.unpag")}</h4>}
+                        { !this.props.disableInfiniteScroll && etextAccessError && <h4 style={{fontSize:"16px",fontWeight:600,textAlign:"center",marginTop:"80px"}}>
+                           <><img style={{height:"50px", verticalAlign:"middle", marginRight:"10px"}} src="/icons/unknown.svg"/><Trans i18nKey="access.fairuseEtext" components={{ bold: <u /> }} /></>
+                        </h4> }
+                        { !etextAccessError && (!this.props.disableInfiniteScroll?.outETvol?.length ? etext_data : <div onClick={() => {
+                           const loadETres = shortUri(this.props.disableInfiniteScroll.outETvol[0].value)
+                           this.props.onGetResource(loadETres)
+                           //this.props.onReinitEtext(loadETres, { startChar: this.props.disableInfiniteScroll.outETstart[0].value})                  
+                           this.props.navigate(this.renderEtextLink(etextRes))
+                        }}>{etext_data}</div>)}
+                        { this.props.disableInfiniteScroll && etextAccessError && <h4  style={{ lineHeight:"23px" }}>
+                           <div class="images-thumb-links"  data-n={5} style={{ marginLeft:0 }}>
+                              <a class="urilink nolink noIA"><BlockIcon style={{width:"18px",verticalAlign:"top"}}/>{I18n.t("access.restrictedC")}</a>
+                              <div class="data access generic"><h3><span style={{ textTransform: "none", width: "100%" }}><Trans i18nKey="access.fairuseEtext" components={{ bold: <span style={{ textTransform: "none"}} /> }}/></span></h3></div>
+                           </div>
+                        </h4> } 
+                     </div>                     
+                  </div>
+                  {!this.props.disableInfiniteScroll && <GenericSwipeable classN={"monlamResults "+(monlamVisible ? "visible" : "")} onSwipedRight={() => { 
+                        this.setState({noHilight:false, monlam:null, collapse:{ ...this.state.collapse, monlamPopup: true }})
+                        this.props.onCloseMonlam()
+                     }}>                  
+                     <SimpleBar>
+                        <h2>
+                           <a href="https://monlamdic.com" target="_blank" rel="noopener noreferrer"><img width="32" src="/icons/monlam.png" title="monlamdic.com"/></a>
+                           <a href="https://monlamdic.com" target="_blank" rel="noopener noreferrer">{I18n.t("viewer.monlamTitle")}</a>
+                           {/* <a href="https://monlamdic.com" target="_blank" rel="noopener noreferrer"><img width="32" src="/icons/monlam.png" title="monlamdic.com"/></a> */}
+                           <Close width="32" onClick={() => { 
+                              this.setState({noHilight:false, monlam:null, collapse:{ ...this.state.collapse, monlamPopup: true }})
+                              this.props.onCloseMonlam()
+                           }}/>
+                        </h2>
+                        { this.props.monlamResults == true && <Loader  /> }
+                        { monlamResults }
+                     </SimpleBar>
+                  </GenericSwipeable> }
+                  { !this.props.disableInfiniteScroll && <GenericSwipeable classN={"ETSBresults "+(!monlamVisible && this.state.ETSBresults&&!this.state.collapse.ETSBresults? "visible" : "")} onSwipedRight={() => { 
+                        this.setState({ collapse:{ ...this.state.collapse, ETSBresults: true }})
+                     }}>
+                     <SimpleBar>
+                        { ETSBresults }
+                     </SimpleBar>
+                  </GenericSwipeable> }
+               </div>,
+            ])
+         }
       }
       else {
+
+         const bcLabel = (resTitle?.value ?? titlElem?.[0]?.value) && getLangLabel(this, skos+"prefLabel", resTitle?.value ? [resTitle] : titlElem) 
+
+         let iof = this.getResourceElem(bdo+"instanceOf")
+         if(iof?.length) iof = shortUri(iof[0].value)
+         else iof = null
+
+         if(iof) { 
+            breadcrumbs.push(<Link to={"/show/"+iof} class="can-shrink"><Trans i18nKey="resource.wPageO" values={{of: bcLabel?.value, interpolation: {escapeValue: false}}} components={{nomob:<u/>,sp: <i/>}} /></Link>)
+         }
+
+         breadcrumbs.push(<span class="can-shrink">{bcLabel?.value ?? this.props.IRI}</span>)
+
+         let legal = this.getResourceElem(adm+"metadataLegal"), legalD, sameLegalD
+         if(legal && legal.length) legal = legal.filter(p => !p.fromSameAs)
+         if(legal && legal.length && legal[0].value && this.props.dictionary) { 
+            legalD = this.props.dictionary[legal[0].value]
+            sameLegalD = legalD
+         }
+         let { same, noS } = this.prepareSame(kZprop.filter(k => k.startsWith(adm+"seeOther")), sameLegalD)
+         let otherResourcesData = this.otherResources(same,"permalink",noS)
 
          // #851
          let listWithAS = [ ], tmpElem = this.getResourceElem(tmp+"outlineAuthorshipStatement")
          if(!tmpElem?.length && this.props.outlines && this.props.outlines[this.props.IRI]) {
             listWithAS = [ tmp+"outlineAuthorshipStatement" ]
          }
+
+         let hasMap = kZprop.filter(k => mapProps.includes(k))
+         let header = this.renderHeader(hasMap, _T, etextUT, root)
          
-         let theDataTop = this.renderData(topProps,iiifpres,title,otherLabels,"top-props","main-info")      
-         let theDataBot = this.renderData(kZprop.filter(k => !topProps.includes(k) && !extProps.includes(k)).concat(listWithAS),iiifpres,title,otherLabels,"bot-props")      
+         let theOutline, showOutline = this.state.collapse.containingOutline || this.state.collapse.containingOutline === undefined && this.props.outlineKW
+         if((!root || !root.length) && (!this.props.outlineOnly || showOutline || this.props.IRI === "bdr:PR1ER12")) theOutline = this.renderOutline()      
+
+         if(theOutline && !this.props.outlineOnly) {
+            //theOutline = <div data-prop="tmp:outline"><h3><span>Outline:</span></h3><div class="group">{theOutline}</div></div>
+         }
+
+
+         let findText, hasInstances = this.getResourceElem(bdo+"workHasInstance")?.length > 0, shouldShowOtherInstances = _T == "Work" && !serial?.length && !isSerialWork && hasInstances
+         if(!this.props.simple && ![/*"Instance",*/ "Images", "Etext"].includes(_T) /*&& (_T != "Work" || serial?.length || isSerialWork)*/ && (_T != "Instance" || hasInstances && (!this.props.loading||this.state.collapse["findText-"+this.props.IRI]) )) {            
+            findText = <InnerSearchPageContainer isOtherVersions={_T === "Instance" || shouldShowOtherInstances} srcVersionID={_T === "Instance" ? this.props.IRI.split(":")[1] : undefined} location={this.props.location} /*history={this.props.history}*/ auth={this.props.auth} isOsearch={true} RID={iof ?? this.props.IRI} T={_T} />          
+            if(_T == "Instance" || shouldShowOtherInstances) {
+               if(!this.state.collapse["findText-"+this.props.IRI]) this.setState({collapse:{...this.state.collapse,["findText-"+this.props.IRI]:true}})
+               findText = <div data-prop="tmp:workHasInstance" class="">                  
+                  <h3><span>{this.proplink(bdo+"workHasInstance",null,2)}{I18n.t("punc.colon")}</span> </h3>
+                  <div class="group">
+                     {findText}
+                  </div>
+               </div>
+            }
+         }
+         let get = qs.parse(this.props.location.search)          
+         let theDataTop = this.renderData(false, topProps,iiifpres,title,otherLabels,"top-props","main-info",versionTitle?[this.renderGenericProp(versionTitle, _tmp+"versionTitle", this.format("h4",_tmp+"versionTitle","",false,"sub",[{...versionTitle, type:"literal"}]), undefined, get)]:[],[], { [_tmp+"outline"]: theOutline, [_tmp+"map"]: hasMap.length ? header : undefined, [_tmp+"findText"]: _T != "Instance" && (shouldShowOtherInstances || hasMap.length) ? findText : undefined})      
+
+         //console.log("serial:", this.props.IRI, serial, ilabel)
+
+         if(hasMap.length) findText = undefined
+
+         let { html: theDataMid, nbChildren: midPropsLen }= this.renderData(true, midProps,iiifpres,title,otherLabels,"mid-props", undefined, otherResourcesData, [], {[_tmp+"workHasInstance"]: _T === "Instance"||shouldShowOtherInstances ? findText : undefined}) ?? {}
+         let theDataBot = this.renderData(false, kZprop.filter(k => !topProps.includes(k) && !midProps.includes(k) && !extProps.includes(k)).concat(listWithAS),iiifpres,title,otherLabels,"bot-props", undefined)      
 
          let theEtext
          if(this.props.eTextRefs && this.props.eTextRefs !== true && this.props.IRI && this.props.IRI.startsWith("bdr:IE")) { 
@@ -9676,18 +11126,43 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
             theEtext = this.renderEtextRefs(accessET)      
          }
 
-         let theDataExt = this.renderData(extProps,iiifpres,title,otherLabels,"ext-props")      
-         let theDataLegal = this.renderData([adm+"metadataLegal"],iiifpres,title,otherLabels,"legal-props")      
+         let theDataExt = this.renderData(false,extProps,iiifpres,title,otherLabels,"ext-props")      
+         let theDataLegal = this.renderData(false,[adm+"metadataLegal"],iiifpres,title,otherLabels,"legal-props")      
          
-         let theOutline ;
-         if(!root || !root.length) theOutline = this.renderOutline()      
+         if(this.props.outlineOnly) {            
+            return <>
+               { this.perma_menu(pdfLink,monoVol,fairUse,kZprop.filter(k => k.startsWith(adm+"seeOther")), accessET && !etextAccessError, true) }
+               <div  data-prop={"tmp:containingOutline"} >               
+                  <h3><span>{this.proplink(_tmp+"containingOutline",null,1)}{I18n.t("punc.colon")}</span> </h3>
+                  <div class="group">
+                     <a class="ulink prefLabel containing-outline" href="#" 
+                        onClick={(ev) => { 
+                           this.setState({collapse:{...this.state.collapse, containingOutline:!(this.state.collapse.containingOutline ?? showOutline)}})
+
+                           if(!(this.state.collapse.containingOutline ?? showOutline)) {
+                              if(this.props.resources && !this.props.resources[this.props.IRI] /*&& this.state.collapse.containingOutline*/) this.props.onGetResource(this.props.IRI);
+                           }
+
+                           ev.preventDefault()
+                           ev.stopPropagation()
+                        }}  
+                     >
+                        { showOutline ? I18n.t("resource.closeO") : I18n.t("resource.seeIn",{txt: ilabel?.value ?? I18n.t("index.outline")}) }
+                     </a>     
+                     { this.props.part && <Link {...this.props.preview?{ target:"_blank" }:{}} to={"/show/"+this.props.IRI} class="ulink prefLabel containing-outline" >{I18n.t("resource.openR")}</Link> }         
+                  </div>
+               </div>             
+               { showOutline && theOutline }
+            </>
+         }
+
 
          let etext = this.isEtext(), etextRes = etext ? this.getResourceElem(bdo+"eTextInInstance") : false, backToET = etextRes?.length ? shortUri(etextRes[0].value) : this.props.IRI
          if(etext && !this.props.eTextRefs) { 
             if(!etextRes || !etextRes.length) this.props.onGetETextRefs(this.props.IRI);
          }
 
-         let loca = this.props.history.location            
+         let loca = this.props.location            
 
          let rView = true, iOutline, wDataExt, iDataExt, rDataExt, checkDataExt = (rid) => {            
             let sRid = shortUri(rid)
@@ -9753,10 +11228,10 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
                etextAccessError = etextAccessError || this.props.etextErrors && this.props.etextErrors[shUri] && [401, 403].includes(this.props.etextErrors[shUri])
             }
             if(fVol && fTxt && (this.props.eTextRefs && this.props.eTextRefs !== true && !this.props.eTextRefs.mono)) etextLoca = I18n.t("resource.openVolViewer", {VolN:etextVolN}) // not sure we need this:  TxtN:etextTxtN
-            if(this.props.history.location.hash == "#open-reader") { //} && this.state.fromSearch) {
+            if(this.props.location.hash == "#open-reader") { //} && this.state.fromSearch) {
 
-               let loca = { ...this.props.history.location, hash:"#open-viewer", pathname: etextUT } //, search:"?backToEtext="+encodeURIComponent(this.state.fromSearch) }
-               this.props.history.replace(loca)
+               let loca = { ...this.props.location, hash:"#open-viewer", pathname: etextUT } //, search:"?backToEtext="+encodeURIComponent(this.state.fromSearch) }
+               this.props.navigate(loca, {replace: true})
 
             }
          }
@@ -9957,37 +11432,48 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
             tablist = tablist.filter(t => t).reverse()
             tabpanels = tabpanels.filter(t => t).reverse()            
          } 
-
+         
          return (
          [getGDPRconsent(this),   
          <Helmet>
-            <link rel="canonical" href={"https://library.bdrc.io"+this.props.history.location.pathname} />
+            <link rel="canonical" href={"https://library.bdrc.io"+this.props.location.pathname} />
          </Helmet>,
+         top_right_menu(this, null, null, null, isMirador, this.props.location, infoPanelR, "resource"),
+         // <Loader className="resource-viewer-loader" loaded={false}  options={{position:"fixed",left:"50%",top:"50%"}} />,
          <div class={isMirador?"H100vh OF0":""}>
-            { ["Images","Instance"].includes(_T) && <abbr class="unapi-id" title={this.props.IRI}></abbr> }
-            { infoPanelR }
-            <div {...searchUrl?{"data-searchUrl":searchUrl}:{}} className={"resource "+hasTabs+getEntiType(this.props.IRI).toLowerCase() + (this.props.simple?" simple":"") + (this.props.preview?" preview":"") /*+(!this.props.portraitPopupClosed?" portrait-warn-on":"")*/} {...this.props.simple?{onClick:sendMsg}:{}}>                              
-               {searchUrl && <div class="ariane">
-                  <Link to={fromStaticRoute?searchUrl:"/search?"+searchUrl} onClick={(ev) => {
-                     this.props.onLoading("search",true)                     
+            { ["Images","Instance"].includes(_T) && <abbr class="unapi-id" title={this.props.IRI}></abbr> }           
+            <div class="infoPanel" style={{display:"none"}}></div>
+            <div {...searchUrl?{"data-searchUrl":searchUrl}:{}} className={"resource "+hasTabs+getEntiType(this.props.IRI).toLowerCase() + (this.props.simple?" simple":"") + (this.props.preview?" preview":"") /*+(!this.props.portraitPopupClosed?" portrait-warn-on":"")*/} {...this.props.simple?{onClick:sendMsg}:{}}>                                             
+               {/* {searchUrl &&  */}
+               <div class="ariane" data-level={0}>
+                  {breadcrumbs}
+                  {/*
+                  <Link to={searchUrl} 
+                  //    onClick={(ev) => {
+                  //    this.props.onLoading("search",true)                     
+                     
+                  //    let pathname = "/osearch/search"
+                  //    if(fromStaticRoute){
+                  //       pathname = "/"+fromStaticRoute
+                  //       searchUrl = searchUrl.replace(new RegExp(fromStaticRoute+"[?]"),"")
+                  //    }                     
 
-                     let pathname = "/search"
-                     if(fromStaticRoute){
-                        pathname = "/"+fromStaticRoute
-                        searchUrl = searchUrl.replace(new RegExp(fromStaticRoute+"[?]"),"")
-                     }
+                  //    setTimeout(() => { 
+                  //          //this.props.navigate({pathname,search:"?"+searchUrl}) ; 
+                  //          this.props.navigate(searchUrl) ; 
+                  //    }, 100)
 
-                     setTimeout(() => { 
-                           this.props.history.push({pathname,search:"?"+searchUrl}) ; 
-                     }, 100)
-
-                     ev.preventDefault()
-                     ev.stopPropagation();
-                     return false
-                  }}
-                  ><img src="/icons/FILARIANE.svg" /><span>{searchUrl.startsWith("latest")?I18n.t("home.new").toLowerCase():I18n.t("topbar.results")} <span>{searchTerm}</span></span></Link>
+                  //    ev.preventDefault()
+                  //    ev.stopPropagation();
+                  //    return false
+                  // }}
+                  >
+                     <img src="/icons/FILARIANE.svg" /><span>{searchUrl.startsWith("latest")?I18n.t("home.new").toLowerCase():I18n.t("topbar."+(searchTerm?"results":"resultsNoKW"))} <span>{searchTerm}</span></span>
+                  </Link> */}
+                  
                   {this.state.ready && <Loader loaded={!this.props.loading} options={{position:"fixed",left:"50%",top:"50%"}} /> }
-               </div> }
+               </div> 
+               {/* } */}
                <div class="index">                  
                   {/* { this.renderBrowseAssoRes() } */}
                   {/* { this.renderPdfLink(pdfLink,monoVol,fairUse) } */}
@@ -10000,34 +11486,51 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
                   { rTitle && this.state.title.images && sideMenu(this.state.title.images[0].value,"Images", false, rDataExt, false, rView && !orig, etextUT) }
                   </div>
                </div>
-               <div>
-                  { top_right_menu(this) }               
+               <div>                               
                   {/* { this.renderAnnoPanel() } */}
                   { this.renderWithdrawn() }             
                   <div class="title">{ wTitle }{ iTitle }{ rTitle }</div>
-                  { this.renderHeader(kZprop.filter(k => mapProps.includes(k)), _T, etextUT, root) }
                   { (etext && !orig) && <div class={"data open-etext"+(etextAccessError?" disable":"")}><div><Link to={etextUT+(etextUT.includes("?")?"&":"?")+"backToEtext="+backToET+"#open-viewer"}>{etextLoca}</Link></div></div> }
                   { (etext && orig) && <div class="data open-etext"><div><a target="_blank" href={orig}>{I18n.t("resource.openO",{src:prov})}<img src="/icons/link-out_.svg"/></a></div></div> }
                   <div class={"data" + (_T === "Etext"?" etext-title":"")+(_T === "Images"?" images-title":"")}>
+                     {searchUrl && <span class="back-anchor">
+                        <Link className="urilink" to={searchUrl}><ChevronLeft />{I18n.t("resource.goB")}</Link>
+                     </span> }                     
                      {_T === "Images" && iTitle?[<h2 class="on intro">{I18n.t("resource.scanF")}</h2>,iTitle]
                       :(_T === "Etext" && iTitle?[<h2 class="on intro">{I18n.t("resource.etextF")}</h2>,iTitle]
                        :(_T === "Etext" && wTitle?[<h2 class="on intro">{I18n.t("resource.etextF")}</h2>,wTitle]
                        :title))}
                      {inTitle}
                      {dates}
-                     { ( _T === "Person" && createdBy && createdBy.length > 0 ) && <div class="browse-by"><Link to={"/search?r="+this.props.IRI+"&t=Work"}><img src="/icons/sidebar/work_white.svg"/>{I18n.t("resource.assoc")}</Link></div> }
+                     {/* { ( _T === "Person" && createdBy && createdBy.length > 0 ) && <div class="browse-by"><Link to={"/search?r="+this.props.IRI+"&t=Work"}><img src="/icons/sidebar/work_white.svg"/>{I18n.t("resource.assoc")}</Link></div> } */}
                      { this.props.preview && <a href={"/show/"+this.props.IRI} target="_blank">{I18n.t("resource.fullR")}<img src="/icons/link-out.svg"/></a>}
                   </div>
-                  { this.props.preview && _T === "Place" && <div class="data" id="map">{this.renderData(kZprop.filter(k => mapProps.includes(k)),null,null,null,"header")}</div> }
+                  { this.props.preview && _T === "Place" && <div class="data" id="map">{this.renderData(false, kZprop.filter(k => mapProps.includes(k)),null,null,null,"header")}</div> }
+                  
+                  {/*                   
                   { _T !== "Etext" && this.renderQuality() }
                   { _T === "Etext" && this.renderEtextAccess(etextAccessError) }
                   { _T === "Etext" && this.renderOCR() }
-                  { _T !== "Etext" && this.renderNoAccess(fairUse) }                  
-                  { this.renderMirador(isMirador) }           
+                  { _T !== "Etext" && this.renderNoAccess(fairUse) }
+                  */}
+                  
+                  { this.renderMirador(isMirador) }                            
+
+                  {  isGroup(this.props.auth, "editors") ? header : _T === "Images" && this.renderScanPage() }
+                  
                   { theDataTop }
+                  
+                  { !["Instance", "Scan", "Etext"].includes(_T) && findText != null && !shouldShowOtherInstances && <>
+                     {/* // DONE: inner search results */}
+                     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/instantsearch.css@7/themes/satellite-min.css" />                           
+                     { findText }
+                   </>}
+
+
                   <div class="data" id="perma">{ this.perma_menu(pdfLink,monoVol,fairUse,kZprop.filter(k => k.startsWith(adm+"seeOther")), accessET && !etextAccessError)  }</div>
+                  { theDataMid }
                   { theDataBot }
-                  { ( /*hasRel &&*/ !this.props.preview && this.props.assocResources && !["Instance","Images","Etext"].includes(_T)) &&
+                  { ( /*hasRel &&*/ false && !this.props.preview && this.props.assocResources && !["Instance","Images","Etext"].includes(_T)) &&
                      <div class="data related" id="resources" data-all={all}>
                         <MySwipeable scrollRel={scrollRel}>
                            <div><h2>{I18n.t(true || _T=== "Place"||_T==="Corporation"?"index.relatedR":(_T==="Product"?"index.relatedM":(_T==="Work"&&serial?"index.relatedS":"index.related")))}</h2>{/* ( ( (this.state.relatedTabAll||!related.length&&!createdBy.length)&&t1) || related && related.length > 4 || createdBy && createdBy.length > 4) && <Link to={(this.state.relatedTabAll||!related.length&&!createdBy.length)&&t1?t1:("/search?t="+(_T==="Corporation"&&(this.state.relatedTab||!related.length)?"Person":(_T==="Place"&&this.state.relatedTab?"Instance":(_T==="Product"?"Scan":"Work")))+"&r="+this.props.IRI)}>{I18n.t("misc.seeA")}</Link> */}</div>
@@ -10062,7 +11565,6 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET)
                      </div> 
                   }         
                   { (!(etext && orig)) && theEtext }
-                  { theOutline }
                   { theDataLegal }
                   { theDataExt && 
                      <div class="data ext-props" id="ext-info">

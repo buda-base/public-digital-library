@@ -19,7 +19,6 @@ import 'babel-polyfill';
 import createSagaMiddleware from 'redux-saga';
 import rootSaga from './state/sagas'
 
-
 // i18nify  deprecated
 // import thunk from 'redux-thunk';
 // import { loadTranslations, setLocale, syncTranslationWithStore, i18nReducer } from 'react-redux-i18n';
@@ -40,7 +39,7 @@ import dataReducer from './state/data/reducers';
 import * as data from './state/data/actions' ;
 
 
-import history from './history'
+//import history from './history'
 import qs from 'query-string'
 
 import makeMainRoutes from './routes'

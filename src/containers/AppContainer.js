@@ -19,7 +19,7 @@ import logdown from 'logdown'
 
 const loggergen = new logdown('gen', { markdown: false });
 
-const mapStateToProps = (state) => {
+const mapStateToProps = (state,ownProps) => {
 
    let logged = state.ui.logged ;
    let hostFailure = state.data.failures.host ;
@@ -62,6 +62,10 @@ const mapStateToProps = (state) => {
     
    let latestSyncs = state.data.latestSyncs
    let latestSyncsNb = state.data.latestSyncsNb
+   let latestSyncsMeta = ownProps.latestSyncsMeta ?? state.data.latestSyncsMeta
+
+
+   let etextLang = state.ui.etextLang
 
    let profileName
    if(auth && auth.userProfile) {
@@ -84,18 +88,24 @@ const mapStateToProps = (state) => {
 
    let spellcheckerBo = state.data.spellcheckerBo
 
+   let advancedSearch = state.ui.advancedSearch ?? ownProps.advancedSearch
+   let advKeyword = state.ui.advKeyword
+
 
    let newState = { logged,config, hostFailure, searches, keyword, language,loading,datatypes,ontology,facets,
       locale,prefLang,resources,ontoSearch,rightPanel,langPreset, langIndex, langExt, failures,dictionary,metadata, assoRes, 
       sortBy, topicParents, genresParents, instances, isInstance,
-      latestSyncs,latestSyncsNb, profileName,
+      latestSyncs,latestSyncsNb,latestSyncsMeta,
+      profileName,
       checkResults,
       portraitPopupClosed,
       useDLD,
       isNewUser,
       subscribedCollections,
       feedbucket,
-      spellcheckerBo
+      spellcheckerBo,
+      advancedSearch, advKeyword,
+      etextLang
    }
 
    if(config && !config.auth) newState.auth = false
@@ -165,7 +175,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
          dispatch(i18nextChangeLanguage(lg));
       },
       onSetLangPreset:(langs:string[],i?:number) => {
-         localStorage.setItem('lang', langs);
+         localStorage.setItem('langs', langs);
          dispatch(ui.langPreset(langs,i))
       },
       onLoading:(kw:string,load:boolean) => {
@@ -173,6 +183,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       },
       onFeedbucketClick(cls:string) {
          dispatch(ui.feedbucket(cls))
+      },
+      onAdvancedSearch(s:boolean,k:string) {
+         dispatch(ui.advancedSearch(s,k))
       }
    }
 }
