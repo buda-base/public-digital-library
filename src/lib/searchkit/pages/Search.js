@@ -492,7 +492,7 @@ export class SearchPage extends Component<State, Props>
       <>
         { top_right_menu(this,null,null,null,null,this.props.location, infoPanelS, "search") }
         <div className={"AppSK"+(this.props.advancedSearch?" advanced":"") + (" isFocused-"+this.state.collapse.isFocused) + (" settings-"+this.state.collapse.settings)}>
-          { this.props.advancedSearch && <HomeCompo auth={this.props.auth} SKquery={this.state.SKquery} isFocused={this.state.collapse.isFocused} setIsFocused={toggleIsFocused}/>}
+          { this.props.advancedSearch && <HomeCompo auth={this.props.auth} SKquery={this.state.SKquery ?? this.state.query} isFocused={this.state.collapse.isFocused} setIsFocused={toggleIsFocused}/>}
           <InstantSearch
             key={pageFilters ?? "main"}
             indexName={process.env.REACT_APP_ELASTICSEARCH_INDEX}

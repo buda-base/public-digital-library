@@ -6,7 +6,7 @@ public/config-khmer.json
 public/config*v2.json
 
 # dependencies
-/node_modules
+/node_modules*
 
 # testing
 /coverage
@@ -14,6 +14,7 @@ public/config*v2.json
 
 # production
 /build
+/prod
 
 # static files
 /public/scripts/*
