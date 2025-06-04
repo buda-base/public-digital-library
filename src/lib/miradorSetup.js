@@ -463,7 +463,7 @@ async function hasEtextPage(manifest, resID) {
                   //loggergen.log(p,c)                  
                   //let content = c["chunkContents"], start = -1, end = -1
                   let start = -1, end = -1
-                  let k = Object.keys(c.sourceAsMap ?? {}).filter(t => t.startsWith("text_")).[0]
+                  let k = Object.keys(c.sourceAsMap ?? {}).filter(t => t.startsWith("text_"))[0]
                   let content = c.sourceAsMap[k]
                   let _cval = c.sourceAsMap[k] //e.chunkContents["@value"]
                   let _clang = k.split("_")[1] //e.chunkContents["@language"]
