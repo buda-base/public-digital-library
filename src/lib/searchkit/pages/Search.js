@@ -448,7 +448,7 @@ export class SearchPage extends Component<State, Props>
       
       this._urlParams = qs.parse(this.props.location.search) 
       
-      this.state = { collapse:{} } 
+      this.state = { collapse:{}, advanced: this._urlParams.advanced == "true" ? "true" : undefined } 
 
       if(!this.props.config) store.dispatch(initiateApp(this._urlParams,null,null,"tradition"))
       
@@ -459,6 +459,9 @@ export class SearchPage extends Component<State, Props>
     if(window.initFeedbucket) window.initFeedbucket()    
 
     this._urlParams = qs.parse(this.props.location.search) 
+
+    if(this._urlParams.advanced == "true" && this.state.advanced == undefined) this.setState({ advanced: true})
+    else if(!this._urlParams.advanced && this.state.advanced) this.setState({ advanced: undefined })
 
     //if(this._urlParams.q && !this.state.query) this.setState({query:this._urlParams.q})
   }
@@ -491,8 +494,8 @@ export class SearchPage extends Component<State, Props>
     return (
       <>
         { top_right_menu(this,null,null,null,null,this.props.location, infoPanelS, "search") }
-        <div className={"AppSK"+(this.props.advancedSearch?" advanced":"") + (" isFocused-"+this.state.collapse.isFocused) + (" settings-"+this.state.collapse.settings)}>
-          { this.props.advancedSearch && <HomeCompo auth={this.props.auth} SKquery={this.state.SKquery ?? this.state.query} isFocused={this.state.collapse.isFocused} setIsFocused={toggleIsFocused}/>}
+        <div className={"AppSK"+(this.props.advancedSearch|| this.state.advanced?" advanced":"") + (" isFocused-"+this.state.collapse.isFocused) + (" settings-"+this.state.collapse.settings)}>
+          { (this.props.advancedSearch || this.state.advanced) && <HomeCompo auth={this.props.auth} SKquery={this.state.SKquery ?? this.state.query} isFocused={this.state.collapse.isFocused} setIsFocused={toggleIsFocused}/>}
           <InstantSearch
             key={pageFilters ?? "main"}
             indexName={process.env.REACT_APP_ELASTICSEARCH_INDEX}

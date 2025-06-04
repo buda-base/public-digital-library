@@ -2197,6 +2197,11 @@ class App extends Component<Props,State> {
       }
 
       if(window.initFeedbucket) window.initFeedbucket()
+
+      if(this.props.advancedSearch === undefined && get.advanced == "true") { 
+         setTimeout(() => this.props.navigate({...this.props.location, search:this.props.location.search.replace(/advanced=[^&]+&?/,"")}, { replace:true}), 1500)
+         this.props.onAdvancedSearch(true, this.state.keyword)
+      }
    }
 
    requestSearch(key:string,label?:string,lang?:string,forceSearch:boolean=false,dataInfo:string,menu_i?:number)
@@ -2312,7 +2317,7 @@ class App extends Component<Props,State> {
             inEtext = this.props.searches[this.state.filters.datatype[0]][this.props.keyword+"@"+this.props.language].inEtext
          }
          const newLoca = label === "Etext" 
-            ? {pathname:"/osearch/search",search:"?q="+_key.replace(/(^\")|(\"$)/g,"")+"&etext_search[0]=true"+khmerCollec+proxiedCollec}
+            ? {pathname:"/osearch/search",search:"?advanced=true&q="+_key.replace(/(^\")|(\"$)/g,"")+"&etext_search[0]=true"+khmerCollec+proxiedCollec}
             : {pathname:"/search",search:"?q="+key+"&lg="+lang+"&t="+label+khmerCollec+proxiedCollec+hasOpenPossibly+(inEtext?"&r="+inEtext:"")}
          loggergen.log("newL?",newLoca)
          this.props.navigate(newLoca)
