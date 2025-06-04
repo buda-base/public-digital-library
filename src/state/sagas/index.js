@@ -2783,7 +2783,7 @@ function rewriteAuxMain(result,keyword,datatype,sortBy,language)
         
          //loggergen.log("dWa:",language,t,dataWithAsset,sortBy,reverse,canPopuSort)
 
-         if(!canPopuSort && sortBy.startsWith("popularity")) {            
+         if(!canPopuSort && sortBy?.startsWith("popularity")) {            
             let {pathname,search} = window.location         
             window.history.pushState({},"",pathname+search.replace(/(([&?])s=[^&]+)/g,"$2")+(!search.match(/[?&]s=/)?"&":"")+"s="+(sortBy=(language?"closest matches":"title")+" forced"))
          }
