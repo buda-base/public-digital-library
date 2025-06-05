@@ -191,7 +191,7 @@
                     "lang": "en"
                   },
                   {
-                    "value": "ཕྱོགས་བསྒྲིགས། ༼བཀའ་མ་ལ་སོགས།༽",
+                    "value": "ཕྱོགས་བསྒྲིགས། ༼བཀའ་མ་སོགས།༽",
                     "lang": "bo"
                   }
                 ],
@@ -309,9 +309,6 @@
                     "id": "bdr:MW2PD17369"
                   },
                   {
-                    "id": "bdr:MW3CN2890"
-                  },
-                  {
                     "id": "bdr:MW3CN26344"
                   },
                   {
@@ -366,9 +363,6 @@
                     "id": "bdr:MW4CZ354420"
                   },
                   {
-                    "id": "bdr:MW4PD2187"
-                  },
-                  {
                     "id": "bdr:MW6475"
                   },
                   {
@@ -385,9 +379,6 @@
                   },
                   {
                     "id": "bdr:MW22139"
-                  },
-                  {
-                    "id": "bdr:MW1KG3655"
                   },
                   {
                     "id": "bdr:MW30407"
@@ -453,9 +444,6 @@
                     "id": "bdr:MW00KG04001"
                   },
                   {
-                    "id": "bdr:MW00KG04068"
-                  },
-                  {
                     "id": "bdr:MW11208"
                   },
                   {
@@ -469,9 +457,6 @@
                   },
                   {
                     "id": "bdr:MW27873"
-                  },
-                  {
-                    "id": "bdr:MW29578"
                   },
                   {
                     "id": "bdr:MW2CZ6597"
@@ -502,11 +487,17 @@
                   },
                   {
                     "id": "bdr:MW2PD17461"
+                  },
+                  {
+                    "id": "bdr:MW1PD26799"
+                  },
+                  {
+                    "id": "bdr:MW00KG03976"
                   }
                 ]
               },
               {
-                "id": "tmp:tradiCat0_104",
+                "id": "tmp:tradiCat0_99",
                 "to": "/show/bdr::rid",
                 "label": [
                   {
@@ -625,10 +616,16 @@
                     "id": "bdr:MW3KG207"
                   },
                   {
+                    "id": "bdr:MW1KG3655"
+                  },
+                  {
                     "id": "bdr:MW1PD159387"
                   },
                   {
                     "id": "bdr:MW23695"
+                  },
+                  {
+                    "id": "bdr:MW4PD2187"
                   },
                   {
                     "id": "bdr:MW23453"
@@ -657,7 +654,7 @@
                 ]
               },
               {
-                "id": "tmp:tradiCat0_153",
+                "id": "tmp:tradiCat0_149",
                 "to": "/show/bdr::rid",
                 "label": [
                   {
@@ -1058,9 +1055,6 @@
                     "id": "bdr:MW3CN477"
                   },
                   {
-                    "id": "bdr:MW4CZ302668"
-                  },
-                  {
                     "id": "bdr:MW26630"
                   },
                   {
@@ -1241,9 +1235,6 @@
                     "id": "bdr:MW27481"
                   },
                   {
-                    "id": "bdr:MW24012"
-                  },
-                  {
                     "id": "bdr:MW1CZ1187"
                   },
                   {
@@ -1378,7 +1369,7 @@
                 ]
               },
               {
-                "id": "tmp:tradiCat2_145",
+                "id": "tmp:tradiCat2_143",
                 "to": "/show/bdr::rid",
                 "label": [
                   {
@@ -1700,7 +1691,7 @@
                 ]
               },
               {
-                "id": "tmp:tradiCat2_250",
+                "id": "tmp:tradiCat2_248",
                 "to": "/show/bdr::rid",
                 "label": [
                   {
@@ -2005,9 +1996,6 @@
                     "id": "bdr:MW30112"
                   },
                   {
-                    "id": "bdr:MW4CZ301822"
-                  },
-                  {
                     "id": "bdr:MW4CZ295072"
                   },
                   {
@@ -2036,11 +2024,14 @@
                   },
                   {
                     "id": "bdr:MW23181"
+                  },
+                  {
+                    "id": "bdr:MW24012"
                   }
                 ]
               },
               {
-                "id": "tmp:tradiCat2_360",
+                "id": "tmp:tradiCat2_358",
                 "to": "/show/bdr::rid",
                 "label": [
                   {
@@ -2770,11 +2761,14 @@
                   },
                   {
                     "id": "bdr:MW2MS811"
+                  },
+                  {
+                    "id": "bdr:MW1NLM5521"
                   }
                 ]
               },
               {
-                "id": "tmp:tradiCat3_191",
+                "id": "tmp:tradiCat3_192",
                 "to": "/show/bdr::rid",
                 "label": [
                   {
@@ -2832,7 +2826,7 @@
                 ]
               },
               {
-                "id": "tmp:tradiCat3_207",
+                "id": "tmp:tradiCat3_208",
                 "to": "/show/bdr::rid",
                 "label": [
                   {
@@ -2878,7 +2872,7 @@
                 ]
               },
               {
-                "id": "tmp:tradiCat3_219",
+                "id": "tmp:tradiCat3_220",
                 "to": "/show/bdr::rid",
                 "label": [
                   {
@@ -2939,7 +2933,7 @@
                 ]
               },
               {
-                "id": "tmp:tradiCat3_236",
+                "id": "tmp:tradiCat3_237",
                 "to": "/show/bdr::rid",
                 "label": [
                   {
@@ -3126,7 +3120,7 @@
                 ]
               },
               {
-                "id": "tmp:tradiCat3_296",
+                "id": "tmp:tradiCat3_297",
                 "to": "/show/bdr::rid",
                 "label": [
                   {
@@ -3213,9 +3207,6 @@
                   },
                   {
                     "id": "bdr:MW4CZ369493"
-                  },
-                  {
-                    "id": "bdr:MW4CZ58738"
                   }
                 ]
               },
@@ -3265,9 +3256,6 @@
                   },
                   {
                     "id": "bdr:MW1NLM5515"
-                  },
-                  {
-                    "id": "bdr:MW1NLM5521"
                   },
                   {
                     "id": "bdr:MW1NLM5538"
@@ -3859,6 +3847,12 @@
                   },
                   {
                     "id": "bdr:MW1KG12021"
+                  },
+                  {
+                    "id": "bdr:MW4CZ58738"
+                  },
+                  {
+                    "id": "bdr:MW4CZ332376"
                   }
                 ]
               }
@@ -4194,9 +4188,6 @@
                     "id": "bdr:MW23755"
                   },
                   {
-                    "id": "bdr:MW27418"
-                  },
-                  {
                     "id": "bdr:MW27477"
                   },
                   {
@@ -4213,12 +4204,6 @@
                   },
                   {
                     "id": "bdr:MW4CZ294727"
-                  },
-                  {
-                    "id": "bdr:MW4CZ332376"
-                  },
-                  {
-                    "id": "bdr:MW4CZ45236"
                   },
                   {
                     "id": "bdr:MW4PD1120"
@@ -4266,18 +4251,12 @@
                     "id": "bdr:MW1NLM459"
                   },
                   {
-                    "id": "bdr:MW1NLM2678"
-                  },
-                  {
                     "id": "bdr:MW1NLM158"
-                  },
-                  {
-                    "id": "bdr:MW8LS32601"
                   }
                 ]
               },
               {
-                "id": "tmp:tradiCat7_73",
+                "id": "tmp:tradiCat7_68",
                 "to": "/show/bdr::rid",
                 "label": [
                   {
@@ -4385,6 +4364,15 @@
                   },
                   {
                     "id": "bdr:MW2KG201049"
+                  },
+                  {
+                    "id": "bdr:MW4CZ45236"
+                  },
+                  {
+                    "id": "bdr:MW1NLM2678"
+                  },
+                  {
+                    "id": "bdr:MW27418"
                   }
                 ]
               }
@@ -4600,9 +4588,6 @@
                     "id": "bdr:MW19464"
                   },
                   {
-                    "id": "bdr:MW1KG10763"
-                  },
-                  {
                     "id": "bdr:MW1KG8762"
                   },
                   {
@@ -4639,16 +4624,10 @@
                     "id": "bdr:MW8LS24668"
                   },
                   {
-                    "id": "bdr:MW0TTBBC0052"
-                  },
-                  {
                     "id": "bdr:MW1KG10728"
                   },
                   {
                     "id": "bdr:MW27221"
-                  },
-                  {
-                    "id": "bdr:MW1KG26247"
                   },
                   {
                     "id": "bdr:MW1KG26248"
@@ -4698,7 +4677,7 @@
                 ]
               },
               {
-                "id": "tmp:tradiCat9_36",
+                "id": "tmp:tradiCat9_33",
                 "to": "/show/bdr::rid",
                 "label": [
                   {
@@ -4732,7 +4711,7 @@
                 ]
               },
               {
-                "id": "tmp:tradiCat9_44",
+                "id": "tmp:tradiCat9_41",
                 "to": "/show/bdr::rid",
                 "label": [
                   {
@@ -4774,9 +4753,6 @@
                   },
                   {
                     "id": "bdr:MW3CN15705"
-                  },
-                  {
-                    "id": "bdr:MW3CN15709"
                   },
                   {
                     "id": "bdr:MW3CN21708"
@@ -5263,9 +5239,6 @@
                     "id": "bdr:MW00CHZ0103344"
                   },
                   {
-                    "id": "bdr:MW3CN22306"
-                  },
-                  {
                     "id": "bdr:MW1KG12370"
                   },
                   {
@@ -5288,9 +5261,6 @@
                   },
                   {
                     "id": "bdr:MW1KG4851"
-                  },
-                  {
-                    "id": "bdr:MW00KG01635"
                   },
                   {
                     "id": "bdr:MW27913"
@@ -5321,11 +5291,20 @@
                   },
                   {
                     "id": "bdr:MW8722"
+                  },
+                  {
+                    "id": "bdr:MW1KG13108"
+                  },
+                  {
+                    "id": "bdr:MW16478"
+                  },
+                  {
+                    "id": "bdr:MW30136"
                   }
                 ]
               },
               {
-                "id": "tmp:tradiCat10_86",
+                "id": "tmp:tradiCat10_88",
                 "to": "/show/bdr::rid",
                 "label": [
                   {
@@ -5385,9 +5364,6 @@
                   },
                   {
                     "id": "bdr:MW16476"
-                  },
-                  {
-                    "id": "bdr:MW1KG13108"
                   },
                   {
                     "id": "bdr:MW7494"
@@ -5546,9 +5522,6 @@
                     "id": "bdr:MW1KG5697"
                   },
                   {
-                    "id": "bdr:MW16478"
-                  },
-                  {
                     "id": "bdr:MW00KG09731"
                   },
                   {
@@ -5597,9 +5570,6 @@
                     "id": "bdr:MW1KG9562"
                   },
                   {
-                    "id": "bdr:MW30136"
-                  },
-                  {
                     "id": "bdr:MW3CN656"
                   },
                   {
@@ -5629,7 +5599,7 @@
                 ]
               },
               {
-                "id": "tmp:tradiCat10_184",
+                "id": "tmp:tradiCat10_183",
                 "to": "/show/bdr::rid",
                 "label": [
                   {
@@ -5700,12 +5670,12 @@
                     "id": "bdr:MW1CZ2543"
                   },
                   {
-                    "id": "bdr:སློབ་དཔོན་པདྨ་འབྱུང་གནས།"
+                    "id": "bdr:MW00KG09761"
                   }
                 ]
               },
               {
-                "id": "tmp:tradiCat10_206",
+                "id": "tmp:tradiCat10_205",
                 "to": "/show/bdr::rid",
                 "label": [
                   {
@@ -5781,7 +5751,7 @@
                 ]
               },
               {
-                "id": "tmp:tradiCat10_228",
+                "id": "tmp:tradiCat10_227",
                 "to": "/show/bdr::rid",
                 "label": [
                   {
@@ -5812,7 +5782,7 @@
                 ]
               },
               {
-                "id": "tmp:tradiCat10_235",
+                "id": "tmp:tradiCat10_234",
                 "to": "/show/bdr::rid",
                 "label": [
                   {
@@ -5836,14 +5806,11 @@
                   },
                   {
                     "id": "bdr:MW3CN22303"
-                  },
-                  {
-                    "id": "bdr:MW23748"
                   }
                 ]
               },
               {
-                "id": "tmp:tradiCat10_242",
+                "id": "tmp:tradiCat10_240",
                 "to": "/show/bdr::rid",
                 "label": [
                   {
@@ -5964,7 +5931,7 @@
                 ]
               },
               {
-                "id": "tmp:tradiCat10_279",
+                "id": "tmp:tradiCat10_277",
                 "to": "/show/bdr::rid",
                 "label": [
                   {
@@ -5982,9 +5949,6 @@
                   },
                   {
                     "id": "bdr:MW1CZ2328"
-                  },
-                  {
-                    "id": "bdr:MW30090"
                   },
                   {
                     "id": "bdr:MW3CN22287"
