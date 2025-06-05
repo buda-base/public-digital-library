@@ -193,7 +193,7 @@ export class TraditionViewer extends Component<State, Props>
   renderContent(t, route, storage = this.state.storage){ 
     return (t.content ?? t)?.map(c => {
       let label = { value: "", lang: this.props.locale }, rid = (c.id ?? "").split(":")[1] ?? ""
-      if(t.id && c.id && storage && storage[c.id.replace(/^bdr:/,"")]) label = getLangLabel(this,skos+"prefLabel",storage[c.id.replace(/^bdr:/,"")].label ?? [], false, true)
+      if(t.id && c.id && storage && storage[c.id.replace(/^bdr:/,"")] && !c.label?.length) label = getLangLabel(this,skos+"prefLabel",storage[c.id.replace(/^bdr:/,"")].label ?? [], false, true)
       else if(c.label) label = getLangLabel(this,skos+"prefLabel",c.label ?? [], false, true)
       else if(c.id) {
         if(c.id.startsWith("bdr:")) label = getPropLabel(this, fullUri(c.id), false, true)
@@ -215,7 +215,7 @@ export class TraditionViewer extends Component<State, Props>
       //if(e.depth > 0) res.push(<h5 onClick={() => this.setState({collapse:{...this.state.collapse,[e.rank+"_"+e.value]:!this.state.collapse[e.rank+"_"+e.value]}})} class={"collapse-"+(!!this.state.collapse[e.rank+"_"+e.value])} lang={e.lang}><ExpandLess/>{e.value}</h5>)// | {e.rank}</h5>)
       
       if(c.content) {
-        this.goFetch(c.content.map(i => i.id.split(":")[1]),c.id)
+        this.goFetch(c.content.filter(i => !i.label?.length).map(i => i.id.split(":")[1]),c.id)
         return <>
           <h5 onClick={() => !c.img && this.setState({collapse:{...this.state.collapse,[c.id]:!this.state.collapse[c.id]}})} class={"collapse-"+(!!this.state.collapse[c.id])} className={(c.img ? "has-img ":"")+(c.classes??"")+" collapse-"+(!!this.state.collapse[c.id])}>
             { c.img ? <img src={c.img}/> : <ExpandLess/>}

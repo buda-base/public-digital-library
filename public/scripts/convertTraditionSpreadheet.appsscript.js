@@ -122,7 +122,11 @@ function processSheetData() {
       
       if (row[3] !== '') {
         currentItem.content.push({
-          "id": "bdr:"+row[2]
+          "id": "bdr:"+row[2],
+          "label": [{ 
+            "lang": "bo",
+            "value": row[1]
+          }]
         });
       }
     }
