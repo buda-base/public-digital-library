@@ -34,7 +34,7 @@ import {
 import I18n from 'i18next';
 
 // hooks
-import { useInstantSearch, useSortBy, useClearRefinements, useConfigure } from "react-instantsearch";
+import { useInstantSearch, useSortBy, useClearRefinements, useConfigure, useSearchBox } from "react-instantsearch";
 
 // Custom
 import CustomHit from "../components/CustomHit";
@@ -407,9 +407,10 @@ export function HomeCompo(props = {}) {
 
 export function QueryRefCompo({ that }) {
   const { indexUiState } = useInstantSearch();
-  
+  const { refine  } = useSearchBox();
+
   useEffect(() => {
-    if(that.state.query != indexUiState.query) that.setState({query:indexUiState.query})
+    if(that.state.query != indexUiState.query) that.setState({query:indexUiState.query, refine})
   }, [indexUiState])
 
   return <></>
@@ -460,7 +461,8 @@ export class SearchPage extends Component<State, Props>
 
     this._urlParams = qs.parse(this.props.location.search) 
 
-    if(this._urlParams.advanced == "true" && this.state.advanced == undefined) this.setState({ advanced: true})
+    if(this._urlParams.advanced == "true" && this.state.advanced == undefined) this.setState({ advanced: true, etextSearch:this._urlParams["etext_search[0]"] == "true"})
+    else if(this._urlParams.advanced == "true" && this.state.etextSearch == undefined && this._urlParams["etext_search[0]"] == "true") this.setState({ advanced: true, etextSearch:true})
     else if(!this._urlParams.advanced && this.state.advanced) this.setState({ advanced: undefined })
 
     //if(this._urlParams.q && !this.state.query) this.setState({query:this._urlParams.q})
@@ -495,7 +497,7 @@ export class SearchPage extends Component<State, Props>
       <>
         { top_right_menu(this,null,null,null,null,this.props.location, infoPanelS, "search") }
         <div className={"AppSK"+(this.props.advancedSearch|| this.state.advanced?" advanced":"") + (" isFocused-"+this.state.collapse.isFocused) + (" settings-"+this.state.collapse.settings)}>
-          { (this.props.advancedSearch || this.state.advanced) && <HomeCompo auth={this.props.auth} SKquery={this.state.SKquery ?? this.state.query} isFocused={this.state.collapse.isFocused} setIsFocused={toggleIsFocused}/>}
+          { (this.props.advancedSearch || this.state.advanced) && <HomeCompo auth={this.props.auth} SKquery={this.state.SKquery ?? this.state.query} etextSearch={this.state.etextSearch} refine={this.state.refine} isFocused={this.state.collapse.isFocused} setIsFocused={toggleIsFocused}/>}
           <InstantSearch
             key={pageFilters ?? "main"}
             indexName={process.env.REACT_APP_ELASTICSEARCH_INDEX}

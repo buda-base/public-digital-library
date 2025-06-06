@@ -1970,7 +1970,7 @@ class App extends Component<Props,State> {
          },
          collapse:{},
          sortBy,
-         searchTypes: get.t?get.t.split(","):types,
+         searchTypes: props.etextSearch?["Etext"]:get.t?get.t.split(","):types,
          dataSource: [],         
          newKW,
          loader:{},
@@ -2198,9 +2198,15 @@ class App extends Component<Props,State> {
 
       if(window.initFeedbucket) window.initFeedbucket()
 
-      if(this.props.advancedSearch === undefined && get.advanced == "true") { 
-         setTimeout(() => this.props.navigate({...this.props.location, search:this.props.location.search.replace(/advanced=[^&]+&?/,"")}, { replace:true}), 1500)
-         this.props.onAdvancedSearch(true, this.state.keyword)
+      if(get.advanced == "true") { 
+         setTimeout(() => { 
+            this.props.navigate({...this.props.location, search:this.props.location.search.replace(/advanced=[^&]+&?/,"")}, { replace:true})
+            console.log("get:",get)
+         }, 1500)
+         if(!this.props.advancedSearch) this.props.onAdvancedSearch(true, this.state.keyword)
+         if(!this.state.searchTypes?.includes("Etext") && get["etext_search[0]"] === "true") {
+            this.setState({searchTypes:["Etext"]})
+         }
       }
    }
 
@@ -2320,7 +2326,8 @@ class App extends Component<Props,State> {
             ? {pathname:"/osearch/search",search:"?advanced=true&q="+_key.replace(/(^\")|(\"$)/g,"")+"&etext_search[0]=true"+khmerCollec+proxiedCollec}
             : {pathname:"/search",search:"?q="+key+"&lg="+lang+"&t="+label+khmerCollec+proxiedCollec+hasOpenPossibly+(inEtext?"&r="+inEtext:"")}
          loggergen.log("newL?",newLoca)
-         this.props.navigate(newLoca)
+         if(this.props.refine) this.props.refine(_key.replace(/(^\")|(\"$)/g,"")) 
+         else this.props.navigate(newLoca)
          
          // TODO add permanent filters (here ?)
       }
