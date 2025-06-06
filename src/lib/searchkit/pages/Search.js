@@ -406,11 +406,11 @@ export function HomeCompo(props = {}) {
 }
 
 export function QueryRefCompo({ that }) {
-  const { indexUiState } = useInstantSearch();
-  const { refine  } = useSearchBox();
+  const { indexUiState, setIndexUiState } = useInstantSearch();
+  //const { refine  } = useSearchBox();
 
   useEffect(() => {
-    if(that.state.query != indexUiState.query) that.setState({query:indexUiState.query, refine})
+    if(that.state.query != indexUiState.query) that.setState({query:indexUiState.query, refine:setIndexUiState})
   }, [indexUiState])
 
   return <></>

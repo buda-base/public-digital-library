@@ -2326,7 +2326,7 @@ class App extends Component<Props,State> {
             ? {pathname:"/osearch/search",search:"?advanced=true&q="+_key.replace(/(^\")|(\"$)/g,"")+"&etext_search[0]=true"+khmerCollec+proxiedCollec}
             : {pathname:"/search",search:"?q="+key+"&lg="+lang+"&t="+label+khmerCollec+proxiedCollec+hasOpenPossibly+(inEtext?"&r="+inEtext:"")}
          loggergen.log("newL?",newLoca)
-         if(this.props.refine) this.props.refine(_key.replace(/(^\")|(\"$)/g,"")) 
+         if(this.props.refine) this.props.refine({query:_key.replace(/(^\")|(\"$)/g,""),refinementList:{etext_search:[true]}}) 
          else this.props.navigate(newLoca)
          
          // TODO add permanent filters (here ?)
