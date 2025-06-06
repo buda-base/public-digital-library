@@ -6,6 +6,7 @@ import { Link } from "react-router-dom"
 import { useLocation, useNavigate } from "react-router"
 import { Trans } from 'react-i18next'
 import I18n from 'i18next';
+import Loader from 'react-loader';
 
 import Close from '@material-ui/icons/Close';
 
@@ -58,6 +59,7 @@ function SearchResultsHeader(props) {
   }, [results])
 
   return <header data-hits={results?.nbHits} data-status={status}>    
+    { ["loading"].includes(status) && <Loader className="SRHloader"/>  }
     { !inner && <>{ config.length > 1 && config[0] === "associated_res" 
       ? <h1 class={that.props.locale === "bo" || label?.lang === "bo" ? "has-bo" : ""}>
         <Trans i18nKey="result.assocNoT" values={{ name: label?.value || config[1] }} components={{ res: <Link to={inner?"/osearch/associated/"+config[1]+"/search":"/show/bdr:"+config[1]} /> }}/>

@@ -433,6 +433,10 @@ header[data-hits="0"] ~ .hits .pagination,
    display:none;
 }
 
+header .SRHloader {
+  top : 250px !important;
+}
+
 :not(#a) .ais-SearchBox-form:before,
 :not(#a) .ais-SearchBox-loadingIndicator, 
 :not(#a) .ais-SearchBox-reset {

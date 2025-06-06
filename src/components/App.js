@@ -2326,7 +2326,7 @@ class App extends Component<Props,State> {
             ? {pathname:"/osearch/search",search:"?advanced=true&q="+_key.replace(/(^\")|(\"$)/g,"")+"&etext_search[0]=true"+khmerCollec+proxiedCollec}
             : {pathname:"/search",search:"?q="+key+"&lg="+lang+"&t="+label+khmerCollec+proxiedCollec+hasOpenPossibly+(inEtext?"&r="+inEtext:"")}
          loggergen.log("newL?",newLoca)
-         if(this.props.refine) this.props.refine({query:_key.replace(/(^\")|(\"$)/g,""),refinementList:{etext_search:[true]}}) 
+         if(this.props.refine && this.state.searchTypes?.includes("Etext")) this.props.refine({query:_key.replace(/(^\")|(\"$)/g,""),refinementList:{etext_search:[true]}}) 
          else this.props.navigate(newLoca)
          
          // TODO add permanent filters (here ?)
@@ -2513,7 +2513,7 @@ class App extends Component<Props,State> {
          }
       }
 
-      if(!state.newKW || state.newKW !== props.keyword || props.keyword === null) { 
+      if(!state.newKW || state.newKW !== props.keyword || props.keyword === null || props.SKquery !== props.keyword) { 
          if(!s) s = { ...state }
          if(s.newKW !== props.keyword ?? props.SKquery) {
             s.newKW = props.keyword

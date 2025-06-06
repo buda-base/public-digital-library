@@ -542,6 +542,7 @@ export class SearchPage extends Component<State, Props>
               </SimpleBar>
               <div className="main-content">
                 <SearchResultsHeader that={this} {...{ storageRef }}/>
+
                 <div className="hits">
                   <div className="pagination">
                     <Pagination />
