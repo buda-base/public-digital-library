@@ -33,7 +33,7 @@ function EtextPage(props) {
 
   const highlight = useCallback((str) => HTMLparse(
     "<span>"
-    + str
+    + (str ?? "")
       .replace(/(['"][^'"]*rend-small[^'"]*['"])/g,"$1 style='vertical-align:"+(0.12+(state_etextSize ?? 1.5)*0.0075)+"em'")
       .replace(/\[([ ]*)((<[^>]+>)+)([ ]*)\]/g,"$1$2$4")
       //.replace(/[\]\[]*↤[\]\[]*/g,"</span><span>")

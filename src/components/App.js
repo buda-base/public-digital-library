@@ -2313,6 +2313,10 @@ class App extends Component<Props,State> {
       }
       else {
 
+
+         this.props.onAdvancedSearch(true, this.state.keyword)
+
+
          if(lang === "bo-x-ewts_lower" ) {
             key = key.toLowerCase();
             lang = "bo-x-ewts"
@@ -2513,7 +2517,7 @@ class App extends Component<Props,State> {
          }
       }
 
-      if(!state.newKW || state.newKW !== props.keyword || props.keyword === null || props.SKquery !== props.keyword) { 
+      if(!state.newKW || state.newKW !== props.keyword || props.keyword === null) { 
          if(!s) s = { ...state }
          if(s.newKW !== props.keyword ?? props.SKquery) {
             s.newKW = props.keyword
@@ -2521,7 +2525,9 @@ class App extends Component<Props,State> {
             if(!props.keyword) s.leftPane = false ;
          }
          console.log("newKW:",s.newKW,s.keyword,props.keyword,props.SKquery,state.SKquery)
-         if(!props.loading && s.newKW !== undefined && s.newKW === props.keyword && props.SKquery !== undefined) {
+         if(s.newKW !== undefined && s.newKW === props.keyword && props.advKeyword != undefined) {
+            s.keyword = props.advKeyword
+         } else if(!props.loading && s.newKW !== undefined && s.newKW === props.keyword && props.SKquery !== undefined) {
             s.keyword = props.SKquery
          } else if(props.IRI && s.newKW === undefined && state.SKquery !== undefined){
             s.keyword = state.SKquery
