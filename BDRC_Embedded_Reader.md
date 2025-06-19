@@ -1,10 +1,10 @@
 # Embedding a IIIF collection viewer
 
 ## Using an `iframe`
-You can embed a viewer by using an `iframe` element pointing to `https://library.bdrc.io/scripts/embed-iframe.html?work=workVal&origin=originVal&uilang=langVal&lang=langVal` with:
+You can embed a viewer by using an `iframe` element pointing to `https://library.bdrc.io/scripts/embed-iframe.html?work=workVal&origin=originVal&uilang=uiLangVal&lang=langVal` with:
 - `workVal` is a BDRC resource ID such as `bdr:MW22084`
 - `originVal` is an identifier for the website embedding the iframe
-- `uilangVal` is the locale used to display the elements of the UI, either `en` (English) or `bo` (Tibetan)
+- `uiLangVal` is the locale used to display the elements of the UI, either `en` (English) or `bo` (Tibetan)
 - `langVal` is a comma-separated list of preferred languages by order of preference, to be selected from [BDRC's lang tag conventions](https://github.com/buda-base/owl-schema/blob/master/lang-tags.md), used to display the data from work (outlines, titles, etc.)
 
 For example:
