@@ -170,7 +170,8 @@ export function miradorSetUI(closeCollec, num, withIAlink) {
    clearInterval(timerConf)
    timerConf = setInterval( () => {
 
-      //loggergen.log("Mtrap",window.Mousetrap)      
+      loggergen.log("Mtrap",window.Mousetrap)      
+
       window.Mousetrap.unbind("left")
       window.Mousetrap.unbind("right")
       window.Mousetrap.unbind("space")
@@ -664,6 +665,8 @@ export async function miradorConfig(data, manifest, canvasID, useCredentials, la
       } ]
    }
    config.data = data
+
+   console.log("config:",config)
 
    return config ;
 }

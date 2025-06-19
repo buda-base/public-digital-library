@@ -505,9 +505,8 @@ const makeMainRoutes = () => {
                      <Route path="/search" element={<HomeCompo advancedSearch={true} />} />
 
                      <Route path="/simplesearch" element={<SimpleAdvancedSearchCompo />} />
-
-
                      <Route path="/simple/:IRI"  element={<SimpleResourceViewerCompo />} />
+
 {/* 
 
                         <Route exact path="/static/:DIR1/:DIR2/:DIR3/:PAGE" render={(props) => {

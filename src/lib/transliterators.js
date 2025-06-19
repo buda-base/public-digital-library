@@ -162,6 +162,7 @@ export function extendedPresets(preset)
    }
 
    for(const p of preset) {
+      if(!p) continue
       if(p.startsWith("inc")) { 
          presetNoInc.push(p.replace(/^inc/,"sa"))
          presetNoInc.push(p.replace(/^inc/,"pi"))
