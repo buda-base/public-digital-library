@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Demo Viewer</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <style>
+      #container { position:fixed; width:100%; height:100%; border:none; left:0; top:0; transition:opacity 400ms ease-in-out;  }
+      #container:not(.loaded) { background:url(https://cdnjs.cloudflare.com/ajax/libs/galleriffic/2.0.1/css/loader.gif) center no-repeat;  }
+      #container iframe { width:100%; height:100%; }
+      .hidden { pointer-events:none; opacity:0;  }
+    </style>
+  </head>
+  <body>
+    <div id="container" class="hidden"><iframe allowfullscreen class="hidden"></iframe></div>
+    <button class="open" data-rid="bdr:MW22084">View Collection A</button>
+    <button class="open" data-rid="bdr:MW12827">View Collection B</button>
+    <script>
+      $("#container iframe").on("load", () => { $('#container iframe').removeClass('hidden'); $("#container").addClass("loaded"); });
+      $("button.open").click( (e) => {
+        $("#container").removeClass("hidden");
+        let src = "https://library.bdrc.io/scripts/embed-iframe.html?work="+$(e.target).attr("data-rid")+"&origin=website.com&lang=bo";
+        if($("#container iframe").attr("src")!== src) { $("#container iframe").attr("src",src); }
+        else { $("#container iframe").trigger("load"); }
+      })
+      window.addEventListener("message", (msg) => { if(msg.data === "close") { $("#container,#container iframe").addClass("hidden").removeClass("loaded"); } } )
+    </script>
+  </body>
+</html>
