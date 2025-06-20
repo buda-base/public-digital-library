@@ -1729,7 +1729,7 @@ export function renderDates(birth,death,floruit,locale) {
          else date = I18n.t("misc.inter", { min, max }) 
       }      
       if(uncertain) date = date + " ?" 
-      if(approx) date = "~"+date
+      if(approx && !date?.startsWith("~")) date = "~"+date
       
       //loggergen.log("date:",dates,date);
 
