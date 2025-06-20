@@ -11301,7 +11301,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
 
             const prep = (obj) => {
                let ret = []
-               for(let k of [ bdo+"onYear", bdo+"notBefore", bdo+"notAfter", bdo+"eventWhen" ]) {
+               for(let k of [ bdo+"eventWhen", bdo+"onYear", bdo+"notBefore", bdo+"notAfter" ]) {
                   if(obj[k]) for(let v of obj[k]) {
                      const edtf = v.edtf
                      ret.push({ type:k, value: v.value, edtf })
