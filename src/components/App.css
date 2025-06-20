@@ -5423,6 +5423,10 @@ span.in { font-weight:500;padding-left:0px; padding-right:10px; margin-left:36px
 .resource .data.bot-props > div[data-prop="bdo:placeLong"] .map,
 .resource .data.bot-props > div[data-prop="bdo:placeRegionPoly"]:not(.youpi):not(#youpi) {display:none !important;}
 
+
+.resource .data.bot-props:not(#a) > div[data-prop="bdo:placeLong"]:not(#a),
+.resource .data.bot-props:not(#a) > div[data-prop="bdo:placeLat"]:not(#a) { display:none !important; }
+
 .resource .sub {  width:100% ;}
 .resource .data > :not([data-prop="bdo:note"]) .sub:not(:first-of-type) {border-top:1px solid rgba(0,0,0,0.25); padding-top:20px;}
 .resource .data > :not([data-prop="bdo:note"]) .sub:not(:last-child) {  margin-bottom:20px; }

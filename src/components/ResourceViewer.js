@@ -11520,7 +11520,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                   
                   { this.renderMirador(isMirador) }                            
 
-                  {  isGroup(this.props.auth, "editors") ? header : _T === "Images" && this.renderScanPage() }
+                  {  _T === "Images" && isGroup(this.props.auth, "editors") ? header : this.renderScanPage() }
                   
                   { theDataTop }
                   
