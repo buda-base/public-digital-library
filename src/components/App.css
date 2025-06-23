@@ -475,7 +475,7 @@ html[lang="bo"] .msg-popup .front p { font-size:18px;}
 #search-bar > div:first-child { box-shadow: 0 2px 4px rgba(187, 187, 187, 0.5); border-radius:2px; font-weight:600;  }
 #search-bar > div:first-child  > div:first-child  > div:first-child { width:calc(100% - 160px); margin-right:200px; }
 
-#search-bar { background-color: #fce08e; padding-top:30px;padding-bottom:5px; display:block;}
+#search-bar { background-color: #fce08e; padding-top:0px;padding-bottom:5px; display:block;}
 .App.home:not(.khmerServer) #search-bar { padding-bottom:30px; }
 
 #search-bar > div { display:inline-flex;}
@@ -782,7 +782,7 @@ body > #pop-login { z-index:1000000 ;}
 .inner-search-bar:not(#a) {
    width:1440px;
    max-width:97%;
-   height:120px;   
+   height:150px;   
    box-sizing: border-box;
    margin:auto;
    display: flex;
