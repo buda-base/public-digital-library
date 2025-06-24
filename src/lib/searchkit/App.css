@@ -1460,6 +1460,10 @@ header .SRHloader {
   min-height: 0;
 }
 
+.nav ~ .AppSK.advanced .App .SearchPane:not(#a) {
+  max-width:97%;
+}
+
 
 .resource [data-prop="tmp:workHasInstance"] .data:not(#perma) > div:not(.firstImage):not(.browse):not(.header)::after {
   content:none;
@@ -1904,6 +1908,19 @@ header .SRHloader {
   .etext-header.sticky .Etext .etext-header-breadcrumbs .ariane {
     width:calc(100vw - 250px);
   }
+
+  .inner-search-bar:not(#a) > div:not(#a) {
+    width:700px;
+    padding:0;
+  }
+
+  .inner-search-bar:not(#a) > div:not(#a) > .ais-SearchBox-form {
+    width:100%;
+  }
+
+  #root > .AppSK.advanced > div > .App.home #simple-search + div {
+    width:700px !important;
+  }
 }
 
 @media (max-width: 1320px) {
@@ -1944,6 +1961,8 @@ header .SRHloader {
   #root > .withETSBresults.withOutline:not(#a) > .resource.etext-view:not(#a), #root > .withMonlam.withOutline:not(#a) > .resource.etext-view:not(#a) {
     width: calc(100% - 400px);
   }
+
+
 }
 
 @media (max-width: 1280px) {
@@ -1963,10 +1982,25 @@ header .SRHloader {
   #viewer .nav-bar-top {
     padding:0 30px; 
   }
+
+
+  #root > div > .App:not(.home) #filters-UI {
+    padding-bottom: 10px
+  }
+
   
 }
 
 @media (max-width: 1024px) {
+
+  .App.home:not(#a) #search-bar {
+    padding-top:19px;   
+    padding-bottom:50px;
+  }
+
+  .nav ~ .AppSK.advanced .App .SearchPane:not(#a) {
+    max-width:100%;
+  }
 
   #root .resource.preview.place .data > div:not([data-prop="bdo:note"]):not(.header):not(.firstImage):not(#perma):is(#head),
   #root .resource.preview .data:not(#a) [data-prop="tmp:outlineSearch"] {
@@ -2230,6 +2264,11 @@ header .SRHloader {
     max-width:100%;
   }
 
+  #root > .AppSK > .inner-search-bar:not(#a),
+  #root .ISB .inner-search-bar:not(#a) {
+    height:160px;
+  }
+
   .AppSK .content {
     padding:0 30px;
   }
@@ -2411,9 +2450,10 @@ header .SRHloader {
   }
 
   .ISB.advanced-true .App .SearchPane:not(#a) #search-bar  { 
-    padding:15px 30px;
+    padding:15px 0px;
     box-sizing: border-box;
     height:160px; 
+    padding-top:10px;
   }
 
   .ISB.advanced-true .App .SearchPane:not(#a) #search-bar #simple-search + div,
@@ -2456,7 +2496,7 @@ header .SRHloader {
     #root #search-bar > h2+div,
     #root .App #search-bar h2, #root .nav ~ .AppSK.advanced #search-bar h2 {
       width:100%;
-      padding:0 30px;
+      padding:0 0px;
       box-sizing: border-box;
     }
   
@@ -2502,6 +2542,7 @@ header .SRHloader {
     padding:0 30px;
     box-sizing: border-box;
   }
+
 
   #root #search-bar > div > span + div {
     width:100% !important;
@@ -2755,12 +2796,22 @@ header .SRHloader {
   #root .tradition:not(#a) .AppSK.InnerSearchPage.data .content .main-content h3:not(#a) {
     font-size:16px;
   }
+
+  #root > div:last-child:not(.AppSK) #filters-UI {
+    padding-top:20px;
+    padding-bottom:15px;
+  }
+
 }
 
 
 
 @media (max-width:800px){
   
+  .ISB.advanced-true .App .SearchPane:not(#a) #search-bar > h2 {
+    margin-bottom:5px;  
+   }
+
   #root .ariane .can-shrink u,
   #root .ariane .can-shrink i {
     display:none;
@@ -2882,11 +2933,6 @@ header .SRHloader {
     width: calc(100% - 25px - 50px - 35px + 35px);
   }
 
-  #root > div:last-child:not(.AppSK) #filters-UI {
-    padding-top:20px;
-    padding-bottom:10px;
-  }
-
   #etext-nav > div {
     flex-wrap:wrap;
   }
@@ -2962,9 +3008,10 @@ header .SRHloader {
     margin-left:20px;
   }
 
+/*   
   .inner-search-bar:not(#a) > div:not(#a) {
     padding-left:50px; 
-  }
+  } */
 
   .AppSK.InnerSearchPage:not(#a) .searchbox > .inner-search-bar:not(#a) {
     width:100%;
