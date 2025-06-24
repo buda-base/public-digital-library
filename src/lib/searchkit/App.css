@@ -1921,6 +1921,12 @@ header .SRHloader {
   #root > .AppSK.advanced > div > .App.home #simple-search + div {
     width:700px !important;
   }
+
+
+  #root > div > .App:not(.home) #filters-UI {
+    padding-bottom: 10px
+  }
+
 }
 
 @media (max-width: 1320px) {
@@ -1983,10 +1989,6 @@ header .SRHloader {
     padding:0 30px; 
   }
 
-
-  #root > div > .App:not(.home) #filters-UI {
-    padding-bottom: 10px
-  }
 
   
 }
