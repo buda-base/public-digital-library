@@ -1888,6 +1888,12 @@ header .SRHloader {
   padding-right:65px; 
 }
 
+
+#root > div > .App:not(.home) #filters-UI {
+  padding-bottom: 10px
+}
+
+
 @media (max-width: 1440px) {
 
   .etext-header.sticky .etext-header-breadcrumbs .ariane {
@@ -1920,11 +1926,6 @@ header .SRHloader {
 
   #root > .AppSK.advanced > div > .App.home #simple-search + div {
     width:700px !important;
-  }
-
-
-  #root > div > .App:not(.home) #filters-UI {
-    padding-bottom: 10px
   }
 
 }
