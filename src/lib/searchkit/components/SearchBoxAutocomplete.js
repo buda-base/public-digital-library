@@ -466,7 +466,7 @@ const SearchBoxAutocomplete = (props) => {
                 <CloseIcon /> 
               </IconButton>{
               ["tibetan","codes","AND","chinese","sanskrit","khmer","scope"].map(k => <div>
-                <p>
+                <p style={{margin:"1em 0"}}>
                   <b>{I18n.t("topbar.how."+k+".title")}</b>
                   <br/>
                   <Trans i18nKey={"topbar.how."+k+".body"} components={{ nl : <br />, ita: <i /> }}/>

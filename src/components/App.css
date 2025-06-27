@@ -362,10 +362,10 @@ body { overflow:auto !important;padding-right:0 !important; /*font-family:"Robot
 #root > .profile.static:not(#a) > .nav:not(.etext-nav).msgPopupOn::after { content:none; }
 #root > .profile.static:not(#a) > .nav:not(.etext-nav).msgPopupOn { box-shadow:none;}
 
-.static-container > #samples > .doc-content { max-width:100%; padding-top:0; padding-bottom:100px;}
-.static .doc-content .index { position:fixed; width:310px; background:white; top:130px; padding:0; padding-top:0px; padding-bottom:40px;}
-.static .doc-content .index > div { height:calc(100vh - 80px - 50px /*- 40px*/); overflow: auto; box-sizing: border-box; padding-bottom:40px; box-sizing: border-box;}
-.static .doc-content .index ~ * { padding-left:350px; }
+.static-container > #samples > .doc-content { max-width:100%; padding-top:0; padding-bottom:100px; display:flex;}
+.static .doc-content .index { position:sticky; width:310px; background:white; top:30px; padding:0; padding-top:0px; padding-bottom:40px; align-self: flex-start;}
+.static .doc-content .index > div { height:calc(100vh - 30px /* - 80px - 50px -40px*/); overflow: auto; box-sizing: border-box; padding-bottom:40px; box-sizing: border-box;}
+.static .doc-content .index ~ * { padding-left:10px; width:calc(100% - 310px); }
 .static .doc-content .index .c25:not(.c19,.c8) a { font-size:16px; font-weight:600; margin-top:5px; display: block; }
 .static .doc-content .index .c19 a { font-size:14px; font-weight:500;}
 .static .doc-content .index .c8 a { font-size:13px; font-weight:400; }
@@ -425,6 +425,8 @@ body { overflow:auto !important;padding-right:0 !important; /*font-family:"Robot
 
 .static .doc-content .title { margin-bottom:30px;}
 
+
+
 @media(max-width:1024px) {
    .static-container[data-dir^="user-guide"] #samples { padding:20px;}
    .static-container[data-dir^="user-guide"] #samples .doc-content { padding:0;  }
@@ -433,10 +435,16 @@ body { overflow:auto !important;padding-right:0 !important; /*font-family:"Robot
 
 
 @media(max-width:800px) {
+
+   .static-container > #samples > .doc-content { display: block; }
+
+   .static .doc-content .index,
+   .static .doc-content .index ~ * { width:100%; }
+
    .static-container[data-dir^="user-guide"] #samples .doc-content .index { position: relative; top:110px; }
    .static-container[data-dir^="user-guide"] #samples .doc-content .index > div { height:auto; overflow:visible; padding:60px 0 0 0; }
    .static-container[data-dir^="user-guide"] #samples .doc-content .index + div { padding-left:0; margin-top:115px; }
-   .static-container[data-dir^="user-guide"] #samples .doc-content .index + div > .title:first-child { position: absolute; top:55px; }
+   .static-container[data-dir^="user-guide"] #samples .doc-content .index + div > .title:first-child { position: absolute; top:325px; }
 }
 
 
