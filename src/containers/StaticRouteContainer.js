@@ -29,7 +29,12 @@ const mapStateToProps = (state,ownProps) => {
 
    let feedbucket = state.ui.feedbucket
 
-   let props = { config, locale, profileName, portraitPopupClosed, isNewUser, feedbucket }
+   let advancedSearch = state.ui.advancedSearch ?? ownProps.advancedSearch
+   let advKeyword = state.ui.advKeyword
+
+   let props = { config, locale, profileName, portraitPopupClosed, isNewUser, feedbucket,
+      advancedSearch, advKeyword
+    }
 
    return props
 
@@ -52,6 +57,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       },
       onFeedbucketClick(cls:string) {
          dispatch(ui.feedbucket(cls))
+      },
+      onAdvancedSearch(s:boolean,k:string) {
+         dispatch(ui.advancedSearch(s,k))
       }
    }
 }
