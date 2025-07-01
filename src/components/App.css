@@ -373,8 +373,13 @@ body { overflow:auto !important;padding-right:0 !important; /*font-family:"Robot
 
 /* .static-container > #samples > .doc-content .index a {  color:#000; } */
 
+.static [data-dir^="user-guide"] #samples .doc-content { padding-bottom: 0;}
 
-.static .doc-content .index .c8,
+.static [data-dir^="user-guide"] #samples { padding-bottom:0 !important; }
+
+.static [data-dir^="user-guide"] #samples .doc-content .index + div { padding-bottom:100px; }
+
+/* .static .doc-content .index .c8, */
 .static .doc-content .index .c27 { display: none;}
 
 .static-container > #samples > .doc-content [id] { scroll-margin:80px; }
