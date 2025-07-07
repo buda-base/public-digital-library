@@ -650,8 +650,8 @@ else if(staticQueries[route]?.length === 2) {
    let sortBy = "popularity" 
    if(params && params.s) sortBy = params.s
    if(!params.t) {
-      let {pathname,search} = window.location         
-      window.history.replace({pathname,search:(search?"&":"")+"t="+staticQueries[route][1]})
+      let {pathname,search} = window.location       
+      window.location.search = (search?"&":"")+"t="+staticQueries[route][1]
       return
    }
    store.dispatch(uiActions.updateSortBy(sortBy,params.t))

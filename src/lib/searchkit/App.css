@@ -1927,6 +1927,13 @@ header .SRHloader {
   #root > .AppSK.advanced > div > .App.home #simple-search + div {
     width:700px !important;
   }
+}
+
+@media (min-width: 1025px) and (max-width:1440px) {
+
+  .AppSK.InnerSearchPage .searchbox > .inner-search-bar:not(#a) > div:not(#a) {
+    padding-bottom:40px;
+  }
 
 }
 

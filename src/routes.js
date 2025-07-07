@@ -411,6 +411,18 @@ function AuthCompo(props) {
    }
 }
 
+function StaticQueryCompo({ path }) {
+
+   const location = useLocation();
+   const navigate = useNavigate();
+
+   useEffect(() => {
+      store.dispatch(initiateApp(qs.parse(location.search), null, null, path))
+   }, [location])
+
+   return (<AppContainer  {...{ location, navigate, auth }} static={path}/> )
+}
+
 function ProfileCompo() {   
    const location = useLocation();
    const navigate = useNavigate();
@@ -507,6 +519,12 @@ const makeMainRoutes = () => {
                      <Route path="/simplesearch" element={<SimpleAdvancedSearchCompo />} />
                      <Route path="/simple/:IRI"  element={<SimpleResourceViewerCompo />} />
 
+                     { 
+                        Object.keys(staticQueries).map(q => (
+                           <Route path={"/"+q} element={<StaticQueryCompo path={q}/>}/>
+                        )) 
+                     }
+
 {/* 
 
                         <Route exact path="/static/:DIR1/:DIR2/:DIR3/:PAGE" render={(props) => {
@@ -549,14 +567,6 @@ const makeMainRoutes = () => {
                            }
                            return (<AppContainer history={history} auth={auth} latest={true} {...get.tf ? {latestSyncsMeta:{timeframe:"past"+get.tf}}:{}}/> )
                         }}/>  
-                        { Object.keys(staticQueries).map(q => (
-                           <Route path={"/"+q} render={(props) => {
-                              let get = qs.parse(history.location.search), path = props.location.pathname.split("/")[1]
-                              loggergen.log("new route",props,store.getState())                           
-                              store.dispatch(initiateApp(qs.parse(history.location.search), null, null, path))
-                              return (<AppContainer history={history} auth={auth} static={path}/> )
-                           }}/>
-                        )) }
                         <Route path="/view/:IRI" render={(props) =>
                            {
                               store.dispatch(initiateApp())

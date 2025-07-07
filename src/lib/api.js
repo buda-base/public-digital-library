@@ -97,10 +97,10 @@ export const dPrefix = {
 
 
 export const staticQueries = { 
-   "female-authors": ["femaleAuthorsGraph", "Person" ],
-   "all-collections": [ "allCollections", "Product" ],
-   "works-by-female-authors": ["worksByFemaleAuthors", "Work"],
-   "instances-by-female-authors": ["instancesByFemaleAuthor", "Instance"]
+   "all-collections": [ "allCollections", "Product" ],                         // ok
+   //"female-authors": ["femaleAuthorsGraph", "Person" ],                      // returns 0 results
+   //"works-by-female-authors": ["worksByFemaleAuthors", "Work"],              // returns 500
+   //"instances-by-female-authors": ["instancesByFemaleAuthor", "Instance"]    // returns 500
 }
 
 export async function logError(error, json) {
