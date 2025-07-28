@@ -120,6 +120,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
    return {
       onResetSearch:() => {
          dispatch(data.resetSearch())
+         dispatch(ui.resetSearch())
       },
       onOntoSearch:(k:string) => {
          dispatch(data.ontoSearch(k));

@@ -7665,7 +7665,7 @@ a.result + #matches.mobile,
 #root .nav #donate + .close { display:none;}
 
 
-#search-bar > div:first-child input { line-height:35px; }
+#search-bar > div:first-of-type input { line-height:35px; }
 
    
 @media (max-width:1024px)

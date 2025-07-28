@@ -63,6 +63,14 @@ export const langPreset = (lang: string[],i?:number): Action => {
    }
 }
 
+TYPES.resetSearch = 'RESET_SEARCH';
+export const resetSearch = (): Action => {
+    return {
+        type: TYPES.resetSearch
+    }
+}
+
+
 TYPES.advancedSearch = 'ADVANCED_SEARCH';
 export const advancedSearch = (s: boolean, k:string): Action => {
    return {

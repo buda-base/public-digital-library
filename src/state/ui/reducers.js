@@ -135,6 +135,15 @@ export const setType = (state: UIState, action: Action) => {
 reducers[actions.TYPES.setType] = setType;
 
 
+export const resetSearch = (state: UIState, action: Action) => { 
+    return {
+       ...state,
+       advKeyword: null
+    }
+ }
+ reducers[actions.TYPES.resetSearch] = resetSearch;
+
+ 
 export const advancedSearch = (state: UIState, action: Action) => {
 
     return {
