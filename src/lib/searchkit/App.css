@@ -338,7 +338,7 @@ svg.help-workid { opacity:0.55; width:18px; vertical-align: -4px; margin-left:8p
 
 .AppSK.InnerSearchPage .searchbox h3 {
   flex-shrink: 10000;
-  padding-right:0px;
+  padding-right:10px;
 }
 .AppSK.InnerSearchPage .searchbox > .inner-search-bar:not(#a) {
   width:calc(100% - 190px);
@@ -1032,6 +1032,14 @@ header .SRHloader {
   color:#777;
   font-weight:500;
   text-transform: capitalize;
+}
+
+.resource h2 + .date > span {
+  display: block;
+}
+
+.resource h2 + .date > span::first-letter {
+  text-transform: uppercase;
 }
 
 .content .main-content header h1 {

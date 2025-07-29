@@ -803,6 +803,7 @@
       "closeO":"Close outline",
       "downloadFU": "Download Preview",
       "findT":"Find Texts Related to this {{type}}",
+      "findTP":"Find Material Related to this {{type}}",
       "findTbyP":"Find texts created by this person",
       "findTaboutT":"Find texts about this topic",
       "findTrecent":"Find Texts in the Recent Acquisitions",

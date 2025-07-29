@@ -134,7 +134,7 @@ export class InnerSearchPage extends Component<State, Props>
       
       pageFilters = "associated_res:"+RID 
       placeholder = I18n.t("resource.searchT",{ type: I18n.t("types."+T.toLowerCase()).toLowerCase() } )
-      leftTitle = I18n.t("resource.findT",{type:I18n.t("types."+T.toLowerCase())})
+      leftTitle = I18n.t("resource.findT"+(T === "Place" ?  "P" : ""),{type:I18n.t("types."+T.toLowerCase())})
   
       if(["Person","Topic","Place","Product"].includes(T)) placeholder = I18n.t("resource.searchTn."+T.toLowerCase())
             
