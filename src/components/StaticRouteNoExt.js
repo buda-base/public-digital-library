@@ -119,10 +119,10 @@ export class StaticRouteNoExt extends Component<State, Props>
 
     handleHashChange(ev) {
         // Perform actions based on the changed hash
-        console.log("hash:",ev, _that)
-        if(this.props.location.hash != _that.state.hash) {
+        console.log("hash:",ev, _that, this)
+        if((this.props ?? _that.props).location.hash != _that.state.hash) {
             if(!ev) {
-                const hash = this.props.location.hash.replace(/^#/,"")
+                const hash = (this.props ?? _that.props).location.hash.replace(/^#/,"")
                 _that.setState({scroll:hash, hash})
             }
         }
@@ -173,7 +173,8 @@ export class StaticRouteNoExt extends Component<State, Props>
                 document.querySelectorAll('.index [href^="#"]').forEach(anchor => {
                     anchor.addEventListener('click', function (e) {
                         e.preventDefault();                
-                        document.querySelector("[id='"+this.getAttribute('href').replace(/^#/,"")+"']").scrollIntoView({
+                        const elem = document.querySelector("[id='"+this.getAttribute('href').replace(/^#/,"")+"']")
+                        if(elem) elem.scrollIntoView({
                             behavior: 'smooth'
                         });
                     });
