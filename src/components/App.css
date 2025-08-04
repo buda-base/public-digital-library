@@ -6183,6 +6183,10 @@ html[lang="en"] .resource .data > [data-prop="bdo:creator"] h4[data-prop="bdo:ro
    visibility: hidden;
 }
 
+html[lang="bo"] .etext-nav-parent .etext-header.sticky > div  h2 .placeType {
+   line-height:32px;
+}
+
 .etext-nav-parent .etext-header.sticky > div  h2 {
    margin:0;
    font-size: 18px;
