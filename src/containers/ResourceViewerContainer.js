@@ -360,7 +360,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       //    store.dispatch(data.gotNextPages(id,{ reset: true}));
       // },
       onReinitEtext(id:string, params?:{}, preview) {
-         const nav = document.querySelector("#etext-scroll > div:first-child")//(".over-nav")
+         
          setTimeout(() => {             
             let get = qs.parse(ownProps.location.search)                  
             
@@ -376,18 +376,38 @@ const mapDispatchToProps = (dispatch, ownProps) => {
             }
          
             setTimeout(() => {             
-               if(nav && !get.part && document.querySelector(//".etext-nav-parent.someClass"
-                     ".resource.etext-view #etext-scroll > :first-child"
-                  ) && !document.querySelector(
-                     ".resource.etext-view #etext-scroll .highlight"
-                  )) nav.scrollIntoView()
+               
+               const timer2 = setInterval(() => {
+                  console.log("tmr2")
+
+                  const nav = document.querySelector("#etext-scroll")//(".over-nav")                           
+                  const elem = document.querySelector(".data.etextrefs .parTy.on")
+
+                  if(elem && nav) {
+                     clearInterval(timer2)
+
+                     if(nav && !get.part && document.querySelector(//".etext-nav-parent.someClass"
+                           ".resource.etext-view #etext-scroll > :first-child"
+                        ) && !document.querySelector(
+                           ".resource.etext-view #etext-scroll .highlight"
+                        )) nav.scrollIntoView()
+
+                  }
+               }, 150)
+               
+               
+               /* // TODO: center current text in outline
 
                const timer = setInterval(() => {
                   console.log("tmr")
+
                   const elem = document.querySelector(".data.etextrefs .parTy.on")
                   if(elem) {
                      clearInterval(timer)
+                     
                      elem.scrollIntoView() 
+
+
                   } else {
                      const elem = document.querySelector(".data.etextrefs .root.on > .parTy")
                      if(elem) {
@@ -398,6 +418,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
                      }
                   }
                }, 150)
+               */
 
             }, 1000)
 

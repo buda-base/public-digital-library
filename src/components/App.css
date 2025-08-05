@@ -1678,6 +1678,7 @@ ul.suggestions li > span > svg:first-child {
    height:100%;
 }
 
+.resource .data#outline.etextrefs .is-root.on h2 a span:not(#a),
 .resource.etext-outline .data#outline .parTy.on + span a:not(#a):hover,
 .resource.etext-outline .data#outline .parTy.on + span a {
    color:#d73449;
@@ -3941,9 +3942,7 @@ div:has(.resource.preview) .infoPanel.inRes { margin:0 !important; }
 .resource .data#outline .root + div span.top :not(.lang) { display:inline; vertical-align:top; }
 
 
-.resource .data#outline .is-root { scroll-margin: calc((100vh - 80px) /2); }
-
-.resource .data#outline  .parTy.on { scroll-margin:calc((100vh - 2 * 60px) / 2); }
+.resource .data#outline .is-root { scroll-margin: calc((100vh - 2 * 60px) / 2); }
 
 .resource .data#outline .root.is-root .parTy + span > h2 > a:hover,
 .resource .data#outline .top:not(.is-root) .parTy + span > .ulink > a:hover { text-decoration: none; }
@@ -5939,6 +5938,8 @@ html[lang="en"] .resource .data > [data-prop="bdo:creator"] h4[data-prop="bdo:ro
 /* ------------------------------------------------------------------------------------------------------------------------ etext view */
 
 
+.withOutline #etext-scroll { scroll-margin-top:160px;}
+ 
 #root > div > .resource.etext-view { padding:155px 30px; width:90%; margin:0 auto; position:relative; }
 
 .preview-etext .resource.etext-view .data,
@@ -6181,6 +6182,9 @@ html[lang="en"] .resource .data > [data-prop="bdo:creator"] h4[data-prop="bdo:ro
 
 .etext-nav-parent:not(.someClass) .etext-header.sticky > div > * {
    visibility: hidden;
+}
+html .etext-nav-parent .etext-header.sticky > div  h2 .placeType {
+   line-height:28px;
 }
 
 html[lang="bo"] .etext-nav-parent .etext-header.sticky > div  h2 .placeType {
