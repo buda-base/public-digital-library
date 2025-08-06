@@ -377,14 +377,14 @@ const mapDispatchToProps = (dispatch, ownProps) => {
          
             setTimeout(() => {             
                
-               const timer2 = setInterval(() => {
-                  console.log("tmr2")
+               const timer = setInterval(() => {
+                  console.log("tmr")
 
                   const nav = document.querySelector("#etext-scroll")//(".over-nav")                           
                   const elem = document.querySelector(".data.etextrefs .parTy.on")
 
                   if(elem && nav) {
-                     clearInterval(timer2)
+                     clearInterval(timer)
 
                      if(nav && !get.part && document.querySelector(//".etext-nav-parent.someClass"
                            ".resource.etext-view #etext-scroll > :first-child"
@@ -392,6 +392,49 @@ const mapDispatchToProps = (dispatch, ownProps) => {
                            ".resource.etext-view #etext-scroll .highlight"
                         )) nav.scrollIntoView()
 
+                     
+                     setTimeout(() => {
+                        // Find the closest .etext-outline container (SimpleBar)
+                        const etextOutline = elem.closest('.etext-outline');
+                        if (etextOutline) {
+                           // Get the SimpleBar instance from the data attribute
+                           const simpleBarInstance = window.SimpleBar?.instances?.get?.(etextOutline.querySelector('[data-simplebar]'));
+                           if (simpleBarInstance) {
+                              // Calculate the position of elem relative to the scrollable container
+                              const scrollElement = simpleBarInstance.getScrollElement();
+                              const containerRect = scrollElement.getBoundingClientRect();
+                              const elemRect = elem.getBoundingClientRect();
+                              const scrollTop = scrollElement.scrollTop + elemRect.top - containerRect.top - (containerRect.height / 2) + (elemRect.height / 2);
+                              
+                              // Scroll to the element position
+                              simpleBarInstance.getScrollElement().scrollTo({
+                                 top: scrollTop
+                              });
+                           } else {
+                              // Fallback: use native scrollTo on the scrollable element
+                              const scrollElement = etextOutline.querySelector('.simplebar-content-wrapper') || etextOutline;
+                              const containerRect = scrollElement.getBoundingClientRect();
+                              const elemRect = elem.getBoundingClientRect();
+                              const scrollTop = scrollElement.scrollTop + elemRect.top - containerRect.top - (containerRect.height / 2) + (elemRect.height / 2);
+                              
+                              scrollElement.scrollTo({
+                                 top: scrollTop
+                              });
+                           }
+                        } else {
+                           // Fallback to original behavior if no .etext-outline found
+                           elem.scrollIntoView();
+                        }
+                     }, 150);
+
+                  } else if(!elem) {
+                     const elem = document.querySelector(".data.etextrefs .root.on > .parTy")
+                     if(elem) {
+                        clearInterval(timer)
+                     } else {
+                        if(document.querySelector(".data.etextrefs .root .parTy") && !document.querySelector(".data.etextrefs .on"))
+                           clearInterval(timer)
+                     }
                   }
                }, 150)
                
