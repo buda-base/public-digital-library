@@ -9000,7 +9000,9 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
    }
 
    getIAlink(loca = {}, prefix = "") {
-      let id = this.props.IRI.replace(/^(bdr:M?)|(_[A-Z0-9]+)$/g,""), vid = "", pid = ""      
+      let id = this.props.IRI.replace(/^(bdr:M?)|(_[A-Z0-9]+)+$/g,""), vid = "", pid = ""
+      let inst = loca[prefix+"contentLocationInstance"]
+      if(inst?.[0].value) id = inst?.[0].value.replace(/^.*?[/]([^/]+)$/,"$1")
       let vol = loca[prefix+"contentLocationVolume"]
       if(vol?.length && vol[0].value) vol = Number(vol[0].value)
       if(vol) { 
