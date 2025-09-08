@@ -1761,7 +1761,7 @@ class ResourceViewer extends Component<Props,State>
          let startChar =  Number(props.disableInfiniteScroll?.outETstart?.[0].value ?? 0)
          if(!props.resources[props.IRI] && state.currentText != loadETres || state.startChar != startChar) {  
             
-            if(!props.that && props.snippets?.[props.IRI] === undefined) props.onGetSnippet(props.IRI);
+            if(!props.that && props.snippets?.[loadETres] === undefined) props.onGetSnippet(loadETres);
             
             /*
             else if((!props.snippets?.[props.IRI] || !props.snippets[props.IRI]?.length) && ETreinit != loadETres +"@"+ startChar) {
@@ -6085,10 +6085,12 @@ class ResourceViewer extends Component<Props,State>
                //console.log("oEiv:", outETinst, outETvol, outETstart, outETscope)
             }   
             
-            let snip = this.props.snippets?.[this.props.IRI]  
-            if(snip === undefined && this._snip != this.props.IRI && !this.props.outlineOnly) { //} && get.unaligned === "true") {
-               this.props.onGetSnippet(this.props.IRI);
-               this._snip = this.props.IRI
+            let snipID = shortUri(e.value)
+            let snip = this.props.snippets?.[snipID]  
+
+            if(snip === undefined && this._snip != snipID && !this.props.outlineOnly && snipID != "tmp:notAvailable") { //} && get.unaligned === "true") {
+               this.props.onGetSnippet(snipID);
+               this._snip = snipID
             }
             if(snip === false) {
                if(i == 0) return <div {...rootID?{"data-rootID":rootID}:{}} data-prop={shortUri(k)} class={""}>               
@@ -6101,6 +6103,8 @@ class ResourceViewer extends Component<Props,State>
             }
 
             let root = this.getResourceElem(bdo+"inRootInstance"), rootID = root?.length ? shortUri(root?.[0].value) : ""
+
+            const uniqueET = this.props.snippets && elem.filter(e => this.props.snippets[shortUri(e.value)]).length > 1
             
             if(e.value === _tmp+"notAvailable" || snip === false) {
                
@@ -6175,10 +6179,10 @@ class ResourceViewer extends Component<Props,State>
 
                      </div>
                   </div>
-               }
-            
+               }            
+
                return  this.state.openMirador?<></>:( <div {...rootID?{"data-rootID":rootID}:{}} data-prop={shortUri(k)} class={hasEtextAndNotAvail?" etext-and-preview-not-available":""} >               
-               <h3><span>{this.proplink(k,null,n)}{elem.filter(e => e.value !== _tmp+"notAvailable").length > 1  || this.state.checkedEtext === rootID ? <span class="ETnum">{" "+I18n.t("punc.num",{num:i+1})}</span> : ""}{I18n.t("punc.colon")}</span> </h3>
+               <h3><span>{this.proplink(k,null,n)}{elem.filter(e => e.value !== _tmp+"notAvailable").length > 1  || this.state.checkedEtext === rootID ? uniqueET && <span class="ETnum">{" "+I18n.t("punc.num",{num:i+1})}</span> : ""}{I18n.t("punc.colon")}</span> </h3>
                {this.preprop(k,0,n)}
                <div class="group preview-etext">
                   {/* <Link to={"/show/"+shortUri(e.value)}>{shortUri(e.value)}</Link> */}
