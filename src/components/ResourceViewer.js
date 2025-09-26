@@ -11447,6 +11447,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
          [getGDPRconsent(this),   
          <Helmet>
             <link rel="canonical" href={"https://library.bdrc.io"+this.props.location.pathname} />
+            <link rel="alternate" hreflang={this.props.locale} href={"https://library.bdrc.io"+this.props.location.pathname} />
          </Helmet>,
          top_right_menu(this, null, null, null, isMirador, this.props.location, infoPanelR, "resource"),
          // <Loader className="resource-viewer-loader" loaded={false}  options={{position:"fixed",left:"50%",top:"50%"}} />,

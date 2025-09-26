@@ -8,10 +8,11 @@ import $ from 'jquery' ;
 import logdown from 'logdown'
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
+import { Helmet } from "react-helmet"
 
 //import history from "../history"
 import store from '../index';
-import { top_right_menu, getLangLabel, getPropLabel, fullUri, renderBanner } from './App'
+import { top_right_menu, getLangLabel, getPropLabel, fullUri, renderBanner, getGDPRconsent } from './App'
 import { auth, Redirect404 } from '../routes'
 import { initiateApp } from '../state/actions';
 //import LatestSyncs, { latestSyncsScopes } from "./LatestSyncs"
@@ -467,7 +468,12 @@ export class TraditionViewer extends Component<State, Props>
       console.log("tv:state",this.state)
 
       return (
-        <>
+        <>  
+          {getGDPRconsent(this)}
+          <Helmet>
+            <link rel="canonical" href={"https://library.bdrc.io"+this.props.location.pathname} />
+            <link rel="alternate" hreflang={this.props.locale} href={"https://library.bdrc.io"+this.props.location.pathname} />
+          </Helmet>
           { top_right_menu(this, null, null, null, null, this.props.location, infoPanelT, "tradition") }
           <div>
             <div class={"App tradition tradition-"+(this.props.tradition)}>
