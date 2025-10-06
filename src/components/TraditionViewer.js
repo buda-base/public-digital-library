@@ -472,7 +472,9 @@ export class TraditionViewer extends Component<State, Props>
           {getGDPRconsent(this)}
           <Helmet>
             <link rel="canonical" href={"https://library.bdrc.io"+this.props.location.pathname} />
-            <link rel="alternate" hreflang={this.props.locale} href={"https://library.bdrc.io"+this.props.location.pathname} />
+            <link rel="alternate" hreflang="x-default" href={"https://library.bdrc.io"+this.props.location.pathname} />
+            {["en","bo"].map(l => <link rel="alternate" hreflang={l} href={"https://library.bdrc.io"+this.props.location.pathname+"?uilang="+l} />)}
+            <link rel="license" href="https://creativecommons.org/publicdomain/zero/1.0/" />
           </Helmet>
           { top_right_menu(this, null, null, null, null, this.props.location, infoPanelT, "tradition") }
           <div>

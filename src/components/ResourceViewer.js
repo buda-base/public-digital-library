@@ -10381,7 +10381,10 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
          console.log("render perma", this.props.feedbucket)
          // DONE: scans loaded with instance
          //if(this.props.resources && !this.props.resources[this.props.IRI]) this.props.onGetResource(this.props.IRI);
-         return this.perma_menu(pdfLink,monoVol,fairUse,kZprop.filter(k => k.startsWith(adm+"seeOther")), accessET && !etextAccessError, true)
+         return <>
+            {this.perma_menu(pdfLink,monoVol,fairUse,kZprop.filter(k => k.startsWith(adm+"seeOther")), accessET && !etextAccessError, true)}
+            {this.props.imageAsset && <Helmet><link rel="alternate" type="application/ld+json;profile=http://iiif.io/api/presentation/3/context.json" href={this.props.imageAsset} /></Helmet> }
+         </>
       }
 
       let resLabel = getLangLabel(this,"",titlElem)
@@ -11443,11 +11446,46 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
             tabpanels = tabpanels.filter(t => t).reverse()            
          } 
          
+         const id = this.props.IRI.split(":")[1]
+
          return (
          [getGDPRconsent(this),   
          <Helmet>
             <link rel="canonical" href={"https://library.bdrc.io"+this.props.location.pathname} />
-            <link rel="alternate" hreflang={this.props.locale} href={"https://library.bdrc.io"+this.props.location.pathname} />
+            <link rel="alternate" hreflang="x-default" href={"https://library.bdrc.io"+this.props.location.pathname} />
+            {["en","bo"].map(l => <link rel="alternate" hreflang={l} href={"https://library.bdrc.io"+this.props.location.pathname+"?uilang="+l} />)}
+            <link rel="alternate" type="application/ld+json" href={"http://purl.bdrc.io/resource/"+id+".jsonld"} /> 
+            <link rel="alternate" type="application/rdf+xml" href={"http://purl.bdrc.io/resource/"+id+".rdf"} /> 
+            <link rel="alternate" type="text/turtle" href={"http://purl.bdrc.io/resource/"+id+".ttl"} />
+            <link rel="license" href="https://creativecommons.org/publicdomain/zero/1.0/" />
+            <script type="application/ld+json">{`
+            {
+               "@context": "https://schema.org",
+               "@id": "http://purl.bdrc.io/resource/${id}",
+               "inLanguage": ["bo", "en"],
+               "identifier": [
+                  "bdr:${id}",
+                  "http://purl.bdrc.io/resource/${id}"
+               ],
+               "isPartOf": {
+                  "@type": "Dataset",
+                  "name": "Buddhist Digital Archives",
+                  "publisher": {
+                  "@type": "Organization",
+                  "name": "Buddhist Digital Resource Center",
+                  "url": "https://www.bdrc.io/"
+                  },
+                  "license": "https://creativecommons.org/publicdomain/zero/1.0/"
+               },
+               "license": "https://creativecommons.org/publicdomain/zero/1.0/",
+               "url": "https://library.bdrc.io/show/${id}",
+               "potentialAction": {
+                  "@type": "SearchAction",
+                  "target": "https://library.bdrc.io/search?q={search_term_string}",
+                  "query-input": "required name=search_term_string"
+               }
+            }
+         `}</script>
          </Helmet>,
          top_right_menu(this, null, null, null, isMirador, this.props.location, infoPanelR, "resource"),
          // <Loader className="resource-viewer-loader" loaded={false}  options={{position:"fixed",left:"50%",top:"50%"}} />,

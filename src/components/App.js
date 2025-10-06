@@ -8104,6 +8104,9 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   !this.props.config.khmerServer && <>               
                      <Helmet>
                         <link rel="canonical" href={"https://library.bdrc.io"} />
+                        <link rel="alternate" hreflang="x-default" href={"https://library.bdrc.io"} />
+                        {["en","bo"].map(l => <link rel="alternate" hreflang={l} href={"https://library.bdrc.io/?uilang="+l} />)}
+                        <link rel="license" href="https://creativecommons.org/publicdomain/zero/1.0/" />
                      </Helmet>
                      <List id="samples">
                         {/* { messageD } 
