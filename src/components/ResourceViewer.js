@@ -11478,7 +11478,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                   "license": "https://creativecommons.org/publicdomain/zero/1.0/"
                },
                "license": "https://creativecommons.org/publicdomain/zero/1.0/",
-               "url": "https://library.bdrc.io/show/${id}",
+               "url": "https://library.bdrc.io/show/bdr:${id}",
                "potentialAction": {
                   "@type": "SearchAction",
                   "target": "https://library.bdrc.io/search?q={search_term_string}",
