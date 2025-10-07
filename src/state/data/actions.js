@@ -277,6 +277,24 @@ export const gotCitationData = (s: string, res:string): Action => {
         meta:res
     }
 }
+
+TYPES.getJsonLdHeader = 'GET_JSON_LD_HEADER';
+export const getJsonLdHeader = (s: string): Action => {
+    return {
+        type: TYPES.getJsonLdHeader,
+        payload:s
+    }
+}
+
+TYPES.gotJsonLdHeader = 'GOT_JSON_LD_HEADER';
+export const gotJsonLdHeader = (s: string, res:string): Action => {
+    return {
+        type: TYPES.gotJsonLdHeader,
+        payload:s,
+        meta:res
+    }
+}
+
 TYPES.resetSearch = 'RESET_SEARCH';
 export const resetSearch = (): Action => {
     return {

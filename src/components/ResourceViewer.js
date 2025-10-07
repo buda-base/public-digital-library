@@ -11448,17 +11448,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
          
          const id = this.props.IRI.split(":")[1]
 
-         return (
-         [getGDPRconsent(this),   
-         <Helmet>
-            <link rel="canonical" href={"https://library.bdrc.io"+this.props.location.pathname} />
-            <link rel="alternate" hreflang="x-default" href={"https://library.bdrc.io"+this.props.location.pathname} />
-            {["en","bo"].map(l => <link rel="alternate" hreflang={l} href={"https://library.bdrc.io"+this.props.location.pathname+"?uilang="+l} />)}
-            <link rel="alternate" type="application/ld+json" href={"http://purl.bdrc.io/resource/"+id+".jsonld"} /> 
-            <link rel="alternate" type="application/rdf+xml" href={"http://purl.bdrc.io/resource/"+id+".rdf"} /> 
-            <link rel="alternate" type="text/turtle" href={"http://purl.bdrc.io/resource/"+id+".ttl"} />
-            <link rel="license" href="https://creativecommons.org/publicdomain/zero/1.0/" />
-            <script type="application/ld+json">{`
+         let jsonLdHeader = `
             {
                "@context": "https://schema.org",
                "@id": "http://purl.bdrc.io/resource/${id}",
@@ -11485,7 +11475,25 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                   "query-input": "required name=search_term_string"
                }
             }
-         `}</script>
+         `
+
+         if(!this.props.loading && !this.props.jsonLdHeader){
+            this.props.onGetJsonLdHeader(id)
+         } else if(this.props.jsonLdHeader != true) {
+            jsonLdHeader = this.props.jsonLdHeader
+         }
+
+         return (
+         [getGDPRconsent(this),   
+         <Helmet>
+            <link rel="canonical" href={"https://library.bdrc.io"+this.props.location.pathname} />
+            <link rel="alternate" hreflang="x-default" href={"https://library.bdrc.io"+this.props.location.pathname} />
+            {["en","bo"].map(l => <link rel="alternate" hreflang={l} href={"https://library.bdrc.io"+this.props.location.pathname+"?uilang="+l} />)}
+            <link rel="alternate" type="application/ld+json" href={"http://purl.bdrc.io/resource/"+id+".jsonld"} /> 
+            <link rel="alternate" type="application/rdf+xml" href={"http://purl.bdrc.io/resource/"+id+".rdf"} /> 
+            <link rel="alternate" type="text/turtle" href={"http://purl.bdrc.io/resource/"+id+".ttl"} />
+            <link rel="license" href="https://creativecommons.org/publicdomain/zero/1.0/" />
+            <script type="application/ld+json">{JSON.stringify(this.props.jsonLdHeader, null, 3)}</script>
          </Helmet>,
          top_right_menu(this, null, null, null, isMirador, this.props.location, infoPanelR, "resource"),
          // <Loader className="resource-viewer-loader" loaded={false}  options={{position:"fixed",left:"50%",top:"50%"}} />,

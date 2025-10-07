@@ -227,6 +227,8 @@ const mapStateToProps = (state,ownProps) => {
    let monlamResults = state.data.monlamResults
    let monlamKeyword = state.data.monlamKeyword
 
+   let jsonLdHeader = state.data.jsonLdHeader
+
    let props = { logged,config,resources, ontology, dictionary, keyword, language, datatype, assocResources, prefLang, failures, loading,
       imageAsset,firstImage,canvasID,collecManif,manifests,manifestError,pdfVolumes,createPdf,pdfUrl, manifestWpdf, monovolume,
       annoCollec,rightPanel,locale,langPreset,langIndex,langExt,imgData, nextChunk, nextPage, resourceManifest, imageVolumeManifests, imageLists, userEditPolicies, highlight,
@@ -244,7 +246,8 @@ const mapStateToProps = (state,ownProps) => {
       monlamResults, monlamKeyword,
       isNewUser, 
       advancedSearch, advKeyword,
-      snippets
+      snippets,
+      jsonLdHeader
    }
 
    if(config && !config.auth) props.auth = false
@@ -355,6 +358,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       },
       onAdvancedSearch(s:boolean) {
          dispatch(ui.advancedSearch(s))
+      },
+      onGetJsonLdHeader(rid:string) {
+         dispatch(data.getJsonLdHeader(rid))
       },
       // onResetEtext(id:string) {
       //    store.dispatch(data.gotNextPages(id,{ reset: true}));

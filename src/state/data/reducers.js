@@ -122,6 +122,22 @@ export const loadedDictionary = (state: DataState, action: Action) => {
 }
 reducers[actions.TYPES.loadedDictionary] = loadedDictionary;
 
+export const getJsonLdHeader = (state: DataState, action: Action) => {
+   return {
+      ...state,
+      jsonLdHeader: true
+   }
+}
+reducers[actions.TYPES.getJsonLdHeader] = getJsonLdHeader;
+
+export const gotJsonLdHeader = (state: DataState, action: Action) => {
+   return {
+      ...state,
+      jsonLdHeader: action.meta
+   }
+}
+reducers[actions.TYPES.gotJsonLdHeader] = gotJsonLdHeader;
+
 export const resetSearch = (state: DataState, action: Action) => {
    let failures = { ...state.failures }
    if(failures.search) delete failures.search

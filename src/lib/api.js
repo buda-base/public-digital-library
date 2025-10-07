@@ -1478,6 +1478,12 @@ export default class API {
         }
     }
 
+     async getJsonLdHeader(IRI: string): Promise<{} | null> {
+      let data =  JSON.parse(await this.getURLContents(this._jsonLdHeaderPath(IRI),false));
+      return data ;
+    }
+   
+
      async getReproductions(IRI: string): Promise<{} | null> {
 
        let data = [];
@@ -1606,6 +1612,10 @@ export default class API {
         return path;
     }
 
+    _jsonLdHeaderPath(rid:string): string {
+      const path = "//purl.bdrc.io/resource/" + rid + ".jsonld" ;  // tmp
+      return path;
+    }
     
      get _ontologyPath(): string {
         let path = ONTOLOGY_PATH;

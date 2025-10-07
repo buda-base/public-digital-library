@@ -4019,6 +4019,19 @@ export function* watchGetAnnotations() {
    );
 }
 
+export function* watchGetJsonLdHeader() {
+
+   yield takeLatest(
+      dataActions.TYPES.getJsonLdHeader,
+      (action) => getJsonLdHeader(action.payload)
+   );
+}
+
+async function getJsonLdHeader(rid:string) {
+   const data = await api.getJsonLdHeader(rid)
+   store.dispatch(dataActions.gotJsonLdHeader(rid,data))
+}
+
 /** Root **/
 
 export default function* rootSaga() {
@@ -4060,6 +4073,8 @@ export default function* rootSaga() {
       watchStartSearch(),
       watchGetStaticQueryAsResults(),
       watchGetMonlamResults(),
-      watchGetSubscribedCollections()
+      watchGetSubscribedCollections(),
+      watchGetJsonLdHeader()
+
    ])
 }
