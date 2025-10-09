@@ -1480,6 +1480,21 @@ export default class API {
 
      async getJsonLdHeader(IRI: string): Promise<{} | null> {
       let data =  JSON.parse(await this.getURLContents(this._jsonLdHeaderPath(IRI),false));
+      data = [ { 
+            ...data,            
+            "url": "https://library.bdrc.io/show/bdr:"+IRI,
+            "mainEntityOfPage": { "@id": "https://library.bdrc.io/show/bdr:"+IRI },
+            "isPartOf": { "@id": "https://library.bdrc.io/#catalog" }
+         },{
+           "@context" : "https://schema.org",
+           "@id" : "https://library.bdrc.io/show/bdr:"+IRI,
+           "@type" : "WebPage",
+           "url": "https://library.bdrc.io/show/bdr:"+IRI,
+           "license": "https://creativecommons.org/publicdomain/zero/1.0/",
+           "mainEntity": { "@id": "http://purl.bdrc.io/resource/"+IRI },
+           "isPartOf": { "@id": "https://library.bdrc.io/#website" }
+         }
+      ]
       return data ;
     }
    
@@ -1613,7 +1628,7 @@ export default class API {
     }
 
     _jsonLdHeaderPath(rid:string): string {
-      const path = "//purl.bdrc.io/resource/" + rid + ".jsonld" ;  // tmp
+      const path = "//ldspdi.bdrc.io/resource/" + rid + ".schema.jsonld" ;  // tmp
       return path;
     }
     

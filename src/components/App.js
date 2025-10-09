@@ -7709,6 +7709,58 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       if(corpo_lang.startsWith("bo")) corpo_lang = "bo"
       else if(corpo_lang.startsWith("zh")) corpo_lang = "zh-hans"
       
+      const homeJsonLdHeader = [
+         {
+           "@context": "https://schema.org",
+           "@type": "WebSite",
+           "@id": "https://library.bdrc.io/#website",
+           "url": "https://library.bdrc.io/",
+           "name": "Buddhist Digital Archives",
+           "alternateName": ["Buddhist Digital Resource Center Library", "BDRC Library"],
+           "inLanguage": ["bo", "en"],
+           "publisher": { "@id": "https://www.bdrc.io/#org" },
+           "potentialAction": {
+             "@type": "SearchAction",
+             "target": "https://library.bdrc.io/search?q={search_term_string}",
+             "query-input": "required name=search_term_string"
+           },
+           "image": "https://library.bdrc.io/icons/BUDA-small.svg",
+           "thumbnailUrl": "https://library.bdrc.io/icons/BUDA-small.svg"
+           // TODO: add a png version too
+         },{
+           "@context": "https://schema.org",
+           "@type": "ArchiveOrganization",
+           "@id": "https://www.bdrc.io/#org",
+           "name": "Buddhist Digital Resource Center",
+           "alternateName": ["BDRC", "ནང་བསྟན་དཔེ་ཚོགས་ལྟེ་གནས།", "佛教数字资源中心"],
+           "url": "https://www.bdrc.io/",
+           "logo": {
+             "@type": "ImageObject",
+             "url": "https://library.bdrc.io/logo.svg"
+           },
+           "sameAs": [
+             "https://www.wikidata.org/entity/Q30324366"
+           ],
+           "contactPoint": [{
+             "@type": "ContactPoint",
+             "contactType": "customer support",
+             "email": "help@bdrc.io",
+             "availableLanguage": ["en", "bo"]
+           }],
+           "foundingDate": "1999"
+         },
+         {
+           "@context": "https://schema.org",
+           "@type": "DataCatalog",
+           "@id": "https://library.bdrc.io/#catalog",
+           "name": "BDRC Catalog",
+           "url": "https://library.bdrc.io/",
+           "inLanguage": ["bo", "en"],
+           "publisher": { "@id": "https://www.bdrc.io/#org" },
+           "license": "https://creativecommons.org/publicdomain/mark/1.0/"
+         }
+       ]
+
       const ret = (<>
 { top_right_menu(this,null,null,null,null,this.props.location, undefined, infoPanelH?.length ? "home" : infoPanelR?.length ? "resource" : undefined) }
 <div className={(this.props.simple?"simpleSearch":"")+(" settings-"+this.state.collapse.settings)}>
@@ -8107,6 +8159,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                         <link rel="alternate" hreflang="x-default" href={"https://library.bdrc.io"} />
                         {["en","bo"].map(l => <link rel="alternate" hreflang={l} href={"https://library.bdrc.io/?uilang="+l} />)}
                         <link rel="license" href="https://creativecommons.org/publicdomain/zero/1.0/" />
+                        <script type="application/ld+json">{JSON.stringify(homeJsonLdHeader, null, 3)}</script>
                      </Helmet>
                      <List id="samples">
                         {/* { messageD } 
