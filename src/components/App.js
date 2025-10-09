@@ -7724,9 +7724,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
              "target": "https://library.bdrc.io/search?q={search_term_string}",
              "query-input": "required name=search_term_string"
            },
-           "image": "https://library.bdrc.io/icons/BUDA-small.svg",
-           "thumbnailUrl": "https://library.bdrc.io/icons/BUDA-small.svg"
-           // TODO: add a png version too
+           "image": ["https://library.bdrc.io/icons/BUDA-small.svg", "https://library.bdrc.io/android-chrome-192x192.png"],
+           "thumbnailUrl": ["https://library.bdrc.io/icons/BUDA-small.svg", "https://library.bdrc.io/android-chrome-192x192.png"]   
          },{
            "@context": "https://schema.org",
            "@type": "ArchiveOrganization",
