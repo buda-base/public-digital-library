@@ -422,7 +422,8 @@
       "added":"{{date}}",
       "inRootInstanceS": "in",
       "nHitET":"Match in etext",
-      "nHitET_plural":"Matches in etext"
+      "nHitET_plural":"Matches in etext",
+      "inSeries":"{{issueName}} in "
    },
    "map": {
       "touch": "Use two fingers to move the map",
