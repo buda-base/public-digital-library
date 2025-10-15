@@ -480,7 +480,7 @@ const CustomHit = ({ hit, routing, that, sortItems, recent, storage, advanced /*
     [hit]
   )
 
-  //console.log("hit:", hit, isMetaMatch, link, that.props.location?.search, sortBy, refinementList, uiState, publisher, storage)
+  //console.log("hit:", hit, isMetaMatch, link, that.props.location?.search, sortBy, refinementList, uiState, publisher, storage, seriesName, hit.seriesName_res, hit.issueName)
 
   const scrollToTop = () => {
     const top = document.querySelector("#root > .over-nav")
@@ -646,7 +646,9 @@ const CustomHit = ({ hit, routing, that, sortItems, recent, storage, advanced /*
         { 
           seriesName && <span class="names inRoot noNL">
             <span class="label">{I18n.t("types.serial")}<span class="colon">:</span></span>
-            <span>{hit.seriesName_res?.length > 0
+            <span>
+              {hit.issueName ? I18n.t("result.inSeries", { issueName: hit.issueName }) : ""}
+              {hit.seriesName_res?.length > 0
               ? hit.seriesName_res.map(a => <span data-id={a}>
                 {/* <Link to={"/show/bdr:"+a+backLink}> */}
                 {seriesName}

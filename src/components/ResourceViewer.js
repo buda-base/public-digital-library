@@ -4899,7 +4899,7 @@ class ResourceViewer extends Component<Props,State>
                   if(f == rdf+"type") continue;
                   else
                   {
-                     let what = this.props.resources[this.props.IRI][elem[f][0].value]
+                     let what = this.props.resources[this.props.IRI][elem[f]?.[0]?.value]
 
                      //loggergen.log("what",what,elem[f])
 
