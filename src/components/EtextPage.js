@@ -34,8 +34,6 @@ function EtextPage(props) {
   const highlight = useCallback((str) => HTMLparse(
     "<span>"
     + (str ?? "")
-    .replace(/((^|\n)(([^\[]*)|(.*\][^\[]+)))[<]/g,"$1&lt;")
-    .replace(/((^|\n)(([^\[]*)|(.*\][^\[]+)))[>]/g,"$1&gt;")
     .replace(/(['"][^'"]*rend-small[^'"]*['"])/g,"$1 style='vertical-align:"+(0.12+(state_etextSize ?? 1.5)*0.0075)+"em'")
     .replace(/\[([ ]*)((<[^>]+>)+)([ ]*)\]/g,"$1$2$4")
     //.replace(/[\]\[]*↤[\]\[]*/g,"</span><span>")
@@ -129,7 +127,7 @@ function EtextPage(props) {
         <img title="Open image+text view in Mirador" onClick={eve => { openMiradorAtPage(imageLinks[e.seq].id) }} style={{maxWidth:"100%"}} src={imageLinks[e.seq].image} />
       */}
       {
-        e.seq && showIm && Object.keys(imageLinks).sort().map(id => {
+        e.seq != undefined && showIm && Object.keys(imageLinks).sort().map(id => {
             /* // TODO: check if this still in use?
             if(!state_collapse["imageVolume-"+id] && imageLinks[id][e.seq]) 
             */
@@ -173,7 +171,7 @@ function EtextPage(props) {
               //else return <p class="copyrighted">copyrighted</p>
         })
       }
-      { e.seq && <div> 
+      { e.seq !== undefined && <div> 
         { !unpag && !preview && !imgErr && <span class="button" title={I18n.t("misc."+(!showIm?"show":"hide"))+" "+I18n.t("available scans for that page")} 
         onClick={(eve) => {
               /*
@@ -297,6 +295,13 @@ function EtextPage(props) {
                   if(!hasBo && lang?.startsWith("bo") && label.value.match(/[^0-9\n \[\]]/)) thatSetState({etextHasBo: label}) ; 
               }
               if(label) { label = label["value"]; pageVal += " "+label ; chunkVal = label }
+              
+              if(lang != "bo") { 
+                label = label
+                  .replace(/((^|\n)(([^\[]*)|(.*\][^\[]+)))[<]/g,"$1&lt;")
+                  .replace(/((^|\n)(([^\[]*)|(.*\][^\[]+)))[>]/g,"$1&gt;")
+              }
+              
               if(label && props_highlight && props_highlight.key /*&& state_noHilight != e.seq*/) { 
                   label = highlight(label,kw.map(k => k.replace(/(.)/g,"$1\\n?")),null,false,true,lang); 
                   current.push(label); }

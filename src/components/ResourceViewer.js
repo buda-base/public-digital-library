@@ -8435,7 +8435,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
          <span><span class="placeType">{text}</span></span>
       </h2>
    
-      const header = (l) => <div>
+      const header = (l,etextInfo) => <div>
          <span>
             <Link className="urilink" to={back} onClick={(e) => {
                this.props.onLoading("etext", true)
@@ -8447,14 +8447,36 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                return false
             }} ><ChevronLeft />{I18n.t("resource.goB")}</Link>
             {title(l)}
+            {etextInfo}
          </span>
       </div>
+
+      let etextInfo 
+      if(inst?.length > 0) {
+         etextInfo = this.getResourceElem(bdo+"etextInfo", shortUri(inst[0].value), this.props.assocResources)
+         if(etextInfo?.length) {
+            etextInfo = etextInfo[0]
+            if(etextInfo.value) {
+               etextInfo = etextInfo.value
+            }
+            etextInfo = <div class="resource" style={{padding:0}}>
+               <div class="data" style={{padding:"0 0 50px 0", margin:0}}>
+                  <div data-prop="bdo:etextInfo">
+                     <h3>{this.proplink(bdo+"etextInfo")}{I18n.t("punc.colon")}</h3>
+                     <div class="group">
+                        <h4>{etextInfo}</h4>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         }
+      }
 
       return (!this.props.disableInfiniteScroll && <>
          { monlamPop }
           {/* <GenericSwipeable onSwipedRight={() => this.setState({ collapse:{ ...this.state.collapse, etextNav:!this.state.collapse.etextNav }})}> */}
          <div class="etext-header">
-            {header(label)}
+            {header(label, etextInfo)}
          </div>
          <StickyElement className="etext-nav-parent">
             <div class="etext-header sticky">
