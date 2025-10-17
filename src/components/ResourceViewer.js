@@ -8435,9 +8435,9 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
          <span><span class="placeType">{text}</span></span>
       </h2>
    
-      const header = (l,etextInfo) => <div>
+      const header = (l,etextPropHeader) => <div>
          <span>
-            <Link className="urilink" to={back} onClick={(e) => {
+            <Link className="urilink backLink" to={back} onClick={(e) => {
                this.props.onLoading("etext", true)
                setTimeout(() => {
                   this.props.navigate(back)                  
@@ -8447,28 +8447,31 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                return false
             }} ><ChevronLeft />{I18n.t("resource.goB")}</Link>
             {title(l)}
-            {etextInfo}
+            {etextPropHeader}
          </span>
       </div>
 
-      let etextInfo 
+      let etextPropHeader = []
       if(inst?.length > 0) {
-         etextInfo = this.getResourceElem(bdo+"etextInfo", shortUri(inst[0].value), this.props.assocResources)
+         
+         let etextInfo = this.getResourceElem(bdo+"etextInfo", shortUri(inst[0].value), this.props.assocResources)
          if(etextInfo?.length) {
-            etextInfo = etextInfo[0]
-            if(etextInfo.value) {
-               etextInfo = etextInfo.value
-            }
-            etextInfo = <div class="resource" style={{padding:0}}>
-               <div class="data" style={{padding:"0 0 50px 0", margin:0}}>
-                  <div data-prop="bdo:etextInfo">
-                     <h3>{this.proplink(bdo+"etextInfo")}{I18n.t("punc.colon")}</h3>
-                     <div class="group">
-                        <h4>{etextInfo}</h4>
-                     </div>
+            etextPropHeader.push(this.renderGenericProp(etextInfo, bdo+"etextInfo", this.format("h4",bdo+"etextInfo","",false,"sub",etextInfo)))         
+         }
+
+         let inCollec = this.getResourceElem(bdo+"inCollection", shortUri(inst[0].value), this.props.assocResources)
+         if(inCollec?.length) {
+            etextPropHeader.push(this.renderGenericProp(inCollec, bdo+"inCollection", this.format("h4",bdo+"inCollection","",false,"sub",inCollec)))
+         }           
+
+         if(etextPropHeader?.length) {
+            etextPropHeader = (
+               <div class="resource" style={{padding:0}}>
+                  <div class="data" style={{padding:"0 0 30px 0", margin:0}}>
+                     {etextPropHeader}
                   </div>
                </div>
-            </div>
+            )
          }
       }
 
@@ -8476,7 +8479,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
          { monlamPop }
           {/* <GenericSwipeable onSwipedRight={() => this.setState({ collapse:{ ...this.state.collapse, etextNav:!this.state.collapse.etextNav }})}> */}
          <div class="etext-header">
-            {header(label, etextInfo)}
+            {header(label, etextPropHeader)}
          </div>
          <StickyElement className="etext-nav-parent">
             <div class="etext-header sticky">

@@ -501,6 +501,13 @@ const CustomHit = ({ hit, routing, that, sortItems, recent, storage, advanced /*
       )
   ), [hit.author, storage, authorName])
 
+  const inCollec = useMemo(() => {
+    let collec = []
+    if(hit.inRootInstance?.length) collec = collec.concat(hit.inRootInstance)
+    if(!isOtherVersions && hit.inCollection?.length) collec = collec.concat(hit.inCollection)
+    return collec
+  }, [hit, isOtherVersions])
+
   return (<div class={"result "+hit.type}>        
     <div class="main">
       <Link to={link} className="BG-link" onClick={scrollToTop}></Link>
@@ -581,9 +588,9 @@ const CustomHit = ({ hit, routing, that, sortItems, recent, storage, advanced /*
           </>
         */}
         { 
-          hit.inRootInstance?.length > 0 && <span class="names inRoot noNL">
+          inCollec?.length > 0 && <span class="names inRoot noNL">
             <span class="label">{I18n.t("result.inRootInstance"+(isOtherVersions?"S":""))}{!isOtherVersions?<span class="colon">:</span>:null}</span>
-            <span>{hit.inRootInstance?.map(a => <span data-id={a}>
+            <span>{inCollec?.map(a => <span data-id={a}>
               {/* <Link to={"/show/bdr:"+a+backLink+"&part=bdr:"+hit.objectID}> */}
               {
               getPropLabel(that, fullUri("bdr:"+a), true, true, "", 1, storage, true) ?? a

@@ -296,7 +296,8 @@ function EtextPage(props) {
               }
               if(label) { label = label["value"]; pageVal += " "+label ; chunkVal = label }
               
-              if(lang != "bo") { 
+              // fix for conflict with < ... > as transliteration of  ༺...༻
+              if(lang == "bo-x-ewts") { 
                 label = label
                   .replace(/((^|\n)(([^\[]*)|(.*\][^\[]+)))[<]/g,"$1&lt;")
                   .replace(/((^|\n)(([^\[]*)|(.*\][^\[]+)))[>]/g,"$1&gt;")

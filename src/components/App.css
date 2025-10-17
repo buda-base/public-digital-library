@@ -6239,7 +6239,7 @@ html[lang="bo"] .etext-nav-parent .etext-header.sticky > div  h2 .placeType {
 } 
 
 .resource .data .back-anchor .urilink ,  
-.etext-header .urilink {
+.etext-header .urilink.backLink {
    color:#d73449;
    position: absolute;
    right:calc(100% + 20px);
