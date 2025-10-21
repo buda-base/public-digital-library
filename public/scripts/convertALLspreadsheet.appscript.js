@@ -115,7 +115,7 @@ function processSheetData() {
   outline = outline.map(n => {
     if(n._type === "X") {
       const sub = outline.filter(m => n.hasPart?.includes(m.id)) ?? []
-      return ({ ...(sub[0]??{}), id:n.id, _type:n._type, _depth:n._depth, _subXid:sub?.[0]?.id, ...(sub.length > 1 ? {sub}:{}) })
+      return ({ ...(sub[0]??{}), id:sub?.[0]?.id/*n.id*/, _type:n._type, _depth:n._depth, _subXid:sub?.[0]?.id, ...(sub.length > 1 ? {sub}:{}) })
     }
     return n
   })
