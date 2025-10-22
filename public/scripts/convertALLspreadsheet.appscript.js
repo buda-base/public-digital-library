@@ -112,10 +112,21 @@ function processSheetData() {
   }
 
   // handle nodes with type X 
+
+  const hasXtype = {}
   outline = outline.map(n => {
     if(n._type === "X") {
       const sub = outline.filter(m => n.hasPart?.includes(m.id)) ?? []
-      return ({ ...(sub[0]??{}), id:sub?.[0]?.id/*n.id*/, _type:n._type, _depth:n._depth, _subXid:sub?.[0]?.id, ...(sub.length > 1 ? {sub}:{}) })
+      const patched = ({ ...(sub[0]??{}), id:sub?.[0]?.id, _type:n._type, _depth:n._depth, _oldXid:n.id, _subXid:sub?.[0]?.id, ...(sub.length > 1 ? {sub}:{}) })
+      hasXtype[n.id] = patched
+      return patched
+    }
+    return n
+  })
+  outline = outline.map(n => {
+    if(n.hasPart?.some(p => hasXtype[p])) {
+      if(!Array.isArray(n.hasPart)) n.hasPart = [ n.hasPart ]
+      n.hasPart = n.hasPart.map(p => hasXtype[p]?hasXtype[p]._subXid:p)
     }
     return n
   })
