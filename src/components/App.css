@@ -3915,7 +3915,7 @@ div:has(.resource.preview) .infoPanel.inRes { margin:0 !important; }
 
 .resource .data#outline .root + div .hasImg:hover img { opacity:1; }
 
-.resource .data#outline  .parTy + span { margin-right:5px;}
+.resource .data#outline  .parTy + span { margin-right:5px; overflow-wrap:break-word;}
 
 .resource .data#outline div .id { padding-right:6px; font-size:14px !important; font-weight:600 !important; }
 .resource .data#outline div .id::after,
@@ -6220,6 +6220,7 @@ html[lang="bo"] .etext-nav-parent .etext-header.sticky > div  h2 .placeType {
 .etext-header:not(.sticky) > div h2 {
    margin:0;
    font-size:32px;
+   overflow-wrap: break-word;
 }
 
 .etext-header-breadcrumbs {
