@@ -849,7 +849,8 @@ export default class API {
                      "@id":"bdr:"+text["@id"],
                      "type":"Etext",          
                      "seqNum":text.etextNumber,
-                     "eTextInVolume":"bdr:"+text["@id"],
+                     "eTextInInstance":IRI,
+                     "eTextInVolume":"bdr:"+vol["@id"],
                      "sliceStartChar":text.cstart,
                      "sliceEndChar":text.cend,
                      ...(prefLabel?{"skos:prefLabel":prefLabel}:{})
@@ -863,6 +864,8 @@ export default class API {
                   "volumeHasEtext":(vol.etexts ?? []).map(v => "bdr:"+v["@id"]),
                   "volumeNumber":vol.volumeNumber,
                   ...(prefLabel?{"skos:prefLabel":prefLabel}:{}),
+                  "volumeOf":IRI,
+                  sliceStartChar:0,
                   sliceEndChar
                })
             }
@@ -872,7 +875,7 @@ export default class API {
                "instanceHasVolume":(newData?.volumes ?? []).map(v => "bdr:"+v["@id"])
             })
 
-            console.log("etrefs:",data,newData,formattedData)
+            //console.log("etrefs:",data,newData,formattedData)
             
             //return data
             return {["@graph"]: formattedData } ;
