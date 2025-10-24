@@ -823,7 +823,59 @@ export default class API {
             let param = {"searchType":"etextrefs","R_RES":IRI,"L_NAME":"","LG_NAME":"", "I_LIM":"" }
             let data = await this.getQueryResults(url, IRI, param,"GET","application/jsonld");         
 
-            return data ;
+            const getPrefLabelFromKeys = (obj) => {
+               let prefLabel = ""
+               for(let key of Object.keys(obj)) {
+                  if(key.startsWith("prefLabel")) {
+                     if(!prefLabel) prefLabel = []
+                     prefLabel.push({
+                        "@value":obj[key],
+                        "@language":key.replace("prefLabel_","")
+                     })
+                  }
+               }
+               return prefLabel
+            }
+
+            url = config.endpoints[config.index]+"/etextrefs/"+IRI;
+            let response = await this._fetch( url )
+            let newData = await response.json()
+            let formattedData = [] 
+            for(let vol of newData?.volumes ?? []) {
+               let sliceEndChar = 0
+               for(let text of vol.etexts ?? []) {
+                  let prefLabel = getPrefLabelFromKeys(text) 
+                  formattedData.push({                     
+                     "@id":"bdr:"+text["@id"],
+                     "type":"Etext",          
+                     "seqNum":text.etextNumber,
+                     "eTextInVolume":"bdr:"+text["@id"],
+                     "sliceStartChar":text.cstart,
+                     "sliceEndChar":text.cend,
+                     ...(prefLabel?{"skos:prefLabel":prefLabel}:{})
+                  })
+                  if(sliceEndChar < text.cend) sliceEndChar = text.cend
+               }
+               let prefLabel = getPrefLabelFromKeys(vol) 
+               formattedData.push({
+                  "@id":"bdr:"+vol["@id"],
+                  "type":"EtextVolume",                  
+                  "volumeHasEtext":(vol.etexts ?? []).map(v => "bdr:"+v["@id"]),
+                  "volumeNumber":vol.volumeNumber,
+                  ...(prefLabel?{"skos:prefLabel":prefLabel}:{}),
+                  sliceEndChar
+               })
+            }
+            formattedData.push({
+               "@id":IRI,
+               "type":"EtextInstance",
+               "instanceHasVolume":(newData?.volumes ?? []).map(v => "bdr:"+v["@id"])
+            })
+
+            console.log("etrefs:",data,newData,formattedData)
+            
+            //return data
+            return {["@graph"]: formattedData } ;
          }
          catch(e)
          {

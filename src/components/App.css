@@ -6170,7 +6170,7 @@ html[lang="en"] .resource .data > [data-prop="bdo:creator"] h4[data-prop="bdo:ro
    padding-top:40px;
 }
 
-.etext-header:not(.sticky) h2[lang="bo-x-ewts"]:not(:last-child) {
+.etext-header:not(.sticky) h2:not([lang="bo"]):not(:last-child) {
    margin-bottom:30px;
 }
 
