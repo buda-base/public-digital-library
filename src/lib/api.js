@@ -823,7 +823,15 @@ export default class API {
             let param = {"searchType":"etextrefs","R_RES":IRI,"L_NAME":"","LG_NAME":"", "I_LIM":"" }
             let data = await this.getQueryResults(url, IRI, param,"GET","application/jsonld");         
 
-            const getPrefLabelFromKeys = (obj) => {
+            let elem_map = {}, elem_val, elem = data["@graph"] ?? data ?? {} ;
+            elem.map( e => elem_map[e["id"]] = e )
+            const mapElem = (i) => {
+               elem_val = elem_map[i]
+               if(elem_val) return elem_val
+               else return []
+            }   
+
+            const getPrefLabelFromKeysOrLegacyQuery = (obj) => {
                let prefLabel = ""
                for(let key of Object.keys(obj)) {
                   if(key.startsWith("prefLabel")) {
@@ -834,6 +842,10 @@ export default class API {
                      })
                   }
                }
+               if(!prefLabel) {
+                  let node = mapElem("bdr:"+obj["@id"])
+                  prefLabel = node["skos:prefLabel"]
+               }      
                return prefLabel
             }
 
@@ -844,8 +856,8 @@ export default class API {
             for(let vol of newData?.volumes ?? []) {
                let sliceEndChar = 0
                for(let text of vol.etexts ?? []) {
-                  let prefLabel = getPrefLabelFromKeys(text) 
-                  formattedData.push({                     
+                  let prefLabel = getPrefLabelFromKeysOrLegacyQuery(text) 
+                  formattedData.push({                      
                      "@id":"bdr:"+text["@id"],
                      "type":"Etext",          
                      "seqNum":text.etextNumber,
@@ -857,7 +869,7 @@ export default class API {
                   })
                   if(sliceEndChar < text.cend) sliceEndChar = text.cend
                }
-               let prefLabel = getPrefLabelFromKeys(vol) 
+               let prefLabel = getPrefLabelFromKeysOrLegacyQuery(vol) 
                formattedData.push({
                   "@id":"bdr:"+vol["@id"],
                   "type":"EtextVolume",                  
