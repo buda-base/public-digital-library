@@ -1208,6 +1208,8 @@ async function getPages(iri,next,meta) {
       spans = []
       pages = []
       for(const j of data) {
+         // skip chunk handling if no match in page anyways
+         if(!j.innerHits.etext_pages.hits.length) continue
          chunk = []
          for(const c of j.innerHits.chunks.hits) {
             if(!chunk.some(d => c.sourceAsMap.cstart === d.sourceAsMap.cstart)) chunk.push(c)
@@ -1339,7 +1341,7 @@ async function getPages(iri,next,meta) {
          
          if(hilight && hilight.lang === clang && value) value = value.replace(new RegExp("("+hilight.value+")","g"),"↦$1↤")
 
-         //loggergen.log("page?",e,e.cstart,e.cend,start)
+         //loggergen.log("page?",e,e.cstart,e.cend,value,chunk,chunks)
 
          if(e.sourceAsMap.cend <= chunk[chunk.length - 1].sourceAsMap.cend) 
             return {
@@ -1354,6 +1356,7 @@ async function getPages(iri,next,meta) {
                chunks
             }
          
+            
       }).filter(e => e) //+ " ("+e.seqNum+")" }))
       .filter(p => (meta?.firstC === undefined || p.start >= meta.firstC) && (meta?.lastC === undefined || p.start < meta?.lastC) )
 

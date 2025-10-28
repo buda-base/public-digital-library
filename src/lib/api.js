@@ -838,7 +838,7 @@ export default class API {
                      if(!prefLabel) prefLabel = []
                      prefLabel.push({
                         "@value":obj[key],
-                        "@language":key.replace("prefLabel_","")
+                        "@language":key.replace("prefLabel_","").replace(/_/g,"-")
                      })
                   }
                }
