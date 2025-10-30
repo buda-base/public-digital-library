@@ -108,7 +108,7 @@ function EtextPage(props) {
       thatSetState({ collapse:{...state_collapse, [id]:!showIm}}) 
       */
       setShowIm(!showIm)
-  }}>{I18n.t("resource.page",{num:e.seq})}{getPname(e)}</a>                                             
+  }}>{e.seq != "--" && I18n.t("resource.page",{num:e.seq})}{getPname(e)}</a>                                             
   </h5>
 
 
@@ -184,7 +184,7 @@ function EtextPage(props) {
         </span> }
         {/* { <h5><a title="Open image+text view in Mirador" onClick={eve => { openMiradorAtPage(imageLinks[e.seq].id) }}>p.{e.seq}</a></h5> } */}
         {   !unpag && !preview && !imgErr && imgElem }        
-            { (unpag || preview || imgErr ) && <h5><a class="unpag" title={I18n.t("resource.unpag")}>{I18n.t("resource.pageN",{num:e.seq})}{getPname(e)}</a></h5>}
+            { (unpag || preview || imgErr ) && <h5><a class="unpag" title={I18n.t("resource.unpag")}>{e.seq != "--" && I18n.t("resource.pageN",{num:e.seq})}{getPname(e)}</a></h5>}
             &nbsp;
             { !preview && Object.keys(imageLinks).sort().map(id => {
               //loggergen.log("id:",id,e)

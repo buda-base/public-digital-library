@@ -1202,9 +1202,32 @@ async function getPages(iri,next,meta) {
          hilight = { value:state.ui.highlight.key, lang:state.ui.highlight.lang }
       }
 
-
       data = await api.loadEtextChunks(iri,next);
       
+      // WIP: add fake pages if none available (#1078)
+      let hasPages = false;
+      for(const j of data) {
+         if(j.etext_pages?.length) { 
+            hasPages = true; 
+            break; 
+         }
+      }
+      if(!hasPages) {
+         data = data.map(e => ({ ...e, innerHits:{ 
+            ...e.innerHits, 
+            etext_pages:{ 
+               ...e.innerHits.chunks, 
+               hits:e.innerHits.chunks.hits.map((h,i) => ({
+                  ...h, sourceAsMap:{
+                     ...h.sourceAsMap,
+                     pnum:i+1,
+                     pname:"@"+h.sourceAsMap.cstart
+                  }
+               })) 
+            }
+         }}))        
+      } 
+
       spans = []
       pages = []
       for(const j of data) {
@@ -1348,7 +1371,7 @@ async function getPages(iri,next,meta) {
                //value:(chunk.substring(e.cstart - start,e.cend - start - 1)).replace(/[\n\r]+/,"\n").replace(/(^\n)|(\n$)/,""),
                value,
                language:lang,
-               seq:e.sourceAsMap.pnum,
+               seq:hasPages?e.sourceAsMap.pnum:"--",
                pname:e.sourceAsMap.pname,
                start:e.sourceAsMap.cstart,
                end:e.sourceAsMap.cend,
