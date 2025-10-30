@@ -10247,6 +10247,12 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
          else unpag = false
       }
 
+
+      if(!unpag) {
+         unpag = this.getResourceElem(tmp+"etextIsPaginated")
+         unpag = unpag?.[0]?.value === "false"
+      } 
+
       return unpag
    }
 

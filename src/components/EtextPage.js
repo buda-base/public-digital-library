@@ -31,14 +31,14 @@ function EtextPage(props) {
   } = props
 
 
-  const highlight = useCallback((str) => HTMLparse(
+  const highlight = useCallback((str, unpag) => HTMLparse(
     "<span>"
     + (str ?? "")
     .replace(/(['"][^'"]*rend-small[^'"]*['"])/g,"$1 style='vertical-align:"+(0.12+(state_etextSize ?? 1.5)*0.0075)+"em'")
     .replace(/\[([ ]*)((<[^>]+>)+)([ ]*)\]/g,"$1$2$4")
     //.replace(/[\]\[]*↤[\]\[]*/g,"</span><span>")
     //.replace(/[\]\[]*↦[\]\[]*/g,"</span><span class='highlight'>")
-    .replace(/[\n\r]+/g, "<br/>")
+    .replace(/([\n\r]+)/g, unpag?"$1":"<br/>")
     + "</span>"
   ), [state_etextSize])
 
@@ -121,7 +121,7 @@ function EtextPage(props) {
   let shift = 0
 
   return (
-  <div data-start={e.start} data-seq={e.seq} data-iri={props_IRI} class={"etextPage"+(props_manifestError&&!imageLinks?" manifest-error":"")+ (!e.value.match(/[\n\r]/)?" unformated":"") + (e.seq?" hasSeq":"")/*+(e.language === "bo"?" lang-bo":"")*/ }>
+  <div data-start={e.start} data-seq={e.seq} data-iri={props_IRI} class={"etextPage"+(props_manifestError&&!imageLinks?" manifest-error":"")+ (!e.value.match(/[\n\r]/)||unpag?" unformated":"") + (e.seq?" hasSeq":"")+(unpag?" unpaginated":"")/*+(e.language === "bo"?" lang-bo":"")*/ }>
       {/*                                          
         e.seq && state_collapse["image-"+props_IRI+"-"+e.seq] && imageLinks[e.seq] &&
         <img title="Open image+text view in Mirador" onClick={eve => { openMiradorAtPage(imageLinks[e.seq].id) }} style={{maxWidth:"100%"}} src={imageLinks[e.seq].image} />
@@ -304,13 +304,13 @@ function EtextPage(props) {
               }
               
               if(label && props_highlight && props_highlight.key /*&& state_noHilight != e.seq*/) { 
-                  label = highlight(label,kw.map(k => k.replace(/(.)/g,"$1\\n?")),null,false,true,lang); 
+                  label = highlight(label, unpag) //,kw.map(k => k.replace(/(.)/g,"$1\\n?")),null,false,true,lang); 
                   current.push(label); }
               else if(ETSBresults?.length) {
-                label = highlight(label,null,null,false,true,lang)
+                label = highlight(label,unpag) //,null,null,false,true,lang)
               }
               else if(label) { 
-                label = highlight(label)
+                label = highlight(label,unpag)
                 //label = [ label.startsWith("\n") ? <br/>:""].concat(label.split(/[\n\r]/))                           
                 //label = label.map( (e,i) =>(e?[e,i > 0 && i < label.length-1?<br/>:null]:[])).filter(e => e)
               } 

@@ -1207,7 +1207,7 @@ async function getPages(iri,next,meta) {
       // WIP: add fake pages if none available (#1078)
       let hasPages = false;
       for(const j of data) {
-         if(j.etext_pages?.length) { 
+         if(j.innerHits?.etext_pages?.hits?.length) { 
             hasPages = true; 
             break; 
          }
@@ -1221,7 +1221,8 @@ async function getPages(iri,next,meta) {
                   ...h, sourceAsMap:{
                      ...h.sourceAsMap,
                      pnum:i+1,
-                     pname:"@"+h.sourceAsMap.cstart
+                     pname:"@"+h.sourceAsMap.cstart,                     
+                     cend:h.sourceAsMap.cend-1,                     
                   }
                })) 
             }
@@ -1247,7 +1248,8 @@ async function getPages(iri,next,meta) {
             spans.push(c)
          }
       }
-      pages = _.orderBy(pages, (val) => val.sourceAsMap.cstart, ['asc'])            
+      pages = _.orderBy(pages, (val) => val.sourceAsMap.cstart, ['asc'])   
+      if(!hasPages && pages.length) pages[pages.length-1].sourceAsMap.cend ++
       //chunk = _.orderBy(chunk, [(val) => val.id,(val) => val.sourceAsMap.cstart], ['asc', 'asc'])
 
       let sortedSpans = []
@@ -1371,7 +1373,7 @@ async function getPages(iri,next,meta) {
                //value:(chunk.substring(e.cstart - start,e.cend - start - 1)).replace(/[\n\r]+/,"\n").replace(/(^\n)|(\n$)/,""),
                value,
                language:lang,
-               seq:hasPages?e.sourceAsMap.pnum:"--",
+               seq:hasPages?e.sourceAsMap.pnum:undefined,
                pname:e.sourceAsMap.pname,
                start:e.sourceAsMap.cstart,
                end:e.sourceAsMap.cend,

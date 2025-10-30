@@ -5264,6 +5264,9 @@ line-height:12px; }
    right:5px;
 }
 
+.unpaginated .overpage + .hover-menu { margin-top:0; }
+
+
 #popHoverM .resource .data h4[data-prop="bdo:role"] + h4 .hover-menu,
 #popHoverM .resource .data h4[data-prop="bdo:creator"] + .subgroup > h4.first,
 #popHoverM .resource .data h4[data-prop="bdo:creator"],
@@ -6000,6 +6003,7 @@ html[lang="en"] .resource .data > [data-prop="bdo:creator"] h4[data-prop="bdo:ro
 .resource.etext-view .etextPage .rend-italic { font-style:italic; }
 .resource.etext-view .etextPage .rend-small:not(#a) { font-size:85%;  line-height:inherit; /*opacity:0.8;*/}
 .resource.etext-view .etextPage .rend-unclear { color:#606060; }
+.resource.etext-view .etextPage .rend-head { font-weight:700; font-size: 135%; vertical-align: -13%; }
 
 
 .resource.etext-view .etextPage .overpage{ padding-top:5px;}
