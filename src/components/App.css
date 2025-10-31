@@ -5266,6 +5266,14 @@ line-height:12px; }
 
 .unpaginated .overpage + .hover-menu { margin-top:0; }
 
+.unpaginated.unformated .overpage .page { white-space: pre-line; }
+
+.unpaginated.unformated:not(:nth-of-type(2)) { border:none; }
+
+.unpaginated.unformated:not(#a),
+.unpaginated.unformated:not(#a) .overpage { padding:0; }
+
+.unpaginated.unformated:nth-of-type(2):not(#a) { padding-top:25px; }
 
 #popHoverM .resource .data h4[data-prop="bdo:role"] + h4 .hover-menu,
 #popHoverM .resource .data h4[data-prop="bdo:creator"] + .subgroup > h4.first,
