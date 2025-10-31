@@ -1231,10 +1231,10 @@ async function getPages(iri,next,meta) {
 
       spans = []
       pages = []
+      chunk = []
       for(const j of data) {
          // skip chunk handling if no match in page anyways
          if(!j.innerHits.etext_pages.hits.length) continue
-         chunk = []
          for(const c of j.innerHits.chunks.hits) {
             if(!chunk.some(d => c.sourceAsMap.cstart === d.sourceAsMap.cstart)) chunk.push(c)
          }
@@ -1250,7 +1250,7 @@ async function getPages(iri,next,meta) {
       }
       pages = _.orderBy(pages, (val) => val.sourceAsMap.cstart, ['asc'])   
       if(!hasPages && pages.length) pages[pages.length-1].sourceAsMap.cend ++
-      //chunk = _.orderBy(chunk, [(val) => val.id,(val) => val.sourceAsMap.cstart], ['asc', 'asc'])
+      chunk = _.orderBy(chunk, [(val) => val.id,(val) => val.sourceAsMap.cstart], ['asc', 'asc'])
 
       let sortedSpans = []
       if(spans.length) {
