@@ -7490,7 +7490,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
             //console.log("this:",this)
 
             return <EtextPage 
-                  { ...{ e, _i, unpag, imageLinks, kw, monlamPopup, preview:this.props.disableInfiniteScroll?true:false } } 
+                  { ...{ e, _i, unpag, unformatted:!this.props.disableInfiniteScroll && e.seq === undefined, imageLinks, kw, monlamPopup, preview:this.props.disableInfiniteScroll?true:false } } 
                   
                   state_showEtextImages={this.state.showEtextImages}
                   //state_monlam={this.state.monlam}
@@ -10247,11 +10247,12 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
          else unpag = false
       }
 
-
+      /*
       if(!unpag) {
          unpag = this.getResourceElem(tmp+"etextIsPaginated")
          unpag = unpag?.[0]?.value === "false"
       } 
+      */
 
       return unpag
    }

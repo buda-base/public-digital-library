@@ -22,7 +22,7 @@ const bdr   = "http://purl.bdrc.io/resource/";
 function EtextPage(props) {  
 
   let { 
-    e, _i, unpag, preview, imageLinks, kw, 
+    e, _i, unpag, unformatted, preview, imageLinks, kw, 
     state_showEtextImages, /*state_monlam,*/ state_monlam_hilight, /*state_noHilight,*/ state_enableDicoSearch, state_etextHasBo, state_etextSize, /*state_collapse,*/
     props_IRI, props_location, props_config, props_highlight, props_monlamResults, props_disableInfiniteScroll, props_manifestError, props_assocResources,
     thatGetLangLabel, thatSetState, 
@@ -37,8 +37,8 @@ function EtextPage(props) {
     .replace(/(['"][^'"]*rend-small[^'"]*['"])/g,"$1 style='vertical-align:"+(0.12+(state_etextSize ?? 1.5)*0.0075)+"em'")
     .replace(/\[([ ]*)((<[^>]+>)+)([ ]*)\]/g,"$1$2$4")
     //.replace(/[\]\[]*↤[\]\[]*/g,"</span><span>")
-    //.replace(/[\]\[]*↦[\]\[]*/g,"</span><span class='highlight'>")
-    .replace(/([\n\r]+)/g, unpag?"$1":"<br/>")
+    //.replace(/[\]\[]*↦[\]\[]*/g,"</span><span class='highlight'>")    
+    .replace(/([\n\r]+)/g, unformatted?"$1":"<br/>") 
     + "</span>"
   ), [state_etextSize])
 
@@ -121,7 +121,7 @@ function EtextPage(props) {
   let shift = 0
 
   return (
-  <div data-start={e.start} data-seq={e.seq} data-iri={props_IRI} class={"etextPage"+(props_manifestError&&!imageLinks?" manifest-error":"")+ (!e.value.match(/[\n\r]/)||unpag?" unformated":"") + (e.seq?" hasSeq":"")+(unpag?" unpaginated":"")/*+(e.language === "bo"?" lang-bo":"")*/ }>
+  <div data-start={e.start} data-seq={e.seq} data-iri={props_IRI} class={"etextPage"+(props_manifestError&&!imageLinks?" manifest-error":"")+ ((!e.value.match(/[\n\r]/)||unformatted)?" unformatted":"") + (e.seq?" hasSeq":"")+(unpag?" unpaginated":"")/*+(e.language === "bo"?" lang-bo":"")*/ }>
       {/*                                          
         e.seq && state_collapse["image-"+props_IRI+"-"+e.seq] && imageLinks[e.seq] &&
         <img title="Open image+text view in Mirador" onClick={eve => { openMiradorAtPage(imageLinks[e.seq].id) }} style={{maxWidth:"100%"}} src={imageLinks[e.seq].image} />

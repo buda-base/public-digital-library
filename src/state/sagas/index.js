@@ -1204,7 +1204,7 @@ async function getPages(iri,next,meta) {
 
       data = await api.loadEtextChunks(iri,next);
       
-      // WIP: add fake pages if none available (#1078)
+      // DONE: add fake pages if none available (#1078)
       let hasPages = false;
       for(const j of data) {
          if(j.innerHits?.etext_pages?.hits?.length) { 
@@ -1268,7 +1268,7 @@ async function getPages(iri,next,meta) {
          //}
       }
 
-      //loggergen.log("pages:",iri,pages,chunk,sortedSpans)
+      //loggergen.log("pages:",iri,pages,chunk,sortedSpans,hasPages)
 
       let lang //= chunk[0].chunkContents["@language"]
 

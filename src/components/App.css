@@ -5264,16 +5264,16 @@ line-height:12px; }
    right:5px;
 }
 
-.unpaginated .overpage + .hover-menu { margin-top:0; }
+:not(.preview-etext) > div > .etext-view .unformatted .overpage + .hover-menu { margin-top:0; }
 
-.unpaginated.unformated .overpage .page { white-space: pre-line; }
+:not(.preview-etext) > div > .etext-view .unformatted .overpage .page { white-space: pre-line; }
 
-.unpaginated.unformated:not(:nth-of-type(2)) { border:none; }
+:not(.preview-etext) > div > .etext-view .unformatted:not(:nth-of-type(2)) { border:none; }
 
-.unpaginated.unformated:not(#a),
-.unpaginated.unformated:not(#a) .overpage { padding:0; }
+:not(.preview-etext) > div > .etext-view .unformatted:not(#a),
+:not(.preview-etext) > div > .etext-view .unformatted:not(#a) .overpage { padding:0; }
 
-.unpaginated.unformated:nth-of-type(2):not(#a) { padding-top:25px; }
+:not(.preview-etext) > div > .etext-view .unformatted:nth-of-type(2):not(#a) { padding-top:25px; }
 
 #popHoverM .resource .data h4[data-prop="bdo:role"] + h4 .hover-menu,
 #popHoverM .resource .data h4[data-prop="bdo:creator"] + .subgroup > h4.first,
@@ -6043,8 +6043,8 @@ html[lang="en"] .resource .data > [data-prop="bdo:creator"] h4[data-prop="bdo:ro
 
 .preview-etext .resource.etext-view .data #etext-scroll > .etextPage:first-child { padding-top:0; }
 
-.preview-etext .resource.etext-view .data #etext-scroll > .etextPage.unformated { padding:0;padding-top:30px; }
-.preview-etext .resource.etext-view .data #etext-scroll > .etextPage.unformated:first-child { padding-top:0; }
+.preview-etext .resource.etext-view .data #etext-scroll > .etextPage.unformatted { padding:0;padding-top:30px; }
+.preview-etext .resource.etext-view .data #etext-scroll > .etextPage.unformatted:first-child { padding-top:0; }
 
 
 .resource .data #etext-scroll,
@@ -6065,8 +6065,8 @@ html[lang="en"] .resource .data > [data-prop="bdo:creator"] h4[data-prop="bdo:ro
 
 .etextPage:not(.unformatted).hasSeq { overflow: hidden ;}
 
-.etextPage.unformated h4 .hover-menu { top:-24px; right:0px; }
-.etextPage:not(.unformated) h4 .hover-menu { top:-5px; right:0px; }
+.etextPage.unformatted h4 .hover-menu { top:-24px; right:0px; }
+.etextPage:not(.unformatted) h4 .hover-menu { top:-5px; right:0px; }
 
 .etextPage { border-top:1px solid #999; padding-top:25px; line-height:24px;  }
 .etextPage h4.page  { display:inline-block; padding-left:0; margin-bottom:0;  
@@ -6079,11 +6079,11 @@ html[lang="en"] .resource .data > [data-prop="bdo:creator"] h4[data-prop="bdo:ro
 .etextPage h4.page  [lang=bo] { font-size:1.4em; line-height:1.4em; }
 
 /* .etextPage h4.page:last-child { padding-bottom:25px; } */
-.etextPage:not(.unformated) .overpage { overflow-x: auto;}
-.etextPage.unformated.hasSeq,
-.etextPage:not(.unformated) .overpage { padding-bottom:25px}
-.etextPage.unformated:not(.hasSeq)  { padding-bottom:25px; }
-.etextPage.unformated h4.page { white-space: normal;  }
+.etextPage:not(.unformatted) .overpage { overflow-x: auto;}
+.etextPage.unformatted.hasSeq,
+.etextPage:not(.unformatted) .overpage { padding-bottom:25px}
+.etextPage.unformatted:not(.hasSeq)  { padding-bottom:25px; }
+.etextPage.unformatted h4.page { white-space: normal;  }
 .etextPage h5 { margin-top:0; color:#777; display:inline-block; margin-bottom:10px;}
 
 .preview-etext .etext-data .etextPage h5 { display:none; margin-bottom:12px;}
