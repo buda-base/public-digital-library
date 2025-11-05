@@ -7168,7 +7168,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
             let imageList = this.props.imageLists, iiifpres = "//iiifpres.bdrc.io", iiif = "//iiif.bdrc.io"            
             if(imageList) imageList = imageList[id]
             
-            loggergen.log("k:",id,manif,imageList)
+            //loggergen.log("k:",id,manif,imageList)
 
             if(!this.props.previewEtext && this.props.resources && !this.props.resources[id]) this.props.onGetResource(id);
 

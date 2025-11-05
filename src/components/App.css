@@ -5268,10 +5268,10 @@ line-height:12px; }
 
 :not(.preview-etext) > div > .etext-view .unformatted .overpage .page { white-space: pre-line; }
 
-:not(.preview-etext) > div > .etext-view .unformatted:not(:nth-of-type(2)) { border:none; }
+:not(.preview-etext) > div > .etext-view .unformatted:not(.hasSeq):not(:nth-of-type(2)) { border:none; }
 
-:not(.preview-etext) > div > .etext-view .unformatted:not(#a),
-:not(.preview-etext) > div > .etext-view .unformatted:not(#a) .overpage { padding:0; }
+:not(.preview-etext) > div > .etext-view .unformatted:not(.hasSeq),
+:not(.preview-etext) > div > .etext-view .unformatted:not(.hasSeq) .overpage { padding:0; }
 
 :not(.preview-etext) > div > .etext-view .unformatted:nth-of-type(2):not(#a) { padding-top:25px; }
 
