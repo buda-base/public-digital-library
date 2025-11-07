@@ -1107,8 +1107,8 @@ export const gotNextPages = (state: DataState, action: Action) => {
          res = state.resources[action.payload]["http://purl.bdrc.io/resource/"+action.payload.replace(/bdr:/,"")]
 
          if(!res["http://purl.bdrc.io/ontology/core/eTextHasPage"]) res["http://purl.bdrc.io/ontology/core/eTextHasPage"] = []
-          if(!action.meta.prev) res["http://purl.bdrc.io/ontology/core/eTextHasPage"] = res["http://purl.bdrc.io/ontology/core/eTextHasPage"].concat(action.meta.data)
-          else  res["http://purl.bdrc.io/ontology/core/eTextHasPage"] = action.meta.data.concat(res["http://purl.bdrc.io/ontology/core/eTextHasPage"])
+            if(!action.meta.prev) res["http://purl.bdrc.io/ontology/core/eTextHasPage"] = res["http://purl.bdrc.io/ontology/core/eTextHasPage"].concat(action.meta.data?.filter(p => !res["http://purl.bdrc.io/ontology/core/eTextHasPage"].some(q => q.start === p.start)))
+            else  res["http://purl.bdrc.io/ontology/core/eTextHasPage"] = action.meta.data?.filter(p => !res["http://purl.bdrc.io/ontology/core/eTextHasPage"].some(q => q.start === p.start)).concat(res["http://purl.bdrc.io/ontology/core/eTextHasPage"])
 
       }
 

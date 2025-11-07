@@ -1213,20 +1213,26 @@ async function getPages(iri,next,meta) {
          }
       }
       if(!hasPages) {
-         data = data.map(e => ({ ...e, innerHits:{ 
-            ...e.innerHits, 
-            etext_pages:{ 
-               ...e.innerHits.chunks, 
-               hits:e.innerHits.chunks.hits.map((h,i) => ({
-                  ...h, sourceAsMap:{
-                     ...h.sourceAsMap,
-                     pnum:i+1,
-                     pname:"@"+h.sourceAsMap.cstart,                     
-                     cend:h.sourceAsMap.cend-1,                     
-                  }
-               })) 
-            }
-         }}))        
+         let global_i = 0
+         data = data.map(e => { 
+            return ({ ...e, innerHits:{ 
+               ...e.innerHits, 
+               etext_pages:{ 
+                  ...e.innerHits.chunks, 
+                  hits:e.innerHits.chunks.hits.map((h,i) => {
+                     const page = ({
+                        ...h, sourceAsMap:{
+                           ...h.sourceAsMap,
+                           pnum:global_i++,
+                           pname:"@"+h.sourceAsMap.cstart,                     
+                           cend:h.sourceAsMap.cend-1,                     
+                        }
+                     })
+                     return page
+                  }) 
+               }
+            }})
+         })        
       } 
 
       spans = []
