@@ -5272,6 +5272,12 @@ line-height:12px; }
 
 :not(.preview-etext) > div > .etext-view .unformatted:not(.hasSeq) .overpage + .hover-menu { opacity:0 !important; pointer-events: none !important; }
 
+:not(.preview-etext) #etext-scroll.has-no-pages:not(#a) { display: inline !important; }
+
+:not(.preview-etext) #etext-scroll.has-no-pages:not(#a) .etextPage { border:none; }
+
+:not(.preview-etext) .resource.etext-view #etext-scroll > :first-child { border-bottom:1px solid #999; margin-bottom:25px; }
+
 :not(.preview-etext) > div > .etext-view:not(#a) .unformatted:not(.hasSeq):not(#a),
 :not(.preview-etext) > div > .etext-view .unformatted:not(.hasSeq) :not(:empty) { display: inline; }
 

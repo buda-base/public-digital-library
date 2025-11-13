@@ -7460,10 +7460,13 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
       const onGetContext = this.props.onGetContext      
       const ETSBresults = this.state.ETSBresults 
 
+      const hasNoPages = this.getResourceElem(tmp+"hasPages")?.[0]?.value === "false";
+
       return (
          
          [<InfiniteScroll
             id="etext-scroll"
+            className={hasNoPages && "has-no-pages"}
             hasMore={true}
             pageStart={0}
             loadMore={(e) => { 
