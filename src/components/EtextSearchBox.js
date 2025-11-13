@@ -115,6 +115,7 @@ export function EtextSearchBox(props) {
     setLoading(true)
 
     let res = await getEtextSearchRequest({ query: useQuery ?? query, lang: "bo", [params[ETtype]]: scopeId.split(":")[1] })
+    res = res.map(r => r.startPageCstart != null ? r : { ...r, startPageCstart: r.highlightStart - 2500 })
     let last
     res = _.orderBy(res, ["volumeNumber","startPageCstart"], ["asc","asc"]).filter(r => {
       if(last && last.volumeId === r.volumeId && last.highlightStart === r.highlightStart && last.highlightEnd === r.highlightEnd) {

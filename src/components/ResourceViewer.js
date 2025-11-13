@@ -7460,7 +7460,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
       const onGetContext = this.props.onGetContext      
       const ETSBresults = this.state.ETSBresults 
 
-      const hasNoPages = this.getResourceElem(tmp+"hasPages")?.[0]?.value === "false";
+      const hasNoPages = this.props.disableInfiniteScroll && this.getResourceElem(tmp+"hasPages")?.[0]?.value === "false";
 
       return (
          
