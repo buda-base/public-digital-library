@@ -7460,7 +7460,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
       const onGetContext = this.props.onGetContext      
       const ETSBresults = this.state.ETSBresults 
 
-      const hasNoPages = this.props.disableInfiniteScroll && this.getResourceElem(tmp+"hasPages")?.[0]?.value === "false";
+      const hasNoPages = !this.props.disableInfiniteScroll && this.getResourceElem(tmp+"hasPages")?.[0]?.value === "false";
 
       return (
          
@@ -7513,7 +7513,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                   props_manifestError={this.props.manifestError} 
                   props_assocResources={this.props.assocResources}
 
-                  { ...{ thatGetLangLabel, thatSetState, uriformat, hoverMenu, onGetContext, ETSBresults:ETSBresults?.filter(r => "bdr:"+r.volumeId === this.props.that?.state?.currentText && r.startPnum <= e.seq && e.seq <= r.endPnum && e.start - 5 <= r.startPageCstart && r.startPageCstart <= e.start + 5) } }
+                  { ...{ thatGetLangLabel, thatSetState, uriformat, hoverMenu, onGetContext, ETSBresults:ETSBresults?.filter(r => "bdr:"+r.volumeId === this.props.that?.state?.currentText && (e.seq === undefined || r.startPnum <= e.seq && e.seq <= r.endPnum) && e.start - 5 <= r.startPageCstart && r.startPageCstart <= e.start + 5) } }
 
                />
          })  }
