@@ -7281,7 +7281,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
          let parent = selection.anchorNode?.parentElement
          if(!parent?.getAttribute("lang")) parent = parent?.parentElement
 
-         //loggergen.log("parent:",langElem,ev.currentTarget,parent,selection.toString(),selection,parent.children,selection.anchorNode)
+         loggergen.log("parent:",langElem,window.getComputedStyle(parent).getPropertyValue("display"),ev.currentTarget,parent,selection.toString(),selection,parent.children,selection.anchorNode)
          
          const getAbsOffset = (node, nodeOffset) => {
 
@@ -7402,27 +7402,51 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
          let cursor_start = chunk.indexOf(selection.toString())
          if(cursor_start < 0) cursor_start = start - startOff 
          let cursor_end =  cursor_start + selection.toString().length
+         
+         function getTextNodeRects(textNode) {
+            const range = document.createRange();
+            range.selectNodeContents(textNode);
+            
+            // getClientRects() retourne un rect pour chaque ligne
+            const rects = range.getClientRects();
+            
+            return Array.from(rects);
+         }
+
+         let firstTextNode
 
          const updateHilightCoords = (target = this.state.monlam?.target, _range = this.state.monlam?.range) => {
+  
+            let inlineShift
+            if(window.getComputedStyle(target).getPropertyValue("display") === "inline") {
+               try {
+                  firstTextNode = selection.getRangeAt(0).startContainer;
+               } catch(err) {
+                  firstTextNode = this.state.monlam?.firstTextNode
+               }
+               const allRects = getTextNodeRects(firstTextNode).filter(r => r.width > 0);
+               const firstLineRect = allRects[0];
+               inlineShift = firstLineRect.left
+            }
 
             const { top, left } = target.getBoundingClientRect()
             let coords = Array.from(_range.getClientRects()).map(r => ({ 
                ...r, 
                px:{
                   top:(r.top - top)+"px",
-                  left:(r.left - left)+"px",
+                  left:(r.left - (inlineShift ?? left))+"px",
                   height:r.height+"px",
                   width:r.width+"px"
                }
             }))
+
+            loggergen.log("coords:",target,left,_range.getClientRects(),coords,ev.currentTarget,start,end,startOff,endOff,pageVal.substring(startOff, endOff))
          
             let ref = React.createRef()
             coords = coords.map( (c,i) => { 
                if(i > 0) ref = null
                return <div {...ref?{ref}:{}} style={{...c.px, scrollMargin:"50vh 50px 50vh 50px", pointerEvents:"none", position:"absolute", background: "rgba(252,224,141,0.65)", display:"block", zIndex: 1, mixBlendMode: "darken" }}></div>
             })
-
-            loggergen.log("coords:",coords,ev.currentTarget,start,end,startOff,endOff,pageVal.substring(startOff, endOff))
             
             return { hilight:coords, ref, popupCoords:Array.from(_range.getClientRects()) }
          }
@@ -7432,11 +7456,14 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
             range = range.cloneRange();
          }
 
+         const nodeCoords = updateHilightCoords(ev.currentTarget, selection.getRangeAt(0))
+
          const data = { 
             target: ev.currentTarget,
             seq,
             range,
-            ...updateHilightCoords(ev.currentTarget, selection.getRangeAt(0)),
+            firstTextNode,
+            ...nodeCoords,
             updateHilightCoords,
             api: {chunk, lang: langElem, cursor_start, cursor_end },
          }
@@ -7488,7 +7515,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
          {/* {this.hasSub(k)?this.subProps(k):tags.map((e)=> [e," "] )} */}
          { elem.filter((e,i) => !this.props.disableInfiniteScroll || i > 0 || !e.chunks?.some(c => c["@value"].includes("Text Scan Input Form" /*" - Title Page"*/))).filter((e,i) => !this.props.disableInfiniteScroll || i < 2).map( (e,_i) => { 
             
-            const state_monlam_hilight = e.seq == this.state.monlam?.seq && this.state.enableDicoSearch ? this.state.monlam?.hilight : null
+            const state_monlam_hilight = (e.seq ?? e.start) == this.state.monlam?.seq && this.state.enableDicoSearch ? this.state.monlam?.hilight : null
 
             //console.log("this:",this)
 

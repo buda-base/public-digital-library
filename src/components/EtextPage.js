@@ -225,8 +225,8 @@ function EtextPage(props) {
               onMouseEnter={ev => { if(!state_monlam && state_enableDicoSearch && !props_disableInfiniteScroll && state_noHilight != e.seq) thatSetState({ noHilight: e.seq})}} 
               onMouseDown={ev => { if((!state_monlam || state_monlam.seq != e.seq) && state_enableDicoSearch && !props_disableInfiniteScroll && state_noHilight != e.seq) thatSetState({ noHilight: e.seq})}}               
               */
-              onMouseUp={(ev) => monlamPopup(ev, e.seq, pageVal)} 
-              onCopy={(ev) => monlamPopup(ev, e.seq, pageVal)} >
+              onMouseUp={(ev) => monlamPopup(ev, e.seq ?? e.start, pageVal)} 
+              onCopy={(ev) => monlamPopup(ev, e.seq ?? e.start, pageVal)} >
             { state_monlam_hilight}
             {!e.value.match(/[\n\r]/) && !e.seq ?[<span class="startChar"><span>[&nbsp;<Link to={"/show/"+props_IRI+"?startChar="+e.start+"#open-viewer"}>@{e.start}</Link>&nbsp;]</span></span>]:null}{(e.chunks?.length?e.chunks:[e.value]).map(f => {
               let h = f["@value"] ?? f
