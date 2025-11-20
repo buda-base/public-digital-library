@@ -929,9 +929,9 @@ header .SRHloader {
   padding:0;
 }
 
-.etext-header > div  h2 .newT:not(#a),
-.etext-nav-parent .etext-header.sticky > div  h2 .newT:not(#a),
-.resource h2 .newT {
+.etext-header > div  h1 .newT:not(#a),
+.etext-nav-parent .etext-header.sticky > div  h1 .newT:not(#a),
+.resource h1 .newT {
   font-family:Noto Sans;
   display:block;
   font-size:14px;
@@ -941,33 +941,33 @@ header .SRHloader {
 }
 
 :not(#a) #back .newT,
-.resource .on.intro + h2 .newT,
-.resource #outline h2 .newT {
+.resource .on.intro + h1 .newT,
+.resource #outline h1 .newT {
   display:none;
 }
 
-.etext-header:not(.sticky) > div h2:not([title*=" "]) {
+.etext-header:not(.sticky) > div h1:not([title*=" "]) {
   word-break: break-all;
 }
 
-.etext-header > div  h2 .newT > span,
-.etext-nav-parent .etext-header.sticky > div  h2 .newT > span,
-.resource h2 .newT > span {
+.etext-header > div  h1 .newT > span,
+.etext-nav-parent .etext-header.sticky > div  h1 .newT > span,
+.resource h1 .newT > span {
   background:#dddddd;
   padding:1px 4px;  
 }
 
-.etext-header > div  h2 .newT:not(#a) {
+.etext-header > div  h1 .newT:not(#a) {
   margin-top: 0;
 }
 
-.etext-nav-parent .etext-header.sticky > div  h2 .newT:not(#a) {
+.etext-nav-parent .etext-header.sticky > div  h1 .newT:not(#a) {
   font-size:12px;
   margin-top: 0;
   font-weight: 500;
 }
 
-.etext-nav-parent .etext-header.sticky > div  h2 .placeType {
+.etext-nav-parent .etext-header.sticky > div  h1 .placeType {
   display: block;
   max-width: 100%;
   white-space: nowrap;
@@ -1028,18 +1028,28 @@ header .SRHloader {
   text-transform: uppercase;
 }
 
-.resource h2 + .date {
+.etext-header.sticky h1,
+.resource h1 {
+  margin:0;
+}
+
+
+.resource h1 + .date {
   color:#777;
   font-weight:500;
   text-transform: capitalize;
 }
 
-.resource h2 + .date > span {
+.resource h1 + .date > span {
   display: block;
 }
 
-.resource h2 + .date > span::first-letter {
+.resource h1 + .date > span::first-letter {
   text-transform: uppercase;
+}
+
+.resource h1 {
+  color: #343434;
 }
 
 .content .main-content header h1 {
@@ -2408,13 +2418,13 @@ header .SRHloader {
     bottom:60px;
   }
 
-  #root .resource .data h2.on ~ .date, 
-  #root .resource .data h2.on {
+  #root .resource .data h1.on ~ .date, 
+  #root .resource .data h1.on {
     padding-left:0;
   }
 
-  #root .resource .data h2.on span.newT span.space-fix:not(#a):not(#b):not(#c), 
-  #root .resource .data h2.on span.newT span.space-fix:not(#a):not(#b):not(#c) span {
+  #root .resource .data h1.on span.newT span.space-fix:not(#a):not(#b):not(#c), 
+  #root .resource .data h1.on span.newT span.space-fix:not(#a):not(#b):not(#c) span {
     font-size:14px;
   }
 

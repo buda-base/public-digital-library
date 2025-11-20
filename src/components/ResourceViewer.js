@@ -5441,8 +5441,8 @@ class ResourceViewer extends Component<Props,State>
 
       //loggergen.log("H2?",title, rootC, other)
 
-      if(other) return <h2 title={title.value} lang={title.lang || this.props.locale}><Link {...this.props.preview?{ target:"_blank" }:{}}   {... rootC?{onClick:rootC}:{onClick:() => setTimeout(()=>window.scrollTo(0,0),10)}}  to={"/show/"+shortUri(other)+this.getTabs(T_,other)}>{_T}<span>{_befo}{title.value}</span>{this.tooltip(title.lang)}</Link></h2>
-      else return <><h2 title={title.value} lang={title.lang || this.props.locale} class="on">{_T}<span>{_befo}<span class="placeType">{title.value}</span></span>{this.tooltip(title.lang)}</h2>{ title.placeT?.length && <span class="date">{title.placeT.map(t => this.fullname(t.value, false, false, true)).map((s,i) => i > 0 ? ([I18n.t("punc.comma"), s]):s)}</span>}</>
+      if(other) return <h1 title={title.value} lang={title.lang || this.props.locale}><Link {...this.props.preview?{ target:"_blank" }:{}}   {... rootC?{onClick:rootC}:{onClick:() => setTimeout(()=>window.scrollTo(0,0),10)}}  to={"/show/"+shortUri(other)+this.getTabs(T_,other)}>{_T}<span>{_befo}{title.value}</span>{this.tooltip(title.lang)}</Link></h1>
+      else return <><h1 title={title.value} lang={title.lang || this.props.locale} class="on">{_T}<span>{_befo}<span class="placeType">{title.value}</span></span>{this.tooltip(title.lang)}</h1>{ title.placeT?.length && <span class="date">{title.placeT.map(t => this.fullname(t.value, false, false, true)).map((s,i) => i > 0 ? ([I18n.t("punc.comma"), s]):s)}</span>}</>
    }
 
    setTitle = (kZprop,_T,other,rootC,noSame:boolean=false) => {
@@ -5473,8 +5473,8 @@ class ResourceViewer extends Component<Props,State>
       }
       else {
           let loaded = this.props.resources && this.props.resources[other?other:this.props.IRI] 
-          if(other) title = <h2 lang={this.props.locale}><Link {...this.props.preview?{ target:"_blank" }:{}}  onClick={() => setTimeout(()=>window.scrollTo(0,0),10)} to={"/show/"+shortUri(other)+this.getTabs(T_,other)}>{_T}<span>{loaded && (T_ === "Work" || T_ === "Instance")?I18n.t("resource.noT"):shortUri(other?other:this.props.IRI)}</span></Link></h2>
-          else  title = <h2 class="on" lang={this.props.locale}>{_T}<span>{loaded && (T_ === "Work" || T_ === "Instance")?I18n.t("resource.noT"):shortUri(other?other:this.props.IRI)}</span></h2>
+          if(other) title = <h1 lang={this.props.locale}><Link {...this.props.preview?{ target:"_blank" }:{}}  onClick={() => setTimeout(()=>window.scrollTo(0,0),10)} to={"/show/"+shortUri(other)+this.getTabs(T_,other)}>{_T}<span>{loaded && (T_ === "Work" || T_ === "Instance")?I18n.t("resource.noT"):shortUri(other?other:this.props.IRI)}</span></Link></h1>
+          else  title = <h1 class="on" lang={this.props.locale}>{_T}<span>{loaded && (T_ === "Work" || T_ === "Instance")?I18n.t("resource.noT"):shortUri(other?other:this.props.IRI)}</span></h1>
       }
 
       let resTitle
@@ -8451,7 +8451,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
             
       if(!this.props.that.props.previewEtext) document.title = label.value + " - " + (this.props.config?.khmerServer?"Khmer Manuscript Heritage Project":"Buddhist Digital Archives")
 
-      const title =({value: text, lang}) => <h2 title={text} lang={lang} class="on">
+      const title =({value: text, lang}) => <h1 title={text} lang={lang} class="on">
          <span class={"newT etext "+ETtype}>
             <span class="space-fix">
                <span>{ETtype ? I18n.t("types.ET."+ETtype) : I18n.t("types.etext")}</span>
@@ -8463,7 +8463,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
             </div>
          </span>
          <span><span class="placeType">{text}</span></span>
-      </h2>
+      </h1>
    
       const header = (l,etextPropHeader) => <div>
          <span>
@@ -10374,14 +10374,14 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
             title = getLangLabel(this,"",titleRaw.label)
             ilabel = getLangLabel(this,"",resTitle?.value ? [ resTitle ] : titlElem)
             if(ilabel?.value != title.value) versionTitle = ilabel
-            title = <h2 class="on" title={title.value} lang={title.lang} >
+            title = <h1 class="on" title={title.value} lang={title.lang} >
                <span class={"newT "+_T.toLowerCase()}>
                   <span class="space-fix">
                      <span>{I18n.t("types."+_T.toLowerCase())}</span>
                   </span>
                </span>
                <span>{title.value}</span>
-            </h2> 
+            </h1> 
          } else if(this.props.outlineOnly && titlElem?.length) {
             ilabel = getLangLabel(this,"",titlElem)
          }
@@ -11596,28 +11596,28 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                <div class="index">                  
                   {/* { this.renderBrowseAssoRes() } */}
                   {/* { this.renderPdfLink(pdfLink,monoVol,fairUse) } */}
-                  <div class="title">
+                  {/* <div class="title">
                   { wTitle }
                   { wTitle && this.state.title.work && sideMenu(this.state.title.work[0].value, "Work", hasRel, wDataExt)  }
                   { iTitle }
                   { iTitle && this.state.title.instance && sideMenu(this.state.title.instance[0].value,"Instance", false, iDataExt, iOutline) }
                   { rTitle }
                   { rTitle && this.state.title.images && sideMenu(this.state.title.images[0].value,"Images", false, rDataExt, false, rView && !orig, etextUT) }
-                  </div>
+                  </div> */}
                </div>
                <div>                               
                   {/* { this.renderAnnoPanel() } */}
                   { this.renderWithdrawn() }             
-                  <div class="title">{ wTitle }{ iTitle }{ rTitle }</div>
+                  <div class="title">{/* { wTitle }{ iTitle }{ rTitle } */}</div> 
                   { (etext && !orig) && <div class={"data open-etext"+(etextAccessError?" disable":"")}><div><Link to={etextUT+(etextUT.includes("?")?"&":"?")+"backToEtext="+backToET+"#open-viewer"}>{etextLoca}</Link></div></div> }
                   { (etext && orig) && <div class="data open-etext"><div><a target="_blank" href={orig}>{I18n.t("resource.openO",{src:prov})}<img src="/icons/link-out_.svg"/></a></div></div> }
                   <div class={"data" + (_T === "Etext"?" etext-title":"")+(_T === "Images"?" images-title":"")}>
                      {searchUrl && <span class="back-anchor">
                         <Link className="urilink" to={searchUrl}><ChevronLeft />{I18n.t("resource.goB")}</Link>
                      </span> }                     
-                     {_T === "Images" && iTitle?[<h2 class="on intro">{I18n.t("resource.scanF")}</h2>,iTitle]
-                      :(_T === "Etext" && iTitle?[<h2 class="on intro">{I18n.t("resource.etextF")}</h2>,iTitle]
-                       :(_T === "Etext" && wTitle?[<h2 class="on intro">{I18n.t("resource.etextF")}</h2>,wTitle]
+                     {_T === "Images" && iTitle?[<h1 class="on intro">{I18n.t("resource.scanF")}</h1>,iTitle]
+                      :(_T === "Etext" && iTitle?[<h1 class="on intro">{I18n.t("resource.etextF")}</h1>,iTitle]
+                       :(_T === "Etext" && wTitle?[<h1 class="on intro">{I18n.t("resource.etextF")}</h1>,wTitle]
                        :title))}
                      {inTitle}
                      {dates}

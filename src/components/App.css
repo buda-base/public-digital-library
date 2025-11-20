@@ -152,6 +152,7 @@ footer#site-footer.no-syncs > div.head::before { background-color:#efefef; }
 .App:not(.home) .SearchPane { min-height:calc(100vh - 80px - 50px * 0);  }
 
 
+.etext-header h1,
 #uiLangPopup *,
 .ISB *,
 #popHowTo div p,
@@ -5346,6 +5347,12 @@ h4:hover a.no-bdrc img { opacity:1; }
 .resource .data h2.intro + h2[lang=bo],
 .resource .data h2[lang=bo] { line-height:64px; }
 
+.resource .data h2.intro + h2 { line-height:42px;}
+
+[lang="bo"] .resource .data h2.intro,
+.resource .data h2.intro + h2[lang=bo],
+.resource .data h2[lang=bo] { line-height:64px; }
+
 .ETSBresults,
 .monlamResults,
 .resource .data h2.intro + h2[lang=bo] > a > span:not(.T,.lang),
@@ -5746,7 +5753,7 @@ html[lang="en"] .resource .data > [data-prop="bdo:creator"] h4[data-prop="bdo:ro
 .resource .data .sub .subsubgroup .subsubsub > h4.first,
 .resource .subsubgroup .subsubsub > h4.first a.propref { font-weight:300; font-size:14px;  }
 
-.resource .data h2 .lang, .resource .data h4 .lang { display:none;}
+.resource .data h1 .lang, .resource .data h2 .lang, .resource .data h4 .lang { display:none;}
 
 /* ------------------------------------------------------------------------------------------------------------------------ "normal" properties */
 
@@ -6193,6 +6200,7 @@ html[lang="en"] .resource .data > [data-prop="bdo:creator"] h4[data-prop="bdo:ro
    padding-top:40px;
 }
 
+.etext-header:not(.sticky) h1:not([lang="bo"]):not(:last-child),
 .etext-header:not(.sticky) h2:not([lang="bo"]):not(:last-child) {
    margin-bottom:30px;
 }
@@ -6210,14 +6218,18 @@ html[lang="en"] .resource .data > [data-prop="bdo:creator"] h4[data-prop="bdo:ro
 .etext-nav-parent:not(.someClass) .etext-header.sticky > div > * {
    visibility: hidden;
 }
+
+html .etext-nav-parent .etext-header.sticky > div  h1 .placeType,
 html .etext-nav-parent .etext-header.sticky > div  h2 .placeType {
    line-height:28px;
 }
 
+html[lang="bo"] .etext-nav-parent .etext-header.sticky > div  h1 .placeType,
 html[lang="bo"] .etext-nav-parent .etext-header.sticky > div  h2 .placeType {
    line-height:32px;
 }
 
+.etext-nav-parent .etext-header.sticky > div  h1,
 .etext-nav-parent .etext-header.sticky > div  h2 {
    margin:0;
    font-size: 18px;
@@ -6240,6 +6252,7 @@ html[lang="bo"] .etext-nav-parent .etext-header.sticky > div  h2 .placeType {
    box-sizing: border-box;
    max-width:100%;
 }
+.etext-header:not(.sticky) > div h1,
 .etext-header:not(.sticky) > div h2 {
    margin:0;
    font-size:32px;
@@ -6275,7 +6288,7 @@ html[lang="bo"] .etext-nav-parent .etext-header.sticky > div  h2 .placeType {
    text-decoration: none;
    font-weight:500;
    align-items: center;
-   margin-top:-3px;
+   margin-top:18px;
 }
 
 
@@ -8067,6 +8080,7 @@ a.result + #matches.mobile,
 
    .resource .data#outline > h2 { margin:0 0px 20px 20px; }
 
+   .resource .data h1,
    .resource .data#outline > h2,
    .resource .data.related > div h2, 
    .resource .data.ext-props > div h2,
@@ -8074,6 +8088,8 @@ a.result + #matches.mobile,
    .resource .data h2.on + h2 a span,
    .resource .data h2.on span:not(.T):not(.lang):not(#a) { font-size:28px;}
 
+
+   .resource .data h1,
    .resource .data.images-title,
    .resource .data h2.intro + h2,
    .resource .data h2.on,
@@ -8436,6 +8452,7 @@ a.result + #matches.mobile,
 
    .resource .sub > h4.label:not(:first-of-type) { max-width:100%; box-sizing: border-box;}
 
+   .resource .data h1,
    .resource .data.images-title, 
    .resource .data h2.intro + h2, 
    .resource .data h2.on, 
@@ -8444,6 +8461,7 @@ a.result + #matches.mobile,
    .resource .data.ext-props > div h2, 
    .resource .data h2 { line-height:32px; }
 
+   .resource .data h1, 
    .resource .data#outline > h2, 
    .resource .data.related > div h2, 
    .resource .data.ext-props > div h2, 
