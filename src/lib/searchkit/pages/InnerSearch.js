@@ -201,7 +201,7 @@ export class InnerSearchPage extends Component<State, Props>
             <Loader loaded={!this.props.loading}/>
             <div data-prop="tmp:search">
               { (!recent || forceSearch) && <div className="searchbox">
-                <h3><span><a class="propref"><span>{leftTitle}{I18n.t("punc.colon")}</span></a></span></h3>
+                <h3><span><span class="propref"><span>{leftTitle}{I18n.t("punc.colon")}</span></span></span></h3>
                 <div className="search inner-search-bar group">
                   <div>
                     <SearchBoxAutocomplete inner={true} searchAsYouType={false} loading={this.props.loading} {...{ forceSearch, pageFilters, placeholder, routing, that: this }}/>

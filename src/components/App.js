@@ -1197,41 +1197,41 @@ export function top_right_menu(that,etextTitle,backUrl,etextres,isMirador,locati
    let onZhMirror = (that.props.config && that.props.config.chineseMirror)
    let onKhmerServer = (that.props.config && that.props.config.khmerServer)
 
-   let feedbucket = <div id="feedback" title={I18n.t("topbar.feedback")} className={that.props.feedbucket /*+ (that.props.keyword&&!that.props.IRI?" top":"")*/} onClick={(ev) => {
-      if(!document.querySelector('feedbucket-app')) {
-         $("#feedback .tooltip").toggleClass("on")
-      } else {
-         $("feedbucket-app").toggleClass("on")
-         that.props.onFeedbucketClick("on "+(that.props.feedbucket?.endsWith("X")?"":"X"))
-      }
-   }}><Feedback /><Close /><div class="tooltip mustLogin">      
-         <div class="bg" onClick={(e) => {
-            $("#feedback .tooltip").removeClass("on")
-            e.stopPropagation()
-         }}></div>
-         <a onClick={(e) => { 
-            that.props.auth.login(location)            
-            e.stopPropagation()
-         }}>{I18n.t("viewer.mustLoginFeedback")}</a>
-      </div></div>
+   // let feedbucket = <div id="feedback" title={I18n.t("topbar.feedback")} className={that.props.feedbucket /*+ (that.props.keyword&&!that.props.IRI?" top":"")*/} onClick={(ev) => {
+   //    if(!document.querySelector('feedbucket-app')) {
+   //       $("#feedback .tooltip").toggleClass("on")
+   //    } else {
+   //       $("feedbucket-app").toggleClass("on")
+   //       that.props.onFeedbucketClick("on "+(that.props.feedbucket?.endsWith("X")?"":"X"))
+   //    }
+   // }}><Feedback /><Close /><div class="tooltip mustLogin">      
+   //       <div class="bg" onClick={(e) => {
+   //          $("#feedback .tooltip").removeClass("on")
+   //          e.stopPropagation()
+   //       }}></div>
+   //       <a onClick={(e) => { 
+   //          that.props.auth.login(location)            
+   //          e.stopPropagation()
+   //       }}>{I18n.t("viewer.mustLoginFeedback")}</a>
+   //    </div></div>
 
-   let feedbucketTop = <div id="feedback" title={I18n.t("topbar.feedback")} className={"top " + that.props.feedbucket} onClick={(ev) => {
-      if(!document.querySelector('feedbucket-app')) {
-         $("#feedback .tooltip").toggleClass("on")
-      } else {
-         $("feedbucket-app").toggleClass("on")
-         that.props.onFeedbucketClick("on "+(that.props.feedbucket?.endsWith("X")?"":"X"))
-      }
-   }}><IconButton><Feedback /></IconButton>{/*<Close />*/}<div class="tooltip mustLogin">      
-         <div class="bg" onClick={(e) => {
-            $("#feedback .tooltip").removeClass("on")
-            e.stopPropagation()
-         }}></div>
-         <a onClick={(e) => { 
-            that.props.auth.login(location)            
-            e.stopPropagation()
-         }}>{I18n.t("viewer.mustLoginFeedback")}</a>
-      </div></div>
+   // let feedbucketTop = <div id="feedback" title={I18n.t("topbar.feedback")} className={"top " + that.props.feedbucket} onClick={(ev) => {
+   //    if(!document.querySelector('feedbucket-app')) {
+   //       $("#feedback .tooltip").toggleClass("on")
+   //    } else {
+   //       $("feedbucket-app").toggleClass("on")
+   //       that.props.onFeedbucketClick("on "+(that.props.feedbucket?.endsWith("X")?"":"X"))
+   //    }
+   // }}><IconButton><Feedback /></IconButton>{/*<Close />*/}<div class="tooltip mustLogin">      
+   //       <div class="bg" onClick={(e) => {
+   //          $("#feedback .tooltip").removeClass("on")
+   //          e.stopPropagation()
+   //       }}></div>
+   //       <a onClick={(e) => { 
+   //          that.props.auth.login(location)            
+   //          e.stopPropagation()
+   //       }}>{I18n.t("viewer.mustLoginFeedback")}</a>
+   //    </div></div>
 
 
    let logo = [
@@ -1310,12 +1310,12 @@ export function top_right_menu(that,etextTitle,backUrl,etextres,isMirador,locati
             <div>
                <div><i>{I18n.t("topbar.preserving")}</i></div>
                <div style={{ textTransform: "capitalize" }}>
-                  <a href={"https://www.bdrc.io?lang="+corpo_lang} target="_blank" rel="nofollow" class="BDRC-link"><img src="/BDRC-Logo_.png"/>{I18n.t("topbar.BDRC")}</a>
-                  <a href={"https://www.bdrc.io/buda-archive?lang="+corpo_lang} target="_blank" rel="nofollow">{I18n.t("topbar.aboutB")}</a>
-                  <a href={"https://www.bdrc.io/news?lang="+corpo_lang} target="_blank" rel="nofollow">{I18n.t("topbar.news")}</a>
-                  <a href={"https://www.bdrc.io/programs?lang="+corpo_lang} target="_blank" rel="nofollow">{I18n.t("topbar.programs")}</a>
+                  <a href={"https://www.bdrc.io?lang="+corpo_lang} target="_blank" /*rel="nofollow"*/ class="BDRC-link"><img src="/BDRC-Logo_.png"/>{I18n.t("topbar.BDRC")}</a>
+                  <a href={"https://www.bdrc.io/buda-archive?lang="+corpo_lang} target="_blank" /*rel="nofollow"*/>{I18n.t("topbar.aboutB")}</a>
+                  <a href={"https://www.bdrc.io/news?lang="+corpo_lang} target="_blank" /*rel="nofollow"*/>{I18n.t("topbar.news")}</a>
+                  <a href={"https://www.bdrc.io/programs?lang="+corpo_lang} target="_blank" /*rel="nofollow"*/>{I18n.t("topbar.programs")}</a>
                   {/* <Link to="/buda-user-guide">{I18n.t("topbar.guide")}</Link> */}
-                  <a href={"https://bdrc.io/donation?lang="+corpo_lang} target="_blank" rel="nofollow">{I18n.t("topbar.donate")}</a>
+                  <a href={"https://bdrc.io/donation?lang="+corpo_lang} target="_blank" /*rel="nofollow"*/>{I18n.t("topbar.donate")}</a>
                </div>
             </div>
          </div>
@@ -1445,7 +1445,7 @@ export function top_right_menu(that,etextTitle,backUrl,etextres,isMirador,locati
                   
                }}>+</div> 
          </div>      
-      </StickyElement>{feedbucket}{ infoPanel }{innerSearch}</>)
+      </StickyElement>{/*feedbucket*/}{ infoPanel }{innerSearch}</>)
    else {
 
       const toggleHoverLogin = (hoverLogin,e) => {
@@ -1608,7 +1608,7 @@ export function top_right_menu(that,etextTitle,backUrl,etextres,isMirador,locati
          </div>
 
          <div id="lang-login">
-         { feedbucketTop } 
+         {/* { feedbucketTop }  */}
          { lang_selec(that) }
          { that.props.auth && login }
          <IconButton id="burger" onClick={() => that.setState({collapse:{...that.state.collapse,burgerOn:!that.state.collapse.burgerOn}})}>
@@ -1625,7 +1625,7 @@ export function top_right_menu(that,etextTitle,backUrl,etextres,isMirador,locati
          { <div class="close" onClick={()=>that.setState({collapse:{...that.state.collapse,navMenu:false}})}>+</div> }
        </div>
      </StickyElement>,
-     feedbucket,
+   //   feedbucket,
      infoPanel,
      innerSearch,
       ]
@@ -7787,7 +7787,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             { showMenus }
                { !this.props.config.khmerServer && 
                   <div class="fond-logo">
-                     <a /*title="Photo by Ven. Matthieu Ricard"*/ id="logo" target="_blank" old-href="https://www.tbrc.org/"
+                     <span /*title="Photo by Ven. Matthieu Ricard"*/ id="logo" target="_blank" old-href="https://www.tbrc.org/"
                         data-caption='Photo by Ven. Matthieu Ricard'>
                         {/* <img src="/logo.svg" style={{width:"200px"}} /> */}
                         {/* <img src="/pichome.jpg" /> */}
@@ -7802,12 +7802,12 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                               <span>{ I18n.t("home.subtitle_new") }</span>
                            </div>
                         </div>
-                     </a>
+                     </span>
                   </div>
                }
                { this.props.config.khmerServer &&  !this.props.loading && !this.props.keyword && 
                   <div class="fond-logo">
-                     <a id="logo" target="_blank" old-href="https://www.tbrc.org/">
+                     <span id="logo" target="_blank" old-href="https://www.tbrc.org/">
                         {/* <img src="/logo.svg" style={{width:"200px"}} /> */}
                         <img src="/pichome_khmer.jpg" />
                         <div>
@@ -7820,7 +7820,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                               }}>{ I18n.t("home.khmer.anchor") }</span></p>
                            </div>
                         </div>
-                     </a>
+                     </span>
                      <div class="abs"><ExpandMore onClick={() => {
                         document.querySelector("#learn").scrollIntoView({block: "start", inline: "nearest", behavior:"smooth"})
                      }}/></div>
@@ -8192,7 +8192,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
                         <div class="home-support">
                            <span>{I18n.t("topbar.support")}</span>
-                           <a href={"https://bdrc.io/donation?lang="+corpo_lang} target="_blank" rel="nofollow">{I18n.t("topbar.donate2")}</a>
+                           <a href={"https://bdrc.io/donation?lang="+corpo_lang} target="_blank" /*rel="nofollow"*/>{I18n.t("topbar.donate2")}</a>
                         </div>
                         <h3>{I18n.t("tradition.recent")}</h3> 
                         <InnerSearchPageContainer /*noScrollFilters={true}*/ customPholder={I18n.t("resource.searchTtrad", {trad:I18n.t("tradition.title.recent"),interpolation: {escapeValue: false} }) } forceSearch={true} location={this.props.location} auth={this.props.auth} isOsearch={true} recent={true} />  

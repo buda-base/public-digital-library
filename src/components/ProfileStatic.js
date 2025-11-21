@@ -443,13 +443,13 @@ export class Profile extends Component<Props,State> {
             </div>
              */}
               <div class="data">
-                <h2><span class="newT"><span>{I18n.t("index.userP")}</span></span>{title}</h2>
+                <h1><span class="newT"><span>{I18n.t("index.userP")}</span></span>{title}</h1>
               </div>
               <div id="main-info" className="profile-area data">
 
 
                 <div data-props>
-                  <h3><span><a class="propref"><span>{I18n.t("user.name")}{I18n.t("punc.colon")}</span></a></span></h3>
+                  <h3><span><span class="propref"><span>{I18n.t("user.name")}{I18n.t("punc.colon")}</span></span></span></h3>
                   <div class="group">
                     <FormControl className="FC">
                       <InputLabel htmlFor="name">{I18n.t("user.name")}</InputLabel>
@@ -465,7 +465,7 @@ export class Profile extends Component<Props,State> {
               { 
                 this.state.profile && this.state.profile.sub.match(/^auth0[|]/) && //this.props.profile[tmp+"passwordResetLink"] && 
                   <div data-props>
-                    <h3><span><a class="propref"><span>{I18n.t("user.email")}{I18n.t("punc.colon")}</span></a></span></h3>
+                    <h3><span><span class="propref"><span>{I18n.t("user.email")}{I18n.t("punc.colon")}</span></span></span></h3>
                       <div class="group">
                         <TextField
                           className="FC"
@@ -486,7 +486,7 @@ export class Profile extends Component<Props,State> {
                  this.state.profile && !this.state.profile.sub.match(/^auth0[|]/) && 
 
                   <div data-props="foaf:mbox">
-                    <h3><span><a class="propref"><span>{I18n.t("user.email")}{I18n.t("punc.colon")}</span></a></span></h3>
+                    <h3><span><span class="propref"><span>{I18n.t("user.email")}{I18n.t("punc.colon")}</span></span></span></h3>
                       <div class="group">
                         {/* <h4>{this.props.profile && this.props.profile[foaf+"mbox"] && this.props.profile[foaf+"mbox"][0].value}</h4> */}
                         <TextField
@@ -504,7 +504,7 @@ export class Profile extends Component<Props,State> {
 
 
                 <div data-props>
-                  <h3><span><a class="propref"><span>{I18n.t("user.photo.label")}{I18n.t("punc.colon")}</span></a></span></h3>
+                  <h3><span><span class="propref"><span>{I18n.t("user.photo.label")}{I18n.t("punc.colon")}</span></span></span></h3>
                   <div class="group">
                     <FormControl className="FC text">
                       <TextField
@@ -552,7 +552,7 @@ export class Profile extends Component<Props,State> {
               */}
 
                 <div data-props>
-                  <h3><span><a class="propref"><span>{I18n.t("user.gender")}{I18n.t("punc.colon")}</span></a></span></h3>
+                  <h3><span><span class="propref"><span>{I18n.t("user.gender")}{I18n.t("punc.colon")}</span></span></span></h3>
                   <div class="group">
                     <FormControl className="FC">
                       <InputLabel htmlFor="gender">{I18n.t("user.gender")}</InputLabel>
@@ -570,7 +570,7 @@ export class Profile extends Component<Props,State> {
                 </div>
 
                 <div data-props>
-                  <h3><span><a class="propref"><span>{I18n.t("user.area")}{I18n.t("punc.colon")}</span></a></span></h3>
+                  <h3><span><span class="propref"><span>{I18n.t("user.area")}{I18n.t("punc.colon")}</span></span></span></h3>
                   <div class="group">
                     <FormControl className="FC">
                       <InputLabel htmlFor="interest" /*classes={{root:classes.root}}*/ >{I18n.t("user.area")}</InputLabel>
@@ -595,7 +595,7 @@ export class Profile extends Component<Props,State> {
                       </Select>
                     </FormControl>
                     { val.interest.includes(tmp+"other") && <div class="sub otherI">
-                      <h4 class="first type"><a class="propref"><span lang={this.props.locale}>{I18n.t("prop.tmp:other")}{I18n.t("punc.colon")}</span></a></h4>
+                      <h4 class="first type"><span class="propref"><span lang={this.props.locale}>{I18n.t("prop.tmp:other")}{I18n.t("punc.colon")}</span></span></h4>
                       <FormControl className="FC">
                         <InputLabel htmlFor="otherInterest">{I18n.t("prop.tmp:other")}</InputLabel>
                         <Input
@@ -609,7 +609,7 @@ export class Profile extends Component<Props,State> {
                 </div> 
 
                 <div data-props="tmp:cultural" lang={this.props.locale}>
-                  <h3><span><a class="propref"><span>{I18n.t("user.region")}{I18n.t("punc.colon")}</span></a></span></h3>
+                  <h3><span><span class="propref"><span>{I18n.t("user.region")}{I18n.t("punc.colon")}</span></span></span></h3>
                   <div class="group">
                     <FormControl className="FC">
                       <InputLabel htmlFor="region">{I18n.t("user.region")}</InputLabel>
@@ -629,7 +629,7 @@ export class Profile extends Component<Props,State> {
                 </div>
 
                 <div data-props>
-                  <h3><span><a class="propref"><span></span></a></span></h3>
+                  <h3><span><span class="propref"><span></span></span></span></h3>
                   <div class="group">
                     <FormControlLabel
                         control={

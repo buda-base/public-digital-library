@@ -735,10 +735,10 @@ export function top_left_menu(that,pdfLink,monoVol,fairUse)
                 prompt(I18n.t("misc.clipboard"),fullUri(that.props.IRI))
           }>
 
-          <a id="permalink" style={{marginLeft:"0px"}} title={I18n.t("misc.permalink")}>
+          <span id="permalink" style={{marginLeft:"0px"}} title={I18n.t("misc.permalink")}>
              <img src="/icons/PLINK.png"/>{/* <ShareIcon /> */}
              <span>{I18n.t("misc.permalink")}</span>
-          </a>
+          </span>
        </CopyToClipboard> }
 
       { that.props.IRI && <span id="rid">{shortUri(that.props.IRI)}</span> }
@@ -787,7 +787,7 @@ export function top_left_menu(that,pdfLink,monoVol,fairUse)
          ( (!(that.props.manifestError && that.props.manifestError.error.message.match(/Restricted access/)) && !fairUse) ||
          (that.props.auth && that.props.auth.isAuthenticated()))
          &&
-          [<a style={{fontSize:"26px"}} className="goBack pdfLoader">
+          [<span style={{fontSize:"26px"}} className="goBack pdfLoader">
              <Loader loaded={(!that.props.pdfVolumes || that.props.pdfVolumes.length > 0)} options={{position:"relative",left:"24px",top:"-7px"}} />
                 <IconButton title={I18n.t("resource.downloadAs")+" PDF/ZIP"} onClick={ev =>
                       {
@@ -856,7 +856,7 @@ export function top_left_menu(that,pdfLink,monoVol,fairUse)
                       </List>
                    </Popover>
                 }
-          </a>
+          </span>
        ]
        }
 
@@ -3818,13 +3818,13 @@ class ResourceViewer extends Component<Props,State>
                   else if ( this.props.IIIFerrors && this.props.IIIFerrors[prefix+":"+pretty] && (!this.props.auth || this.props.auth && (this.props.IIIFerrors[prefix+":"+pretty]?.error.code === 401 || this.props.IIIFerrors[prefix+":"+pretty]?.error.code === 403) )) 
                      if(elem && elem.includes("RestrictedSealed")) 
                         restrict =  <>
-                           <a class="urilink nolink noIA"><BlockIcon style={{width:"18px",verticalAlign:"top"}}/>{accessLabel}</a>
+                           <span class="urilink nolink noIA"><BlockIcon style={{width:"18px",verticalAlign:"top"}}/>{accessLabel}</span>
                            <div class="data access sealed"><h3><span style={{textTransform:"none"}}><Trans i18nKey="access.sealed" components={{ bold: <u /> }} /> <a href="mailto:help@bdrc.io">help@bdrc.io</a>{I18n.t("punc.point")}</span></h3></div>
                         </>
                      else 
                         //return  <div class="data access"><h3><span style={{textTransform:"none"}}>{I18n.t("misc.please")} <a class="login" {...(this.props.auth?{onClick:this.props.auth.login.bind(this,this.props.location)}:{})}>{I18n.t("topbar.login")}</a> {I18n.t("access.credentials")}</span></h3></div>
                         restrict =  <>
-                           <a class="urilink nolink noIA"><BlockIcon style={{width:"18px",verticalAlign:"top"}}/>{accessLabel}</a>
+                           <span class="urilink nolink noIA"><BlockIcon style={{width:"18px",verticalAlign:"top"}}/>{accessLabel}</span>
                            <div class="data access generic"><h3><span style={{textTransform:"none"}}><Trans i18nKey="access.generic" components={{ policies: <a /> }} /></span></h3></div>
                         </>
                         
@@ -3850,10 +3850,10 @@ class ResourceViewer extends Component<Props,State>
                                        <ResourceViewerContainer key={this.props.IRI+"_scans-"+prefix+":"+pretty} auth={this.props.auth} /*history={this.props.history}*/ location={this.props.location} navigate={this.props.navigate} IRI={prefix+":"+pretty} pdfDownloadOnly={true} />
                                     </>
                                  :  this.props.IIIFerrors[prefix+":"+pretty].error.code === 401 && (!this.props.auth || !this.props.auth.isAuthenticated())
-                                    ? <a class="urilink nolink"><BlockIcon style={{width:"18px",verticalAlign:"top"}}/>&nbsp;{I18n.t(hasIA?"resource.loginToPreview":"viewer.dlError401")}</a>                              
+                                    ? <span class="urilink nolink"><BlockIcon style={{width:"18px",verticalAlign:"top"}}/>&nbsp;{I18n.t(hasIA?"resource.loginToPreview":"viewer.dlError401")}</span>                              
                                     : [404,444].includes(this.props.IIIFerrors[prefix+":"+pretty].error.code) 
-                                       ? <a class="urilink nolink"><BlockIcon style={{width:"18px",verticalAlign:"top"}}/>&nbsp;{I18n.t("access.notyet")}</a>                              
-                                       : <a class="urilink nolink"><BlockIcon style={{width:"18px",verticalAlign:"top"}}/>&nbsp;{I18n.t("access.error")}</a>                              
+                                       ? <span class="urilink nolink"><BlockIcon style={{width:"18px",verticalAlign:"top"}}/>&nbsp;{I18n.t("access.notyet")}</span>                              
+                                       : <span class="urilink nolink"><BlockIcon style={{width:"18px",verticalAlign:"top"}}/>&nbsp;{I18n.t("access.error")}</span>                              
                                     // TODO: handle more access cases (fair use etc., see figma)
                            }                        
                            { scanInfo && //(!this.props.IIIFerrors||!this.props.IIIFerrors[prefix+":"+pretty]|| this.props.IIIFerrors[prefix+":"+pretty].error?.code != 403) && 
@@ -5409,7 +5409,7 @@ class ResourceViewer extends Component<Props,State>
          }
       }
 
-      let ret = (<a class="propref" {...(k.match(/purl[.]bdrc[.]io/) && !k.match(/[/]tmp[/]/) ? {"href":k}:{})} target="_blank">{txt?<span>{txt}</span>:this.fullname(k,false,false,true,true,count)}</a>)
+      let ret = (<span class="propref" {...(k.match(/purl[.]bdrc[.]io/) && !k.match(/[/]tmp[/]/) ? {"href":k}:{})} target="_blank">{txt?<span>{txt}</span>:this.fullname(k,false,false,true,true,count)}</span>)
 
       if(tooltip && tooltip.value) ret = <Tooltip placement="bottom-start" classes={{tooltip:"commentT",popper:"commentP"}} style={{marginLeft:"50px"}} title={<div>{tooltip.value}</div>}>{ret}</Tooltip>
 
@@ -6373,7 +6373,7 @@ class ResourceViewer extends Component<Props,State>
                <h3>
                   <span>
                       <Tooltip placement="bottom-start" classes={{tooltip:"commentT",popper:"commentP"}} style={{marginLeft:"50px"}} title={<div>{I18n.t("resource.sameL",{count:mapSame.length})}</div>}>
-                        <a class="propref"><span>{I18n.t("misc.otherR",{count:mapSame.length})}</span></a>
+                        <span class="propref"><span>{I18n.t("misc.otherR",{count:mapSame.length})}</span></span>
                      </Tooltip>
                      {I18n.t("punc.colon")}
                   </span>
@@ -6832,28 +6832,28 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                const nbVol = (e.volume !== undefined?e.volume:monoVol.replace(/[^0-9]+/,""))
                if(this.props.useDLD)  return (<ListItem className="pdfMenu">
                      <b>{(e.volume !== undefined?(!e.volume.match || e.volume.match(/^[0-9]+$/)?"Volume ":"")+(e.volume):monoVol)}{I18n.t("punc.colon")}</b>
-                     <a href="#" onClick={(ev) => {
+                     <span class="a" href="#" onClick={(ev) => {
                         window.top.postMessage(JSON.stringify({"download":{nbVol:""+nbVol,"rid":this.props.IRI.replace(/^bdr:/,"")}}),"*")        
                         ev.preventDefault()
                         ev.stopPropagation()
-                     }}><span class="on">{I18n.t("resource.gener3pdf")}</span></a>                                     
+                     }}><span class="on">{I18n.t("resource.gener3pdf")}</span></span>                                     
                   </ListItem>)                              
                else  return (<ListItem className="pdfMenu">
                         <b>{(e.volume !== undefined?(!e.volume.match || e.volume.match(/^[0-9]+$/)?"Volume ":"")+(e.volume):monoVol)}{I18n.t("punc.colon")}</b>
-                        <a onClick={ev => that.handlePdfClick(ev,e.link,e.pdfFile)}
+                        <span class="a" onClick={ev => that.handlePdfClick(ev,e.link,e.pdfFile)}
                            {...(Ploaded ?{href:e.pdfFile}:{})}
                         >
                            { Ploading && <Loader className="pdfSpinner" loaded={Ploaded} scale={0.35}/> }
                            <span {... (Ploading?{className:"pdfLoading"}:{className: this.state.collapse["pdf_"+e.link]?"on":""})} >{pdfMsg}</span>
                            { Ploading && e.pdfPercent !== undefined && <span>&nbsp;{e.pdfPercent}%</span>}
-                        </a>
-                        <a onClick={ev => that.handlePdfClick(ev,e.link,e.zipFile,"zip")}
+                        </span>
+                        <span class="a" onClick={ev => that.handlePdfClick(ev,e.link,e.zipFile,"zip")}
                            {...(Zloaded ?{href:e.zipFile}:{})}
                         >
                            { Zloading && <Loader className="zipSpinner" loaded={Zloaded} scale={0.35}/> }
                            <span {... (Zloading?{className:"zipLoading"}:{className:this.state.collapse["zip_"+e.link]?"on":""})}>{zipMsg}</span>
                            { Zloading && e.zipPercent !== undefined && <span>&nbsp;{e.zipPercent}%</span>}
-                        </a>
+                        </span>
                         { that.props.IRI && getEntiType(that.props.IRI) === "Etext" && // TODO fix download etext
                            <div> 
 
@@ -6878,7 +6878,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
        { popupPdf }
        { pdfLink && 
             ( (!(that.props.manifestError && that.props.manifestError.error.message.match(/Restricted access/)) /*&& !fairUse*/) )
-            ? <a href="#" class="urilink" onClick={ev =>
+            ? <span href="#" class="a urilink" onClick={ev =>
                   {
                      //if(that.props.createPdf) return ;
                      if((monoVol && monoVol.match && monoVol.match(/[^0-9]/)) || monoVol > 0){
@@ -6895,9 +6895,9 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                   }
                }>
                {I18n.t("resource.download"+(fairUse?"FU":""))}
-            </a>
+            </span>
             : that.props.manifestError && !that.props.manifestError.error.message.match(/Restricted access/) 
-               ? <a class="urilink nolink">{I18n.t("viewer.pdferror2")} ({I18n.t("user.errors.server2")})</a>
+               ? <span class="a urilink nolink">{I18n.t("viewer.pdferror2")} ({I18n.t("user.errors.server2")})</span>
                : <Loader  className="scans-viewer-loader" loaded={that.props.firstImage && !that.props.firstImage.includes("bdrc.io") || !( (!(that.props.manifestError && that.props.manifestError.error.message.match(/Restricted access/)) /*&& !fairUse*/) || (that.props.auth && that.props.auth.isAuthenticated())) || that.props.loading === false} />
          }      
       </>)
@@ -6911,10 +6911,10 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                 prompt(I18n.t("misc.clipboard"),fullUri(that.props.IRI))
           }>
 
-          <a id="permalink" style={{marginLeft:"0px"}} title={I18n.t("misc.permalink")}>
+          <span id="permalink" style={{marginLeft:"0px"}} title={I18n.t("misc.permalink")}>
              <img src="/icons/PLINK.png"/>{/* <ShareIcon /> */}
              <span>{I18n.t("misc.permalink")}</span>
-          </a>
+          </span>
        </CopyToClipboard> }
 
       { that.props.IRI && <span id="rid">{shortUri(that.props.IRI)}</span> }
@@ -7509,7 +7509,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
          >
          { !this.props.disableInfiniteScroll && <div style={{display:"flex", justifyContent:"space-between", width:"100%", scrollMarginTop:"160px" }}>
             <h3 style={{marginBottom:"20px",textAlign:"right"}}>{ firstPageUrl && <Link onClick={(e) => this.props.onGetPages(this.props.IRI,firstC,true,{firstC, lastC})} to={firstPageUrl}>{I18n.t("resource.firstP")}</Link>}</h3>
-            <h3 style={{marginBottom:"20px",textAlign:"right"}}>{ prev!==-1 && <a onClick={(e) => this.props.onGetPages(this.props.IRI, prev, true, {firstC, lastC} )} class="download" style={{fontWeight:700,border:"none",textAlign:"right"}}>{I18n.t("resource.loadP")}</a>}</h3>
+            <h3 style={{marginBottom:"20px",textAlign:"right"}}>{ prev!==-1 && <span onClick={(e) => this.props.onGetPages(this.props.IRI, prev, true, {firstC, lastC} )} class="download ulink urilink" style={{color:"#d73449",fontWeight:700,border:"none",textAlign:"right",cursor:"pointer"}}>{I18n.t("resource.loadP")}</span>}</h3>
             <h3 style={{marginBottom:"20px",textAlign:"right"}}>{ lastPageUrl && <Link to={lastPageUrl} onClick={(e) => this.props.onGetPages(this.props.IRI,lastC-999 /* TODO: use the other query here (mirador/num page)*/,true,{firstC, lastC})} >{I18n.t("resource.lastP")}</Link>}</h3>
          </div> }
          {/* {this.hasSub(k)?this.subProps(k):tags.map((e)=> [e," "] )} */}
@@ -8310,12 +8310,12 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
          url = url.replace(/^\/\//,"https://")
       }
       return (
-         <a id="DL" class={!accessError&&!noDL?"on":""} onClick={(e) => !noDL && this.setState({...this.state,anchorLangDL:e.currentTarget, collapse: {...this.state.collapse, langDL:!this.state.collapse.langDL } } ) }>
+         <span id="DL" class={!accessError&&!noDL?"on a":"a"} onClick={(e) => !noDL && this.setState({...this.state,anchorLangDL:e.currentTarget, collapse: {...this.state.collapse, langDL:!this.state.collapse.langDL } } ) }>
             {etext_lang_selec(this,true,<>
                   {I18n.t(!noDL?"mirador.downloadE":this.props.disableInfiniteScroll?"mirador.noDL":"mirador.noDLviewer")}
                   {!noIcon && <img src="/icons/DLw.png"/>}
                </>, url)}
-            </a>
+            </span>
       )
    }
 
@@ -8519,18 +8519,18 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                <div>
                   { this.renderEtextDLlink(accessError) }
                   {/* // <a id="DL" class={!accessError?"on":""} target="_blank" rel="alternate" type="text" download href={this.props.IRI?fullUri(this.props.IRI).replace(/^http:/,"https:")+".txt":""}>{I18n.t("mirador.downloadE")}<img src="/icons/DLw.png"/></a>) */}
-                  { this.props.config.useMonlam && this.state.etextHasBo && <a id="dico" class="on" onClick={(e) => { 
+                  { this.props.config.useMonlam && this.state.etextHasBo && <span id="dico" class="on a" onClick={(e) => { 
                      if(this.state.enableDicoSearch) this.props.onCloseMonlam()
                      this.setState({noHilight:false, enableDicoSearch:!this.state.enableDicoSearch, ...this.state.enableDicoSearch?{monlam:null}:{}})
                   }}>
                      {/* <div class="new">{I18n.t("viewer.new")}</div> */}
-                     {this.state.enableDicoSearch?<img id="check" src="/icons/check.svg"/>:<span id="check"></span>}<span>{I18n.t("viewer.monlam")}</span><span><img class="ico" src="/icons/monlam.png"/></span></a> }
+                     {this.state.enableDicoSearch?<img id="check" src="/icons/check.svg"/>:<span id="check"></span>}<span>{I18n.t("viewer.monlam")}</span><span><img class="ico" src="/icons/monlam.png"/></span></span> }
                   <div id="control">
                      <span title={I18n.t("mirador.decreaseFont")} class={!size||size > 0.6?"on":""} onClick={(e)=>etextSize(false)}><img src="/icons/Zm.svg"/></span>
                      <span title={I18n.t("mirador.increaseFont")} class={!size||size < 2.4?"on":""} onClick={(e)=>etextSize(true)}><img src="/icons/Zp.svg"/></span>
                      {etext_lang_selec(this,true)}
                   </div>
-                  <a class={showToggleScan?"on":""} onClick={(e) => this.setState({showEtextImages:!this.state.showEtextImages})}>{this.state.showEtextImages?<img id="check" src="/icons/check.svg"/>:<span id="check"></span>}<span>{I18n.t("mirador.showI")}</span><img width="42" src="/icons/search/images_b.svg"/></a>
+                  <span class={showToggleScan?"on a":"a"} onClick={(e) => this.setState({showEtextImages:!this.state.showEtextImages})}>{this.state.showEtextImages?<img id="check" src="/icons/check.svg"/>:<span id="check"></span>}<span>{I18n.t("mirador.showI")}</span><img width="42" src="/icons/search/images_b.svg"/></span>
                   <EtextSearchBox that={this} scopeId={this.props?.that?.state?.scope} ETrefs={this.props.that?.props.eTextRefs?.["@graph"]} setETSBpage={(p,v,i,s) => { if(!this.state.ETSBpage || this.state.ETSBpage?.start != s || this.state.ETSBpage?.page != p || this.state.ETSBpage?.vol != v || this.state.ETSBpage?.idx != i) this.setState({ ETSBpage:{page:p, vol:v, idx:i, start:s } }) }} />
                   <span class="X" onClick={() => this.props.that.setState({ collapse:{ ...this.props.that.state.collapse, etextNav:!this.props.that.state.collapse.etextNav }})}></span>
                </div>
@@ -8693,10 +8693,10 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                      }
 
                      return (
-                        <a  {...!access?{disabled:true}:{}} onClick={(e) => this.setState({...this.state,anchorLangDL:e.currentTarget, collapse: {...this.state.collapse, langDL:!this.state.collapse.langDL } } ) } 
+                        <span  {...!access?{disabled:true}:{}} onClick={(e) => this.setState({...this.state,anchorLangDL:e.currentTarget, collapse: {...this.state.collapse, langDL:!this.state.collapse.langDL } } ) } 
                            class="ulink" style={{cursor:"pointer"}}>
                               {etext_lang_selec(this,true,<>{I18n.t("mirador.downloadE")}</>,url)}
-                        </a>
+                        </span>
                      )
                   }
 
@@ -8919,18 +8919,18 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                            }*/}>
                                  <img src="/icons/search/etext.svg"/><img src="/icons/search/etext_r.svg"/>
                               </Link> 
-                           :  <a disabled="true" className="hasImg hasTxt" title={I18n.t("access.fairuseEtext").replace(/<[^>]+>/g,"")}>
+                           :  <span disabled="true" className="hasImg hasTxt" title={I18n.t("access.fairuseEtext").replace(/<[^>]+>/g,"")}>
                                  <img src="/icons/search/etext.svg"/><img src="/icons/search/etext.svg"/>
-                              </a> 
+                              </span> 
                      )}                   
                      { e.details && <span id="anchor" title={I18n.t("resource."+(openD?"hideD":"showD"))} onClick={(ev) => toggle(ev,root,e["@id"],"details",!e.hasPart && (mono || ut), e)}>
                         <img src="/icons/info.svg"/>
                      </span> }
                      <CopyToClipboard text={fullUri(gUri)} onCopy={(e) => prompt(I18n.t("misc.clipboard"),fullUri(gUri))}>
-                        <a class="permalink" title={I18n.t("misc.permalink")}>
+                        <span class="permalink" title={I18n.t("misc.permalink")}>
                            <img src="/icons/PLINK_small.svg"/>
                            <img src="/icons/PLINK_small_r.svg"/>
-                        </a>
+                        </span>
                      </CopyToClipboard>
                   </div>
                </span>)
@@ -10054,10 +10054,10 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                                     <img src="/icons/info.svg"/>
                                  </span> }
                                  <CopyToClipboard text={fUri} onCopy={(e) => prompt(I18n.t("misc.clipboard"),fUri)}>
-                                    <a class="permalink" title={I18n.t("misc.permalink")}>
+                                    <span class="permalink" title={I18n.t("misc.permalink")}>
                                        <img src="/icons/PLINK_small.svg"/>
                                        <img src="/icons/PLINK_small_r.svg"/>
-                                    </a>
+                                    </span>
                                  </CopyToClipboard>
 
                                  
@@ -11097,7 +11097,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                         }}>{etext_data}</div>)}
                         { this.props.disableInfiniteScroll && etextAccessError && <h4  style={{ lineHeight:"23px" }}>
                            <div class="images-thumb-links"  data-n={5} style={{ marginLeft:0 }}>
-                              <a class="urilink nolink noIA"><BlockIcon style={{width:"18px",verticalAlign:"top"}}/>{I18n.t("access.restrictedC")}</a>
+                              <span class="urilink nolink noIA"><BlockIcon style={{width:"18px",verticalAlign:"top"}}/>{I18n.t("access.restrictedC")}</span>
                               <div class="data access generic"><h3><span style={{ textTransform: "none", width: "100%" }}><Trans i18nKey="access.fairuseEtext" components={{ bold: <span style={{ textTransform: "none"}} /> }}/></span></h3></div>
                            </div>
                         </h4> } 
@@ -11210,7 +11210,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                <div  data-prop={"tmp:containingOutline"} >               
                   <h3><span>{this.proplink(_tmp+"containingOutline",null,1)}{I18n.t("punc.colon")}</span> </h3>
                   <div class="group">
-                     <a class="ulink prefLabel containing-outline" href="#" 
+                     <a class="ulink prefLabel containing-outline" href={"./"+this.props.IRI}
                         onClick={(ev) => { 
                            this.setState({collapse:{...this.state.collapse, containingOutline:!(this.state.collapse.containingOutline ?? showOutline)}})
 

@@ -447,13 +447,13 @@ const SearchBoxAutocomplete = (props) => {
         setActualList={setActualList}
       />
       { !inner && <><div id="simple-search" ref={ref}>
-          <a class="regular"><span class="new">{I18n.t("topbar.new")}</span><Trans i18nKey="topbar.phonetics" components={{ita:<i/>}}/></a>
-          <a onClick={() => setHowTo(!howTo)}>{I18n.t("topbar.howToF")}</a>
-          <a onClick={() => {
+          <span class="regular"><span class="new">{I18n.t("topbar.new")}</span><Trans i18nKey="topbar.phonetics" components={{ita:<i/>}}/></span>
+          <span onClick={() => setHowTo(!howTo)}>{I18n.t("topbar.howToF")}</span>
+          <span onClick={() => {
             that.setState({[that.state.filters?"keyword":"SKquery"]:lucenequerytokeyword(inputValue)})
             that.props.onAdvancedSearch(true)
           }}>{I18n.t("topbar.advanced")}
-          </a>
+          </span>
         </div>
         { howTo && <>
           <div class="popHowTo bg" onClick={() => setHowTo(false)}></div>

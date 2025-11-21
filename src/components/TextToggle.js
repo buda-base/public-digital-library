@@ -34,9 +34,9 @@ const TextToggle = ({ text }) => {
       >
         {text}
         {isEllipsisActive && (
-          <a onClick={toggleText}>
+          <span class="a" onClick={toggleText}>
             {I18n.t(isExpanded ? 'misc.hide' : 'Rsidebar.priority.more')}
-          </a>
+          </span>
         )}
       </div>
     </div>

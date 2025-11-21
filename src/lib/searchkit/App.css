@@ -1727,13 +1727,14 @@ header .SRHloader {
 
 .etext-nav-parent .etext-search > span input { width:160px; }
 
+#etext-nav .a:not(#a) #check,
 #etext-nav a:not(#a) #check,
-#etext-nav > div > #control + a > span:first-child {
+#etext-nav > div > #control + .a > span:first-child {
   margin-right:15px;
 }
 
 #etext-nav a #check ~ span img,
-#etext-nav > div > #control + a > span + img {
+#etext-nav > div > #control + .a > span + img {
   margin-left:15px;
 }
 
@@ -1963,7 +1964,7 @@ header .SRHloader {
   }
 
   #etext-nav > div > #dico,
-  #etext-nav > div > #control + a {
+  #etext-nav > div > #control + .a {
     display:flex;
     align-items: center;
   }
@@ -1974,7 +1975,7 @@ header .SRHloader {
     display: block;
   }
 
-  #etext-nav > div > #control + a > span + span {
+  #etext-nav > div > #control + .a > span + span {
     width:35px;
     display: block;
   }
@@ -2668,12 +2669,12 @@ header .SRHloader {
     padding-left:36px;
   }
 
-  #root #etext-nav a#DL {
+  #root #etext-nav #DL {
     margin-right:auto;
     width:auto;
   }
 
-  #etext-nav > div > #control + a > #check + span,
+  #etext-nav > div > #control + .a > #check + span,
   #etext-nav > div > #dico > #check + span {
     display:none;
   }
@@ -3302,11 +3303,11 @@ header .SRHloader {
     margin-right:0;
   }
 
-  .etext-top-links a#DL {
+  .etext-top-links #DL {
     margin-left:0;
     display:block;
   }
-  .etext-top-links a#DL::before {
+  .etext-top-links #DL::before {
     content:none;
   }
 

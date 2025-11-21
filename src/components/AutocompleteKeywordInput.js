@@ -112,7 +112,7 @@ export default function AutocompleteKeywordInput(props) {
         </div> 
       </>}  
       { that.state.filters 
-        ? <a style={{cursor: "pointer"}} onClick={() => that.props.onAdvancedSearch(true)}>Advanced search</a>
+        ? <span style={{cursor: "pointer"}} onClick={() => that.props.onAdvancedSearch(true)}>Advanced search</span>
         : <Link to="/" onClick={(ev) => { 
           that.props.onAdvancedSearch(true)
           that.props.history.push({pathname:"/",search:""}); 
