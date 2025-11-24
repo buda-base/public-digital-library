@@ -514,12 +514,12 @@ const CustomHit = ({ hit, routing, that, sortItems, recent, storage, advanced /*
       <div class={"num-box "+(checked?"checked":"")} onClick={() => setChecked(!checked) }>{hit.__position}</div>
       <div class={"thumb "+(img&&!imgError?"hasImg":"")}>      
         { !isMetaMatch && etextHits.length > 0 && <span class="etext-type">
-            <img src="/icons/sidebar/etext.svg"/>
+            <img alt="etext icon" src="/icons/sidebar/etext.svg"/>
             &nbsp;
             {I18n.t("types.etext")}
           </span>}
         <Link to={link} onClick={scrollToTop}>
-          { !imgError && img && <span class="img"><img src={img} onError={() => setImgError(true)}/></span> }
+          { !imgError && img && <span class="img"><img alt="result thumbnail" src={img} onError={() => setImgError(true)}/></span> }
           <span class="RID">{hit.objectID}</span>
           { (hit.scans_access <= 5 || hit.scans_quality) && <span>
               <span>{I18n.t("types.images", {count:2})}{I18n.t("misc.colon")}</span>&nbsp;

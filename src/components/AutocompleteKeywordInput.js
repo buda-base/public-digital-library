@@ -105,7 +105,7 @@ export default function AutocompleteKeywordInput(props) {
                 <span class="suggest-str">{HTMLparse(s.res)}</span>
                 { s.category && <>
                   <span class="suggest-in">in</span>
-                  <span class="suggest-types">{I18n.t("types."+s.category.toLowerCase(), { count:2 })}<img src={"/icons/search/"+s.category.toLowerCase()+".svg"}/></span>
+                  <span class="suggest-types">{I18n.t("types."+s.category.toLowerCase(), { count:2 })}<img alt="search category icon" src={"/icons/search/"+s.category.toLowerCase()+".svg"}/></span>
                 </>}
               </Link>
             </span> ) }

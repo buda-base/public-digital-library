@@ -395,7 +395,7 @@ class GuidedSearch extends Component<Props,State> {
           {!noTitle && <h2>{getLocaleLabel(k)}{ unique !== undefined && <span>{I18n.t("search."+(unique==="kw"?"kw":(unique?"one":"any")))}</span>}<Tooltip key={"tip"} placement="bottom-end" title={
                                             <div style={{margin:"10px"}}>{getLocaleLabel(k, "tooltip")}</div>
                                           } > 
-                                          <img src="/icons/help.svg"/>
+                                          <img alt="help icon" src="/icons/help.svg"/>
                                        </Tooltip></h2>}
           <div data-prop={k}>
             { settings[k].values.map( (o,i) => (

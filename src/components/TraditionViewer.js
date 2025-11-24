@@ -219,13 +219,13 @@ export class TraditionViewer extends Component<State, Props>
         this.goFetch(c.content.filter(i => !i.label?.length).map(i => i.id.split(":")[1]),c.id)
         return <>
           <h5 onClick={() => !c.img && this.setState({collapse:{...this.state.collapse,[c.id]:!this.state.collapse[c.id]}})} class={"collapse-"+(!!this.state.collapse[c.id])} className={(c.img ? "has-img ":"")+(c.classes??"")+" collapse-"+(!!this.state.collapse[c.id])}>
-            { c.img ? <img src={c.img}/> : <ExpandLess/>}
+            { c.img ? <img alt="tradition item thumbnail" src={c.img}/> : <ExpandLess/>}
             <span lang={label?.lang}>{label?.value}</span>
           </h5>
           {this.state.collapse[c.id] && this.renderContent(c, route, storage)}
         </>
       } else return <Link to={link} className={(c.img ? "has-img ":"")+(c.classes??"")} onClick={scrollToTop}>
-          { c.img && <img src={c.img}/> }
+          { c.img && <img alt="tradition item thumbnail" src={c.img}/> }
           <span lang={label?.lang}>{label?.value}</span>
         </Link>
     })     

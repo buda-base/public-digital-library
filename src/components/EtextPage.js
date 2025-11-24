@@ -142,7 +142,7 @@ function EtextPage(props) {
                           that.showMirador(imageLinks[id][e.seq].id,manif["@id"]);
                         }}/>     */}
                         <a href={imageLinks[id][e.seq].image} target="_blank" rel="noopener noreferrer">
-                          <img class="page" ref={ref} src={imageLinks[id][e.seq].image} onLoad={(ev) => { if(ref.current) {
+                          <img alt="scanned image for page" class="page" ref={ref} src={imageLinks[id][e.seq].image} onLoad={(ev) => { if(ref.current) {
                               if(ref.current.naturalWidth < ref.current.naturalHeight) {
                                 const elem = ref.current.closest(".imagePage")
                                 elem.classList.add("portrait")
@@ -180,7 +180,7 @@ function EtextPage(props) {
               */
               setShowIm(!showIm)
             }}> 
-            <img src="/icons/image.svg"/>
+            <img alt="show images icon" src="/icons/image.svg"/>
         </span> }
         {/* { <h5><a title="Open image+text view in Mirador" onClick={eve => { openMiradorAtPage(imageLinks[e.seq].id) }}>p.{e.seq}</a></h5> } */}
         {   !unpag && !preview && !imgErr && imgElem }        

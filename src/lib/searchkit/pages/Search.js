@@ -530,7 +530,7 @@ export class SearchPage extends Component<State, Props>
                   }} />
               </div>
             </div>
-            { !this.state.collapse.settings && <div id="settings" onClick={toggleSettings}><img src="/icons/settings.svg"/></div> }
+            { !this.state.collapse.settings && <div id="settings" onClick={toggleSettings}><img alt="settings icon" src="/icons/settings.svg"/></div> }
             <div className="content">    
               <div className={"filter "+(this.state.collapse.settings ? "on":"")}>
                 <FiltersSidebar that={this} />

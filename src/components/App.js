@@ -487,7 +487,7 @@ export const renderBanner = (that, infoPanel, isResourcePage) => {
             if(c?.match) { 
                while(img = c.match(/!\[([^\]]+)\]\(([^)]+)\)/)) {
                   let arr = c.split(img[0])
-                  content = content.concat([ arr[0], <img src={img[2]} alt={img[1]}/> ])
+                  content = content.concat([ arr[0], <img alt={img[1]} src={img[2]} /> ])
                   c = arr.slice(1).join(" ")            
                } 
                if(c) content.push(c)
@@ -945,7 +945,7 @@ export function lang_selec(that,black:boolean = false,inPopup:false, useCheckbox
 
    if(inPopup) return form
    else return [
-         <IconButton id="lang" title={I18n.t("home.choose")} onClick={(e) => that.setState({...that.state,anchorLang:e.currentTarget, collapse: {...that.state.collapse, lang:!that.state.collapse.lang } } ) }><img src={"/icons/LANGUE"+(onKhmerUrl?"km":"")+(black?"b":"")+".svg"}/></IconButton>
+         <IconButton id="lang" title={I18n.t("home.choose")} onClick={(e) => that.setState({...that.state,anchorLang:e.currentTarget, collapse: {...that.state.collapse, lang:!that.state.collapse.lang } } ) }><img alt="language icon" src={"/icons/LANGUE"+(onKhmerUrl?"km":"")+(black?"b":"")+".svg"}/></IconButton>
          ,
          <Popover
             id="popLang"
@@ -963,7 +963,7 @@ export function lang_selec(that,black:boolean = false,inPopup:false, useCheckbox
 }
 export function etext_lang_selec(that,black:boolean = false, elem, DL)
 {
-   if(!elem) elem = <span id="lang" title={I18n.t("home.choose")} onClick={(e) => that.setState({...that.state,anchorLang:e.currentTarget, collapse: {...that.state.collapse, lang:!that.state.collapse.lang } } ) }><img src={"/icons/LANGUE"+(black?"b":"")+".svg"}/></span>
+   if(!elem) elem = <span id="lang" title={I18n.t("home.choose")} onClick={(e) => that.setState({...that.state,anchorLang:e.currentTarget, collapse: {...that.state.collapse, lang:!that.state.collapse.lang } } ) }><img alt="language icon" src={"/icons/LANGUE"+(black?"b":"")+".svg"}/></span>
    
    // #818
    let text = [ "lang.tip.original", "lang.tip.roman"], //{ "bo":"lang.tip.bo","bo-x-ewts":"lang.tip.boXEwts", "sa":"lang.tip.saDeva","sa-x-iast":"lang.tip.saXIast"  }, 
@@ -1247,24 +1247,24 @@ export function top_right_menu(that,etextTitle,backUrl,etextres,isMirador,locati
                      return false
                   }
                   */
-               }}:{}} ><img src="/icons/BUDA-small.svg"/><span class="buda-caption"><span>BUDA</span><span class="buda-small">{I18n.t("home.buda")}</span></span></Link>                                  
+               }}:{}} ><img alt="BUDA icon" src="/icons/BUDA-small.svg"/><span class="buda-caption"><span>BUDA</span><span class="buda-small">{I18n.t("home.buda")}</span></span></Link>                                  
                
                {/* <a id="by">
                   <span>by</span></a>
                { !onZhMirror && [
                   <a href={"https://bdrc.io/"} target="_blank" id="BDRC"><span>BDRC</span></a>,
-                  <a href={"https://bdrc.io/"} target="_blank"><img src="/BDRC-Logo_.png"/></a>
+                  <a href={"https://bdrc.io/"} target="_blank"><img alt="BDRC logo" src="/BDRC-Logo_.png"/></a>
                ]}
                { onZhMirror && [
                   <Link to={"/static/about"} id="BDRC"><span>BDRC</span></Link>,
-                  <Link to={"/static/about"} ><img src="/BDRC-Logo_.png"/></Link>
+                  <Link to={"/static/about"} ><img alt="BDRC logo" src="/BDRC-Logo_.png"/></Link>
                ]} */}
             </div>,
 
    ]
    if(onKhmerServer) {
       logo = <div id="logo" class="khmer">                              
-               <a href={"https://bdrc.io/"} target="_blank"><img src="/BDRC-Logo_.png"/></a>
+               <a href={"https://bdrc.io/"} target="_blank"><img alt="BDRC logo" src="/BDRC-Logo_.png"/></a>
                <a href={"https://bdrc.io/"} target="_blank" id="BDRC"><span>BDRC</span></a>               
             </div> 
    }
@@ -1280,7 +1280,7 @@ export function top_right_menu(that,etextTitle,backUrl,etextres,isMirador,locati
          <div class="fg">
             <div>
                {I18n.t("home.choose")}
-               <span id="lang"  style={{margin:"0 0 0 10px"}}><img src={"/icons/LANGUE"+(onKhmerUrl?"km":"")+".svg"}/></span>
+               <span id="lang"  style={{margin:"0 0 0 10px"}}><img alt="language icon" src={"/icons/LANGUE"+(onKhmerUrl?"km":"")+".svg"}/></span>
             </div>
             <div>{ lang_selec(that, false, true) }</div>
          </div>
@@ -1310,7 +1310,7 @@ export function top_right_menu(that,etextTitle,backUrl,etextres,isMirador,locati
             <div>
                <div><i>{I18n.t("topbar.preserving")}</i></div>
                <div style={{ textTransform: "capitalize" }}>
-                  <a href={"https://www.bdrc.io?lang="+corpo_lang} target="_blank" /*rel="nofollow"*/ class="BDRC-link"><img src="/BDRC-Logo_.png"/>{I18n.t("topbar.BDRC")}</a>
+                  <a href={"https://www.bdrc.io?lang="+corpo_lang} target="_blank" /*rel="nofollow"*/ class="BDRC-link"><img alt="BDRC logo" src="/BDRC-Logo_.png"/>{I18n.t("topbar.BDRC")}</a>
                   <a href={"https://www.bdrc.io/buda-archive?lang="+corpo_lang} target="_blank" /*rel="nofollow"*/>{I18n.t("topbar.aboutB")}</a>
                   <a href={"https://www.bdrc.io/news?lang="+corpo_lang} target="_blank" /*rel="nofollow"*/>{I18n.t("topbar.news")}</a>
                   <a href={"https://www.bdrc.io/programs?lang="+corpo_lang} target="_blank" /*rel="nofollow"*/>{I18n.t("topbar.programs")}</a>
@@ -1348,7 +1348,7 @@ export function top_right_menu(that,etextTitle,backUrl,etextres,isMirador,locati
    if(false && etextTitle)
       return (<>
       {!that.props.portraitPopupClosed && portrait}
-      {/* <div class={"mobile-button top"+(!that.state.collapse.navMenu?" off":" on")} onClick={()=>that.setState({collapse:{...that.state.collapse,navMenu:!that.state.collapse.navMenu}})}><img src="/icons/burger.svg" /></div>       */}
+      {/* <div class={"mobile-button top"+(!that.state.collapse.navMenu?" off":" on")} onClick={()=>that.setState({collapse:{...that.state.collapse,navMenu:!that.state.collapse.navMenu}})}><img alt="burger icon" src="/icons/burger.svg" /></div>       */}
       {uiLangPopup}
       {overNav}
       <StickyElement className={"nav etext-nav"+(onZhMirror?" zhMirror":"")+(that.state.collapse.navMenu?" on":"") +(msgPopupOn?" msgPopupOn":"") }>
@@ -1551,7 +1551,7 @@ export function top_right_menu(that,etextTitle,backUrl,etextres,isMirador,locati
 
       return ([
       !that.props.portraitPopupClosed? portrait:null,
-      // <div class={"mobile-button top"+(!that.state.collapse.navMenu?" off":" on")} onClick={() => that.setState({collapse:{...that.state.collapse,navMenu:!that.state.collapse.navMenu}})}><img src="/icons/burger.svg" /></div>,
+      // <div class={"mobile-button top"+(!that.state.collapse.navMenu?" off":" on")} onClick={() => that.setState({collapse:{...that.state.collapse,navMenu:!that.state.collapse.navMenu}})}><img alt="burger icon" src="/icons/burger.svg" /></div>,
       uiLangPopup,
       overNav,
       <StickyElement className={"nav"+(onZhMirror?" zhMirror":"")+ (that.state.collapse.navMenu?" on":"")+(onKhmerServer||onKhmerUrl?" khmerServer":"")
@@ -1603,8 +1603,8 @@ export function top_right_menu(that,etextTitle,backUrl,etextres,isMirador,locati
          }
 
          <div class="history">
-            <span title={I18n.t("topbar.history")}><img src="/icons/histo.svg"/></span>
-            <span title={I18n.t("topbar.bookmarks")}><img src="/icons/fav.svg"/></span>
+            <span title={I18n.t("topbar.history")}><img alt="history icon" src="/icons/histo.svg"/></span>
+            <span title={I18n.t("topbar.bookmarks")}><img alt="bookmarks icon" src="/icons/fav.svg"/></span>
          </div>
 
          <div id="lang-login">
@@ -1612,13 +1612,13 @@ export function top_right_menu(that,etextTitle,backUrl,etextres,isMirador,locati
          { lang_selec(that) }
          { that.props.auth && login }
          <IconButton id="burger" onClick={() => that.setState({collapse:{...that.state.collapse,burgerOn:!that.state.collapse.burgerOn}})}>
-            { !that.state.collapse.burgerOn ? <img src="/icons/burger.svg" /> : <Close style={{color:"#222222"}}/> }
+            { !that.state.collapse.burgerOn ? <img alt="burger icon" src="/icons/burger.svg" /> : <Close style={{color:"#222222"}}/> }
          </IconButton>         
          </div>
 
          {(false && that.props.auth && isGroup(that.props.auth, "fullaccess")) 
-            ? <a target="_blank" href="https://beta.bdrc.io/" id="donate" ><img style={{background:"white",borderRadius:"3px",verticalAlign:"-11px"}} width="33" src="/icons/BUDA-small.svg"/>BETA</a>
-            : (!that.props.config || !that.props.config.chineseMirror) && <a target="_blank" href="https://bdrc.io/donation/" id="donate"><img src="/donate.svg"/>{I18n.t("topbar.donate")}</a>
+            ? <a target="_blank" href="https://beta.bdrc.io/" id="donate" ><img alt="BUDA icon" style={{background:"white",borderRadius:"3px",verticalAlign:"-11px"}} width="33" src="/icons/BUDA-small.svg"/>BETA</a>
+            : (!that.props.config || !that.props.config.chineseMirror) && <a target="_blank" href="https://bdrc.io/donation/" id="donate"><img alt="donate icon" src="/donate.svg"/>{I18n.t("topbar.donate")}</a>
          }
 
 
@@ -3824,7 +3824,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   <div class="match" style={{marginBottom:0}}>
                      <span class="label">{I18n.t("result.hasInstance", {count:nb})}</span>
                      <span class="assets">
-                     { (hasOpenPossibly.length > 0) && <span title={getPropLabel(this,tmp+"assetAvailability",false)+": "+getPropLabel(this,tmp+"possibleAccess",false)}><img src="/icons/open.png"/></span>}
+                     { (hasOpenPossibly.length > 0) && <span title={getPropLabel(this,tmp+"assetAvailability",false)+": "+getPropLabel(this,tmp+"possibleAccess",false)}><img alt="open access icon" src="/icons/open.png"/></span>}
                      { (hasImage.length > 0) && <span title={getPropLabel(this,tmp+"assetAvailability",false)+": "+getPropLabel(this,tmp+"hasImage",false)}>{svgImageS}</span>}
                      { (hasEtext.length > 0) && <span title={getPropLabel(this,tmp+"assetAvailability",false)+": "+getPropLabel(this,tmp+"hasEtext",false)}>{svgEtextS}</span>}
                      </span>
@@ -4374,9 +4374,9 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
                   if(outlineB !== undefined && (!T || T !== "Etext")) {
                      outlineB.push(<span class="sepa"/>)
-                     outlineB.push(<Link class="outL" to={iri}><img src="/scripts/mirador/images/collecR.svg"/>{I18n.t("result.openO")}</Link>)
+                     outlineB.push(<Link class="outL" to={iri}><img alt="collection icon" src="/scripts/mirador/images/collecR.svg"/>{I18n.t("result.openO")}</Link>)
                      outlineB.push(<span class="sepa"/>)
-                     outlineB.push(<Link class="rec" to={iri.replace(/(show[/]).*?part=([^&]+)&/,"$1$2?")}><img src="/icons/rec.svg"/>{I18n.t("resource.openR")}</Link>)
+                     outlineB.push(<Link class="rec" to={iri.replace(/(show[/]).*?part=([^&]+)&/,"$1$2?")}><img alt="record icon" src="/icons/rec.svg"/>{I18n.t("resource.openR")}</Link>)
                   }
 
                   //loggergen.log("2 val:",i.lang,i)
@@ -4674,7 +4674,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       //loggergen.log("prov:",prov,nologo,nologo[prov])
 
       if(prov && prov !== "bdrc") { 
-         if(img[prov]) hasProv = <img class={"provImg "+prov+ (orec.length?" oriRec":"")} title={I18n.t("copyright.provided",{provider:providers[prov]})} src={img[prov]}/>
+         if(img[prov]) hasProv = <img alt="provider icon" class={"provImg "+prov+ (orec.length?" oriRec":"")} title={I18n.t("copyright.provided",{provider:providers[prov]})} src={img[prov]}/>
          else if(nologo[prov]) hasProv = <span class={"provImg "+ prov + (orec.length?" oriRec":"")}  title={I18n.t("copyright.provided",{provider:providers[prov]})} >{nologo[prov]}</span>
       }
 
@@ -4864,10 +4864,10 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                               <span class="T">{resulType}{langs}</span>
                               <h3 key="lit" lang={lang}>
                                  {lit}
-                                 { (resUrl && !resUrl.includes("/show/bdr:") && !resUrl.includes("/show/bda:")) && <img class="link-out" src="/icons/link-out_fit.svg"/>}
+                                 { (resUrl && !resUrl.includes("/show/bdr:") && !resUrl.includes("/show/bda:")) && <img alt="link out icon" class="link-out" src="/icons/link-out_fit.svg"/>}
                                  { lang && <Tooltip key={"tip"} placement="bottom-end" title={
                                           <div style={{margin:"10px"}}>
-                                             {I18n.t(languages[lang]?languages[lang].replace(/search/,"tip"):lang)}/>
+                                             {I18n.t(languages[lang]?languages[lang].replace(/search/,"tip"):lang)}
                                           </div>
                                        }>
                                           <span className="lang">&nbsp;{lang}</span>
@@ -4902,25 +4902,25 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             <div id="num-box" class={(this.state.checked[prettId] === true?"checked":"")} style={{flexShrink:0}} onClick={(e) => this.setState({repage:true,checked:{...this.state.checked,[prettId]:!this.state.checked[prettId]}})}>{warnStatus}{I18n.t("punc.num",{num:n})}</div>,         
             <div id="icon" class={enType + (hasCopyR?" wCopyR":"")+(hasThumb.length > 0 ? "" : " noThumb")}>
                { hasThumb.length > 0  && <div class="thumb" title={I18n.t("copyright.view")}>{
-                   getIconLink(viewUrl?viewUrl:resUrl+"#open-viewer", <LazyLoad height={130} offset={500}><img src={hasThumb}/></LazyLoad>)
+                   getIconLink(viewUrl?viewUrl:resUrl+"#open-viewer", <LazyLoad height={130} offset={500}><img alt="thumbnail" src={hasThumb}/></LazyLoad>)
                   }</div> }
                { hasThumb.length === 0 && [
                   <div>{
-                     getIconLink(resUrl,<img src={"/icons/search/"+enType+".svg"}/>)
+                     getIconLink(resUrl,<img alt="search type icon" src={"/icons/search/"+enType+".svg"}/>)
                   }</div>, 
                   <div>{
-                     getIconLink(resUrl,<img src={"/icons/search/"+enType+"_.svg"}/>)
+                     getIconLink(resUrl,<img alt="search type icon" src={"/icons/search/"+enType+"_.svg"}/>)
                   }</div>] }                  
                <div class="RID">{prettId}</div>
                {hasProv}
-               { /*hasCopyR === "copyleft" && <img title={I18n.t("copyright.open")} src="/icons/open.svg"/>*/ }
-               {hasCopyR === "quality" && <span class="copyRi lowQ" title={I18n.t("copyright.lowQuality")}><img src="/icons/lowrate.png"/></span>}
-               {hasCopyR === "fair_use" && <span class="copyRi" title={I18n.t("copyright.fairUse")}><img src="/icons/fair_use.svg"/></span>}
-               {hasCopyR === "temporarily" && <span class="copyRi" title={I18n.t("copyright.tempo")}><img src="/icons/temporarily.svg"/></span>}
-               {hasCopyR === "sealed" && <span class="copyRi" title={I18n.t("copyright.sealed")}><img src="/icons/sealed.svg"/></span>}
-               {hasCopyR === "unknown" && <span class="copyRi" title={this.fullname(access)}><img src="/icons/unknown.svg"/></span>}
-               {!hasImage && <span class="copyRi noImg" title={I18n.t("copyright.noImg")}><img src="/icons/noimg.svg"/></span>}
-               { /* hasThumb.length > 0 && getIconLink(viewUrl?viewUrl:resUrl+"#open-viewer", <img title={I18n.t("copyright.scans")} style={{width:"20px"}} src="/icons/search/images.svg"/>) */}
+               { /*hasCopyR === "copyleft" && <img alt="open access icon" title={I18n.t("copyright.open")} src="/icons/open.svg"/>*/ }
+               {hasCopyR === "quality" && <span class="copyRi lowQ" title={I18n.t("copyright.lowQuality")}><img alt="low quality icon" src="/icons/lowrate.png"/></span>}
+               {hasCopyR === "fair_use" && <span class="copyRi" title={I18n.t("copyright.fairUse")}><img alt="fair use icon" src="/icons/fair_use.svg"/></span>}
+               {hasCopyR === "temporarily" && <span class="copyRi" title={I18n.t("copyright.tempo")}><img alt="temporarily restricted icon" src="/icons/temporarily.svg"/></span>}
+               {hasCopyR === "sealed" && <span class="copyRi" title={I18n.t("copyright.sealed")}><img alt="sealed icon" src="/icons/sealed.svg"/></span>}
+               {hasCopyR === "unknown" && <span class="copyRi" title={this.fullname(access)}><img alt="unknown restriction icon" src="/icons/unknown.svg"/></span>}
+               {!hasImage && <span class="copyRi noImg" title={I18n.t("copyright.noImg")}><img alt="no image icon" src="/icons/noimg.svg"/></span>}
+               { /* hasThumb.length > 0 && getIconLink(viewUrl?viewUrl:resUrl+"#open-viewer", <img alt="scans icon" title={I18n.t("copyright.scans")} style={{width:"20px"}} src="/icons/search/images.svg"/>) */}
             </div>
          ]
 
@@ -5078,7 +5078,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   if(providers[src]) prov = providers[src]
 
                   let image = <div class="sameAsLogo"><div>{(!providers[src] || providers[src].indexOf(" ")!==-1?src:providers[src]).toUpperCase()}</div></div>
-                  if(img[src]) image = <img src={img[src]}/>
+                  if(img[src]) image = <img alt="provider icon" src={img[src]}/>
 
                   if(h == 0) sources.push(
                      <div class="source-data" id={src}>
@@ -5114,7 +5114,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             }
                      /*
                      <Tooltip placement="bottom-end" title={<div style={{margin:"10px"}}>Show data from {sameAsMap[src]?sameAsMap[src]:src.toUpperCase()}</div>}>
-                        <Link to={"/show/"+hasRes[src]}><img src={img[src]}/>
+                        <Link to={"/show/"+hasRes[src]}><img alt="provider icon" src={img[src]}/>
                      </Link></Tooltip>
                      */
                
@@ -5280,7 +5280,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
           }>
 
           <a id="permalink" {...this.state.collapse[id] || hasNbRepro?{class:"wInstance"}:{}} style={{marginLeft:"0px"}} title={I18n.t("misc.permalink")}>
-             <img src="/icons/PLINK.svg"/>
+             <img alt="permalink icon" src="/icons/PLINK.svg"/>
           </a>
        </CopyToClipboard> )
 
@@ -7106,7 +7106,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                            /* <span className="void">Open {this._menus[id].full.length > 1 ?<b>&nbsp;{short}&nbsp;</b>:"resource"} in {this._menus[id].src} website</span> */
                            <a href={u} class="menu-item-source" target="_blank">
                               <MenuItem onClick={(ev) => this.handleCloseSourceMenu(ev,id)}>
-                                 {I18n.t("result.open")} {m.full.length > 1 ?<b>&nbsp;{short}&nbsp;</b>:I18n.t("result.resource")} {I18n.t("result.in")} &nbsp;<b>{m.src}</b><img src="/icons/link-out.svg"/>
+                                 {I18n.t("result.open")} {m.full.length > 1 ?<b>&nbsp;{short}&nbsp;</b>:I18n.t("result.resource")} {I18n.t("result.in")} &nbsp;<b>{m.src}</b><img alt="link out icon" src="/icons/link-out.svg"/>
                               </MenuItem>
                            </a>
                      )
@@ -7789,9 +7789,9 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   <div class="fond-logo">
                      <span /*title="Photo by Ven. Matthieu Ricard"*/ id="logo" target="_blank" old-href="https://www.tbrc.org/"
                         data-caption='Photo by Ven. Matthieu Ricard'>
-                        {/* <img src="/logo.svg" style={{width:"200px"}} /> */}
-                        {/* <img src="/pichome.jpg" /> */}
-                        <img src="library-hero.jpg" />
+                        {/* <img alt="BDRC logo" src="/logo.svg" style={{width:"200px"}} /> */}
+                        {/* <img alt="home hero" src="/pichome.jpg" /> */}
+                        <img alt="library hero" src="library-hero.jpg" />
                         <div>
                            <div>
                               {/* { I18n.t("home.BUDA") } */}
@@ -7808,8 +7808,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                { this.props.config.khmerServer &&  !this.props.loading && !this.props.keyword && 
                   <div class="fond-logo">
                      <span id="logo" target="_blank" old-href="https://www.tbrc.org/">
-                        {/* <img src="/logo.svg" style={{width:"200px"}} /> */}
-                        <img src="/pichome_khmer.jpg" />
+                        {/* <img alt="BDRC logo" src="/logo.svg" style={{width:"200px"}} /> */}
+                        <img alt="home hero" src="/pichome_khmer.jpg" />
                         <div>
                            <div>
                               {/* { I18n.t("home.BUDA") } */}
@@ -8053,7 +8053,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                <section id="learn">
                   <div>
                      <h2>{I18n.t("home.khmer.section1.title")}</h2>
-                     <div class="float"><img src="/khmerhome-pic.jpg"/><p><Trans i18nKey="home.khmer.section1.caption" components={{lk:<Link className="khmer-link" />}}/></p></div>
+                     <div class="float"><img alt="khmer home picture" src="/khmerhome-pic.jpg"/><p><Trans i18nKey="home.khmer.section1.caption" components={{lk:<Link className="khmer-link" />}}/></p></div>
                      <Trans i18nKey="home.khmer.section1.text" components={{ newline: <br />, parag: <p />, note: <span className="note" />, lk:<a class="khmer-link" />, nbsp:<span style={{whiteSpace:"nowrap"}} />}} />
                      <div style={{visibility:"hidden"}}>
                         <span className="noteText"><Trans i18nKey="home.khmer.section1.noteA" components={{ note: <span className="note" />}} /></span>
@@ -8077,15 +8077,15 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      </div>
                   </div>
                   <div class="imgs">
-                     <a href="https://www.akhmerbuddhistfoundation.org/" target="_blank"><img src="/scripts/static/images/AKBF.jpg"/></a>
-                     <a href="https://www.efeo.fr/" target="_blank"><img src="/scripts/static/images/EFEO.jpg"/></a>
+                     <a href="https://www.akhmerbuddhistfoundation.org/" target="_blank"><img alt="AKBF logo" src="/scripts/static/images/AKBF.jpg"/></a>
+                     <a href="https://www.efeo.fr/" target="_blank"><img alt="EFEO logo" src="/scripts/static/images/EFEO.jpg"/></a>
                   </div>
                </section>
             </>
            }
            {  (message.length > 0 || message.length == 0 && !this.props.loading ) && <div id="res-header" ref={this._refs["header"]}>
                <div>
-                  <div id="settings" onClick={() => this.setState({collapse:{...this.state.collapse, settings:!this.state.collapse.settings}})}><img src="/icons/settings.svg"/></div>
+                  <div id="settings" onClick={() => this.setState({collapse:{...this.state.collapse, settings:!this.state.collapse.settings}})}><img alt="settings icon" src="/icons/settings.svg"/></div>
                   {  // DONE change to popover style open/close
                      sortByList && this.popwidget(I18n.t("Lsidebar.sortBy.title",{by,reverse}),"sortBy",sortByPopup, <ImportExport className="header-icon"/> ) 
                   }
@@ -8106,7 +8106,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                               : I18n.t("sort.showAll") }
                         </p>
                      </div>}
-                  { metaK.includes("hasMatch") &&  this.popwidget(hasMatchTitle,"hasMatchPopup", hasMatchPopup,  <img src="/icons/exact.png" width="20px" style={{marginRight:"8px"}} /> )  }
+                  { metaK.includes("hasMatch") &&  this.popwidget(hasMatchTitle,"hasMatchPopup", hasMatchPopup,  <img alt="exact match icon" src="/icons/exact.png" width="20px" style={{marginRight:"8px"}} /> )  }
                   <div id="pagine" lang={this.props.locale}>
                      <div>
                            { pageLinks && <span>{I18n.t("search.page")} { pageLinks }</span>}
@@ -8185,7 +8185,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                                  onClick={() => { document.documentElement.scrollTo({ top:0, left:0, behavior: "instant" }); }} 
                                     className={this.props.tradition === t ? "active": ""} to={"/tradition/"+t+"/"+(customTradLink[t]??"")}>
                                  <span>{I18n.t("tradition."+t+"T")}</span>
-                                 <img src={"/tradi/"+t+".jpg"}/>
+                                 <img alt="tradition icon" src={"/tradi/"+t+".jpg"}/>
                               </Link>
                            ))}
                         </div>
@@ -8210,7 +8210,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   <List key={2} id="results">
                      { this.props.isInstance && this.state.backToWorks && <a className="uri-link"  onClick={(event) => {
                            this.resetFilters(event)
-                        }}><img src="/icons/back.png"/><span>{I18n.t("search.backToW")}</span></a> }
+                        }}><img alt="back to work icon" src="/icons/back.png"/><span>{I18n.t("search.backToW")}</span></a> }
                      { message }
                      { pageLinks && <div id="pagine">
                         <NavigateBefore

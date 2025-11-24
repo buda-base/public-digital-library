@@ -437,7 +437,7 @@ export class Profile extends Component<Props,State> {
             <div class="data" id="head">
               <div class="header">
                 <div class="before">
-                  <img referrerpolicy="no-referrer" src={picUrl}/>
+                  <img alt="profile picture" referrerpolicy="no-referrer" src={picUrl}/>
                 </div>
               </div> 
             </div>

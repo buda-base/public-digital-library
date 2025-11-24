@@ -42,18 +42,18 @@ class Footer extends Component<Props,State> {
                             <div id="s1">
                                 <SocialIcon target="_blank" url="https://www.facebook.com/BDRC.io" fgColor="#111312" bgColor="transparent" />
                                 <SocialIcon target="_blank" url="https://www.linkedin.com/company/buddhist-digital-resource-center/"  fgColor="#111312" bgColor="transparent" />
-                                <a href="https://www.instagram.com/buddhist_archive/" target="_blank"><img src="/icons/instagram.svg" style={{ height: "18px"}} /></a>
+                                <a href="https://www.instagram.com/buddhist_archive/" target="_blank"><img alt="instagram icon" src="/icons/instagram.svg" style={{ height: "18px"}} /></a>
                             </div>
                         </div></div>
                     </div>
                 </div>
                 <div class="foot">
                     <div class="p60" id="t1">
-                        <div class="p50" id="p1"><img src="/icons/Print-BDRC-icon.svg"/><div lang={this.props.locale}>{I18n.t("footer.print")}<a href={"https://bdrc.io/?p=1355"+locale.replace(/[?]/,"&")} target="_blank" lang={this.props.locale}>{I18n.t("footer.order")}</a></div></div>
-                        <div class="p50" id="p2"><img src="/icons/Newsletter-BDRC-icon.svg"/><div lang={this.props.locale}>{I18n.t("footer.join")}<a href="https://bdrc.app.neoncrm.com/np/clients/bdrc/subscribe.jsp?subscription=3" target="_blank" lang={this.props.locale}>{I18n.t("footer.subscribe")}</a></div></div>
+                        <div class="p50" id="p1"><img alt="print icon" src="/icons/Print-BDRC-icon.svg"/><div lang={this.props.locale}>{I18n.t("footer.print")}<a href={"https://bdrc.io/?p=1355"+locale.replace(/[?]/,"&")} target="_blank" lang={this.props.locale}>{I18n.t("footer.order")}</a></div></div>
+                        <div class="p50" id="p2"><img alt="newsletter icon" src="/icons/Newsletter-BDRC-icon.svg"/><div lang={this.props.locale}>{I18n.t("footer.join")}<a href="https://bdrc.app.neoncrm.com/np/clients/bdrc/subscribe.jsp?subscription=3" target="_blank" lang={this.props.locale}>{I18n.t("footer.subscribe")}</a></div></div>
                     </div>
                     <div class="p40" id="t2">
-                        <div class="p65" id="p1"><img src="/icons/donation.svg"/><span lang={this.props.locale}>{I18n.t("footer.support")}</span></div>
+                        <div class="p65" id="p1"><img alt="donation icon" src="/icons/donation.svg"/><span lang={this.props.locale}>{I18n.t("footer.support")}</span></div>
                         <div class="p35"><a id="donate" href={"https://bdrc.io/donation/"+locale} target="_blank" lang={this.props.locale}>{I18n.t("topbar.donate")}</a></div>
                     </div>
                 </div>

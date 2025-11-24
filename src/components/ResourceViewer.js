@@ -736,7 +736,7 @@ export function top_left_menu(that,pdfLink,monoVol,fairUse)
           }>
 
           <span id="permalink" style={{marginLeft:"0px"}} title={I18n.t("misc.permalink")}>
-             <img src="/icons/PLINK.png"/>{/* <ShareIcon /> */}
+             <img alt="permalink icon" src="/icons/PLINK.png"/>{/* <ShareIcon /> */}
              <span>{I18n.t("misc.permalink")}</span>
           </span>
        </CopyToClipboard> }
@@ -761,7 +761,7 @@ export function top_left_menu(that,pdfLink,monoVol,fairUse)
        }
        { that.props.IRI && getEntiType(that.props.IRI) === "Etext" && <a target="_blank" style={{fontSize:"26px"}} download className="goBack pdfLoader" href={that.props.IRI?that.props.IRI.replace(/bdr:/,bdr)+".txt":""}>
                 <IconButton title={I18n.t("resource.downloadAs")+" TXT"}>
-                   <img src="/DL_icon.svg" height="24" />
+                   <img alt="download icon" src="/DL_icon.svg" height="24" />
                 </IconButton>
                </a> }
        {
@@ -780,7 +780,7 @@ export function top_left_menu(that,pdfLink,monoVol,fairUse)
        */}
        { /*that.props.IRI && getEntiType(that.props.IRI) === "Etext" && <a target="_blank" style={{fontSize:"26px"}} download={that.props.IRI?that.props.IRI.replace(/bdr:/,"")+".txt":""} className="goBack pdfLoader" href={that.props.IRI?that.props.IRI.replace(/bdr:/,bdr)+".txt":""}>
                 <IconButton title={I18n.t("resource.downloadAs")+" TXT"}>
-                   <img src="/DL_icon.svg" height="24" />
+                   <img alt="download icon" src="/DL_icon.svg" height="24" />
                 </IconButton>
                </a>*/ }
        {pdfLink && 
@@ -801,7 +801,7 @@ export function top_left_menu(that,pdfLink,monoVol,fairUse)
                          that.setState({...that.state, pdfOpen:true,anchorElPdf:ev.currentTarget})
                       }
                    }>
-                   <img src="/DL_icon.svg" height="24" />
+                   <img alt="download icon" src="/DL_icon.svg" height="24" />
                 </IconButton>
                 { (that.props.pdfVolumes && that.props.pdfVolumes.length > 0) &&
                    <Popover
@@ -873,7 +873,7 @@ export function top_left_menu(that,pdfLink,monoVol,fairUse)
                       prompt(I18n.t("misc.clipboard"),that.props.imageAsset)
                 }>
 
-                <Button id="iiif" className="goBack" title="IIIF manifest"><img src="/iiif.png"/></Button>
+                <Button id="iiif" className="goBack" title="IIIF manifest"><img alt="IIIF manifest icon" src="/iiif.png"/></Button>
              </CopyToClipboard>]
 
        }
@@ -2165,7 +2165,7 @@ class ResourceViewer extends Component<Props,State>
 
       if(!str.match(/ /) && !str.match(/^http[s]?:/)) str = str.replace(/([a-z])([A-Z])/g,"$1"+(isUrl?"":' ')+"$2")
 
-      if(str.match(/^https?:\/\/[^ ]+$/)) { str = <a href={str} target="_blank" class="no-bdrc">{str}<img src="/icons/link-out.svg"/></a> }
+      if(str.match(/^https?:\/\/[^ ]+$/)) { str = <a href={str} target="_blank" class="no-bdrc">{str}<img alt="link out icon" src="/icons/link-out.svg"/></a> }
       else if(!noNewline) {
          str = str.split("\n").map((i) => ([i,<br/>]))
          str = [].concat.apply([],str);
@@ -3268,8 +3268,8 @@ class ResourceViewer extends Component<Props,State>
                link = "http://authority.dila.edu.tw/"+dir+"/index.php?fromInner="+link
             }
             let prefix = shortUri(elem.value).split(":")[0]
-            if(!providers[prefix]) return <a href={link} target="_blank" class="no-bdrc">{shortUri(decodeURI(elem.value))}<img src="/icons/link-out.svg"/></a>
-            else return <Tooltip placement="bottom-end" title={<span>{I18n.t("misc.seeO")} <b>{providers[prefix]}</b></span>}><a href={link} target="_blank" class="no-bdrc">{shortUri(decodeURI(elem.value))}<img src="/icons/link-out.svg"/></a></Tooltip>
+            if(!providers[prefix]) return <a href={link} target="_blank" class="no-bdrc">{shortUri(decodeURI(elem.value))}<img alt="link out icon" src="/icons/link-out.svg"/></a>
+            else return <Tooltip placement="bottom-end" title={<span>{I18n.t("misc.seeO")} <b>{providers[prefix]}</b></span>}><a href={link} target="_blank" class="no-bdrc">{shortUri(decodeURI(elem.value))}<img alt="link out icon" src="/icons/link-out.svg"/></a></Tooltip>
          }
 
          let dico = dic, ret = []
@@ -3348,7 +3348,7 @@ class ResourceViewer extends Component<Props,State>
             prov = this.getProviderID(prov);
             if(prov && prov !== "BDRC") { 
                prov = prov.toLowerCase()
-               prov = <Link to={"/show/"+sUri}><Tooltip placement="top" title={<span>{I18n.t("prop.tmp:provider")}{I18n.t("punc.colon")} <b>{providers[prov]}</b></span>}><div class={"inst-prov "+(prov)}><img src={provImg[prov]} /></div></Tooltip></Link>
+               prov = <Link to={"/show/"+sUri}><Tooltip placement="top" title={<span>{I18n.t("prop.tmp:provider")}{I18n.t("punc.colon")} <b>{providers[prov]}</b></span>}><div class={"inst-prov "+(prov)}><img alt="provider icon" src={provImg[prov]} /></div></Tooltip></Link>
             }
             else prov = null
 
@@ -3383,7 +3383,7 @@ class ResourceViewer extends Component<Props,State>
                   if(!thumbUrl.match(/[/]default[.][^.]+$/)) thumbUrl += "/full/"+(thumb[0].value.includes(".bdrc.io/")?"!2000,145":",145")+"/0/default.jpg"
                   else if(thumbUrl.match(/bdrc.io.*\/2000,\//)) thumbUrl = thumbUrl.replace(/\/2000,\//,"/!2000,145/")
                   else thumbUrl = thumbUrl.replace(/[/]max[/]/,"/"+(thumbUrl.includes(".bdrc.io/")?"!2000,145":",145")+"/")
-                  ret = [  <Link {...this.props.preview?{ target:"_blank" }:{}} to={"/show/"+sUri+"#open-viewer"} class={"images-thumb"} style={{"background-image":"url("+thumbUrl+")"}}><img src={thumbUrl}/></Link> ]
+                  ret = [  <Link {...this.props.preview?{ target:"_blank" }:{}} to={"/show/"+sUri+"#open-viewer"} class={"images-thumb"} style={{"background-image":"url("+thumbUrl+")"}}><img alt="thumbnail" src={thumbUrl}/></Link> ]
                }
                            
                if(prov) ret.push(prov)
@@ -3406,7 +3406,7 @@ class ResourceViewer extends Component<Props,State>
                   if(!thumbUrl.match(/[/]default[.][^.]+$/)) thumbUrl += "/full/"+(thumbV[0].value.includes(".bdrc.io/")?"!2000,145":",145")+"/0/default.jpg"
                   else if(thumbUrl.match(/bdrc.io.*\/2000,\//)) thumbUrl = thumbUrl.replace(/\/2000,\//,"/!2000,145/")
                   else thumbUrl = thumbUrl.replace(/[/]max[/]/,"/"+(thumbUrl.includes(".bdrc.io/")?"!2000,145":",145")+"/")
-                  ret = [  <Link {...this.props.preview?{ target:"_blank" }:{}} to={"/show/"+sUri} class={"images-thumb"} style={{"background-image":"url("+thumbUrl+")"}}><img src={thumbUrl}/></Link> ]
+                  ret = [  <Link {...this.props.preview?{ target:"_blank" }:{}} to={"/show/"+sUri} class={"images-thumb"} style={{"background-image":"url("+thumbUrl+")"}}><img alt="thumbnail" src={thumbUrl}/></Link> ]
                }
                            
                if(inRoot && inRoot.length && info && lang && lang === "bo-x-ewts" && info.match(/^([^ ]+ ){11}/)) info = [ info.replace(/^(([^ ]+ ){10}).*?$/,"$1"), <span class="ellip">{info.replace(/^([^ ]+ ){10}([^ ]+.*?)$/,"$2")}</span> ]
@@ -3471,19 +3471,19 @@ class ResourceViewer extends Component<Props,State>
 
             // #828
             if(!elem.value.includes("purl.bdrc.io")) { 
-               if(orec && orec.length) link = <a class="urilink prefLabel no-bdrc" href={orec[0].value} target="_blank">{info}<Tooltip placement="bottom-end" title={<span>See on <b>{providers[prefix]}</b></span>}><img src="/icons/link-out.svg"/></Tooltip></a>
+               if(orec && orec.length) link = <a class="urilink prefLabel no-bdrc" href={orec[0].value} target="_blank">{info}<Tooltip placement="bottom-end" title={<span>See on <b>{providers[prefix]}</b></span>}><img alt="link out icon" src="/icons/link-out.svg"/></Tooltip></a>
                else if(sameBDRC) {
                   if(!info) info = shortUri(elem.value)
                   link = <a class="urilink prefLabel" href={"/show/"+shortUri(sameBDRC)} target="_blank">{info}</a>
                }
                else if(canUrl && canUrl.length) { 
                   if(!info) info = shortUri(elem.value)                  
-                  link = <a class="urilink prefLabel no-bdrc" href={canUrl[0].value} target="_blank">{info}<Tooltip placement="bottom-end" title={<span>See on <b>{providers[prefix]}</b></span>}><img src="/icons/link-out.svg"/></Tooltip></a>
+                  link = <a class="urilink prefLabel no-bdrc" href={canUrl[0].value} target="_blank">{info}<Tooltip placement="bottom-end" title={<span>See on <b>{providers[prefix]}</b></span>}><img alt="link out icon" src="/icons/link-out.svg"/></Tooltip></a>
                   if(srcProv.indexOf(" ") !== -1) srcProv = srcSame
                }
                else {
                   if(!info) info = shortUri(elem.value)
-                  link = <a class="urilink prefLabel no-bdrc" href={elem.value} target="_blank">{info}<Tooltip placement="bottom-end" title={<span>See on <b>{providers[prefix]}</b></span>}><img src="/icons/link-out.svg"/></Tooltip></a>
+                  link = <a class="urilink prefLabel no-bdrc" href={elem.value} target="_blank">{info}<Tooltip placement="bottom-end" title={<span>See on <b>{providers[prefix]}</b></span>}><img alt="link out icon" src="/icons/link-out.svg"/></Tooltip></a>
                } 
             }
             else {                
@@ -3708,7 +3708,7 @@ class ResourceViewer extends Component<Props,State>
                   else thumbUrl = thumbUrl.replace(/[/](max|(,600))[/]/,"/"+(thumbUrl.includes(".bdrc.io/")?"!2000,145":",145")+"/")
                }
                let vlink = "/"+show+"/"+prefix+":"+pretty+"?s="+encodeURIComponent(this.props.location.pathname+this.props.location.search)+"#open-viewer"                
-               thumb = <div class="images-thumb" style={{"background-image":"url("+thumbUrl+")"}}><img src={thumbUrl}/></div>;               
+               thumb = <div class="images-thumb" style={{"background-image":"url("+thumbUrl+")"}}><img alt="thumbnail" src={thumbUrl}/></div>;               
 
                const checkDLD = (ev) => {
                   loggergen.log("CDLD:",this.props.useDLD)
@@ -3790,9 +3790,9 @@ class ResourceViewer extends Component<Props,State>
 
                      fairTxt = <>
                         <span class="fairuse-IA-link-new">
-                           {/* <img class="ia" src="/IA.svg"/> */}
-                           {<Trans i18nKey="access.fairUseIA3" components={{ icon:<img class="link-out" src="/icons/link-out_fit.svg"/>, lk:<a target="_blank" href={IAlink} /> }} />}
-                           {/* <img class="link-out" src="/icons/link-out_fit.svg"/> */}
+                           {/* <img alt="IA icon" class="ia" src="/IA.svg"/> */}
+                           {<Trans i18nKey="access.fairUseIA3" components={{ icon:<img alt="link out icon" class="link-out" src="/icons/link-out_fit.svg"/>, lk:<a target="_blank" href={IAlink} /> }} />}
+                           {/* <img alt="link out icon" class="link-out" src="/icons/link-out_fit.svg"/> */}
                         </span>
                         {/* <a class="fairuse-IA-link" onClick={toggleSnippet}>{I18n.t("access.snippet"+(this.state.collapse.snippet?"H":"V"))}</a>*/}
                         <br/> 
@@ -4095,7 +4095,7 @@ class ResourceViewer extends Component<Props,State>
             let logo = provImg[pref]
             let prov = providers[pref]
             if(!this.props.IRI.startsWith(pref+":") && pref !== "bdr") nb ++
-            return (<span>{I18n.t("popover.source")}{I18n.t("punc.colon")} <img src={logo}/><b>{prov}</b></span>) 
+            return (<span>{I18n.t("popover.source")}{I18n.t("punc.colon")} <img alt="provider icon" src={logo}/><b>{prov}</b></span>) 
          } ).filter(e => e)
 
 
@@ -4157,7 +4157,7 @@ class ResourceViewer extends Component<Props,State>
       return (
          <div class="hover-menu">
             { /*
-            <img src="/icons/info.svg" onMouseEnter={(e) => { 
+            <img alt="info icon" src="/icons/info.svg" onMouseEnter={(e) => { 
                this.setState({...this.state,collapse:{...this.state.collapse,["hover"+ID]:!this.state.collapse["hover"+ID]}, anchorEl:{...this.state.anchorEl,["hover"+ID]:e.currentTarget} } ) 
             } } />
             */}
@@ -4165,7 +4165,7 @@ class ResourceViewer extends Component<Props,State>
             { hasTT && <Tooltip placement="top-end" title={<span class="over" onMouseEnter={this.toggleHoverMtooltip(ID,false)}>{info}</span>} >
                <div style={{display:"inline-block" /*,pointerEvents:"none"*/ }} data-id={ID}>
                   <span id="anchor" onClick={this.toggleHoverM(ID)}>
-                     <img src="/icons/info.svg"/>
+                     <img alt="info icon" src="/icons/info.svg"/>
                      {nb>0 && <span id="nb">{nb}</span> }
                   </span>
                </div>
@@ -4186,9 +4186,9 @@ class ResourceViewer extends Component<Props,State>
                               ev.preventDefault()
                               ev.stopPropagation()
                               return false
-                           }}><img style={{width:"16px"}} src="/icons/PLINK_small.svg"/>
+                           }}><img alt="permalink icon" style={{width:"16px"}} src="/icons/PLINK_small.svg"/>
                            </Link>}
-                     <img src="/icons/info.svg" onClick={this.toggleHoverM(ID)} />
+                     <img alt="info icon" src="/icons/info.svg" onClick={this.toggleHoverM(ID)} />
                   </span> 
                </div>
             }
@@ -4226,7 +4226,7 @@ class ResourceViewer extends Component<Props,State>
                      <div class="data">
                         <span id="anchor" onClick={this.toggleHoverM(ID,null,false)}>     
                            <Close/>                    
-                           {/* <img src="/icons/info.svg"/> */}
+                           {/* <img alt="info icon" src="/icons/info.svg"/> */}
                         </span>
                         <div data-prop={shortUri(prop)}>
                            {!parent && [
@@ -4273,7 +4273,7 @@ class ResourceViewer extends Component<Props,State>
                                  let asso,tab ;
                                  if(this.props.assocResources) asso = this.props.assocResources[f]                  
                                  if(asso && (tab=asso.filter(t => t.fromKey === adm+"canonicalHtml")).length) link = tab[0].value  
-                                 return (<div><a class="urilink" href={link} target="_blank">{a}{pref!=="bdr"&&<img src="/icons/link-out.svg"/>}</a><span>{I18n.t("misc.from")}</span><img src={logo}/><b>{prov}</b></div>)
+                                 return (<div><a class="urilink" href={link} target="_blank">{a}{pref!=="bdr"&&<img alt="link out icon" src="/icons/link-out.svg"/>}</a><span>{I18n.t("misc.from")}</span><img alt="provider icon" src={logo}/><b>{prov}</b></div>)
                               })}
                               </TabPanel>
                               <TabPanel>
@@ -6259,7 +6259,7 @@ class ResourceViewer extends Component<Props,State>
             // TODO fix Sakya Research Center
             if(!list.includes(prefix)) {
                list.push(prefix)
-               return <span class={"provider "+prefix}>{provImg[prefix]?<img src={provImg[prefix]}/>:<span class="img">{prefix.replace(/^cbc.$/,"cbc@").toUpperCase()}</span>}</span>
+               return <span class={"provider "+prefix}>{provImg[prefix]?<img alt="provider icon" src={provImg[prefix]}/>:<span class="img">{prefix.replace(/^cbc.$/,"cbc@").toUpperCase()}</span>}</span>
             } else {
                useRid.push(prefix)
             }
@@ -6293,8 +6293,8 @@ class ResourceViewer extends Component<Props,State>
                      // DONE case when more than on resource from a given provider (cf RKTS)
                      let useR = !useRid.includes(prov)
                      
-                     let open = <MenuItem>{I18n.t("result.open")} {useR && name} {!useR && <emph> {shortUri(s.value)} </emph>}{I18n.t("misc.in")} &nbsp;<b>{providers[prov]}</b><img src="/icons/link-out.svg"/></MenuItem>
-                     if(s.isOrig) open = <MenuItem style={{display:"block",height:"32px",lineHeight:"12px"}}>{I18n.t("popover.imported")} <b>{providers[prov]}</b><br/>{I18n.t("popover.seeO")}<img style={{verticalAlign:"middle"}} src="/icons/link-out.svg"/></MenuItem>
+                     let open = <MenuItem>{I18n.t("result.open")} {useR && name} {!useR && <emph> {shortUri(s.value)} </emph>}{I18n.t("misc.in")} &nbsp;<b>{providers[prov]}</b><img alt="link out icon" src="/icons/link-out.svg"/></MenuItem>
+                     if(s.isOrig) open = <MenuItem style={{display:"block",height:"32px",lineHeight:"12px"}}>{I18n.t("popover.imported")} <b>{providers[prov]}</b><br/>{I18n.t("popover.seeO")}<img alt="link out icon" style={{verticalAlign:"middle"}} src="/icons/link-out.svg"/></MenuItem>
 
                      //loggergen.log("permaSame",s,data,tab,link,name,prov) 
 
@@ -6346,10 +6346,10 @@ class ResourceViewer extends Component<Props,State>
    
 
                let ret = <a target="_blank" href={link} className="otherRlink">                     
-                  <span class={"provider "+prefix}>{provImg[prefix]?<img src={provImg[prefix]}/>:<span class="img">{prefix.replace(/^cbc.$/,"cbc@").toUpperCase()}</span>}</span>
+                  <span class={"provider "+prefix}>{provImg[prefix]?<img alt="provider icon" src={provImg[prefix]}/>:<span class="img">{prefix.replace(/^cbc.$/,"cbc@").toUpperCase()}</span>}</span>
                   {/* {I18n.t("result.open")} {useR && name} {!useR && <emph> {shortUri(s.value)} </emph>}{I18n.t("misc.in")} &nbsp; */}
                   {providers[prov]}
-                  <img src="/icons/link-out.svg"/>
+                  <img alt="link out icon" src="/icons/link-out.svg"/>
                </a>
             
                const sav = [ ret ]
@@ -6406,8 +6406,8 @@ class ResourceViewer extends Component<Props,State>
                      // DONE case when more than on resource from a given provider (cf RKTS)
                      let useR = !useRid.includes(prov)
                      
-                     let open = <MenuItem>{I18n.t("result.open")} {useR && name} {!useR && <emph> {shortUri(s.value)} </emph>}{I18n.t("misc.in")} &nbsp;<b>{providers[prov]}</b><img src="/icons/link-out.svg"/></MenuItem>
-                     if(s.isOrig) open = <MenuItem style={{display:"block",height:"32px",lineHeight:"12px"}}>{I18n.t("popover.imported")} <b>{providers[prov]}</b><br/>{I18n.t("popover.seeO")}<img style={{verticalAlign:"middle"}} src="/icons/link-out.svg"/></MenuItem>
+                     let open = <MenuItem>{I18n.t("result.open")} {useR && name} {!useR && <emph> {shortUri(s.value)} </emph>}{I18n.t("misc.in")} &nbsp;<b>{providers[prov]}</b><img alt="link out icon" src="/icons/link-out.svg"/></MenuItem>
+                     if(s.isOrig) open = <MenuItem style={{display:"block",height:"32px",lineHeight:"12px"}}>{I18n.t("popover.imported")} <b>{providers[prov]}</b><br/>{I18n.t("popover.seeO")}<img alt="link out icon" style={{verticalAlign:"middle"}} src="/icons/link-out.svg"/></MenuItem>
 
                      //loggergen.log("permaSame",s,data,tab,link,name,prov) 
 
@@ -6533,7 +6533,7 @@ renderPopupCitation(IRI) {
                               anchorEl:{ ...this.state.anchorEl, export:({...ev}).currentTarget }
                            })
                         }}>
-                           <span class="icon"><img src="/icons/export.svg"/></span> {I18n.t("resource.export")} { this.state.collapse.export ? <ExpandLess/>:<ExpandMore/>}
+                           <span class="icon"><img alt="export icon" src="/icons/export.svg"/></span> {I18n.t("resource.export")} { this.state.collapse.export ? <ExpandLess/>:<ExpandMore/>}
                         </a>
                      </div>}
                   </div>
@@ -6840,20 +6840,20 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                   </ListItem>)                              
                else  return (<ListItem className="pdfMenu">
                         <b>{(e.volume !== undefined?(!e.volume.match || e.volume.match(/^[0-9]+$/)?"Volume ":"")+(e.volume):monoVol)}{I18n.t("punc.colon")}</b>
-                        <span class="a" onClick={ev => that.handlePdfClick(ev,e.link,e.pdfFile)}
+                        <a onClick={ev => that.handlePdfClick(ev,e.link,e.pdfFile)}
                            {...(Ploaded ?{href:e.pdfFile}:{})}
                         >
                            { Ploading && <Loader className="pdfSpinner" loaded={Ploaded} scale={0.35}/> }
                            <span {... (Ploading?{className:"pdfLoading"}:{className: this.state.collapse["pdf_"+e.link]?"on":""})} >{pdfMsg}</span>
                            { Ploading && e.pdfPercent !== undefined && <span>&nbsp;{e.pdfPercent}%</span>}
-                        </span>
-                        <span class="a" onClick={ev => that.handlePdfClick(ev,e.link,e.zipFile,"zip")}
+                        </a>
+                        <a onClick={ev => that.handlePdfClick(ev,e.link,e.zipFile,"zip")}
                            {...(Zloaded ?{href:e.zipFile}:{})}
                         >
                            { Zloading && <Loader className="zipSpinner" loaded={Zloaded} scale={0.35}/> }
                            <span {... (Zloading?{className:"zipLoading"}:{className:this.state.collapse["zip_"+e.link]?"on":""})}>{zipMsg}</span>
                            { Zloading && e.zipPercent !== undefined && <span>&nbsp;{e.zipPercent}%</span>}
-                        </span>
+                        </a>
                         { that.props.IRI && getEntiType(that.props.IRI) === "Etext" && // TODO fix download etext
                            <div> 
 
@@ -6912,7 +6912,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
           }>
 
           <span id="permalink" style={{marginLeft:"0px"}} title={I18n.t("misc.permalink")}>
-             <img src="/icons/PLINK.png"/>{/* <ShareIcon /> */}
+             <img alt="permalink icon" src="/icons/PLINK.png"/>{/* <ShareIcon /> */}
              <span>{I18n.t("misc.permalink")}</span>
           </span>
        </CopyToClipboard> }
@@ -6922,7 +6922,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
       <span class="NL nl-dl"></span>
 
       <span id="DL" ref={this._refs["perma_DL"]} onClick={(e) => this.setState({...this.state,anchorPermaDL:e.currentTarget, collapse: {...this.state.collapse, permaDL:!this.state.collapse.permaDL } } ) }>
-         <img src="/icons/DL_.svg"/>{I18n.t("resource.exportData",{data: "metadata" })} { this.state.collapse.permaDL ? <ExpandLess/>:<ExpandMore/>}
+         <img alt="download icon" src="/icons/DL_.svg"/>{I18n.t("resource.exportData",{data: "metadata" })} { this.state.collapse.permaDL ? <ExpandLess/>:<ExpandMore/>}
       </span>
 
       { that.props.IRI && that.props.IRI.match(/bdr:((MW)|(W[0-9])|(IE))/) && 
@@ -6942,7 +6942,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
 
       { cLegalD && <>
             <span class="NL nl-copy"></span>
-            <span id="copyright" title={this.fullname(cLegalD,false,false,true,false)}><img src={"/icons/"+copyR+".png"}/></span> 
+            <span id="copyright" title={this.fullname(cLegalD,false,false,true,false)}><img alt="copyright icon" src={"/icons/"+copyR+".png"}/></span> 
          </>
       }
 
@@ -7911,7 +7911,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
       if(!this.props.collecManif && this.props.imageAsset && this.props.imageAsset.match(/[/]collection[/]/)) imageLabel = "collection"
 
 
-      let src //= <div class="src"><img src="/logo.svg"/></div> 
+      let src //= <div class="src"><img alt="logo" src="/logo.svg"/></div> 
       let legal = this.getResourceElem(adm+(T=="Images"?"contentLegal":"metadataLegal")), legalD, sameLegalD
       if(legal && legal.length) legal = legal.filter(p => !p.fromSameAs)
       if(legal && legal.length && legal[0].value && this.props.dictionary) { 
@@ -7935,11 +7935,11 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
             const img = provImg[prov.toLowerCase()]
             if(orig) 
                src = <div class={"src orig "+(!img?prov:"")} onClick={(e) => this.setState({...this.state,anchorPermaSame:e.currentTarget, collapse: {...this.state.collapse, ["permaSame-permalink"]:!this.state.collapse["permaSame-permalink"] } } ) }>
-                  {img && <img src={img}/>}
+                  {img && <img alt="provider icon" src={img}/>}
                </div> 
             else  
                src = <div class={"src "+(!img?prov:"")}>
-                  {img && <img src={img}/>}
+                  {img && <img alt="provider icon" src={img}/>}
                </div> 
 
          }
@@ -8005,10 +8005,10 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
          else if(access.includes("Quality")) hasCopyR = "quality" ;
       }
 
-      if(hasCopyR === "fair_use") copyRicon = <img class="access-icon" title={I18n.t("copyright.fairUse")} src="/icons/fair_use.svg"/>
-      else if(hasCopyR === "temporarily") copyRicon = <img class="access-icon" title={I18n.t("copyright.tempo")} src="/icons/temporarily.svg"/>
-      else if(hasCopyR === "sealed") copyRicon = <img class="access-icon" title={I18n.t("copyright.sealed")} src="/icons/sealed.svg"/>
-      else if(hasCopyR === "quality") copyRicon = <img class="access-icon" title={I18n.t("copyright.quality")} src="/icons/unknown.svg"/>
+      if(hasCopyR === "fair_use") copyRicon = <img alt="fair use icon" class="access-icon" title={I18n.t("copyright.fairUse")} src="/icons/fair_use.svg"/>
+      else if(hasCopyR === "temporarily") copyRicon = <img alt="temporarily restricted icon" class="access-icon" title={I18n.t("copyright.tempo")} src="/icons/temporarily.svg"/>
+      else if(hasCopyR === "sealed") copyRicon = <img alt="sealed icon" class="access-icon" title={I18n.t("copyright.sealed")} src="/icons/sealed.svg"/>
+      else if(hasCopyR === "quality") copyRicon = <img alt="low quality icon" class="access-icon" title={I18n.t("copyright.quality")} src="/icons/unknown.svg"/>
       
 
       let rootWarn
@@ -8034,7 +8034,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                <a onClick={handleViewer} onContextMenu={handleViewer}  href={viewUrl.pathname+viewUrl.search} target="_blank" className={"firstImage "+(this.state.imageLoaded?"loaded":"")} 
                /*{...(this.props.config.hideViewers?{"onClick":() => this.showMirador(null,null,true),"style":{cursor:"pointer"}}:{})}*/ >
                   <Loader className="uvLoader" loaded={this.state.imageLoaded} color="#fff"/>
-                  <img onError={(e)=>this.setState({...this.state,imageError:"!"})} onLoad={(e)=>this.setState({...this.state,imageLoaded:true,imageError:false})} src={iiifThumb+"/full/!1000,500/0/default.jpg"} /> 
+                  <img alt="thumbnail" onError={(e)=>this.setState({...this.state,imageError:"!"})} onLoad={(e)=>this.setState({...this.state,imageLoaded:true,imageError:false})} src={iiifThumb+"/full/!1000,500/0/default.jpg"} /> 
                </a>
                { rootWarn }
             </div>
@@ -8046,7 +8046,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                <a onClick={handleViewer} onContextMenu={handleViewer}  href={viewUrl.pathname+viewUrl.search} target="_blank" className={"firstImage "+(this.state.imageLoaded?"loaded":"")} 
                /*{...(this.props.config.hideViewers?{"onClick":() => this.showMirador(null,null,true),"style":{cursor:"pointer"}}:{})}*/ >
                   <Loader className="uvLoader" loaded={this.state.imageLoaded} color="#fff"/>
-                  <img onError={(e)=>this.setState({...this.state,imageError:true})} onLoad={(e)=>this.setState({...this.state,imageLoaded:true})} src={iiifThumb+"/full/,500/0/default.jpg"} />                   
+                  <img alt="thumbnail" onError={(e)=>this.setState({...this.state,imageError:true})} onLoad={(e)=>this.setState({...this.state,imageLoaded:true})} src={iiifThumb+"/full/,500/0/default.jpg"} />                   
                </a>
                { rootWarn }
             </div>
@@ -8060,7 +8060,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                <Loader className="uvLoader" loaded={this.state.imageLoaded} color="#fff"/>
                { 
                   this.props.firstImage && 
-                  <img onLoad={(e)=>this.setState({...this.state,imageLoaded:true})}
+                  <img alt="thumbnail" onLoad={(e)=>this.setState({...this.state,imageLoaded:true})}
                      src={this.props.firstImage} 
                    /*src={`data:image/${this.props.firstImage.match(/png$/)?'png':'jpeg'};base64,${this.props.imgData}`}*/  
                   /> }
@@ -8135,9 +8135,9 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                <Trans i18nKey="access.fairUseIA4" components={{ bold: <u /> }} />
                <br/><br/>
                <span class="fairuse-IA-link-new">
-                  {/* <img class="ia" src="/IA.svg"/> */}
-                  {<Trans i18nKey="access.fairUseIA3" components={{ icon:<img class="link-out" src="/icons/link-out_fit.svg"/>, lk:<a target="_blank"  href={IAlink} /> }} />}
-                  {/* <img class="link-out" src="/icons/link-out_fit.svg"/> */}
+                  {/* <img alt="IA icon" class="ia" src="/IA.svg"/> */}
+                  {<Trans i18nKey="access.fairUseIA3" components={{ icon:<img alt="link out icon" class="link-out" src="/icons/link-out_fit.svg"/>, lk:<a target="_blank"  href={IAlink} /> }} />}
+                  {/* <img alt="link out icon" class="link-out" src="/icons/link-out_fit.svg"/> */}
                </span>
             </>
          }
@@ -8313,7 +8313,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
          <span id="DL" class={!accessError&&!noDL?"on a":"a"} onClick={(e) => !noDL && this.setState({...this.state,anchorLangDL:e.currentTarget, collapse: {...this.state.collapse, langDL:!this.state.collapse.langDL } } ) }>
             {etext_lang_selec(this,true,<>
                   {I18n.t(!noDL?"mirador.downloadE":this.props.disableInfiniteScroll?"mirador.noDL":"mirador.noDLviewer")}
-                  {!noIcon && <img src="/icons/DLw.png"/>}
+                  {!noIcon && <img alt="download icon" src="/icons/DLw.png"/>}
                </>, url)}
             </span>
       )
@@ -8387,7 +8387,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                      }, 10)
                   }
 
-               }}><img class="ico" src="/icons/monlam.png"/>{I18n.t("viewer.find")}</MenuItem>
+               }}><img alt="monlam icon" class="ico" src="/icons/monlam.png"/>{I18n.t("viewer.find")}</MenuItem>
             </Popover>
       }
 
@@ -8518,25 +8518,25 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
             <div id="etext-nav" class={this.state.collapse.etextNav?"on":""}>
                <div>
                   { this.renderEtextDLlink(accessError) }
-                  {/* // <a id="DL" class={!accessError?"on":""} target="_blank" rel="alternate" type="text" download href={this.props.IRI?fullUri(this.props.IRI).replace(/^http:/,"https:")+".txt":""}>{I18n.t("mirador.downloadE")}<img src="/icons/DLw.png"/></a>) */}
+                  {/* // <a id="DL" class={!accessError?"on":""} target="_blank" rel="alternate" type="text" download href={this.props.IRI?fullUri(this.props.IRI).replace(/^http:/,"https:")+".txt":""}>{I18n.t("mirador.downloadE")}<img alt="download icon" src="/icons/DLw.png"/></a>) */}
                   { this.props.config.useMonlam && this.state.etextHasBo && <span id="dico" class="on a" onClick={(e) => { 
                      if(this.state.enableDicoSearch) this.props.onCloseMonlam()
                      this.setState({noHilight:false, enableDicoSearch:!this.state.enableDicoSearch, ...this.state.enableDicoSearch?{monlam:null}:{}})
                   }}>
                      {/* <div class="new">{I18n.t("viewer.new")}</div> */}
-                     {this.state.enableDicoSearch?<img id="check" src="/icons/check.svg"/>:<span id="check"></span>}<span>{I18n.t("viewer.monlam")}</span><span><img class="ico" src="/icons/monlam.png"/></span></span> }
+                     {this.state.enableDicoSearch?<img alt="check icon" id="check" src="/icons/check.svg"/>:<span id="check"></span>}<span>{I18n.t("viewer.monlam")}</span><span><img alt="monlam icon" class="ico" src="/icons/monlam.png"/></span></span> }
                   <div id="control">
-                     <span title={I18n.t("mirador.decreaseFont")} class={!size||size > 0.6?"on":""} onClick={(e)=>etextSize(false)}><img src="/icons/Zm.svg"/></span>
-                     <span title={I18n.t("mirador.increaseFont")} class={!size||size < 2.4?"on":""} onClick={(e)=>etextSize(true)}><img src="/icons/Zp.svg"/></span>
+                     <span title={I18n.t("mirador.decreaseFont")} class={!size||size > 0.6?"on":""} onClick={(e)=>etextSize(false)}><img alt="decrease font icon" src="/icons/Zm.svg"/></span>
+                     <span title={I18n.t("mirador.increaseFont")} class={!size||size < 2.4?"on":""} onClick={(e)=>etextSize(true)}><img alt="increase font icon" src="/icons/Zp.svg"/></span>
                      {etext_lang_selec(this,true)}
                   </div>
-                  <span class={showToggleScan?"on a":"a"} onClick={(e) => this.setState({showEtextImages:!this.state.showEtextImages})}>{this.state.showEtextImages?<img id="check" src="/icons/check.svg"/>:<span id="check"></span>}<span>{I18n.t("mirador.showI")}</span><img width="42" src="/icons/search/images_b.svg"/></span>
+                  <span class={showToggleScan?"on a":"a"} onClick={(e) => this.setState({showEtextImages:!this.state.showEtextImages})}>{this.state.showEtextImages?<img alt="check icon" id="check" src="/icons/check.svg"/>:<span id="check"></span>}<span>{I18n.t("mirador.showI")}</span><img alt="images icon" width="42" src="/icons/search/images_b.svg"/></span>
                   <EtextSearchBox that={this} scopeId={this.props?.that?.state?.scope} ETrefs={this.props.that?.props.eTextRefs?.["@graph"]} setETSBpage={(p,v,i,s) => { if(!this.state.ETSBpage || this.state.ETSBpage?.start != s || this.state.ETSBpage?.page != p || this.state.ETSBpage?.vol != v || this.state.ETSBpage?.idx != i) this.setState({ ETSBpage:{page:p, vol:v, idx:i, start:s } }) }} />
                   <span class="X" onClick={() => this.props.that.setState({ collapse:{ ...this.props.that.state.collapse, etextNav:!this.props.that.state.collapse.etextNav }})}></span>
                </div>
             </div>
          </StickyElement>
-         <div id="settings" onClick={() => this.props.that.setState({collapse:{...this.props.that.state.collapse, etextNav:!this.props.that.state.collapse.etextNav}})}><img src="/icons/settings.svg"/></div>
+         <div id="settings" onClick={() => this.props.that.setState({collapse:{...this.props.that.state.collapse, etextNav:!this.props.that.state.collapse.etextNav}})}><img alt="settings icon" src="/icons/settings.svg"/></div>
          
          {/* </GenericSwipeable>  */}
       </>)
@@ -8902,8 +8902,8 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
             else pT = <div>{pType}</div>
 
             ret.push(<span {...ref} class={'top' + (/*this.state.collapse[tag]*/ isCurrent?" on":"") }>
-                  {(e.hasPart && !open) && <img src="/icons/triangle.png" onClick={(ev) => toggle(null,root,e["@id"],!e.hasPart?"details":"",!e.hasPart && mono, e, false)} className="xpd right"/>}
-                  {(e.hasPart && open) && <img src="/icons/triangle_.png" onClick={(ev) => toggle(null,root,e["@id"],!e.hasPart?"details":"",!e.hasPart && mono, e, false)} className="xpd"/>}
+                  {(e.hasPart && !open) && <img alt="triangle icon" src="/icons/triangle.png" onClick={(ev) => toggle(null,root,e["@id"],!e.hasPart?"details":"",!e.hasPart && mono, e, false)} className="xpd right"/>}
+                  {(e.hasPart && open) && <img alt="triangle icon" src="/icons/triangle_.png" onClick={(ev) => toggle(null,root,e["@id"],!e.hasPart?"details":"",!e.hasPart && mono, e, false)} className="xpd"/>}
                   <span class={"parTy "+(/*e.details*/isCurrent?"on":"") } {...e.details?{title: I18n.t("resource."+(openD?"hideD":"showD")), onClick:(ev) => toggle(ev,root,e["@id"],"details",!e.hasPart && mono,e) /*openText()*/ }:{title:tLabel}} >
                   {pT}
                   </span>
@@ -8917,19 +8917,19 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                               this.props.onReinitEtext(ETres)
                               this.setState({currentText: ETres})
                            }*/}>
-                                 <img src="/icons/search/etext.svg"/><img src="/icons/search/etext_r.svg"/>
+                                 <img alt="etext icon" src="/icons/search/etext.svg"/><img alt="etext icon" src="/icons/search/etext_r.svg"/>
                               </Link> 
                            :  <span disabled="true" className="hasImg hasTxt" title={I18n.t("access.fairuseEtext").replace(/<[^>]+>/g,"")}>
-                                 <img src="/icons/search/etext.svg"/><img src="/icons/search/etext.svg"/>
+                                 <img alt="etext icon" src="/icons/search/etext.svg"/><img alt="etext icon" src="/icons/search/etext.svg"/>
                               </span> 
                      )}                   
                      { e.details && <span id="anchor" title={I18n.t("resource."+(openD?"hideD":"showD"))} onClick={(ev) => toggle(ev,root,e["@id"],"details",!e.hasPart && (mono || ut), e)}>
-                        <img src="/icons/info.svg"/>
+                        <img alt="info icon" src="/icons/info.svg"/>
                      </span> }
                      <CopyToClipboard text={fullUri(gUri)} onCopy={(e) => prompt(I18n.t("misc.clipboard"),fullUri(gUri))}>
                         <span class="permalink" title={I18n.t("misc.permalink")}>
-                           <img src="/icons/PLINK_small.svg"/>
-                           <img src="/icons/PLINK_small_r.svg"/>
+                           <img alt="permalink icon" src="/icons/PLINK_small.svg"/>
+                           <img alt="permalink icon" src="/icons/PLINK_small_r.svg"/>
                         </span>
                      </CopyToClipboard>
                   </div>
@@ -9009,8 +9009,8 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
             {/* <Loader  options={{position:"fixed",left:"calc(50% + 100px)",top:"calc(50% - 20px)"}} loaded={!this.props.loading === "etext"}/> */}
             <div>
                <div class={"root is-root "+ (isCurrent?"on":"")} onClick={(e) => toggle(e,root,root)} >                     
-                  { !open && [<img src="/icons/triangle.png" className="xpd right" />,colT,<span >{title}</span>]}
-                  {  open && [<img src="/icons/triangle_.png" className="xpd"  />,colT,<span /* class='on' */>{title}</span>]}
+                  { !open && [<img alt="triangle icon" src="/icons/triangle.png" className="xpd right" />,colT,<span >{title}</span>]}
+                  {  open && [<img alt="triangle icon" src="/icons/triangle_.png" className="xpd"  />,colT,<span /* class='on' */>{title}</span>]}
                </div>
                { open && <div style={{paddingLeft:"43px"}}>{etextRefs}</div> }
             </div>
@@ -9973,7 +9973,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                                     }
                                     
                                     // deprecated
-                                    //if(prefix && url) g.same.push(<a href={url} target="_blank" class={"provider "+prefix}>{provImg[prefix]?<img src={provImg[prefix]}/>:<span class="img">{prefix.replace(/^cbc.$/,"cbc@").toUpperCase()}</span>}</a>)
+                                    //if(prefix && url) g.same.push(<a href={url} target="_blank" class={"provider "+prefix}>{provImg[prefix]?<img alt="provider icon" src={provImg[prefix]}/>:<span class="img">{prefix.replace(/^cbc.$/,"cbc@").toUpperCase()}</span>}</a>)
                                  }
                               }
 
@@ -10034,8 +10034,8 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
 
                         ret.push(<span class={'top'+ (isRoot ?" is-root":"")+(this.state.collapse[tag]||osearch&&e.hasMatch?" on":"") }>
                               {((e.hasPart || e["tmp:hasNonVolumeParts"]) && open && osearch && !this.props.outlines[e['@id']]) && <span onClick={(ev) => toggle(ev,root,e["@id"],"",true,e,top)} className="xpd" title={I18n.t("resource.otherN")}><RefreshIcon /></span>}
-                              {((e.hasPart || e["tmp:hasNonVolumeParts"]) && !open && this.props.outlines[e['@id']] !== true) && <img src="/icons/triangle.png" onClick={(ev) => toggle(null,root,togId,!e.hasPart&&!e["tmp:hasNonVolumeParts"]?"details":"",false,e,top)} className="xpd right"/>}
-                              {((e.hasPart || e["tmp:hasNonVolumeParts"])&& open && this.props.outlines[e['@id']] !== true) && <img src="/icons/triangle_.png" onClick={(ev) => toggle(null,root,togId,!e.hasPart&&!e["tmp:hasNonVolumeParts"]?"details":"",false,e,top)} className="xpd"/>}
+                              {((e.hasPart || e["tmp:hasNonVolumeParts"]) && !open && this.props.outlines[e['@id']] !== true) && <img alt="triangle icon" src="/icons/triangle.png" onClick={(ev) => toggle(null,root,togId,!e.hasPart&&!e["tmp:hasNonVolumeParts"]?"details":"",false,e,top)} className="xpd right"/>}
+                              {((e.hasPart || e["tmp:hasNonVolumeParts"])&& open && this.props.outlines[e['@id']] !== true) && <img alt="triangle icon" src="/icons/triangle_.png" onClick={(ev) => toggle(null,root,togId,!e.hasPart&&!e["tmp:hasNonVolumeParts"]?"details":"",false,e,top)} className="xpd"/>}
                               <span class={"parTy "+(e.details?"on":"")}  ref={citeRef} {...e.details?{title:/*tLabel+" - "+*/ I18n.t("resource."+(this.state.collapse[tag+"-details"]?"hideD":"showD")), onClick:(ev) => toggle(ev,root,e["@id"],"details",false,e)}:{title:tLabel}} >
                                  {pType && parts[pType] ? <div>{parts[pType]}</div> : <div>{parts["?"]}</div> }
                               </span>
@@ -10043,7 +10043,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                               {e.id}
                               {this.samePopup(e.same,fUri)}
                               <div class="abs">
-                                 { e.hasImg && <Link className="hasImg" title={I18n.t("copyright.view")} onClick={e.checkDLD}  to={e.hasImg}><img src="/icons/search/images.svg"/><img src="/icons/search/images_r.svg"/></Link> }
+                                 { e.hasImg && <Link className="hasImg" title={I18n.t("copyright.view")} onClick={e.checkDLD}  to={e.hasImg}><img alt="images icon" src="/icons/search/images.svg"/><img alt="images icon" src="/icons/search/images_r.svg"/></Link> }
                                  { /* pType && 
                                     <span class={"pType "+(e.details?"on":"")} {...e.details?{title:(this.state.collapse[tag+"-details"]?"Hide":"Show")+" Details", onClick:(ev) => toggle(ev,root,e["@id"],"details")}:{}} >
                                        {this.proplink(pType)}
@@ -10051,12 +10051,12 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                                        {  this.state.collapse[tag+"-details"] && <ExpandLess className="details"/>}
                                     </span> */ }
                                  { e.hasDetails && <span id="anchor" title={/*tLabel+" - "+*/I18n.t("resource."+(this.state.collapse[tag+"-details"]?"hideD":"showD"))} onClick={(ev) => toggle(ev,root,togId,"details",false,e)}>
-                                    <img src="/icons/info.svg"/>
+                                    <img alt="info icon" src="/icons/info.svg"/>
                                  </span> }
                                  <CopyToClipboard text={fUri} onCopy={(e) => prompt(I18n.t("misc.clipboard"),fUri)}>
                                     <span class="permalink" title={I18n.t("misc.permalink")}>
-                                       <img src="/icons/PLINK_small.svg"/>
-                                       <img src="/icons/PLINK_small_r.svg"/>
+                                       <img alt="permalink icon" src="/icons/PLINK_small.svg"/>
+                                       <img alt="permalink icon" src="/icons/PLINK_small_r.svg"/>
                                     </span>
                                  </CopyToClipboard>
 
@@ -10090,7 +10090,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                                        anchorEl:{ ...this.state.anchorEl, print: printRef&&printRef.current?printRef.current:({...ev}).currentTarget }}
                                     this.setState(s)
                                  }}>
-                                    {/* <span class="icon"><img src="/icons/print.svg"/></span>  */}
+                                    {/* <span class="icon"><img alt="print icon" src="/icons/print.svg"/></span>  */}
                                     <PrintIcon/>
                                  </span> }
                               
@@ -10214,8 +10214,8 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                      } loaded={this.props.loading !== "outline"}/>
                   <div class={"root " +(this.state.outlinePart === root || (!this.state.outlinePart && this.props.IRI===root)?"is-root":"")} >
                      { (osearch && open && (this.props.outlines[root] && !this.props.outlines[osearch].reloaded)) && <span onClick={(ev) => toggle(ev,root,root,"",true)} className="xpd" title={I18n.t("resource.otherN")}><RefreshIcon /></span>}
-                     { !open && [<img src="/icons/triangle.png" className="xpd right" onClick={(e) => toggle(e,root,root)} />,colT,<span onClick={rootClick}>{title}</span>]}
-                     {  open && [<img src="/icons/triangle_.png" className="xpd" onClick={(e) => toggle(e,root,root)} />,colT,<span onClick={rootClick} class='on'>{title}</span>]}
+                     { !open && [<img alt="triangle icon" src="/icons/triangle.png" className="xpd right" onClick={(e) => toggle(e,root,root)} />,colT,<span onClick={rootClick}>{title}</span>]}
+                     {  open && [<img alt="triangle icon" src="/icons/triangle_.png" className="xpd" onClick={(e) => toggle(e,root,root)} />,colT,<span onClick={rootClick} class='on'>{title}</span>]}
                   </div>
                   { open && <div style={{paddingLeft:"45px" /*"50px"*/}}>{outline}</div> }
                </div>
@@ -10714,7 +10714,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
          inTitle  = [ 
             <h3 class="inT">
                <span>{I18n.t("misc.in")}{I18n.t("punc.colon")} </span> {this.uriformat(tmp+"in",root[0])}
-               <Link {...this.props.preview?{ target:"_blank" }:{}} onClick={() => this.setState({opartinview:""})} to={"/show/"+shortUri(root[0].value)+"?part="+this.props.IRI} class="outL"><img src="/scripts/mirador/images/collecR.svg"/>{I18n.t("result.openO")}</Link>
+               <Link {...this.props.preview?{ target:"_blank" }:{}} onClick={() => this.setState({opartinview:""})} to={"/show/"+shortUri(root[0].value)+"?part="+this.props.IRI} class="outL"><img asrc="/scripts/mirador/images/collecR.svg"/>{I18n.t("result.openO")}</Link>
             </h3>,
             //<br/>,
             //<h3 class="outline-link"><Link class="urilink" to={"/show/"+shortUri(root[0].value)+"?part="+this.props.IRI+"#outline"}>{"View in the outline"}</Link></h3>
@@ -11024,7 +11024,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
          } else if(topLevel) { 
             const outline = <>
                {/* {this.state.collapse.etextRefs &&  */}
-                  <IconButton width="32" className={"show-outline-etext collapseETr-"+this.state.collapse.etextRefs} onClick={() => this.setState({collapse:{...this.state.collapse,etextRefs:false}})}><img src="/icons/collecN.svg" /></IconButton>
+                  <IconButton width="32" className={"show-outline-etext collapseETr-"+this.state.collapse.etextRefs} onClick={() => this.setState({collapse:{...this.state.collapse,etextRefs:false}})}><img alt="collection icon" src="/icons/collecN.svg" /></IconButton>
                {/* }  */}
                <SimpleBar class={"resource etext-outline "+(this.state.collapse.etextRefs ? "withOutline-false":"withOutline-true")+(" collapseETr-"+this.state.collapse.etextRefs)}>
                { etRefs }          
@@ -11087,7 +11087,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                            />  }
                         { this.unpaginated() && !this.props.disableInfiniteScroll && <h4 style={{fontSize:"16px",fontWeight:600,textAlign:"center", marginBottom:"50px",top:"20px"}}>{I18n.t("resource.unpag")}</h4>}
                         { !this.props.disableInfiniteScroll && etextAccessError && <h4 style={{fontSize:"16px",fontWeight:600,textAlign:"center",marginTop:"80px"}}>
-                           <><img style={{height:"50px", verticalAlign:"middle", marginRight:"10px"}} src="/icons/unknown.svg"/><Trans i18nKey="access.fairuseEtext" components={{ bold: <u /> }} /></>
+                           <><img alt="unknown access icon" style={{height:"50px", verticalAlign:"middle", marginRight:"10px"}} src="/icons/unknown.svg"/><Trans i18nKey="access.fairuseEtext" components={{ bold: <u /> }} /></>
                         </h4> }
                         { !etextAccessError && (!this.props.disableInfiniteScroll?.outETvol?.length ? etext_data : <div onClick={() => {
                            const loadETres = shortUri(this.props.disableInfiniteScroll.outETvol[0].value)
@@ -11109,9 +11109,9 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                      }}>                  
                      <SimpleBar>
                         <h2>
-                           <a href="https://monlamdic.com" target="_blank" rel="noopener noreferrer"><img width="32" src="/icons/monlam.png" title="monlamdic.com"/></a>
+                           <a href="https://monlamdic.com" target="_blank" rel="noopener noreferrer"><img alt="monlam icon" width="32" src="/icons/monlam.png" title="monlamdic.com"/></a>
                            <a href="https://monlamdic.com" target="_blank" rel="noopener noreferrer">{I18n.t("viewer.monlamTitle")}</a>
-                           {/* <a href="https://monlamdic.com" target="_blank" rel="noopener noreferrer"><img width="32" src="/icons/monlam.png" title="monlamdic.com"/></a> */}
+                           {/* <a href="https://monlamdic.com" target="_blank" rel="noopener noreferrer"><img alt="monlam icon" width="32" src="/icons/monlam.png" title="monlamdic.com"/></a> */}
                            <Close width="32" onClick={() => { 
                               this.setState({noHilight:false, monlam:null, collapse:{ ...this.state.collapse, monlamPopup: true }})
                               this.props.onCloseMonlam()
@@ -11587,7 +11587,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                   //    return false
                   // }}
                   >
-                     <img src="/icons/FILARIANE.svg" /><span>{searchUrl.startsWith("latest")?I18n.t("home.new").toLowerCase():I18n.t("topbar."+(searchTerm?"results":"resultsNoKW"))} <span>{searchTerm}</span></span>
+                     <img alt="breadcrumbs icon" src="/icons/FILARIANE.svg" /><span>{searchUrl.startsWith("latest")?I18n.t("home.new").toLowerCase():I18n.t("topbar."+(searchTerm?"results":"resultsNoKW"))} <span>{searchTerm}</span></span>
                   </Link> */}
                   
                   {this.state.ready && <Loader loaded={!this.props.loading} options={{position:"fixed",left:"50%",top:"50%"}} /> }
@@ -11610,7 +11610,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                   { this.renderWithdrawn() }             
                   <div class="title">{/* { wTitle }{ iTitle }{ rTitle } */}</div> 
                   { (etext && !orig) && <div class={"data open-etext"+(etextAccessError?" disable":"")}><div><Link to={etextUT+(etextUT.includes("?")?"&":"?")+"backToEtext="+backToET+"#open-viewer"}>{etextLoca}</Link></div></div> }
-                  { (etext && orig) && <div class="data open-etext"><div><a target="_blank" href={orig}>{I18n.t("resource.openO",{src:prov})}<img src="/icons/link-out_.svg"/></a></div></div> }
+                  { (etext && orig) && <div class="data open-etext"><div><a target="_blank" href={orig}>{I18n.t("resource.openO",{src:prov})}<img alt="link out icon" src="/icons/link-out_.svg"/></a></div></div> }
                   <div class={"data" + (_T === "Etext"?" etext-title":"")+(_T === "Images"?" images-title":"")}>
                      {searchUrl && <span class="back-anchor">
                         <Link className="urilink" to={searchUrl}><ChevronLeft />{I18n.t("resource.goB")}</Link>
@@ -11621,8 +11621,8 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                        :title))}
                      {inTitle}
                      {dates}
-                     {/* { ( _T === "Person" && createdBy && createdBy.length > 0 ) && <div class="browse-by"><Link to={"/search?r="+this.props.IRI+"&t=Work"}><img src="/icons/sidebar/work_white.svg"/>{I18n.t("resource.assoc")}</Link></div> } */}
-                     { this.props.preview && <a href={"/show/"+this.props.IRI} target="_blank">{I18n.t("resource.fullR")}<img src="/icons/link-out.svg"/></a>}
+                     {/* { ( _T === "Person" && createdBy && createdBy.length > 0 ) && <div class="browse-by"><Link to={"/search?r="+this.props.IRI+"&t=Work"}><img alt="work icon" src="/icons/sidebar/work_white.svg"/>{I18n.t("resource.assoc")}</Link></div> } */}
+                     { this.props.preview && <a href={"/show/"+this.props.IRI} target="_blank">{I18n.t("resource.fullR")}<img alt="link out icon" src="/icons/link-out.svg"/></a>}
                   </div>
                   { this.props.preview && _T === "Place" && <div class="data" id="map">{this.renderData(false, kZprop.filter(k => mapProps.includes(k)),null,null,null,"header")}</div> }
                   
@@ -11677,8 +11677,8 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                         { 
                            (!this.state.relatedTab && !this.state.relatedTabAll && related.length > 4 || this.state.relatedTab && createdBy.length > 4 || !this.state.relatedTabAll && !related.length && createdBy.length > 4) &&
                            <div id="related-nav" >
-                              <span class={!this.state.relatedTab&&related.length?(this.state.irel>0?"on":""):(this.state.icrea>0?"on":"")} onClick={(ev) => scrollRel(ev)}><img src="/icons/g.svg"/></span>
-                              <span class={navNext?"on":""} onClick={(ev) => scrollRel(ev,true)}><img src="/icons/d.svg"/></span>
+                              <span class={!this.state.relatedTab&&related.length?(this.state.irel>0?"on":""):(this.state.icrea>0?"on":"")} onClick={(ev) => scrollRel(ev)}><img alt="previous icon" src="/icons/g.svg"/></span>
+                              <span class={navNext?"on":""} onClick={(ev) => scrollRel(ev,true)}><img alt="next icon" src="/icons/d.svg"/></span>
                            </div>
                         }
                      </div> 
