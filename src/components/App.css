@@ -6129,6 +6129,10 @@ html[lang="en"] .resource .data > [data-prop="bdo:creator"] h4[data-prop="bdo:ro
 .etextPage.unformatted h4.page { white-space: normal;  }
 .etextPage h5 { margin-top:0; color:#777; display:inline-block; margin-bottom:10px;}
 
+.etextPage h5 .a:not(.unpag) { color:#d73449; cursor:pointer; }
+
+.etextPage h5 .a.unpag:not(#a) { color: #343434; }
+
 .preview-etext .etext-data .etextPage h5 { display:none; margin-bottom:12px;}
 
 .etextPage h4 + h5 { margin-top:15px;margin-bottom:30px;}

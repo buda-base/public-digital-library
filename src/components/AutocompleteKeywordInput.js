@@ -102,6 +102,7 @@ export default function AutocompleteKeywordInput(props) {
                   //"/search?q="+keywordtolucenequery(s.res.replace(/<[^>]+>/g,""), s.lang)+"&lg="+s.lang+"&t="+(s.category ? s.category : "Instance")}>
                   "/osearch/search?q="+encodeURIComponent(s.res.replace(/<[^>]+>/g,""))
                 }>
+                <span className="visually-hidden">Search for {s.res}</span>
                 <span class="suggest-str">{HTMLparse(s.res)}</span>
                 { s.category && <>
                   <span class="suggest-in">in</span>
@@ -126,6 +127,7 @@ export default function AutocompleteKeywordInput(props) {
           ev.stopPropagation()          
        }}>Advanced search</Link>}       
       { keyword ? <Link className="go" to={"/osearch/search?q="+encodeURIComponent(keyword)}>
+          <span className="visually-hidden">Search for {keyword}</span>
           <IconButton>
             <SearchIcon />
           </IconButton>

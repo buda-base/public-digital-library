@@ -102,13 +102,13 @@ function EtextPage(props) {
 
   let getPname = (e) => e.pname != undefined ? " ["+e.pname+"]":""
 
-  const imgElem = !unpag && !imgErr && <h5><a title={I18n.t("misc."+(!showIm?"show":"hide"))+" "+I18n.t("available scans for that page")} onClick={(eve) => {
+  const imgElem = !unpag && !imgErr && <h5><span class='a' title={I18n.t("misc."+(!showIm?"show":"hide"))+" "+I18n.t("available scans for that page")} onClick={(eve) => {
       /*
       let id = "image-"+props_IRI+"-"+e.seq
       thatSetState({ collapse:{...state_collapse, [id]:!showIm}}) 
       */
       setShowIm(!showIm)
-  }}>{e.seq != "--" && I18n.t("resource.page",{num:e.seq})}{getPname(e)}</a>                                             
+  }}>{e.seq != "--" && I18n.t("resource.page",{num:e.seq})}{getPname(e)}</span>                                             
   </h5>
 
 
@@ -149,6 +149,7 @@ function EtextPage(props) {
                                 if(get.right) elem.classList.add("right")
                               }
                           }}} onError={(ev)=> handleImageError(ev,imageLinks[id][e.seq].image,e.seq)} />
+                          <span className="visually-hidden">Open image in new tab</span>
                         </a>
 
                         {/*}
@@ -184,7 +185,7 @@ function EtextPage(props) {
         </span> }
         {/* { <h5><a title="Open image+text view in Mirador" onClick={eve => { openMiradorAtPage(imageLinks[e.seq].id) }}>p.{e.seq}</a></h5> } */}
         {   !unpag && !preview && !imgErr && imgElem }        
-            { (unpag || preview || imgErr ) && <h5><a class="unpag" title={I18n.t("resource.unpag")}>{e.seq != "--" && I18n.t("resource.pageN",{num:e.seq})}{getPname(e)}</a></h5>}
+            { (unpag || preview || imgErr ) && <h5><span class="a unpag" title={I18n.t("resource.unpag")}>{e.seq != "--" && I18n.t("resource.pageN",{num:e.seq})}{getPname(e)}</span></h5>}
             &nbsp;
             { !preview && Object.keys(imageLinks).sort().map(id => {
               //loggergen.log("id:",id,e)
@@ -228,7 +229,7 @@ function EtextPage(props) {
               onMouseUp={(ev) => monlamPopup(ev, e.seq ?? e.start, pageVal)} 
               onCopy={(ev) => monlamPopup(ev, e.seq ?? e.start, pageVal)} >
             { state_monlam_hilight}
-            {!e.value.match(/[\n\r]/) && !e.seq ?[<span class="startChar"><span>[&nbsp;<Link to={"/show/"+props_IRI+"?startChar="+e.start+"#open-viewer"}>@{e.start}</Link>&nbsp;]</span></span>]:null}{(e.chunks?.length?e.chunks:[e.value]).map(f => {
+            {!e.value.match(/[\n\r]/) && !e.seq ?[<span class="startChar"><span>[&nbsp;<Link to={"/show/"+props_IRI+"?startChar="+e.start+"#open-viewer"}>@{e.start}<span className="visually-hidden">Go to start of page</span></Link>&nbsp;]</span></span>]:null}{(e.chunks?.length?e.chunks:[e.value]).map(f => {
               let h = f["@value"] ?? f
 
               // feedbucket-integration#128 fix conflict with htmlParse when < or > in chunk

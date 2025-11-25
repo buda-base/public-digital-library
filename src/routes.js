@@ -150,7 +150,7 @@ class LogErrorBoundary extends React.Component {
     render() {
       if (this.state.hasError) {
         // Vous pouvez afficher n'importe quelle UI de repli.
-        return <h1>We're sorry but the website encountered an unexpected error.<br/>Go to <a href="/">homepage</a></h1>
+        return <h1>We're sorry but the website encountered an unexpected error.<br/>Go to <a href="/"><span className="visually-hidden">Go to homepage</span>homepage</a></h1>
       }
   
       return this.props.children;

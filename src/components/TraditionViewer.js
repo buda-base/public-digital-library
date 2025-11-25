@@ -227,6 +227,7 @@ export class TraditionViewer extends Component<State, Props>
       } else return <Link to={link} className={(c.img ? "has-img ":"")+(c.classes??"")} onClick={scrollToTop}>
           { c.img && <img alt="tradition item thumbnail" src={c.img}/> }
           <span lang={label?.lang}>{label?.value}</span>
+          <span className="visually-hidden">Go to {label?.value} page</span>
         </Link>
     })     
   }
@@ -274,7 +275,7 @@ export class TraditionViewer extends Component<State, Props>
         if(e.depth > 0) res.push(<h5 onClick={() => this.setState({collapse:{...this.state.collapse,[e.rank+"_"+e.value]:!this.state.collapse[e.rank+"_"+e.value]}})} class={"collapse-"+(!!this.state.collapse[e.rank+"_"+e.value])} lang={e.lang}><ExpandLess/>{e.value}</h5>)// | {e.rank}</h5>)
         if(e.depth === 0 || this.state.collapse[e.rank+"_"+e.value]) res.push(this.renderList(e.sublist))
       }
-      else if(e.to) res.push(<Link lang={e.lang} to={e.to}>{e.value}{e.length?" ["+e.length+"]":""}</Link>)// | {e.rank}</Link>)
+      else if(e.to) res.push(<Link data-lang={e.lang} to={e.to}>{e.value}{e.length?" ["+e.length+"]":""}<span className="visually-hidden">Go to {e.value} page</span></Link>)// | {e.rank}</Link>)
       else res.push(<i>{e.value} {e.lang}</i>)// | {e.rank}</i>)
     }
     return res
@@ -284,7 +285,7 @@ export class TraditionViewer extends Component<State, Props>
   renderTopic({tradi, id}, {content, breadcrumbs}){
 
     breadcrumbs.pop()
-    breadcrumbs.push(<Link to={"./../"}>{I18n.t("tradition.t_"+this.props.type)} ({id})</Link>)                    
+    breadcrumbs.push(<Link data-lang={this.props.locale} to={"./../"}>{I18n.t("tradition.t_"+this.props.type)} ({id})<span className="visually-hidden">Go to {I18n.t("tradition.t_"+this.props.type)} page</span></Link>)                    
     
     let t = this.props.root.split(":")
     t = t.pop()
@@ -295,7 +296,7 @@ export class TraditionViewer extends Component<State, Props>
     path.pop()
     for(const p of path) {
       const pathid = this.getIdAsText("bdr:"+p)     
-      breadcrumbs.push(<Link to={"./../bdr:"+p+"/"}>{pathid}</Link>)                    
+      breadcrumbs.push(<Link data-lang={this.props.locale} to={"./../bdr:"+p+"/"}>{pathid}<span className="visually-hidden">Go to {pathid} page</span></Link>)                    
     }
 
     let rootid = this.getIdAsText(this.props.root)     
@@ -325,7 +326,7 @@ export class TraditionViewer extends Component<State, Props>
       id = this.getIdAsText(this.props.id) 
     }
 
-    breadcrumbs.push(<Link to={"/tradition/"+this.props.tradition+"/"}>{I18n.t("tradition."+this.props.tradition+"T")}</Link>)
+    breadcrumbs.push(<Link data-lang={this.props.locale} to={"/tradition/"+this.props.tradition+"/"}>{I18n.t("tradition."+this.props.tradition+"T")}<span className="visually-hidden">Go to {I18n.t("tradition."+this.props.tradition+"T")} page</span></Link>)
     
     console.log("subl:", tradi, content, id, this.props.type, this.props.id)
 
@@ -340,7 +341,7 @@ export class TraditionViewer extends Component<State, Props>
         
         let subid = this.getIdAsText(tradi.subContent[this.props.type][this.props.id].parent)
 
-        breadcrumbs.push(<Link to={"./../"+tradi.subContent[this.props.type][this.props.id].parent}>{I18n.t("tradition.t_"+this.props.type)} ({subid})</Link>)            
+        breadcrumbs.push(<Link data-lang={this.props.locale} to={"./../"+tradi.subContent[this.props.type][this.props.id].parent}>{I18n.t("tradition.t_"+this.props.type)} ({subid})<span className="visually-hidden">Go to {I18n.t("tradition.t_"+this.props.type)} page</span></Link>)            
         breadcrumbs.push(<span>{id}</span>)                    
         
       } else {
@@ -456,7 +457,7 @@ export class TraditionViewer extends Component<State, Props>
       */
 
       const tradi = this.props.config?.tradition && this.props.config?.tradition[this.props.tradition]    
-      let content = [], breadcrumbs = [<Link to="/">{I18n.t("topbar.home")}</Link>]                
+      let content = [], breadcrumbs = [<Link data-lang={this.props.locale} to="/">{I18n.t("topbar.home")}<span className="visually-hidden">Go to home page</span></Link>]                
 
       //console.log("tradi:",tradi,content,this.props)
 

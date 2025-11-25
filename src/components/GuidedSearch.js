@@ -423,7 +423,7 @@ class GuidedSearch extends Component<Props,State> {
       return <Link to={"#"+k} onClick={event => {
         document.querySelector("#"+k).scrollIntoView({block: "start", inline: "nearest", behavior:"smooth"})
         event.stopPropagation()
-      }}>{getLocaleLabel(k)}</Link>
+      }}>{getLocaleLabel(k)}<span className="visually-hidden">Go to {getLocaleLabel(k)} section</span></Link>
     }
 
     const selectors = settings.filters.map(k => renderSelector(k, false))     
@@ -450,6 +450,7 @@ class GuidedSearch extends Component<Props,State> {
         { this.props.type === "work" || this.state.keyword
           ? <Link to={searchRoute?searchRoute:""}><button class="red">
               {I18n.t("home.search")}
+              <span className="visually-hidden">Go to search page</span>
             </button></Link>
           : <button {...this.props.checkResults === true || this.props.checkResults?.count != 0 && this.props.checkResults?.count < GUIDED_LIMIT  && this.props.checkResults.loading? {disabled:true}:{}} 
               class="red" onClick={() => {
@@ -593,6 +594,7 @@ class GuidedSearch extends Component<Props,State> {
                   </div>
                   <div>
                     { searchRoute && <Link to={searchRoute}><button class="red mobile">Search</button></Link> }
+                    <span className="visually-hidden">Go to search page</span>
                   </div>
                 </div>
                 <div>

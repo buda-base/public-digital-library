@@ -753,13 +753,16 @@ export function top_left_menu(that,pdfLink,monoVol,fairUse)
        {
           that.props.IRI && that.props.IRI.match(/^(bd[ra])|(dila):/) &&
           <div>{[<a className="goBack" target="_blank" title="TTL version" rel="alternate" type="text/turtle" href={that.expand(that.props.IRI)+".ttl"}>
+             <span className="visually-hidden">Go to TTL version</span>
              <Button style={{marginLeft:"0px",paddingLeft:"10px",paddingRight:0}}>{I18n.t("resource.export")} ttl</Button>
           </a>,<span>&nbsp;/&nbsp;</span>,
           <a className="goBack noML" target="_blank" title="JSON-LD version" rel="alternate" type="application/ld+json" href={that.expand(that.props.IRI)+".jsonld"}>
+             <span className="visually-hidden">Go to JSON-LD version</span>
              <Button style={{paddingLeft:0,paddingRight:"10px"}}>json-ld</Button>
           </a>]}</div>
        }
        { that.props.IRI && getEntiType(that.props.IRI) === "Etext" && <a target="_blank" style={{fontSize:"26px"}} download className="goBack pdfLoader" href={that.props.IRI?that.props.IRI.replace(/bdr:/,bdr)+".txt":""}>
+                <span className="visually-hidden">Go to TXT version</span>
                 <IconButton title={I18n.t("resource.downloadAs")+" TXT"}>
                    <img alt="download icon" src="/DL_icon.svg" height="24" />
                 </IconButton>
@@ -768,10 +771,12 @@ export function top_left_menu(that,pdfLink,monoVol,fairUse)
           that.props.IRI && that.props.IRI.match(/^bda[nc]:/) &&
           <div>{[<a className="goBack" target="_blank" title="TTL version" rel="alternate" type="text/turtle"
              href={"http://purl.bdrc.io/"+(that.props.IRI.match(/^bdan:/)?"annotation/":"anncollection/")+that.props.IRI.replace(/bda[nc]:/,"")+".ttl"}>
+                <span className="visually-hidden">Go to TTL version</span>
                 <Button style={{marginLeft:"0px",paddingLeft:"10px",paddingRight:"0px"}}>{I18n.t("resource.export")} ttl</Button>
           </a>,<span>&nbsp;/&nbsp;</span>,
           <a className="goBack noML" target="_blank" title="JSON-LD version" rel="alternate" type="application/ld+json"
              href={"http://purl.bdrc.io/"+(that.props.IRI.match(/^bdan:/)?"annotation/":"anncollection/")+that.props.IRI.replace(/bda[nc]:/,"")+".jsonld"}>
+                <span className="visually-hidden">Go to JSON-LD version</span>
                 <Button style={{paddingLeft:0,paddingRight:"10px"}}>json-ld</Button>
           </a>]}</div>
        }
@@ -830,6 +835,7 @@ export function top_left_menu(that,pdfLink,monoVol,fairUse)
                                      <a onClick={ev => that.handlePdfClick(ev,e.link,e.pdfFile)}
                                         {...(Ploaded ?{href:e.pdfFile}:{})}
                                      >
+                                        <span className="visually-hidden">Download PDF</span>
                                         { Ploading && <Loader className="pdfSpinner" loaded={Ploaded} scale={0.35}/> }
                                         <span {... (Ploading?{className:"pdfLoading"}:{})}>PDF</span>
                                      </a>
@@ -837,6 +843,7 @@ export function top_left_menu(that,pdfLink,monoVol,fairUse)
                                      <a onClick={ev => that.handlePdfClick(ev,e.link,e.zipFile,"zip")}
                                         {...(Zloaded ?{href:e.zipFile}:{})}
                                      >
+                                        <span className="visually-hidden">Download ZIP</span>
                                         { Zloading && <Loader className="zipSpinner" loaded={Zloaded} scale={0.35}/> }
                                         <span {... (Zloading?{className:"zipLoading"}:{})}>ZIP</span>
                                        </a>
@@ -846,6 +853,7 @@ export function top_left_menu(that,pdfLink,monoVol,fairUse)
 
                                              <a target="_blank" download={that.props.IRI?that.props.IRI.replace(/bdr:/,"")+".txt":""} 
                                                    href={that.props.IRI?that.props.IRI.replace(/bdr:/,bdr)+".txt":""} >
+                                                <span className="visually-hidden">Download TXT</span>
                                                 <span>TXT</span>
                                              </a>
                                           </div>
@@ -2165,7 +2173,7 @@ class ResourceViewer extends Component<Props,State>
 
       if(!str.match(/ /) && !str.match(/^http[s]?:/)) str = str.replace(/([a-z])([A-Z])/g,"$1"+(isUrl?"":' ')+"$2")
 
-      if(str.match(/^https?:\/\/[^ ]+$/)) { str = <a href={str} target="_blank" class="no-bdrc">{str}<img alt="link out icon" src="/icons/link-out.svg"/></a> }
+      if(str.match(/^https?:\/\/[^ ]+$/)) { str = <a href={str} target="_blank" class="no-bdrc">{str}<img alt="link out icon" src="/icons/link-out.svg"/><span className="visually-hidden">Open {str} page in new tab</span></a> }
       else if(!noNewline) {
          str = str.split("\n").map((i) => ([i,<br/>]))
          str = [].concat.apply([],str);
@@ -2301,6 +2309,7 @@ class ResourceViewer extends Component<Props,State>
                <Link to={window.location.hostname != "library.bdrc.io" 
                      ? "/show/"+shortUri(prop[bdo+"instanceOf"]?.[0]?.value)
                      : prop[bdo+"instanceOf"]?.[0]?.value}>
+                        <span className="visually-hidden">Go to {I18n.t("resource.workId1")} page</span>
                         {I18n.t("resource.workId1")}
                </Link><span>&#32;</span>
                {I18n.t("resource.workId2", {id:this.props.IRI.split(":")[1]})} 
@@ -3015,7 +3024,7 @@ class ResourceViewer extends Component<Props,State>
            info = getLangLabel(this, "",  infoBase.filter((e)=>(e.type == skos+"prefLabel")))
 
            //loggergen.log("infoB",info)
-           if(info && info[0] && n <= 10) vals.push(<h4><Link className="urilink prefLabel" to={"/show/bdr:"+this.pretty(v,true)}>{info[0].value}</Link></h4>)
+           if(info && info[0] && n <= 10) vals.push(<h4><Link className="urilink prefLabel" to={"/show/bdr:"+this.pretty(v,true)}>{info[0].value}<span className="visually-hidden">Go to {info[0].value} page</span></Link></h4>)
            else if(n == 11) vals.push("...")
            n ++
          }
@@ -3268,8 +3277,8 @@ class ResourceViewer extends Component<Props,State>
                link = "http://authority.dila.edu.tw/"+dir+"/index.php?fromInner="+link
             }
             let prefix = shortUri(elem.value).split(":")[0]
-            if(!providers[prefix]) return <a href={link} target="_blank" class="no-bdrc">{shortUri(decodeURI(elem.value))}<img alt="link out icon" src="/icons/link-out.svg"/></a>
-            else return <Tooltip placement="bottom-end" title={<span>{I18n.t("misc.seeO")} <b>{providers[prefix]}</b></span>}><a href={link} target="_blank" class="no-bdrc">{shortUri(decodeURI(elem.value))}<img alt="link out icon" src="/icons/link-out.svg"/></a></Tooltip>
+            if(!providers[prefix]) return <a href={link} target="_blank" class="no-bdrc"><span className="visually-hidden">Go to {shortUri(decodeURI(elem.value))} page</span>{shortUri(decodeURI(elem.value))}<img alt="link out icon" src="/icons/link-out.svg"/></a>
+            else return <Tooltip placement="bottom-end" title={<span>{I18n.t("misc.seeO")} <b>{providers[prefix]}</b></span>}><a href={link} target="_blank" class="no-bdrc"><span className="visually-hidden">Go to {shortUri(decodeURI(elem.value))} page</span>{shortUri(decodeURI(elem.value))}<img alt="link out icon" src="/icons/link-out.svg"/></a></Tooltip>
          }
 
          let dico = dic, ret = []
@@ -3348,7 +3357,7 @@ class ResourceViewer extends Component<Props,State>
             prov = this.getProviderID(prov);
             if(prov && prov !== "BDRC") { 
                prov = prov.toLowerCase()
-               prov = <Link to={"/show/"+sUri}><Tooltip placement="top" title={<span>{I18n.t("prop.tmp:provider")}{I18n.t("punc.colon")} <b>{providers[prov]}</b></span>}><div class={"inst-prov "+(prov)}><img alt="provider icon" src={provImg[prov]} /></div></Tooltip></Link>
+               prov = <Link to={"/show/"+sUri}><Tooltip placement="top" title={<span>{I18n.t("prop.tmp:provider")}{I18n.t("punc.colon")} <b>{providers[prov]}</b></span>}><div class={"inst-prov "+(prov)}><img alt="provider icon" src={provImg[prov]} /></div></Tooltip><span className="visually-hidden">Go to {providers[prov]} page</span></Link>
             }
             else prov = null
 
@@ -3359,10 +3368,10 @@ class ResourceViewer extends Component<Props,State>
                
                //let vlink = "/"+show+"/"+prefix+":"+pretty+"?s="+encodeURIComponent(this.props.location.pathname+this.props.location.search)+"#open-viewer"    
                let vlink = "/"+show+"/"+prefix+":"+pretty+"?backToEtext="+this.props.IRI+"#open-reader"    
-               ret = [  <Link {...this.props.preview?{ target:"_blank" }:{}} to={"/show/"+sUri} class={"images-thumb no-thumb 1"} style={{"background-image":"url(/icons/etext.png)"}}></Link> ,
+               ret = [  <Link {...this.props.preview?{ target:"_blank" }:{}} to={"/show/"+sUri} class={"images-thumb no-thumb 1"} style={{"background-image":"url(/icons/etext.png)"}}><span className="visually-hidden">Go to {I18n.t("resource.etextF")} page</span></Link> ,
                      <div class="images-thumb-links"  data-n={1}>
-                        <Link {...this.props.preview?{ target:"_blank" }:{}} className={"urilink "+ prefix} to={vlink}>{I18n.t("resource.openViewer")}</Link>
-                        {/* <Link {...this.props.preview?{ target:"_blank" }:{}} className={"urilink "+ prefix} to={"/"+show+"/"+prefix+":"+pretty}>{I18n.t("resource.openR")}</Link> */}                        
+                        <Link {...this.props.preview?{ target:"_blank" }:{}} className={"urilink "+ prefix} to={vlink}><span className="visually-hidden">Go to {I18n.t("resource.openViewer")} page</span>{I18n.t("resource.openViewer")}</Link>
+                        {/* <Link {...this.props.preview?{ target:"_blank" }:{}} className={"urilink "+ prefix} to={"/"+show+"/"+prefix+":"+pretty}><span className="visually-hidden">Go to {I18n.t("resource.openR")} page</span>{I18n.t("resource.openR")}</Link> */}                        
                      </div> ]
                if(prov) ret.push(prov)
             
@@ -3377,13 +3386,13 @@ class ResourceViewer extends Component<Props,State>
                               
                //console.log("noT?", thumb, !thumb?.length, sUri, this.props.assocResources, this.props.firstImage, this.props.IRI,this.props.manifestError)               
 
-               if(!thumb || !thumb.length)  ret = [  <Link {...this.props.preview?{ target:"_blank" }:{}} to={"/show/"+sUri+"#open-viewer"} class={"images-thumb no-thumb 2a"} style={{"background-image":"url(/icons/header/instance.svg)"}}></Link> ]
+               if(!thumb || !thumb.length)  ret = [  <Link {...this.props.preview?{ target:"_blank" }:{}} to={"/show/"+sUri+"#open-viewer"} class={"images-thumb no-thumb 2a"} style={{"background-image":"url(/icons/header/instance.svg)"}}><span className="visually-hidden">Go to {I18n.t("resource.instanceF")} page</span></Link> ]
                else {
                   let thumbUrl = thumb[0].value
                   if(!thumbUrl.match(/[/]default[.][^.]+$/)) thumbUrl += "/full/"+(thumb[0].value.includes(".bdrc.io/")?"!2000,145":",145")+"/0/default.jpg"
                   else if(thumbUrl.match(/bdrc.io.*\/2000,\//)) thumbUrl = thumbUrl.replace(/\/2000,\//,"/!2000,145/")
                   else thumbUrl = thumbUrl.replace(/[/]max[/]/,"/"+(thumbUrl.includes(".bdrc.io/")?"!2000,145":",145")+"/")
-                  ret = [  <Link {...this.props.preview?{ target:"_blank" }:{}} to={"/show/"+sUri+"#open-viewer"} class={"images-thumb"} style={{"background-image":"url("+thumbUrl+")"}}><img alt="thumbnail" src={thumbUrl}/></Link> ]
+                  ret = [  <Link {...this.props.preview?{ target:"_blank" }:{}} to={"/show/"+sUri+"#open-viewer"} class={"images-thumb"} style={{"background-image":"url("+thumbUrl+")"}}><img alt="thumbnail" src={thumbUrl}/><span className="visually-hidden">Go to {I18n.t("resource.instanceF")} page</span></Link> ]
                }
                            
                if(prov) ret.push(prov)
@@ -3400,13 +3409,13 @@ class ResourceViewer extends Component<Props,State>
                               
                //console.log("noT?", !thumbV?.length, sUri, this.props.assocResources)               
 
-               if(!thumbV || !thumbV.length)  ret = [  <Link {...this.props.preview?{ target:"_blank" }:{}} to={"/show/"+sUri} class={"images-thumb no-thumb 2b"} style={{"background-image":"url(/icons/header/instance.svg)"}}></Link> ]
+               if(!thumbV || !thumbV.length)  ret = [  <Link {...this.props.preview?{ target:"_blank" }:{}} to={"/show/"+sUri} class={"images-thumb no-thumb 2b"} style={{"background-image":"url(/icons/header/instance.svg)"}}><span className="visually-hidden">Go to {I18n.t("resource.instanceF")} page</span></Link> ]
                else {
                   let thumbUrl = thumbV[0].value
                   if(!thumbUrl.match(/[/]default[.][^.]+$/)) thumbUrl += "/full/"+(thumbV[0].value.includes(".bdrc.io/")?"!2000,145":",145")+"/0/default.jpg"
                   else if(thumbUrl.match(/bdrc.io.*\/2000,\//)) thumbUrl = thumbUrl.replace(/\/2000,\//,"/!2000,145/")
                   else thumbUrl = thumbUrl.replace(/[/]max[/]/,"/"+(thumbUrl.includes(".bdrc.io/")?"!2000,145":",145")+"/")
-                  ret = [  <Link {...this.props.preview?{ target:"_blank" }:{}} to={"/show/"+sUri} class={"images-thumb"} style={{"background-image":"url("+thumbUrl+")"}}><img alt="thumbnail" src={thumbUrl}/></Link> ]
+                  ret = [  <Link {...this.props.preview?{ target:"_blank" }:{}} to={"/show/"+sUri} class={"images-thumb"} style={{"background-image":"url("+thumbUrl+")"}}><img alt="thumbnail" src={thumbUrl}/><span className="visually-hidden">Go to {I18n.t("resource.instanceF")} page</span></Link> ]
                }
                            
                if(inRoot && inRoot.length && info && lang && lang === "bo-x-ewts" && info.match(/^([^ ]+ ){11}/)) info = [ info.replace(/^(([^ ]+ ){10}).*?$/,"$1"), <span class="ellip">{info.replace(/^([^ ]+ ){10}([^ ]+.*?)$/,"$2")}</span> ]
@@ -3460,7 +3469,7 @@ class ResourceViewer extends Component<Props,State>
             //if(src.match(/bdr/)) src = "bdr"
 
             let bdrcData 
-            bdrcData = <Link className={"hoverlink"} to={"/"+show+"/"+prefix+":"+pretty}></Link>
+            bdrcData = <Link className={"hoverlink"} to={"/"+show+"/"+prefix+":"+pretty}><span className="visually-hidden">Go to {I18n.t("resource.openR")} page</span></Link>
 
             let sameBDRC ;
             if(infoBase && infoBase.length) sameBDRC = infoBase.filter(e => e.type === tmp+"withSameAs" && e.value.indexOf("bdrc.io") !== -1)            
@@ -3471,19 +3480,19 @@ class ResourceViewer extends Component<Props,State>
 
             // #828
             if(!elem.value.includes("purl.bdrc.io")) { 
-               if(orec && orec.length) link = <a class="urilink prefLabel no-bdrc" href={orec[0].value} target="_blank">{info}<Tooltip placement="bottom-end" title={<span>See on <b>{providers[prefix]}</b></span>}><img alt="link out icon" src="/icons/link-out.svg"/></Tooltip></a>
+               if(orec && orec.length) link = <a class="urilink prefLabel no-bdrc" href={orec[0].value} target="_blank"><span className="visually-hidden">Go to {info} page</span>{info}<Tooltip placement="bottom-end" title={<span>See on <b>{providers[prefix]}</b></span>}><img alt="link out icon" src="/icons/link-out.svg"/></Tooltip></a>
                else if(sameBDRC) {
                   if(!info) info = shortUri(elem.value)
-                  link = <a class="urilink prefLabel" href={"/show/"+shortUri(sameBDRC)} target="_blank">{info}</a>
+                  link = <a class="urilink prefLabel" href={"/show/"+shortUri(sameBDRC)} target="_blank"><span className="visually-hidden">Go to {info} page</span>{info}</a>
                }
                else if(canUrl && canUrl.length) { 
                   if(!info) info = shortUri(elem.value)                  
-                  link = <a class="urilink prefLabel no-bdrc" href={canUrl[0].value} target="_blank">{info}<Tooltip placement="bottom-end" title={<span>See on <b>{providers[prefix]}</b></span>}><img alt="link out icon" src="/icons/link-out.svg"/></Tooltip></a>
+                  link = <a class="urilink prefLabel no-bdrc" href={canUrl[0].value} target="_blank"><span className="visually-hidden">Go to {info} page</span>{info}<Tooltip placement="bottom-end" title={<span>See on <b>{providers[prefix]}</b></span>}><img alt="link out icon" src="/icons/link-out.svg"/></Tooltip></a>
                   if(srcProv.indexOf(" ") !== -1) srcProv = srcSame
                }
                else {
                   if(!info) info = shortUri(elem.value)
-                  link = <a class="urilink prefLabel no-bdrc" href={elem.value} target="_blank">{info}<Tooltip placement="bottom-end" title={<span>See on <b>{providers[prefix]}</b></span>}><img alt="link out icon" src="/icons/link-out.svg"/></Tooltip></a>
+                  link = <a class="urilink prefLabel no-bdrc" href={elem.value} target="_blank"><span className="visually-hidden">Go to {info} page</span>{info}<Tooltip placement="bottom-end" title={<span>See on <b>{providers[prefix]}</b></span>}><img alt="link out icon" src="/icons/link-out.svg"/></Tooltip></a>
                } 
             }
             else {                
@@ -3584,9 +3593,9 @@ class ResourceViewer extends Component<Props,State>
                         elem?.data?.partType === "bdr:PartTypeVolume" && (elem?.data?.partIndex ?? elem?.data?.index) != undefined && I18n.t("resource.outLn", {n:(""+(elem.data.partIndex?? elem?.data?.index)).padStart(2,'0')})
                      }{
                         elem?.data?.type === "EtextVolume" && elem?.data?.volumeNumber != undefined && I18n.t("resource.outLn", {n:(""+(elem?.data?.volumeNumber)).padStart(2,'0')})
-                     }{info}</Link>
+                     }{info}<span className="visually-hidden">Go to {info} page</span></Link>
                }
-               else link = <Link {...this.props.preview?{ target:"_blank" }:{}} className={"urilink prefLabel " } to={"/"+show+"/"+uri}>{info}</Link>
+               else link = <Link {...this.props.preview?{ target:"_blank" }:{}} className={"urilink prefLabel " } to={"/"+show+"/"+uri}><span className="visually-hidden">Go to {info} page</span>{info}</Link>
 
                if(noLink) link = info
 
@@ -3630,11 +3639,11 @@ class ResourceViewer extends Component<Props,State>
                   
                   //loggergen.log("srcP",srcPrefix,srcUri)
 
-                  if(srcPrefix !== "bdr") locaLink = <a class="urilink" href={getRealUrl(this,srcUri)} target="_blank"></a>
-                  else locaLink = <Link to={"/"+show+"/"+shortUri(srcUri)}></Link>
+                  if(srcPrefix !== "bdr") locaLink = <a class="urilink" href={getRealUrl(this,srcUri)} target="_blank"><span className="visually-hidden">Go to {getRealUrl(this,srcUri)} page</span></a>
+                  else locaLink = <Link to={"/"+show+"/"+shortUri(srcUri)}><span className="visually-hidden">Go to {shortUri(srcUri)} page</span></Link>
 
 
-                  //bdrcData = <Link className="hoverlink" to={"/"+show+"/"+shortUri(srcUri)}></Link>
+                  //bdrcData = <Link className="hoverlink" to={"/"+show+"/"+shortUri(srcUri)}><span className="visually-hidden">Go to {shortUri(srcUri)} page</span></Link>
                   
                   if(!srcPrefixList.includes(srcPrefix)) befo.push(
 
@@ -3692,13 +3701,13 @@ class ResourceViewer extends Component<Props,State>
             }><span className="lang">{lang}</span></Tooltip>:null,bdrcData])
          }
          else if(pretty.toString().match(/^V[0-9A-Z]+_I[0-9A-Z]+$/)) { ret.push(<span>
-            <Link {...this.props.preview?{ target:"_blank" }:{}} className={"urilink "+prefix} to={"/"+show+"/"+prefix+":"+pretty}>{pretty}</Link>&nbsp;
+            <Link {...this.props.preview?{ target:"_blank" }:{}} className={"urilink "+prefix} to={"/"+show+"/"+prefix+":"+pretty}><span className="visually-hidden">Go to {pretty} page</span>{pretty}</Link>&nbsp;
             {/* <Link className="goBack" target="_blank" to={"/gallery?manifest=//iiifpres.bdrc.io/v:bdr:"+pretty+"/manifest"}>{"(view image gallery)"}</Link> */}
          </span> ) }
          else if(pretty.toString().match(/^([A-Z]+[v_0-9-]*[A-Z]*)+$/)){ 
 
             if(!thumb && !thumbV) {
-               ret = (<Link {...this.props.preview?{ target:"_blank" }:{}} className={"urilink "+ prefix} to={"/"+show+"/"+prefix+":"+pretty}><span lang="">{ret}{enti!="Etext"||prop?.endsWith("eTextInInstance")?prefix+":"+pretty:""}</span></Link>)
+               ret = (<Link {...this.props.preview?{ target:"_blank" }:{}} className={"urilink "+ prefix} to={"/"+show+"/"+prefix+":"+pretty}><span lang="">{ret}{enti!="Etext"||prop?.endsWith("eTextInInstance")?prefix+":"+pretty:""}</span><span className="visually-hidden">Go to {prefix+":"+pretty} page</span></Link>)
             }
             else if(thumb && thumb.length || this.props.manifestError?.error?.code === 401) {
                let thumbUrl = thumb?.[0]?.value ?? ""
@@ -3781,7 +3790,7 @@ class ResourceViewer extends Component<Props,State>
                         <a class="fairuse-IA-link no-IA" onClick={toggleSnippet}>{I18n.t("access.snippet"+(this.state.collapse.snippet?"H":"V"))}</a>
                         <br/> 
                         */}
-                        <Trans i18nKey="access.fairuse1" components={{ bold: <u /> }} /> { I18n.t("access.fairuse2")} <a href="mailto:help@bdrc.io">help@bdrc.io</a> { I18n.t("access.fairuse3")}
+                        <Trans i18nKey="access.fairuse1" components={{ bold: <u /> }} /> { I18n.t("access.fairuse2")} <a href="mailto:help@bdrc.io">help@bdrc.io<span className="visually-hidden">Mail to help@bdrc.io</span></a> { I18n.t("access.fairuse3")}
                      </>
                   } else {         
                      let loca = this.getResourceElem(bdo+"contentLocation")
@@ -3819,7 +3828,7 @@ class ResourceViewer extends Component<Props,State>
                      if(elem && elem.includes("RestrictedSealed")) 
                         restrict =  <>
                            <span class="urilink nolink noIA"><BlockIcon style={{width:"18px",verticalAlign:"top"}}/>{accessLabel}</span>
-                           <div class="data access sealed"><h3><span style={{textTransform:"none"}}><Trans i18nKey="access.sealed" components={{ bold: <u /> }} /> <a href="mailto:help@bdrc.io">help@bdrc.io</a>{I18n.t("punc.point")}</span></h3></div>
+                           <div class="data access sealed"><h3><span style={{textTransform:"none"}}><Trans i18nKey="access.sealed" components={{ bold: <u /> }} /> <a href="mailto:help@bdrc.io">help@bdrc.io<span className="visually-hidden">Mail to help@bdrc.io</span></a>{I18n.t("punc.point")}</span></h3></div>
                         </>
                      else 
                         //return  <div class="data access"><h3><span style={{textTransform:"none"}}>{I18n.t("misc.please")} <a class="login" {...(this.props.auth?{onClick:this.props.auth.login.bind(this,this.props.location)}:{})}>{I18n.t("topbar.login")}</a> {I18n.t("access.credentials")}</span></h3></div>
@@ -3839,14 +3848,14 @@ class ResourceViewer extends Component<Props,State>
                         quality,
                         fairUse,
                         (!fairUse || this.state.collapse.snippet || true) &&(!this.props.IIIFerrors||!this.props.IIIFerrors[prefix+":"+pretty]|| this.props.IIIFerrors[prefix+":"+pretty].error?.code != 403)
-                        ? <Link {...this.props.preview?{ target:"_blank" }:{}} className={"urilink " + prefix + (this.props.IIIFerrors&&this.props.IIIFerrors[prefix+":"+pretty]?.error.code ? " error-"+this.props.IIIFerrors[prefix+":"+pretty]?.error?.code : "")} onClick={checkDLD.bind(this)} to={vlink}>{thumb}</Link>
+                        ? <Link {...this.props.preview?{ target:"_blank" }:{}} className={"urilink " + prefix + (this.props.IIIFerrors&&this.props.IIIFerrors[prefix+":"+pretty]?.error.code ? " error-"+this.props.IIIFerrors[prefix+":"+pretty]?.error?.code : "")} onClick={checkDLD.bind(this)} to={vlink}>{thumb}<span className="visually-hidden">Go to {prefix+":"+pretty} page</span></Link>
                         : null,
                         (!fairUse || this.state.collapse.snippet || true || restrict) && <div class="images-thumb-links"  data-n={2}>
                            { restrict 
                               ? restrict 
                               :  !this.props.IIIFerrors||!this.props.IIIFerrors[prefix+":"+pretty]                            
                                  ?  <>
-                                       <Link {...this.props.preview?{ target:"_blank" }:{}} className={"urilink "+ prefix} to={vlink} onClick={checkDLD.bind(this)}>{I18n.t("index.openViewer"+(fairUse?"FU":""))}</Link>
+                                       <Link {...this.props.preview?{ target:"_blank" }:{}} className={"urilink "+ prefix} to={vlink} onClick={checkDLD.bind(this)}>{I18n.t("index.openViewer"+(fairUse?"FU":""))}<span className="visually-hidden">Go to {prefix+":"+pretty} page</span></Link>
                                        <ResourceViewerContainer key={this.props.IRI+"_scans-"+prefix+":"+pretty} auth={this.props.auth} /*history={this.props.history}*/ location={this.props.location} navigate={this.props.navigate} IRI={prefix+":"+pretty} pdfDownloadOnly={true} />
                                     </>
                                  :  this.props.IIIFerrors[prefix+":"+pretty].error.code === 401 && (!this.props.auth || !this.props.auth.isAuthenticated())
@@ -3873,10 +3882,10 @@ class ResourceViewer extends Component<Props,State>
                let vlink = "/"+show+"/"+repro+"?s="+encodeURIComponent(this.props.location.pathname+this.props.location.search)+"#open-viewer"                
                thumbV = <div class={"images-thumb"+(!hasT?" no-thumb 3":"")} style={{"background-image":"url("+img+")"}}/>;               
 
-               ret = [<Link {...this.props.preview?{ target:"_blank" }:{}} className={"urilink "+ prefix} to={hasT?vlink:"/"+show+"/"+prefix+":"+pretty}>{thumbV}</Link>,
+               ret = [<Link {...this.props.preview?{ target:"_blank" }:{}} className={"urilink "+ prefix} to={hasT?vlink:"/"+show+"/"+prefix+":"+pretty}>{thumbV}<span className="visually-hidden">Go to {prefix+":"+pretty} page</span></Link>,
                      <div class="images-thumb-links" data-n={3}>
-                        <Link {...this.props.preview?{ target:"_blank" }:{}} className={"urilink "+ prefix + (!hasT?" disable":"")} to={vlink}>{I18n.t("index.openViewer")}</Link>
-                        <Link {...this.props.preview?{ target:"_blank" }:{}} className={"urilink "+ prefix} to={"/"+show+"/"+prefix+":"+pretty}>{I18n.t("resource.openR")}</Link>
+                        <Link {...this.props.preview?{ target:"_blank" }:{}} className={"urilink "+ prefix + (!hasT?" disable":"")} to={vlink}>{I18n.t("index.openViewer")}<span className="visually-hidden">Go to {prefix+":"+pretty} page</span></Link>
+                        <Link {...this.props.preview?{ target:"_blank" }:{}} className={"urilink "+ prefix} to={"/"+show+"/"+prefix+":"+pretty}>{I18n.t("resource.openR")}<span className="visually-hidden">Go to {prefix+":"+pretty} page</span></Link>
                      </div>]
             }
          } 
@@ -3973,11 +3982,11 @@ class ResourceViewer extends Component<Props,State>
       if(e.fromSameAs ) { 
          //loggergen.log("e.f",e.fromSameAs)
 
-         bdrcData = <Link className="hoverlink" to={"/show/"+shortUri(e.fromSameAs)}></Link>               
+         bdrcData = <Link className="hoverlink" to={"/show/"+shortUri(e.fromSameAs)}><span className="visually-hidden">Go to {shortUri(e.fromSameAs)} page</span></Link>               
          let src ;
          if(sameAsPrefix) src = sameAsPrefix.replace(/^([^ ]+) .*$/,"$1") 
-         let link = <a href="urilink" target="_blank" href={getRealUrl(this,e.fromSameAs)}></a>
-         if(src === "bdr") link =  <Link className="urilink" to={"/show/"+shortUri(e.fromSameAs)}></Link>               
+         let link = <a href="urilink" target="_blank" href={getRealUrl(this,e.fromSameAs)}><span className="visually-hidden">Go to {getRealUrl(this,e.fromSameAs)} page</span></a>
+         if(src === "bdr") link =  <Link className="urilink" to={"/show/"+shortUri(e.fromSameAs)}><span className="visually-hidden">Go to {shortUri(e.fromSameAs)} page</span></Link>               
 
          befo = 
 
@@ -4187,7 +4196,7 @@ class ResourceViewer extends Component<Props,State>
                               ev.stopPropagation()
                               return false
                            }}><img alt="permalink icon" style={{width:"16px"}} src="/icons/PLINK_small.svg"/>
-                           </Link>}
+                           <span className="visually-hidden">Go to {loca.pathname+loca.search+"#open-viewer"} page</span></Link>}
                      <img alt="info icon" src="/icons/info.svg" onClick={this.toggleHoverM(ID)} />
                   </span> 
                </div>
@@ -4257,7 +4266,7 @@ class ResourceViewer extends Component<Props,State>
                               { (e.start !== undefined) &&  <div><span class='first'>{this.proplink(bdo+"startChar")}</span><span>{I18n.t("punc.colon")}&nbsp;</span><span>{e.start}</span></div>  }
                               { (e.end !== undefined) &&  <div><span class='first'>{this.proplink(bdo+"endChar")}</span><span>{I18n.t("punc.colon")}&nbsp;</span><span>{e.end}</span></div>  }
                               { (comment !== undefined) &&  <div><span class='first'>{this.proplink(rdfs+"comment")}</span><span>{I18n.t("punc.colon")}&nbsp;</span><span>{comment.value}</span></div>  }
-                              { (ontolink !== undefined) &&  <div><span class='first'>{I18n.t("prop.tmp:ontologyProperty")}</span><span>{I18n.t("punc.colon")}&nbsp;</span><Link class="ontolink" to={"/show/"+ontolink}>{ontolink}</Link></div>  }
+                              { (ontolink !== undefined) &&  <div><span class='first'>{I18n.t("prop.tmp:ontologyProperty")}</span><span>{I18n.t("punc.colon")}&nbsp;</span><Link class="ontolink" to={"/show/"+ontolink}>{ontolink}<span className="visually-hidden">Go to {ontolink} page</span></Link></div>  }
                               { (e.value === "etextMoreInfo") && <div><span class='first'>{this.proplink(bdo+"instanceReproductionOf")}</span><span>{I18n.t("punc.colon")}&nbsp;</span>{repro}</div>  }
                               { (e.value === "etextMoreInfo" && inPart.length) && <div><span class='first'>{this.proplink(tmp+"inInstancePart")}</span><span>{I18n.t("punc.colon")}&nbsp;</span><div class="inPart">{inPart}</div></div>  }
                               { (e.decimalValue) &&  <div><span class='first'>{this.proplink(tmp+"decimalValue")}</span><span>{I18n.t("punc.colon")}&nbsp;</span>{e.decimalValue}</div>  }
@@ -4273,7 +4282,7 @@ class ResourceViewer extends Component<Props,State>
                                  let asso,tab ;
                                  if(this.props.assocResources) asso = this.props.assocResources[f]                  
                                  if(asso && (tab=asso.filter(t => t.fromKey === adm+"canonicalHtml")).length) link = tab[0].value  
-                                 return (<div><a class="urilink" href={link} target="_blank">{a}{pref!=="bdr"&&<img alt="link out icon" src="/icons/link-out.svg"/>}</a><span>{I18n.t("misc.from")}</span><img alt="provider icon" src={logo}/><b>{prov}</b></div>)
+                                 return (<div><a class="urilink" href={link} target="_blank">{a}{pref!=="bdr"&&<img alt="link out icon" src="/icons/link-out.svg"/>}<span className="visually-hidden">Go to {a} page</span></a><span>{I18n.t("misc.from")}</span><img alt="provider icon" src={logo}/><b>{prov}</b></div>)
                               })}
                               </TabPanel>
                               <TabPanel>
@@ -4421,7 +4430,7 @@ class ResourceViewer extends Component<Props,State>
 
                   if(tLab.start !== undefined) tmp = [ <span class="startChar">
                      <span>[&nbsp;
-                        <Link to={"/show/"+this.props.IRI+"?startChar="+tLab.start+(this.props.highlight?'&keyword="'+this.props.highlight.key+'"@'+this.props.highlight.lang:"")+"#open-viewer"}>@{tLab.start}</Link>
+                        <Link to={"/show/"+this.props.IRI+"?startChar="+tLab.start+(this.props.highlight?'&keyword="'+this.props.highlight.key+'"@'+this.props.highlight.lang:"")+"#open-viewer"}>@{tLab.start}<span className="visually-hidden">Go to @{tLab.start} page</span></Link>
                      </span>&nbsp;]</span>,<br/> ]
                   else tmp = []
                   
@@ -4525,7 +4534,7 @@ class ResourceViewer extends Component<Props,State>
 
                   //loggergen.log("ori,lab",ori,lab)
 
-                  if(ori.length > 0 && lab.length > 0) tmp = [tmp," at ",<a href={ori[0].value} target="_blank">{lab[0].value}</a>]
+                  if(ori.length > 0 && lab.length > 0) tmp = [tmp," at ",<a href={ori[0].value} target="_blank">{lab[0].value}<span className="visually-hidden">Go to {lab[0].value} page</span></a>]
                }
             }
 
@@ -5441,7 +5450,7 @@ class ResourceViewer extends Component<Props,State>
 
       //loggergen.log("H2?",title, rootC, other)
 
-      if(other) return <h1 title={title.value} lang={title.lang || this.props.locale}><Link {...this.props.preview?{ target:"_blank" }:{}}   {... rootC?{onClick:rootC}:{onClick:() => setTimeout(()=>window.scrollTo(0,0),10)}}  to={"/show/"+shortUri(other)+this.getTabs(T_,other)}>{_T}<span>{_befo}{title.value}</span>{this.tooltip(title.lang)}</Link></h1>
+      if(other) return <h1 title={title.value} lang={title.lang || this.props.locale}><Link {...this.props.preview?{ target:"_blank" }:{}}   {... rootC?{onClick:rootC}:{onClick:() => setTimeout(()=>window.scrollTo(0,0),10)}}  to={"/show/"+shortUri(other)+this.getTabs(T_,other)}>{_T}<span>{_befo}{title.value}</span>{this.tooltip(title.lang)}<span className="visually-hidden">Go to {shortUri(other)} page</span></Link></h1>
       else return <><h1 title={title.value} lang={title.lang || this.props.locale} class="on">{_T}<span>{_befo}<span class="placeType">{title.value}</span></span>{this.tooltip(title.lang)}</h1>{ title.placeT?.length && <span class="date">{title.placeT.map(t => this.fullname(t.value, false, false, true)).map((s,i) => i > 0 ? ([I18n.t("punc.comma"), s]):s)}</span>}</>
    }
 
@@ -5473,7 +5482,7 @@ class ResourceViewer extends Component<Props,State>
       }
       else {
           let loaded = this.props.resources && this.props.resources[other?other:this.props.IRI] 
-          if(other) title = <h1 lang={this.props.locale}><Link {...this.props.preview?{ target:"_blank" }:{}}  onClick={() => setTimeout(()=>window.scrollTo(0,0),10)} to={"/show/"+shortUri(other)+this.getTabs(T_,other)}>{_T}<span>{loaded && (T_ === "Work" || T_ === "Instance")?I18n.t("resource.noT"):shortUri(other?other:this.props.IRI)}</span></Link></h1>
+          if(other) title = <h1 lang={this.props.locale}><Link {...this.props.preview?{ target:"_blank" }:{}}  onClick={() => setTimeout(()=>window.scrollTo(0,0),10)} to={"/show/"+shortUri(other)+this.getTabs(T_,other)}>{_T}<span>{loaded && (T_ === "Work" || T_ === "Instance")?I18n.t("resource.noT"):shortUri(other?other:this.props.IRI)}</span><span className="visually-hidden">Go to {shortUri(other)} page</span></Link></h1>
           else  title = <h1 class="on" lang={this.props.locale}>{_T}<span>{loaded && (T_ === "Work" || T_ === "Instance")?I18n.t("resource.noT"):shortUri(other?other:this.props.IRI)}</span></h1>
       }
 
@@ -5804,7 +5813,7 @@ class ResourceViewer extends Component<Props,State>
 
          //loggergen.log("loca:",elem,monoVol,withTag,node)
 
-         if(!elem) return [<h4><Link to={"/show/"+shortUri(_elem[0].value)}>{shortUri(_elem[0].value)}</Link></h4>]
+         if(!elem) return [<h4><Link to={"/show/"+shortUri(_elem[0].value)}>{shortUri(_elem[0].value)}<span className="visually-hidden">Go to {shortUri(_elem[0].value)} page</span></Link></h4>]
 
          let loca = s => (elem && elem[bdo+"contentLocation"+s] && elem[bdo+"contentLocation"+s][0] && elem[bdo+"contentLocation"+s][0]["value"] ? elem[bdo+"contentLocation"+s][0]["value"]:null)
                
@@ -5993,6 +6002,7 @@ class ResourceViewer extends Component<Props,State>
             <Link {...this.props.preview?{ target:"_blank" }:{}} 
                to={/*"/search?i="+wrid+"&t=Work"*/"/osearch/associated/"+wrid?.split(":")[1]+"/search"}>
                   {I18n.t("misc.browseA",{count: ret.length})}
+                  <span className="visually-hidden">Go to {I18n.t("misc.browseA",{count: ret.length})} page</span>
             </Link>
          </span>
       }
@@ -6004,6 +6014,7 @@ class ResourceViewer extends Component<Props,State>
                to={ //"/search?r="+this.props.IRI+"&t=Place&f=relation,inc,bdo:placeLocatedIn"
                     "/osearch/associated/"+this.props.IRI.split(":")[1]+"/search?type%5B0%5D=Place"}> 
                   {I18n.t("misc.browseA",{count: ret.length})}
+                  <span className="visually-hidden">Go to {I18n.t("misc.browseA",{count: ret.length})} page</span>
             </Link>
          </span>
       }
@@ -6300,7 +6311,7 @@ class ResourceViewer extends Component<Props,State>
 
                      if(this.props.config && this.props.config.chineseMirror) link = link.replace(new RegExp(cbeta), "http://cbetaonline.cn/")
 
-                     if(prov != "bdr") return (<a target="_blank" href={link  /*.replace(/^https?:/,"") */ }>{open}</a>) // keep original http/s prefix (#381)
+                     if(prov != "bdr") return (<a target="_blank" href={link  /*.replace(/^https?:/,"") */ }>{open}<span className="visually-hidden">Go to {link} page</span></a>) // keep original http/s prefix (#381)
                } ) }
             </Popover>
          ])
@@ -6350,6 +6361,7 @@ class ResourceViewer extends Component<Props,State>
                   {/* {I18n.t("result.open")} {useR && name} {!useR && <emph> {shortUri(s.value)} </emph>}{I18n.t("misc.in")} &nbsp; */}
                   {providers[prov]}
                   <img alt="link out icon" src="/icons/link-out.svg"/>
+                  <span className="visually-hidden">Go to {link} page</span>
                </a>
             
                const sav = [ ret ]
@@ -6413,7 +6425,7 @@ class ResourceViewer extends Component<Props,State>
 
                      if(this.props.config && this.props.config.chineseMirror) link = link.replace(new RegExp(cbeta), "http://cbetaonline.cn/")
 
-                     if(prov != "bdr") return (<a target="_blank" href={link}>{open}</a>) // keep original http/s prefix (#381)
+                     if(prov != "bdr") return (<a target="_blank" href={link}>{open}<span className="visually-hidden">Go to {link} page</span></a>) // keep original http/s prefix (#381)
                } ) }
             </Popover>
          ])
@@ -6524,6 +6536,7 @@ renderPopupCitation(IRI) {
                                     ? [<CheckIcon/>,I18n.t("resource.clipC")] 
                                     : [<ClipboardIcon/>,I18n.t("resource.clipB")] 
                                  }
+                                 <span className="visually-hidden">Copy citation to clipboard</span>
                               </a>
                         </CopyToClipboard>
                         <a id="export" onClick={ev => {
@@ -6533,7 +6546,7 @@ renderPopupCitation(IRI) {
                               anchorEl:{ ...this.state.anchorEl, export:({...ev}).currentTarget }
                            })
                         }}>
-                           <span class="icon"><img alt="export icon" src="/icons/export.svg"/></span> {I18n.t("resource.export")} { this.state.collapse.export ? <ExpandLess/>:<ExpandMore/>}
+                           <span class="icon"><img alt="export icon" src="/icons/export.svg"/></span> {I18n.t("resource.export")} { this.state.collapse.export ? <ExpandLess/>:<ExpandMore/>}<span className="visually-hidden">Export citation</span>
                         </a>
                      </div>}
                   </div>
@@ -6566,13 +6579,16 @@ renderPopupCitation(IRI) {
                         <MenuItem>
                               { I18n.t("resource.exportRIS", {format:"RIS"})}
                         </MenuItem>
+                        <span className="visually-hidden">Download RIS citation</span>
                   </a>
                   { IRI && IRI.match(/^bdr:MW[^_]+$/) && [
                      <a rel="alternate" type="application/marc" href={this.expand(IRI, true)+".mrc"} download>
                            <MenuItem>{I18n.t("resource.export2",{format:"MARC"})}</MenuItem>           
+                           <span className="visually-hidden">Download MARC citation</span>
                      </a>,
                      <a rel="alternate" type="application/marcxml+xml" href={this.expand(IRI, true)+".mrcx"} download>
                            <MenuItem>{I18n.t("resource.export2",{format:"MARCXML"})}</MenuItem>           
+                           <span className="visually-hidden">Download MARCXML citation</span>
                      </a> 
                   ]}
                </ClickAwayListener>
@@ -6609,10 +6625,12 @@ renderPopupPrint(IRI,place = "bottom-start") {
                               ? [<CheckIcon/>,I18n.t("resource.clipT")] 
                               : [<ClipboardIcon/>,I18n.t("resource.clipB")] 
                            }
+                           <span className="visually-hidden">Copy print order to clipboard</span>
                         </a>
                   </CopyToClipboard>
                   <a id="export" href="http://vimalatreasures.org/contact-us.aspx" target="_blank">
                      <span class="icon"><MailIcon/></span> {I18n.t("resource.contactVT")}
+                     <span className="visually-hidden">Contact Vimala Treasures</span>
                   </a>
                </div>
             </div>
@@ -6762,7 +6780,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
             { !this.props.useDLD && authError && (
             isProxied(that)
                ? <ListItem><div className="mustLogin"><Trans i18nKey="resource.notInList" components={{lk:<a class='uri-link' target='_blank' href={"https://library"+"."+"bdrc"+"."+"io/show/"+that.props.IRI} />, nl:<br/>}}/></div></ListItem>
-               : <ListItem><a className="mustLogin" onClick={() => that.props.auth.login(that.props.location)}>{I18n.t("resource.mustLogin")}</a></ListItem>
+               : <ListItem><a className="mustLogin" onClick={() => that.props.auth.login(that.props.location)}>{I18n.t("resource.mustLogin")}<span className="visually-hidden">Login to download</span></a></ListItem>
             )}
             {
             (!authError || this.props.useDLD) && that.props.pdfVolumes.map(e => {
@@ -6846,6 +6864,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                            { Ploading && <Loader className="pdfSpinner" loaded={Ploaded} scale={0.35}/> }
                            <span {... (Ploading?{className:"pdfLoading"}:{className: this.state.collapse["pdf_"+e.link]?"on":""})} >{pdfMsg}</span>
                            { Ploading && e.pdfPercent !== undefined && <span>&nbsp;{e.pdfPercent}%</span>}
+                           <span className="visually-hidden">Download PDF</span>
                         </a>
                         <a onClick={ev => that.handlePdfClick(ev,e.link,e.zipFile,"zip")}
                            {...(Zloaded ?{href:e.zipFile}:{})}
@@ -6853,6 +6872,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                            { Zloading && <Loader className="zipSpinner" loaded={Zloaded} scale={0.35}/> }
                            <span {... (Zloading?{className:"zipLoading"}:{className:this.state.collapse["zip_"+e.link]?"on":""})}>{zipMsg}</span>
                            { Zloading && e.zipPercent !== undefined && <span>&nbsp;{e.zipPercent}%</span>}
+                           <span className="visually-hidden">Download ZIP</span>
                         </a>
                         { that.props.IRI && getEntiType(that.props.IRI) === "Etext" && // TODO fix download etext
                            <div> 
@@ -6862,6 +6882,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                               <a target="_blank" download={that.props.IRI?that.props.IRI.replace(/bdr:/,"")+".txt":""} 
                                     href={that.props.IRI?that.props.IRI.replace(/bdr:/,bdr)+".txt":""} >
                                  <span>TXT</span>
+                                 <span className="visually-hidden">Download TXT version</span>
                               </a>
                            </div>
                         }
@@ -6959,11 +6980,13 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                { (this.props.eTextRefs && this.props.eTextRefs.mono && accessET) && 
                      <a target="_blank" title={I18n.t("resource.version",{format:"TXT"})} rel="alternate" type="text"  download href={fullUri(this.props.eTextRefs.mono).replace(/^http:/,"https:")+".txt"}>
                         <MenuItem>{I18n.t("resource.exportDataAs",{data: I18n.t("types.etext"), format:"TXT"})}</MenuItem>
+                        <span className="visually-hidden">Download TXT version</span>
                      </a> }
 
                { (isEtextVol && accessET) &&
                      <a target="_blank" title={I18n.t("resource.version",{format:"TXT"})} rel="alternate" type="text"  download href={this.props.IRI?fullUri(this.props.IRI).replace(/^http:/,"https:")+".txt":""}>
                         <MenuItem>{I18n.t("resource.exportDataAs",{data: I18n.t("types.etext"), format:"TXT"})}</MenuItem>
+                        <span className="visually-hidden">Download TXT version</span>
                      </a> }
 
                { pdfLink && 
@@ -7006,10 +7029,12 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
 
                <a target="_blank" title={I18n.t("resource.version",{format:"TTL"})} rel="alternate" type="text/turtle" href={that.expand(that.props.IRI, true)+".ttl"} download>
                   <MenuItem>{I18n.t("resource.exportDataAs",{data: "metadata", format:"TTL"})}</MenuItem>
+                  <span className="visually-hidden">Download TTL version</span>
                </a>
                
                <a target="_blank" title={I18n.t("resource.version",{format:"JSON-LD"})} rel="alternate" type="application/ld+json" href={that.expand(that.props.IRI, true)+".jsonld"} download>
                   <MenuItem>{I18n.t("resource.exportDataAs",{data: "metadata", format:"JSON-LD"})}</MenuItem>           
+                  <span className="visually-hidden">Download JSON-LD version</span>
                </a>
 
                { /* that.props.IRI && that.props.IRI.match(/bdr:MW/) && [
@@ -7508,9 +7533,9 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
          //loader={<Loader loaded={false} />}
          >
          { !this.props.disableInfiniteScroll && <div style={{display:"flex", justifyContent:"space-between", width:"100%", scrollMarginTop:"160px" }}>
-            <h3 style={{marginBottom:"20px",textAlign:"right"}}>{ firstPageUrl && <Link onClick={(e) => this.props.onGetPages(this.props.IRI,firstC,true,{firstC, lastC})} to={firstPageUrl}>{I18n.t("resource.firstP")}</Link>}</h3>
+            <h3 style={{marginBottom:"20px",textAlign:"right"}}>{ firstPageUrl && <Link onClick={(e) => this.props.onGetPages(this.props.IRI,firstC,true,{firstC, lastC})} to={firstPageUrl}>{I18n.t("resource.firstP")}<span className="visually-hidden">Go to first page</span></Link>}</h3>
             <h3 style={{marginBottom:"20px",textAlign:"right"}}>{ prev!==-1 && <span onClick={(e) => this.props.onGetPages(this.props.IRI, prev, true, {firstC, lastC} )} class="download ulink urilink" style={{color:"#d73449",fontWeight:700,border:"none",textAlign:"right",cursor:"pointer"}}>{I18n.t("resource.loadP")}</span>}</h3>
-            <h3 style={{marginBottom:"20px",textAlign:"right"}}>{ lastPageUrl && <Link to={lastPageUrl} onClick={(e) => this.props.onGetPages(this.props.IRI,lastC-999 /* TODO: use the other query here (mirador/num page)*/,true,{firstC, lastC})} >{I18n.t("resource.lastP")}</Link>}</h3>
+            <h3 style={{marginBottom:"20px",textAlign:"right"}}>{ lastPageUrl && <Link to={lastPageUrl} onClick={(e) => this.props.onGetPages(this.props.IRI,lastC-999 /* TODO: use the other query here (mirador/num page)*/,true,{firstC, lastC})} >{I18n.t("resource.lastP")}<span className="visually-hidden">Go to last page</span></Link>}</h3>
          </div> }
          {/* {this.hasSub(k)?this.subProps(k):tags.map((e)=> [e," "] )} */}
          { elem.filter((e,i) => !this.props.disableInfiniteScroll || i > 0 || !e.chunks?.some(c => c["@value"].includes("Text Scan Input Form" /*" - Title Page"*/))).filter((e,i) => !this.props.disableInfiniteScroll || i < 2).map( (e,_i) => { 
@@ -7779,6 +7804,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                      data.unshift(
                         <a class="" onClick={() => this.setState({collapse:{...this.state.collapse, commit:!this.state.collapse["commit"]}})}>
                            {I18n.t(this.state.collapse["commit"]?"resource.commitH":"resource.commitV")}
+                           <span className="visually-hidden">Toggle commit history</span>
                         </a>
                      )
                   }
@@ -7856,7 +7882,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                         delete(s.viewAnno);
                         this.setState({...s})
                      }
-                  }}>View all</a>}
+                  }}>View all<span className="visually-hidden">View all annotations</span></a>}
                   <div className="sub">
                      {(!this.state.newAnno || this.state.newAnno.replyTo) && this._annoPane}
                      {
@@ -7898,7 +7924,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
          <div class="data">
             <div class="browse">
                <Link className="download login" to={"/search?r="+this.props.IRI+"&t=Work"}>
-                  &gt; {I18n.t("resource.browse")}
+                  &gt; {I18n.t("resource.browse")}<span className="visually-hidden">Browse asso resources</span>
                </Link>
             </div>
          </div>
@@ -8035,6 +8061,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                /*{...(this.props.config.hideViewers?{"onClick":() => this.showMirador(null,null,true),"style":{cursor:"pointer"}}:{})}*/ >
                   <Loader className="uvLoader" loaded={this.state.imageLoaded} color="#fff"/>
                   <img alt="thumbnail" onError={(e)=>this.setState({...this.state,imageError:"!"})} onLoad={(e)=>this.setState({...this.state,imageLoaded:true,imageError:false})} src={iiifThumb+"/full/!1000,500/0/default.jpg"} /> 
+                  <span className="visually-hidden">Open in viewer</span>
                </a>
                { rootWarn }
             </div>
@@ -8047,6 +8074,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                /*{...(this.props.config.hideViewers?{"onClick":() => this.showMirador(null,null,true),"style":{cursor:"pointer"}}:{})}*/ >
                   <Loader className="uvLoader" loaded={this.state.imageLoaded} color="#fff"/>
                   <img alt="thumbnail" onError={(e)=>this.setState({...this.state,imageError:true})} onLoad={(e)=>this.setState({...this.state,imageLoaded:true})} src={iiifThumb+"/full/,500/0/default.jpg"} />                   
+                  <span className="visually-hidden">Open in viewer</span>
                </a>
                { rootWarn }
             </div>
@@ -8057,6 +8085,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
             { /*(prov && prov !== "BDRC" && orig) &&*/  src }
             <a onClick={handleViewer} onContextMenu={handleViewer} href={viewUrl.pathname+viewUrl.search} target="_blank" className={"firstImage "+(this.state.imageLoaded?"loaded":"")} 
                /*{...(this.props.config.hideViewers?{"onClick":this.showMirador.bind(this),"style":{cursor:"pointer"}}:{})}*/ >
+               <span className="visually-hidden">Open in viewer</span>
                <Loader className="uvLoader" loaded={this.state.imageLoaded} color="#fff"/>
                { 
                   this.props.firstImage && 
@@ -8101,7 +8130,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
          let loca = this.props.location
          let view = loca.pathname+loca.search+"#open-viewer"
          if(etextUT) view = etextUT+"#open-viewer"
-         return <div class="data" id="head"><Link title='View Etext' to={view}><div class={"header "+(!this.state.ready?"loading":"")}>{ !this.state.ready && <Loader loaded={false} /> }{src}{copyRicon}</div></Link></div>
+         return <div class="data" id="head"><Link title='View Etext' to={view}><div class={"header "+(!this.state.ready?"loading":"")}>{ !this.state.ready && <Loader loaded={false} /> }{src}{copyRicon}</div><span className="visually-hidden">View Etext</span></Link></div>
       }
       else 
          return <div class="data" id="head"><div class={"header "+(!this.state.ready?"loading":"")}>{ !this.state.ready && <Loader loaded={false} /> }{src}{copyRicon}</div></div>   
@@ -8475,7 +8504,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                e.preventDefault()
                e.stopPropagation()
                return false
-            }} ><ChevronLeft />{I18n.t("resource.goB")}</Link>
+            }} ><ChevronLeft />{I18n.t("resource.goB")}<span className="visually-hidden">Go back</span></Link>
             {title(l)}
             {etextPropHeader}
          </span>
@@ -8721,7 +8750,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                               
                               //nav.push(<Link to={"/show/"+txt[0].eTextResource} class="ulink">{I18n.t("resource.openR")}</Link>)
                               //nav.push(<span>|</span>)
-                              nav.push(<Link  {...!access?{disabled:true}:{}} to={"/show/"+g.link} class="ulink" onClick={(ev) => {                                 
+                              nav.push(<Link {...!access?{disabled:true}:{}} to={"/show/"+g.link} class="ulink" onClick={(ev) => {                                 
                                  this.props.onLoading("etext", true)
                                  this.props.onReinitEtext(ETres)
                                  this.setState({currentText: ETres, scope:ETres})
@@ -8917,7 +8946,9 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                               this.props.onReinitEtext(ETres)
                               this.setState({currentText: ETres})
                            }*/}>
-                                 <img alt="etext icon" src="/icons/search/etext.svg"/><img alt="etext icon" src="/icons/search/etext_r.svg"/>
+                                 <img alt="etext icon" src="/icons/search/etext.svg"/>
+                                 <span className="visually-hidden">Open Etext</span>
+                                 <img alt="etext icon" src="/icons/search/etext_r.svg"/>
                               </Link> 
                            :  <span disabled="true" className="hasImg hasTxt" title={I18n.t("access.fairuseEtext").replace(/<[^>]+>/g,"")}>
                                  <img alt="etext icon" src="/icons/search/etext.svg"/><img alt="etext icon" src="/icons/search/etext.svg"/>
@@ -10043,7 +10074,10 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                               {e.id}
                               {this.samePopup(e.same,fUri)}
                               <div class="abs">
-                                 { e.hasImg && <Link className="hasImg" title={I18n.t("copyright.view")} onClick={e.checkDLD}  to={e.hasImg}><img alt="images icon" src="/icons/search/images.svg"/><img alt="images icon" src="/icons/search/images_r.svg"/></Link> }
+                                 { e.hasImg && <Link className="hasImg" title={I18n.t("copyright.view")} onClick={e.checkDLD}  to={e.hasImg}><img alt="images icon" src="/icons/search/images.svg"/>
+                                 <span className="visually-hidden">View images</span>
+                                 <img alt="images icon" src="/icons/search/images_r.svg"/>
+                                 </Link> }
                                  { /* pType && 
                                     <span class={"pType "+(e.details?"on":"")} {...e.details?{title:(this.state.collapse[tag+"-details"]?"Hide":"Show")+" Details", onClick:(ev) => toggle(ev,root,e["@id"],"details")}:{}} >
                                        {this.proplink(pType)}
@@ -10561,7 +10595,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
             this._refs["rel-"+i] = React.createRef();
             return ( 
                <div ref={this._refs["rel-"+i]}>
-                  <Link to={"/show/"+s}><div class="header"></div></Link>
+                  <Link to={"/show/"+s}><div class="header"></div><span className="visually-hidden">View related work</span></Link>
                   <div><Link to={"/show/"+s}><span {...label.lang?{lang:label.lang}:{}}>{ label.value }</span></Link>{ label.lang && this.tooltip(label.lang) }</div>
                   {/* <Link to={"/show/"+s}>{I18n.t("misc.readM")}</Link> */}
                </div>
@@ -10582,7 +10616,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
             }
             return ( 
                <div ref={this._refs["crea-"+i]}>
-                  <Link to={"/show/"+s}><div class={"header"+(thumb?" thumb":"") + (_T === "Product"?(isEtextCollection?" etext":" instance"):"")} style={{backgroundImage:"url("+thumbUrl+")"}}></div></Link>
+                  <Link to={"/show/"+s}><div class={"header"+(thumb?" thumb":"") + (_T === "Product"?(isEtextCollection?" etext":" instance"):"")} style={{backgroundImage:"url("+thumbUrl+")"}}></div><span className="visually-hidden">View related work</span></Link>
                   <div><Link to={"/show/"+s}><span {...label.lang?{lang:label.lang}:{}}>{ label.value }</span></Link>{ label.lang && this.tooltip(label.lang) }</div>
                   {/* <Link to={"/show/"+s}>{I18n.t("misc.readM")}</Link> */}
                </div>
@@ -10638,7 +10672,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
             let url = "/search?r="+this.props.IRI+"&t="+t
             if(!t1) t1 = url
             return (<div>                                                                           
-               <Link to={url}><div class={"header "+t.toLowerCase()}></div></Link>
+               <Link to={url}><div class={"header "+t.toLowerCase()}></div><span className="visually-hidden">View all {t}</span></Link>
                <div><Link to={url}><span lang={this.props.locale}>{I18n.t("misc.allT",{count:v,type:I18n.t("types."+t.toLowerCase(),{count:v})})}</span></Link></div>
                {/* <Link to={url}>{I18n.t("misc.seeR",{count:v})}</Link> */}
             </div>)
@@ -10880,7 +10914,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                }
             }
             //console.log("lbls:", back, repro, vol, labelMW, this.props.that.props.eTextRefs, labelVL, labelUT)
-            breadcrumbs.push(<Link  class="can-shrink" to={"/show/"+back}>{labelMW?.value ?? back}</Link>)         
+            breadcrumbs.push(<Link class="can-shrink" to={"/show/"+back}>{labelMW?.value ?? back}<span className="visually-hidden">Back to {labelMW?.value ?? back}</span></Link>)         
             if(this.props.that.state.scope != etextRes) {
                let openText = (ev,ETres,reset) => {
                   this.props.onLoading("etext", true)
@@ -10889,7 +10923,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                }
                breadcrumbs.push(<Link to={"/show/"+etextRes+"#open-viewer"} onClick={(ev,)=>openText(ev,etextRes,true)}>{I18n.t("types.etext")}</Link>)
                if(this.props.that.state.currentText != this.props.that.state.scope && vol && Array.isArray(vol?.volumeHasEtext ?? []) && vol?.volumeHasEtext?.length > 1 ) {
-                  breadcrumbs.push(<Link  class="can-shrink" to={"/show/"+etextRes+"?openEtext="+this.props.that.state.currentText+"#open-viewer"} onClick={(ev)=>openText(ev,this.props.that.state.currentText)}>{labelVL?.value ?? this.props.that.state.currentText}</Link>)
+                  breadcrumbs.push(<Link class="can-shrink" to={"/show/"+etextRes+"?openEtext="+this.props.that.state.currentText+"#open-viewer"} onClick={(ev)=>openText(ev,this.props.that.state.currentText)}>{labelVL?.value ?? this.props.that.state.currentText}<span className="visually-hidden">Back to {labelVL?.value ?? this.props.that.state.currentText}</span></Link>)
                   breadcrumbs.push(<span class="can-shrink">{labelUT?.value ?? this.props.that.state.scope}</span>)
                   level = 3
                } else if(labelVL?.value) {
@@ -11109,8 +11143,8 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                      }}>                  
                      <SimpleBar>
                         <h2>
-                           <a href="https://monlamdic.com" target="_blank" rel="noopener noreferrer"><img alt="monlam icon" width="32" src="/icons/monlam.png" title="monlamdic.com"/></a>
-                           <a href="https://monlamdic.com" target="_blank" rel="noopener noreferrer">{I18n.t("viewer.monlamTitle")}</a>
+                           <a href="https://monlamdic.com" target="_blank" rel="noopener noreferrer"><img alt="monlam icon" width="32" src="/icons/monlam.png" title="monlamdic.com"/><span className="visually-hidden">Open monlam dictionary</span></a>
+                           <a href="https://monlamdic.com" target="_blank" rel="noopener noreferrer">{I18n.t("viewer.monlamTitle")}<span className="visually-hidden">Open monlam dictionary</span></a>
                            {/* <a href="https://monlamdic.com" target="_blank" rel="noopener noreferrer"><img alt="monlam icon" width="32" src="/icons/monlam.png" title="monlamdic.com"/></a> */}
                            <Close width="32" onClick={() => { 
                               this.setState({noHilight:false, monlam:null, collapse:{ ...this.state.collapse, monlamPopup: true }})
@@ -11609,7 +11643,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                   {/* { this.renderAnnoPanel() } */}
                   { this.renderWithdrawn() }             
                   <div class="title">{/* { wTitle }{ iTitle }{ rTitle } */}</div> 
-                  { (etext && !orig) && <div class={"data open-etext"+(etextAccessError?" disable":"")}><div><Link to={etextUT+(etextUT.includes("?")?"&":"?")+"backToEtext="+backToET+"#open-viewer"}>{etextLoca}</Link></div></div> }
+                  { (etext && !orig) && <div class={"data open-etext"+(etextAccessError?" disable":"")}><div><Link to={etextUT+(etextUT.includes("?")?"&":"?")+"backToEtext="+backToET+"#open-viewer"}>{etextLoca}<span className="visually-hidden">Open Etext</span></Link></div></div> }
                   { (etext && orig) && <div class="data open-etext"><div><a target="_blank" href={orig}>{I18n.t("resource.openO",{src:prov})}<img alt="link out icon" src="/icons/link-out_.svg"/></a></div></div> }
                   <div class={"data" + (_T === "Etext"?" etext-title":"")+(_T === "Images"?" images-title":"")}>
                      {searchUrl && <span class="back-anchor">

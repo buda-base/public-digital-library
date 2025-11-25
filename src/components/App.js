@@ -474,7 +474,7 @@ export const renderBanner = (that, infoPanel, isResourcePage) => {
          let content = [], str = lab.value
          while(link = str.match(/([^!]|^|\n)(\[([^\]]+?)\]\(([^)]+?)\))/m)) {
             let arr = str.split(link[2])
-            content = content.concat([ arr[0], <a href={link[4]} target="_blank">{link[3]}</a> ])
+            content = content.concat([ arr[0], <a href={link[4]} target="_blank"><span className="visually-hidden">Go to {link[3]}</span>{link[3]}</a> ])
             str = arr.slice(1).join(" ")
          }
          if(str) content.push(str)
@@ -1247,7 +1247,7 @@ export function top_right_menu(that,etextTitle,backUrl,etextres,isMirador,locati
                      return false
                   }
                   */
-               }}:{}} ><img alt="BUDA icon" src="/icons/BUDA-small.svg"/><span class="buda-caption"><span>BUDA</span><span class="buda-small">{I18n.t("home.buda")}</span></span></Link>                                  
+               }}:{}} ><span className="visually-hidden">Go to homepage</span><img alt="BUDA icon" src="/icons/BUDA-small.svg"/><span class="buda-caption"><span>BUDA</span><span class="buda-small">{I18n.t("home.buda")}</span></span></Link>                                  
                
                {/* <a id="by">
                   <span>by</span></a>
@@ -1256,16 +1256,16 @@ export function top_right_menu(that,etextTitle,backUrl,etextres,isMirador,locati
                   <a href={"https://bdrc.io/"} target="_blank"><img alt="BDRC logo" src="/BDRC-Logo_.png"/></a>
                ]}
                { onZhMirror && [
-                  <Link to={"/static/about"} id="BDRC"><span>BDRC</span></Link>,
-                  <Link to={"/static/about"} ><img alt="BDRC logo" src="/BDRC-Logo_.png"/></Link>
+                  <Link to={"/static/about"} id="BDRC"><span className="visually-hidden">Go to BDRC About page</span><span>BDRC</span></Link>,
+                  <Link to={"/static/about"} ><span className="visually-hidden">Go to BDRC About page</span><img alt="BDRC logo" src="/BDRC-Logo_.png"/></Link>
                ]} */}
             </div>,
 
    ]
    if(onKhmerServer) {
       logo = <div id="logo" class="khmer">                              
-               <a href={"https://bdrc.io/"} target="_blank"><img alt="BDRC logo" src="/BDRC-Logo_.png"/></a>
-               <a href={"https://bdrc.io/"} target="_blank" id="BDRC"><span>BDRC</span></a>               
+               <a href={"https://bdrc.io/"} target="_blank"><span className="visually-hidden">Go to BDRC homepage</span><img alt="BDRC logo" src="/BDRC-Logo_.png"/></a>
+               <a href={"https://bdrc.io/"} target="_blank" id="BDRC"><span className="visually-hidden">Go to BDRC homepage</span><span>BDRC</span></a>               
             </div> 
    }
 
@@ -1310,12 +1310,12 @@ export function top_right_menu(that,etextTitle,backUrl,etextres,isMirador,locati
             <div>
                <div><i>{I18n.t("topbar.preserving")}</i></div>
                <div style={{ textTransform: "capitalize" }}>
-                  <a href={"https://www.bdrc.io?lang="+corpo_lang} target="_blank" /*rel="nofollow"*/ class="BDRC-link"><img alt="BDRC logo" src="/BDRC-Logo_.png"/>{I18n.t("topbar.BDRC")}</a>
-                  <a href={"https://www.bdrc.io/buda-archive?lang="+corpo_lang} target="_blank" /*rel="nofollow"*/>{I18n.t("topbar.aboutB")}</a>
-                  <a href={"https://www.bdrc.io/news?lang="+corpo_lang} target="_blank" /*rel="nofollow"*/>{I18n.t("topbar.news")}</a>
-                  <a href={"https://www.bdrc.io/programs?lang="+corpo_lang} target="_blank" /*rel="nofollow"*/>{I18n.t("topbar.programs")}</a>
+                  <a href={"https://www.bdrc.io?lang="+corpo_lang} target="_blank" /*rel="nofollow"*/ class="BDRC-link"><span className="visually-hidden">Go to BDRC homepage</span><img alt="BDRC logo" src="/BDRC-Logo_.png"/>{I18n.t("topbar.BDRC")}</a>
+                  <a href={"https://www.bdrc.io/buda-archive?lang="+corpo_lang} target="_blank" /*rel="nofollow"*/><span className="visually-hidden">Go to About BUDA page</span>{I18n.t("topbar.aboutB")}</a>
+                  <a href={"https://www.bdrc.io/news?lang="+corpo_lang} target="_blank" /*rel="nofollow"*/><span className="visually-hidden">Go to News page</span>{I18n.t("topbar.news")}</a>
+                  <a href={"https://www.bdrc.io/programs?lang="+corpo_lang} target="_blank" /*rel="nofollow"*/><span className="visually-hidden">Go to Programs page</span>{I18n.t("topbar.programs")}</a>
                   {/* <Link to="/buda-user-guide">{I18n.t("topbar.guide")}</Link> */}
-                  <a href={"https://bdrc.io/donation?lang="+corpo_lang} target="_blank" /*rel="nofollow"*/>{I18n.t("topbar.donate")}</a>
+                  <a href={"https://bdrc.io/donation?lang="+corpo_lang} target="_blank" /*rel="nofollow"*/><span className="visually-hidden">Go to Donation page</span>{I18n.t("topbar.donate")}</a>
                </div>
             </div>
          </div>
@@ -1323,7 +1323,7 @@ export function top_right_menu(that,etextTitle,backUrl,etextres,isMirador,locati
       innerNav = (
 
          <div className="inner-nav">
-            { ["bo","pi","sa","zh"].map(t => <div><Link onClick={() => that.state.collapse.burgerOn && that.setState({collapse:{...that.state.collapse, burgerOn:false}})} className={that.props.tradition === t ? "active": ""} to={"/tradition/"+t+"/"+(customTradLink[t]??"")}>{I18n.t("tradition."+t+"T")}</Link></div>) }
+            { ["bo","pi","sa","zh"].map(t => <div><Link onClick={() => that.state.collapse.burgerOn && that.setState({collapse:{...that.state.collapse, burgerOn:false}})} className={that.props.tradition === t ? "active": ""} to={"/tradition/"+t+"/"+(customTradLink[t]??"")}><span className="visually-hidden">Go to {I18n.t("tradition."+t+"T")} page</span>{I18n.t("tradition."+t+"T")}</Link></div>) }
          </div>
       ),
       innerSearch = (
@@ -1512,11 +1512,11 @@ export function top_right_menu(that,etextTitle,backUrl,etextres,isMirador,locati
       if(onKhmerServer) {
          const setCurrent = (route) => (window.location.pathname === route ? {className:"current"}:{})
          khmerLinks = <div class="links">
-            <Link {...setCurrent("/")} to={"/"} >{I18n.t("topbar.home")}</Link> 
-            <Link {...setCurrent("/guidedsearch")} to={"/guidedsearch"} >{I18n.t("topbar.guided")}</Link> 
-            <Link {...setCurrent("/browse")} to={"/browse"} >{I18n.t("topbar.browse")}</Link> 
-            <Link {...setCurrent("/static/aboutkm")} to={"/static/aboutkm"} >{I18n.t("topbar.about")}</Link> 
-            <Link {...setCurrent("/static/resources")} to={"/static/resources"} >{I18n.t("topbar.resources")}</Link> 
+            <Link {...setCurrent("/")} to={"/"} ><span className="visually-hidden">Go to homepage</span>{I18n.t("topbar.home")}</Link> 
+            <Link {...setCurrent("/guidedsearch")} to={"/guidedsearch"} ><span className="visually-hidden">Go to Guided search page</span>{I18n.t("topbar.guided")}</Link> 
+            <Link {...setCurrent("/browse")} to={"/browse"} ><span className="visually-hidden">Go to Browse page</span>{I18n.t("topbar.browse")}</Link> 
+            <Link {...setCurrent("/static/aboutkm")} to={"/static/aboutkm"} ><span className="visually-hidden">Go to About page</span>{I18n.t("topbar.about")}</Link> 
+            <Link {...setCurrent("/static/resources")} to={"/static/resources"} ><span className="visually-hidden">Go to Resources page</span>{I18n.t("topbar.resources")}</Link> 
          </div>
       }
 
@@ -1531,14 +1531,16 @@ export function top_right_menu(that,etextTitle,backUrl,etextres,isMirador,locati
          ev.preventDefault()
       } 
 
-      const aboutLink = (id) => <a {...{id}}  href={"https://bdrc.io"} target="_blank">{I18n.t("topbar.about")}</a>
+      const aboutLink = (id) => <a {...{id}}  href={"https://bdrc.io"} target="_blank"><span className="visually-hidden">Go to BDRC About page</span>{I18n.t("topbar.about")}</a>
 
       const newSearchLink = (id) => <Link {...{id}} to="/" onClick={newSearchFunc}>
+            <span className="visually-hidden">Go to search page</span>
             <span>{I18n.t("topbar.search")}</span>
             { id && <SearchIcon  style={{ fill:"#d73449", width:"32px", height:"32px" }} /> }
          </Link>
 
       const userGuideLink = (id) => <Link {...{id}} to={"/buda-user-guide"} >
+               <span className="visually-hidden">Go to User guide page</span>
                <span>
                   {I18n.t("topbar.guide")}
                   { id && <svg style={{ fill:"#d73449", width:"28px" }} version="1.1" id="Layer_1"x="0px" y="0px" viewBox="0 0 103.19 122.88">
@@ -1567,7 +1569,7 @@ export function top_right_menu(that,etextTitle,backUrl,etextres,isMirador,locati
          { !onKhmerServer && [
             !onZhMirror &&  aboutLink("about")
             ,
-            onZhMirror  && <Link id="about" to={"/static/about"} >{I18n.t("topbar.about")}</Link> 
+            onZhMirror  && <Link id="about" to={"/static/about"} ><span className="visually-hidden">Go to About page</span>{I18n.t("topbar.about")}</Link> 
          ] }
 
          { !onKhmerServer && newSearchLink("new-search") }         
@@ -1576,6 +1578,7 @@ export function top_right_menu(that,etextTitle,backUrl,etextres,isMirador,locati
 
          { !onKhmerServer && <>
             <a id="more-pages" onClick={(e) => { that.setState({collapse:{ ...that.state.collapse, "more":!that.state.collapse.more}, anchor:{...that.state.anchor, "more":e.currentTarget }})}}>
+               <span className="visually-hidden">Open menu of more pages</span>
                <span>more pages<ExpandMore /></span>
             </a>
             <Popover 
@@ -1598,7 +1601,7 @@ export function top_right_menu(that,etextTitle,backUrl,etextres,isMirador,locati
 
          { proxied &&   
             <Tooltip placement="center" title={<span style={{ whiteSpace:"normal" }}><Trans i18nKey="topbar.collections" /></span>}  >
-               <Link id="collections" to={"/search?r=tmp:subscriptions&t=Product"} >{I18n.t("types.product",{ count:2 })}</Link>
+               <Link id="collections" to={"/search?r=tmp:subscriptions&t=Product"} ><span className="visually-hidden">Go to collections page</span>{I18n.t("types.product",{ count:2 })}</Link>
             </Tooltip>
          }
 
@@ -1617,8 +1620,8 @@ export function top_right_menu(that,etextTitle,backUrl,etextres,isMirador,locati
          </div>
 
          {(false && that.props.auth && isGroup(that.props.auth, "fullaccess")) 
-            ? <a target="_blank" href="https://beta.bdrc.io/" id="donate" ><img alt="BUDA icon" style={{background:"white",borderRadius:"3px",verticalAlign:"-11px"}} width="33" src="/icons/BUDA-small.svg"/>BETA</a>
-            : (!that.props.config || !that.props.config.chineseMirror) && <a target="_blank" href="https://bdrc.io/donation/" id="donate"><img alt="donate icon" src="/donate.svg"/>{I18n.t("topbar.donate")}</a>
+            ? <a target="_blank" href="https://beta.bdrc.io/" id="donate" ><span className="visually-hidden">Go to BUDA beta page</span><img alt="BUDA icon" style={{background:"white",borderRadius:"3px",verticalAlign:"-11px"}} width="33" src="/icons/BUDA-small.svg"/>BETA</a>
+            : (!that.props.config || !that.props.config.chineseMirror) && <a target="_blank" href="https://bdrc.io/donation/" id="donate"><span className="visually-hidden">Go to Donation page</span><img alt="donate icon" src="/donate.svg"/>{I18n.t("topbar.donate")}</a>
          }
 
 
@@ -2934,7 +2937,7 @@ class App extends Component<Props,State> {
                      if(!lit) console.warn("EMPTY lit:",o,sublist[o])
                      mapInfo[o].ref = React.createRef()
                      mapInfo[o].marker = (<Marker ref={mapInfo[o].ref} position={latLong} permanent icon={redIcon}> 
-                           <MapPopup direction="top"><Link onClick={(ev) => sendMsgMap(ev)} to={url}>{ lit?.value }<br/><span className="RID">{sUri}</span></Link></MapPopup>
+                           <MapPopup direction="top"><Link onClick={(ev) => sendMsgMap(ev)} to={url}>{ lit?.value }<br/><span className="RID">{sUri}</span><span className="visually-hidden">Go to {lit?.value} page</span></Link></MapPopup>
                      </Marker>)
 
                   }
@@ -3830,7 +3833,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      </span>
                      <span class="instance-link">
                         { nb > maxNbPreview && <>
-                           <Link class="urilink" to={iUrl}>{I18n.t("misc.browseA",{count:nb})}</Link>                     
+                           <Link class="urilink" to={iUrl}><span className="visually-hidden">Go to {I18n.t("misc.browseA",{count:nb})}</span>{I18n.t("misc.browseA",{count:nb})}</Link>                     
                            <emph style={{margin:"0 5px"}}> {I18n.t("misc.or")} </emph>
                         </> }
                         <span class="instance-collapse" onClick={(e) => { 
@@ -3849,7 +3852,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   { (nb > maxNbPreview && this.state.collapse[id]) && //!this.props.loading && 
                      <div class="match" style={{marginBottom:0}}>
                         <span class="label" style={{textTransform:"none"}}>{I18n.t("misc.seeM", {count:nb - normalNbPreview})}:</span>&nbsp;
-                        <span class="instance-link"><Link class="urilink" to={iUrl}>{I18n.t("misc.browse").toLowerCase()}</Link></span> 
+                        <span class="instance-link"><Link class="urilink" to={iUrl}><span className="visually-hidden">Go to {I18n.t("misc.browse").toLowerCase()} page</span>{I18n.t("misc.browse").toLowerCase()}</Link></span> 
                      </div>
                   }
                </div>
@@ -3874,7 +3877,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   <span class="instance-link">
                      <span class="urilink" onClick={(e) => this.props.onGetInstances(shortUri(id))}>Preview</span>
                      <emph> or </emph>
-                     <Link class="urilink" to={iUrl}>Browse All ({nb})</Link>
+                     <Link class="urilink" to={iUrl}><span className="visually-hidden">Go to Browse All Instances ({nb}) page</span>Browse All ({nb})</Link>
                   </span>
                 </div>
          }
@@ -3986,12 +3989,12 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          if (qname && label?.length) {
             label = getLangLabel(this, bdo+"serialInstanceOf", label)
             if(label?.value) {
-               label = <Link to={"/show/"+qname} lang={label.lang}>{label.value}</Link>
+               label = <Link to={"/show/"+qname} lang={label.lang}><span className="visually-hidden">Go to {label.value} page</span>{label.value}</Link>
             } else {
-               label = <Link to={"/show/"+qname}>{qname}</Link>
+               label = <Link to={"/show/"+qname}><span className="visually-hidden">Go to {qname} page</span>{qname}</Link>
             }
          } else {
-            label = <Link to={"/show/"+qname}>{qname}</Link>
+            label = <Link to={"/show/"+qname}><span className="visually-hidden">Go to {qname} page</span>{qname}</Link>
          }
       } else {
          label = false
@@ -4369,14 +4372,14 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                if(i.value != "false") {
                   let urilink
 
-                  if(i.uri && !i.uri.includes(".bdrc.") && i.uri.startsWith("http")) urilink = <a target="_blank" href={i.uri}><span {...(i.lang?{lang:i.lang}:{})}>{i.value}</span></a> 
-                  else urilink =  <Link class="inRoot" to={"/show/"+i.uri+"?s="+encodeURIComponent("/search?"+window.location.href.replace(/^https?:[/][/][^?]+[?]?/gi,""))}><span {...(i.lang?{lang:i.lang}:{})}>{i.value}</span></Link> 
+                  if(i.uri && !i.uri.includes(".bdrc.") && i.uri.startsWith("http")) urilink = <a target="_blank" href={i.uri}><span {...(i.lang?{lang:i.lang}:{})}>{i.value}</span><span className="visually-hidden">Go to {i.value} page</span></a> 
+                  else urilink =  <Link class="inRoot" to={"/show/"+i.uri+"?s="+encodeURIComponent("/search?"+window.location.href.replace(/^https?:[/][/][^?]+[?]?/gi,""))}><span {...(i.lang?{lang:i.lang}:{})}>{i.value}</span><span className="visually-hidden">Go to {i.value} page</span></Link> 
 
                   if(outlineB !== undefined && (!T || T !== "Etext")) {
                      outlineB.push(<span class="sepa"/>)
-                     outlineB.push(<Link class="outL" to={iri}><img alt="collection icon" src="/scripts/mirador/images/collecR.svg"/>{I18n.t("result.openO")}</Link>)
+                     outlineB.push(<Link class="outL" to={iri}><img alt="collection icon" src="/scripts/mirador/images/collecR.svg"/><span className="visually-hidden">Go to collection page</span>{I18n.t("result.openO")}</Link>)
                      outlineB.push(<span class="sepa"/>)
-                     outlineB.push(<Link class="rec" to={iri.replace(/(show[/]).*?part=([^&]+)&/,"$1$2?")}><img alt="record icon" src="/icons/rec.svg"/>{I18n.t("resource.openR")}</Link>)
+                     outlineB.push(<Link class="rec" to={iri.replace(/(show[/]).*?part=([^&]+)&/,"$1$2?")}><img alt="record icon" src="/icons/rec.svg"/>{I18n.t("resource.openR")}<span className="visually-hidden">Go to record page</span></Link>)
                   }
 
                   //loggergen.log("2 val:",i.lang,i)
@@ -4468,9 +4471,9 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             this.setState({...this.state,blurSearch:true,repage:true,collapse:{...this.state.collapse, [id]:!this.state.collapse[id]}})
          }	
 
-         let getUrilink = (uri,val,lang) => ([ <Link className="urilink" to={"/show/"+shortUri(uri)}>{val}</Link>,lang?<Tooltip placement="bottom-end" title={	
+         let getUrilink = (uri,val,lang) => ([ <Link className="urilink" to={"/show/"+shortUri(uri)}><span className="visually-hidden">Go to {val} page</span>{val}</Link>,lang?<Tooltip placement="bottom-end" title={	
                <div style={{margin:"10px"}}>	
-                  {I18n.t(languages[lang]?languages[lang].replace(/search/,"tip"):lang)}/>	
+                  {I18n.t(languages[lang]?languages[lang].replace(/search/,"tip"):lang)}
                </div>	
             }><span className="lang">&nbsp;{lang}</span></Tooltip>:null])	
 
@@ -4496,9 +4499,9 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
          return (<div className={"match "+prop}>	
             <span className={"label " +(lastP === prop?"invisible":"")}>{(!from?prop:from)}{I18n.t("punc.colon")}&nbsp;</span>	
-               <span>{expand!==true?null:inPart}{[!uri?val:<Link className="urilink" to={uri}><span {...(lang?{lang:lang}:{})}>{val}</span></Link>,lang?<Tooltip placement="bottom-end" title={	
+               <span>{expand!==true?null:inPart}{[!uri?val:<Link className="urilink" to={uri}><span {...(lang?{lang:lang}:{})}>{val}</span><span className="visually-hidden">Go to {val} page</span></Link>,lang?<Tooltip placement="bottom-end" title={	
                <div style={{margin:"10px"}}>	
-                  {I18n.t(languages[lang]?languages[lang].replace(/search/,"tip"):lang)}/>	
+                  {I18n.t(languages[lang]?languages[lang].replace(/search/,"tip"):lang)}	
                </div>	
             }><span className="lang">&nbsp;{lang}</span></Tooltip>:null]}{expand?<span class="etext-match"><br/>
                { (openAccess || expand !== true) && <>
@@ -4522,7 +4525,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      }</span>	
                   { openAccess && <>
                      <span> {I18n.t("misc.or")} </span>	
-                     <Link to={"/show/"+prettId+"?s="+ encodeURIComponent("/search?"+(urlBase.replace(/((([?])?&*|^)n=[^&]*)/g,"$3")+(!urlBase.match(/[\?&]$/)?"&":"")+"n="+n).replace(/\?+&?/,"?"))+(!bestM?"":"&"+bestM.replace(/^\?/,""))} class="uri-link">{I18n.t("result.openEin")}</Link>	
+                     <Link to={"/show/"+prettId+"?s="+ encodeURIComponent("/search?"+(urlBase.replace(/((([?])?&*|^)n=[^&]*)/g,"$3")+(!urlBase.match(/[\?&]$/)?"&":"")+"n="+n).replace(/\?+&?/,"?"))+(!bestM?"":"&"+bestM.replace(/^\?/,""))} class="uri-link">{I18n.t("result.openEin")}<span className="visually-hidden">Go to {I18n.t("result.openEin")} page</span></Link>	
                   </> }
                   </> }</span>:null}</span>	                      	
             </div>)	
@@ -4835,8 +4838,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
          let getIconLink = (resUrl,div) => {
 
-            if(!resUrl.startsWith("http")) return <Link to={resUrl}  onClick={(ev) => sendMsg(ev, true, resUrl)}>{div}</Link>
-            else return <a href={resUrl} target="_blank"  onClick={(ev) => sendMsg(ev, true)}>{div}</a>
+            if(!resUrl.startsWith("http")) return <Link to={resUrl}  onClick={(ev) => sendMsg(ev, true, resUrl)}><span className="visually-hidden">Go to result page</span>{div}</Link>
+            else return <a href={resUrl} target="_blank"  onClick={(ev) => sendMsg(ev, true)}><span className="visually-hidden">Go to result page</span>{div}</a>
 
          }
 
@@ -4924,8 +4927,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             </div>
          ]
 
-         if(!resUrl.startsWith("http")) retList.push(<Link to={resUrl.replace(/#open-viewer$/,"")} className="result" onClick={(ev) => sendMsg(ev, true)}>{ret}</Link>)         
-         else retList.push(<a href={resUrl} target="_blank" className="result"  onClick={(ev) => sendMsg(ev, true)}>{ret}</a>)         
+         if(!resUrl.startsWith("http")) retList.push(<Link to={resUrl.replace(/#open-viewer$/,"")} className="result" onClick={(ev) => sendMsg(ev, true)}>{ret}<span className="visually-hidden">Go to result page</span></Link>)         
+         else retList.push(<a href={resUrl} target="_blank" className="result"  onClick={(ev) => sendMsg(ev, true)}>{ret}<span className="visually-hidden">Go to result page</span></a>)         
 
          let type = this.state.filters.datatype[0]
          let typeisbiblio = (type === "Work" || type === "Instance" || type === "Etext" || type === "Scan")
@@ -5280,6 +5283,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
           }>
 
           <a id="permalink" {...this.state.collapse[id] || hasNbRepro?{class:"wInstance"}:{}} style={{marginLeft:"0px"}} title={I18n.t("misc.permalink")}>
+            <span className="visually-hidden">Copy permalink</span>
              <img alt="permalink icon" src="/icons/PLINK.svg"/>
           </a>
        </CopyToClipboard> )
@@ -6217,6 +6221,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   {  this.state.filters.facets && <span class="reset-khmer"><br/>{this.renderResetF()}{onKhmerUrl&&<>
                      &nbsp;{I18n.t("misc.or")}&nbsp;
                      <Link to={"/guidedsearch"} id="clear-filters">
+                        <span className="visually-hidden">Clear filters</span>
                         <span>{I18n.t("Lsidebar.tags.try")}</span>
                         <SearchIcon />                        
                      </Link>
@@ -6227,7 +6232,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                </Typography>);
 
                if(!this.state.filters.facets && other && other.length && !this.props.simple)   
-                  message.push(<Typography className="no-result"><span>{I18n.t("search.seeO")}{I18n.t("misc.colon")} {other.map(o => <a onClick={(event) => this.handleCheck(event,o,true)} class="uri-link">{I18n.t("types."+o.toLowerCase(),{count:2})}</a>)}</span></Typography>)
+                  message.push(<Typography className="no-result"><span>{I18n.t("search.seeO")}{I18n.t("misc.colon")} {other.map(o => <a onClick={(event) => this.handleCheck(event,o,true)} class="uri-link"><span className="visually-hidden">Go to {I18n.t("types."+o.toLowerCase(),{count:2})}</span>{I18n.t("types."+o.toLowerCase(),{count:2})}</a>)}</span></Typography>)
                else if(this.props.language === "id" && this.props.keyword.match(RIDregexp)) {
                   let rid = this.props.keyword //
                   if(rid.includes(":")) { 
@@ -6237,7 +6242,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      rid = rid.toUpperCase().replace(/^"?([^:"]+)"?$/,"bdr:$1")
                   }
                   message.push(<Typography className="no-result" style={{ lineHeight:"120%" }}>
-                     <Link style={{ marginLeft:0 }} className="uri-link" to={"/show/"+rid}>Find resource with this RID</Link>
+                     <Link style={{ marginLeft:0 }} className="uri-link" to={"/show/"+rid}><span className="visually-hidden">Find resource with this RID</span>Find resource with this RID</Link>
                   </Typography>)
                }
                
@@ -6296,7 +6301,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                <Typography className="no-result">
                   <span>
                      {I18n.t("search.hidden")}<br/>
-                     <a onClick={(event) => this.handleCheckFacet(event,f?.nonReleased,[_tmp+"show"],true)} class="uri-link" style={{marginLeft:0}}>{I18n.t("search.showU")}</a>
+                     <a onClick={(event) => this.handleCheckFacet(event,f?.nonReleased,[_tmp+"show"],true)} class="uri-link" style={{marginLeft:0}}><span className="visually-hidden">Go to {I18n.t("search.showU")} page</span>{I18n.t("search.showU")}</a>
                   </span>
                </Typography>
             )
@@ -6457,7 +6462,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          k = getPropLabel(this,k)
       }
       else { t = <span>{t}</span>; k = <span>{k}</span> }
-      return <a  title={I18n.t("Lsidebar.tags."+(!isExclu?"include":"exclude"))+" "+t_+I18n.t("punc.colon")+" "+ k_} lang={this.props.locale} class={ "active-filter " + (isExclu?"exclu":"") + (!f?" disabled":"")}><span>{t}{I18n.t("punc.colon")} <b>{k}</b></span><a title={I18n.t("Lsidebar.activeF.remove")} {...f?{onClick:f.bind(this)}:{}}><Close/></a></a>
+      return <a title={I18n.t("Lsidebar.tags."+(!isExclu?"include":"exclude"))+" "+t_+I18n.t("punc.colon")+" "+ k_} lang={this.props.locale} class={ "active-filter " + (isExclu?"exclu":"") + (!f?" disabled":"")}><span className="visually-hidden">{I18n.t("Lsidebar.tags."+(!isExclu?"include":"exclude"))+" "+t_+I18n.t("punc.colon")+" "+ k_}</span><span>{t}{I18n.t("punc.colon")} <b>{k}</b></span><a title={I18n.t("Lsidebar.activeF.remove")} {...f?{onClick:f.bind(this)}:{}}><Close/><span className="visually-hidden">Remove filter</span></a></a>
    }
 
    resetFilters(e) {
@@ -6924,7 +6929,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
    }
 
    renderResetF() {
-      return <a title={I18n.t("Lsidebar.activeF.reset")} id="clear-filters" onClick={this.resetFilters.bind(this)}><span>{I18n.t("Lsidebar.tags.reset")}</span><RefreshIcon /></a>
+      return <a title={I18n.t("Lsidebar.activeF.reset")} id="clear-filters" onClick={this.resetFilters.bind(this)}><span className="visually-hidden">Reset filters</span>{I18n.t("Lsidebar.tags.reset")}<RefreshIcon /></a>
    }
 
    render() {
@@ -7005,14 +7010,14 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
                //loggergen.log("pages:",min,max, nbResu, paginate.pages[paginate.pages.length-1], paginate.pages )
 
-               if(min > 1) pageLinks.push(<a onClick={this.goPage.bind(this,id,1)}>{I18n.t("punc.num",{num:1})}</a>) 
+               if(min > 1) pageLinks.push(<a onClick={this.goPage.bind(this,id,1)}>{I18n.t("punc.num",{num:1})}<span className="visually-hidden">Go to page {I18n.t("punc.num",{num:1})}</span></a>) 
                if(min > 2) pageLinks.push(" ... ") 
-               for(let i = min ; i <= max ; i++) { /*if(nbResu >= paginate.pages[i-1])*/ pageLinks.push(<a data-i={i} data-max={paginate.pages.length > MAX_PAGE} onClick={this.goPage.bind(this,id,i)}>{((i-1)===this.state.paginate.index?<b><u>{I18n.t("punc.num",{num:i})}</u></b>:I18n.t("punc.num",{num:i}))}</a>) }
+               for(let i = min ; i <= max ; i++) { /*if(nbResu >= paginate.pages[i-1])*/ pageLinks.push(<a data-i={i} data-max={paginate.pages.length > MAX_PAGE} onClick={this.goPage.bind(this,id,i)}>{((i-1)===this.state.paginate.index?<b><u>{I18n.t("punc.num",{num:i})}</u></b>:I18n.t("punc.num",{num:i}))}<span className="visually-hidden">Go to page {I18n.t("punc.num",{num:i})}</span></a>) }
                if(max < paginate.pages.length) {  
                   for(let i = paginate.pages.length-1 ; i >= min ; i--) {
                      if(nbResu >= paginate.pages[i]) {
                         if(max < paginate.pages.length - 1) pageLinks.push(" ... ")
-                        pageLinks.push(<a onClick={this.goPage.bind(this,id,paginate.pages.length)}>{I18n.t("punc.num",{num:paginate.pages.length})}</a>) 
+                        pageLinks.push(<a onClick={this.goPage.bind(this,id,paginate.pages.length)}>{I18n.t("punc.num",{num:paginate.pages.length})}<span className="visually-hidden">Go to page {I18n.t("punc.num",{num:paginate.pages.length})}</span></a>) 
                         break;
                      }
                   }
@@ -7105,6 +7110,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      return (
                            /* <span className="void">Open {this._menus[id].full.length > 1 ?<b>&nbsp;{short}&nbsp;</b>:"resource"} in {this._menus[id].src} website</span> */
                            <a href={u} class="menu-item-source" target="_blank">
+                              <span className="visually-hidden">Open {m.full.length > 1 ?<b>&nbsp;{short}&nbsp;</b>:"resource"} in {m.src} website</span>
                               <MenuItem onClick={(ev) => this.handleCloseSourceMenu(ev,id)}>
                                  {I18n.t("result.open")} {m.full.length > 1 ?<b>&nbsp;{short}&nbsp;</b>:I18n.t("result.resource")} {I18n.t("result.in")} &nbsp;<b>{m.src}</b><img alt="link out icon" src="/icons/link-out.svg"/>
                               </MenuItem>
@@ -7231,7 +7237,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                               />
 
                            }
-                           label={<a title={shortUri(i)}><span lang={this.props.locale}>{label}&nbsp;<span class="facet-count-block">{I18n.t("punc.lpar")}<span class="facet-count" lang={this.props.locale}>{I18n.t("punc.num",{num:cpt_i+meta[j][i].n, interpolation: {escapeValue: false}})}</span>{I18n.t("punc.rpar")}</span></span></a>}
+                           label={<a title={shortUri(i)}><span className="visually-hidden">Go to {label} page</span><span lang={this.props.locale}>{label}&nbsp;<span class="facet-count-block">{I18n.t("punc.lpar")}<span class="facet-count" lang={this.props.locale}>{I18n.t("punc.num",{num:cpt_i+meta[j][i].n, interpolation: {escapeValue: false}})}</span>{I18n.t("punc.rpar")}</span></span></a>}
                         />
                         { !isExclu && label !== "Any" && <div class="exclude"><Close onClick={(event, checked) => this.handleCheckFacet(event,jpre,[i],true,true)} /></div> }
                      </div>
@@ -7848,8 +7854,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                { this.props.advancedSearch && <div id="search-bar">
                { this.props.config.khmerServer && !this.props.keyword &&  !this.props.loading && 
                   <span class="links">
-                     <span><Link to="/guidedsearch">{I18n.t("topbar.guided")}</Link></span>
-                     <span><Link to="/browse">{I18n.t("topbar.browse")}</Link></span>
+                     <span><Link to="/guidedsearch"><span className="visually-hidden">Go to Guided search page</span>{I18n.t("topbar.guided")}</Link></span>
+                     <span><Link to="/browse"><span className="visually-hidden">Go to Browse page</span>{I18n.t("topbar.browse")}</Link></span>
                   </span>
                }
                {/* <IconButton style={{marginRight:"15px"}} className={this.state.leftPane?"hidden":""} onClick={e => this.setState({...this.state,leftPane:!this.state.leftPane,closeLeftPane:!this.state.closeLeftPane})}>                  
@@ -8073,12 +8079,12 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                <section class="white-bg">
                   <div>
                      <div class="abs">
-                        <div><Link to="/static/resources">{I18n.t("topbar.resources")}</Link></div>
+                        <div><Link to="/static/resources"><span className="visually-hidden">Go to Resources page</span>{I18n.t("topbar.resources")}</Link></div>
                      </div>
                   </div>
                   <div class="imgs">
-                     <a href="https://www.akhmerbuddhistfoundation.org/" target="_blank"><img alt="AKBF logo" src="/scripts/static/images/AKBF.jpg"/></a>
-                     <a href="https://www.efeo.fr/" target="_blank"><img alt="EFEO logo" src="/scripts/static/images/EFEO.jpg"/></a>
+                     <a href="https://www.akhmerbuddhistfoundation.org/" target="_blank"><span className="visually-hidden">Go to AKBF page</span><img alt="AKBF logo" src="/scripts/static/images/AKBF.jpg"/></a>
+                     <a href="https://www.efeo.fr/" target="_blank"><span className="visually-hidden">Go to EFEO page</span><img alt="EFEO logo" src="/scripts/static/images/EFEO.jpg"/></a>
                   </div>
                </section>
             </>
@@ -8183,7 +8189,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                               <Link /*{...t=="bo"?{title:"Photo by Ven. Matthieu Ricard"}:{}}*/ 
                                  data-caption='Photo by Ven. Matthieu Ricard'
                                  onClick={() => { document.documentElement.scrollTo({ top:0, left:0, behavior: "instant" }); }} 
-                                    className={this.props.tradition === t ? "active": ""} to={"/tradition/"+t+"/"+(customTradLink[t]??"")}>
+                                    className={this.props.tradition === t ? "active": ""} to={"/tradition/"+t+"/"+(customTradLink[t]??"")}><span className="visually-hidden">Go to {I18n.t("tradition."+t+"T")} page</span>
                                  <span>{I18n.t("tradition."+t+"T")}</span>
                                  <img alt="tradition icon" src={"/tradi/"+t+".jpg"}/>
                               </Link>
@@ -8193,9 +8199,10 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                         <div class="home-support">
                            <span>{I18n.t("topbar.support")}</span>
                            <a href={"https://bdrc.io/donation?lang="+corpo_lang} target="_blank" /*rel="nofollow"*/>{I18n.t("topbar.donate2")}</a>
+                           <span className="visually-hidden">Go to Donation page</span>
                         </div>
                         <h3>{I18n.t("tradition.recent")}</h3> 
-                        <InnerSearchPageContainer /*noScrollFilters={true}*/ customPholder={I18n.t("resource.searchTtrad", {trad:I18n.t("tradition.title.recent"),interpolation: {escapeValue: false} }) } forceSearch={true} location={this.props.location} auth={this.props.auth} isOsearch={true} recent={true} />  
+                        <InnerSearchPageContainer /*noScrollFilters={true}*/ customPholder={I18n.t("resource.searchTtrad", {trad:I18n.t("tradition.title.recent"),interpolation: {escapeValue: false} }) } forceSearch={true} location={this.props.location} auth={this.props.auth} isOsearch={true} recent={true} />
                            
                      </List> 
                   </>}
@@ -8210,7 +8217,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   <List key={2} id="results">
                      { this.props.isInstance && this.state.backToWorks && <a className="uri-link"  onClick={(event) => {
                            this.resetFilters(event)
-                        }}><img alt="back to work icon" src="/icons/back.png"/><span>{I18n.t("search.backToW")}</span></a> }
+                        }}><img alt="back to work icon" src="/icons/back.png"/><span className="visually-hidden">Go back to work page</span>{I18n.t("search.backToW")}</a> }
                      { message }
                      { pageLinks && <div id="pagine">
                         <NavigateBefore

@@ -150,7 +150,7 @@ class Browse extends Component<Props,State> {
             */
           }
           if( this.state.titles[k].filter(t => t.type === facets.language && t.value === lang || t.type === facets.tree && t.value === subT).length === 2) {
-            results.push(<div class="val"><Link to={"/show/"+shortUri(k)}>{label.value}</Link></div>)
+            results.push(<div class="val"><Link to={"/show/"+shortUri(k)}>{label.value}<span className="visually-hidden">Go to {label.value} page</span></Link></div>)
           }
         })          
         if(!results.length) results.push(<div class="val">{I18n.t("search.filters.noresult-")}</div>)

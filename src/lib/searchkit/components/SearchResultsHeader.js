@@ -73,6 +73,7 @@ function SearchResultsHeader(props) {
               }}
             >
               <Close />
+              <span className="visually-hidden">Go back to search page</span>
             </Link>
           }</h1>
     : <h1 lang={that.props.locale}>{I18n.t("result.search")}</h1> }</> }

@@ -393,7 +393,7 @@ const CustomHit = ({ hit, routing, that, sortItems, recent, storage, advanced /*
               let kw = '"'+indexUiState.query+'"@'+(detec[0]==="tibt"?"bo":"bo-x-ewts")
               
               newEtextHits.push(
-              <Link to={"/show/bdr:"+vol._source.etext_instance+backLink+"&scope=bdr:"+vol._id+"&openEtext=bdr:"+vol._source.etext_vol+"&startChar="+(ch._source.cstart-1000)+(n?"&ETselect="+n:"")+"&ETkeyword="+indexUiState.query+"#open-viewer"}>{
+              <Link data-lang={that.props.locale} to={"/show/bdr:"+vol._source.etext_instance+backLink+"&scope=bdr:"+vol._id+"&openEtext=bdr:"+vol._source.etext_vol+"&startChar="+(ch._source.cstart-1000)+(n?"&ETselect="+n:"")+"&ETkeyword="+indexUiState.query+"#open-viewer"}>{
                 //#1020
                 hilight(label)
                 //highlight(label.value, expand.etext && text ? indexUiState.query : undefined, undefined 
@@ -402,7 +402,7 @@ const CustomHit = ({ hit, routing, that, sortItems, recent, storage, advanced /*
                 , undefined, expand.etext && text
                 */
                 //)
-              }</Link>
+              }<span className="visually-hidden">Open result</span></Link>
               )
             }
 
@@ -493,7 +493,7 @@ const CustomHit = ({ hit, routing, that, sortItems, recent, storage, advanced /*
         const label = getPropLabel(that, fullUri("bdr:"+a), true, true, "", 1, storage, true, authorName, false) ?? a 
 
         return (<span data-id={a}>
-          {/* <Link to={"/show/bdr:"+a+backLink}> */}
+          {/* <Link data-lang={that.props.locale} to={"/show/bdr:"+a+backLink}> */}
           { label }
           {/* </Link> */}
           </span>)
@@ -510,7 +510,7 @@ const CustomHit = ({ hit, routing, that, sortItems, recent, storage, advanced /*
 
   return (<div class={"result "+hit.type}>        
     <div class="main">
-      <Link to={link} className="BG-link" onClick={scrollToTop}></Link>
+      <Link data-lang={that.props.locale} to={link} className="BG-link" onClick={scrollToTop}><span className="visually-hidden">Go to result page</span></Link>
       <div class={"num-box "+(checked?"checked":"")} onClick={() => setChecked(!checked) }>{hit.__position}</div>
       <div class={"thumb "+(img&&!imgError?"hasImg":"")}>      
         { !isMetaMatch && etextHits.length > 0 && <span class="etext-type">
@@ -531,6 +531,7 @@ const CustomHit = ({ hit, routing, that, sortItems, recent, storage, advanced /*
               <span>{I18n.t("types.etext" )}{I18n.t("misc.colon")}</span>&nbsp;
               <span className="quality">{hit.etext_access < 3 ? I18n.t("access.etext.hit."+hit.etext_access) : getQuality("etext",hit.etext_quality)}</span>
             </span>} 
+            <span className="visually-hidden">Go to result page</span>
         </Link>        
       </div>
       <div class="data">                 
@@ -543,6 +544,7 @@ const CustomHit = ({ hit, routing, that, sortItems, recent, storage, advanced /*
             </span>
             {/* {{ hit.author && <Link to={"/show/bdr:"+hit.author}>{hit.author}</Link> } */} 
             { !isMetaMatch && etextHits.length > 0 ? <span class="etext-label"><i>Etext for: </i> { title }</span> : title }
+            <span className="visually-hidden">Go to result page</span>
           </Link>
 
 
