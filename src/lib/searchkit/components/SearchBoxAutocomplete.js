@@ -353,7 +353,8 @@ const SearchBoxAutocomplete = (props) => {
 
   return (
     <form
-      action=""
+      action="/osearch/search"
+      method="GET"
       role="search"
       className="ais-SearchBox-form search-input"
       noValidate
@@ -393,6 +394,7 @@ const SearchBoxAutocomplete = (props) => {
         spellCheck={false}
         maxLength={512}
         type="search"
+        name="q"
         value={inputValue}
         {...placeholder ? { placeholder} : { placeholder: I18n.t("topbar.placeHda") } }
         onFocus={(ev) => {
