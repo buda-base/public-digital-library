@@ -752,16 +752,16 @@ export function top_left_menu(that,pdfLink,monoVol,fairUse)
        </Link> */}
        {
           that.props.IRI && that.props.IRI.match(/^(bd[ra])|(dila):/) &&
-          <div>{[<a className="goBack" target="_blank" title="TTL version" rel="alternate" type="text/turtle" href={that.expand(that.props.IRI)+".ttl"}>
+          <div>{[<a className="goBack" target="_blank" rel="alternate noopener noreferrer" title="TTL version" type="text/turtle" href={that.expand(that.props.IRI)+".ttl"}>
              <span className="visually-hidden">Go to TTL version</span>
              <Button style={{marginLeft:"0px",paddingLeft:"10px",paddingRight:0}}>{I18n.t("resource.export")} ttl</Button>
           </a>,<span>&nbsp;/&nbsp;</span>,
-          <a className="goBack noML" target="_blank" title="JSON-LD version" rel="alternate" type="application/ld+json" href={that.expand(that.props.IRI)+".jsonld"}>
+          <a className="goBack noML" target="_blank" rel="alternate noopener noreferrer" title="JSON-LD version" type="application/ld+json" href={that.expand(that.props.IRI)+".jsonld"}>
              <span className="visually-hidden">Go to JSON-LD version</span>
              <Button style={{paddingLeft:0,paddingRight:"10px"}}>json-ld</Button>
           </a>]}</div>
        }
-       { that.props.IRI && getEntiType(that.props.IRI) === "Etext" && <a target="_blank" style={{fontSize:"26px"}} download className="goBack pdfLoader" href={that.props.IRI?that.props.IRI.replace(/bdr:/,bdr)+".txt":""}>
+       { that.props.IRI && getEntiType(that.props.IRI) === "Etext" && <a target="_blank" rel="noopener noreferrer" style={{fontSize:"26px"}} download className="goBack pdfLoader" href={that.props.IRI?that.props.IRI.replace(/bdr:/,bdr)+".txt":""}>
                 <span className="visually-hidden">Go to TXT version</span>
                 <IconButton title={I18n.t("resource.downloadAs")+" TXT"}>
                    <img alt="download icon" src="/DL_icon.svg" height="24" />
@@ -769,12 +769,12 @@ export function top_left_menu(that,pdfLink,monoVol,fairUse)
                </a> }
        {
           that.props.IRI && that.props.IRI.match(/^bda[nc]:/) &&
-          <div>{[<a className="goBack" target="_blank" title="TTL version" rel="alternate" type="text/turtle"
+          <div>{[<a className="goBack" target="_blank" rel="alternate noopener noreferrer" title="TTL version" type="text/turtle"
              href={"http://purl.bdrc.io/"+(that.props.IRI.match(/^bdan:/)?"annotation/":"anncollection/")+that.props.IRI.replace(/bda[nc]:/,"")+".ttl"}>
                 <span className="visually-hidden">Go to TTL version</span>
                 <Button style={{marginLeft:"0px",paddingLeft:"10px",paddingRight:"0px"}}>{I18n.t("resource.export")} ttl</Button>
           </a>,<span>&nbsp;/&nbsp;</span>,
-          <a className="goBack noML" target="_blank" title="JSON-LD version" rel="alternate" type="application/ld+json"
+          <a className="goBack noML" target="_blank" rel="alternate noopener noreferrer" title="JSON-LD version" type="application/ld+json"
              href={"http://purl.bdrc.io/"+(that.props.IRI.match(/^bdan:/)?"annotation/":"anncollection/")+that.props.IRI.replace(/bda[nc]:/,"")+".jsonld"}>
                 <span className="visually-hidden">Go to JSON-LD version</span>
                 <Button style={{paddingLeft:0,paddingRight:"10px"}}>json-ld</Button>
@@ -851,7 +851,7 @@ export function top_left_menu(that,pdfLink,monoVol,fairUse)
 
                                              &nbsp;&nbsp;|&nbsp;&nbsp;
 
-                                             <a target="_blank" download={that.props.IRI?that.props.IRI.replace(/bdr:/,"")+".txt":""} 
+                                             <a target="_blank" rel="noopener noreferrer" download={that.props.IRI?that.props.IRI.replace(/bdr:/,"")+".txt":""} 
                                                    href={that.props.IRI?that.props.IRI.replace(/bdr:/,bdr)+".txt":""} >
                                                 <span className="visually-hidden">Download TXT</span>
                                                 <span>TXT</span>
@@ -2173,7 +2173,7 @@ class ResourceViewer extends Component<Props,State>
 
       if(!str.match(/ /) && !str.match(/^http[s]?:/)) str = str.replace(/([a-z])([A-Z])/g,"$1"+(isUrl?"":' ')+"$2")
 
-      if(str.match(/^https?:\/\/[^ ]+$/)) { str = <a href={str} target="_blank" class="no-bdrc">{str}<img alt="link out icon" src="/icons/link-out.svg"/><span className="visually-hidden">Open {str} page in new tab</span></a> }
+      if(str.match(/^https?:\/\/[^ ]+$/)) { str = <a href={str} target="_blank" rel="noopener noreferrer" class="no-bdrc">{str}<img alt="link out icon" src="/icons/link-out.svg"/><span className="visually-hidden">Open {str} page in new tab</span></a> }
       else if(!noNewline) {
          str = str.split("\n").map((i) => ([i,<br/>]))
          str = [].concat.apply([],str);
@@ -3277,8 +3277,8 @@ class ResourceViewer extends Component<Props,State>
                link = "http://authority.dila.edu.tw/"+dir+"/index.php?fromInner="+link
             }
             let prefix = shortUri(elem.value).split(":")[0]
-            if(!providers[prefix]) return <a href={link} target="_blank" class="no-bdrc"><span className="visually-hidden">Go to {shortUri(decodeURI(elem.value))} page</span>{shortUri(decodeURI(elem.value))}<img alt="link out icon" src="/icons/link-out.svg"/></a>
-            else return <Tooltip placement="bottom-end" title={<span>{I18n.t("misc.seeO")} <b>{providers[prefix]}</b></span>}><a href={link} target="_blank" class="no-bdrc"><span className="visually-hidden">Go to {shortUri(decodeURI(elem.value))} page</span>{shortUri(decodeURI(elem.value))}<img alt="link out icon" src="/icons/link-out.svg"/></a></Tooltip>
+            if(!providers[prefix]) return <a href={link} target="_blank" rel="noopener noreferrer" class="no-bdrc"><span className="visually-hidden">Go to {shortUri(decodeURI(elem.value))} page</span>{shortUri(decodeURI(elem.value))}<img alt="link out icon" src="/icons/link-out.svg"/></a>
+            else return <Tooltip placement="bottom-end" title={<span>{I18n.t("misc.seeO")} <b>{providers[prefix]}</b></span>}><a href={link} target="_blank" rel="noopener noreferrer" class="no-bdrc"><span className="visually-hidden">Go to {shortUri(decodeURI(elem.value))} page</span>{shortUri(decodeURI(elem.value))}<img alt="link out icon" src="/icons/link-out.svg"/></a></Tooltip>
          }
 
          let dico = dic, ret = []
@@ -3480,19 +3480,19 @@ class ResourceViewer extends Component<Props,State>
 
             // #828
             if(!elem.value.includes("purl.bdrc.io")) { 
-               if(orec && orec.length) link = <a class="urilink prefLabel no-bdrc" href={orec[0].value} target="_blank"><span className="visually-hidden">Go to {info} page</span>{info}<Tooltip placement="bottom-end" title={<span>See on <b>{providers[prefix]}</b></span>}><img alt="link out icon" src="/icons/link-out.svg"/></Tooltip></a>
+               if(orec && orec.length) link = <a class="urilink prefLabel no-bdrc" href={orec[0].value} target="_blank" rel="noopener noreferrer"><span className="visually-hidden">Go to {info} page</span>{info}<Tooltip placement="bottom-end" title={<span>See on <b>{providers[prefix]}</b></span>}><img alt="link out icon" src="/icons/link-out.svg"/></Tooltip></a>
                else if(sameBDRC) {
                   if(!info) info = shortUri(elem.value)
-                  link = <a class="urilink prefLabel" href={"/show/"+shortUri(sameBDRC)} target="_blank"><span className="visually-hidden">Go to {info} page</span>{info}</a>
+                  link = <a class="urilink prefLabel" href={"/show/"+shortUri(sameBDRC)} target="_blank" rel="noopener noreferrer"><span className="visually-hidden">Go to {info} page</span>{info}</a>
                }
                else if(canUrl && canUrl.length) { 
                   if(!info) info = shortUri(elem.value)                  
-                  link = <a class="urilink prefLabel no-bdrc" href={canUrl[0].value} target="_blank"><span className="visually-hidden">Go to {info} page</span>{info}<Tooltip placement="bottom-end" title={<span>See on <b>{providers[prefix]}</b></span>}><img alt="link out icon" src="/icons/link-out.svg"/></Tooltip></a>
+                  link = <a class="urilink prefLabel no-bdrc" href={canUrl[0].value} target="_blank" rel="noopener noreferrer"><span className="visually-hidden">Go to {info} page</span>{info}<Tooltip placement="bottom-end" title={<span>See on <b>{providers[prefix]}</b></span>}><img alt="link out icon" src="/icons/link-out.svg"/></Tooltip></a>
                   if(srcProv.indexOf(" ") !== -1) srcProv = srcSame
                }
                else {
                   if(!info) info = shortUri(elem.value)
-                  link = <a class="urilink prefLabel no-bdrc" href={elem.value} target="_blank"><span className="visually-hidden">Go to {info} page</span>{info}<Tooltip placement="bottom-end" title={<span>See on <b>{providers[prefix]}</b></span>}><img alt="link out icon" src="/icons/link-out.svg"/></Tooltip></a>
+                  link = <a class="urilink prefLabel no-bdrc" href={elem.value} target="_blank" rel="noopener noreferrer"><span className="visually-hidden">Go to {info} page</span>{info}<Tooltip placement="bottom-end" title={<span>See on <b>{providers[prefix]}</b></span>}><img alt="link out icon" src="/icons/link-out.svg"/></Tooltip></a>
                } 
             }
             else {                
@@ -3639,7 +3639,7 @@ class ResourceViewer extends Component<Props,State>
                   
                   //loggergen.log("srcP",srcPrefix,srcUri)
 
-                  if(srcPrefix !== "bdr") locaLink = <a class="urilink" href={getRealUrl(this,srcUri)} target="_blank"><span className="visually-hidden">Go to {getRealUrl(this,srcUri)} page</span></a>
+                  if(srcPrefix !== "bdr") locaLink = <a class="urilink" href={getRealUrl(this,srcUri)} target="_blank" rel="noopener noreferrer"><span className="visually-hidden">Go to {getRealUrl(this,srcUri)} page</span></a>
                   else locaLink = <Link to={"/"+show+"/"+shortUri(srcUri)}><span className="visually-hidden">Go to {shortUri(srcUri)} page</span></Link>
 
 
@@ -3800,7 +3800,7 @@ class ResourceViewer extends Component<Props,State>
                      fairTxt = <>
                         <span class="fairuse-IA-link-new">
                            {/* <img alt="IA icon" class="ia" src="/IA.svg"/> */}
-                           {<Trans i18nKey="access.fairUseIA3" components={{ icon:<img alt="link out icon" class="link-out" src="/icons/link-out_fit.svg"/>, lk:<a target="_blank" href={IAlink} /> }} />}
+                           {<Trans i18nKey="access.fairUseIA3" components={{ icon:<img alt="link out icon" class="link-out" src="/icons/link-out_fit.svg"/>, lk:<a target="_blank" rel="noopener noreferrer" href={IAlink} /> }} />}
                            {/* <img alt="link out icon" class="link-out" src="/icons/link-out_fit.svg"/> */}
                         </span>
                         {/* <a class="fairuse-IA-link" onClick={toggleSnippet}>{I18n.t("access.snippet"+(this.state.collapse.snippet?"H":"V"))}</a>*/}
@@ -3985,7 +3985,7 @@ class ResourceViewer extends Component<Props,State>
          bdrcData = <Link className="hoverlink" to={"/show/"+shortUri(e.fromSameAs)}><span className="visually-hidden">Go to {shortUri(e.fromSameAs)} page</span></Link>               
          let src ;
          if(sameAsPrefix) src = sameAsPrefix.replace(/^([^ ]+) .*$/,"$1") 
-         let link = <a href="urilink" target="_blank" href={getRealUrl(this,e.fromSameAs)}><span className="visually-hidden">Go to {getRealUrl(this,e.fromSameAs)} page</span></a>
+         let link = <a href="urilink" target="_blank" rel="noopener noreferrer" href={getRealUrl(this,e.fromSameAs)}><span className="visually-hidden">Go to {getRealUrl(this,e.fromSameAs)} page</span></a>
          if(src === "bdr") link =  <Link className="urilink" to={"/show/"+shortUri(e.fromSameAs)}><span className="visually-hidden">Go to {shortUri(e.fromSameAs)} page</span></Link>               
 
          befo = 
@@ -4282,7 +4282,7 @@ class ResourceViewer extends Component<Props,State>
                                  let asso,tab ;
                                  if(this.props.assocResources) asso = this.props.assocResources[f]                  
                                  if(asso && (tab=asso.filter(t => t.fromKey === adm+"canonicalHtml")).length) link = tab[0].value  
-                                 return (<div><a class="urilink" href={link} target="_blank">{a}{pref!=="bdr"&&<img alt="link out icon" src="/icons/link-out.svg"/>}<span className="visually-hidden">Go to {a} page</span></a><span>{I18n.t("misc.from")}</span><img alt="provider icon" src={logo}/><b>{prov}</b></div>)
+                                 return (<div><a class="urilink" href={link} target="_blank" rel="noopener noreferrer">{a}{pref!=="bdr"&&<img alt="link out icon" src="/icons/link-out.svg"/>}<span className="visually-hidden">Go to {a} page</span></a><span>{I18n.t("misc.from")}</span><img alt="provider icon" src={logo}/><b>{prov}</b></div>)
                               })}
                               </TabPanel>
                               <TabPanel>
@@ -4534,7 +4534,7 @@ class ResourceViewer extends Component<Props,State>
 
                   //loggergen.log("ori,lab",ori,lab)
 
-                  if(ori.length > 0 && lab.length > 0) tmp = [tmp," at ",<a href={ori[0].value} target="_blank">{lab[0].value}<span className="visually-hidden">Go to {lab[0].value} page</span></a>]
+                  if(ori.length > 0 && lab.length > 0) tmp = [tmp," at ",<a href={ori[0].value} target="_blank" rel="noopener noreferrer">{lab[0].value}<span className="visually-hidden">Go to {lab[0].value} page</span></a>]
                }
             }
 
@@ -5418,7 +5418,7 @@ class ResourceViewer extends Component<Props,State>
          }
       }
 
-      let ret = (<span class="propref" {...(k.match(/purl[.]bdrc[.]io/) && !k.match(/[/]tmp[/]/) ? {"href":k}:{})} target="_blank">{txt?<span>{txt}</span>:this.fullname(k,false,false,true,true,count)}</span>)
+      let ret = (<span class="propref" {...(k.match(/purl[.]bdrc[.]io/) && !k.match(/[/]tmp[/]/) ? {"href":k}:{})} target="_blank" rel="noopener noreferrer">{txt?<span>{txt}</span>:this.fullname(k,false,false,true,true,count)}</span>)
 
       if(tooltip && tooltip.value) ret = <Tooltip placement="bottom-start" classes={{tooltip:"commentT",popper:"commentP"}} style={{marginLeft:"50px"}} title={<div>{tooltip.value}</div>}>{ret}</Tooltip>
 
@@ -6311,7 +6311,7 @@ class ResourceViewer extends Component<Props,State>
 
                      if(this.props.config && this.props.config.chineseMirror) link = link.replace(new RegExp(cbeta), "http://cbetaonline.cn/")
 
-                     if(prov != "bdr") return (<a target="_blank" href={link  /*.replace(/^https?:/,"") */ }>{open}<span className="visually-hidden">Go to {link} page</span></a>) // keep original http/s prefix (#381)
+                     if(prov != "bdr") return (<a target="_blank" rel="noopener noreferrer" href={link  /*.replace(/^https?:/,"") */ }>{open}<span className="visually-hidden">Go to {link} page</span></a>) // keep original http/s prefix (#381)
                } ) }
             </Popover>
          ])
@@ -6356,7 +6356,7 @@ class ResourceViewer extends Component<Props,State>
                let ID = "ID-tmp:otherResources-"+link      
    
 
-               let ret = <a target="_blank" href={link} className="otherRlink">                     
+               let ret = <a target="_blank" rel="noopener noreferrer" href={link} className="otherRlink">                     
                   <span class={"provider "+prefix}>{provImg[prefix]?<img alt="provider icon" src={provImg[prefix]}/>:<span class="img">{prefix.replace(/^cbc.$/,"cbc@").toUpperCase()}</span>}</span>
                   {/* {I18n.t("result.open")} {useR && name} {!useR && <emph> {shortUri(s.value)} </emph>}{I18n.t("misc.in")} &nbsp; */}
                   {providers[prov]}
@@ -6628,7 +6628,7 @@ renderPopupPrint(IRI,place = "bottom-start") {
                            <span className="visually-hidden">Copy print order to clipboard</span>
                         </a>
                   </CopyToClipboard>
-                  <a id="export" href="http://vimalatreasures.org/contact-us.aspx" target="_blank">
+                  <a id="export" href="http://vimalatreasures.org/contact-us.aspx" target="_blank" rel="noopener noreferrer">
                      <span class="icon"><MailIcon/></span> {I18n.t("resource.contactVT")}
                      <span className="visually-hidden">Contact Vimala Treasures</span>
                   </a>
@@ -6879,7 +6879,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
 
                               &nbsp;&nbsp;|&nbsp;&nbsp;
 
-                              <a target="_blank" download={that.props.IRI?that.props.IRI.replace(/bdr:/,"")+".txt":""} 
+                              <a target="_blank" rel="noopener noreferrer" download={that.props.IRI?that.props.IRI.replace(/bdr:/,"")+".txt":""} 
                                     href={that.props.IRI?that.props.IRI.replace(/bdr:/,bdr)+".txt":""} >
                                  <span>TXT</span>
                                  <span className="visually-hidden">Download TXT version</span>
@@ -6978,13 +6978,13 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
             >
 
                { (this.props.eTextRefs && this.props.eTextRefs.mono && accessET) && 
-                     <a target="_blank" title={I18n.t("resource.version",{format:"TXT"})} rel="alternate" type="text"  download href={fullUri(this.props.eTextRefs.mono).replace(/^http:/,"https:")+".txt"}>
+                     <a target="_blank" rel="alternate noopener noreferrer" title={I18n.t("resource.version",{format:"TXT"})} type="text"  download href={fullUri(this.props.eTextRefs.mono).replace(/^http:/,"https:")+".txt"}>
                         <MenuItem>{I18n.t("resource.exportDataAs",{data: I18n.t("types.etext"), format:"TXT"})}</MenuItem>
                         <span className="visually-hidden">Download TXT version</span>
                      </a> }
 
                { (isEtextVol && accessET) &&
-                     <a target="_blank" title={I18n.t("resource.version",{format:"TXT"})} rel="alternate" type="text"  download href={this.props.IRI?fullUri(this.props.IRI).replace(/^http:/,"https:")+".txt":""}>
+                     <a target="_blank" rel="alternate noopener noreferrer" title={I18n.t("resource.version",{format:"TXT"})} type="text"  download href={this.props.IRI?fullUri(this.props.IRI).replace(/^http:/,"https:")+".txt":""}>
                         <MenuItem>{I18n.t("resource.exportDataAs",{data: I18n.t("types.etext"), format:"TXT"})}</MenuItem>
                         <span className="visually-hidden">Download TXT version</span>
                      </a> }
@@ -7027,12 +7027,12 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
 
                    }
 
-               <a target="_blank" title={I18n.t("resource.version",{format:"TTL"})} rel="alternate" type="text/turtle" href={that.expand(that.props.IRI, true)+".ttl"} download>
+               <a target="_blank" rel="alternate noopener noreferrer" title={I18n.t("resource.version",{format:"TTL"})} type="text/turtle" href={that.expand(that.props.IRI, true)+".ttl"} download>
                   <MenuItem>{I18n.t("resource.exportDataAs",{data: "metadata", format:"TTL"})}</MenuItem>
                   <span className="visually-hidden">Download TTL version</span>
                </a>
                
-               <a target="_blank" title={I18n.t("resource.version",{format:"JSON-LD"})} rel="alternate" type="application/ld+json" href={that.expand(that.props.IRI, true)+".jsonld"} download>
+               <a target="_blank" rel="alternate noopener noreferrer" title={I18n.t("resource.version",{format:"JSON-LD"})} type="application/ld+json" href={that.expand(that.props.IRI, true)+".jsonld"} download>
                   <MenuItem>{I18n.t("resource.exportDataAs",{data: "metadata", format:"JSON-LD"})}</MenuItem>           
                   <span className="visually-hidden">Download JSON-LD version</span>
                </a>
@@ -8057,7 +8057,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
          return  ( 
             <div class="data simple" id="first-image">
                { /*(prov && prov !== "BDRC" && orig) &&*/ src }
-               <a onClick={handleViewer} onContextMenu={handleViewer}  href={viewUrl.pathname+viewUrl.search} target="_blank" className={"firstImage "+(this.state.imageLoaded?"loaded":"")} 
+               <a onClick={handleViewer} onContextMenu={handleViewer}  href={viewUrl.pathname+viewUrl.search} target="_blank" rel="noopener noreferrer" className={"firstImage "+(this.state.imageLoaded?"loaded":"")} 
                /*{...(this.props.config.hideViewers?{"onClick":() => this.showMirador(null,null,true),"style":{cursor:"pointer"}}:{})}*/ >
                   <Loader className="uvLoader" loaded={this.state.imageLoaded} color="#fff"/>
                   <img alt="thumbnail" onError={(e)=>this.setState({...this.state,imageError:"!"})} onLoad={(e)=>this.setState({...this.state,imageLoaded:true,imageError:false})} src={iiifThumb+"/full/!1000,500/0/default.jpg"} /> 
@@ -8070,7 +8070,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
          return  ( 
             <div class="data simple" id="first-image">
                { /*(prov && prov !== "BDRC" && orig) &&*/  src }
-               <a onClick={handleViewer} onContextMenu={handleViewer}  href={viewUrl.pathname+viewUrl.search} target="_blank" className={"firstImage "+(this.state.imageLoaded?"loaded":"")} 
+               <a onClick={handleViewer} onContextMenu={handleViewer}  href={viewUrl.pathname+viewUrl.search} target="_blank" rel="noopener noreferrer" className={"firstImage "+(this.state.imageLoaded?"loaded":"")} 
                /*{...(this.props.config.hideViewers?{"onClick":() => this.showMirador(null,null,true),"style":{cursor:"pointer"}}:{})}*/ >
                   <Loader className="uvLoader" loaded={this.state.imageLoaded} color="#fff"/>
                   <img alt="thumbnail" onError={(e)=>this.setState({...this.state,imageError:true})} onLoad={(e)=>this.setState({...this.state,imageLoaded:true})} src={iiifThumb+"/full/,500/0/default.jpg"} />                   
@@ -8083,7 +8083,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
          return  ( 
          <div class="data" id="first-image">
             { /*(prov && prov !== "BDRC" && orig) &&*/  src }
-            <a onClick={handleViewer} onContextMenu={handleViewer} href={viewUrl.pathname+viewUrl.search} target="_blank" className={"firstImage "+(this.state.imageLoaded?"loaded":"")} 
+            <a onClick={handleViewer} onContextMenu={handleViewer} href={viewUrl.pathname+viewUrl.search} target="_blank" rel="noopener noreferrer" className={"firstImage "+(this.state.imageLoaded?"loaded":"")} 
                /*{...(this.props.config.hideViewers?{"onClick":this.showMirador.bind(this),"style":{cursor:"pointer"}}:{})}*/ >
                <span className="visually-hidden">Open in viewer</span>
                <Loader className="uvLoader" loaded={this.state.imageLoaded} color="#fff"/>
@@ -8165,7 +8165,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                <br/><br/>
                <span class="fairuse-IA-link-new">
                   {/* <img alt="IA icon" class="ia" src="/IA.svg"/> */}
-                  {<Trans i18nKey="access.fairUseIA3" components={{ icon:<img alt="link out icon" class="link-out" src="/icons/link-out_fit.svg"/>, lk:<a target="_blank"  href={IAlink} /> }} />}
+                  {<Trans i18nKey="access.fairUseIA3" components={{ icon:<img alt="link out icon" class="link-out" src="/icons/link-out_fit.svg"/>, lk:<a target="_blank" rel="noopener noreferrer" href={IAlink} /> }} />}
                   {/* <img alt="link out icon" class="link-out" src="/icons/link-out_fit.svg"/> */}
                </span>
             </>
@@ -11644,7 +11644,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                   { this.renderWithdrawn() }             
                   <div class="title">{/* { wTitle }{ iTitle }{ rTitle } */}</div> 
                   { (etext && !orig) && <div class={"data open-etext"+(etextAccessError?" disable":"")}><div><Link to={etextUT+(etextUT.includes("?")?"&":"?")+"backToEtext="+backToET+"#open-viewer"}>{etextLoca}<span className="visually-hidden">Open Etext</span></Link></div></div> }
-                  { (etext && orig) && <div class="data open-etext"><div><a target="_blank" href={orig}>{I18n.t("resource.openO",{src:prov})}<img alt="link out icon" src="/icons/link-out_.svg"/></a></div></div> }
+                  { (etext && orig) && <div class="data open-etext"><div><a target="_blank" rel="noopener noreferrer" href={orig}>{I18n.t("resource.openO",{src:prov})}<img alt="link out icon" src="/icons/link-out_.svg"/></a></div></div> }
                   <div class={"data" + (_T === "Etext"?" etext-title":"")+(_T === "Images"?" images-title":"")}>
                      {searchUrl && <span class="back-anchor">
                         <Link className="urilink" to={searchUrl}><ChevronLeft />{I18n.t("resource.goB")}</Link>
@@ -11656,7 +11656,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                      {inTitle}
                      {dates}
                      {/* { ( _T === "Person" && createdBy && createdBy.length > 0 ) && <div class="browse-by"><Link to={"/search?r="+this.props.IRI+"&t=Work"}><img alt="work icon" src="/icons/sidebar/work_white.svg"/>{I18n.t("resource.assoc")}</Link></div> } */}
-                     { this.props.preview && <a href={"/show/"+this.props.IRI} target="_blank">{I18n.t("resource.fullR")}<img alt="link out icon" src="/icons/link-out.svg"/></a>}
+                     { this.props.preview && <a href={"/show/"+this.props.IRI} target="_blank" rel="noopener noreferrer">{I18n.t("resource.fullR")}<img alt="link out icon" src="/icons/link-out.svg"/></a>}
                   </div>
                   { this.props.preview && _T === "Place" && <div class="data" id="map">{this.renderData(false, kZprop.filter(k => mapProps.includes(k)),null,null,null,"header")}</div> }
                   

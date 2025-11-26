@@ -474,7 +474,7 @@ export const renderBanner = (that, infoPanel, isResourcePage) => {
          let content = [], str = lab.value
          while(link = str.match(/([^!]|^|\n)(\[([^\]]+?)\]\(([^)]+?)\))/m)) {
             let arr = str.split(link[2])
-            content = content.concat([ arr[0], <a href={link[4]} target="_blank"><span className="visually-hidden">Go to {link[3]}</span>{link[3]}</a> ])
+            content = content.concat([ arr[0], <a href={link[4]} target="_blank" rel="noopener noreferrer"><span className="visually-hidden">Go to {link[3]}</span>{link[3]}</a> ])
             str = arr.slice(1).join(" ")
          }
          if(str) content.push(str)
@@ -1264,8 +1264,8 @@ export function top_right_menu(that,etextTitle,backUrl,etextres,isMirador,locati
    ]
    if(onKhmerServer) {
       logo = <div id="logo" class="khmer">                              
-               <a href={"https://bdrc.io/"} target="_blank"><span className="visually-hidden">Go to BDRC homepage</span><img alt="BDRC logo" src="/BDRC-Logo_.png"/></a>
-               <a href={"https://bdrc.io/"} target="_blank" id="BDRC"><span className="visually-hidden">Go to BDRC homepage</span><span>BDRC</span></a>               
+               <a href={"https://bdrc.io/"} target="_blank" rel="noopener noreferrer"><span className="visually-hidden">Go to BDRC homepage</span><img alt="BDRC logo" src="/BDRC-Logo_.png"/></a>
+               <a href={"https://bdrc.io/"} target="_blank" rel="noopener noreferrer" id="BDRC"><span className="visually-hidden">Go to BDRC homepage</span><span>BDRC</span></a>               
             </div> 
    }
 
@@ -1310,12 +1310,12 @@ export function top_right_menu(that,etextTitle,backUrl,etextres,isMirador,locati
             <div>
                <div><i>{I18n.t("topbar.preserving")}</i></div>
                <div style={{ textTransform: "capitalize" }}>
-                  <a href={"https://www.bdrc.io?lang="+corpo_lang} target="_blank" /*rel="nofollow"*/ class="BDRC-link"><span className="visually-hidden">Go to BDRC homepage</span><img alt="BDRC logo" src="/BDRC-Logo_.png"/>{I18n.t("topbar.BDRC")}</a>
-                  <a href={"https://www.bdrc.io/buda-archive?lang="+corpo_lang} target="_blank" /*rel="nofollow"*/><span className="visually-hidden">Go to About BUDA page</span>{I18n.t("topbar.aboutB")}</a>
-                  <a href={"https://www.bdrc.io/news?lang="+corpo_lang} target="_blank" /*rel="nofollow"*/><span className="visually-hidden">Go to News page</span>{I18n.t("topbar.news")}</a>
-                  <a href={"https://www.bdrc.io/programs?lang="+corpo_lang} target="_blank" /*rel="nofollow"*/><span className="visually-hidden">Go to Programs page</span>{I18n.t("topbar.programs")}</a>
+                  <a href={"https://www.bdrc.io?lang="+corpo_lang} target="_blank" rel="noopener noreferrer" /*rel="nofollow"*/ class="BDRC-link"><span className="visually-hidden">Go to BDRC homepage</span><img alt="BDRC logo" src="/BDRC-Logo_.png"/>{I18n.t("topbar.BDRC")}</a>
+                  <a href={"https://www.bdrc.io/buda-archive?lang="+corpo_lang} target="_blank" rel="noopener noreferrer" /*rel="nofollow"*/><span className="visually-hidden">Go to About BUDA page</span>{I18n.t("topbar.aboutB")}</a>
+                  <a href={"https://www.bdrc.io/news?lang="+corpo_lang} target="_blank" rel="noopener noreferrer" /*rel="nofollow"*/><span className="visually-hidden">Go to News page</span>{I18n.t("topbar.news")}</a>
+                  <a href={"https://www.bdrc.io/programs?lang="+corpo_lang} target="_blank" rel="noopener noreferrer" /*rel="nofollow"*/><span className="visually-hidden">Go to Programs page</span>{I18n.t("topbar.programs")}</a>
                   {/* <Link to="/buda-user-guide">{I18n.t("topbar.guide")}</Link> */}
-                  <a href={"https://bdrc.io/donation?lang="+corpo_lang} target="_blank" /*rel="nofollow"*/><span className="visually-hidden">Go to Donation page</span>{I18n.t("topbar.donate")}</a>
+                  <a href={"https://bdrc.io/donation?lang="+corpo_lang} target="_blank" rel="noopener noreferrer" /*rel="nofollow"*/><span className="visually-hidden">Go to Donation page</span>{I18n.t("topbar.donate")}</a>
                </div>
             </div>
          </div>
@@ -1531,7 +1531,7 @@ export function top_right_menu(that,etextTitle,backUrl,etextres,isMirador,locati
          ev.preventDefault()
       } 
 
-      const aboutLink = (id) => <a {...{id}}  href={"https://bdrc.io"} target="_blank"><span className="visually-hidden">Go to BDRC About page</span>{I18n.t("topbar.about")}</a>
+      const aboutLink = (id) => <a {...{id}}  href={"https://bdrc.io"} target="_blank" rel="noopener noreferrer"><span className="visually-hidden">Go to BDRC About page</span>{I18n.t("topbar.about")}</a>
 
       const newSearchLink = (id) => <Link {...{id}} to="/" onClick={newSearchFunc}>
             <span className="visually-hidden">Go to search page</span>
@@ -1620,8 +1620,8 @@ export function top_right_menu(that,etextTitle,backUrl,etextres,isMirador,locati
          </div>
 
          {(false && that.props.auth && isGroup(that.props.auth, "fullaccess")) 
-            ? <a target="_blank" href="https://beta.bdrc.io/" id="donate" ><span className="visually-hidden">Go to BUDA beta page</span><img alt="BUDA icon" style={{background:"white",borderRadius:"3px",verticalAlign:"-11px"}} width="33" src="/icons/BUDA-small.svg"/>BETA</a>
-            : (!that.props.config || !that.props.config.chineseMirror) && <a target="_blank" href="https://bdrc.io/donation/" id="donate"><span className="visually-hidden">Go to Donation page</span><img alt="donate icon" src="/donate.svg"/>{I18n.t("topbar.donate")}</a>
+            ? <a target="_blank" rel="noopener noreferrer" href="https://beta.bdrc.io/" id="donate" ><span className="visually-hidden">Go to BUDA beta page</span><img alt="BUDA icon" style={{background:"white",borderRadius:"3px",verticalAlign:"-11px"}} width="33" src="/icons/BUDA-small.svg"/>BETA</a>
+            : (!that.props.config || !that.props.config.chineseMirror) && <a target="_blank" rel="noopener noreferrer" href="https://bdrc.io/donation/" id="donate"><span className="visually-hidden">Go to Donation page</span><img alt="donate icon" src="/donate.svg"/>{I18n.t("topbar.donate")}</a>
          }
 
 
@@ -4372,7 +4372,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                if(i.value != "false") {
                   let urilink
 
-                  if(i.uri && !i.uri.includes(".bdrc.") && i.uri.startsWith("http")) urilink = <a target="_blank" href={i.uri}><span {...(i.lang?{lang:i.lang}:{})}>{i.value}</span><span className="visually-hidden">Go to {i.value} page</span></a> 
+                  if(i.uri && !i.uri.includes(".bdrc.") && i.uri.startsWith("http")) urilink = <a target="_blank" rel="noopener noreferrer" href={i.uri}><span {...(i.lang?{lang:i.lang}:{})}>{i.value}</span><span className="visually-hidden">Go to {i.value} page</span></a> 
                   else urilink =  <Link class="inRoot" to={"/show/"+i.uri+"?s="+encodeURIComponent("/search?"+window.location.href.replace(/^https?:[/][/][^?]+[?]?/gi,""))}><span {...(i.lang?{lang:i.lang}:{})}>{i.value}</span><span className="visually-hidden">Go to {i.value} page</span></Link> 
 
                   if(outlineB !== undefined && (!T || T !== "Etext")) {
@@ -4839,7 +4839,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          let getIconLink = (resUrl,div) => {
 
             if(!resUrl.startsWith("http")) return <Link to={resUrl}  onClick={(ev) => sendMsg(ev, true, resUrl)}><span className="visually-hidden">Go to result page</span>{div}</Link>
-            else return <a href={resUrl} target="_blank"  onClick={(ev) => sendMsg(ev, true)}><span className="visually-hidden">Go to result page</span>{div}</a>
+            else return <a href={resUrl} target="_blank" rel="noopener noreferrer" onClick={(ev) => sendMsg(ev, true)}><span className="visually-hidden">Go to result page</span>{div}</a>
 
          }
 
@@ -4928,7 +4928,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
          ]
 
          if(!resUrl.startsWith("http")) retList.push(<Link to={resUrl.replace(/#open-viewer$/,"")} className="result" onClick={(ev) => sendMsg(ev, true)}>{ret}<span className="visually-hidden">Go to result page</span></Link>)         
-         else retList.push(<a href={resUrl} target="_blank" className="result"  onClick={(ev) => sendMsg(ev, true)}>{ret}<span className="visually-hidden">Go to result page</span></a>)         
+         else retList.push(<a href={resUrl} target="_blank" rel="noopener noreferrer" className="result"  onClick={(ev) => sendMsg(ev, true)}>{ret}<span className="visually-hidden">Go to result page</span></a>)         
 
          let type = this.state.filters.datatype[0]
          let typeisbiblio = (type === "Work" || type === "Instance" || type === "Etext" || type === "Scan")
@@ -7109,7 +7109,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      if(this.props.config && this.props.config.chineseMirror) u = u.replace(new RegExp(cbeta), "http://cbetaonline.cn/")
                      return (
                            /* <span className="void">Open {this._menus[id].full.length > 1 ?<b>&nbsp;{short}&nbsp;</b>:"resource"} in {this._menus[id].src} website</span> */
-                           <a href={u} class="menu-item-source" target="_blank">
+                           <a href={u} class="menu-item-source" target="_blank" rel="noopener noreferrer">
                               <span className="visually-hidden">Open {m.full.length > 1 ?<b>&nbsp;{short}&nbsp;</b>:"resource"} in {m.src} website</span>
                               <MenuItem onClick={(ev) => this.handleCloseSourceMenu(ev,id)}>
                                  {I18n.t("result.open")} {m.full.length > 1 ?<b>&nbsp;{short}&nbsp;</b>:I18n.t("result.resource")} {I18n.t("result.in")} &nbsp;<b>{m.src}</b><img alt="link out icon" src="/icons/link-out.svg"/>
@@ -7793,7 +7793,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             { showMenus }
                { !this.props.config.khmerServer && 
                   <div class="fond-logo">
-                     <span /*title="Photo by Ven. Matthieu Ricard"*/ id="logo" target="_blank" old-href="https://www.tbrc.org/"
+                     <span /*title="Photo by Ven. Matthieu Ricard"*/ id="logo" target="_blank" rel="noopener noreferrer" old-href="https://www.tbrc.org/"
                         data-caption='Photo by Ven. Matthieu Ricard'>
                         {/* <img alt="BDRC logo" src="/logo.svg" style={{width:"200px"}} /> */}
                         {/* <img alt="home hero" src="/pichome.jpg" /> */}
@@ -7813,7 +7813,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                }
                { this.props.config.khmerServer &&  !this.props.loading && !this.props.keyword && 
                   <div class="fond-logo">
-                     <span id="logo" target="_blank" old-href="https://www.tbrc.org/">
+                     <span id="logo" old-href="https://www.tbrc.org/">
                         {/* <img alt="BDRC logo" src="/logo.svg" style={{width:"200px"}} /> */}
                         <img alt="home hero" src="/pichome_khmer.jpg" />
                         <div>
@@ -8083,8 +8083,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      </div>
                   </div>
                   <div class="imgs">
-                     <a href="https://www.akhmerbuddhistfoundation.org/" target="_blank"><span className="visually-hidden">Go to AKBF page</span><img alt="AKBF logo" src="/scripts/static/images/AKBF.jpg"/></a>
-                     <a href="https://www.efeo.fr/" target="_blank"><span className="visually-hidden">Go to EFEO page</span><img alt="EFEO logo" src="/scripts/static/images/EFEO.jpg"/></a>
+                     <a href="https://www.akhmerbuddhistfoundation.org/" target="_blank" rel="noopener noreferrer"><span className="visually-hidden">Go to AKBF page</span><img alt="AKBF logo" src="/scripts/static/images/AKBF.jpg"/></a>
+                     <a href="https://www.efeo.fr/" target="_blank" rel="noopener noreferrer"><span className="visually-hidden">Go to EFEO page</span><img alt="EFEO logo" src="/scripts/static/images/EFEO.jpg"/></a>
                   </div>
                </section>
             </>
@@ -8198,7 +8198,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
 
                         <div class="home-support">
                            <span>{I18n.t("topbar.support")}</span>
-                           <a href={"https://bdrc.io/donation?lang="+corpo_lang} target="_blank" /*rel="nofollow"*/>{I18n.t("topbar.donate2")}</a>
+                           <a href={"https://bdrc.io/donation?lang="+corpo_lang} target="_blank" rel="noopener noreferrer" /*rel="nofollow"*/>{I18n.t("topbar.donate2")}</a>
                            <span className="visually-hidden">Go to Donation page</span>
                         </div>
                         <h3>{I18n.t("tradition.recent")}</h3> 
