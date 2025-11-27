@@ -3829,14 +3829,14 @@ div:has(.resource.preview) .infoPanel.inRes { margin:0 !important; }
 .resource .data#outline .parTy + span .ulink .before  { display:none !important; }
 
 
-.resource .data#outline span.is-root #print,
-.resource .data#outline span.is-root #cite,
+.resource .data#outline span.is-root .printO,
+.resource .data#outline span.is-root .citeO,
 .resource .data#outline .is-root h2 a span,
 .resource .data#outline span.is-root a  { color:#d73449;  }
 
 
-.resource .data#outline span.is-root #print svg,
-.resource .data#outline span.is-root #cite svg { border-color:#d73449 !important;  } 
+.resource .data#outline span.is-root .printO svg,
+.resource .data#outline span.is-root .citeO svg { border-color:#d73449 !important;  } 
 
 .resource .data#outline .is-root a:hover {
    text-decoration:none;
@@ -3863,24 +3863,24 @@ div:has(.resource.preview) .infoPanel.inRes { margin:0 !important; }
    vertical-align:middle; /*padding-left:6px;*/margin-left:0px; margin-bottom:1px; 
 }
 
-.resource .data#outline .root + div #print,
-.resource .data#outline .root + div #cite { margin-left:5px !important; display: inline-block; }
-.resource .data#outline .root + div #print svg,
-.resource .data#outline .root + div #cite svg { width:14px !important; height:14px; border:1px solid #343434; border-radius:50%; }
+.resource .data#outline .root + div .printO,
+.resource .data#outline .root + div .citeO { margin-left:5px !important; display: inline-block; }
+.resource .data#outline .root + div .printO svg,
+.resource .data#outline .root + div .citeO svg { width:14px !important; height:14px; border:1px solid #343434; border-radius:50%; }
 
-.resource .data#outline .root + div #print svg { border:none; width:19px! important; height:19px;}
+.resource .data#outline .root + div .printO svg { border:none; width:19px! important; height:19px;}
 
-.resource .data#outline .root + div #print,
-.resource .data#outline .root + div #cite,
+.resource .data#outline .root + div .printO,
+.resource .data#outline .root + div .citeO,
 .resource .data#outline .root + div .permalink {  opacity:0; margin-left:0px; cursor:pointer; }
-.resource .data#outline .root + div .top:hover #print,
-.resource .data#outline .root + div .top:hover #cite,
+.resource .data#outline .root + div .top:hover .printO,
+.resource .data#outline .root + div .top:hover .citeO,
 .resource .data#outline .root + div .top:hover .permalink  {  opacity:0.8; }
-.resource .data#outline .root + div #print svg,
-.resource .data#outline .root + div #cite svg,
+.resource .data#outline .root + div .printO svg,
+.resource .data#outline .root + div .citeO svg,
 .resource .data#outline .root + div .permalink img { width:16px; vertical-align: middle !important; }
-.resource .data#outline .root + div .top:hover #print:hover,
-.resource .data#outline .root + div .top:hover #cite:hover,
+.resource .data#outline .root + div .top:hover .printO:hover,
+.resource .data#outline .root + div .top:hover .citeO:hover,
 .resource .data#outline .root + div .top:hover .permalink:hover { opacity:1; }
 
 /*
@@ -3907,17 +3907,17 @@ div:has(.resource.preview) .infoPanel.inRes { margin:0 !important; }
 .resource .data#outline .root + div .top.is-root .hasImg img:first-child,
 .resource .data#outline .root + div .top:not(.is-root) .hasImg img:last-child { display:none;}
 
-.resource .data#outline .root + div .top.is-root #print,
-.resource .data#outline .root + div .top.is-root #cite,
+.resource .data#outline .root + div .top.is-root .printO,
+.resource .data#outline .root + div .top.is-root .citeO,
 .resource .data#outline .root + div .top.is-root .permalink,
-.resource .data#outline .root + div .top.is-root #anchor,
-.resource .data#outline .root + div .top.is-root #anchor img,
+.resource .data#outline .root + div .top.is-root .anchorO,
+.resource .data#outline .root + div .top.is-root .anchorO img,
 .resource .data#outline .root + div .top.is-root .hasImg img { opacity:1; }
 
 .resource .data#outline .root + div .top.is-root .permalink img:last-child,
 .resource .data#outline .root + div .top.is-root .hasImg img:last-child { display:inline;}
 
-.resource .data#outline .root + div .top:not(.is-root) #anchor img { filter: grayscale(); }
+.resource .data#outline .root + div .top:not(.is-root) .anchorO img { filter: grayscale(); }
 
 .resource .data#outline .root + div .hasImg:hover img { opacity:1; }
 
@@ -3972,10 +3972,10 @@ div:has(.resource.preview) .infoPanel.inRes { margin:0 !important; }
 .resource .data#outline .root:not(.is-root) .parTy,
 .resource .data#outline .top:not(.is-root) .parTy { text-decoration-color:rgba(0,0,0,0.65) !important; }
 
-.resource .data#outline .root + div #anchor { margin-left:0px; opacity:0; cursor: pointer; }
-.resource .data#outline .root + div #anchor img {  opacity:0.75; width:24px;  display:inline-block;margin-top:-2px;}
-.resource .data#outline .root + div .top:hover #anchor { opacity:1; }
-.resource .data#outline .root + div #anchor:hover img { opacity:0.9; }
+.resource .data#outline .root + div .anchorO { margin-left:0px; opacity:0; cursor: pointer; }
+.resource .data#outline .root + div .anchorO img {  opacity:0.75; width:24px;  display:inline-block;margin-top:-2px;}
+.resource .data#outline .root + div .top:hover .anchorO { opacity:1; }
+.resource .data#outline .root + div .anchorO:hover img { opacity:0.9; }
 
 .resource .data#outline .root + div .pType.on { cursor:pointer; }
 .resource .data#outline .root + div .pType.on a { text-decoration:underline; text-decoration-color:rgba(0,0,0,0.65);}
@@ -4622,7 +4622,7 @@ html[lang='bo'] .resource .title h2 .T .space-fix span:not(.RID) { line-height: 
 
 #popHoverM .resource .data {/* width:100%;*/margin-left:0; }
 
-#popHoverM #anchor { position:absolute; right:57px; margin-top:-3px; cursor:pointer; z-index:1;}
+#popHoverM .anchorH { position:absolute; right:57px; margin-top:-3px; cursor:pointer; z-index:1;}
 
 /* #popHoverM .resource .data > div[data-prop] > h3 { margin-top:-4px;} */
 /* #popHoverM .resource .data > div[data-prop] > .sub:first-child { margin-top:-4px;} */
@@ -5269,9 +5269,9 @@ h4:not(.first)
 line-height:12px; } 
 .hover-menu img { height:26px; vertical-align: super;  flex-shrink:0; cursor:pointer; }
 .hover-menu div span#nb { position:absolute;color:#d73449;font-weight:900;font-size:10px; right:0; bottom:2px;cursor:pointer;}
-.hover-menu span#anchor { display:inline-block; position:relative;}
+.hover-menu span.anchorH { display:inline-block; position:relative;}
 
-.hover-menu span#anchor a:hover { border:none;}
+.hover-menu span.anchorH a:hover { border:none;}
 
 :not(#etext-scroll) > h5:last-of-type { position: relative; padding-right:20px; }
 

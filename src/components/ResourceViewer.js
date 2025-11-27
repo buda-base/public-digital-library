@@ -4173,7 +4173,7 @@ class ResourceViewer extends Component<Props,State>
 
             { hasTT && <Tooltip placement="top-end" title={<span class="over" onMouseEnter={this.toggleHoverMtooltip(ID,false)}>{info}</span>} >
                <div style={{display:"inline-block" /*,pointerEvents:"none"*/ }} data-id={ID}>
-                  <span id="anchor" onClick={this.toggleHoverM(ID)}>
+                  <span class="anchorH" onClick={this.toggleHoverM(ID)}>
                      <img alt="info icon" src="/icons/info.svg"/>
                      {nb>0 && <span id="nb">{nb}</span> }
                   </span>
@@ -4182,7 +4182,7 @@ class ResourceViewer extends Component<Props,State>
 
             {! hasTT && 
                <div /*style={{pointerEvents:"none"}}*/ >
-                  <span id="anchor">
+                  <span class="anchorH">
                      { (e.start !== undefined) && <Link to={loca.pathname+loca.search+"#open-viewer"} onClick={(ev) => {
                               /*
                               const ETres = e.link.replace(/^.*openEtext=([^#&]+)[#&].*$/,"$1")
@@ -4233,7 +4233,7 @@ class ResourceViewer extends Component<Props,State>
                <div class="popper">                     
                   <div class={"resource"}>
                      <div class="data">
-                        <span id="anchor" onClick={this.toggleHoverM(ID,null,false)}>     
+                        <span class="anchorH" onClick={this.toggleHoverM(ID,null,false)}>     
                            <Close/>                    
                            {/* <img alt="info icon" src="/icons/info.svg"/> */}
                         </span>
@@ -5446,15 +5446,18 @@ class ResourceViewer extends Component<Props,State>
       else return ""
    }
 
-   getH2 = (title,_befo,_T,other,T_,rootC) => {
+   getH2 = (title,_befo,_T,other,T_,rootC,useH1 = true) => {
 
       //loggergen.log("H2?",title, rootC, other)
 
-      if(other) return <h1 title={title.value} lang={title.lang || this.props.locale}><Link {...this.props.preview?{ target:"_blank" }:{}}   {... rootC?{onClick:rootC}:{onClick:() => setTimeout(()=>window.scrollTo(0,0),10)}}  to={"/show/"+shortUri(other)+this.getTabs(T_,other)}>{_T}<span>{_befo}{title.value}</span>{this.tooltip(title.lang)}<span className="visually-hidden">Go to {shortUri(other)} page</span></Link></h1>
-      else return <><h1 title={title.value} lang={title.lang || this.props.locale} class="on">{_T}<span>{_befo}<span class="placeType">{title.value}</span></span>{this.tooltip(title.lang)}</h1>{ title.placeT?.length && <span class="date">{title.placeT.map(t => this.fullname(t.value, false, false, true)).map((s,i) => i > 0 ? ([I18n.t("punc.comma"), s]):s)}</span>}</>
+      let Tag = "h1"
+      if(!useH1) Tag = "h2"
+
+      if(other) return <Tag title={title.value} lang={title.lang || this.props.locale}><Link {...this.props.preview?{ target:"_blank" }:{}}   {... rootC?{onClick:rootC}:{onClick:() => setTimeout(()=>window.scrollTo(0,0),10)}}  to={"/show/"+shortUri(other)+this.getTabs(T_,other)}>{_T}<span>{_befo}{title.value}</span>{this.tooltip(title.lang)}<span className="visually-hidden">Go to {shortUri(other)} page</span></Link></Tag>
+      else return <><Tag title={title.value} lang={title.lang || this.props.locale} class="on">{_T}<span>{_befo}<span class="placeType">{title.value}</span></span>{this.tooltip(title.lang)}</Tag>{ title.placeT?.length && <span class="date">{title.placeT.map(t => this.fullname(t.value, false, false, true)).map((s,i) => i > 0 ? ([I18n.t("punc.comma"), s]):s)}</span>}</>
    }
 
-   setTitle = (kZprop,_T,other,rootC,noSame:boolean=false) => {
+   setTitle = (kZprop,_T,other,rootC,noSame:boolean=false,useH1 = true) => {
 
       //loggergen.log("setT:", rootC, this.props.IRI, other, kZprop, this.props.outlineOnly, )
 
@@ -5462,6 +5465,9 @@ class ResourceViewer extends Component<Props,State>
       if(_T === "Place") {
          placeT = this.getResourceElem(bdo+"placeType",other,this.props.assocResources);         
       }
+
+      let Tag = "h1"
+      if(!useH1) Tag = "h2"
 
       let title,titlElem,otherLabels = [], T_ = _T ;
       _T = [<span class={"newT "+_T.toLowerCase()}>
@@ -5482,8 +5488,8 @@ class ResourceViewer extends Component<Props,State>
       }
       else {
           let loaded = this.props.resources && this.props.resources[other?other:this.props.IRI] 
-          if(other) title = <h1 lang={this.props.locale}><Link {...this.props.preview?{ target:"_blank" }:{}}  onClick={() => setTimeout(()=>window.scrollTo(0,0),10)} to={"/show/"+shortUri(other)+this.getTabs(T_,other)}>{_T}<span>{loaded && (T_ === "Work" || T_ === "Instance")?I18n.t("resource.noT"):shortUri(other?other:this.props.IRI)}</span><span className="visually-hidden">Go to {shortUri(other)} page</span></Link></h1>
-          else  title = <h1 class="on" lang={this.props.locale}>{_T}<span>{loaded && (T_ === "Work" || T_ === "Instance")?I18n.t("resource.noT"):shortUri(other?other:this.props.IRI)}</span></h1>
+          if(other) title = <Tag lang={this.props.locale}><Link {...this.props.preview?{ target:"_blank" }:{}}  onClick={() => setTimeout(()=>window.scrollTo(0,0),10)} to={"/show/"+shortUri(other)+this.getTabs(T_,other)}>{_T}<span>{loaded && (T_ === "Work" || T_ === "Instance")?I18n.t("resource.noT"):shortUri(other?other:this.props.IRI)}</span><span className="visually-hidden">Go to {shortUri(other)} page</span></Link></Tag>
+          else  title = <Tag class="on" lang={this.props.locale}>{_T}<span>{loaded && (T_ === "Work" || T_ === "Instance")?I18n.t("resource.noT"):shortUri(other?other:this.props.IRI)}</span></Tag>
       }
 
       let resTitle
@@ -5516,7 +5522,7 @@ class ResourceViewer extends Component<Props,State>
          }
          if(!title || title.value == "") title = { value: I18n.t("resource.noT"), lang: this.props.locale } // #825
          if(placeT?.length) title.placeT = placeT //T[0].value
-         title = this.getH2(title,_befo,_T,other,T_,rootC)         
+         title = this.getH2(title,_befo,_T,other,T_,rootC,useH1)         
 
       }
 
@@ -8954,7 +8960,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                                  <img alt="etext icon" src="/icons/search/etext.svg"/><img alt="etext icon" src="/icons/search/etext.svg"/>
                               </span> 
                      )}                   
-                     { e.details && <span id="anchor" title={I18n.t("resource."+(openD?"hideD":"showD"))} onClick={(ev) => toggle(ev,root,e["@id"],"details",!e.hasPart && (mono || ut), e)}>
+                     { e.details && <span class="anchorO" title={I18n.t("resource."+(openD?"hideD":"showD"))} onClick={(ev) => toggle(ev,root,e["@id"],"details",!e.hasPart && (mono || ut), e)}>
                         <img alt="info icon" src="/icons/info.svg"/>
                      </span> }
                      <CopyToClipboard text={fullUri(gUri)} onCopy={(e) => prompt(I18n.t("misc.clipboard"),fullUri(gUri))}>
@@ -9193,10 +9199,10 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
          let elem = this.getResourceElem(bdo+"inRootInstance")
          if(elem && elem.length) { 
             root = shortUri(elem[0].value)
-            title = this.getWtitle(elem, rootClick)
+            title = this.getWtitle(elem, rootClick, undefined, false)
          }
          else {
-            title = this.getWtitle([{value:fullUri(this.props.IRI)}], rootClick)
+            title = this.getWtitle([{value:fullUri(this.props.IRI)}], rootClick, undefined, false)
          }
          let opart, opartInVol = [], osearchIds = []
          if(this.state.outlinePart) opart = this.state.outlinePart         
@@ -10084,7 +10090,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                                        { !this.state.collapse[tag+"-details"] && <ExpandMore className="details"/>}
                                        {  this.state.collapse[tag+"-details"] && <ExpandLess className="details"/>}
                                     </span> */ }
-                                 { e.hasDetails && <span id="anchor" title={/*tLabel+" - "+*/I18n.t("resource."+(this.state.collapse[tag+"-details"]?"hideD":"showD"))} onClick={(ev) => toggle(ev,root,togId,"details",false,e)}>
+                                 { e.hasDetails && <span class="anchorO" title={/*tLabel+" - "+*/I18n.t("resource."+(this.state.collapse[tag+"-details"]?"hideD":"showD"))} onClick={(ev) => toggle(ev,root,togId,"details",false,e)}>
                                     <img alt="info icon" src="/icons/info.svg"/>
                                  </span> }
                                  <CopyToClipboard text={fUri} onCopy={(e) => prompt(I18n.t("misc.clipboard"),fUri)}>
@@ -10095,7 +10101,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                                  </CopyToClipboard>
 
                                  
-                                 <span id="cite" title={I18n.t("resource.cite")} onClick={ev => {
+                                 <span class="citeO" title={I18n.t("resource.cite")} onClick={ev => {
                                     let s = {
                                        citationRID:e["@id"],
                                        collapse:{ ...this.state.collapse, citation:!this.state.collapse.citation },
@@ -10117,7 +10123,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                                  </span> 
 
                                  { e.hasImg && 
-                                 <span id="print" title={I18n.t("resource.print")} onClick={ev => {
+                                 <span class="printO" title={I18n.t("resource.print")} onClick={ev => {
                                     let s = { 
                                        printRID:e["@id"],
                                        collapse:{ ...this.state.collapse, print:!this.state.collapse.print }, 
@@ -10259,7 +10265,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
    }
 
 
-   getWtitle(baseW,rootC,titleRaw) {
+   getWtitle(baseW,rootC,titleRaw,useH1 = true) {
       if(baseW && baseW.length && baseW[0].value) {
          let wUri = shortUri(baseW[0].value);
          // DONE: work loaded with instance
@@ -10274,7 +10280,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
             else baseData = []
          }
          let _T = getEntiType(shortUri(baseW[0].value))
-         let { title,titlElem,otherLabels } = this.setTitle(baseData,_T,baseW[0].value,rootC,titleRaw) ;
+         let { title,titlElem,otherLabels } = this.setTitle(baseData,_T,baseW[0].value,rootC,titleRaw,useH1) ;
          
          // loggergen.log("tEl:",titlElem)
 

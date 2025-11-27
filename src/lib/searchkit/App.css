@@ -940,6 +940,8 @@ header .SRHloader {
   margin-top:10px;
 }
 
+.resource .on.intro + h2 .newT,
+.resource #outline h2 .newT,
 :not(#a) #back .newT,
 .resource .on.intro + h1 .newT,
 .resource #outline h1 .newT {
