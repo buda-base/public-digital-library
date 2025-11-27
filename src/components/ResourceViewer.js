@@ -8486,7 +8486,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                <span>{ETtype ? I18n.t("types.ET."+ETtype) : I18n.t("types.etext")}</span>
             </span>
             <div class="etext-header-breadcrumbs" >
-               <div class="ariane" /*data-level={level}*/>
+               <div class="ariane" /*data-level={level}*/>                  
                   {breadcrumbs}
                </div>
             </div>
@@ -10321,7 +10321,6 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
       return unpag
    }
 
-
    render()
    {
       let isMirador = (!this.props.manifestError || (this.props.imageVolumeManifests && Object.keys(this.props.imageVolumeManifests).length)) && (this.props.imageAsset || this.props.imageVolumeManifests) && this.state.openMirador
@@ -10846,6 +10845,18 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
          }}>{I18n.t("topbar.home")}</Link>         
       ]
 
+      const breadcrumbsData = {
+         "@context": "https://schema.org",
+         "@type": "BreadcrumbList",
+         "itemListElement": []
+      }
+      breadcrumbsData.itemListElement.push({
+         "@type": "ListItem",
+         "position": 1,
+         "name": I18n.t("topbar.home"),
+         "item": "/"
+      })
+
       if(!this.props.simple && (this.props.previewEtext || this.props.disableInfiniteScroll || topLevel || this.props.openEtext || hasChunks && hasChunks.length && this.state.openEtext)) {         
 
          let hasPages = this.getResourceElem(bdo+"eTextHasPage")
@@ -10915,6 +10926,12 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
             }
             //console.log("lbls:", back, repro, vol, labelMW, this.props.that.props.eTextRefs, labelVL, labelUT)
             breadcrumbs.push(<Link class="can-shrink" to={"/show/"+back}>{labelMW?.value ?? back}<span className="visually-hidden">Back to {labelMW?.value ?? back}</span></Link>)         
+            breadcrumbsData.itemListElement.push({
+               "@type": "ListItem",
+               "position": breadcrumbs.length,
+               "name": labelMW?.value ?? back,
+               "item": "/show/"+back
+            })
             if(this.props.that.state.scope != etextRes) {
                let openText = (ev,ETres,reset) => {
                   this.props.onLoading("etext", true)
@@ -10922,18 +10939,45 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                   this.props.that.setState({ currentText: reset?null:ETres, scope: ETres })                       
                }
                breadcrumbs.push(<Link to={"/show/"+etextRes+"#open-viewer"} onClick={(ev,)=>openText(ev,etextRes,true)}>{I18n.t("types.etext")}</Link>)
+               breadcrumbsData.itemListElement.push({
+                  "@type": "ListItem",
+                  "position": breadcrumbs.length,
+                  "name": I18n.t("types.etext"),
+                  "item": "/show/"+etextRes+"#open-viewer"
+               })
                if(this.props.that.state.currentText != this.props.that.state.scope && vol && Array.isArray(vol?.volumeHasEtext ?? []) && vol?.volumeHasEtext?.length > 1 ) {
                   breadcrumbs.push(<Link class="can-shrink" to={"/show/"+etextRes+"?openEtext="+this.props.that.state.currentText+"#open-viewer"} onClick={(ev)=>openText(ev,this.props.that.state.currentText)}>{labelVL?.value ?? this.props.that.state.currentText}<span className="visually-hidden">Back to {labelVL?.value ?? this.props.that.state.currentText}</span></Link>)
+                  breadcrumbsData.itemListElement.push({
+                     "@type": "ListItem",
+                     "position": breadcrumbs.length,
+                     "name": labelVL?.value ?? this.props.that.state.currentText,
+                     "item": "/show/"+etextRes+"?openEtext="+this.props.that.state.currentText+"#open-viewer"
+                  })
                   breadcrumbs.push(<span class="can-shrink">{labelUT?.value ?? this.props.that.state.scope}</span>)
+                  breadcrumbsData.itemListElement.push({
+                     "@type": "ListItem",
+                     "position": breadcrumbs.length,
+                     "name": labelUT?.value ?? this.props.that.state.scope
+                  })
                   level = 3
                } else if(labelVL?.value) {
                   breadcrumbs.push(<span class="can-shrink">{labelVL?.value}</span>)
+                  breadcrumbsData.itemListElement.push({
+                     "@type": "ListItem",
+                     "position": breadcrumbs.length,
+                     "name": labelVL?.value
+                  })
                   level = 2
                } else {
                   //this.props.that.state.currentText
                }
             } else {
                breadcrumbs.push(<span>Etext</span>)
+               breadcrumbsData.itemListElement.push({
+                  "@type": "ListItem",
+                  "position": breadcrumbs.length + 1,
+                  "name": "Etext"
+               })
                level = 1
             }
          }
@@ -11085,6 +11129,9 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
             if(!inCollec?.length) inCollec = this.getResourceElem(bdo+"inCollection", this.props.disableInfiniteScroll?.etextRes)
          
             return ([           
+               !this.props.disableInfiniteScroll && <Helmet>
+                  <script type="application/ld+json">{JSON.stringify(breadcrumbsData,null,3) }</script>
+               </Helmet>,
                         
                !this.props.previewEtext && !this.props.disableInfiniteScroll && <div class="etext-header-breadcrumbs" >
                   <div class="ariane" data-level={level}>
@@ -11162,7 +11209,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                         { ETSBresults }
                      </SimpleBar>
                   </GenericSwipeable> }
-               </div>,
+               </div>,               
             ])
          }
       }
@@ -11174,11 +11221,34 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
          if(iof?.length) iof = shortUri(iof[0].value)
          else iof = null
 
+         const breadcrumbsData = {
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            "itemListElement": []
+         }
+         breadcrumbsData.itemListElement.push({
+            "@type": "ListItem",
+            "position": 1,
+            "name": I18n.t("topbar.home"),
+            "item": "/"
+         })
+
          if(iof) { 
             breadcrumbs.push(<Link to={"/show/"+iof} class="can-shrink"><Trans i18nKey="resource.wPageO" values={{of: bcLabel?.value, interpolation: {escapeValue: false}}} components={{nomob:<u/>,sp: <i/>}} /></Link>)
+            breadcrumbsData.itemListElement.push({
+               "@type": "ListItem",
+               "position": breadcrumbs.length,
+               "name": "("+I18n.t("types.work")+") " + bcLabel?.value,
+               "item": "/show/"+iof
+            })
          }
 
          breadcrumbs.push(<span class="can-shrink">{bcLabel?.value ?? this.props.IRI}</span>)
+         breadcrumbsData.itemListElement.push({
+            "@type": "ListItem",
+            "position": breadcrumbs.length,
+            "name": bcLabel?.value ?? this.props.IRI
+         })
 
          let legal = this.getResourceElem(adm+"metadataLegal"), legalD, sameLegalD
          if(legal && legal.length) legal = legal.filter(p => !p.fromSameAs)
@@ -11590,6 +11660,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
             <link rel="alternate" type="text/turtle" href={"http://purl.bdrc.io/resource/"+id+".ttl"} />
             <link rel="license" href="https://creativecommons.org/publicdomain/zero/1.0/" />
             <script type="application/ld+json">{JSON.stringify(this.props.jsonLdHeader, null, 3)}</script>
+            <script type="application/ld+json">{JSON.stringify(breadcrumbsData,null,3)}</script>
          </Helmet>,
          top_right_menu(this, null, null, null, isMirador, this.props.location, infoPanelR, "resource"),
          // <Loader className="resource-viewer-loader" loaded={false}  options={{position:"fixed",left:"50%",top:"50%"}} />,
@@ -11727,7 +11798,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                </div>
             </div>
             {/* <Footer locale={this.props.locale}/> */}
-         </div>
+         </div>,
          /*
          ,
          <LanguageSidePaneContainer />
