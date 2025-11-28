@@ -1245,7 +1245,7 @@ async function getPages(iri,next,meta) {
             if(!chunk.some(d => c.sourceAsMap.cstart === d.sourceAsMap.cstart)) chunk.push(c)
          }
          for(const p of j.innerHits.etext_pages.hits) {
-            if(!pages.some(q => q.sourceAsMap.pnum === p.sourceAsMap.pnum)) { 
+            if(p.sourceAsMap.cstart != p.sourceAsMap.cend && !pages.some(q => q.sourceAsMap.pnum === p.sourceAsMap.pnum)) { 
                pages.push(p)
                p.chunk = chunk
             }
