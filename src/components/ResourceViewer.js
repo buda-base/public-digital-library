@@ -4173,16 +4173,16 @@ class ResourceViewer extends Component<Props,State>
 
             { hasTT && <Tooltip placement="top-end" title={<span class="over" onMouseEnter={this.toggleHoverMtooltip(ID,false)}>{info}</span>} >
                <div style={{display:"inline-block" /*,pointerEvents:"none"*/ }} data-id={ID}>
-                  <span class="anchorH" onClick={this.toggleHoverM(ID)}>
+                  <button class="anchorH" onClick={this.toggleHoverM(ID)}>
                      <img alt="info icon" src="/icons/info.svg"/>
                      {nb>0 && <span id="nb">{nb}</span> }
-                  </span>
+                  </button>
                </div>
             </Tooltip> }
 
             {! hasTT && 
                <div /*style={{pointerEvents:"none"}}*/ >
-                  <span class="anchorH">
+                  <button class="anchorH">
                      { (e.start !== undefined) && <Link to={loca.pathname+loca.search+"#open-viewer"} onClick={(ev) => {
                               /*
                               const ETres = e.link.replace(/^.*openEtext=([^#&]+)[#&].*$/,"$1")
@@ -4198,7 +4198,7 @@ class ResourceViewer extends Component<Props,State>
                            }}><img alt="permalink icon" style={{width:"16px"}} src="/icons/PLINK_small.svg"/>
                            <span className="visually-hidden">Go to {loca.pathname+loca.search+"#open-viewer"} page</span></Link>}
                      <img alt="info icon" src="/icons/info.svg" onClick={this.toggleHoverM(ID)} />
-                  </span> 
+                  </button> 
                </div>
             }
             <Popper
@@ -4233,10 +4233,10 @@ class ResourceViewer extends Component<Props,State>
                <div class="popper">                     
                   <div class={"resource"}>
                      <div class="data">
-                        <span class="anchorH" onClick={this.toggleHoverM(ID,null,false)}>     
+                        <button class="anchorH" onClick={this.toggleHoverM(ID,null,false)}>     
                            <Close/>                    
                            {/* <img alt="info icon" src="/icons/info.svg"/> */}
-                        </span>
+                        </button>
                         <div data-prop={shortUri(prop)}>
                            {!parent && [
                               !prop.startsWith(" ") && <h3>{this.proplink(prop)}{I18n.t("punc.colon")}</h3>,
@@ -5418,7 +5418,10 @@ class ResourceViewer extends Component<Props,State>
          }
       }
 
-      let ret = (<span class="propref" {...(k.match(/purl[.]bdrc[.]io/) && !k.match(/[/]tmp[/]/) ? {"href":k}:{})} target="_blank" rel="noopener noreferrer">{txt?<span>{txt}</span>:this.fullname(k,false,false,true,true,count)}</span>)
+      let tmpProp = !(k.match(/purl[.]bdrc[.]io/) && !k.match(/[/]tmp[/]/))
+      let Tag = "a"
+      if(tmpProp) Tag = "button"
+      let ret = (<Tag class="propref" {...(!tmpProp ? {"href":k,target:"_blank",rel:"noopener noreferrer"}:{})}>{txt?<span>{txt}</span>:this.fullname(k,false,false,true,true,count)}</Tag>)
 
       if(tooltip && tooltip.value) ret = <Tooltip placement="bottom-start" classes={{tooltip:"commentT",popper:"commentP"}} style={{marginLeft:"50px"}} title={<div>{tooltip.value}</div>}>{ret}</Tooltip>
 
@@ -6286,10 +6289,10 @@ class ResourceViewer extends Component<Props,State>
     
             !noS ? <span class="NL nl-same"></span>:null,
 
-            <span id="same" title={I18n.t("resource.sameL",{count:same.length})} class={noS?"PE0":""} onClick={(e) => this.setState({...this.state,anchorPermaSame:e.currentTarget, collapse: {...this.state.collapse, ["permaSame-"+id]:!this.state.collapse["permaSame-"+id] } } ) }>
+            <button id="same" title={I18n.t("resource.sameL",{count:same.length})} class={noS?"PE0":""} onClick={(e) => this.setState({...this.state,anchorPermaSame:e.currentTarget, collapse: {...this.state.collapse, ["permaSame-"+id]:!this.state.collapse["permaSame-"+id] } } ) }>
                { id === "permalink" && <span>{I18n.t("misc.link",{count:mapSame.length})}</span> }
                { mapSame}
-            </span>,
+            </button>,
 
             <Popover
                id="popSame"
@@ -6391,7 +6394,7 @@ class ResourceViewer extends Component<Props,State>
                <h3>
                   <span>
                       <Tooltip placement="bottom-start" classes={{tooltip:"commentT",popper:"commentP"}} style={{marginLeft:"50px"}} title={<div>{I18n.t("resource.sameL",{count:mapSame.length})}</div>}>
-                        <span class="propref"><span>{I18n.t("misc.otherR",{count:mapSame.length})}</span></span>
+                        <button class="propref"><span>{I18n.t("misc.otherR",{count:mapSame.length})}</span></button>
                      </Tooltip>
                      {I18n.t("punc.colon")}
                   </span>
@@ -6938,10 +6941,10 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                 prompt(I18n.t("misc.clipboard"),fullUri(that.props.IRI))
           }>
 
-          <span id="permalink" style={{marginLeft:"0px"}} title={I18n.t("misc.permalink")}>
+          <button id="permalink" style={{marginLeft:"0px"}} title={I18n.t("misc.permalink")}>
              <img alt="permalink icon" src="/icons/PLINK.png"/>{/* <ShareIcon /> */}
              <span>{I18n.t("misc.permalink")}</span>
-          </span>
+          </button>
        </CopyToClipboard> }
 
       { that.props.IRI && <span id="rid">{shortUri(that.props.IRI)}</span> }
@@ -8960,14 +8963,14 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                                  <img alt="etext icon" src="/icons/search/etext.svg"/><img alt="etext icon" src="/icons/search/etext.svg"/>
                               </span> 
                      )}                   
-                     { e.details && <span class="anchorO" title={I18n.t("resource."+(openD?"hideD":"showD"))} onClick={(ev) => toggle(ev,root,e["@id"],"details",!e.hasPart && (mono || ut), e)}>
+                     { e.details && <button class="anchorO" title={I18n.t("resource."+(openD?"hideD":"showD"))} onClick={(ev) => toggle(ev,root,e["@id"],"details",!e.hasPart && (mono || ut), e)}>
                         <img alt="info icon" src="/icons/info.svg"/>
-                     </span> }
+                     </button> }
                      <CopyToClipboard text={fullUri(gUri)} onCopy={(e) => prompt(I18n.t("misc.clipboard"),fullUri(gUri))}>
-                        <span class="permalink" title={I18n.t("misc.permalink")}>
+                        <button class="permalink" title={I18n.t("misc.permalink")}>
                            <img alt="permalink icon" src="/icons/PLINK_small.svg"/>
                            <img alt="permalink icon" src="/icons/PLINK_small_r.svg"/>
-                        </span>
+                        </button>
                      </CopyToClipboard>
                   </div>
                </span>)
@@ -10090,18 +10093,18 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                                        { !this.state.collapse[tag+"-details"] && <ExpandMore className="details"/>}
                                        {  this.state.collapse[tag+"-details"] && <ExpandLess className="details"/>}
                                     </span> */ }
-                                 { e.hasDetails && <span class="anchorO" title={/*tLabel+" - "+*/I18n.t("resource."+(this.state.collapse[tag+"-details"]?"hideD":"showD"))} onClick={(ev) => toggle(ev,root,togId,"details",false,e)}>
+                                 { e.hasDetails && <button class="anchorO" title={/*tLabel+" - "+*/I18n.t("resource."+(this.state.collapse[tag+"-details"]?"hideD":"showD"))} onClick={(ev) => toggle(ev,root,togId,"details",false,e)}>
                                     <img alt="info icon" src="/icons/info.svg"/>
-                                 </span> }
+                                 </button> }
                                  <CopyToClipboard text={fUri} onCopy={(e) => prompt(I18n.t("misc.clipboard"),fUri)}>
-                                    <span class="permalink" title={I18n.t("misc.permalink")}>
+                                    <button class="permalink" title={I18n.t("misc.permalink")}>
                                        <img alt="permalink icon" src="/icons/PLINK_small.svg"/>
                                        <img alt="permalink icon" src="/icons/PLINK_small_r.svg"/>
-                                    </span>
+                                    </button>
                                  </CopyToClipboard>
 
                                  
-                                 <span class="citeO" title={I18n.t("resource.cite")} onClick={ev => {
+                                 <button class="citeO" title={I18n.t("resource.cite")} onClick={ev => {
                                     let s = {
                                        citationRID:e["@id"],
                                        collapse:{ ...this.state.collapse, citation:!this.state.collapse.citation },
@@ -10120,10 +10123,10 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                                     this.setState(s)
                                  }}>
                                     <CiteIcon /> 
-                                 </span> 
+                                 </button> 
 
                                  { e.hasImg && 
-                                 <span class="printO" title={I18n.t("resource.print")} onClick={ev => {
+                                 <button class="printO" title={I18n.t("resource.print")} onClick={ev => {
                                     let s = { 
                                        printRID:e["@id"],
                                        collapse:{ ...this.state.collapse, print:!this.state.collapse.print }, 
@@ -10132,7 +10135,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                                  }}>
                                     {/* <span class="icon"><img alt="print icon" src="/icons/print.svg"/></span>  */}
                                     <PrintIcon/>
-                                 </span> }
+                                 </button> }
                               
                               </div>
                            </span>)

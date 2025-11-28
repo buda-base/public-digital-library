@@ -3521,7 +3521,7 @@ h4:not(:hover) > .lang
 .resource.preview .data h4 { font-size: 12px; }
 
 .resource.preview .data > div > h3 { margin-bottom:0px; font-size:12px; line-height:16px;}
-.resource.preview .data > div > h3 span.propref { font-size: 12px;}
+.resource.preview .data > div > h3 .propref { font-size: 12px;}
 /* .resource.preview .data > div > h3 + .group:has(.sub) { margin-top:5px; } */
 
 .resource.preview .data > :not([data-prop="bdo:note"]) .sub:not(:last-child) { margin-bottom: 5px; }
@@ -3534,12 +3534,12 @@ h4:not(:hover) > .lang
 .resource.preview .data > div > .group > .sub > h4.first { margin-bottom: 0px; font-size:12px; line-height:16px;}
 
 
-.resource.preview .data > div .sub > .subgroup > .subsub > h4.first span.propref,  
-.resource.preview .data .propCollapseHeader > .sub > h4.first  span.propref, 
-.resource.preview .data .propCollapse > div > div > .sub > h4.first  span.propref, 
-.resource.preview .data > div > .group > .sub > h4.first  span.propref { font-size:12px; }
+.resource.preview .data > div .sub > .subgroup > .subsub > h4.first .propref,  
+.resource.preview .data .propCollapseHeader > .sub > h4.first  .propref, 
+.resource.preview .data .propCollapse > div > div > .sub > h4.first  .propref, 
+.resource.preview .data > div > .group > .sub > h4.first  .propref { font-size:12px; }
 
-.resource.preview .data > div > h3 span.propref  { font-weight:600; }
+.resource.preview .data > div > h3 .propref  { font-weight:600; }
 
 
 .resource.preview .data > [data-prop="bdo:note"] .sub h4 { font-size: 12px !important; }
@@ -4499,7 +4499,7 @@ html[lang='bo'] .resource .title h2 .T .space-fix span:not(.RID) { line-height: 
 /* #top-left { position:absolute; top:calc(100% + 40px);right:40px; } */
 #perma > div { position:relative; background:#efefef; display:flex;align-items: center; justify-content:flex-start; margin-bottom:0px;
    padding:20px 35px; }
-#perma > div button {color:rgba(0,0,0,0.54); }
+/* #perma > div button {color:rgba(0,0,0,0.54); } */
 
 #popDL.print #clipB,
 #popDL.cite #clipB,
@@ -5566,11 +5566,11 @@ span.in { font-weight:500;padding-left:0px; padding-right:10px; margin-left:36px
 .resource .data > [data-prop="bdo:workHasTranslation"] > .group { width:100%; }
 
 .resource .data > [data-prop="bdo:workHasTranslation"] > .group > .sub > h4.first {  width: calc(190px - 15px);  padding-right: 15px; margin-right:0; font-size:16px;  }
-.resource .data > [data-prop="bdo:workHasTranslation"] > .group > .sub > h4.first span.propref { color: #343434;  font-size: 16px; letter-spacing: 0px;
+.resource .data > [data-prop="bdo:workHasTranslation"] > .group > .sub > h4.first .propref { color: #343434;  font-size: 16px; letter-spacing: 0px;
    /*line-height: 23px;*/ width: calc(190px - 15px);  padding-right: 0px; margin-right:0px; word-spacing:50px; font-weight:600;
 }
 .resource .data > [data-prop="bdo:workHasTranslation"] > .group > .sub > .subgroup { width:calc(100% - 190px);}
-.resource .data  > [data-prop="bdo:workHasTranslation"] .sub .subsub span.propref { font-size: 15px;  font-weight: 600; letter-spacing: 0px;
+.resource .data  > [data-prop="bdo:workHasTranslation"] .sub .subsub .propref { font-size: 15px;  font-weight: 600; letter-spacing: 0px;
     font-style: normal; 
 }
 .resource .data >  [data-prop="bdo:workHasTranslation"] .sub:not(:first-of-type) { border:none; }
@@ -5756,7 +5756,7 @@ html[lang="en"] .resource .data > [data-prop="bdo:creator"] h4[data-prop="bdo:ro
 
 /*
 .resource .data .sub .subgroup,
-.resource .data > :not([data-prop="bdo:lineageHolder"]) .sub .subgroup span.propref { line-height:22px; }
+.resource .data > :not([data-prop="bdo:lineageHolder"]) .sub .subgroup .propref { line-height:22px; }
 */
 
 /*
@@ -5775,7 +5775,7 @@ html[lang="en"] .resource .data > [data-prop="bdo:creator"] h4[data-prop="bdo:ro
 .resource .subsubgroup .subsubsub { padding-left:0; }
 .resource .subgroup .subsub > h4.first { width:auto;}
 .resource .data .sub .subsubgroup .subsubsub > h4.first,
-.resource .subsubgroup .subsubsub > h4.first span.propref { font-weight:300; font-size:14px;  }
+.resource .subsubgroup .subsubsub > h4.first .propref { font-weight:300; font-size:14px;  }
 
 .resource .data h1 .lang, .resource .data h2 .lang, .resource .data h4 .lang { display:none;}
 
@@ -5949,7 +5949,7 @@ html[lang="en"] .resource .data > [data-prop="bdo:creator"] h4[data-prop="bdo:ro
 
 /*
 .resource .data.ext-props .has-collapse.custom h3 { order:-2; display:flex; align-items: center; height:42px; line-height:20px;  }
-.resource .data.ext-props .has-collapse.custom h3 span span.propref { line-height:20px; }
+.resource .data.ext-props .has-collapse.custom h3 span .propref { line-height:20px; }
 */
 
 /*
@@ -6441,13 +6441,15 @@ html[lang="bo"] .etext-nav-parent .etext-header.sticky > div  h2 .placeType {
 .imageVolumePopup a { color:rgba(229, 74, 53,1); text-decoration: none; pointer-events: none;}
 
 .resource .data h3 { font-size:16px;}
-.resource .data h3 span.propref,.resource .data h4 span.propref { color:#343434; font-size:16px; letter-spacing: 0px;/*line-height:24px; word-break: break-all;*/ 
-   font-weight:700; vertical-align:top;
+.resource .data h3 button.propref, .resource .data h3 a.propref,
+.resource .data h3 .propref,.resource .data h4 .propref { color:#343434; font-size:16px; letter-spacing: 0px;/*line-height:24px; word-break: break-all;*/ 
+   font-weight:700; vertical-align:top;text-decoration-color:#343434;border-bottom-color:#343434; ;
 }
-.resource .data .sub span.propref { font-size:15px; font-weight: 600; letter-spacing: 0px;font-style:normal; }
+.resource .data .sub button.propref,.resource .data .sub a.propref ,
+.resource .data .sub .propref { font-size:15px; font-weight: 600; letter-spacing: 0px;font-style:normal;text-decoration-color:#343434;border-bottom-color:#343434; }
 .resource .data .sub .subsub h4.first { font-size:14px;font-weight:400;color:#343434; }
-.resource .data .sub .subsub span.propref { font-weight:400;letter-spacing:0px; font-size:14px;}
-.resource .data h3 span.propref:hover,.resource .data h4 span.propref:hover { border-bottom:1px solid black;}
+.resource .data .sub .subsub .propref { font-weight:400;letter-spacing:0px; font-size:14px;}
+.resource .data h3 .propref:hover,.resource .data h4 .propref:hover { border-bottom:1px solid black;}
 
 .tradition .propref span { color:#343434; font-size:16px; font-weight:600; }
 

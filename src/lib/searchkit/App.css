@@ -3447,3 +3447,39 @@ header .SRHloader {
   border: 0;
 }
 
+
+/*
+"anchorO|"anchorH|"permalink|"citeO|"printO|propref
+*/
+
+button.permalink,
+button.anchorO,
+button.propref,
+button.anchorH,
+button.citeO,
+button.printO {
+  background-color: transparent;
+  border:none;
+  padding:0;
+}
+
+#outline .abs button.citeO,
+#outline .abs button.printO,
+#outline .abs button.permalink,
+.etextrefs .abs button.permalink {
+  line-height:20px;
+  color:#343434;
+}
+
+
+#outline .top:hover .abs button.printO:hover,
+#outline .top:hover .abs button.printO:hover svg  {
+  opacity:0.8;
+  color:black;
+}
+
+
+#outline .is-root .abs button.citeO svg,
+#outline .is-root .abs button.printO svg {
+  color:#d73449;
+}
