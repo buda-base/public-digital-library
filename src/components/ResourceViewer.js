@@ -10863,7 +10863,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
          "@type": "ListItem",
          "position": 1,
          "name": I18n.t("topbar.home"),
-         "item": "/"
+         "item": "https://library.bdrc.io/"
       })
 
       if(!this.props.simple && (this.props.previewEtext || this.props.disableInfiniteScroll || topLevel || this.props.openEtext || hasChunks && hasChunks.length && this.state.openEtext)) {         
@@ -10939,7 +10939,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                "@type": "ListItem",
                "position": breadcrumbs.length,
                "name": labelMW?.value ?? back,
-               "item": "/show/"+back
+               "item": "https://library.bdrc.io/show/"+back
             })
             if(this.props.that.state.scope != etextRes) {
                let openText = (ev,ETres,reset) => {
@@ -10952,7 +10952,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                   "@type": "ListItem",
                   "position": breadcrumbs.length,
                   "name": I18n.t("types.etext"),
-                  "item": "/show/"+etextRes+"#open-viewer"
+                  "item": "https://library.bdrc.io/show/"+etextRes+"#open-viewer"
                })
                if(this.props.that.state.currentText != this.props.that.state.scope && vol && Array.isArray(vol?.volumeHasEtext ?? []) && vol?.volumeHasEtext?.length > 1 ) {
                   breadcrumbs.push(<Link class="can-shrink" to={"/show/"+etextRes+"?openEtext="+this.props.that.state.currentText+"#open-viewer"} onClick={(ev)=>openText(ev,this.props.that.state.currentText)}>{labelVL?.value ?? this.props.that.state.currentText}<span className="visually-hidden">Back to {labelVL?.value ?? this.props.that.state.currentText}</span></Link>)
@@ -10960,7 +10960,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                      "@type": "ListItem",
                      "position": breadcrumbs.length,
                      "name": labelVL?.value ?? this.props.that.state.currentText,
-                     "item": "/show/"+etextRes+"?openEtext="+this.props.that.state.currentText+"#open-viewer"
+                     "item": "https://library.bdrc.io/show/"+etextRes+"?openEtext="+this.props.that.state.currentText+"#open-viewer"
                   })
                   breadcrumbs.push(<span class="can-shrink">{labelUT?.value ?? this.props.that.state.scope}</span>)
                   breadcrumbsData.itemListElement.push({
@@ -10984,7 +10984,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                breadcrumbs.push(<span>Etext</span>)
                breadcrumbsData.itemListElement.push({
                   "@type": "ListItem",
-                  "position": breadcrumbs.length + 1,
+                  "position": breadcrumbs.length,
                   "name": "Etext"
                })
                level = 1
@@ -11239,7 +11239,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
             "@type": "ListItem",
             "position": 1,
             "name": I18n.t("topbar.home"),
-            "item": "/"
+            "item": "https://library.bdrc.io/"
          })
 
          if(iof) { 
@@ -11248,7 +11248,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                "@type": "ListItem",
                "position": breadcrumbs.length,
                "name": "("+I18n.t("types.work")+") " + bcLabel?.value,
-               "item": "/show/"+iof
+               "item": "https://library.bdrc.io/show/"+iof
             })
          }
 
