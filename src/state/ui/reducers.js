@@ -218,7 +218,10 @@ reducers[actions.TYPES.gotHighlight] = gotHighlight ;
 
 export const loading = (state: UIState, action: actions.LoadingAction) => {
 
-   if(!action.payload.isLoading) analytics.track('page loaded', { target: action.payload.keyword })
+   if(!action.payload.isLoading) { 
+        analytics.track('page loaded', { target: action.payload.keyword })
+        window.__APP_READY__ = true
+   }
 
     if(state.metadata) delete state.metadata 
     return {
