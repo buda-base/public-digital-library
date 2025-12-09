@@ -7152,9 +7152,9 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
       
       let next, prev;
       if(elem && elem.length && !this.props.disableInfiniteScroll?.snip) { 
-         elem = elem.filter(e => e.value && e.start !== undefined && e.start >= firstC && e.start < lastC)
-         prev = elem.filter(e => e.value && e.start !== undefined)
-         next = elem.filter(e => e.value && e.end)
+         elem = elem.filter(e => e.value != undefined && e.start !== undefined && e.start >= firstC && e.start < lastC)
+         prev = elem.filter(e => e.value != undefined && e.start !== undefined)
+         next = elem.filter(e => e.value != undefined && e.end)
       }
       if(next && next.length) next = next[next.length - 1].end + 1
       else next = 0

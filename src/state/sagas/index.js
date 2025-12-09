@@ -1245,7 +1245,7 @@ async function getPages(iri,next,meta) {
             if(!chunk.some(d => c.sourceAsMap.cstart === d.sourceAsMap.cstart)) chunk.push(c)
          }
          for(const p of j.innerHits.etext_pages.hits) {
-            if(p.sourceAsMap.cstart != p.sourceAsMap.cend && !pages.some(q => q.sourceAsMap.pnum === p.sourceAsMap.pnum)) { 
+            if(!pages.some(q => q.sourceAsMap.pnum === p.sourceAsMap.pnum)) { 
                pages.push(p)
                p.chunk = chunk
             }
@@ -1322,7 +1322,7 @@ async function getPages(iri,next,meta) {
             }
 
             if(start >= 0 && end >= 0) {
-               let str = _cval.substring(start,end+1), pre = "", tags = []
+               let str = _cval.substring(start,end+(start != end ? 1 : 0)), pre = "", tags = []
                for(const s of sortedSpans) {
                   
                   // #1049 debug mode
