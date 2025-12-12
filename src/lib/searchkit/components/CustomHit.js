@@ -521,6 +521,7 @@ const CustomHit = ({ hit, routing, that, sortItems, recent, storage, advanced /*
         <Link to={link} onClick={scrollToTop}>
           { !imgError && img && <span class="img"><img alt="result thumbnail" src={img} onError={() => setImgError(true)}/></span> }
           <span class="RID">{hit.objectID}</span>
+          <span className="visually-hidden">Go to result page</span>
           { (hit.scans_access <= 5 || hit.scans_quality) && <span>
               <span>{I18n.t("types.images", {count:2})}{I18n.t("misc.colon")}</span>&nbsp;
               <span>{ hit.scans_access <= 5 
@@ -531,7 +532,6 @@ const CustomHit = ({ hit, routing, that, sortItems, recent, storage, advanced /*
               <span>{I18n.t("types.etext" )}{I18n.t("misc.colon")}</span>&nbsp;
               <span className="quality">{hit.etext_access < 3 ? I18n.t("access.etext.hit."+hit.etext_access) : getQuality("etext",hit.etext_quality)}</span>
             </span>} 
-            <span className="visually-hidden">Go to result page</span>
         </Link>        
       </div>
       <div class="data">                 

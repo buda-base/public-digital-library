@@ -5421,7 +5421,7 @@ class ResourceViewer extends Component<Props,State>
       let tmpProp = !(k.match(/purl[.]bdrc[.]io/) && !k.match(/[/]tmp[/]/))
       let Tag = "a"
       if(tmpProp) Tag = "button"
-      let ret = (<Tag class="propref" {...(!tmpProp ? {"href":k,target:"_blank",rel:"noopener noreferrer"}:{})}>{txt?<span>{txt}</span>:this.fullname(k,false,false,true,true,count)}</Tag>)
+      let ret = (<Tag class={"propref"+(tmpProp?" tmp-prop":"")} {...(!tmpProp ? {"href":k,target:"_blank",rel:"noopener noreferrer"}:{})}>{txt?<span>{txt}</span>:this.fullname(k,false,false,true,true,count)}</Tag>)
 
       if(tooltip && tooltip.value) ret = <Tooltip placement="bottom-start" classes={{tooltip:"commentT",popper:"commentP"}} style={{marginLeft:"50px"}} title={<div>{tooltip.value}</div>}>{ret}</Tooltip>
 
@@ -6177,7 +6177,7 @@ class ResourceViewer extends Component<Props,State>
                                  {!(snip?.precision > 1) && <h4><span>{I18n.t("prop.tmp:noPagination")}</span></h4> }
                                  <ResourceViewerContainer key={this.props.IRI+"_etext"+"-"+i+"_"+ET}  auth={this.props.auth} /*history={this.props.history}*/ location={this.props.location} navigate={this.props.navigate} IRI={ET} previewEtext={{ outETvol: null, outETstart: null, outETscope: null, outETinst: null, snip }}/>  
                               </>
-                           : rootID && (this.state.checkedEtext != rootID || this.props.resources[rootID] === true)
+                           : rootID && this.state.checkedEtext && (this.state.checkedEtext != rootID || this.props.resources[rootID] === true)
                               ? <><h4 class="possibleEtext">
                                     {rootID && this.props.resources[rootID] === true && <Loader className="etext-loader" loaded={false} /> }
                                     {/* <a disabled={this.props.resources[rootID] === true} onClick={() => {                                  
@@ -11291,7 +11291,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
             if(_T == "Instance" || shouldShowOtherInstances) {
                if(!this.state.collapse["findText-"+this.props.IRI]) this.setState({collapse:{...this.state.collapse,["findText-"+this.props.IRI]:true}})
                findText = <div data-prop="tmp:workHasInstance" class="">                  
-                  <h3><span>{this.proplink(bdo+"workHasInstance",null,2)}{I18n.t("punc.colon")}</span> </h3>
+                  <h3><span>{this.proplink(bdo+"workHasInstance",null,2)}<span className="propref-colon">{I18n.t("punc.colon")}</span></span> </h3>
                   <div class="group">
                      {findText}
                   </div>

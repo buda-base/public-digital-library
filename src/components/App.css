@@ -1863,6 +1863,8 @@ button.close-etext-outline {
    display: inline-block;
    overflow:hidden;
 }
+
+[data-prop="tmp:propHasScans"] h4:not(#a) > .images-thumb-links,
 [data-prop="tmp:propHasScans"] h4:not(#a) > div {
    order:0;
    margin-left:0;
@@ -6443,8 +6445,12 @@ html[lang="bo"] .etext-nav-parent .etext-header.sticky > div  h2 .placeType {
 .resource .data h3 { font-size:16px;}
 .resource .data h3 button.propref, .resource .data h3 a.propref,
 .resource .data h3 .propref,.resource .data h4 .propref { color:#343434; font-size:16px; letter-spacing: 0px;/*line-height:24px; word-break: break-all;*/ 
-   font-weight:700; vertical-align:top;text-decoration-color:#343434;border-bottom-color:#343434; ;
+   font-weight:700; /*vertical-align:top;*/text-decoration-color:#343434;border-bottom-color:#343434; text-align: left ; 
 }
+
+.resource .data [data-prop="tmp:workHasInstance"] h3 button.propref.tmp-prop::after{ content:':';font-weight:600;} 
+.resource .data [data-prop="tmp:workHasInstance"] h3 button.propref.tmp-prop+.propref-colon{ display:none;}
+
 .resource .data .sub button.propref,.resource .data .sub a.propref ,
 .resource .data .sub .propref { font-size:15px; font-weight: 600; letter-spacing: 0px;font-style:normal;text-decoration-color:#343434;border-bottom-color:#343434; }
 .resource .data .sub .subsub h4.first { font-size:14px;font-weight:400;color:#343434; }
