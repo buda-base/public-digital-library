@@ -2,3 +2,5 @@ User-agent: *
 Disallow: /search*
 Disallow: /osearch*
 Disallow: /view*
+
+Sitemap: https://library.bdrc.io/scripts/sitemap/sitemap-index.xml
