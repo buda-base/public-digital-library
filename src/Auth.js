@@ -379,14 +379,14 @@ type TTState = {
 
 export class TestToken extends Component<TTState> {  
 
-  constructor(props) {
+  constructor(props: { location: Location, auth: Auth }) {
     super(props);
     this.state = { endpoint:"" }
   }
   
   componentWillMount() {
     this.setState({ profile: {} });
-    const { userProfile, getProfile } = this.props.auth;
+    const { userProfile, getProfile } = auth;
     if (!userProfile) {
       getProfile((err, profile) => {
         this.setState({ profile });
@@ -408,10 +408,10 @@ export class TestToken extends Component<TTState> {
     }
 
     return  <div id="TestToken">
-        {!isAuth && <IconButton onClick={(e) => { auth.login(window.history.location) }} title="Log in">
+        {!isAuth && <IconButton onClick={(e) => { auth.login(this.props.location) }} title="Log in">
             <FontAwesomeIcon style={{fontSize:"28px"}} icon={faUserCircle} />
         </IconButton> }
-        {isAuth && <IconButton onClick={(e) => { auth.logout(window.history.location) }} title="Log out">
+        {isAuth && <IconButton onClick={(e) => { auth.logout(this.props.location) }} title="Log out">
             <FontAwesomeIcon style={{fontSize:"28px"}} icon={faSignOutAlt} />
         </IconButton>  }
         

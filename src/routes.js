@@ -478,6 +478,17 @@ function IIIFTokenCompo(){
    return (<div/>)
 }
 
+
+function TestTokenComponent() {
+   const location = useLocation();
+
+   useEffect(() => {
+      store.dispatch(initiateApp());
+   }, [location])
+
+   return (<TestToken auth={auth} location={location} />)
+}
+
 const makeMainRoutes = () => {
 
    // #767
@@ -524,6 +535,8 @@ const makeMainRoutes = () => {
                            <Route path={"/"+q} element={<StaticQueryCompo path={q}/>}/>
                         )) 
                      }
+                        
+                     <Route path="/testToken" element={<TestTokenComponent />} />
 
 {/* 
 
@@ -539,10 +552,7 @@ const makeMainRoutes = () => {
                         <Route exact path="/static/:PAGE" render={(props) => {
                            return <StaticRouteContainer dir={""} page={props.match.params.PAGE} history={history}  auth={auth}/>
                         }}/>                                                
-                        <Route path="/testToken" render={(props) => {
-                           store.dispatch(initiateApp());
-                           return (<TestToken auth={auth} history={history} />)
-                        } }/>
+                        
                         
                         { 
                            <Route exact path="/testUser" render={(props) => {

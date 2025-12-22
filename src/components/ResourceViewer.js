@@ -11668,8 +11668,8 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
             <link rel="alternate" type="application/rdf+xml" href={"http://purl.bdrc.io/resource/"+id+".rdf"} /> 
             <link rel="alternate" type="text/turtle" href={"http://purl.bdrc.io/resource/"+id+".ttl"} />
             <link rel="license" href="https://creativecommons.org/publicdomain/zero/1.0/" />
-            <script type="application/ld+json">{JSON.stringify(this.props.jsonLdHeader, null, 3)}</script>
-            <script type="application/ld+json">{JSON.stringify(breadcrumbsData,null,3)}</script>
+            { this.props.jsonLdHeader && this.props.jsonLdHeader != true && <script type="application/ld+json">{JSON.stringify(this.props.jsonLdHeader, null, 3)}</script> }
+            { breadcrumbsData && breadcrumbsData != true && <script type="application/ld+json">{JSON.stringify(breadcrumbsData,null,3)}</script> } 
          </Helmet>,
          top_right_menu(this, null, null, null, isMirador, this.props.location, infoPanelR, "resource"),
          // <Loader className="resource-viewer-loader" loaded={false}  options={{position:"fixed",left:"50%",top:"50%"}} />,
