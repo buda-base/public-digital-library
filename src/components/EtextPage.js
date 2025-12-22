@@ -141,14 +141,14 @@ function EtextPage(props) {
                           window.MiradorUseEtext = "open" ;                                 
                           that.showMirador(imageLinks[id][e.seq].id,manif["@id"]);
                         }}/>     */}
-                        <a href={imageLinks[id][e.seq].image} target="_blank" rel="noopener noreferrer">
-                          <img alt="scanned image for page" class="page" ref={ref} src={imageLinks[id][e.seq].image} onLoad={(ev) => { if(ref.current) {
+                        <a href={imageLinks?.[id]?.[e.seq]?.image} target="_blank" rel="noopener noreferrer">
+                          <img alt="scanned image for page" class="page" ref={ref} src={imageLinks?.[id]?.[e.seq]?.image} onLoad={(ev) => { if(ref.current) {
                               if(ref.current.naturalWidth < ref.current.naturalHeight) {
                                 const elem = ref.current.closest(".imagePage")
                                 elem.classList.add("portrait")
                                 if(get.right) elem.classList.add("right")
                               }
-                          }}} onError={(ev)=> handleImageError(ev,imageLinks[id][e.seq].image,e.seq)} />
+                          }}} onError={(ev)=> handleImageError(ev,imageLinks?.[id]?.[e.seq]?.image,e.seq)} />
                           <span className="visually-hidden">Open image in new tab</span>
                         </a>
 
