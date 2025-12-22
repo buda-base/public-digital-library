@@ -2294,6 +2294,9 @@ class ResourceViewer extends Component<Props,State>
          prop[tmp+"propHasEtext"] = prop[tmp+"hasEtextInOutline"]
       }
 
+      // #1086
+      if(!prop[tmp+"propHasEtext"]) prop[tmp+"propHasEtext"] = [{ type: "uri", value: fullUri(this.props.IRI) }]
+
       if(prop[tmp+"propHasScans"]) {
          if(!prop[tmp+"propHasEtext"]) { 
             prop[tmp+"propHasEtext"] = []
@@ -5811,6 +5814,8 @@ class ResourceViewer extends Component<Props,State>
       let _elem = elem
       if(elem && Array.isArray(elem) && elem[0]) {
          
+         if(elem.length > 1) elem = _.orderBy(elem, ["value"], ["desc"])
+
          if(!node) elem = this.getResourceBNode(elem[0].value)
          else elem = node
 
@@ -5820,7 +5825,7 @@ class ResourceViewer extends Component<Props,State>
          if(monoVol && monoVol.length && monoVol[0].value === "1") monoVol = true
          else monoVol = false
 
-         //loggergen.log("loca:",elem,monoVol,withTag,node)
+         //loggergen.log("loca:",_elem,elem,monoVol,withTag,node)
 
          if(!elem) return [<h4><Link to={"/show/"+shortUri(_elem[0].value)}>{shortUri(_elem[0].value)}<span className="visually-hidden">Go to {shortUri(_elem[0].value)} page</span></Link></h4>]
 
@@ -6120,6 +6125,13 @@ class ResourceViewer extends Component<Props,State>
                   </div>
                </div>
                else return null
+            }
+            // #1086
+            if(snip && snip != true && shortUri(e.value) === this.props.IRI) {
+               outETscope = "bdr:"+(snip.ut??snip.etext_vol??snip.etext_instance)
+               outETinst = [{ type:"uri", value:bdr+snip.etext_instance }]
+               outETvol =  [{ type:"uri", value:bdr+snip.etext_vol }]
+               outETstart= [{ type:"literal", value:snip.start_cnum }]
             }
 
             let root = this.getResourceElem(bdo+"inRootInstance"), rootID = root?.length ? shortUri(root?.[0].value) : ""
@@ -9723,6 +9735,10 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                                  }
                               }
                               if(warn) {
+                                 if(Array.isArray(g.contentLocation) && g.contentLocation?.length > 1) { 
+                                    g.contentLocation = _.orderBy(g.contentLocation, ["value"], ["desc"])
+                                    g.contentLocation = g.contentLocation[0]
+                                 }
                                  let loca = mapElem(g.contentLocation)
                                  if(loca?.length) loca = loca[0]
                                  if(loca && loca.contentLocationVolume && !loca.contentLocationPage) {
@@ -9797,6 +9813,10 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                               if(showDetails && g.contentLocation) {
                                  if(!g.details) g.details = []
                                  // let loca = elem.filter(f => f["@id"] === g.contentLocation), 
+                                 if(Array.isArray(g.contentLocation) && g.contentLocation?.length > 1) { 
+                                    g.contentLocation = _.orderBy(g.contentLocation, ["value"], ["desc"])
+                                    g.contentLocation = g.contentLocation[0]
+                                 }
                                  let loca = mapElem(g.contentLocation),
                                     jLoca = {}
                                  if(loca && loca.length) loca = loca[0]
