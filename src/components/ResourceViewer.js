@@ -1529,25 +1529,25 @@ class ResourceViewer extends Component<Props,State>
       const replaceW = (id) => { 
          if(id?.length) {
             if(props.assocResources) {
-               const rw = getElem(adm+"replaceWith",shortUri(id[0].value)) 
+               const rw = getElem(adm+"replaceWith",shortUri(id[0].value), null, null, true) // skip replaceW
                if(rw?.length) return rw
             }
          }
          return id
       }
 
-      const getElem = (prop,IRI,useAssoc,subIRI) => {         
+      const getElem = (prop,IRI,useAssoc,subIRI,skipReplaceW) => {         
          let longIRI = fullUri(IRI)
          if(subIRI) longIRI = subIRI
          if(useAssoc) {
             let elem = useAssoc[longIRI]
             if(elem) elem = elem.filter(e => e.type === prop || e.fromKey === prop)
             else elem = null
-            return replaceW(elem)
+            return skipReplaceW ? elem : replaceW(elem)
          }
          else if(props.resources && props.resources[IRI] && props.resources[IRI][longIRI]){
             let elem = props.resources[IRI][longIRI][prop]
-            return replaceW(elem)
+            return skipReplaceW ? elem : replaceW(elem)
          }
       }
 
@@ -10347,6 +10347,8 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
       } 
       */
 
+      //console.log("unpag",unpag,this.props.resources?.[this.props.IRI])
+
       return unpag
    }
 
@@ -11201,7 +11203,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                         </h4> }
                         { !etextAccessError && (!this.props.disableInfiniteScroll?.outETvol?.length ? etext_data : <div onClick={() => {
                            const loadETres = shortUri(this.props.disableInfiniteScroll.outETvol[0].value)
-                           this.props.onGetResource(loadETres)
+                           //this.props.onGetResource(loadETres)
                            //this.props.onReinitEtext(loadETres, { startChar: this.props.disableInfiniteScroll.outETstart[0].value})                  
                            this.props.navigate(this.renderEtextLink(etextRes))
                         }}>{etext_data}</div>)}
