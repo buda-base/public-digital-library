@@ -3593,7 +3593,7 @@ class ResourceViewer extends Component<Props,State>
                      }
                                                 
                   } } data-info={info}>{
-                        elem?.data?.partType === "bdr:PartTypeVolume" && (elem?.data?.volumeNumber ?? elem?.data?.partIndex ?? elem?.data?.index) != undefined && I18n.t("resource.outLn", {n:(""+(elem?.data?.volumeNumber?? elem?.data?.partIndex?? elem?.data?.index)).padStart(2,'0')})
+                        elem?.data?.partType === "bdr:PartTypeVolume" && (elem?.data?.useVolumeNumber ?? elem?.data?.partIndex ?? elem?.data?.index) != undefined && I18n.t("resource.outLn", {n:(""+(elem?.data?.useVolumeNumber?? elem?.data?.partIndex?? elem?.data?.index)).padStart(2,'0')})
                      }{
                         elem?.data?.type === "EtextVolume" && elem?.data?.volumeNumber != undefined && I18n.t("resource.outLn", {n:(""+(elem?.data?.volumeNumber)).padStart(2,'0')})
                      }{info}<span className="visually-hidden">Go to {info} page</span></Link>
@@ -9657,7 +9657,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                                  if(!Array.isArray(loca)) loca = [ loca ]
                                  loca = _.orderBy(loca).map(mapElem).map(l => l[0])
                                  if(loca.length && loca[0].contentLocationVolume) {
-                                    g.volumeNumber = loca[0].contentLocationVolume
+                                    g.useVolumeNumber = loca[0].contentLocationVolume
                                  }                                            
                               }
 
