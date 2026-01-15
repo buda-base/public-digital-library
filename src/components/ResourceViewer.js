@@ -3593,7 +3593,7 @@ class ResourceViewer extends Component<Props,State>
                      }
                                                 
                   } } data-info={info}>{
-                        elem?.data?.partType === "bdr:PartTypeVolume" && (elem?.data?.partIndex ?? elem?.data?.index) != undefined && I18n.t("resource.outLn", {n:(""+(elem.data.partIndex?? elem?.data?.index)).padStart(2,'0')})
+                        elem?.data?.partType === "bdr:PartTypeVolume" && (elem?.data?.volumeNumber ?? elem?.data?.partIndex ?? elem?.data?.index) != undefined && I18n.t("resource.outLn", {n:(""+(elem?.data?.volumeNumber?? elem?.data?.partIndex?? elem?.data?.index)).padStart(2,'0')})
                      }{
                         elem?.data?.type === "EtextVolume" && elem?.data?.volumeNumber != undefined && I18n.t("resource.outLn", {n:(""+(elem?.data?.volumeNumber)).padStart(2,'0')})
                      }{info}<span className="visually-hidden">Go to {info} page</span></Link>
@@ -9652,6 +9652,14 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
 
                               //loggergen.log("showD:",g["@id"], g.hasMatch, g)
 
+                              if(g.contentLocation) {
+                                 let loca = g.contentLocation
+                                 if(!Array.isArray(loca)) loca = [ loca ]
+                                 loca = _.orderBy(loca).map(mapElem).map(l => l[0])
+                                 if(loca.length && loca[0].contentLocationVolume) {
+                                    g.volumeNumber = loca[0].contentLocationVolume
+                                 }                                            
+                              }
 
                               subtime(1)
 
@@ -11115,7 +11123,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                   vols = _.orderBy(vols.map(v => {
                      return ({ v, n:this.getResourceElem(bdo+"volumeNumber", shortUri(v.value), this.props.assocResources)?.[0]})
                   }).filter(f => f.n != undefined).map(f => ({f, n:Number(f.n.value)})), ["n"], ["asc"])
-                  console.log("vols:",vols)
+                  //console.log("vols:",vols)
                }
             }
             const iri = this.state.currentText ?? (vols?.length ? shortUri(vols[0].f.v.value) : shortUri(this.props.previewEtext?.outETvol?.[0]?.value ?? ""))
