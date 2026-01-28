@@ -2284,7 +2284,9 @@ class ResourceViewer extends Component<Props,State>
          //delete prop[bdo+"instanceHasReproduction"]
       }
 
-      if(prop[bdo+"contentLocation"] && prop[bdo+"inRootInstance"] && prop[rdf+"type"].some(t => t.value === bdo+"Instance")) {
+      const hasInstanceType = prop[rdf+"type"]?.some(t => t.value === bdo+"Instance")
+
+      if(prop[bdo+"contentLocation"] && prop[bdo+"inRootInstance"] && hasInstanceType) {
 
          prop[tmp+"propHasScans"] = [{ type: "uri", value: this.props.IRI }]
       }
@@ -2295,7 +2297,7 @@ class ResourceViewer extends Component<Props,State>
       }
 
       // #1086
-      if(!prop[tmp+"propHasEtext"]) prop[tmp+"propHasEtext"] = [{ type: "uri", value: fullUri(this.props.IRI) }]
+      if(hasInstanceType && !prop[tmp+"propHasEtext"]) prop[tmp+"propHasEtext"] = [{ type: "uri", value: fullUri(this.props.IRI) }]
 
       if(prop[tmp+"propHasScans"]) {
          if(!prop[tmp+"propHasEtext"]) { 

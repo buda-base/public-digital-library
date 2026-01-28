@@ -5405,7 +5405,7 @@ h4:hover a.no-bdrc img { opacity:1; }
 .resource .data h2.intro + h2 .T { display:none; }
 
 /* .resource .data > div:not(.firstImage) { display:flex;align-items:baseline;flex-wrap:nowrap;box-sizing: border-box;width:100%;position:relative;} */
-.resource .data > div:not(.firstImage):not(.browse):not(.header) { display:block; position:relative; }
+.resource .data > div:not(.firstImage):not(.browse):not(.header,.empty-true) { display:block; position:relative; }
 .resource .data:not(#perma) > div:not(.firstImage):not(.browse):not(.header)::after { content:''; width:calc(100% - 190px);; height:1px;margin:25px 0 25px 190px;display:block;}
 .resource .data.mid-props > div:not(.firstImage):not(.browse):not(.header)::after,
 .resource .data > div:not(.firstImage):not(.browse):not(.header):not(:last-child)::after { background:rgba(0,0,0,0.25);}
@@ -5477,7 +5477,7 @@ span.in { font-weight:500;padding-left:0px; padding-right:10px; margin-left:36px
 .resource .sub .sub { padding-left:60px;}
 .resource .subsub.full .subsub .subsubsub h4.first.prop { font-style:normal; }
 
-.resource .data > div:not([data-prop="bdo:note"]):not(.header):not(.firstImage):not(#perma)
+.resource .data > div:not([data-prop="bdo:note"]):not(.header):not(.firstImage,.empty-true):not(#perma)
 { display:flex !important; /*align-items: baseline;*/ flex-wrap:wrap;}
 
 .resource .data#perma > div { flex-wrap:nowrap !important;}
