@@ -1315,7 +1315,7 @@ export function top_right_menu(that,etextTitle,backUrl,etextres,isMirador,locati
                   <a href={"https://www.bdrc.io/news?lang="+corpo_lang} target="_blank" rel="noopener noreferrer" /*rel="nofollow"*/><span className="visually-hidden">Go to News page</span>{I18n.t("topbar.news")}</a>
                   <a href={"https://www.bdrc.io/programs?lang="+corpo_lang} target="_blank" rel="noopener noreferrer" /*rel="nofollow"*/><span className="visually-hidden">Go to Programs page</span>{I18n.t("topbar.programs")}</a>
                   {/* <Link to="/buda-user-guide">{I18n.t("topbar.guide")}</Link> */}
-                  <a href={"https://bdrc.io/donation?lang="+corpo_lang} target="_blank" rel="noopener noreferrer" /*rel="nofollow"*/><span className="visually-hidden">Go to Donation page</span>{I18n.t("topbar.donate")}</a>
+                  <a href={"https://bdrc.io/donation?lang="+corpo_lang} target="_blank" rel="noopener noreferrer" /*rel="nofollow"*/ ><span className="visually-hidden">Go to Donation page</span><span style={{ textTransform: "capitalize", display: "inline-block" }}>{I18n.t("topbar.donate")}</span></a>
                </div>
             </div>
          </div>
@@ -1503,9 +1503,9 @@ export function top_right_menu(that,etextTitle,backUrl,etextres,isMirador,locati
       if(proxied) {
          const dot = '.'
          login = <Tooltip id="hoverLogin" open={that.state.collapse.hoverLogin === undefined?false:that.state.collapse.hoverLogin} 
-                     placement="center" 
+                     placement="bottom-end" 
                      onOpen={(e)=>toggleHoverLogin(true,e)} onClose={(e)=>toggleHoverLogin(false,e)} 
-                     title={<IconButton style={{ whiteSpace:"normal" }} onMouseEnter={(e)=>toggleHoverLogin(true, e)} onMouseLeave={(e)=>toggleHoverLogin(false,e)}><Trans i18nKey="topbar.proxied" values={{library: "library"+dot+"bdrc"+dot+"io"}} components={{ tag: <a /> }} /></IconButton>}  >{login}</Tooltip>
+                     title={<div style={{ whiteSpace:"normal", padding:"12px" }} onMouseEnter={(e)=>toggleHoverLogin(true, e)} onMouseLeave={(e)=>toggleHoverLogin(false,e)}><Trans i18nKey="topbar.proxied" values={{library: "library"+dot+"bdrc"+dot+"io"}} components={{ tag: <a /> }} /></div>}  ><span style={{position: "relative"}}>{login}</span></Tooltip>
       }
 
       let khmerLinks 
@@ -1661,7 +1661,7 @@ export function isGroup(auth, group) {
 export function isProxied(that) {
    return ( 
       /* just comment 1st line for dev/debug */
-      !window.location.host.includes("localhost") && 
+      //!window.location.host.includes("localhost") && 
       that?.props?.config && that.props.config.primaryUrl && !window.location.host.match(new RegExp(that.props.config.primaryUrl))
    )
 }

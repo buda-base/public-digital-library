@@ -14,6 +14,7 @@ import IIIFCookieLogin from './lib/IIIFCookieLogin';
 import {miradorSetUI, miradorConfig, miradorInitView} from './lib/miradorSetup';
 import { initiateApp } from './state/actions';
 import { logError, staticQueries } from './lib/api'
+import TestProxyContainer from './containers/TestProxyContainer';
 
 
 import store from './index';
@@ -28,7 +29,7 @@ import StaticRouteContainer from './containers/StaticRouteContainer';
 import GuidedSearchContainer from './containers/GuidedSearchContainer'
 import BrowseContainer from './containers/BrowseContainer'
 import TraditionViewerContainer from './containers/TraditionViewerContainer'
-import { top_right_menu, RIDregexp } from './components/App'
+import { top_right_menu, RIDregexp, isProxied } from './components/App'
 
 import Profile from './components/ProfileStatic';
 import { ClearCacheProvider, useClearCacheCtx } from "react-clear-cache";
@@ -489,6 +490,41 @@ function TestTokenComponent() {
    return (<TestToken auth={auth} location={location} />)
 }
 
+export class TestProxy extends Component {
+
+   render() {
+      console.log("this:", this)
+      return (<div style={{padding:"24px", background:"white"}}><h1>Test Proxy</h1>
+         <pre>
+            <ul>
+               <li>window.location.host: {window.location.host}</li>
+               <li>window.location.hostname: {window.location.hostname}</li>
+               <li>window.location.port: {window.location.port}</li>
+               <li>window.location.protocol: {window.location.protocol}</li>
+               <li>window.location.search: {window.location.search}</li>
+               <li>window.location.hash: {window.location.hash}</li>
+            </ul>
+            <ul>
+               <li>config.primaryUrl: {this.props?.config?.primaryUrl}</li>
+               <li>isProxied: {isProxied(this)}</li>
+            </ul>
+         </pre>
+      </div>)
+   }
+}
+
+
+function TestProxyComponent() {
+   const location = useLocation();
+
+   useEffect(() => {
+      store.dispatch(initiateApp());
+   }, [location])
+
+   return (<TestProxyContainer auth={auth} location={location} />)
+}
+
+
 const makeMainRoutes = () => {
 
    // #767
@@ -537,6 +573,7 @@ const makeMainRoutes = () => {
                      }
                         
                      <Route path="/testToken" element={<TestTokenComponent />} />
+                     <Route path="/testProxy" element={<TestProxyComponent />} />
 
 {/* 
 
