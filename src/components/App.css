@@ -1687,6 +1687,37 @@ ul.suggestions li > span > svg:first-child {
 .resource.etext-outline .data#outline .parTy.on + span a {
    color:#d73449;
 }
+/*
+.resource.etext-outline .data#outline .parTy.current-result + span > span:not(.lang) {
+   display: inline-block !important;
+}
+.resource.etext-outline .data#outline .parTy.current-result + span span::before {
+   content:'';
+   position: absolute;
+   width:calc(100% + 10px);
+   height:calc(100% + 10px);
+   left:-5px;
+   top:-5px;
+   background:rgba(215, 52, 73,0.15);
+   border-radius:4px;
+   z-index:10;
+}
+   */
+
+
+.resource.etext-outline .data#outline .parTy.current-result  {
+   z-index:1;
+}
+
+.resource.etext-outline .data#outline .parTy.current-result + span  {
+   z-index:0;
+}
+
+.resource.etext-outline .data#outline .parTy.current-result + span span a {
+   font-weight:700;
+   background:#fceab5;
+   box-shadow:0 2px 0px 0px #fceab5,-7px 0px 0px 0px #fceab5,-7px 2px 0px 0px #fceab5;   
+}
 
 
 .resource.etext-outline .data#outline .parTy.on + span + .abs img:not(#a) {

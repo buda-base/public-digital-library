@@ -1913,6 +1913,10 @@ class ResourceViewer extends Component<Props,State>
 
    componentDidUpdate()  {
 
+      if(this.props.that && this.props.that.state.fromThis?.props.IRI !== this.props.IRI) { 
+         this.props.that.setState({fromThis: this})
+      }
+
       if(!this.props.pdfDownloadOnly && !this.props.outlineOnly) window.closeViewer = (ev, gotoResults = false) => {
 
          loggergen.log("ev:", ev, gotoResults, this.props.location)
@@ -8931,8 +8935,12 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
 
             let isCurrent = e.link?.includes("openEtext="+this.state.scope + "#") || e["@id"] === this.state.scope  // e.link?.includes("openEtext="+this.state.currentText + "#") //e.link.endsWith(this.state.currentText)            
             
+            let isCurrentResult = this.state.fromThis && e["@id"] === "bdr:"+this.state.fromThis.state.ETSBresults?.[this.state.fromThis.state.ETSBpage?.idx]?.etextId;
+            //console.log("isCurrentResult:",isCurrentResult,e["@id"],this.state.fromThis?.state.ETSBresults, this.state, this.props)
+
             let open = this.state.collapse[tag] || this.state.collapse[tag]  === undefined && ut // #821
                         || e.link?.includes("openEtext="+this.state.currentText + "#") && this.state.scope != root && this.state.collapse[tag] != false
+                        || e.link?.includes("openEtext="+"bdr:"+this.state.fromThis?.state?.ETSBresults?.[this.state.fromThis?.state?.ETSBpage?.idx]?.volumeId) && this.state.collapse[tag] != false
                         || e.link.endsWith(this.state.currentText)  && this.state.scope != root && this.state.collapse[tag] != false
             let mono = false // etextrefs.length === 1
             let openD = this.state.collapse[tag+"-details"] // || this.state.collapse[tag+"-details"]  === undefined && (mono || ut) // #821          
@@ -8956,7 +8964,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
             ret.push(<span {...ref} class={'top' + (/*this.state.collapse[tag]*/ isCurrent?" on":"") }>
                   {(e.hasPart && !open) && <img alt="triangle icon" src="/icons/triangle.png" onClick={(ev) => toggle(null,root,e["@id"],!e.hasPart?"details":"",!e.hasPart && mono, e, false)} className="xpd right"/>}
                   {(e.hasPart && open) && <img alt="triangle icon" src="/icons/triangle_.png" onClick={(ev) => toggle(null,root,e["@id"],!e.hasPart?"details":"",!e.hasPart && mono, e, false)} className="xpd"/>}
-                  <span class={"parTy "+(/*e.details*/isCurrent?"on":"") } {...e.details?{title: I18n.t("resource."+(openD?"hideD":"showD")), onClick:(ev) => toggle(ev,root,e["@id"],"details",!e.hasPart && mono,e) /*openText()*/ }:{title:tLabel}} >
+                  <span class={"parTy "+(isCurrentResult?" current-result ":"")+(/*e.details*/isCurrent?"on":"") } {...e.details?{title: I18n.t("resource."+(openD?"hideD":"showD")), onClick:(ev) => toggle(ev,root,e["@id"],"details",!e.hasPart && mono,e) /*openText()*/ }:{title:tLabel}} >
                   {pT}
                   </span>
                   <span>{this.uriformat(_tmp+"withEtextPrefLang",{type:'uri', value:gUri, volume:fUri, data:e, inOutline: (!e.hasPart?tag+"-details":tag), /*url:"/show/"+e.link,*/ debug:false, noid:true, toggle:(ev) => toggle(null,root,e["@id"],/*!e.hasPart?"details":*/"",!e.hasPart && (mono || ut), e)  })}</span>

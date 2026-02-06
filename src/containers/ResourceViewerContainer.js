@@ -387,7 +387,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
                   console.log("tmr")
 
                   const nav = document.querySelector("#etext-scroll")//(".over-nav")                           
-                  const elem = document.querySelector(".data.etextrefs .parTy.on")
+                  const elem = document.querySelector(".data.etextrefs .parTy.current-result,.data.etextrefs .parTy.on")
 
                   if(elem && nav) {
                      clearInterval(timer)
