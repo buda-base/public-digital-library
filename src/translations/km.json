@@ -736,7 +736,7 @@
       "scanF": "ស្កែនរក",
       "etextF": "អត្ថបទអេឡិចត្រូនិកសម្រាប់",
       "openR": "បើកកំណត់ត្រា",
-      "loadP": "ផ្ទុកទំព័រមុនៗ",
+      "loadP": "Load previous pages",
       "sameL": "តំណភ្ជាប់ទៅកាន់ធនធានខាងក្រៅ",
       "sameL_plural": "តំណភ្ជាប់ទៅកាន់ធនធានខាងក្រៅ",
       "gener1pdf": "ទាញយក PDF",
@@ -836,7 +836,9 @@
       "workId2":"The ID of this version is {{ id }}.",
       "workId3":"The overarching work ID is {{ id }}",
       "searchTtrad":"Search the {{trad}}",
-      "wPageO":"<nomob>(</nomob>Work<nomob>)</nomob><sp> {{of}}</sp>"
+      "wPageO":"<nomob>(</nomob>Work<nomob>)</nomob><sp> {{of}}</sp>",
+      "firstPof": "First page of {{type}}",
+      "lastPof": "Last page of {{type}}"
    },
    "tradition":{
       "boT":"Tibetan Tradition",
