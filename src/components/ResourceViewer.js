@@ -7297,7 +7297,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
       let firstPageUrl 
       let loca = { ...this.props.location }
       //if(prev!==-1) {
-         loca.search = loca.search.replace(/(^[?])|(&*startChar=[^&]+)(&&+)?/g,"")
+         loca.search = loca.search.replace(/(^[?])|(&*startChar=[^&]+)|(&*lastVol=[^&]+)(&&+)?/g,"")
          firstPageUrl = "?startChar="+(firstC ?? 0)+(loca.search?"&"+loca.search:"") + "#open-viewer"
       //}
 
@@ -7305,7 +7305,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
       let lastPageUrl 
       loca = { ...this.props.location }
       if(lastC) {//(last?.length) { //} && next <= Number(last[0].value)) {
-         loca.search = loca.search.replace(/(^[?])|(&*startChar=[^&]+)(&&+)?/g,"")
+         loca.search = loca.search.replace(/(^[?])|(&*startChar=[^&]+)|(&*lastVol=[^&]+)(&&+)?/g,"")
          lastPageUrl = "?startChar="+lastC+(loca.search?"&"+loca.search:"") + "#open-viewer"
       }
 
@@ -7541,6 +7541,50 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
 
       const hasNoPages = !this.props.disableInfiniteScroll && this.getResourceElem(tmp+"hasPages")?.[0]?.value === "false";
 
+      let ETinfo = this.props.allETrefs?.[shortUri(inst?.[0]?.value ?? "")]?.["@graph"] ?? []
+      let scopeInfo = ETinfo.filter(e => e["@id"] === this.props.that?.state?.scope)
+      //console.log("ETinfo:", scopeInfo, this.props.that?.state?.scope, this.props.IRI)
+      let pagScope, volNavFirst = this.props.IRI, volNavLast = this.props.IRI
+      if(scopeInfo?.[0]?.instanceHasVolume) {
+         pagScope = "collection"
+         let vols = this.getResourceElem(bdo+"instanceHasVolume") ?? []
+         if(vols.length) {
+            volNavFirst = shortUri(vols[0].value)
+            volNavLast = shortUri(vols[vols.length - 1].value)
+            scopeInfo = ETinfo.filter(e => e["@id"] === volNavLast)
+            firstC = 0
+            lastC = scopeInfo[0].sliceEndChar 
+            let loca = { ...this.props.location }  
+            let search = loca.search.replace(/(^[?])|(&*startChar=[^&]+)|(&*lastVol=[^&]+)(&&+)?/g,"")
+            firstPageUrl = "?startChar="+(firstC ?? 0)+(search?"&"+search:"") + "#open-viewer"
+            lastPageUrl = "?lastVol=true&startChar="+lastC+(search?"&"+search:"") + "#open-viewer"
+         }
+
+      } else if(scopeInfo?.[0]?.volumeHasEtext) {
+         pagScope = "volume"
+         firstC = scopeInfo[0].sliceStartChar
+         lastC = scopeInfo[0].sliceEndChar 
+         let loca = { ...this.props.location }
+         let search = loca.search.replace(/(^[?])|(&*startChar=[^&]+)|(&*lastVol=[^&]+)(&&+)?/g,"")
+         firstPageUrl = "?startChar="+(firstC ?? 0)+(search?"&"+search:"") + "#open-viewer"
+         lastPageUrl = "?startChar="+lastC+(search?"&"+search:"") + "#open-viewer"
+      } else if(scopeInfo?.[0]?.eTextInVolume){
+         pagScope = "text"
+         firstC = scopeInfo[0].sliceStartChar
+         lastC = scopeInfo[0].sliceEndChar 
+         let loca = { ...this.props.location }
+         let search = loca.search.replace(/(^[?])|(&*startChar=[^&]+)|(&*lastVol=[^&]+)(&&+)?/g,"")
+         firstPageUrl = "?startChar="+(firstC ?? 0)+(search?"&"+search:"") + "#open-viewer"
+         lastPageUrl = "?startChar="+lastC+(search?"&"+search:"") + "#open-viewer"
+      }
+      
+/*
+         let loca = { ...this.props.location }
+
+
+         let search = loca.search.replace(/(^[?])|(&*startChar=[^&]+)(&&+)?/g,"")
+  */    
+      
       return (
          
          [<InfiniteScroll
@@ -7560,9 +7604,24 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
          //loader={<Loader loaded={false} />}
          >
          { !this.props.disableInfiniteScroll && <div style={{display:"flex", justifyContent:"space-between", width:"100%", scrollMarginTop:"160px" }}>
-            <h3 style={{marginBottom:"20px",textAlign:"right"}}>{ firstPageUrl && <Link onClick={(e) => this.props.onGetPages(this.props.IRI,firstC,true,{firstC, lastC})} to={firstPageUrl}>{I18n.t("resource.firstP")}<span className="visually-hidden">Go to first page</span></Link>}</h3>
-            <h3 style={{marginBottom:"20px",textAlign:"right"}}>{ prev!==-1 && <span onClick={(e) => this.props.onGetPages(this.props.IRI, prev, true, {firstC, lastC} )} class="download ulink urilink" style={{color:"#d73449",fontWeight:700,border:"none",textAlign:"right",cursor:"pointer"}}>{I18n.t("resource.loadP")}</span>}</h3>
-            <h3 style={{marginBottom:"20px",textAlign:"right"}}>{ lastPageUrl && <Link to={lastPageUrl} onClick={(e) => this.props.onGetPages(this.props.IRI,lastC-999 /* TODO: use the other query here (mirador/num page)*/,true,{firstC, lastC})} >{I18n.t("resource.lastP")}<span className="visually-hidden">Go to last page</span></Link>}</h3>
+            <h3 style={{marginBottom:"20px",textAlign:"right"}}>{ firstPageUrl && <Link onClick={(e) => {
+              if(volNavFirst != volNavLast) {  // collection      
+                  this.props.that.setState({ currentText: null })
+               } else {
+                  this.props.onGetPages(volNavFirst,firstC,true,{firstC, lastC})
+               }
+            }} to={firstPageUrl}>{I18n.t("resource.firstP"+(pagScope ? "of" : ""), {type:pagScope})}<span className="visually-hidden">Go to first page</span></Link>}</h3>
+            <h3 style={{marginBottom:"20px",textAlign:"right"}}>{ prev!==-1 && <span onClick={(e) => this.props.onGetPages(this.props.IRI, prev, true, {firstC, lastC} )} class="download ulink urilink" style={{color:"#d73449",fontWeight:700,border:"none",textAlign:"right",cursor:"pointer",textTransform:"none"}}>{I18n.t("resource.loadP")}</span>}</h3>
+            <h3 style={{marginBottom:"20px",textAlign:"right"}}>{ lastPageUrl &&<Link to={lastPageUrl} onClick={(e) => { 
+               if(volNavFirst != volNavLast) {
+                  this.props.onLoading("etext", true)
+                  setTimeout(() => this.props.that.props.onReinitEtext(volNavLast), 150)               
+                  this.props.that.setState({ currentText: volNavLast })
+                  setTimeout(() => this.props.onGetPages(volNavLast,lastC-999 /* TODO: use the other query here (mirador/num page)*/,true,{firstC, lastC}), 5000)
+               } else {
+                  this.props.onGetPages(volNavLast,lastC-999 /* TODO: use the other query here (mirador/num page)*/,true,{firstC, lastC})
+               }         
+            }}>{I18n.t("resource.lastP"+(pagScope ? "of" : ""), {type:pagScope})} <span className="visually-hidden">Go to last page</span></Link>}</h3>
          </div> }
          {/* {this.hasSub(k)?this.subProps(k):tags.map((e)=> [e," "] )} */}
          { elem.filter((e,i) => !this.props.disableInfiniteScroll || i > 0 || !e.chunks?.some(c => c["@value"].includes("Text Scan Input Form" /*" - Title Page"*/))).filter((e,i) => !this.props.disableInfiniteScroll || i < 2).map( (e,_i) => { 
@@ -8879,7 +8938,14 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                   loadETres = g.eTextInVolume
                }
             }
+            if(get.lastVol === "true") {
+               let vols = this.getResourceElem(bdo+"instanceHasVolume")
+               if(vols.length) {
+                  loadETres = shortUri(vols[vols.length - 1].value)
+               }
+            }
             if(loadETres && this.state.currentText != loadETres) {
+               console.log("loadETres:",loadETres)
                this.props.onLoading("etext", true)            
                this.props.onReinitEtext(loadETres)
                this.setState({currentText: loadETres})

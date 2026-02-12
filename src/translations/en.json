@@ -736,7 +736,7 @@
       "scanF": "Scans for",
       "etextF": "Etext for",
       "openR": "Open Record",
-      "loadP": "Load Previous Pages",
+      "loadP": "Load previous pages",
       "sameL": "Link to External Resource",
       "sameL_plural": "Links to External Resources",
       "gener1pdf": "Get PDF",
@@ -836,7 +836,9 @@
       "workId2":"The ID of this version is {{ id }}.",
       "workId3":"The overarching work ID is {{ id }}",
       "searchTtrad":"Search the {{trad}}",
-      "wPageO":"<nomob>(</nomob>Work<nomob>)</nomob><sp> {{of}}</sp>"
+      "wPageO":"<nomob>(</nomob>Work<nomob>)</nomob><sp> {{of}}</sp>",
+      "firstPof": "First page of {{type}}",
+      "lastPof": "Last page of {{type}}"
    },
    "tradition":{
       "boT":"Tibetan Tradition",
