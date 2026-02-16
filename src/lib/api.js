@@ -3,7 +3,7 @@ import store from '../index';
 import {auth} from '../routes'
 import qs from 'query-string'
 //import history from '../history';
-import {shortUri,isAdmin} from '../components/App';
+import {shortUri,isAdmin,isProxied} from '../components/App';
 import { fetchLabels } from "../lib/searchkit/api/LabelAPI";
 
 
@@ -963,6 +963,35 @@ export default class API {
       })
     }
 
+   patchKey(key: string): string
+   {
+      /*
+      // debug/inverse
+      if(key.startsWith("http://purl.bdrc.io/")) {
+         return key.replace(/(purl.bdrc.io)/, "$1.us1.proxyathens.net")
+      } else return key
+      */
+
+      if(key.startsWith("http://purl.bdrc.io.")) {
+         return key.replace(/(purl.bdrc.io)[^/]+[/]/, "$1/")
+      }
+      return key
+   }
+   patchProxiedUrls(res: {}): {}
+   {
+      let patched = {}
+      for(let key in res) {
+         //console.log("patching:", key, res[key])
+         if(Array.isArray(res[key])) {
+            patched[this.patchKey(key)] = res[key].map(v => typeof v === "object" ? this.patchProxiedUrls(v) : this.patchKey(v))
+         } else if(typeof res[key] === "object") {
+            patched[this.patchKey(key)] = this.patchProxiedUrls(res[key])
+         } else if(typeof res[key] === "string") {
+            patched[this.patchKey(key)] = this.patchKey(res[key])
+         }
+      }
+      return patched
+   }
 
    async getQueryResults(url: string, key:string, param:{}={}, method:string = "POST", accept:string="application/json",other?:{}): Promise<{}>
    {
@@ -1086,6 +1115,14 @@ export default class API {
 
 
       //loggergen.log("resolving",res)
+
+
+      const config = store.getState()?.data?.config
+      if(config && isProxied({ props: { config } })) {
+         //console.log("proxied res:", res)
+         res = Array.isArray(res) ? res.map(v => this.patchProxiedUrls(v)) : this.patchProxiedUrls(res)
+         //console.log("patched res:", res)
+      }
 
       return res ;
    }
