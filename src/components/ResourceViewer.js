@@ -7611,15 +7611,15 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                   this.props.onGetPages(volNavFirst,firstC,true,{firstC, lastC})
                }
             }} to={firstPageUrl}>{I18n.t("resource.firstP"+(pagScope ? "of" : ""), {type:pagScope})}<span className="visually-hidden">Go to first page</span></Link>}</h3>
-            <h3 style={{marginBottom:"20px",textAlign:"right"}}>{ prev!==-1 && <span onClick={(e) => this.props.onGetPages(this.props.IRI, prev, true, {firstC, lastC} )} class="download ulink urilink" style={{color:"#d73449",fontWeight:700,border:"none",textAlign:"right",cursor:"pointer",textTransform:"none"}}>{I18n.t("resource.loadP")}</span>}</h3>
+            <h3 style={{marginBottom:"20px",textAlign:"right"}}>{ prev!==-1 && <span onClick={(e) => this.props.onGetPages(this.props.IRI, prev, true, {firstC, lastC, filterTruncated: true} )} class="download ulink urilink" style={{color:"#d73449",fontWeight:700,border:"none",textAlign:"right",cursor:"pointer",textTransform:"none"}}>{I18n.t("resource.loadP")}</span>}</h3>
             <h3 style={{marginBottom:"20px",textAlign:"right"}}>{ lastPageUrl &&<Link to={lastPageUrl} onClick={(e) => { 
                if(volNavFirst != volNavLast) {
                   this.props.onLoading("etext", true)
                   setTimeout(() => this.props.that.props.onReinitEtext(volNavLast), 150)               
                   this.props.that.setState({ currentText: volNavLast })
-                  setTimeout(() => this.props.onGetPages(volNavLast,lastC-999 /* TODO: use the other query here (mirador/num page)*/,true,{firstC, lastC}), 5000)
+                  setTimeout(() => this.props.onGetPages(volNavLast,lastC-999 /* TODO: use the other query here (mirador/num page)*/,true,{firstC, lastC, filterTruncated: true}), 5000)
                } else {
-                  this.props.onGetPages(volNavLast,lastC-999 /* TODO: use the other query here (mirador/num page)*/,true,{firstC, lastC})
+                  this.props.onGetPages(volNavLast,lastC-999 /* TODO: use the other query here (mirador/num page)*/,true,{firstC, lastC, filterTruncated: true})
                }         
             }}>{I18n.t("resource.lastP"+(pagScope ? "of" : ""), {type:pagScope})} <span className="visually-hidden">Go to last page</span></Link>}</h3>
          </div> }

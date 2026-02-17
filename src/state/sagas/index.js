@@ -1390,8 +1390,9 @@ async function getPages(iri,next,meta) {
             
       }).filter(e => e) //+ " ("+e.seqNum+")" }))
       .filter(p => (meta?.firstC === undefined || p.start >= meta.firstC) && (meta?.lastC === undefined || p.start < meta?.lastC) )
+      .filter(p => !meta?.filterTruncated || pages?.[0].chunk?.[0]?.sourceAsMap?.cstart <= p.start)
 
-      loggergen.log("dataP",iri,next,data,meta)
+      loggergen.log("dataP",iri,next,data,meta,pages)
 
       store.dispatch(dataActions.gotNextPages(iri,data,next < 0))
 
