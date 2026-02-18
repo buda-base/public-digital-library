@@ -815,7 +815,7 @@
       "pagesN":"{{i}} / {{count}} page",
       "pagesN_plural":"{{i}} / {{count}} pages",
       "noR":"No results",
-      "pageRvol":"Page {{p}} from Volume {{v}}",
+      "pageRvol":"Page {{p}} from Text {{e}} of Volume {{v}}",
       "explain":"Showing the most popular items. Make a new search or use the filters on the left to find what you are looking for.",
       "explainR":"Showing the most recent items. Use the filters on the left to find what you are looking for.",
       "searchTn":{

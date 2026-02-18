@@ -1238,6 +1238,7 @@ async function getPages(iri,next,meta) {
       spans = []
       pages = []
       chunk = []
+      data = _.orderBy(data,(val) => val.innerHits.chunks.hits?.[0]?.sourceAsMap.cstart, ['asc'])
       for(const j of data) {
          // skip chunk handling if no match in page anyways
          if(!j.innerHits.etext_pages.hits.length) continue
