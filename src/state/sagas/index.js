@@ -477,7 +477,7 @@ async function initiateApp(params,iri,myprops,route,isAuthCallback) {
          if(!res[bdrIRI][_tmp+"etextIsPaginated"]) store.dispatch(dataActions.getChunks(useIri,next));
          else {
             res[bdrIRI][bdo+"eTextHasPage"] = []
-            store.dispatch(dataActions.getPages(useIri,next,true)); 
+            store.dispatch(dataActions.getPages(useIri,next,true,{filterTruncated:true})); 
          }
          
 
@@ -1391,7 +1391,7 @@ async function getPages(iri,next,meta) {
             
       }).filter(e => e) //+ " ("+e.seqNum+")" }))
       .filter(p => (meta?.firstC === undefined || p.start >= meta.firstC) && (meta?.lastC === undefined || p.start < meta?.lastC) )
-      .filter(p => !meta?.filterTruncated || pages?.[0].chunk?.[0]?.sourceAsMap?.cstart <= p.start)
+      .filter(p => !hasPages || !meta?.filterTruncated || pages?.[0].chunk?.[0]?.sourceAsMap?.cstart <= p.start)
 
       loggergen.log("dataP",iri,next,data,meta,pages)
 
