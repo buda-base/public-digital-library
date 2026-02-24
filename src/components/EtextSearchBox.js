@@ -236,7 +236,11 @@ export function EtextSearchBox(props) {
       that.props.onCloseMonlam()
     }
 
-    if(p != page) reloadPage(res,idx,p,useQuery,selec)    
+    if(!that.props.that?.state?.skipGoToResult) { 
+      if(p != page) reloadPage(res,idx,p,useQuery,selec)
+    } else {
+      that.props.that.setState({ skipGoToResult: false })
+    }    
   }, [query, that, results, index, page, scopeId, total, startSearch])
 
   const handlePrev = useCallback(async () => {

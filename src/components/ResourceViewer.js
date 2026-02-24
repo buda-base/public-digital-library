@@ -7607,7 +7607,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
          { !this.props.disableInfiniteScroll && <div style={{display:"flex", justifyContent:"space-between", width:"100%", scrollMarginTop:"160px" }}>
             <h3 style={{marginBottom:"20px",textAlign:"right"}}>{ firstPageUrl && <Link onClick={(e) => {
               if(volNavFirst != volNavLast) {  // collection      
-                  this.props.that.setState({ currentText: null })
+                  this.props.that.setState({ currentText: null, skipGoToResult:ETSBresults?.length > 0 })
                } else {
                   this.props.onGetPages(volNavFirst,navFirstC,true,{navFirstC, navLastC})
                }
