@@ -5314,6 +5314,8 @@ line-height:12px; }
 .resource .data [data-prop="bdo:note"] .sub:hover .hover-menu,
 :not(#etext-scroll) > h4:hover .hover-menu {  opacity:1 !important; pointer-events: auto !important; }
 
+.etextPage > div:first-child:not(:hover ) .img-shift { display:none !important; }
+
 .resource .data:not(.legal-props) .group:hover > h4:not(.first):not(.multiple) + .hover-menu { opacity:1; }
 
 .overpage + .hover-menu {

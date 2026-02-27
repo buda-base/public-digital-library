@@ -7552,9 +7552,9 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
          if(vols.length) {
             volNavFirst = shortUri(vols[0].value)
             volNavLast = shortUri(vols[vols.length - 1].value)
-            scopeInfo = ETinfo.filter(e => e["@id"] === volNavLast)
+            const colScopeInfo = ETinfo.filter(e => e["@id"] === volNavLast)
             navFirstC = 0
-            navLastC = scopeInfo[0].sliceEndChar 
+            navLastC = colScopeInfo[0].sliceEndChar 
             let loca = { ...this.props.location }  
             let search = loca.search.replace(/(^[?])|(&*startChar=[^&]+)|(&*lastVol=[^&]+)(&&+)?/g,"")
             firstPageUrl = "?startChar="+(navFirstC ?? 0)+(search?"&"+search:"") + "#open-viewer"
@@ -7652,7 +7652,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                   props_manifestError={this.props.manifestError} 
                   props_assocResources={this.props.assocResources}
 
-                  { ...{ thatGetLangLabel, thatSetState, uriformat, hoverMenu, onGetContext, ETSBresults:ETSBresults?.filter(r => "bdr:"+r.volumeId === this.props.that?.state?.currentText && (e.seq === undefined || r.startPnum <= e.seq && e.seq <= r.endPnum) && e.start - 5 <= r.startPageCstart && r.startPageCstart <= e.start + 5) } }
+                  { ...{ thatGetLangLabel, thatSetState, uriformat, hoverMenu, onGetContext, ETSBresults:ETSBresults?.filter(r => "bdr:"+r.volumeId === this.props.that?.state?.currentText && (e.seq === undefined || r.startPnum <= e.seq && e.seq <= r.endPnum) && e.start - 5 <= r.startPageCstart && r.startPageCstart <= e.start + 5), imgShift: this.state.imgShift, setImgShift:(n) => this.setState({ imgShift:n }), ETinfo } }
 
                />
          })  }

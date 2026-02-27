@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect, useCallback } from "react"
+import React, { useState, useEffect, useCallback, useMemo } from "react"
 import I18n from 'i18next';
 import rangy from "rangy"
 import "rangy/lib/rangy-textrange"
@@ -11,7 +11,8 @@ import { Link } from 'react-router-dom';
 import _ from "lodash"
 import HTMLparse from 'html-react-parser';
 
-import { getLangLabel, /*highlight*/ } from './App';
+import { getLangLabel, shortUri, /*highlight*/ } from './App';
+import { SwapHorizontalCircleOutlined } from "@material-ui/icons";
 
 const loggergen = new logdown('etext', { markdown: false });
 
@@ -27,9 +28,16 @@ function EtextPage(props) {
     props_IRI, props_location, props_config, props_highlight, props_monlamResults, props_disableInfiniteScroll, props_manifestError, props_assocResources,
     thatGetLangLabel, thatSetState, 
     uriformat, hoverMenu, monlamPopup, onGetContext,
-    ETSBresults
+    ETSBresults,
+    imgShift = 0, setImgShift, ETinfo
   } = props
 
+  let imgSeq = e.seq + imgShift
+  if(imgSeq < 1) imgSeq = 1
+  const [showImgShift, setShowImgShift] = useState(false)
+  const toggleShowImgShift = () => setShowImgShift(!showImgShift)
+
+  const textNumber = useMemo(() => ETinfo.find(t => t["@id"] === shortUri(e.id))?.seqNum, [ETinfo, e.id])
 
   const highlight = useCallback((str, unpag) => HTMLparse(
     "<span>"
@@ -92,11 +100,13 @@ function EtextPage(props) {
       });
   }
 
+  //console.log("imgShift:",imgShift,imgSeq,e,ETinfo,textNumber)
+
   /*
   let imgErr = errors[props_IRI]
-  if(imgErr) imgErr = imgErr[e.seq]
+  if(imgErr) imgErr = imgErr[imgSeq]
   */
-  let imgErr = errors[e.seq]
+  let imgErr = errors[imgSeq]
 
   //loggergen.log("links:",imageLinks,e,errors, imgErr)
 
@@ -104,11 +114,11 @@ function EtextPage(props) {
 
   const imgElem = !unpag && !imgErr && <h5><span class='a' title={I18n.t("misc."+(!showIm?"show":"hide"))+" "+I18n.t("available scans for that page")} onClick={(eve) => {
       /*
-      let id = "image-"+props_IRI+"-"+e.seq
+      let id = "image-"+props_IRI+"-"+imgSeq
       thatSetState({ collapse:{...state_collapse, [id]:!showIm}}) 
       */
       setShowIm(!showIm)
-  }}>{e.seq != "--" && I18n.t("resource.page",{num:e.seq})}{getPname(e)}</span>                                             
+  }}>{imgSeq != "--" && I18n.t("resource.page",{num:imgSeq})}{getPname(e)}</span>                                             
   </h5>
 
 
@@ -121,42 +131,42 @@ function EtextPage(props) {
   let shift = 0
 
   return (
-  <div data-start={e.start} data-seq={e.seq} data-iri={props_IRI} class={"etextPage"+(props_manifestError&&!imageLinks?" manifest-error":"")+ ((!e.value.match(/[\n\r]/)||unformatted)?" unformatted":"") + (e.seq?" hasSeq":"")+(unpag?" unpaginated":"")/*+(e.language === "bo"?" lang-bo":"")*/ }>
+  <div data-start={e.start} data-seq={imgSeq} data-iri={props_IRI} class={"etextPage"+(props_manifestError&&!imageLinks?" manifest-error":"")+ ((!e.value.match(/[\n\r]/)||unformatted)?" unformatted":"") + (imgSeq?" hasSeq":"")+(unpag?" unpaginated":"")/*+(e.language === "bo"?" lang-bo":"")*/ }>
       {/*                                          
-        e.seq && state_collapse["image-"+props_IRI+"-"+e.seq] && imageLinks[e.seq] &&
-        <img title="Open image+text view in Mirador" onClick={eve => { openMiradorAtPage(imageLinks[e.seq].id) }} style={{maxWidth:"100%"}} src={imageLinks[e.seq].image} />
+        imgSeq && state_collapse["image-"+props_IRI+"-"+imgSeq] && imageLinks[imgSeq] &&
+        <img title="Open image+text view in Mirador" onClick={eve => { openMiradorAtPage(imageLinks[imgSeq].id) }} style={{maxWidth:"100%"}} src={imageLinks[imgSeq].image} />
       */}
       {
-        e.seq != undefined && showIm && Object.keys(imageLinks).sort().map(id => {
+        imgSeq != undefined && showIm && Object.keys(imageLinks).sort().map(id => {
             /* // TODO: check if this still in use?
-            if(!state_collapse["imageVolume-"+id] && imageLinks[id][e.seq]) 
+            if(!state_collapse["imageVolume-"+id] && imageLinks[id][imgSeq]) 
             */
-              if(!imgErr || !imgErr[imageLinks[id][e.seq].image]) { 
+              if(!imgErr || !imgErr[imageLinks[id][imgSeq].image]) { 
                   const ref = React.createRef()
                   return (
                     <div class="imagePage">
                         {/* // TODO: use openseadragon 
-                          <img class="page" title="Open image+text reading view" src={imageLinks[id][e.seq].image} onError={(ev)=> handleImageError(ev,imageLinks[id][e.seq].image,e.seq)} onClick={eve => { 
+                          <img class="page" title="Open image+text reading view" src={imageLinks[id][imgSeq].image} onError={(ev)=> handleImageError(ev,imageLinks[id][imgSeq].image,imgSeq)} onClick={eve => { 
                           let manif = props_imageVolumeManifests[id]
                           window.MiradorUseEtext = "open" ;                                 
-                          that.showMirador(imageLinks[id][e.seq].id,manif["@id"]);
+                          that.showMirador(imageLinks[id][imgSeq].id,manif["@id"]);
                         }}/>     */}
-                        <a href={imageLinks?.[id]?.[e.seq]?.image} target="_blank" rel="noopener noreferrer">
-                          <img alt="scanned image for page" class="page" ref={ref} src={imageLinks?.[id]?.[e.seq]?.image} onLoad={(ev) => { if(ref.current) {
+                        <a href={imageLinks?.[id]?.[imgSeq]?.image} target="_blank" rel="noopener noreferrer">
+                          <img alt="scanned image for page" class="page" ref={ref} src={imageLinks?.[id]?.[imgSeq]?.image} onLoad={(ev) => { if(ref.current) {
                               if(ref.current.naturalWidth < ref.current.naturalHeight) {
                                 const elem = ref.current.closest(".imagePage")
                                 elem.classList.add("portrait")
                                 if(get.right) elem.classList.add("right")
                               }
-                          }}} onError={(ev)=> handleImageError(ev,imageLinks?.[id]?.[e.seq]?.image,e.seq)} />
+                          }}} onError={(ev)=> handleImageError(ev,imageLinks?.[id]?.[imgSeq]?.image,imgSeq)} />
                           <span className="visually-hidden">Open image in new tab</span>
                         </a>
 
                         {/*}
                         <div class="small"><a title="Open image+text reading view" onClick={eve => { 
                           let manif = props_imageVolumeManifests[id]
-                          openMiradorAtPage(imageLinks[id][e.seq].id,manif["@id"])
-                        }}>p.{e.seq}</a> from {that.uriformat(null,{value:id.replace(/bdr:/,bdr).replace(/[/]V([^_]+)_I.+$/,"/W$1")})}                                                      
+                          openMiradorAtPage(imageLinks[id][imgSeq].id,manif["@id"])
+                        }}>p.{imgSeq}</a> from {that.uriformat(null,{value:id.replace(/bdr:/,bdr).replace(/[/]V([^_]+)_I.+$/,"/W$1")})}                                                      
                         { imageLinks && Object.keys(imageLinks).length > 1 && <span class="button hide" title={"Hide that image volume"} 
                           onClick={(eve) => {
                               thatSetState({...that.state, collapse:{...state_collapse, ["imageVolume-"+id]:true}}) 
@@ -172,27 +182,31 @@ function EtextPage(props) {
               //else return <p class="copyrighted">copyrighted</p>
         })
       }
-      { e.seq !== undefined && <div> 
+      { imgSeq !== undefined && <div> 
         { !unpag && !preview && !imgErr && <span class="button" title={I18n.t("misc."+(!showIm?"show":"hide"))+" "+I18n.t("available scans for that page")} 
         onClick={(eve) => {
               /*
-              let id = "image-"+props_IRI+"-"+e.seq
+              let id = "image-"+props_IRI+"-"+imgSeq
               thatSetState({ collapse:{...state_collapse, [id]:!showIm}}) 
               */
               setShowIm(!showIm)
             }}> 
             <img alt="show images icon" src="/icons/image.svg"/>
         </span> }
-        {/* { <h5><a title="Open image+text view in Mirador" onClick={eve => { openMiradorAtPage(imageLinks[e.seq].id) }}>p.{e.seq}</a></h5> } */}
+        {/* { <h5><a title="Open image+text view in Mirador" onClick={eve => { openMiradorAtPage(imageLinks[imgSeq].id) }}>p.{imgSeq}</a></h5> } */}
         {   !unpag && !preview && !imgErr && imgElem }        
-            { (unpag || preview || imgErr ) && <h5><span class="a unpag" title={I18n.t("resource.unpag")}>{e.seq != "--" && I18n.t("resource.pageN",{num:e.seq})}{getPname(e)}</span></h5>}
+            { (unpag || preview || imgErr ) && <h5><span class="a unpag" title={I18n.t("resource.unpag")}>{imgSeq != "--" && I18n.t("resource.pageN",{num:imgSeq})}{getPname(e)}</span></h5>}
             &nbsp;
             { !preview && Object.keys(imageLinks).sort().map(id => {
               //loggergen.log("id:",id,e)
               let iIp = props_assocResources[e.id]
-              const withHoverM = <>{I18n.t("misc.from")} { uriformat(null,{nolink:true,noid:true,value:id.replace(/bdr:/,bdr) .replace(/[/]V([^_]+)_I.+$/,"/W$1")})} </>
-              if( /* !state_collapse["imageVolume-"+id] &&*/ imageLinks[id][e.seq]) 
-                  return (
+              const withHoverM = <>{I18n.t("misc.from")} text {textNumber} in { uriformat(null,{nolink:true,noid:true,value:id.replace(/bdr:/,bdr) .replace(/[/]V([^_]+)_I.+$/,"/W$1")})} </>
+              if( /* !state_collapse["imageVolume-"+id] &&*/ imageLinks[id][imgSeq]) 
+                  return (<>
+                        <div className="img-shift" style={{display:"inline-flex",alignItems:"center",gap:"5px",margin:"0 10px"}}>
+                          <button onClick={toggleShowImgShift}>+/-</button>
+                          {showImgShift ? <input onBlur={() => setShowImgShift(false)} type="number" value={imgShift} style={{width:"30px"}} onChange={(ev) => setImgShift(Number(ev.target.value))} /> : null}
+                        </div>
                         <h5 className="withHoverM" style={{textTransform:"lowercase"}}>
                           {withHoverM}
                           {/* <span onClick={() => { 
@@ -202,16 +216,16 @@ function EtextPage(props) {
                               { hoverMenu(" "+e.id,{ value:"etextMoreInfo", elem: e },[ imgElem, <>&nbsp;</>, withHoverM ])}
                           </span> */}
                         </h5>
-                  )
+                  </>)
             })}
             {imgErr &&  Object.values(imgErr).some(v => [401,403].includes(v)) && <span class="copyrighted">{I18n.t("access.imageN")}</span>}
-            { imageLinks && Object.keys(imageLinks).length > 1 && <span class="button close" data-seq={"image-"+props_IRI+"-"+e.seq} title="Configure which image volumes to display" 
+            { imageLinks && Object.keys(imageLinks).length > 1 && <span class="button close" data-seq={"image-"+props_IRI+"-"+imgSeq} title="Configure which image volumes to display" 
               /*
               // TODO: check if this still in use?
               onClick={e => { 
                   $(e.target).closest(".button").addClass("show");
                   thatSetState({
-                    collapse:{...state_collapse, imageVolumeDisplay:!state_collapse.imageVolumeDisplay},
+                    collapse:{...state_collapse, imageVoluttmeDisplay:!state_collapse.imageVolumeDisplay},
                     anchorElemImaVol:e.target
                   })} }
               */
@@ -223,13 +237,13 @@ function EtextPage(props) {
       <div class="overpage">
         <h4 class="page"                
               /* // TODO: find a workaround for this (forces rerendering the whole text)
-              onMouseEnter={ev => { if(!state_monlam && state_enableDicoSearch && !props_disableInfiniteScroll && state_noHilight != e.seq) thatSetState({ noHilight: e.seq})}} 
-              onMouseDown={ev => { if((!state_monlam || state_monlam.seq != e.seq) && state_enableDicoSearch && !props_disableInfiniteScroll && state_noHilight != e.seq) thatSetState({ noHilight: e.seq})}}               
+              onMouseEnter={ev => { if(!state_monlam && state_enableDicoSearch && !props_disableInfiniteScroll && state_noHilight != imgSeq) thatSetState({ noHilight: imgSeq})}} 
+              onMouseDown={ev => { if((!state_monlam || state_monlam.seq != imgSeq) && state_enableDicoSearch && !props_disableInfiniteScroll && state_noHilight != imgSeq) thatSetState({ noHilight: imgSeq})}}               
               */
-              onMouseUp={(ev) => monlamPopup(ev, e.seq ?? e.start, pageVal)} 
-              onCopy={(ev) => monlamPopup(ev, e.seq ?? e.start, pageVal)} >
+              onMouseUp={(ev) => monlamPopup(ev, imgSeq ?? e.start, pageVal)} 
+              onCopy={(ev) => monlamPopup(ev, imgSeq ?? e.start, pageVal)} >
             { state_monlam_hilight}
-            {!e.value.match(/[\n\r]/) && !e.seq ?[<span class="startChar"><span>[&nbsp;<Link to={"/show/"+props_IRI+"?startChar="+e.start+"#open-viewer"}>@{e.start}<span className="visually-hidden">Go to start of page</span></Link>&nbsp;]</span></span>]:null}{(e.chunks?.length?e.chunks:[e.value]).map(f => {
+            {!e.value.match(/[\n\r]/) && !imgSeq ?[<span class="startChar"><span>[&nbsp;<Link to={"/show/"+props_IRI+"?startChar="+e.start+"#open-viewer"}>@{e.start}<span className="visually-hidden">Go to start of page</span></Link>&nbsp;]</span></span>]:null}{(e.chunks?.length?e.chunks:[e.value]).map(f => {
               let h = f["@value"] ?? f
 
               // feedbucket-integration#128 fix conflict with htmlParse when < or > in chunk
@@ -254,7 +268,7 @@ function EtextPage(props) {
               if(tags.length) {
                 tags = _.orderBy(tags, (r) => r.index, "desc")
 
-                //console.log("tags:", e.seq, tags)
+                //console.log("tags:", imgSeq, tags)
 
                 let c = "", last_c = "", current_c = []
                 for(let t of tags) {
@@ -304,7 +318,7 @@ function EtextPage(props) {
                   .replace(/((^|\n)(([^\[]*)|(.*\][^\[]+)))[>]/g,"$1&gt;")
               }
               
-              if(label && props_highlight && props_highlight.key /*&& state_noHilight != e.seq*/) { 
+              if(label && props_highlight && props_highlight.key /*&& state_noHilight != imgSeq*/) { 
                   label = highlight(label, unpag) //,kw.map(k => k.replace(/(.)/g,"$1\\n?")),null,false,true,lang); 
                   current.push(label); }
               else if(ETSBresults?.length) {
@@ -318,7 +332,7 @@ function EtextPage(props) {
               //label = f
               let size = state_etextSize
 
-              //loggergen.log("page:",e.seq,pageVal,e,current)
+              //loggergen.log("page:",imgSeq,pageVal,e,current)
               
               if(lang === "bo") { size += 0.4 ; }
               return ([<span lang={lang} {...state_etextSize?{style:{ fontSize:size+"em", lineHeight:(size * 1.0)+"em" }}:{}}>{label}</span>])})}
