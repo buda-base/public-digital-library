@@ -1265,7 +1265,7 @@ const patchId = (graph, action) => {
       }      
       for(let k of Object.keys(e)) {
          if(!Array.isArray(e[k])) {
-            if(e[k]["id"]) {
+            if(e[k]?.["id"]) {
                e[k]["@id"] = e[k]["id"]
                delete e[k]["id"]
             }

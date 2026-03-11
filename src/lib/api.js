@@ -6,7 +6,7 @@ import qs from 'query-string'
 import {shortUri,isAdmin,isProxied} from '../components/App';
 import { fetchLabels } from "../lib/searchkit/api/LabelAPI";
 
-
+import _ from "lodash"
 import * as rdflib from "rdflib"
 
 import logdown from 'logdown'
@@ -854,8 +854,9 @@ export default class API {
             let newData = await response.json()
             let formattedData = [] 
             for(let vol of newData?.volumes ?? []) {
-               let sliceEndChar = 0
-               for(let text of vol.etexts ?? []) {
+               let sliceEndChar = 0, lastNumPages = 0, globalStartPage = 0, numPages = 0
+               const texts = _.orderBy((vol.etexts ?? []), (t) => mapElem("bdr:"+t)?.sliceStartChar, "desc")
+               for(let text of texts) {
                   let prefLabel = getPrefLabelFromKeysOrLegacyQuery(text) 
                   formattedData.push({                      
                      "@id":"bdr:"+text["@id"],
@@ -865,8 +866,12 @@ export default class API {
                      "eTextInVolume":"bdr:"+vol["@id"],
                      "sliceStartChar":text.cstart,
                      "sliceEndChar":text.cend,
-                     ...(prefLabel?{"skos:prefLabel":prefLabel}:{})
+                     ...(prefLabel?{"skos:prefLabel":prefLabel}:{}),
+                     "globalStartPage":globalStartPage,
+                     "numPages": (numPages = mapElem("bdr:"+text["@id"])?.eTextHasPage?.length)
                   })
+                  globalStartPage += numPages
+                  lastNumPages = numPages
                   if(sliceEndChar < text.cend) sliceEndChar = text.cend
                }
                let prefLabel = getPrefLabelFromKeysOrLegacyQuery(vol) 
