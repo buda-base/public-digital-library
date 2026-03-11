@@ -4,3 +4,4 @@ Disallow: /osearch*
 Disallow: /view*
 
 Sitemap: https://library.bdrc.io/scripts/sitemap/sitemap-index.xml
+Sitemap: https://library.bdrc.io/scripts/sitemap-outlines/sitemap-outlines-index.xml
