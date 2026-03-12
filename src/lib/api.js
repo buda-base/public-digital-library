@@ -870,7 +870,7 @@ export default class API {
                      "globalStartPage":globalStartPage,
                      "numPages": (numPages = mapElem("bdr:"+text["@id"])?.eTextHasPage?.length)
                   })
-                  globalStartPage += numPages
+                  globalStartPage += numPages + 1
                   lastNumPages = numPages
                   if(sliceEndChar < text.cend) sliceEndChar = text.cend
                }

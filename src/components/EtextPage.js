@@ -29,15 +29,19 @@ function EtextPage(props) {
     thatGetLangLabel, thatSetState, 
     uriformat, hoverMenu, monlamPopup, onGetContext,
     ETSBresults,
-    imgShift = 0, setImgShift, ETinfo
+    imgShift = 0, setImgShift, ETinfo, useGlobalPage = false
   } = props
 
-  let imgSeq = e.seq + imgShift
+  const {textNumber, globalStartPage } = useMemo(() => { 
+    const elem = ETinfo.find(t => t["@id"] === shortUri(e.id))
+    return ({ textNumber: elem?.seqNum, globalStartPage: elem?.globalStartPage })
+  }, [ETinfo, e.id])
+
+  let imgSeq = e.seq + imgShift + (useGlobalPage && globalStartPage ? globalStartPage - 1 : 0) 
   if(imgSeq < 1) imgSeq = 1
   const [showImgShift, setShowImgShift] = useState(false)
   const toggleShowImgShift = () => setShowImgShift(!showImgShift)
 
-  const textNumber = useMemo(() => ETinfo.find(t => t["@id"] === shortUri(e.id))?.seqNum, [ETinfo, e.id])
 
   const highlight = useCallback((str, unpag) => HTMLparse(
     "<span>"
@@ -50,7 +54,7 @@ function EtextPage(props) {
     + "</span>"
   ), [state_etextSize])
 
-  //console.log("page:", _i, imageLinks, unpag, ETSBresults, e)
+  //console.log("page:", _i, imageLinks, unpag, ETSBresults, e, textNumber, globalStartPage)
 
   let pageVal ="", pageLang = "", current = []
 
@@ -205,7 +209,7 @@ function EtextPage(props) {
                   return (<>
                         <div className="img-shift" style={{display:"inline-flex",alignItems:"center",gap:"5px",margin:"0 10px"}}>
                           <button onClick={toggleShowImgShift}>+/-</button>
-                          {showImgShift ? <input onBlur={() => setShowImgShift(false)} type="number" value={imgShift} style={{width:"30px"}} onChange={(ev) => setImgShift(Number(ev.target.value))} /> : null}
+                          {showImgShift ? <input onBlur={() => setShowImgShift(false)} type="number" value={imgShift} style={{width:"40px"}} onChange={(ev) => setImgShift(Number(ev.target.value))} /> : null}
                         </div>
                         <h5 className="withHoverM" style={{textTransform:"lowercase"}}>
                           {withHoverM}

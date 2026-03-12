@@ -7585,6 +7585,8 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
 
          let search = loca.search.replace(/(^[?])|(&*startChar=[^&]+)(&&+)?/g,"")
   */    
+
+      let prev_page = null, useGlobalPage = false;
       
       return (
          
@@ -7631,6 +7633,10 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
 
             //console.log("this:",this)
 
+            useGlobalPage |= _i > 0 && prev_page?.seq >= e.seq 
+
+            prev_page = e
+
             return <EtextPage 
                   { ...{ e, _i, unpag, unformatted:!this.props.disableInfiniteScroll && e.seq === undefined, imageLinks, kw, monlamPopup, preview:this.props.disableInfiniteScroll?true:false } } 
                   
@@ -7652,7 +7658,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                   props_manifestError={this.props.manifestError} 
                   props_assocResources={this.props.assocResources}
 
-                  { ...{ thatGetLangLabel, thatSetState, uriformat, hoverMenu, onGetContext, ETSBresults:ETSBresults?.filter(r => "bdr:"+r.volumeId === this.props.that?.state?.currentText && (e.seq === undefined || r.startPnum <= e.seq && e.seq <= r.endPnum) && e.start - 5 <= r.startPageCstart && r.startPageCstart <= e.start + 5), imgShift: this.state.imgShift, setImgShift:(n) => this.setState({ imgShift:n }), ETinfo } }
+                  { ...{ thatGetLangLabel, thatSetState, uriformat, hoverMenu, onGetContext, ETSBresults:ETSBresults?.filter(r => "bdr:"+r.volumeId === this.props.that?.state?.currentText && (e.seq === undefined || r.startPnum <= e.seq && e.seq <= r.endPnum) && e.start - 5 <= r.startPageCstart && r.startPageCstart <= e.start + 5), imgShift: this.state.imgShift, setImgShift:(n) => this.setState({ imgShift:n }), ETinfo, useGlobalPage } }
 
                />
          })  }
