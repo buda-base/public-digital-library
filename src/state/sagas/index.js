@@ -1644,15 +1644,19 @@ async function getManifest(url,iri,thumb) {
          store.dispatch(dataActions.gotManifest(manif,iri))
       }
 
+      
       if(manif && manif.sequences && manif.sequences[0] && manif.sequences[0].canvases) {
-         if(manif.sequences[0].canvases[0] && manif.sequences[0].canvases[0].images && manif.sequences[0].canvases[0].images[0] &&
-            manif.sequences[0].canvases[0].images[0].resource && manif.sequences[0].canvases[0].images[0].resource["@id"])
-         {
-            let imageres = manif.sequences[0].canvases[0].images[0].resource
-            
-            //loggergen.log("image",imageres )
+         
+         let firstCanvasIndex = manif.sequences[0].canvases.findIndex(c => c["@id"] === manif.sequences[0].startCanvas) ?? 0
 
-            let imageIndex = 0
+         if(manif.sequences[0].canvases[firstCanvasIndex] && manif.sequences[0].canvases[firstCanvasIndex].images && manif.sequences[0].canvases[firstCanvasIndex].images[0] &&
+            manif.sequences[0].canvases[firstCanvasIndex].images[0].resource && manif.sequences[0].canvases[firstCanvasIndex].images[0].resource["@id"])
+         {
+            let imageres = manif.sequences[0].canvases[firstCanvasIndex].images[0].resource
+            
+            //loggergen.log("image",imageres,manif.sequences[0] )
+
+            let imageIndex = firstCanvasIndex
             if (imageres && imageres["@id"] && imageres["@id"].match(/archivelab[.]org.*rashodgson13[$]0[/]full/)) {
                imageIndex = 1
                imageres = manif.sequences[0].canvases[imageIndex].images[0].resource

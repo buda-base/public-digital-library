@@ -7627,7 +7627,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
             }}>{I18n.t("resource.lastP"+(pagScope ? "of" : ""), {type:pagScope})} <span className="visually-hidden">Go to last page</span></Link>}</h3>
          </div> }
          {/* {this.hasSub(k)?this.subProps(k):tags.map((e)=> [e," "] )} */}
-         { elem.filter((e,i) => !this.props.disableInfiniteScroll || i > 0 || !e.chunks?.some(c => c["@value"].includes("Text Scan Input Form" /*" - Title Page"*/))).filter((e,i) => !this.props.disableInfiniteScroll || i < 2).map( (e,_i) => { 
+         { elem.filter((e,i) => !this.props.disableInfiniteScroll || i > 0 || !e.chunks?.some(c => c["@value"].includes("Text Scan Input Form" /*" - Title Page"*/))).filter((e,i) => !this.props.disableInfiniteScroll || i < 2).slice(this.state.imgShift && this.state.imgShift < 0 ? -this.state.imgShift : 0).map( (e,_i) => { 
             
             const state_monlam_hilight = (e.seq ?? e.start) == this.state.monlam?.seq && this.state.enableDicoSearch ? this.state.monlam?.hilight : null
 
