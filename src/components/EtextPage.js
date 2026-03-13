@@ -33,7 +33,7 @@ function EtextPage(props) {
   } = props
 
   const {textNumber, globalStartPage } = useMemo(() => { 
-    const elem = ETinfo.find(t => t["@id"] === shortUri(e.id))
+    const elem = ETinfo.find(t => e.id && t["@id"] === shortUri(e.id))
     return ({ textNumber: elem?.seqNum, globalStartPage: elem?.globalStartPage })
   }, [ETinfo, e.id])
 
@@ -200,7 +200,7 @@ function EtextPage(props) {
         {/* { <h5><a title="Open image+text view in Mirador" onClick={eve => { openMiradorAtPage(imageLinks[imgSeq].id) }}>p.{imgSeq}</a></h5> } */}
         {   !unpag && !preview && !imgErr && imgElem }        
             { (unpag || preview || imgErr ) && <h5><span class="a unpag" title={I18n.t("resource.unpag")}>{imgSeq != "--" && I18n.t("resource.pageN",{num:imgSeq})}{getPname(e)}</span></h5>}
-            &nbsp;
+            { !preview && <>&nbsp;</> }
             { !preview && Object.keys(imageLinks).sort().map(id => {
               //loggergen.log("id:",id,e)
               let iIp = props_assocResources[e.id]
