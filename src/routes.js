@@ -525,6 +525,33 @@ function TestProxyComponent() {
 }
 
 
+function ViewResourceCompo() {
+   const location = useLocation();
+   const navigate = useNavigate();
+   const { IRI } = useParams();
+
+   let get = qs.parse(location.search)
+   let lang = get["langs"] || localStorage.getItem('langs')  || "bo-x-ewts,sa-x-ewts"
+   let uilang = get["uilang"] || localStorage.getItem('uilang') || "en"
+   if(lang) lang = lang.split(",")
+   let callerURI = get["callerURI"]
+
+   useEffect(() => {
+      store.dispatch(initiateApp())
+
+
+      miradorInitView(IRI,lang,callerURI,uilang,get.manifest);
+
+   }, [location, IRI])
+
+   return (<>
+      <div id="viewer" class={"view " + (callerURI?" hasCallerURI":"")}></div>
+      <link rel="stylesheet" type="text/css" href="../scripts/mirador/css/mirador-combined.css"/>
+      <link rel="stylesheet" type="text/css" href="../scripts/src/lib/mirador.css"/>
+      <Script url={"../scripts/mirador/mirador.js"} onLoad={(e)=>{ require("@dbmdz/mirador-keyboardnavigation");  }} />
+   </>)
+}
+
 const makeMainRoutes = () => {
 
    // #767
@@ -575,7 +602,9 @@ const makeMainRoutes = () => {
                      <Route path="/testToken" element={<TestTokenComponent />} />
                      <Route path="/testProxy" element={<TestProxyComponent />} />
 
-{/* 
+                     <Route path="/view/:IRI" element={<ViewResourceCompo />}/>
+
+                     {/*
 
                         <Route exact path="/static/:DIR1/:DIR2/:DIR3/:PAGE" render={(props) => {
                            return <StaticRouteContainer dir={props.match.params.DIR1+"/"+props.match.params.DIR2+"/"+props.match.params.DIR3} page={props.match.params.PAGE} history={history} auth={auth}/>
@@ -614,27 +643,6 @@ const makeMainRoutes = () => {
                            }
                            return (<AppContainer history={history} auth={auth} latest={true} {...get.tf ? {latestSyncsMeta:{timeframe:"past"+get.tf}}:{}}/> )
                         }}/>  
-                        <Route path="/view/:IRI" render={(props) =>
-                           {
-                              store.dispatch(initiateApp())
-
-                              let get = qs.parse(history.location.search)
-                              loggergen.log("props",props,get)
-                              let lang = get["langs"] || localStorage.getItem('langs')  || "bo-x-ewts,sa-x-ewts"
-                              let uilang = get["uilang"] || localStorage.getItem('uilang') || "en"
-                              if(lang) lang = lang.split(",")
-                              let callerURI = get["callerURI"]
-
-                              miradorInitView(props.match.params.IRI,lang,callerURI,uilang,get.manifest);
-
-                              return [
-                                       <div id="viewer" class={"view " + (callerURI?" hasCallerURI":"")}></div>,
-                                       <link rel="stylesheet" type="text/css" href="../scripts/mirador/css/mirador-combined.css"/>,
-                                       <link rel="stylesheet" type="text/css" href="../scripts/src/lib/mirador.css"/>,
-                                       <Script url={"../scripts/mirador/mirador.js"} onLoad={(e)=>{ require("@dbmdz/mirador-keyboardnavigation");  }} />,
-                                    ]
-                           }
-                        }/>
                         <Route path="/preview/:IRI" render={(props) => {
                            let IRI = props.match.params.IRI
                            
