@@ -1357,7 +1357,7 @@ async function getPages(iri,next,meta) {
                //str = pre + "<span>" + str + "</span>"
                
                acc += str ;
-               chunks.push({tags, "@value":/*"|CHUNK "+c.sourceAsMap.cstart+"-"+c.sourceAsMap.cend+" ~ "+start+"-"+end+"|"+*/ str /*+"|/CHUNK|"*/,"@language":_clang})
+               chunks.push({tags, "@value":/*"|CHUNK "+c.sourceAsMap.cstart+"-"+c.sourceAsMap.cend+" ~ "+start+"-"+end+"|"+*/ str /*+"|/CHUNK|"*/,"@language":_clang, cend:c.sourceAsMap.cend, cstart:c.sourceAsMap.cstart})
                
             }
 
@@ -1391,7 +1391,7 @@ async function getPages(iri,next,meta) {
             
       }).filter(e => e) //+ " ("+e.seqNum+")" }))
       .filter(p => (meta?.firstC === undefined || p.start >= meta.firstC) && (meta?.lastC === undefined || p.start < meta?.lastC) )
-      .filter(p => !hasPages || !meta?.filterTruncated || pages?.[0].chunk?.[0]?.sourceAsMap?.cstart <= p.start)
+      .filter((p,i) => !hasPages || !meta?.filterTruncated || pages?.[0].chunk?.[0]?.sourceAsMap?.cstart <= p.start || i == 0 && !meta.skipFirstPageIfNotComplete)
 
       loggergen.log("dataP",iri,next,data,meta,pages)
 

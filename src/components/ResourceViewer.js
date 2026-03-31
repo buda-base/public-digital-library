@@ -7170,7 +7170,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
       
       let next, prev;
       if(elem && elem.length && !this.props.disableInfiniteScroll?.snip) { 
-         elem = elem.filter(e => e.value != undefined && e.start !== undefined && e.start >= firstC && e.start < lastC)
+         elem = elem.filter(e => e.value != undefined && e.start !== undefined && (e.start >= firstC && e.start < lastC || e.end > firstC && e.end <= lastC))
          prev = elem.filter(e => e.value != undefined && e.start !== undefined)
          next = elem.filter(e => e.value != undefined && e.end)
       }
@@ -7182,7 +7182,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
       
       //loggergen.log("epage:", elem, kZprop, iiifpres, this.props.IRI, inst, JSON.stringify(info,null,3), get, text, {prev, next, firstC, lastC})
 
-      if(prev === -firstC) prev = - 1
+      if(prev === -firstC || -prev < firstC) prev = - 1
       
       let imageLinks ;
       if(this.state.imageLinks) imageLinks = this.state.imageLinks[this.props.IRI]
@@ -7614,7 +7614,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                   this.props.onGetPages(volNavFirst,navFirstC,true,{navFirstC, navLastC})
                }
             }} to={firstPageUrl}>{I18n.t("resource.firstP"+(pagScope ? "of" : ""), {type:pagScope})}<span className="visually-hidden">Go to first page</span></Link>}</h3>
-            <h3 style={{marginBottom:"20px",textAlign:"right"}}>{ prev!==-1 && <span onClick={(e) => this.props.onGetPages(this.props.IRI, prev, true, {navFirstC, navLastC, filterTruncated: true} )} class="download ulink urilink" style={{color:"#d73449",fontWeight:700,border:"none",textAlign:"right",cursor:"pointer",textTransform:"none"}}>{I18n.t("resource.loadP")}</span>}</h3>
+            <h3 style={{marginBottom:"20px",textAlign:"right"}}>{ prev!==-1 && <span onClick={(e) => this.props.onGetPages(this.props.IRI, prev, true, {navFirstC, navLastC, filterTruncated: true, skipFirstPageIfNotComplete: true} )} class="download ulink urilink" style={{color:"#d73449",fontWeight:700,border:"none",textAlign:"right",cursor:"pointer",textTransform:"none"}}>{I18n.t("resource.loadP")}</span>}</h3>
             <h3 style={{marginBottom:"20px",textAlign:"right"}}>{ lastPageUrl &&<Link to={lastPageUrl} onClick={(e) => { 
                if(volNavFirst != volNavLast) {
                   this.props.onLoading("etext", true)
@@ -7658,7 +7658,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                   props_manifestError={this.props.manifestError} 
                   props_assocResources={this.props.assocResources}
 
-                  { ...{ thatGetLangLabel, thatSetState, uriformat, hoverMenu, onGetContext, ETSBresults:ETSBresults?.filter(r => "bdr:"+r.volumeId === this.props.that?.state?.currentText && (e.seq === undefined || r.startPnum <= e.seq && e.seq <= r.endPnum) && e.start - 5 <= r.startPageCstart && r.startPageCstart <= e.start + 5), imgShift: this.state.imgShift, setImgShift:(n) => this.setState({ imgShift:n }), ETinfo, useGlobalPage } }
+                  { ...{ thatGetLangLabel, thatSetState, uriformat, hoverMenu, onGetContext, ETSBresults:ETSBresults?.filter(r => "bdr:"+r.volumeId === this.props.that?.state?.currentText && (e.seq === undefined || r.startPnum <= e.seq && e.seq <= r.endPnum) && e.start - 5 <= r.startPageCstart && r.startPageCstart <= e.start + 5), imgShift: this.state.imgShift, setImgShift:(n) => this.setState({ imgShift:n }), ETinfo, useGlobalPage, scopeInfo } }
 
                />
          })  }

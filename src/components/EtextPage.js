@@ -29,13 +29,13 @@ function EtextPage(props) {
     thatGetLangLabel, thatSetState, 
     uriformat, hoverMenu, monlamPopup, onGetContext,
     ETSBresults,
-    imgShift = 0, setImgShift, ETinfo, useGlobalPage = false
+    imgShift = 0, setImgShift, ETinfo, useGlobalPage = false, scopeInfo
   } = props
 
-  const {textNumber, globalStartPage } = useMemo(() => { 
+  const {textNumber, globalStartPage, sliceStartChar, sliceEndChar, partType } = useMemo(() => { 
     const elem = ETinfo.find(t => e.id && t["@id"] === shortUri(e.id))
-    return ({ textNumber: elem?.seqNum, globalStartPage: elem?.globalStartPage })
-  }, [ETinfo, e.id])
+    return ({ textNumber: scopeInfo?.[0]?.seqNum ?? elem?.seqNum, globalStartPage: elem?.globalStartPage, sliceStartChar: scopeInfo?.[0]?.sliceStartChar, sliceEndChar: scopeInfo?.[0]?.sliceEndChar, partType: scopeInfo?.[0]?.partType  })
+  }, [ETinfo, e.id, scopeInfo])
 
   let imgSeq = e.seq + imgShift + (useGlobalPage && globalStartPage ? globalStartPage - 1 : 0) 
   if(imgSeq < 1) imgSeq = 1
@@ -248,6 +248,10 @@ function EtextPage(props) {
               onCopy={(ev) => monlamPopup(ev, imgSeq ?? e.start, pageVal)} >
             { state_monlam_hilight}
             {!e.value.match(/[\n\r]/) && !imgSeq ?[<span class="startChar"><span>[&nbsp;<Link to={"/show/"+props_IRI+"?startChar="+e.start+"#open-viewer"}>@{e.start}<span className="visually-hidden">Go to start of page</span></Link>&nbsp;]</span></span>]:null}{(e.chunks?.length?e.chunks:[e.value]).map(f => {
+
+              //console.log("f:",f.cstart,f.cend,sliceStartChar,sliceEndChar,partType,scopeInfo)
+              if(f.cstart >= sliceEndChar || f.cend <= sliceStartChar) return null
+
               let h = f["@value"] ?? f
 
               // feedbucket-integration#128 fix conflict with htmlParse when < or > in chunk
