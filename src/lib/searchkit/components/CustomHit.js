@@ -19,6 +19,7 @@ import { etext_tooltips } from "../pages/Search";
 //import history from "../../../history"
 
 import { getPropLabel, fullUri, getLangLabel, /*highlight,*/ renderDates } from '../../../components/App'
+import { dPrefix } from '../../api'
 import TextToggle from '../../../components/TextToggle'
 import { sortLangScriptLabels, extendedPresets } from '../../../lib/transliterators'
 
@@ -34,7 +35,15 @@ const Hit = ({ hit, label, debug = true }) => {
   );
 };
 
+const typeFromId = (id) => {
+  if (!id) return undefined
+  const prefix = id.match(/^([A-Z]+)/)?.[1]
+  return prefix ? dPrefix["bdr"]?.[prefix] : undefined
+}
+
 const CustomHit = ({ hit, routing, that, sortItems, recent, storage, advanced /*= true*/, isOtherVersions }) => {
+
+  const hitType = hit.type?.[0] ?? typeFromId(hit.objectID)
 
   const [debug, setDebug] = useState(false)
   const [checked, setChecked] = useState(false)
@@ -230,7 +239,7 @@ const CustomHit = ({ hit, routing, that, sortItems, recent, storage, advanced /*
       }
     }          
 
-    if(!["Person","Topic","Place"].includes(hit.type[0])) {
+    if(!["Person","Topic","Place"].includes(hitType)) {
       if(that.props.config) {
         const iiif = that.props.config.iiif.endpoints[that.props.config.iiif.index] ?? "//iiif.bdrc.io"
         const imgPath = iiif+"/bdr:"+(hit.inRootInstance ?? hit.objectID)+"::thumbnail/full/!1000,130/0/default.jpg"
@@ -419,7 +428,7 @@ const CustomHit = ({ hit, routing, that, sortItems, recent, storage, advanced /*
 
   }, [hit, that.props.langPreset, expand, refinementList, sortBy, that.props.location])
  
-  const prop = ["Person","Topic","Place"].includes(hit.type[0])
+  const prop = ["Person","Topic","Place"].includes(hitType)
     ? "prop.tmp:otherName"
     : "prop.tmp:otherTitle"
 
@@ -508,7 +517,7 @@ const CustomHit = ({ hit, routing, that, sortItems, recent, storage, advanced /*
     return collec
   }, [hit, isOtherVersions])
 
-  return (<div class={"result "+hit.type}>        
+  return (<div class={"result "+hitType}>
     <div class="main">
       <Link data-lang={that.props.locale} to={link} className="BG-link" onClick={scrollToTop}><span className="visually-hidden">Go to result page</span></Link>
       <div class={"num-box "+(checked?"checked":"")} onClick={() => setChecked(!checked) }>{hit.__position}</div>
@@ -537,7 +546,7 @@ const CustomHit = ({ hit, routing, that, sortItems, recent, storage, advanced /*
       <div class="data">                 
           <Link to={link} onClick={scrollToTop}>
             <span class="T">
-              { hit.placeType ? getPlaceTypeLabels(hit.placeType) : getPropLabel(that,fullUri("bdr:"+hit.type), true, false, "types."+(hit.type+"").toLowerCase())}
+              { hit.placeType ? getPlaceTypeLabels(hit.placeType) : getPropLabel(that,fullUri("bdr:"+hitType), true, false, "types."+(hitType??"").toLowerCase())}
               { isMetaMatch || etextHits.length == 0
                 ? hit.script && hit.script.map(s => <span title={getPropLabel(that,fullUri('bdo:script'),false)+I18n.t("punc.colon")+" "+getPropLabel(that, fullUri("bdr:"+s), false)} data-lang={s.replace(/.*Script/)}>{s.replace(/^.*Script/,"")}</span>) 
                 : <span>{I18n.t("types.etext")}</span>}
