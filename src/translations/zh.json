@@ -21,7 +21,7 @@
       "titleBDRC3": "中心",
       "archives1": "佛教",
       "archives2": "数字档案馆",
-      "by": "由佛教数字资源中心提供",
+      "by": "",
       "subtitle": "这是一个令佛教文献触手可及的合作平台。请在此探索由BDRC及其合作伙伴们提供的千万页文本吧。",
       "message": "欢迎来到佛教数字资源中心（BDRC）新图书馆的测试版！",
       "submessage": "新功能，新资源，新工具，促进更高效的研究",
@@ -591,7 +591,8 @@
          "alalc97": "ALA-LC转写",
          "latnPinyin": "拼音",
          "piXNdia": "Pali / Burmese / Khmer (transliterated)",
-         "piKhmr": "Pali in Khmer"
+         "piKhmr": "Pali in Khmer",
+         "my": "Burmese"
       },
       "tip": {
          "zh": "中文",
@@ -736,7 +737,7 @@
       "scanF": "扫描件属于",
       "etextF": "电子档属于",
       "openR": "开放记录",
-      "loadP": "加载前面几页",
+      "loadP": "Load previous pages",
       "sameL": "外部资源链接",
       "sameL_plural": "Links to External Resources",
       "gener1pdf": "生成PDF",
