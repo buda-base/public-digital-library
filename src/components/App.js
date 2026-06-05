@@ -318,6 +318,7 @@ export const languages = {
    "km-x-iast":"lang.search.kmXIast",
    "km":"lang.search.km",
    "zh":"lang.search.zh",
+   "my":"lang.search.my",
    "zhHani":"lang.search.zh",
    "zhHant":"lang.search.zhHant",
    "zhHans":"lang.search.zhHans",
@@ -368,6 +369,7 @@ export const langSelect = onKhmerUrl ? [
    "sa-x-iast",
    "sa-deva",
    "en",
+   "my"
    //"pi-x-iast"
 ]
 
@@ -7399,6 +7401,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                      } 
                   }
                   else if(d === "khmr") { presets.push("km");  } 
+                  else if(d === "mymr") { presets.push("my");  } 
                   
                   // #509
                   if(!onKhmerUrl && d === "iast") presets.push("pi-x-ndia")                  

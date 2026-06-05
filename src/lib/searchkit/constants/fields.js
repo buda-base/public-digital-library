@@ -50,7 +50,7 @@ const ALL_FIELDS = [
 ].concat(
   ...highlightableLocalizableFields
     .map(t => (
-      ["en", "bo_x_ewts", "iast", "hani", "khmr"].map(l => ({label:t+"_"+l, highlightable: true}))
+      ["en", "bo_x_ewts", "iast", "hani", "khmr", "mymr"].map(l => ({label:t+"_"+l, highlightable: true}))
     )
   )
 );

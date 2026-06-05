@@ -14,6 +14,9 @@
 var nativeranges = [
 	{"range": [0x0900, 0x097F], "lt": "deva"},
 	{"range": [0x0F00, 0x0FFF], "lt": "tibt"},
+	{"range": [0x1000, 0x109F], "lt": "mymr"},
+	{"range": [0xA9E0, 0xA9FF], "lt": "mymr"},  // Myanmar Extended-B
+	{"range": [0xAA60, 0xAA7F], "lt": "mymr"},  // Myanmar Extended-A
 	{"range": [0x1780, 0x17FF], "lt": "khmr"},
 	{"range": [0x19E0, 0x19FF], "lt": "khmr"},  // https://en.wikipedia.org/wiki/Khmer_Symbols
 	{"range": [0x2E80, 0x2EFF], "lt": "hani"},
