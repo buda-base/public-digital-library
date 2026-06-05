@@ -591,7 +591,8 @@
          "alalc97": "ALA-LC",
          "latnPinyin": "Pinyin",
          "piXNdia": "Pali / Burmese / Khmer (transliterated)",
-         "piKhmr": "Pali in Khmer"
+         "piKhmr": "Pali in Khmer",
+         "my": "Burmese"
       },
       "tip": {
          "zh": "Chinese",
