@@ -990,13 +990,14 @@ class OutlineSearchBar extends Component<Props,State>
    changeOutlineKW(e, value) {
 
       loggergen.log("osb:change:",this,this.props.that)
-
+     
       if(!this.props.that.state) return
 
       if(!value && e) value = e.target.value
-
-      // TODO: handle different language without autocomplete?
-      const language = "bo-x-ewts"
+      
+      // WIP: handle different language without autocomplete
+      const script = this.props.that.getResourceElem(bdo+"script")?.[0]?.value
+      const language = script?.endsWith("Mymr") ? "my" : "bo-x-ewts"
 
       this.setState({ value, language })
 
