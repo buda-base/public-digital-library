@@ -638,7 +638,10 @@
          "xBdrc":"BDRC Translit.",
          "xFemc":"FEMC Translit.",
          "hani": "Original - no conversion",
-         "fr":"French"
+         "fr":"French",
+         "xDcl": "DCL",
+         "xAlalc": "ALA-LC",
+         "xSawada": "Hideo Sawada Translit."
       },
       "x": "បានសរសេរជាសូរស័ព្ទ",
       "latn": "បានសរសេរជាសូរស័ព្ទ"
