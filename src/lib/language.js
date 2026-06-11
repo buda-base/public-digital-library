@@ -16,6 +16,10 @@ export const langScripts = {
    "x-ndia":"lang.langscript.xNdia",
    "x-bdrc":"lang.langscript.xBdrc",
    "x-femc":"lang.langscript.xFemc",
+   "my":"lang.search.my", 
+   "x-dcl":"lang.langscript.xDcl",
+   "x-alalc":"lang.langscript.xAlalc",
+   "x-sawada":"lang.langscript.xSawada",
 }
 
 const dataLangUI = {

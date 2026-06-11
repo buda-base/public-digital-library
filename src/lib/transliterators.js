@@ -38,6 +38,170 @@ export function fromWylie(s) {
     return jsEWTS.fromWylie(s)
 }
 
+// Burmese -> Roman transliteration, ported from my_transliteration.py
+// (ALA-LC and Sawada mappings, Ye Kyaw Thu, LU Lab.)
+// Refs: https://online-resources.aa-ken.jp/resources/detail/IOR000125
+//       http://www.aa.tufs.ac.jp/~sawadah/burroman2.pdf
+//       https://www.loc.gov/catdir/cpso/roman.html
+const sawadaTransliterationMap = {
+   'ဦ': 'uu', 'ော': 'o', 'ို': 'ui', 'ဩော့': 'o.',
+   'ော်': 'o’', 'က': 'k', 'ခ': 'kh', 'ဂ': 'g',
+   'ဃ': 'gh', 'င': 'ng', 'စ': 'c', 'ဆ': 'ch',
+   'ဇ': 'j', 'ဈ': 'jh', 'ည': 'N~', 'ဋ': 'T',
+   'ဌ': 'Th', 'ဍ': 'D', 'ဎ': 'Dh', 'ဏ': 'N',
+   'တ': 't', 'ထ': 'th', 'ဒ': 'd', 'ဓ': 'dh',
+   'န': 'n', 'ပ': 'p', 'ဖ': 'ph', 'ဗ': 'b',
+   'ဘ': 'bh', 'မ': 'm', 'ယ': 'y', 'ရ': 'r',
+   'လ': 'l', 'ဝ': 'w', 'သ': 's', 'ဟ': 'h',
+   'အ': '@', 'ဣ': 'i', 'ဤ': 'ii', 'ဥ': 'u',
+   'ဧ': 'e', 'ဩ': 'o', 'ဪ': 'o’', 'ှ': 'h',
+   'ျ': 'y', 'ြ': 'r', 'ွ': 'w', '္': '=',
+   'ိ': 'i', 'ု': 'u', 'ေ': 'e', 'ာ': 'aa',
+   'ါ': 'aa', 'ဉ': 'n~',
+   'ီ': 'ii', 'ူ': 'uu', '်': '’', 'ဲ': 'Y',
+   'ံ': 'M', '့': '.', 'း': ':', 'ဿ': 's=s',
+   '၏': '\\i’', '၍': '\\rw’', '၌': '\\nh’', '၎': '\\l',
+   '၊': '|', '။': '||',
+   '၁': '1', '၂': '2', '၃': '3', '၄': '4', '၅': '5',
+   '၆': '6', '၇': '7', '၈': '8', '၉': '9', '၀': '0'
+}
+
+const alalcTransliterationMap = {
+   'ဦ': 'ū', 'ော': 'o', 'ို': 'ui', 'ဩော့': 'o‘',
+   'ော်': 'o‘', 'က': 'k', 'ခ': 'kh', 'ဂ': 'g',
+   'ဃ': 'gh', 'င': 'ṅ', 'စ': 'c', 'ဆ': 'ch',
+   'ဇ': 'j', 'ဈ': 'jh', 'ည': 'ññ', 'ဋ': 'ṭ',
+   'ဌ': 'ṭh', 'ဍ': 'ḍ', 'ဎ': 'ḍh', 'ဏ': 'ṇ',
+   'တ': 't', 'ထ': 'th', 'ဒ': 'd', 'ဓ': 'dh', 'န': 'n',
+   'ပ': 'p', 'ဖ': 'ph', 'ဗ': 'b', 'ဘ': 'bh',
+   'မ': 'm', 'ယ': 'y', 'ရ': 'r', 'လ': 'l',
+   'ဝ': 'v', 'သ': 's', 'ဟ': 'h', 'အ': '‘A', '္': '',
+   'ာ': 'ā', 'ါ': 'ā', 'ဉ': 'ñ', 'ိ': 'i', 'ီ': 'ī', 'ု': 'u',
+   'ူ': 'ū', 'ေ': 'e', 'ဲ': 'ai', 'ဣ': 'i',
+   'ဤ': 'ī', 'ဥ': 'u', 'ဧ': 'e', 'ဩ': 'o',
+   'ဪ': 'o‘', 'ျ': 'y', 'ြ': 'r', 'ွ': 'w',
+   'ှ': 'h', '်': '’', 'ံ': 'ṃ', '့': '.', 'း': '"',
+   'ဿ': 'ss', '၏': 'e*', '၍': 'r*', '၌': 'n*', '၎': 'l*',
+   '၊': ',', '။': '.',
+   '၁': '1', '၂': '2', '၃': '3', '၄': '4', '၅': '5',
+   '၆': '6', '၇': '7', '၈': '8', '၉': '9', '၀': '0'
+}
+
+function transliterateBurmeseWith(text, mapping) {
+   let result = ""
+   let i = 0
+   while (i < text.length) {
+      let matched = false
+      for (let length = 3; length >= 1; length--) {
+         const chunk = text.substr(i, length)
+         if (i + length <= text.length && mapping[chunk] !== undefined) {
+            result += mapping[chunk]
+            i += length
+            matched = true
+            break
+         }
+      }
+      if (!matched) {
+         const ch = text[i]
+         result += (mapping[ch] !== undefined ? mapping[ch] : ch)
+         i += 1
+      }
+   }
+   return result
+}
+
+export function sawadaTransliteration(burmeseText) {
+   return transliterateBurmeseWith(burmeseText, sawadaTransliterationMap)
+}
+
+export function alalcTransliteration(burmeseText) {
+   return transliterateBurmeseWith(burmeseText, alalcTransliterationMap)
+}
+
+// Burmese (Unicode) -> DCL Standard transliteration, per the FPL guidelines
+// (DCL/DHARMA scheme). Adds the inherent vowel 'a', handles stacking (virama),
+// kinzi, medials and diacritics. Meant as a user-friendly romanization of
+// Burmese-script names/titles.
+// Notes / simplifications:
+//  - asat (devowelizer) -> "·"  (U+00B7)
+//  - medial wa ွ -> "v", consonant ဝ -> "v", အ -> "q"  (per doc)
+//  - medials emitted in encounter order (~ y/r/v/h), no extra reordering
+//  - original spaces are kept as-is (the doc's "#" convention is for catalog
+//    input, not for a friendly display)
+const DCL_CONS = {
+   'က':'k','ခ':'kh','ဂ':'g','ဃ':'gh','င':'ṅ','စ':'c','ဆ':'ch','ဇ':'j','ဈ':'jh',
+   'ည':'ññ','ဉ':'ñ','ဋ':'ṭ','ဌ':'ṭh','ဍ':'ḍ','ဎ':'ḍh','ဏ':'ṇ',
+   'တ':'t','ထ':'th','ဒ':'d','ဓ':'dh','န':'n','ပ':'p','ဖ':'ph','ဗ':'b','ဘ':'bh',
+   'မ':'m','ယ':'y','ရ':'r','လ':'l','ဝ':'v','သ':'s','ဟ':'h','ဠ':'ḷ',
+   // အ is the zero-onset vowel carrier: kept silent so the (inherent or
+   // dependent) vowel shows through -> "abhidhān" rather than the strict-DCL
+   // machine marker "qabhidhān". Switch to 'q' if reversibility is needed.
+   'အ':''
+}
+const DCL_INDEP = { 'ဣ':'i','ဤ':'ī','ဥ':'u','ဦ':'ū','ဧ':'e','ဩ':'o','ဪ':'o‘' }
+const DCL_MEDIAL = { 'ျ':'y','ြ':'r','ွ':'v','ှ':'h' } // U+103B..U+103E
+const DCL_VOWEL = { 'ာ':'ā','ါ':'ā','ိ':'i','ီ':'ī','ု':'u','ူ':'ū','ေ':'e','ဲ':'ai','ဳ':'ē' }
+const DCL_VOWEL2 = { 'ော':'o','ို':'ui' }   // 2 codepoints
+const DCL_VOWEL3 = { 'ော်':'o‘' }            // 3 codepoints (incl. asat)
+const DCL_DIGIT = { '၀':'0','၁':'1','၂':'2','၃':'3','၄':'4','၅':'5','၆':'6','၇':'7','၈':'8','၉':'9' }
+const DCL_ASAT = '်', DCL_VIRAMA = '္'
+const DCL_ANUSVARA = 'ံ', DCL_DOT = '့', DCL_VISARGA = 'း'
+const DCL_KINZI = 'င' + DCL_ASAT + DCL_VIRAMA // U+1004 U+103A U+1039
+
+export function dclTransliteration(text) {
+   if (!text) return text
+   let out = ""
+   let i = 0
+   const n = text.length
+   while (i < n) {
+      // kinzi: ṅ with nothing before the next consonant
+      if (text.substr(i, 3) === DCL_KINZI) { out += 'ṅ'; i += 3; continue }
+
+      const c = text[i]
+      if (DCL_CONS[c] !== undefined) {
+         out += DCL_CONS[c]; i++
+         // medials
+         let med = ""
+         while (i < n && DCL_MEDIAL[text[i]] !== undefined) { med += DCL_MEDIAL[text[i]]; i++ }
+         // vowel + diacritics
+         let vowel = "", hasVowel = false, killed = false, asat = "", post = ""
+         let consuming = true
+         while (i < n && consuming) {
+            const v3 = text.substr(i, 3), v2 = text.substr(i, 2), v1 = text[i]
+            if (!hasVowel && DCL_VOWEL3[v3] !== undefined) { vowel = DCL_VOWEL3[v3]; hasVowel = true; i += 3 }
+            else if (!hasVowel && DCL_VOWEL2[v2] !== undefined) { vowel = DCL_VOWEL2[v2]; hasVowel = true; i += 2 }
+            else if (!hasVowel && DCL_VOWEL[v1] !== undefined) { vowel = DCL_VOWEL[v1]; hasVowel = true; i++ }
+            else if (v1 === DCL_ASAT) { asat = '·'; i++ }
+            else if (v1 === DCL_VIRAMA) { killed = true; i++; consuming = false } // stack with next consonant
+            else if (v1 === DCL_ANUSVARA || v1 === DCL_DOT) { post += 'ṃ'; i++ }
+            else if (v1 === DCL_VISARGA) { post += 'ḥ'; i++ }
+            else consuming = false
+         }
+         // inherent 'a' unless an explicit vowel, an asat, or a stack killed it
+         if (!hasVowel && !asat && !killed) vowel = 'a'
+         out += med + vowel + asat + post
+      }
+      else if (DCL_INDEP[c] !== undefined) {
+         out += DCL_INDEP[c]; i++
+         while (i < n) {
+            const v1 = text[i]
+            if (v1 === DCL_ASAT) { out += '·'; i++ }
+            else if (v1 === DCL_ANUSVARA || v1 === DCL_DOT) { out += 'ṃ'; i++ }
+            else if (v1 === DCL_VISARGA) { out += 'ḥ'; i++ }
+            else break
+         }
+      }
+      else if (DCL_DIGIT[c] !== undefined) { out += DCL_DIGIT[c]; i++ }
+      else if (c === '၊') { out += ','; i++ }
+      else if (c === '။') { out += '.'; i++ }
+      else { out += c; i++ }
+   }
+   return out
+}
+
+
+
+
 export const transliterators = {
    "bo": { "bo-x-ewts": (val) => jsEWTS.toWylie(val) },
    "bo-tibt": { "bo-x-ewts": (val) => jsEWTS.toWylie(val) },
@@ -90,6 +254,12 @@ export const transliterators = {
 
    "km":{ "km-x-iast": (val) => Sanscript.t(val,"khmer","iast") },
    "km-x-iast":{ "km": (val) => Sanscript.t(val,"iast","khmer") },
+
+   "my":{
+      "my-x-dcl": (val) => dclTransliteration(val),
+      "my-x-alalc": (val) => alalcTransliteration(val),
+      "my-x-sawada": (val) => sawadaTransliteration(val)
+   },
 
    // quickfix for new search results
 

@@ -56,6 +56,7 @@ const langSettings = {
    "inc": [ "deva", "newa", "sinh", "x-iast" ],
    "km":  [ "-", "x-twktt", "x-iast" ],  
    "pi": [ "deva", "newa", "sinh", "x-iast" ],
+   "my": [ "-", "x-dcl", "x-alalc", "x-sawada" ],
 }
 
 
