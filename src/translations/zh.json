@@ -21,7 +21,7 @@
       "titleBDRC3": "中心",
       "archives1": "佛教",
       "archives2": "数字档案馆",
-      "by": "",
+      "by": "由佛教数字资源中心提供",
       "subtitle": "这是一个令佛教文献触手可及的合作平台。请在此探索由BDRC及其合作伙伴们提供的千万页文本吧。",
       "message": "欢迎来到佛教数字资源中心（BDRC）新图书馆的测试版！",
       "submessage": "新功能，新资源，新工具，促进更高效的研究",
@@ -59,7 +59,7 @@
       "works-by-female-authors":"Works by female authors",
       "instances-by-female-authors":"Versions by female authors",
       "collec":"<h>BDRC offers a digital acquisition program for research libraries, the Core Text Collection (CTC), now with an updated interface for convenient searching and browsing.</h><h><bold>Each of the 18 CTC hard drives contains curated volumes from BDRC’s holdings curated by our librarians and drawn from our most recent acquisitions.</bold></h><h>Please ask your institution’s librarian about subscribing.<nl/>For more information and assistance, email <lk href='mailto:dechen@bdrc.io'>dechen@bdrc.io</lk>.</h>",
-      "buda":"The Buddhist Digital Archives",
+      "buda":"佛教数字档案馆",
       "subtitle_new":"Access almost any text from the major Buddhist traditions. BUDA contains 30 million pages scanned from the precious originals, and 5 million pages of etexts."
    },
    "types": {
@@ -740,7 +740,7 @@
       "scanF": "扫描件属于",
       "etextF": "电子档属于",
       "openR": "开放记录",
-      "loadP": "Load previous pages",
+      "loadP": "加载前面几页",
       "sameL": "外部资源链接",
       "sameL_plural": "Links to External Resources",
       "gener1pdf": "生成PDF",
