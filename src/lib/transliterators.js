@@ -261,6 +261,12 @@ export const transliterators = {
       "my-x-sawada": (val) => sawadaTransliteration(val)
    },
 
+   "mymr":{
+      "my-x-dcl": (val) => dclTransliteration(val),
+      "my-x-alalc": (val) => alalcTransliteration(val),
+      "my-x-sawada": (val) => sawadaTransliteration(val)
+   },
+
    // quickfix for new search results
 
    "hani":{ 
