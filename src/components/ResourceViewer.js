@@ -10937,7 +10937,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
 
       //loggergen.log("chunks?",hasChunks,accessET)
 
-      let etextAccessError = !accessET || this.props.etextErrors && this.props.etextErrors[this.props.IRI] && [401, 403].includes(this.props.etextErrors[this.props.IRI])
+      let etextAccessError = !accessET && (!this.props.auth || !isGroup(this.props.auth, "fullaccess")) || this.props.etextErrors && this.props.etextErrors[this.props.IRI] && [401, 403].includes(this.props.etextErrors[this.props.IRI])
 
       let resType = this.getResourceElem(rdf+"type"), topLevel = false
       if(resType && resType.some(e=> e.value?.endsWith("EtextInstance"))) {
