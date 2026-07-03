@@ -369,7 +369,7 @@ export class TraditionViewer extends Component<State, Props>
 
     const filters = {
       "bo":"script:ScriptDbuCan OR script:ScriptDbuMed OR script:ScriptTibt",
-      "pi":"language:LangPi OR language:LangKm OR script:ScriptKhmr",
+      "pi":"language:LangPi OR language:LangKm OR script:ScriptKhmr OR script:ScriptMymr OR inCollection:PR1FPL01 OR inCollection:PR1KDPP00 AND type:Instance",
       "sa":"language:LangSa",
       "zh":"language:LangZh"
     }
