@@ -997,7 +997,11 @@ class OutlineSearchBar extends Component<Props,State>
       
       // WIP: handle different language without autocomplete
       const script = this.props.that.getResourceElem(bdo+"script")?.[0]?.value
-      const language = script?.endsWith("Mymr") ? "my" : "bo-x-ewts"
+      const language = script?.endsWith("Mymr") 
+         ? !script.match(/[a-z]/) 
+            ? "my" 
+            : "pi-x-ndia" 
+         : "bo-x-ewts"
 
       this.setState({ value, language })
 
@@ -1035,6 +1039,9 @@ class OutlineSearchBar extends Component<Props,State>
    render() {
 
       loggergen.log("osb:",this,this.props,this.state)
+
+      const script = this.props.that.getResourceElem(bdo+"script")?.[0]?.value
+      const isMymr = script?.endsWith("Mymr") 
 
       return (
          <div class="search">
@@ -1098,7 +1105,9 @@ class OutlineSearchBar extends Component<Props,State>
                            onClick={(item) => {
                               console.log("item!",item)
                               const value = item.res.replace(/<[^>]*>/g,"")
-                              const language = (item.lang ?? this.state.language).replace(/_/g,"-")
+                              let language = (item.lang ?? this.state.language).replace(/_/g,"-")
+                              if(language === "en" && isMymr) language = "pi-x-ndia"
+                              else if(language === "mymr") language = "my"
                               this.search(item,language,value)
                            }}
                            setIsFocused={(f) => { if(!f) this.setState({autocomplete: undefined}) } }
@@ -4443,6 +4452,8 @@ class ResourceViewer extends Component<Props,State>
                         <Link to={"/show/"+this.props.IRI+"?startChar="+tLab.start+(this.props.highlight?'&keyword="'+this.props.highlight.key+'"@'+this.props.highlight.lang:"")+"#open-viewer"}>@{tLab.start}<span className="visually-hidden">Go to @{tLab.start} page</span></Link>
                      </span>&nbsp;]</span>,<br/> ]
                   else tmp = []
+                  
+                  if(Array.isArray(tVal)) tVal = tVal.map(t => t["@value"]).join("; ")
                   
                   if(tmp.length || tVal.match(/[↦↤]/)) tmp.push(highlight(tVal,null,null,false /*true*/))
                   else tmp.push(this.fullname(tVal))
