@@ -4,6 +4,7 @@ import { ResizableBox } from 'react-resizable';
 import TextField from '@material-ui/core/TextField';
 import type Auth from '../Auth';
 import _ from "lodash";
+import { appPathname, isHomePath, HOME_PATH } from "../lib/appPath";
 import IconButton from '@material-ui/core/IconButton';
 import Tooltip from '@material-ui/core/Tooltip';
 import React, { Component } from 'react';
@@ -1238,12 +1239,14 @@ export function top_right_menu(that,etextTitle,backUrl,etextres,isMirador,locati
 
    let logo = [
             <div id="logo">
-               <Link to="/?sortBy=firstScanSyncDate_desc&type%5B0%5D=Instance" {...(that?.props?.advancedSearch || that?.state?.filters || that?.props?.keyword) ? {onClick:(ev) => { 
+               {/* The home's default search state is part of the link; only the
+                   path follows HOME_PATH. */}
+               <Link to={HOME_PATH + "?sortBy=firstScanSyncDate_desc&type%5B0%5D=Instance"} {...(that?.props?.advancedSearch || that?.state?.filters || that?.props?.keyword) ? {onClick:(ev) => {
                   if(that.props.keyword) { that.props.onResetSearch(); } 
                   that.setState({blurSearch:false, forceFocus: true})
                   /*
                   if(that?.state?.filters) {
-                     that.props.navigate({pathname:"/",search:""}); 
+                     that.props.navigate({pathname: HOME_PATH, search:""}); 
                      ev.preventDefault()
                      ev.stopPropagation()
                      return false
@@ -1512,9 +1515,10 @@ export function top_right_menu(that,etextTitle,backUrl,etextres,isMirador,locati
 
       let khmerLinks 
       if(onKhmerServer) {
-         const setCurrent = (route) => (window.location.pathname === route ? {className:"current"}:{})
+         // appPathname: the routes below are router paths, without PUBLIC_URL.
+         const setCurrent = (route) => (appPathname() === route ? {className:"current"}:{})
          khmerLinks = <div class="links">
-            <Link {...setCurrent("/")} to={"/"} ><span className="visually-hidden">Go to homepage</span>{I18n.t("topbar.home")}</Link> 
+            <Link {...setCurrent(HOME_PATH)} to={HOME_PATH} ><span className="visually-hidden">Go to homepage</span>{I18n.t("topbar.home")}</Link> 
             <Link {...setCurrent("/guidedsearch")} to={"/guidedsearch"} ><span className="visually-hidden">Go to Guided search page</span>{I18n.t("topbar.guided")}</Link> 
             <Link {...setCurrent("/browse")} to={"/browse"} ><span className="visually-hidden">Go to Browse page</span>{I18n.t("topbar.browse")}</Link> 
             <Link {...setCurrent("/static/aboutkm")} to={"/static/aboutkm"} ><span className="visually-hidden">Go to About page</span>{I18n.t("topbar.about")}</Link> 
@@ -1523,7 +1527,7 @@ export function top_right_menu(that,etextTitle,backUrl,etextres,isMirador,locati
       }
 
       const newSearchFunc = (ev) => { 
-         that.props.navigate({pathname:"/",search:""}); 
+         that.props.navigate({pathname: HOME_PATH, search:""}); 
          if(that.props.keyword) { that.props.onResetSearch();}
          if(window.innerWidth > 0)  setTimeout(() => {
             $("#search-bar input").click()
@@ -1535,7 +1539,7 @@ export function top_right_menu(that,etextTitle,backUrl,etextres,isMirador,locati
 
       const aboutLink = (id) => <a {...{id}}  href={"https://bdrc.io"} target="_blank" rel="noopener noreferrer"><span className="visually-hidden">Go to BDRC About page</span>{I18n.t("topbar.about")}</a>
 
-      const newSearchLink = (id) => <Link {...{id}} to="/" onClick={newSearchFunc}>
+      const newSearchLink = (id) => <Link {...{id}} to={HOME_PATH} onClick={newSearchFunc}>
             <span className="visually-hidden">Go to search page</span>
             <span>{I18n.t("topbar.search")}</span>
             { id && <SearchIcon  style={{ fill:"#d73449", width:"32px", height:"32px" }} /> }
@@ -7616,7 +7620,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
       let infoPanelH, infoPanelR
       
       if(this.props.config && this.props.config.msg && !this.props.simple && !this.props.preview) {
-         if(message.length == 0 && !this.props.loading && !this.props.keyword) infoPanelH = this.props.config.msg.filter(m => m.display && m.display.includes("home") && this.props.location.pathname === "/" )
+         if(message.length == 0 && !this.props.loading && !this.props.keyword) infoPanelH = this.props.config.msg.filter(m => m.display && m.display.includes("home") && isHomePath(this.props.location.pathname) )
          else infoPanelR = this.props.config.msg.filter(m => m.display && ["search"].some(p => m.display.includes(p))&& this.props.location.pathname === "/search"  )
          
          if(infoPanelH && infoPanelH.length) infoPanelH = renderBanner(this, infoPanelH)
@@ -7800,7 +7804,10 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                         data-caption='Photo by Ven. Matthieu Ricard'>
                         {/* <img alt="BDRC logo" src="/logo.svg" style={{width:"200px"}} /> */}
                         {/* <img alt="home hero" src="/pichome.jpg" /> */}
-                        <img alt="library hero" src="library-hero.jpg" />
+                        {/* Absolute, via PUBLIC_URL: a relative src resolves
+                            against the current URL and breaks on "/buda"
+                            (no trailing slash). */}
+                        <img alt="library hero" src={process.env.PUBLIC_URL + "/library-hero.jpg"} />
                         <div>
                            <div>
                               {/* { I18n.t("home.BUDA") } */}
@@ -7872,7 +7879,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                   <SearchBar       
                      innerRef={this._refs.barRef}           
                      placeholder={I18n.t("home.search")}                        
-                     closeIcon={<Close className="searchClose" style={ {color:"rgba(0,0,0,1.0)",opacity:1} } onClick={() => { this.props.navigate({pathname:"/",search:""}); this.props.onResetSearch();} }/>}
+                     closeIcon={<Close className="searchClose" style={ {color:"rgba(0,0,0,1.0)",opacity:1} } onClick={() => { this.props.navigate({pathname: HOME_PATH, search:""}); this.props.onResetSearch();} }/>}
                      disabled={this.props.hostFailure}
                      onClick={(ev) => { changeKW(this.state.keyword?lucenequerytokeyword(this.state.keyword):""); $("#search-bar input[type=text][placeholder]").attr("placeholder",I18n.t("home.start"));  } }
                      onBlur={(ev) => { loggergen.log("BLUR"); setTimeout(() => { 

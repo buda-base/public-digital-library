@@ -3,6 +3,7 @@ import Script from 'react-load-script';
 import AppContainer from './containers/AppContainer';
 import React, { Component, useContext, useEffect } from 'react';
 import { Route, BrowserRouter, Routes, useLocation, useNavigate, useParams } from 'react-router-dom';
+import { HOME_PATH, PUBLIC_PREFIX } from './lib/appPath';
 //import history from './history';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import indigo from '@material-ui/core/colors/indigo';
@@ -151,7 +152,9 @@ class LogErrorBoundary extends React.Component {
     render() {
       if (this.state.hasError) {
         // Vous pouvez afficher n'importe quelle UI de repli.
-        return <h1>We're sorry but the website encountered an unexpected error.<br/>Go to <a href="/"><span className="visually-hidden">Go to homepage</span>homepage</a></h1>
+        // Raw href (full page load), so it needs the PUBLIC_URL prefix that
+        // react-router's basename adds for <Link>.
+        return <h1>We're sorry but the website encountered an unexpected error.<br/>Go to <a href={PUBLIC_PREFIX + HOME_PATH}><span className="visually-hidden">Go to homepage</span>homepage</a></h1>
       }
   
       return this.props.children;
@@ -555,7 +558,9 @@ function ViewResourceCompo() {
 const makeMainRoutes = () => {
 
    // #767
-   return (<ClearCacheProvider duration={ 10 * 60 * 1000 } auto={true} >
+   // basePath: meta.json is fetched from "<basePath>/meta.json", which defaults
+   // to the server root and 404s when the app is served under a sub-path.
+   return (<ClearCacheProvider duration={ 10 * 60 * 1000 } auto={true} basePath={process.env.PUBLIC_URL} >
       <UserAgentProvider ua={window.navigator.userAgent}>
          <Provider store={store}>
            <MuiThemeProvider theme={theme}>
@@ -563,9 +568,14 @@ const makeMainRoutes = () => {
               <UAContextHook/>
               <VersionChecker /> 
               <LogErrorBoundary>              
-               <BrowserRouter /*navigation={history} location={history.location}*/ >
+               {/* basename follows PUBLIC_URL / package.json "homepage" — the single
+                   knob for the sub-path the app is served under ("/" at the root). */}
+               <BrowserRouter basename={process.env.PUBLIC_URL || "/"} /*navigation={history} location={history.location}*/ >
                   <Routes>
                      <Route path="/" element={<HomeCompo />} />
+                     {/* The landing page owns "/" on the shared server root, so
+                         this app's home lives at /buda. */}
+                     <Route path="/buda" element={<HomeCompo />} />
                      
                      <Route path="/show/:IRI" element={<ResourceCompo />} />
                      <Route path="/osearch/search" element={<BaseOSCompo /> } />

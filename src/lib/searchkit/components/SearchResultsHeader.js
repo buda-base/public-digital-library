@@ -4,6 +4,7 @@ import React, {useEffect} from "react"
 import { useInstantSearch, useConfigure } from "react-instantsearch";
 import { Link } from "react-router-dom"
 import { useLocation, useNavigate } from "react-router"
+import { isHomePath } from "../../appPath"
 import { Trans } from 'react-i18next'
 import I18n from 'i18next';
 import Loader from 'react-loader';
@@ -34,7 +35,7 @@ function SearchResultsHeader(props) {
   const navigate = useNavigate()
 
   useEffect(() => {
-    if(location.pathname === '/' && location.search === "") {
+    if(isHomePath(location.pathname) && location.search === "") {
       setIndexUiState((prevIndexUiState) => ({
         ...prevIndexUiState,
         refinementList: {

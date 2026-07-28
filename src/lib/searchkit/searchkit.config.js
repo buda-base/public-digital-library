@@ -12,6 +12,7 @@ import {
 import { FACET_ATTRIBUTES } from "./constants/facets";
 
 import { lucenequerytokeyword } from "../../components/App";
+import { appPathname, isHomePath, PUBLIC_PREFIX } from "../appPath";
 
 const CONNECTION = {
   host: process.env.REACT_APP_ELASTICSEARCH_HOST,
@@ -50,20 +51,24 @@ class MyTransporter extends ESTransporter {
   }
 
   async msearch(requests): Promise {
-    
-    if( 
+
+    // Route-relative path: window.location.pathname would carry the PUBLIC_URL
+    // prefix and never match these literals when served under a sub-path.
+    const path = appPathname()
+
+    if(
         // quickfix for not triggering default query on homepage
-        window.location.pathname != "/osearch/search" 
-        && !window.location.pathname.startsWith("/tradition") 
-        && window.location.pathname != "/" 
+        path != "/osearch/search"
+        && !path.startsWith("/tradition")
+        && !isHomePath(path)
         && !requests?.some(r => r.request.params.query || r.request.params.filters)
-        || 
-        window.location.pathname.startsWith("/show")
-        && !requests?.some(r => r.request.params.filters)         
         ||
-        window.location.pathname == "/search" 
+        path.startsWith("/show")
+        && !requests?.some(r => r.request.params.filters)
         ||
-        window.location.pathname == "/simplesearch" 
+        path == "/search"
+        ||
+        path == "/simplesearch"
       ) return [
       {
           "_shards": {
@@ -244,6 +249,10 @@ const routingConfig = () => ({
     createURL({ qsModule, location, routeState }) {
       
       let { origin, pathname, hash, search } = location, url;
+      // Match on the route-relative path, and put PUBLIC_PREFIX back when
+      // building the URL — otherwise the "/osearch/search" rewrite below would
+      // send the browser outside the app.
+      pathname = appPathname(pathname)
       if(!pathname.startsWith("/search") && !pathname.startsWith("/simplesearch")) {
 
         if(pathname.startsWith("/search") 
@@ -253,7 +262,7 @@ const routingConfig = () => ({
         const indexState = routeState['instant_search'] || {};
         const queryString = qsModule.stringify({ ...qsModule.parse(search.replace(/^\?/,""))??{}, ...routeState});
 
-        url = `${origin}${pathname}?${queryString}${hash}`;      
+        url = `${origin}${PUBLIC_PREFIX}${pathname}?${queryString}${hash}`;
         
         //console.log("cURL:", search, qsModule.parse(search), queryString, url, location, routeState, indexState, search)
 

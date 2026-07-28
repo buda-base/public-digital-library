@@ -4,7 +4,7 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import AppContainer from './containers/AppContainer';
 import { helloWorld } from './state/ui/actions';
-import registerServiceWorker from './lib/registerServiceWorker';
+import { unregister as unregisterServiceWorker } from './lib/registerServiceWorker';
 
 // Material-UI
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
@@ -210,7 +210,14 @@ const theme = createMuiTheme({
     }
 });
 
-registerServiceWorker();
+/*
+ * No service worker: this app shares the server root with the landing page, so a
+ * worker scoped at "/" would answer every navigation with the cached
+ * index.html — the landing's — and /show/… would never reach this app.
+ * unregister() also cleans up workers already installed on visitors' browsers.
+ * Version updates keep working through react-clear-cache (meta.json).
+ */
+unregisterServiceWorker();
 
 const go = () => {
 

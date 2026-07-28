@@ -136,6 +136,7 @@ import { Helmet } from "react-helmet"
 // error when using after build: "Uncaught ReferenceError: s is not defined"
 // => fixed by upgrading react-scripts
 import Cite from 'citation-js'
+import { HOME_PATH } from "../lib/appPath"
 let citationConfig ;
 
 // for full debug, type this in the console:
@@ -10969,8 +10970,8 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
       }
 
       const breadcrumbs = [
-         <Link to="/" onClick={(ev) => { 
-            this.props.navigate({pathname:"/",search:""}); 
+         <Link to={HOME_PATH} onClick={(ev) => { 
+            this.props.navigate({pathname: HOME_PATH, search:""}); 
             if(this.props.keyword) { this.props.onResetSearch(); } 
             this.setState({blurSearch:false, forceFocus: true})
             ev.preventDefault()

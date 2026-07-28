@@ -8,6 +8,7 @@ import IconButton from '@material-ui/core/IconButton';
 import SearchIcon from '@material-ui/icons/Search';
 
 import { keywordtolucenequery, lucenequerytokeyword } from "./App"
+import { HOME_PATH } from "../lib/appPath"
 
 let timer;
 const debounce = (func, timeout = 300) => {
@@ -114,9 +115,9 @@ export default function AutocompleteKeywordInput(props) {
       </>}  
       { that.state.filters 
         ? <span style={{cursor: "pointer"}} onClick={() => that.props.onAdvancedSearch(true)}>Advanced search</span>
-        : <Link to="/" onClick={(ev) => { 
+        : <Link to={HOME_PATH} onClick={(ev) => { 
           that.props.onAdvancedSearch(true)
-          that.props.history.push({pathname:"/",search:""}); 
+          that.props.history.push({pathname: HOME_PATH, search:""}); 
           if(that.props.keyword) { that.props.onResetSearch();}
           if(window.innerWidth > 800 && !that.state.filters)  setTimeout(() => {
              $("#search-bar input").click()

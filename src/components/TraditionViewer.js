@@ -22,6 +22,7 @@ import InnerSearchPageContainer from '../containers/InnerSearchPageContainer'
 import { fetchLabels } from "../lib/searchkit/api/LabelAPI";
 
 import { topics } from "../lib/topics"
+import { HOME_PATH } from "../lib/appPath"
 
 const loggergen = new logdown('gen', { markdown: false });
 
@@ -457,7 +458,7 @@ export class TraditionViewer extends Component<State, Props>
       */
 
       const tradi = this.props.config?.tradition && this.props.config?.tradition[this.props.tradition]    
-      let content = [], breadcrumbs = [<Link data-lang={this.props.locale} to="/">{I18n.t("topbar.home")}<span className="visually-hidden">Go to home page</span></Link>]                
+      let content = [], breadcrumbs = [<Link data-lang={this.props.locale} to={HOME_PATH}>{I18n.t("topbar.home")}<span className="visually-hidden">Go to home page</span></Link>]                
 
       //console.log("tradi:",tradi,content,this.props)
 
