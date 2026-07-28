@@ -8211,7 +8211,9 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                            <a href={"https://bdrc.io/donation?lang="+corpo_lang} target="_blank" rel="noopener noreferrer" /*rel="nofollow"*/>{I18n.t("topbar.donate2")}</a>
                            <span className="visually-hidden">Go to Donation page</span>
                         </div>
-                        <h3>{I18n.t("tradition.recent")}</h3> 
+                        {/* Anchor target: the landing page links here as
+                            /buda#recent-acquisitions (see HASH_SCROLL in routes.js). */}
+                        <h3 id="recent-acquisitions">{I18n.t("tradition.recent")}</h3>
                         <InnerSearchPageContainer /*noScrollFilters={true}*/ customPholder={I18n.t("resource.searchTtrad", {trad:I18n.t("tradition.title.recent"),interpolation: {escapeValue: false} }) } forceSearch={true} location={this.props.location} auth={this.props.auth} isOsearch={true} recent={true} />
                            
                      </List> 

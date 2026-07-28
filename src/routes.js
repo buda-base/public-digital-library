@@ -258,15 +258,52 @@ function Compo() {
    return <div>youpi</div>
 }
 
+/*
+ * The browser resolves location.hash while parsing the document, long before
+ * React has rendered the target, so anchors into this app (the landing page links
+ * to /buda#recent-acquisitions) would do nothing. Scroll to it once it exists:
+ * immediately if it is already there, otherwise when it shows up — parts of the
+ * home arrive asynchronously with the search results.
+ *
+ * Auth0 returns its tokens in the hash (#access_token=…), which is not an anchor:
+ * anything containing "=" or "&" is left alone.
+ */
+const HASH_SCROLL_TIMEOUT = 5000
+
+function useHashScroll(hash) {
+   useEffect(() => {
+      const id = (hash || "").replace(/^#/, "")
+      if (!id || /[=&]/.test(id)) return
+
+      const scrollToTarget = () => {
+         const target = document.getElementById(id)
+         if (!target) return false
+         target.scrollIntoView({ behavior: "smooth", block: "start" })
+         return true
+      }
+      if (scrollToTarget()) return
+
+      let observer, timer
+      const stop = () => { if (observer) observer.disconnect(); clearTimeout(timer) }
+      observer = new MutationObserver(() => { if (scrollToTarget()) stop() })
+      timer = setTimeout(stop, HASH_SCROLL_TIMEOUT)
+
+      observer.observe(document.body, { childList: true, subtree: true })
+      return stop
+   }, [hash])
+}
+
 function HomeCompo(props = {}) {
    const location = useLocation();
    const navigate = useNavigate();
- 
+
    useEffect(() => {
      store.dispatch(initiateApp(qs.parse(location.search)));
-   }, [location]); 
+   }, [location]);
 
-   return <AppContainer { ...{ ...props, location, navigate, auth } }/> 
+   useHashScroll(location.hash)
+
+   return <AppContainer { ...{ ...props, location, navigate, auth } }/>
 }
  
 function SimpleAdvancedSearchCompo() {
