@@ -1252,7 +1252,7 @@ export function top_right_menu(that,etextTitle,backUrl,etextres,isMirador,locati
                      return false
                   }
                   */
-               }}:{}} ><span className="visually-hidden">Go to homepage</span><img alt="BUDA icon" src="/icons/BUDA-small.svg"/><span class="buda-caption"><span>BUDA</span><span class="buda-small">{I18n.t("home.buda")}</span></span></Link>                                  
+               }}:{}} ><span className="visually-hidden">Go to homepage</span><img alt="BUDA icon" src="/logo.svg"/><span class="buda-caption"><span>BUDA</span><span class="buda-small">{I18n.t("home.buda")}</span></span></Link>                                  
                
                {/* <a id="by">
                   <span>by</span></a>

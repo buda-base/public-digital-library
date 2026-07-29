@@ -77,7 +77,7 @@ const SearchBoxAction = ({ inputValue, isSearchStalled, refine, pageFilters, onR
     <>
       <button type="submit" className="ais-SearchBox-submit" 
         onClick={()=> redirect(refine, inputValue, pageFilters, navigate, location, forceSearch)}>
-          Submit
+          {I18n.t("home.search")}
       </button>
       <button
         className="ais-SearchBox-reset"

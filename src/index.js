@@ -5,6 +5,7 @@ import './index.css';
 import AppContainer from './containers/AppContainer';
 import { helloWorld } from './state/ui/actions';
 import { unregister as unregisterServiceWorker } from './lib/registerServiceWorker';
+import { initSerifFont } from './lib/serifFont';
 
 // Material-UI
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
@@ -220,6 +221,8 @@ const theme = createMuiTheme({
 unregisterServiceWorker();
 
 const go = () => {
+
+   initSerifFont();
 
    ReactDOM.render(
        makeMainRoutes(),

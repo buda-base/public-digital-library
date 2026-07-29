@@ -13,6 +13,10 @@
 
 @import url('//fonts.googleapis.com/css2?family=Noto+Serif+Tibetan:wght@300;400;500;600;700;900&display=swap');
 
+/* landing page skin: the latin UI font (see --buda-sans below, and the skin at the
+   end of this file). Same request as ratnasagara/index.html. */
+@import url('https://fonts.googleapis.com/css2?family=Hanken+Grotesk:ital,wght@0,300..800;1,300..800&display=swap');
+
 
 /* @import url('//fonts.googleapis.com/earlyaccess/notosanstibetan.css'); */
 
@@ -159,8 +163,14 @@ footer#site-footer.no-syncs > div.head::before { background-color:#efefef; }
 .etext-header-breadcrumbs *,
 .AppSK *,#etext-nav .etext-search input,
 #more-pages-menu a,[role='tooltip'] *, .App *,.nav *,.App *::before,.App *::after, .react-tabs *, .resource *:not(.fa):not(.material-icons), .resource + * *,
-.inRes *, #popDL.cite *, #menu-citationLang *, #pop-login li { 
-   font-family:"Noto Sans", "Noto Serif Tibetan", "Noto Serif Khmer", "Noto Sans Mongolian", "Roboto", "Helvetica", "Arial", sans-serif !important;
+.inRes *, #popDL.cite *, #menu-citationLang *, #pop-login li {
+   font-family:var(--buda-sans) !important;
+}
+
+/* The UI stack, as a variable so the landing page skin at the end of this file can
+   put its own latin face in front of it without repeating the selector list above. */
+:root {
+   --buda-sans: "Noto Sans", "Noto Serif Tibetan", "Noto Serif Khmer", "Noto Sans Mongolian", "Roboto", "Helvetica", "Arial", sans-serif;
 }
 
 .SearchPane { width:1000px; margin:auto;margin-top:80px;max-width:90%; z-index:0;background:white;padding:50px; padding-bottom:0;
@@ -9012,3 +9022,644 @@ a.result + #matches.mobile,
 .simpleSearch .nav { box-shadow:none; }
 
 .SidePane.left.closed { right:-350px; }
+/* --------------------------------------------------------------------------------------------------------------------- landing page skin
+ *
+ * Both headers (.over-nav corporate strip + .nav main bar) repainted with the
+ * landing page palette and heights, so BUDA and the landing page read as one
+ * site. Palette mirrors ratnasagara/src/index.css.
+ *
+ * Applied unconditionally on this branch (proof of concept).
+ */
+
+/* The landing page's UI font, in front of the app's stack — Hanken Grotesk is
+ * latin-only, so Tibetan, Khmer, Mongolian and Chinese still fall through to Noto
+ * exactly as before. Loaded by the @import at the top of this file.
+ */
+:root {
+   --buda-sans: "Hanken Grotesk", "Noto Sans", "Noto Serif Tibetan", "Noto Serif Khmer", "Noto Sans Mongolian", "Roboto", "Helvetica", "Arial", sans-serif;
+}
+
+:root {
+   --living-brand: #8b1e2b;
+   --living-brand-hover: #a42a39;
+   --living-maroon: #341010;
+   --living-cream: #fbf4e8;
+   --living-cream-dim: rgba(251, 244, 232, 0.82);
+   --living-gold: #e5a832;
+   --living-gold-soft: #f3c76b;
+   --living-gold-line: rgba(229, 168, 50, 0.25);
+}
+
+/* ---- both bars: 1222px -> 1440px with the mockup's 32px gutter ----
+ *
+ * The mockup insets both bars by 32px inside the 1440px box (the hero and the
+ * sections below use 40px, so nothing is flush with them anyway). Narrow screens
+ * add the 1.5% gutter from the max-width:1320px media query on top.
+ */
+
+.over-nav > div,
+.nav > div { width: 1440px; padding: 0 32px; box-sizing: border-box; }
+
+/* ---- top strip: brand red, 50px -> 32px (landing announcement bar) ---- */
+
+.over-nav { background: var(--living-brand); height: 32px; }
+
+/* The strip is a sibling of .nav, so the font-family rule at the top of this file
+   (.App *, .nav *, …) never reached it: it was rendering in the Material-UI system
+   stack while the bar right below it used Noto Sans. */
+.over-nav,
+.over-nav * { font-family: var(--buda-sans); }
+
+/* the tagline gives way to the links instead of wrapping out of the 32px strip */
+.over-nav > div > div:first-child {
+   min-width: 0; flex: 1;
+   white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+/* the links are a 22px-gap row (the sheet spaces them with margin-left:50px) */
+.over-nav > div > div:last-child {
+   flex-shrink: 0; white-space: nowrap;
+   display: flex; align-items: center; gap: 22px;
+}
+.over-nav > div > div:last-child > a { margin: 0; }
+
+.over-nav > div,
+.over-nav > div a { color: rgba(255, 250, 245, 0.92); }
+
+/* the tagline stays sentence case: it is the italic line of the mockup, not a label */
+.over-nav > div > div:first-child { font-size: 12px; letter-spacing: 0.08em; }
+
+.over-nav > div a {
+   line-height: 32px; height: 32px;
+   font-size: 12px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase;
+   transition: color 0.3s ease;
+}
+.over-nav > div a:hover { color: var(--living-gold-soft); }
+
+/* the donation link is the last one, gold like on the landing page. Its label
+   carries an inline text-transform:capitalize, hence the !important. */
+.over-nav > div > div:last-child > a:last-child { color: var(--living-gold-soft); font-weight: 700; }
+.over-nav > div > div:last-child > a:last-child span { text-transform: uppercase !important; }
+.over-nav > div > div:last-child > a:last-child:hover { color: #ffdf9e; }
+
+/* the knot is the main bar's mark now, so the strip keeps the wordmark only */
+.over-nav .BDRC-link img { display: none; }
+
+/* ---- main bar: maroon, gold hairline instead of the grey shadow ----
+ *
+ * Height stays 80px: the landing page is at 84px (16px padding + 52px logo), but
+ * sticky offsets across the app are hardcoded to 80px (#filters-UI, .monlamResults,
+ * scroll-margin on anchors), so the 4px are not worth the drift.
+ */
+
+.nav {
+   background: var(--living-maroon);
+   box-shadow: none;
+   border-bottom: 1px solid var(--living-gold-line);
+}
+
+/* the mark is the mockup's endless knot: /logo.svg is the black one, inverted to
+   white here the same way the strip's used to be (see App.js, #logo) */
+.nav #logo > a:first-child img:not(#a) {
+   height: 50px;
+   margin-right: 14px;
+   filter: invert(1);
+}
+
+/* keep the logo caption and the tabs on one line */
+.nav #logo > a:first-child .buda-caption span { white-space: nowrap; }
+
+/* the tabs group against the icons instead of spreading across the bar (the
+   sheet's .inner-nav > div margin:0 25px is what spreads them) */
+.over-nav + .nav .inner-nav { flex-shrink: 0; margin-left: auto; margin-right: 28px; }
+.over-nav + .nav .inner-nav > div { margin: 0; }
+
+/* every label on the bar: logo caption, about/guide/more pages, login, back */
+.nav a > span,
+.nav a#about,
+.nav a#collections,
+.nav #logo a:first-child span,
+.nav #login,
+.nav #back,
+.nav #back h2 span { color: var(--living-cream); }
+
+.nav #back h2::before { border-left-color: var(--living-gold-line); }
+.nav #back h2.on,
+.nav #back h2 span,
+.nav #back > span:last-child { color: var(--living-gold); }
+
+/* monochrome icons (language, burger, history) are black by default */
+.nav #lang img,
+.nav #burger img,
+.nav .history span img { filter: invert(1); }
+
+/* the two icon buttons get the tabs' square gold hover instead of the MUI circle */
+.nav #lang,
+.nav #login { border-radius: 2px; }
+.nav #lang:hover,
+.nav #login:hover { background-color: rgba(229, 168, 50, 0.14); }
+
+/* the burger's close state is a rotated "+" glyph, not an icon */
+.nav > div > .close { color: var(--living-cream); }
+
+/* tradition tabs */
+.over-nav + .nav .inner-nav > div a {
+   color: rgba(251, 244, 232, 0.85);
+   font-size: 13.5px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase;
+   padding: 0 13px; border-radius: 2px;
+   transition: color 0.3s ease, background-color 0.3s ease;
+}
+.over-nav + .nav .inner-nav > div a:hover {
+   color: var(--living-gold);
+   background: rgba(229, 168, 50, 0.14);
+   text-decoration: none;
+}
+.over-nav + .nav .inner-nav > div a.active { color: var(--living-gold); }
+
+/* donate button */
+.nav #donate { background-color: var(--living-brand); border-radius: 2px; }
+.nav #donate:hover { background-color: var(--living-brand-hover); }
+
+/* the account icon, and the burger's open state, are Material-UI svgs — the first
+   with an inline color:black, both missed by the img filter above */
+#root .nav #login svg,
+#root .nav #burger svg { color: var(--living-cream) !important; }
+
+/* ---- <= 1024px: the collapsed bar and the burger menu keep the maroon ----
+ *
+ * lib/searchkit/App.css paints .nav > div, #burger and the .inner-nav dropdown
+ * white below 1024px, and the cream labels of this skin are invisible on white.
+ * The #root prefixes are there because that sheet is imported after this one.
+ */
+
+@media (max-width: 1024px) {
+   #root .over-nav + .nav:not(#a) > div { background: none; }
+
+   /* the tabs are a dropdown here, not a row: drop the desktop grouping margins */
+   #root .over-nav + .nav .inner-nav { margin-left: 0; margin-right: 0; }
+
+   #root .over-nav + .nav #lang-login #burger:not(#a) { background: none; }
+
+   #root .over-nav + .nav .inner-nav {
+      background: var(--living-maroon);
+      border: 1px solid var(--living-gold-line);
+      border-top: none;
+      box-shadow: 0 10px 26px rgba(52, 16, 16, 0.4);
+   }
+}
+
+/* ---- headings font: Ogg by default, swappable with ?font= ----
+ *
+ * Same mechanism as the landing page: src/lib/serifFont.js reads the param and
+ * overrides --living-serif on <html> (?font=prata, ?font=Cormorant, or a full
+ * fonts.googleapis.com URL). Ogg is latin-only, so Tibetan and Chinese titles
+ * keep the Noto stack.
+ */
+
+@font-face {
+   font-family: "Ogg";
+   font-style: normal;
+   font-weight: 400;
+   font-display: swap;
+   src: url("/fonts/ogg-regular.ttf") format("truetype");
+}
+
+:root { --living-serif: "Ogg", Georgia, "Times New Roman", serif; }
+
+.SearchPane #logo h1:not([lang="bo"]):not([lang^="zh"]) {
+   font-family: var(--living-serif) !important;
+   font-weight: 400;
+   letter-spacing: 0.015em;
+}
+
+/* .nav * sets the Noto stack with !important (see the top of this file) */
+.nav #logo a:first-child .buda-caption > span:first-child {
+   font-family: var(--living-serif) !important;
+   font-weight: 400;
+   font-size: 28px;
+   line-height: 1;
+   letter-spacing: 0.04em;
+}
+
+/* the caption under the wordmark is the mockup's gold eyebrow */
+.nav #logo a:first-child .buda-caption > span:first-child + .buda-small {
+   margin-top: 2px;
+   padding-left: 0;
+   font-size: 10.5px;
+   font-weight: 600;
+   line-height: 1.2;
+   text-transform: uppercase;
+   letter-spacing: 0.16em;
+   color: var(--living-gold) !important;
+}
+
+/* --------------------------------------------------------------------------------------------------------------------- home hero + search band
+ *
+ * Same approach as the headers above: no JSX change, the existing home DOM is
+ * repainted with the landing page palette. Mockup:
+ * ratnasagara/mockups/BUDA Library (offline).html, Hero + Search screens.
+ *
+ * The two blocks that follow have to out-specify src/lib/searchkit/App.css,
+ * which is imported *after* this file (App.js imports './App.css' first, then
+ * pages/Search which pulls the searchkit sheet in) — hence the #root and
+ * .App.home prefixes rather than the flat selectors used above.
+ */
+
+:root {
+   --living-ink: #2a1512;
+   --living-ink-soft: #5c4a42;
+   --living-band: #f0dfaf;
+   --living-band-line: rgba(139, 30, 43, 0.14);
+   --living-box: #fffefa;
+   --living-box-line: rgba(42, 18, 8, 0.18);
+   --living-muted: #9c8475;
+}
+
+/* ---- hero: photo full bleed, the white card becomes a gradient ----
+ *
+ * .SearchPane #logo is the photo, #logo > div the overlay that already covers
+ * it, #logo > div > div the white card. The card loses its background and the
+ * overlay takes the mockup gradient, so the text sits on the photo itself.
+ *
+ * khmerServer has its own hero (different photo, <p> instead of <span>, and
+ * #logo > div overrides further down this file), so it keeps the white card.
+ */
+
+.App:not(.khmerServer) .SearchPane #logo img { height: 520px; }
+
+.App:not(.khmerServer) .SearchPane #logo > div {
+   align-items: center;
+   padding: 72px 40px;
+   box-sizing: border-box;
+   background: linear-gradient(90deg,
+      rgba(52, 16, 16, 0.05) 0%,
+      rgba(52, 16, 16, 0.12) 42%,
+      rgba(52, 16, 16, 0.55) 74%,
+      rgba(52, 16, 16, 0.82) 100%);
+}
+
+.App:not(.khmerServer) .SearchPane #logo > div > div {
+   width: auto;
+   max-width: 480px;
+   background: none;
+   padding: 0;
+}
+
+.App:not(.khmerServer) .SearchPane #logo h1 {
+   color: var(--living-cream);
+   font-size: 46px;
+   line-height: 1.08;
+   margin-bottom: 6px;
+   text-wrap: balance;
+   text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+/* "by Buddhist Digital Resource Center" — gold in every locale */
+.App:not(.khmerServer) .SearchPane #logo h1 + div {
+   margin-bottom: 22px;
+   color: var(--living-gold-soft);
+   text-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+}
+
+/* italic serif, latin only: Ogg has no Tibetan or Chinese glyphs (and no italic
+   face either, the browser slants the regular one) */
+.App:not(.khmerServer) .SearchPane #logo h1:not([lang="bo"]):not([lang^="zh"]) + div {
+   font-family: var(--living-serif) !important;
+   font-style: italic;
+   font-size: 20px;
+   font-weight: 400;
+}
+
+.App:not(.khmerServer) .SearchPane #logo h1 ~ span {
+   color: rgba(251, 244, 232, 0.9);
+   font-size: 16px;
+   line-height: 1.7;
+   text-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+}
+
+/* photo credit — content:attr(data-caption), see lib/searchkit/App.css */
+.App:not(.khmerServer) .SearchPane #logo::after {
+   bottom: 12px;
+   left: 20px;
+   padding-left: 0;
+   font-size: 11.5px;
+   font-style: italic;
+   letter-spacing: 0.02em;
+   color: var(--living-cream-dim);
+   text-shadow: 0 1px 6px rgba(0, 0, 0, 0.9), 0 0 3px rgba(0, 0, 0, 0.8);
+}
+
+/* <= 800px lib/searchkit/App.css stacks the hero — photo on top, text card below,
+ * both full width. Keep that layout: the card just takes the maroon flat (the
+ * gradient has nothing to sit on there) so the cream text still reads.
+ */
+
+@media (max-width: 800px) {
+   .App:not(.khmerServer) .SearchPane #logo img { height: auto; }
+
+   .App:not(.khmerServer) .SearchPane #logo > div {
+      padding: 0;
+      background: var(--living-maroon);
+   }
+
+   .App:not(.khmerServer) .SearchPane #logo > div > div { max-width: 100%; }
+}
+
+/* ---- search bars: cream band + the mockup's box ----
+ *
+ * Two sizes, both from the mockup: the tall box of the Search screen on the home,
+ * and the compact one of the Recent Acquisitions screen everywhere else. What
+ * follows is the compact default; the .App.home block below scales it up.
+ *
+ * The yellow is painted on up to four elements (.ISB, the bar, the bar's ::after
+ * and its > div) and which one shows depends on the page — the bar sits in a .ISB
+ * on the home, resource and tradition pages, but directly in .AppSK on the result
+ * page. So all four are recoloured rather than cleared. The :not(#a) bumps are
+ * there to out-specify lib/searchkit/App.css, imported after this file.
+ *
+ * .group is excluded on purpose: that is the tradition page's inline filter field
+ * (underlined, no band, no button), a different component.
+ */
+
+#root .ISB:not(#a),
+#root .inner-search-bar:not(.group):not(#a),
+#root .inner-search-bar:not(.group):not(#a) > div,
+#root .inner-search-bar:not(.group):not(#a)::after { background-color: var(--living-band); }
+
+/* the hairline closes the band: on the .ISB where there is one, on the bar otherwise */
+#root .ISB:not(#a),
+#root .AppSK > .inner-search-bar:not(.group):not(#a) {
+   border-bottom: 1px solid var(--living-band-line);
+}
+
+/* the input paints the box; the form only positions the icon and the two buttons */
+#root .inner-search-bar .ais-SearchBox-form { background: none; }
+
+#root .inner-search-bar .ais-SearchBox-form input {
+   height: 60px;
+   padding: 0 140px 0 44px;
+   font-size: 15px;
+   line-height: 60px;
+   color: var(--living-ink);
+   background: var(--living-box);
+   border: 1px solid rgba(42, 18, 8, 0.16);
+   border-radius: 3px;
+   box-shadow: 0 6px 20px rgba(42, 18, 8, 0.05);
+}
+
+#root .inner-search-bar .ais-SearchBox-form input::placeholder {
+   color: var(--living-muted);
+   font-weight: 400;
+}
+
+/* magnifier: from the right of the field (where the submit button now is) to the
+   left of it, recoloured to the mockup grey-brown */
+#root .inner-search-bar .ais-SearchBox-form::before {
+   top: 20px; /* (60 - 20) / 2 — the form is exactly as tall as the box */
+   bottom: auto;
+   left: 14px;
+   right: auto;
+   width: 20px;
+   height: 20px;
+   background-size: 20px 20px;
+   background-image: url("data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%239c8475%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Ccircle%20cx%3D%2211%22%20cy%3D%2211%22%20r%3D%228%22%3E%3C%2Fcircle%3E%3Cline%20x1%3D%2221%22%20y1%3D%2221%22%20x2%3D%2216.65%22%20y2%3D%2216.65%22%3E%3C%2Fline%3E%3C%2Fsvg%3E");
+}
+
+/* submit: the round transparent icon hit-area becomes the brand red button.
+   Fixed width so the reset cross can be placed next to it. */
+#root .inner-search-bar .ais-SearchBox-submit {
+   top: auto;
+   bottom: 8px;
+   right: 8px;
+   width: 112px;
+   height: 44px;
+   padding: 0;
+   background: var(--living-brand);
+   border: none;
+   border-radius: 2px;
+   color: var(--living-cream);
+   font-size: 13px;
+   font-weight: 700;
+   text-transform: uppercase;
+   letter-spacing: 0.12em;
+   cursor: pointer;
+   transition: background-color 0.3s ease;
+}
+
+#root .inner-search-bar .ais-SearchBox-submit:hover { background: var(--living-brand-hover); }
+
+/* clear cross: centred in the box (44px tall), just left of the button. The
+   :not([hidden]) guard matters — a bare display would defeat the hidden attribute
+   the component sets while the field is empty. */
+#root .inner-search-bar .ais-SearchBox-reset {
+   top: 8px;
+   bottom: auto;
+   right: 128px;
+   transform: none; /* the instantsearch theme centres it with translateY(-50%) */
+   color: var(--living-muted);
+}
+
+#root .inner-search-bar .ais-SearchBox-reset:not([hidden]) {
+   display: flex;
+   align-items: center;
+   justify-content: center;
+}
+
+#root .inner-search-bar .ais-SearchBox-reset svg { fill: currentColor; }
+
+/* the quick links go under the box instead of spread across the bar */
+#root .inner-search-bar #simple-search {
+   margin-top: 14px;
+   flex-wrap: wrap;
+   justify-content: center;
+   gap: 10px 22px;
+}
+
+#root .inner-search-bar #simple-search > span {
+   height: auto;
+   margin-top: 0;
+   line-height: 1.4;
+   font-size: 13.5px;
+   font-weight: 600;
+   color: var(--living-brand);
+}
+
+#root .inner-search-bar #simple-search > span:not(.regular):hover { color: var(--living-brand-hover); }
+
+#root .inner-search-bar #simple-search > span.regular {
+   display: inline-flex;
+   align-items: center;
+   font-weight: 400;
+   color: var(--living-ink-soft);
+}
+
+#root .inner-search-bar #simple-search .new {
+   margin-right: 8px;
+   padding: 3px 7px;
+   border-radius: 2px;
+   background: var(--living-brand);
+   color: var(--living-cream);
+   font-size: 10px;
+   font-weight: 700;
+   text-transform: uppercase;
+   letter-spacing: 0.1em;
+}
+
+/* The inline "find in these results" field (.inner-search-bar.group, in the
+ * Recent Acquisitions / tradition sections) is the one the mockup draws as the
+ * compact box too, so it gets the same treatment. lib/searchkit/App.css turns it
+ * into a black underline from a 4-class selector, hence the long one here.
+ */
+#root .AppSK.InnerSearchPage .searchbox > .inner-search-bar:not(#a) > div > form > input {
+   padding-left: 44px;
+   border: 1px solid rgba(42, 18, 8, 0.16);
+   border-radius: 3px;
+   box-shadow: 0 6px 20px rgba(42, 18, 8, 0.05);
+}
+
+/* ---- advanced search: same band, same box, different component ----
+ *
+ * The advanced mode swaps the .inner-search-bar for #search-bar and a Material-UI
+ * Paper. MUI v3 JSS class names carry a build counter (SearchBar-root-84), so the
+ * hook below matches the stable prefix instead of the full name; the Paper also
+ * carries its width/height/shadow inline, hence the !important on the shadow.
+ *
+ * The language and scope controls inside it are left as they are — only the strip,
+ * the heading and the box itself are repainted.
+ */
+
+#root #search-bar {
+   background-color: var(--living-band);
+   border-bottom: 1px solid var(--living-band-line);
+}
+
+#root #search-bar > h2 {
+   font-size: 30px;
+   font-weight: 400;
+   text-align: center;
+   color: var(--living-ink);
+}
+
+html:not([lang="bo"]):not([lang^="zh"]):not([lang="km"]) #root #search-bar > h2 {
+   font-family: var(--living-serif) !important;
+   letter-spacing: 0.015em;
+}
+
+#root #search-bar div[class*="SearchBar-root"] {
+   background: var(--living-box);
+   border: 1px solid rgba(42, 18, 8, 0.16);
+   border-radius: 3px;
+   box-shadow: 0 6px 20px rgba(42, 18, 8, 0.05) !important;
+}
+
+#root #search-bar #simple-search {
+   color: var(--living-brand);
+   font-weight: 600;
+}
+
+#root #search-bar #simple-search:hover { color: var(--living-brand-hover); }
+
+/* ---- home: the tall box, with the heading above it ----
+ *
+ * The heading and the quick links stay absolute above and below the form, the way
+ * the sheet already lays them out — the form is the positioning context for the
+ * magnifier and the two buttons, so it has to stay exactly as tall as the box.
+ * The band therefore carries the vertical rhythm in its own padding:
+ * 44 + heading 36 + 22 above, 18 + links 19 + 40 below (mockup numbers).
+ */
+#root .App.home .ISB .inner-search-bar:not(#a) {
+   height: auto;
+   padding: 102px 40px 77px;
+}
+
+#root .App.home .ISB .inner-search-bar:not(#a) > div {
+   width: 100%;
+   padding: 0;
+   align-items: center;
+   justify-content: center;
+}
+
+#root .App.home .ISB .ais-SearchBox-form:not(#a):not(#b) {
+   width: 740px;
+   max-width: 100%;
+   height: 72px;
+   margin: 0 auto;
+   background: none; /* the input paints the box, corners included */
+}
+
+#root .App.home .ISB .ais-SearchBox-form h2 {
+   left: 0;
+   right: 0;
+   margin: 0 0 22px;
+   font-size: 30px;
+   font-weight: 400;
+   line-height: 1.2;
+   color: var(--living-ink);
+   justify-content: center;
+}
+
+/* Ogg is latin-only, so the Tibetan / Chinese / Khmer UI keeps the Noto stack */
+html:not([lang="bo"]):not([lang^="zh"]):not([lang="km"])
+   #root .App.home .ISB .ais-SearchBox-form h2 {
+   font-family: var(--living-serif) !important;
+   letter-spacing: 0.015em;
+}
+
+/* the box grows: 60 -> 72px tall, a wider field and a deeper shadow */
+#root .App.home .ISB .ais-SearchBox-form input {
+   height: 72px;
+   padding: 0 168px 0 58px;
+   font-size: 16.5px;
+   line-height: 72px;
+   border-color: var(--living-box-line);
+   box-shadow: 0 10px 28px rgba(42, 18, 8, 0.12);
+}
+
+#root .App.home .ISB .ais-SearchBox-form::before {
+   top: 24px; /* (72 - 24) / 2 */
+   left: 18px;
+   width: 24px;
+   height: 24px;
+   background-size: 24px 24px;
+}
+
+#root .App.home .ISB .ais-SearchBox-submit {
+   width: 132px;
+   height: 56px;
+   font-size: 14px;
+   letter-spacing: 0.14em;
+   box-shadow: 0 8px 22px rgba(139, 30, 43, 0.35);
+}
+
+#root .App.home .ISB .ais-SearchBox-reset {
+   top: 14px; /* (72 - 44) / 2 */
+   right: 156px;
+}
+
+#root .App.home .ISB .ais-SearchBox-form #simple-search { margin-top: 18px; }
+
+/* small screens: the heading wraps into the 102px reserved above the box, and the
+   field needs the room the 132px button was taking */
+@media (max-width: 600px) {
+   #root .App.home .ISB .inner-search-bar:not(#a) { padding: 96px 20px 77px; }
+
+   #root .App.home .ISB .ais-SearchBox-form h2 { font-size: 24px; }
+
+   #root .App.home .ISB .ais-SearchBox-form input { padding: 0 108px 0 48px; }
+
+   #root .App.home .ISB .ais-SearchBox-form::before { left: 14px; }
+
+   #root .App.home .ISB .ais-SearchBox-submit { width: 92px; }
+
+   #root .App.home .ISB .ais-SearchBox-reset { right: 108px; }
+}
+
+/* the compact box needs the same treatment at that width */
+@media (max-width: 600px) {
+   #root .inner-search-bar .ais-SearchBox-form input { padding: 0 96px 0 40px; }
+
+   #root .inner-search-bar .ais-SearchBox-form::before { left: 12px; }
+
+   #root .inner-search-bar .ais-SearchBox-submit { width: 84px; }
+
+   #root .inner-search-bar .ais-SearchBox-reset { right: 96px; }
+}
