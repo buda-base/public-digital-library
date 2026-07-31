@@ -5828,11 +5828,15 @@ class ResourceViewer extends Component<Props,State>
       return { doMap, doRegion, regBox }
    }
 
-   getWorkLocation = (elem, withTag = true, node) => {
+   getWorkLocation = (elem, withTag = true, node, cls = "") => {
       let _elem = elem
       if(elem && Array.isArray(elem) && elem[0]) {
-         
-         if(elem.length > 1) elem = _.orderBy(elem, ["value"], ["desc"])
+
+         if(elem.length > 1) elem = _.orderBy(elem, ["value"], [withTag && !node ? "asc" : "desc"])
+
+         // list every contentLocation, not only the first one
+         if(elem.length > 1 && withTag && !node)
+            return elem.reduce((acc,e) => [ ...acc, ...(this.getWorkLocation([e], withTag, undefined, "multiple") || []) ], [])
 
          if(!node) elem = this.getResourceBNode(elem[0].value)
          else elem = node
@@ -5845,7 +5849,7 @@ class ResourceViewer extends Component<Props,State>
 
          //loggergen.log("loca:",_elem,elem,monoVol,withTag,node)
 
-         if(!elem) return [<h4><Link to={"/show/"+shortUri(_elem[0].value)}>{shortUri(_elem[0].value)}<span className="visually-hidden">Go to {shortUri(_elem[0].value)} page</span></Link></h4>]
+         if(!elem) return [<h4 class={cls}><Link to={"/show/"+shortUri(_elem[0].value)}>{shortUri(_elem[0].value)}<span className="visually-hidden">Go to {shortUri(_elem[0].value)} page</span></Link></h4>]
 
          let loca = s => (elem && elem[bdo+"contentLocation"+s] && elem[bdo+"contentLocation"+s][0] && elem[bdo+"contentLocation"+s][0]["value"] ? elem[bdo+"contentLocation"+s][0]["value"]:null)
                
@@ -5902,11 +5906,11 @@ class ResourceViewer extends Component<Props,State>
                               {eL && <div><span>{I18n.t("location.endL",{num:eL})}</span></div>}
                            </div>
                         }>
-                           <h4>{str}{/*str && w && <span class="of"> {I18n.t("misc.of")}</span>} {w && this.uriformat(bdo+"contentLocationInstance",{value:w})*/}{this.hoverMenu()}</h4>
+                           <h4 class={cls}>{str}{/*str && w && <span class="of"> {I18n.t("misc.of")}</span>} {w && this.uriformat(bdo+"contentLocationInstance",{value:w})*/}{this.hoverMenu()}</h4>
                      </Tooltip>]
                );
             else if(w)
-               return [<h4>{this.uriformat(bdo+"contentLocationInstance",{value:w})}</h4>]
+               return [<h4 class={cls}>{this.uriformat(bdo+"contentLocationInstance",{value:w})}</h4>]
          }
          else return loca("Volume") //str.replace(/^Vol[.]/,"")
       }
@@ -7840,7 +7844,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                   }           
                   else if(k == bdo+"contentLocation")
                   {
-                     tags = this.getWorkLocation(elem)
+                     tags = this.getWorkLocation(elem) || []
                   }             
                   
                   if((!this.props.config || !this.props.config.chineseMirror) && (k == bdo+"placeRegionPoly" || (k == bdo+"placeLong" && !doRegion))) {
@@ -9608,7 +9612,15 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                      else return []
                   }
 
-                  //let node = elem.filter(e => e["@id"] === top)                  
+                  // a part can have several contentLocation, return them all (sorted, resolved when possible)
+                  const locaNodes = (g) => {
+                     let cl = g.contentLocation
+                     if(!cl) return []
+                     if(!Array.isArray(cl)) cl = [ cl ]
+                     return _.orderBy(cl).map(c => ({ id:c, node:mapElem(c)[0] }))
+                  }
+
+                  //let node = elem.filter(e => e["@id"] === top)
                   let node = mapElem(top)
 
                   //loggergen.log("mapelem:",top,node,elem_map)
@@ -9748,12 +9760,10 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                               //loggergen.log("showD:",g["@id"], g.hasMatch, g)
 
                               if(g.contentLocation) {
-                                 let loca = g.contentLocation
-                                 if(!Array.isArray(loca)) loca = [ loca ]
-                                 loca = _.orderBy(loca).map(mapElem).map(l => l[0])
-                                 if(loca.length && loca[0].contentLocationVolume) {
+                                 let loca = locaNodes(g).map(l => l.node)
+                                 if(loca.length && loca[0]?.contentLocationVolume) {
                                     g.useVolumeNumber = loca[0].contentLocationVolume
-                                 }                                            
+                                 }
                               }
 
                               subtime(1)
@@ -9762,8 +9772,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                                  g.checkDLD = (ev) => {
                                     //loggergen.log("CDLD:",this.props.useDLD,g)
 
-                                    let loca = mapElem(g.contentLocation), go
-                                    if(loca?.length) loca = loca[0]
+                                    let loca = locaNodes(g)[0]?.node, go
                                     if(loca && loca.contentLocationInstance) {
                                        //loggergen.log("root:",loca)
 
@@ -9838,26 +9847,18 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                                  }
                               }
                               if(warn) {
-                                 if(Array.isArray(g.contentLocation) && g.contentLocation?.length > 1) { 
-                                    g.contentLocation = _.orderBy(g.contentLocation, ["value"], ["desc"])
-                                    g.contentLocation = g.contentLocation[0]
-                                 }
-                                 let loca = mapElem(g.contentLocation)
-                                 if(loca?.length) loca = loca[0]
-                                 if(loca && loca.contentLocationVolume && !loca.contentLocationPage) {
-                                    let ptype = g.partType
-                                    //loggergen.log("root:",loca,ptype,g)
-                                    if(ptype && !["bdr:PartTypeVolume","bdr:PartTypeSection"].includes(ptype)) {
-                                       nav.push(<div class="outline-warn"><Tooltip placement="top-end" title={
-                                          <div style={{margin:"10px"}}><Trans i18nKey="location.tooltip" components={{ newL: <br /> }} /></div>
-                                       }><WarnIcon/></Tooltip></div>)
-                                    } 
-                                 } else if(loca && Array.isArray(loca) && !loca.length){
-                                    //loggergen.log("warn:",loca,g)                                    
+                                 const locas = locaNodes(g)
+                                 // no page indication in any of the locations
+                                 const noPage = locas.length && locas.every(l => l.node?.contentLocationVolume && !l.node?.contentLocationPage)
+                                 // location(s) not resolved in the returned graph
+                                 const noLoca = g.contentLocation && (!locas.length || locas.every(l => !l.node))
+                                 let ptype = g.partType
+                                 //loggergen.log("root:",locas,ptype,g)
+                                 if(noPage && ptype && !["bdr:PartTypeVolume","bdr:PartTypeSection"].includes(ptype) || noLoca) {
                                     nav.push(<div class="outline-warn"><Tooltip placement="top-end" title={
                                        <div style={{margin:"10px"}}><Trans i18nKey="location.tooltip" components={{ newL: <br /> }} /></div>
-                                    }><WarnIcon/></Tooltip></div>)                                 
-                                 } 
+                                    }><WarnIcon/></Tooltip></div>)
+                                 }
                               }
 
 
@@ -9871,9 +9872,8 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                                     nav.push(<Link to={"/show/"+g["@id"].split(/;/)[0]} class="ulink">{I18n.t("resource.openR")}</Link>)
 
                                     if(hasIA) {
-                                       let loca = mapElem(g.contentLocation)
-                                       if(loca?.length) loca = loca[0]
-                                       let IAlink = this.getIAlink(loca)                                       
+                                       let loca = locaNodes(g)[0]?.node
+                                       let IAlink = this.getIAlink(loca)                                     
                                        if(nav.length) nav.push(<span>|</span>)                                    
                                        nav.push(<a target="_blank" rel="noopener noreferrer" href={IAlink} class="ulink">{I18n.t("resource.openIA")}</a>)
                                     }
@@ -9915,22 +9915,22 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                               
                               if(showDetails && g.contentLocation) {
                                  if(!g.details) g.details = []
-                                 // let loca = elem.filter(f => f["@id"] === g.contentLocation), 
-                                 if(Array.isArray(g.contentLocation) && g.contentLocation?.length > 1) { 
-                                    g.contentLocation = _.orderBy(g.contentLocation, ["value"], ["desc"])
-                                    g.contentLocation = g.contentLocation[0]
-                                 }
-                                 let loca = mapElem(g.contentLocation),
-                                    jLoca = {}
-                                 if(loca && loca.length) loca = loca[0]
-                                 for(let k of Object.keys(loca)) {
-                                    let val = "" + loca[k]
-                                    if(k.includes("content")) jLoca[bdo+k] = [ { value:(val.includes(":")?fullUri(loca[k]):loca[k]), type:"literal" } ]
-                                 }                                                             
-                                 if(g.contentLocationStatement) {
-                                    jLoca[bdo+"contentLocationStatement"] = [ { value:g.contentLocationStatement, type:"literal" } ]
-                                 }
-                                 g.details.push(<div class="sub loca"><h4 class="first type">{this.proplink(bdo+"contentLocation")}{I18n.t("punc.colon")} </h4>{this.getWorkLocation([{value:loca["@id"]}],true, jLoca)}</div>)
+                                 // list all the contentLocation of the part, not just the first one
+                                 const locas = locaNodes(g)
+                                 const locaTags = locas.reduce((acc,l) => {
+                                    let loca = l.node, jLoca = {}
+                                    if(!loca) return acc
+                                    for(let k of Object.keys(loca)) {
+                                       let val = "" + loca[k]
+                                       if(k.includes("content")) jLoca[bdo+k] = [ { value:(val.includes(":")?fullUri(loca[k]):loca[k]), type:"literal" } ]
+                                    }
+                                    if(g.contentLocationStatement) {
+                                       jLoca[bdo+"contentLocationStatement"] = [ { value:g.contentLocationStatement, type:"literal" } ]
+                                    }
+                                    return [ ...acc, ...(this.getWorkLocation([{value:loca["@id"]}],true, jLoca, locas.length > 1 ? "multiple" : "") || []) ]
+                                 }, [])
+                                 if(locaTags.length)
+                                    g.details.push(<div class="sub loca"><h4 class="first type">{this.proplink(bdo+"contentLocation")}{I18n.t("punc.colon")} </h4>{locaTags}</div>)
                               }
 
 

@@ -4029,10 +4029,15 @@ div:has(.resource.preview) .infoPanel.inRes { margin:0 !important; }
 .resource .data#outline .root + div .top + .details .sub h4 span { font-size:12px;line-height:16px; }
 .resource .data#outline .root + div .top + .details .sub h4.first { width:120px; align-self: flex-start; }
 .resource .data#outline .root + div .top + .details .sub h4.first span { font-weight:700;}
+/* label is a .propref button (15px/normal from .data .sub .propref) --> box taller than the value, text pushed down */
+.resource .data#outline .root + div .top + .details .sub h4.first .propref { font-size:12px; line-height:16px; }
 .resource .data#outline .root + div .top + .details .sub h4.first + * { width:calc(100% - 180px); }
 
 .resource .data#outline .root + div .top + .details .sub h4.first ~ h4.multiple { width:calc(100%); margin-bottom:0; padding-left:155px; }
 .resource .data#outline .root + div .top + .details .sub h4.first ~ h4.multiple:nth-child(2) { width:calc(100% - 180px); padding-left:0px; }
+/* location: indent with a margin, not a padding, so the tooltip anchors on the text and not on the label column */
+.resource .data#outline .root + div .top + .details .sub.loca h4.first ~ h4.multiple { width:calc(100% - 155px); padding-left:0; margin-left:155px; }
+.resource .data#outline .root + div .top + .details .sub.loca h4.first ~ h4.multiple:nth-child(2) { width:calc(100% - 180px); margin-left:0; }
 
 .resource .data#outline .root + div .top + .details .sub h4 { padding-right:20px; /* vertical-align: -100%; */ }
 .resource .data#outline .root + div .top + .details .sub .lang { display:none; } 
@@ -6477,18 +6482,20 @@ html[lang="bo"] .etext-nav-parent .etext-header.sticky > div  h2 .placeType {
 
 .resource .data h3 { font-size:16px;}
 .resource .data h3 button.propref, .resource .data h3 a.propref,
-.resource .data h3 .propref,.resource .data h4 .propref { color:#343434; font-size:16px; letter-spacing: 0px;/*line-height:24px; word-break: break-all;*/ 
-   font-weight:700; /*vertical-align:top;*/text-decoration-color:#343434;border-bottom-color:#343434; text-align: left ; 
+.resource .data h3 .propref,.resource .data h4 .propref { color:#343434; font-size:16px; letter-spacing: 0px;/*line-height:24px; word-break: break-all;*/
+   font-weight:700; /*vertical-align:top;*/text-decoration-color:#343434; text-align: left ;
+   /* keep the space of the hover underline so it doesn't push what's below */
+   border-bottom:1px solid transparent;
 }
 
 .resource .data [data-prop="tmp:workHasInstance"] h3 button.propref.tmp-prop::after{ content:':';font-weight:600;} 
 .resource .data [data-prop="tmp:workHasInstance"] h3 button.propref.tmp-prop+.propref-colon{ display:none;}
 
 .resource .data .sub button.propref,.resource .data .sub a.propref ,
-.resource .data .sub .propref { font-size:15px; font-weight: 600; letter-spacing: 0px;font-style:normal;text-decoration-color:#343434;border-bottom-color:#343434; }
+.resource .data .sub .propref { font-size:15px; font-weight: 600; letter-spacing: 0px;font-style:normal;text-decoration-color:#343434;border-bottom-color:transparent; }
 .resource .data .sub .subsub h4.first { font-size:14px;font-weight:400;color:#343434; }
 .resource .data .sub .subsub .propref { font-weight:400;letter-spacing:0px; font-size:14px;}
-.resource .data h3 .propref:hover,.resource .data h4 .propref:hover { border-bottom:1px solid black;}
+.resource .data h3 .propref:hover,.resource .data h4 .propref:hover { border-bottom-color:black;}
 
 .tradition .propref span { color:#343434; font-size:16px; font-weight:600; }
 
