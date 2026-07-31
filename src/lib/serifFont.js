@@ -70,9 +70,11 @@ function applySerif(def) {
       link.dataset.serifFont = ""
       document.head.appendChild(link)
    }
+   // same script fallbacks as the default stack in App.css: the swapped-in family is
+   // latin-only too, and titles mix romanisation with Tibetan / Khmer / Mongolian
    document.documentElement.style.setProperty(
       "--living-serif",
-      `"${def.family}", Georgia, "Times New Roman", serif`,
+      `"${def.family}", "Noto Serif Tibetan", "Noto Serif Khmer", "Noto Sans Mongolian", Georgia, "Times New Roman", serif`,
    )
 }
 

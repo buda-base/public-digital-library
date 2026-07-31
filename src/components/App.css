@@ -9223,7 +9223,14 @@ a.result + #matches.mobile,
    src: url("/fonts/ogg-regular.ttf") format("truetype");
 }
 
-:root { --living-serif: "Ogg", Georgia, "Times New Roman", serif; }
+/* Ogg is latin-only. The Noto faces that follow are the ones the sans stack uses
+   for the scripts it has no glyphs for, so a title that mixes romanisation and
+   script (hani, mymr, and any tag not caught by the guards on the rules below)
+   resolves to the same faces it would in the sans, instead of a generic serif. */
+:root {
+   --living-serif: "Ogg", "Noto Serif Tibetan", "Noto Serif Khmer", "Noto Sans Mongolian",
+      Georgia, "Times New Roman", serif;
+}
 
 .SearchPane #logo h1:not([lang="bo"]):not([lang^="zh"]) {
    font-family: var(--living-serif) !important;
@@ -10025,8 +10032,11 @@ html:not([lang="bo"]):not([lang^="zh"]):not([lang="km"])
    color: #8a6410;
 }
 
-/* the title. Its lang varies: bo-x-ewts is romanised, so the latin serif fits it,
-   but bo / zh / km are the scripts Ogg has no glyphs for. */
+/* the title. Its lang varies: only the tags that name a non-latin *script* keep the
+   Noto stack (bo, km, zh-hans/hant, *-khmr). The romanisations must not: km-x-twktt
+   is Khmer in latin letters and a lang^="km" guard sent every Khmer-transliterated
+   title back to the sans, which is the "why is this one in Arial" of the search
+   results. bo-x-ewts, iast, hani and mymr resolve per glyph through the stack. */
 #root .AppSK .result .data > a > span[lang]:not(.T) {
    font-size: 24px;
    font-weight: 400;
@@ -10035,7 +10045,7 @@ html:not([lang="bo"]):not([lang^="zh"]):not([lang="km"])
 }
 
 html:not([lang="bo"]):not([lang^="zh"]):not([lang="km"])
-   #root .AppSK .result .data > a > span[lang]:not(.T):not([lang="bo"]):not([lang^="zh"]):not([lang^="km"]) {
+   #root .AppSK .result .data > a > span[lang]:not(.T):not([lang="bo"]):not([lang="zh"]):not([lang^="zh-han"]):not([lang="km"]):not([lang$="-khmr"]) {
    font-family: var(--living-serif) !important;
    letter-spacing: 0.01em;
 }
@@ -10734,4 +10744,614 @@ html:not([lang="bo"]):not([lang^="zh"]):not([lang="km"])
       Organization column is where they are reachable from at this width */
    #root .over-nav > div > div + div > a:not(:first-child):not(:last-child) { display: none; }
    #root .over-nav > div > div:last-child { gap: 16px; }
+}
+
+/* --------------------------------------------------------------------------------------------------------------------- the advanced search results
+ *
+ * /search renders its results with the app's own renderer (App.js, .result-content
+ * + #matches), not the react-instantsearch one the simple page uses — same data,
+ * different DOM, so none of the .AppSK rules above reach it. This block gives it
+ * the same reading: the 1440px box on a 40px gutter with a 288px filter column, no
+ * white card, rows on a hairline with a hover tint, serif titles.
+ *
+ * Everything is scoped to .SearchPane.resultPage, which is this legacy layout only —
+ * #res-container alone would also catch the home.
+ */
+
+/* ---- the grid: 300px + 960px centred in 1440 -> the home's 288 + 44 + rest ---- */
+
+#root .App .SearchPane.resultPage #res-container {
+   justify-content: flex-start;
+   padding: 0 40px;
+   box-sizing: border-box;
+}
+
+#root .App .SearchPane.resultPage .SidePane.left,
+#root .App .SearchPane.resultPage .SidePane.left > [data-simplebar] {
+   width: 288px;
+   min-width: 288px;
+}
+
+#root .App .SearchPane.resultPage .SidePane.left { flex: 0 0 288px; }
+
+/* the sheet insets the scroller by 35px on both sides, which would eat into the
+   288px the column is worth. The top inset is the 30px the results column carries
+   before its own heading, so the two headings start on the same air. */
+#root .App .SearchPane.resultPage .SidePane.left > [data-simplebar] { padding: 34px 0 35px; }
+
+#root .App .SearchPane.resultPage #results {
+   flex: 1 1 auto;
+   width: auto;
+   /* 44px of gap, and the rows carry their own 24px so the text lands where the
+      simple page's does */
+   margin: 0 0 75px 44px;
+   padding: 30px 0 75px;
+}
+
+/* the two bands above the list are full width; the toolbar's content lines up with
+   the results column it commands, rather than with the 1440 box as it did before */
+#root .App .SearchPane.resultPage #res-header > div {
+   width: 100%;
+   max-width: 1440px;
+   margin: 0 auto;
+   padding: 0 40px 0 calc(40px + 288px + 44px);
+   box-sizing: border-box;
+}
+
+/* the chips belong to the search box, so they take its geometry rather than the
+   column's: the box is the Paper's inline 700px plus its 1px borders, centred by a
+   text-align on #search-bar, which margin:auto reproduces to the same half-pixel.
+   Before this they sat on the results column — 3px off the box above 1440px, and
+   123px off at 1200px, where the column stops moving and the box keeps centring. */
+#root .App .SearchPane.resultPage #filters-UI > div {
+   width: 702px;
+   max-width: 100%;
+   margin: 0 auto;
+   padding: 0;
+   box-sizing: border-box;
+}
+
+/* ---- the active filters band ---- */
+
+/* #fce08e was a second, brighter yellow right under the search band; the same
+   colour makes the two read as one strip */
+#root .App .SearchPane.resultPage #filters-UI { background-color: var(--living-band); }
+
+#root .App .SearchPane.resultPage .active-filter {
+   height: 30px;
+   line-height: 30px;
+   padding: 0 4px 0 10px;
+   background: var(--living-box);
+   border: 1px solid rgba(139, 30, 43, 0.35);
+   border-radius: 2px;
+   box-shadow: none;
+}
+
+#root .App .SearchPane.resultPage .active-filter > span {
+   padding-left: 0;
+   font-size: 11px;
+   letter-spacing: 0.04em;
+   color: var(--living-brand);
+}
+
+#root .App .SearchPane.resultPage .active-filter span b,
+#root .App .SearchPane.resultPage .active-filter b span { color: var(--living-ink); }
+
+#root .App .SearchPane.resultPage .active-filter svg { color: var(--living-brand); }
+
+#root .App .SearchPane.resultPage #filters-UI #clear-filters > span,
+#root .App .SearchPane.resultPage #filters-UI #clear-filters svg { color: var(--living-brand); }
+
+/* ---- the sort / paging toolbar ---- */
+
+#root .App .SearchPane.resultPage #res-header {
+   background-color: var(--living-cream-bg);
+   box-shadow: inset 0 -1px 0 rgba(42, 18, 8, 0.1);
+}
+
+#root .App .SearchPane.resultPage #res-header .widget-header .widget-title,
+#root .App .SearchPane.resultPage #res-header .widget-header p {
+   font-size: 11.5px;
+   font-weight: 700;
+   letter-spacing: 0.14em;
+   color: #3b2414;
+}
+
+#root .App .SearchPane.resultPage #res-header .widget-header svg,
+#root .App .SearchPane.resultPage #res-header .widget-header .header-icon { color: var(--living-brand); }
+
+#root .App .SearchPane.resultPage #res-header #pagine { font-size: 13px; }
+
+#root .App .SearchPane.resultPage #res-header #pagine div a { color: #3b2414; }
+
+#root .App .SearchPane.resultPage #res-header #pagine div a:hover { color: var(--living-brand); }
+
+/* the current page is the only one wrapped in <b><u> */
+#root .App .SearchPane.resultPage #res-header #pagine div a b { color: var(--living-brand); }
+
+#root .App .SearchPane.resultPage #res-header #pagine #nb {
+   border-left-color: rgba(42, 18, 8, 0.2);
+   color: var(--living-muted);
+   font-variant-numeric: tabular-nums;
+}
+
+/* ---- the panel goes: rows on a hairline, like the simple page ---- */
+
+#root .App .SearchPane.resultPage #results {
+   background: none;
+   box-shadow: none;
+}
+
+/* "Texts" / "Works" — the type heading above the list */
+#root .App .SearchPane.resultPage #results > div > li > h4 {
+   margin: 0;
+   padding: 0 24px 14px;
+   font-size: 12px;
+   font-weight: 700;
+   text-transform: uppercase;
+   letter-spacing: 0.18em;
+   color: var(--living-brand);
+}
+
+#root .App .SearchPane.resultPage #results > p.no-result.more-result {
+   padding: 0 24px 18px;
+   font-size: 14.5px;
+   color: #7d6350;
+}
+
+#root .App .SearchPane.resultPage #results > p.no-result.more-result a { color: var(--living-brand); }
+
+/* the rule above the first row; the rows below each carry their own bottom one */
+#root .App .SearchPane.resultPage #results #result-1 { border-top: 1px solid rgba(42, 18, 8, 0.12); }
+
+#root .App .SearchPane.resultPage .result-content {
+   padding: 24px 4px 24px 24px;
+   border-bottom: 1px solid rgba(42, 18, 8, 0.08);
+   transition: background-color 0.25s ease;
+}
+
+#root .App .SearchPane.resultPage .result-content:hover { background-color: rgba(241, 231, 214, 0.4); }
+
+/* ---- inside a row ---- */
+
+#root .App .SearchPane.resultPage .result-content #num-box {
+   border: 1px solid rgba(42, 18, 8, 0.2);
+   border-radius: 2px;
+   color: var(--living-muted);
+}
+
+/* the image is a wide IIIF strip clipped by the 130px box, so the frame goes on
+   the box and not on the img as it does on the simple page */
+#root .App .SearchPane.resultPage .result-content #icon .thumb {
+   border: 1px solid rgba(42, 18, 8, 0.14);
+   border-radius: 1px;
+   box-shadow: 0 3px 8px rgba(42, 18, 8, 0.08);
+   box-sizing: border-box;
+}
+
+#root .App .SearchPane.resultPage .result-content #icon .RID { color: var(--living-muted); }
+
+/* the type line and the two script badges nested in it */
+#root .App .SearchPane.resultPage .result-content .T {
+   font-size: 10px;
+   font-weight: 700;
+   letter-spacing: 0.1em;
+   color: #7d6350;
+}
+
+#root .App .SearchPane.resultPage .result-content .T > span[data-lang] {
+   padding: 3px 8px;
+   border: 1px solid rgba(229, 168, 50, 0.5);
+   border-radius: 2px;
+   background: rgba(229, 168, 50, 0.18);
+   color: #8a6410;
+}
+
+#root .App .SearchPane.resultPage .result-content .contenu h3,
+#root .App .SearchPane.resultPage .result-content .contenu h3 > span {
+   font-size: 23px;
+   font-weight: 400;
+   line-height: 1.25;
+   color: var(--living-ink);
+}
+
+/* the titles carry their own lang: bo-x-ewts is romanised and takes the serif,
+   the scripts Ogg has no glyphs for keep the Noto stack */
+html:not([lang="bo"]):not([lang^="zh"]):not([lang="km"])
+   #root .App .SearchPane.resultPage .result-content .contenu h3:not([lang="bo"]):not([lang="zh"]):not([lang^="zh-han"]):not([lang="km"]):not([lang$="-khmr"]),
+html:not([lang="bo"]):not([lang^="zh"]):not([lang="km"])
+   #root .App .SearchPane.resultPage .result-content .contenu h3:not([lang="bo"]):not([lang="zh"]):not([lang^="zh-han"]):not([lang="km"]):not([lang$="-khmr"]) > span {
+   font-family: var(--living-serif) !important;
+   letter-spacing: 0.01em;
+}
+
+/* the label / value lines under the title */
+#root .App .SearchPane.resultPage #matches span.label { color: #3b2414; }
+
+#root .App .SearchPane.resultPage #matches .match .multi,
+#root .App .SearchPane.resultPage #matches .match .multi span { color: var(--living-ink-soft); }
+
+#root .App .SearchPane.resultPage #matches .match .multi a { color: var(--living-brand); }
+
+/* the permalink chip at the right of each row */
+#root .App .SearchPane.resultPage .result-content #permalink {
+   padding: 5px;
+   border: 1px solid rgba(42, 18, 8, 0.16);
+   border-radius: 50%;
+   box-sizing: border-box;
+   transition: border-color 0.25s ease;
+}
+
+#root .App .SearchPane.resultPage .result-content #permalink:hover { border-color: var(--living-brand); }
+
+/* ---- the filters column ---- */
+
+#root .App .SearchPane.resultPage .SidePane.left { background: none; }
+
+#root .App .SearchPane.resultPage .SidePane.left .sidebar-title {
+   font-size: 22px;
+   font-weight: 400;
+   color: var(--living-ink);
+}
+
+html:not([lang="bo"]):not([lang^="zh"]):not([lang="km"])
+   #root .App .SearchPane.resultPage .SidePane.left .sidebar-title {
+   font-family: var(--living-serif) !important;
+}
+
+#root .App .SearchPane.resultPage .SidePane.left .widget-header { border-bottom-color: rgba(42, 18, 8, 0.1); }
+
+#root .App .SearchPane.resultPage .SidePane.left .widget-title {
+   font-size: 12px;
+   font-weight: 700;
+   letter-spacing: 0.14em;
+   color: #3b2414;
+}
+
+#root .App .SearchPane.resultPage .SidePane.left .widget-header svg { color: var(--living-muted); }
+
+#root .App .SearchPane.resultPage .SidePane.left .widget-title .new { color: var(--living-brand); }
+
+/* the facet rows: a checked box carries its red inline on the svg, hence the
+   !important; the unchecked ones only compute to rgba(0,0,0,0.7) */
+#root .App .SearchPane.resultPage .searchWidget .checkbox svg { color: rgba(42, 18, 8, 0.35) !important; }
+
+#root .App .SearchPane.resultPage .searchWidget .checkbox > span:has(input:checked) svg {
+   color: var(--living-brand) !important;
+}
+
+#root .App .SearchPane.resultPage .searchWidget label { color: var(--living-ink-soft); }
+
+#root .App .SearchPane.resultPage .searchWidget .facet-count {
+   color: var(--living-muted);
+   font-variant-numeric: tabular-nums;
+}
+
+/* the toolbar's own offsets, written against the old grid: a 34px indent on the
+   first control and a 40px inset on the paging block, both of which now push the
+   row off the column the band is aligned to */
+#root .App .SearchPane.resultPage #res-header > div .widget-header {
+   margin-top: 0;
+   margin-left: 0;
+}
+
+#root .App .SearchPane.resultPage #res-header > div .widget-header + .widget-header { margin-left: 34px; }
+
+#root .App .SearchPane.resultPage #res-header #pagine {
+   margin-top: 0;
+   padding-right: 0;
+}
+
+/* the type heading and the "more texts are cataloged" line sit tight above the
+   first row's rule rather than floating between the two */
+#root .App .SearchPane.resultPage #results > div > li > h4 { padding-bottom: 0; }
+
+#root .App .SearchPane.resultPage #results > p.no-result.more-result { padding-top: 4px; }
+
+/* the heading block sits in a <ul><li> the sheet indents by 16px; the rows below
+   are on 24px, so the eyebrow, the line under it and the titles share one edge */
+#root .App .SearchPane.resultPage #results > div:first-child,
+#root .App .SearchPane.resultPage #results > div:first-child > li { padding-left: 0; }
+
+#root .App .SearchPane.resultPage #results > div > li > h4 { padding-left: 24px; }
+
+#root .App .SearchPane.resultPage #results > p.no-result.more-result {
+   margin: 6px 0 0;
+   padding: 0 24px 20px;
+}
+
+/* the highlight is a solid #fce08e block with 5px of padding around it, which the
+   23px serif titles turned into a slab. Simple-page results keep the sheet's. */
+#root .App .SearchPane.resultPage .result-content .highlight {
+   padding: 0 3px;
+   background: rgba(229, 168, 50, 0.32);
+   border-radius: 2px;
+   font-weight: 400;
+}
+
+/* ---- the advanced page under 1024px: the filters become a drawer ---- */
+
+@media (max-width: 1024px) {
+   /* the column is out of the flow here, so its 44px gap would leave the rows 84px
+      in on the left against 40px on the right */
+   #root .App .SearchPane.resultPage #results { margin-left: 0; }
+
+   /* the searchkit sheet drops #res-container to a 10px gutter below 800px from a
+      3-id selector, which left the rows 30px inside the topbar's text */
+   #root .App .SearchPane.resultPage #res-container:not(#a) {
+      padding-left: 40px;
+      padding-right: 40px;
+   }
+
+   /* the sheet insets both bands by 24px with !important */
+   #root .App .SearchPane.resultPage #res-header > div,
+   #root .App .SearchPane.resultPage #filters-UI > div { padding: 0 40px !important; }
+
+   /* the box is full width minus the gutter here, so the chips follow it that way */
+   #root .App .SearchPane.resultPage #filters-UI > div { width: 100%; }
+
+   /* The drawer needs the panel treatment the transparent desktop column does not.
+      It goes on the scroller and not on .SidePane.left itself: the backdrop is that
+      element's own first child, so a background on the panel paints under it and
+      came out dimmed by its own overlay (verified by pixel: 0.5 of #341010 over the
+      cream). The scroller is raised above the backdrop just below. */
+   #root .App .SearchPane.resultPage .SidePane.left > [data-simplebar] {
+      background: var(--living-cream-bg);
+      border-right: 1px solid var(--living-gold-line);
+      box-shadow: 0 0 40px rgba(52, 16, 16, 0.35);
+      box-sizing: border-box;
+   }
+
+   #root .App .SearchPane.resultPage .adv-filter-BG { background: rgba(52, 16, 16, 0.5); }
+
+   /* same round button as the simple page's, which is a different #settings (this
+      one lives in #res-header, outside .AppSK) */
+   #root .App .SearchPane.resultPage #res-header #settings:not(#a) {
+      left: 20px;
+      bottom: 20px;
+      padding: 12px;
+      background: var(--living-brand);
+      border-radius: 50%;
+      box-shadow: 0 6px 18px rgba(52, 16, 16, 0.35);
+   }
+
+   #root .App .SearchPane.resultPage #res-header #settings:not(#a):hover { background: var(--living-brand-hover); }
+
+   #root .App .SearchPane.resultPage #res-header #settings:not(#a) img {
+      display: block;
+      width: 22px;
+      height: 22px;
+      filter: invert(1);
+   }
+}
+
+@media (max-width: 600px) {
+   #root .App .SearchPane.resultPage #res-container:not(#a) {
+      padding-left: 20px;
+      padding-right: 20px;
+   }
+
+   #root .App .SearchPane.resultPage #res-header > div,
+   #root .App .SearchPane.resultPage #filters-UI > div { padding: 0 20px !important; }
+}
+
+/* .adv-filter-BG is the drawer's own first child and the sheet gives it z-index:1,
+   so the dim above painted over the panel it was meant to sit behind */
+#root .App .SearchPane.resultPage .SidePane.left > [data-simplebar] {
+   position: relative;
+   z-index: 2;
+}
+
+/* ---- the active-filter row, centred in its band ----
+ *
+ * The chips sat flush under the search box with all the slack below them (0px above,
+ * 20px under, from a margin-bottom:10px on each chip plus the band's own padding),
+ * and "Reset filters" rode ~5px lower than they did — it is an inline element with a
+ * vertical-align tweak, and its icon another. One flex row on a centre line instead.
+ */
+
+#root .App .SearchPane.resultPage #filters-UI {
+   margin-top: 0;
+   /* the top padding is the row "Simple search" sits in — it is positioned against the
+      search box above, so the band leaves it the space rather than holding it — plus
+      the 14px that centres the chips in what is left under that line */
+   padding: 29px 0 14px;
+}
+
+#root .App .SearchPane.resultPage #filters-UI .simplebar-content > div {
+   display: flex;
+   flex-wrap: wrap;
+   align-items: center;
+   gap: 10px;
+}
+
+#root .App .SearchPane.resultPage .active-filter {
+   align-items: center;
+   margin-bottom: 0;
+}
+
+#root .App .SearchPane.resultPage #filters-UI #clear-filters {
+   display: inline-flex;
+   align-items: center;
+   /* a margin-left:5px from the sheet, which showed once the row wrapped and this
+      became the first item on its own line, 5px inside the chips above it */
+   margin: 0;
+   vertical-align: baseline;
+}
+
+#root .App .SearchPane.resultPage #filters-UI #clear-filters > span {
+   padding-right: 4px;
+   vertical-align: baseline;
+}
+
+/* ---- the etext rows' title, on the simple results page ----
+ *
+ * Instance titles are .data > a > span[lang] and got the 24px serif above; an etext
+ * result puts its title in a .etext-label wrapper instead ("Etext for: " + the
+ * text's own name), which that selector never reached — so those rows kept the
+ * sheet's 15px semibold sans and the list read in two different fonts.
+ */
+
+#root .AppSK .result .data > a > .etext-label,
+#root .AppSK .result .data > a > .etext-label > span[lang],
+#root .AppSK .result .data > a > .etext-label > i {
+   font-size: 24px;
+   font-weight: 400;
+   line-height: 1.2;
+   color: var(--living-ink);
+}
+
+html:not([lang="bo"]):not([lang^="zh"]):not([lang="km"])
+   #root .AppSK .result .data > a > .etext-label,
+html:not([lang="bo"]):not([lang^="zh"]):not([lang="km"])
+   #root .AppSK .result .data > a > .etext-label > i,
+html:not([lang="bo"]):not([lang^="zh"]):not([lang="km"])
+   #root .AppSK .result .data > a > .etext-label > span[lang]:not([lang="bo"]):not([lang="zh"]):not([lang^="zh-han"]):not([lang="km"]):not([lang$="-khmr"]) {
+   font-family: var(--living-serif) !important;
+   letter-spacing: 0.01em;
+}
+
+/* "Etext for:" stays the italic lead-in it is, one step back in colour */
+#root .AppSK .result .data > a > .etext-label > i { color: var(--living-ink-soft); }
+
+/* ---- no rule between the search box and the chips ----
+ *
+ * #search-bar closes the band with a hairline, which made sense while the band ended
+ * there; on a results page #filters-UI continues it and the line cut the two apart.
+ * The advanced entry page (no .resultPage) keeps it.
+ */
+#root .App .SearchPane.resultPage #search-bar { border-bottom: none; }
+
+/* the "Simple search" toggle hangs off the box by an absolute top:100%, so it stayed
+   where the chips used to be when they moved onto their centre line */
+#root .App .SearchPane.resultPage #search-bar #simple-search { margin-top: 14px; }
+
+/* the matched term inside a title is an <em> the font rule at the top of this file
+   keeps in the sans at weight 700, so a title switched typeface mid-word ("gdan bzhi
+   yum bka' ye shes..."). It takes the title's own font and keeps the gold tint. */
+#root .AppSK .result .data > a em {
+   font-size: inherit;
+   font-weight: 400;
+   background: rgba(229, 168, 50, 0.32);
+   color: inherit;
+}
+
+html:not([lang="bo"]):not([lang^="zh"]):not([lang="km"])
+   #root .AppSK .result .data > a > span[lang]:not(.T):not([lang="bo"]):not([lang="zh"]):not([lang^="zh-han"]):not([lang="km"]):not([lang$="-khmr"]) em,
+html:not([lang="bo"]):not([lang^="zh"]):not([lang="km"])
+   #root .AppSK .result .data > a > .etext-label > span[lang]:not([lang="bo"]):not([lang="zh"]):not([lang^="zh-han"]):not([lang="km"]):not([lang$="-khmr"]) em {
+   font-family: var(--living-serif) !important;
+}
+
+/* ---- narrow viewports: the result row has to be able to shrink ----
+ *
+ * .result .main is a nowrap flex row of a 130px thumbnail and the data column, and
+ * that column's intrinsic width is its type/script chip line, which does not wrap.
+ * At 375px the row therefore measured 410px against 335px of room and the titles
+ * were cut off past the right edge. Two properties, both no-ops while there is space.
+ */
+#root .AppSK .ais-Hits-item .result,
+#root .AppSK .ais-Hits-item .result .main,
+#root .AppSK .result .data { min-width: 0; }
+
+#root .AppSK .result .T { flex-wrap: wrap; }
+
+/* a long title has to break rather than run off the column */
+#root .AppSK .result .data > a { overflow-wrap: break-word; }
+
+/* under 480px the 130px thumbnail column leaves ~155px for the title, so it comes
+   down a size. The thumbnail itself keeps its width: the etext badge and the RID
+   caption are positioned against that 130px box, and shrinking it pulls them off. */
+@media (max-width: 480px) {
+   #root .AppSK .result .data > a > span[lang]:not(.T),
+   #root .AppSK .result .data > a > .etext-label,
+   #root .AppSK .result .data > a > .etext-label > span[lang],
+   #root .AppSK .result .data > a > .etext-label > i { font-size: 20px; }
+}
+
+/* ---- the advanced band under 1024px ----
+ *
+ * Two glitches at these widths. The sheet insets the heading and the box by 30px
+ * while the chips, the toolbar and the rows are on the page gutter (40px, 20px under
+ * 600), so the box was the only thing off the left edge. And "Simple search" is
+ * positioned absolutely at the bottom right of the box, which is where the chips row
+ * now is: it landed on top of a chip or of "Reset filters" depending on how the
+ * chips wrapped (measured: overlap at 700px and at 560px). It joins the flow above
+ * the box instead, on the same left edge as everything else.
+ */
+
+@media (max-width: 1024px) {
+   #root .App .SearchPane.resultPage #search-bar > h2,
+   #root .App .SearchPane.resultPage #search-bar > div:not(.formControl) {
+      padding-left: 40px;
+      padding-right: 40px;
+   }
+
+   /* under 1024 it goes to the left gutter with everything else. left:0 would resolve
+      against the wrapper's padding box, which is the full width of the band, so the
+      gutter has to be repeated here */
+   #root .App .SearchPane.resultPage #search-bar #simple-search {
+      left: 40px;
+      right: auto;
+      text-align: left;
+   }
+}
+
+@media (max-width: 600px) {
+   #root .App .SearchPane.resultPage #search-bar > h2,
+   #root .App .SearchPane.resultPage #search-bar > div:not(.formControl) {
+      padding-left: 20px;
+      padding-right: 20px;
+   }
+
+   #root .App .SearchPane.resultPage #search-bar #simple-search { left: 20px; }
+
+}
+
+/* "Simple search" hangs off the bottom right of the box (top:100%), which is where
+   the active-filter row is: whether it landed on a chip or on "Reset filters" came
+   down to how the chips wrapped — measured overlapping at 1200px and at 560px. It
+   keeps its place under the box, in a row the band reserves above the chips, and stays
+   absolute so the "in texts" selector beside it (hardcoded top:160px) is unaffected. */
+#root .App .SearchPane.resultPage #search-bar #simple-search {
+   /* 100% is the wrapper, which sits 14px below the box itself */
+   top: calc(100% - 11px);
+   bottom: auto;
+   height: auto;
+   line-height: 1.4;
+}
+
+/* ---- the scope selector once it stacks under the input ----
+ *
+ * Below 665px the "in texts" control drops to a second line inside the box, and the
+ * sheet puts it 5px inside the box (left:45px, 25px under 480px) while the input's own
+ * text is 17px in — so it hung to the left of everything above it. It also kept the
+ * 45px while the gutter had already gone down to 20px, which put it 25px in.
+ */
+
+@media (max-width: 665px) {
+   #root .App .SearchPane.resultPage #search-bar .formControl { left: 57px; }
+}
+
+@media (max-width: 600px) {
+   #root .App .SearchPane.resultPage #search-bar .formControl { left: 37px; }
+}
+
+/* ---- the bar's background under 1024px ----
+ *
+ * The sheet sticks the bar at top:-61px and pushes its own content back down with a
+ * top:60px on the inner row. So the row is on screen while the .nav box that carries
+ * the maroon is above it: once scrolled, the logo, the icons and the open dropdown
+ * floated over the page with nothing behind them. The paint has to be on the inner
+ * row here — except in the collapsed closed state, where that row is the 60px stub
+ * behind the floating burger and has to stay invisible.
+ */
+
+@media (max-width: 1024px) {
+   #root .over-nav + .nav:not(#a):not(.someClass) > div,
+   #root .over-nav + .nav.on:not(#a) > div {
+      background: var(--living-maroon);
+      border-bottom: 1px solid var(--living-gold-line);
+      box-sizing: border-box;
+   }
 }
