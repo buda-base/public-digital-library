@@ -8194,6 +8194,15 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                         }
                             */}
 
+                        {/* Section intro from the mockup. Kept as a sibling before
+                            .home-tradi-grid, which several .home-tradi-grid ~ .AppSK
+                            rules in lib/searchkit/App.css depend on. */}
+                        <div class="home-section-intro">
+                           <span class="eyebrow" lang={this.props.locale}>{I18n.t("home.tradi.eyebrow")}</span>
+                           <h2 lang={this.props.locale}>{I18n.t("home.tradi.title")}</h2>
+                           <p lang={this.props.locale}>{I18n.t("home.tradi.intro")}</p>
+                        </div>
+
                         <div class="home-tradi-grid">
                            { ["bo","pi","sa","zh"].map(t => (
                               <Link /*{...t=="bo"?{title:"Photo by Ven. Matthieu Ricard"}:{}}*/ 
@@ -8207,13 +8216,23 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                         </div>
 
                         <div class="home-support">
-                           <span>{I18n.t("topbar.support")}</span>
+                           <div>
+                              <span class="eyebrow">{I18n.t("topbar.support")}</span>
+                              <span class="support-title" lang={this.props.locale}>{I18n.t("home.support.title")}</span>
+                           </div>
                            <a href={"https://bdrc.io/donation?lang="+corpo_lang} target="_blank" rel="noopener noreferrer" /*rel="nofollow"*/>{I18n.t("topbar.donate2")}</a>
                            <span className="visually-hidden">Go to Donation page</span>
                         </div>
                         {/* Anchor target: the landing page links here as
-                            /buda#recent-acquisitions (see HASH_SCROLL in routes.js). */}
-                        <h3 id="recent-acquisitions">{I18n.t("tradition.recent")}</h3>
+                            /buda#recent-acquisitions (see HASH_SCROLL in routes.js).
+                            The eyebrow before it breaks the .home-support + h3
+                            adjacency lib/searchkit/App.css uses at <=1024px to pull
+                            this heading out of the flow; the skin replaces that. */}
+                        <div class="home-section-intro">
+                           <span class="eyebrow" lang={this.props.locale}>{I18n.t("home.recent.eyebrow")}</span>
+                           <h3 id="recent-acquisitions">{I18n.t("tradition.recent")}</h3>
+                           <p lang={this.props.locale}>{I18n.t("home.recent.intro")}</p>
+                        </div>
                         <InnerSearchPageContainer /*noScrollFilters={true}*/ customPholder={I18n.t("resource.searchTtrad", {trad:I18n.t("tradition.title.recent"),interpolation: {escapeValue: false} }) } forceSearch={true} location={this.props.location} auth={this.props.auth} isOsearch={true} recent={true} />
                            
                      </List> 

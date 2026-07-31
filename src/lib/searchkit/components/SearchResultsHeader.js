@@ -80,7 +80,15 @@ function SearchResultsHeader(props) {
     : <h1 lang={that.props.locale}>{I18n.t("result.search")}</h1> }</> }
     { status != "error" && (results?.nbHits || status === "idle") && (!recent || forceSearch /*&& indexUiState.query && results?.nbHits === 0*/) && 
         ( inner && !indexUiState.query
-          ? <h3>{I18n.t("resource.explain"+(recent&&!forceSearch?"R":""))}</h3>
+          ? <>
+            <h3>{I18n.t("resource.explain"+(recent&&!forceSearch?"R":""))}</h3>
+            {/* the count the mockup puts opposite that line — the number is already
+                on the <header> as data-hits, and types.instance_plural is translated */}
+            { results?.nbHits > 0 &&
+              <span class="hits-count" lang={that.props.locale}>
+                {results.nbHits.toLocaleString(that.props.locale)} {I18n.t("types.instance_plural")}
+              </span> }
+          </>
           : <>
             <h3>{I18n.t("result.hit"+(results.query?"KW":""),{count:results?.nbHits, interpolation: {escapeValue: false}, ...results.query?{kw:results.query}:{}})}</h3> 
             <div class={results?.nbHits === 0 ? "no-result inAppSK":""}>{ results?.nbHits === 0 &&  <Trans i18nKey="search.filters.generic" components={{ newline: <br />, parag: <span class={"noR"}/>, list:<li/>, ita:<i/>}} /> }</div>

@@ -60,7 +60,19 @@
       "instances-by-female-authors":"བུད་མེད་རྩོམ་པ་བོའི་དཔར་གཞི་ཁག",
       "collec":"<h>BDRC ཚོགས་པས་ཞིབ་འཇུག་དཔེ་མཛོད་ཁང་རྣམས་ལ་བཤེར་འབེབས་བྱས་ཟིན་པའི་དཔེ་ཚོགས་མཐུན་སྦྱོར་བྱེད་པའི་ལས་གཞི་ཞིག་ཡོད། ལས་གཞི་དེ་ནི་ང་ཚོས་རྒྱ་ཆེའི་ཀློག་པ་པོར་དཔེ་ཀློག་དང་འཚོལ་ཞིབ་བདེ་བའི་དགོས་མཁོར་དམིགས་ཏེ། གལ་ཆེའི་དཔེ་ཆ་རྣམས་ཕྱོགས་གཅིག་ལ་བསྒྲིགས་པའི་འགངས་ཆེའི་དཔེ་ཚོགས་ཕྱོགས་བསྒྲིགས་(CTC) ཟེར་བ་ཞིག་གསར་བསྒྲིགས་བྱས་ཡོད། </h><h><bold> ཕྱོགས་བསྒྲིགས་ཆེན་མོ་CTC ༡༨ ཡོད་ཅིང་། དེ་དག་ནི་BDRC ཡི་དྲ་ཐོག་དཔེ་མཛོད་ནང་ཉེ་བའི་ཆར་འབྱོར་བ་དང་དེ་དག་གི་ཁྲོད་ནས་དཔེ་མཛོད་དོ་དམ་པ་རྣམས་ཀྱིས་ལེགས་འདེམ་དང་ཕྱོགས་བསྒྲིགས་བྱས་པ་ཤ་སྟག་ཡིན། </bold></h><h>ཁྱེད་དང་འབྲེལ་བའི་དཔེ་མཛོད་ཁག་ལ་དེ་དག་སྔོན་མངགས་བྱ་རྒྱུའི་སྐུལ་མ་གཏོང་རོགས་ཞུ།<nl/>དེ་འབྲེལ་གྱི་གནས་ཚུལ་ཞིབ་ཕྲ་དང་རམ་འདེགས་དགོས་ཚེ་གཤམ་གསལ་གྱི་གློག་འཕྲིན་བརྒྱུད་ནས་འབྲེལ་གཏུགས་གནང་རོགས། <lk href='mailto:dechen@bdrc.io'>dechen@bdrc.io</lk>.</h>",
       "buda":"བུདྡྷ་དྲ་ཐོག་དཔེ་མཛོད།",
-      "subtitle_new":"Access almost any text from the major Buddhist traditions. BUDA contains 30 million pages scanned from the precious originals, and 5 million pages of etexts."
+      "subtitle_new":"Access almost any text from the major Buddhist traditions. BUDA contains 30 million pages scanned from the precious originals, and 5 million pages of etexts.",
+      "tradi": {
+         "eyebrow": "Four great traditions",
+         "title": "Enter by tradition",
+         "intro": "Every stream of the transmission—browse the archive through the lineage that shaped each corpus."
+      },
+      "recent": {
+         "eyebrow": "The living archive",
+         "intro": "The newest scans to join the collection. Make a new search, or refine with the filters to find exactly what you are looking for."
+      },
+      "support": {
+         "title": "ཤོག་གྲངས་ས་ཡ་ ༣༠ རྗེས་མ་སྲུང་སྐྱོབ་བྱེད་པར་རོགས་གནང་།"
+      }
    },
    "types": {
       "any": "གང་རུང་།",
@@ -1028,7 +1040,29 @@
       "order": "མངགས་ཉོ།",
       "join": "ང་ཚོའི་སྐོར་ཀྱི་གནས་ཚུལ་གསར་ཤོས་ཤེས་འདོད་ན་ནང་འཛུལ་བྱོས།",
       "subscribe": "སྔོན་མངགས་བྱོས།",
-      "support": "ངེད་ཚོགས་པའི་ལས་རིགས་ལ་རྒྱབ་སྐྱོར་གནང་རོགས།"
+      "support": "ངེད་ཚོགས་པའི་ལས་རིགས་ལ་རྒྱབ་སྐྱོར་གནང་རོགས།",
+      "description": "༡༩༩༩ ལོ་ནས་བཟུང་འཛམ་གླིང་གི་ནང་བསྟན་ཡིག་ཆའི་རིག་གནས་བརྙན་རྫས་སུ་བསྒྱུར་ཞིང་སྲུང་སྐྱོབ་བྱེད་བཞིན་ཡོད། 501(c)(3) ཁེ་མེད་ལས་ཁུངས་ཤིག",
+      "shareAria": "ཤོག་ངོས་འདི་མཉམ་སྤྱོད།",
+      "emailAria": "BDRC ལ་གློག་འཕྲིན།",
+      "copyright": "© 2026 Buddhist Digital Resource Center. བདག་དབང་ཡོངས་སྲུང་།",
+      "columns": {
+         "resources": "ཐོན་ཁུངས།",
+         "organization": "ལས་ཁུངས།",
+         "legal": "ཁྲིམས་ལུགས།"
+      },
+      "links": {
+         "readingRoom": "ཀློག་ཁང་།",
+         "apiDocs": "API ཡིག་ཆ།",
+         "librarian": "དཔེ་མཛོད་པའི་ཐོན་ཁུངས།",
+         "etexts": "གློག་ཡིག་དང་ OCR",
+         "ourStory": "ང་ཚོའི་གཏམ་རྒྱུད།",
+         "geneSmith": "Gene Smith གྱི་ཤུལ་བཞག",
+         "whoWeAre": "ང་ཚོ་སུ་ཡིན།",
+         "contact": "འབྲེལ་གཏུགས།",
+         "privacy": "གསང་དོན་སྲིད་ཇུས།",
+         "terms": "འཇུག་སྤྱོད་ཀྱི་ཆ་རྐྱེན།",
+         "cookies": "Cookie སྒྲིག་འགོད།"
+      }
    },
    "viewer":{
       "_dash":" — ",

@@ -60,7 +60,19 @@
       "instances-by-female-authors":"Versions by female authors",
       "collec":"<h>BDRC offers a digital acquisition program for research libraries, the Core Text Collection (CTC), now with an updated interface for convenient searching and browsing.</h><h><bold>Each of the 18 CTC hard drives contains curated volumes from BDRC’s holdings curated by our librarians and drawn from our most recent acquisitions.</bold></h><h>Please ask your institution’s librarian about subscribing.<nl/>For more information and assistance, email <lk href='mailto:dechen@bdrc.io'>dechen@bdrc.io</lk>.</h>",
       "buda":"佛教数字档案馆",
-      "subtitle_new":"Access almost any text from the major Buddhist traditions. BUDA contains 30 million pages scanned from the precious originals, and 5 million pages of etexts."
+      "subtitle_new":"Access almost any text from the major Buddhist traditions. BUDA contains 30 million pages scanned from the precious originals, and 5 million pages of etexts.",
+      "tradi": {
+         "eyebrow": "Four great traditions",
+         "title": "Enter by tradition",
+         "intro": "Every stream of the transmission—browse the archive through the lineage that shaped each corpus."
+      },
+      "recent": {
+         "eyebrow": "The living archive",
+         "intro": "The newest scans to join the collection. Make a new search, or refine with the filters to find exactly what you are looking for."
+      },
+      "support": {
+         "title": "助我们保护下一个三千万页"
+      }
    },
    "types": {
       "any": "任意",
@@ -1028,7 +1040,29 @@
       "order": "Order",
       "join": "Join our newsletter and stay up-to-date",
       "subscribe": "Subscribe",
-      "support": "Support our mission of preservation and access"
+      "support": "Support our mission of preservation and access",
+      "description": "自 1999 年以来数字化并保护世界佛教文献遗产。一家 501(c)(3) 非营利机构。",
+      "shareAria": "分享此页面",
+      "emailAria": "给 BDRC 发邮件",
+      "copyright": "© 2026 Buddhist Digital Resource Center 版权所有。",
+      "columns": {
+         "resources": "资源",
+         "organization": "机构",
+         "legal": "法律"
+      },
+      "links": {
+         "readingRoom": "阅览室",
+         "apiDocs": "API 文档",
+         "librarian": "馆员资源",
+         "etexts": "电子文本与 OCR",
+         "ourStory": "我们的故事",
+         "geneSmith": "Gene Smith 的遗产",
+         "whoWeAre": "关于我们",
+         "contact": "联系我们",
+         "privacy": "隐私政策",
+         "terms": "使用条款",
+         "cookies": "Cookie 设置"
+      }
    },
    "viewer":{
       "_dash":" — ",
