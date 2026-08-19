@@ -274,6 +274,12 @@ const xsd   = "http://www.w3.org/2001/XMLSchema#" ;
 //other
 const cbeta = "http://cbetaonline.dila.edu.tw/"
 
+// volumes of an etext instance that actually have etext data, ordered by volume number:
+// instanceHasVolume can list volumes that are missing from the etextrefs graph (ex: bdr:IE1KG14)
+const orderedETVolumes = (graph, instanceIRI) => _.orderBy(
+   (graph ?? []).filter(n => n.volumeOf === instanceIRI && n.sliceEndChar !== undefined),
+   [ "volumeNumber", "sliceStartChar" ], [ "asc", "asc" ])
+
 //const prefixes = { adm, bdac, bdan, bda, bdo, bdr, foaf, oa, owl, rdf, rdfs, skos, xsd, tmp, dila }
 
 export const providers = { 
@@ -7564,13 +7570,13 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
       let pagScope, volNavFirst = this.props.IRI, volNavLast = this.props.IRI, navFirstC = firstC, navLastC = lastC
       if(scopeInfo?.[0]?.instanceHasVolume) {
          pagScope = "collection"
-         let vols = (this.getResourceElem(bdo+"instanceHasVolume") ?? []).filter(v => ETinfo.some(e => e["@id"] === shortUri(v.value)))
-         if(vols.length) {
-            volNavFirst = shortUri(vols[0].value)
-            volNavLast = shortUri(vols[vols.length - 1].value)
-            const colScopeInfo = ETinfo.filter(e => e["@id"] === volNavLast)
+         const volNodes = orderedETVolumes(ETinfo, scopeInfo[0]["@id"])
+         if(volNodes.length) {
+            const lastVolNode = volNodes[volNodes.length - 1]
+            volNavFirst = volNodes[0]["@id"]
+            volNavLast = lastVolNode["@id"]
             navFirstC = 0
-            navLastC = colScopeInfo[0]?.sliceEndChar 
+            navLastC = lastVolNode.sliceEndChar 
             let loca = { ...this.props.location }  
             let search = loca.search.replace(/(^[?])|(&*startChar=[^&]+)|(&*lastVol=[^&]+)(&&+)?/g,"")
             firstPageUrl = "?startChar="+(navFirstC ?? 0)+(search?"&"+search:"") + "#open-viewer"
@@ -8962,9 +8968,14 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                }
             }
             if(get.lastVol === "true") {
-               let vols = this.getResourceElem(bdo+"instanceHasVolume")
-               if(vols.length) {
-                  loadETres = shortUri(vols[vols.length - 1].value)
+               const volNodes = orderedETVolumes(this.props.eTextRefs?.["@graph"], root)
+               if(volNodes.length) {
+                  loadETres = volNodes[volNodes.length - 1]["@id"]
+               } else {
+                  let vols = this.getResourceElem(bdo+"instanceHasVolume")
+                  if(vols?.length) {
+                     loadETres = shortUri(vols[vols.length - 1].value)
+                  }
                }
             }
             if(loadETres && this.state.currentText != loadETres) {
