@@ -7564,13 +7564,13 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
       let pagScope, volNavFirst = this.props.IRI, volNavLast = this.props.IRI, navFirstC = firstC, navLastC = lastC
       if(scopeInfo?.[0]?.instanceHasVolume) {
          pagScope = "collection"
-         let vols = this.getResourceElem(bdo+"instanceHasVolume") ?? []
+         let vols = (this.getResourceElem(bdo+"instanceHasVolume") ?? []).filter(v => ETinfo.some(e => e["@id"] === shortUri(v.value)))
          if(vols.length) {
             volNavFirst = shortUri(vols[0].value)
             volNavLast = shortUri(vols[vols.length - 1].value)
             const colScopeInfo = ETinfo.filter(e => e["@id"] === volNavLast)
             navFirstC = 0
-            navLastC = colScopeInfo[0].sliceEndChar 
+            navLastC = colScopeInfo[0]?.sliceEndChar 
             let loca = { ...this.props.location }  
             let search = loca.search.replace(/(^[?])|(&*startChar=[^&]+)|(&*lastVol=[^&]+)(&&+)?/g,"")
             firstPageUrl = "?startChar="+(navFirstC ?? 0)+(search?"&"+search:"") + "#open-viewer"
