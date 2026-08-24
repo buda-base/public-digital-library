@@ -9306,11 +9306,8 @@ a.result + #matches.mobile,
    align-items: center;
    padding: 72px 40px;
    box-sizing: border-box;
-   background: linear-gradient(90deg,
-      rgba(52, 16, 16, 0.05) 0%,
-      rgba(52, 16, 16, 0.12) 42%,
-      rgba(52, 16, 16, 0.55) 74%,
-      rgba(52, 16, 16, 0.82) 100%);
+   /* the gradient is the full-bleed ::before layer above */
+   background: none;
 }
 
 /* The overlay holding that gradient is the 1440 column, so past 1440 the gradient
@@ -9318,14 +9315,28 @@ a.result + #matches.mobile,
    the gradient's own end colour across what is left on the right, which joins it
    seamlessly — and the ramp keeps covering the text at the same strength whatever
    the viewport, which stretching the overlay would have watered down. */
+/* One full-bleed layer instead of the 1440px overlay plus a rail on its right: the
+   overlay's own edges were visible as seams against the bare photo — sharply on the
+   right, where its end colour is 0.82, and faintly on the left, where 0 meets 0.05.
+   The stops are measured from the right edge in pixels instead of percentages of the
+   column, so the ramp stays exactly where it was over the title whatever the viewport
+   (the percentages would stretch and water it down), and the 0.05 end simply carries on
+   to the left edge. The stops are offset by the gap between the screen edge and the
+   column's — (100% - 1440) / 2 — so the ramp stays anchored to the title and not to the
+   viewport; 374px and 835px are the old 74% and 42% of 1440. */
 .App:not(.khmerServer) .SearchPane #logo::before {
    content: '';
    position: absolute;
    top: 0;
-   bottom: 0;
    right: 0;
-   width: max(0px, calc((100% - 1440px) / 2));
-   background: rgba(52, 16, 16, 0.82);
+   bottom: 0;
+   left: 0;
+   background: linear-gradient(to left,
+      rgba(52, 16, 16, 0.82) 0,
+      rgba(52, 16, 16, 0.82) calc((100% - 1440px) / 2),
+      rgba(52, 16, 16, 0.55) calc((100% - 1440px) / 2 + 374px),
+      rgba(52, 16, 16, 0.12) calc((100% - 1440px) / 2 + 835px),
+      rgba(52, 16, 16, 0.05) calc((100% - 1440px) / 2 + 1440px));
 }
 
 .App:not(.khmerServer) .SearchPane #logo > div > div {
