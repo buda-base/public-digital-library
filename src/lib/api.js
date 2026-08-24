@@ -166,6 +166,20 @@ window.logError = logError
 
 //logError({test: "ok?"})
 
+/* An entity RID in the bdr namespace is a letter prefix followed by digits (P1583,
+ * MW23703, C1KG12). The ontology individuals published in that same namespace have
+ * none (ContentMethod_ComputerInput, ScriptDbuCan, TraditionSakya), and the
+ * first-letter match in getEntiType below reads them as entities all the same —
+ * "ContentMethod_..." comes back Corporation, which is what the resource page then
+ * announces. This does not change getEntiType (its type drives queries, icons and
+ * labels app-wide); it lets a caller tell the two apart.
+ */
+export function isOntologyIndividual(t:string):boolean {
+   const uri = shortUri(t)
+   if(!/^bdr:/.test(uri)) return false
+   return !/[0-9]/.test(uri.replace(/^[^:]+:/,""))
+}
+
 export function getEntiType(t:string):string {
    let uri = shortUri(t)
    let p = uri.replace(/^([^:]+):.*$/,"$1")

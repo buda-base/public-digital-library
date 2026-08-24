@@ -84,7 +84,7 @@ import Loader from "react-loader"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faLanguage } from '@fortawesome/free-solid-svg-icons'
 //import {MapComponent} from './Map';
-import {getEntiType,dPrefix,RISexportPath,staticQueries} from '../lib/api';
+import {getEntiType,dPrefix,RISexportPath,staticQueries,isOntologyIndividual} from '../lib/api';
 import {numtobo} from '../lib/language';
 import {languages,getLangLabel,top_right_menu,prefixesMap as prefixes,sameAsMap,shortUri,fullUri,
    highlight,lang_selec,etext_lang_selec,langSelect,searchLangSelec,report_GA,getGDPRconsent,renderDates,
@@ -11802,7 +11802,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
          <div class={isMirador?"H100vh OF0":""}>
             { ["Images","Instance"].includes(_T) && <abbr class="unapi-id" title={this.props.IRI}></abbr> }           
             <div class="infoPanel" style={{display:"none"}}></div>
-            <div {...searchUrl?{"data-searchUrl":searchUrl}:{}} className={"resource "+hasTabs+getEntiType(this.props.IRI).toLowerCase() + (this.props.simple?" simple":"") + (this.props.preview?" preview":"") /*+(!this.props.portraitPopupClosed?" portrait-warn-on":"")*/} {...this.props.simple?{onClick:sendMsg}:{}}>                                             
+            <div {...searchUrl?{"data-searchUrl":searchUrl}:{}} className={"resource "+hasTabs+getEntiType(this.props.IRI).toLowerCase() + (isOntologyIndividual(this.props.IRI)?" ontology":"") + (this.props.simple?" simple":"") + (this.props.preview?" preview":"") /*+(!this.props.portraitPopupClosed?" portrait-warn-on":"")*/} {...this.props.simple?{onClick:sendMsg}:{}}>                                             
                {/* {searchUrl &&  */}
                <div class="ariane" data-level={0}>
                   {breadcrumbs}

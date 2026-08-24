@@ -9274,7 +9274,7 @@ a.result + #matches.mobile,
 :root {
    --living-ink: #2a1512;
    --living-ink-soft: #5c4a42;
-   --living-band: #f0dfaf;
+   --living-band: #f4ebdc;
    --living-band-line: rgba(139, 30, 43, 0.14);
    --living-box: #fffefa;
    --living-cream-bg: #fbf8f2;
@@ -9445,7 +9445,9 @@ a.result + #matches.mobile,
 /* magnifier: from the right of the field (where the submit button now is) to the
    left of it, recoloured to the mockup grey-brown */
 #root .inner-search-bar .ais-SearchBox-form::before {
-   top: 20px; /* (60 - 20) / 2 — the form is exactly as tall as the box */
+   /* (60 - 20) / 2 = 20, plus 2: the glyph's circle is at 11 of its 24 viewBox units,
+      so geometric centring makes the icon read high against the placeholder */
+   top: 22px;
    bottom: auto;
    left: 14px;
    right: auto;
@@ -9646,7 +9648,7 @@ html:not([lang="bo"]):not([lang^="zh"]):not([lang="km"])
 }
 
 #root .App.home .ISB .ais-SearchBox-form::before {
-   top: 24px; /* (72 - 24) / 2 */
+   top: 26px; /* (72 - 24) / 2, plus the 2px of the compact bar above */
    left: 18px;
    width: 24px;
    height: 24px;
@@ -9873,7 +9875,10 @@ html:not([lang="bo"]):not([lang^="zh"]):not([lang="km"])
 }
 
 #root .AppSK .ais-RefinementList-label {
-   align-items: flex-start;
+   /* baseline, not flex-start: the box, the label's first line and the count are three
+      different type sizes, and top-aligning them left all three on slightly different
+      lines */
+   align-items: baseline;
    gap: 10px;
    padding: 6px 0;
    line-height: 1.35;
@@ -11354,4 +11359,912 @@ html:not([lang="bo"]):not([lang^="zh"]):not([lang="km"])
       border-bottom: 1px solid var(--living-gold-line);
       box-sizing: border-box;
    }
+}
+
+/* --------------------------------------------------------------------------------------------------------------------- the text page
+ *
+ * Mockup: the "BDRC library HTML" design project, BUDA Text Page.dc.html — a
+ * text/instance page, /show/bdr:MW3KG938.
+ *
+ * Same approach as the header and the home page above: no JSX change, the DOM the
+ * ResourceViewer already renders is repainted. That DOM is
+ *
+ *   .resource.hasTabs.instance
+ *      > .ariane                      the breadcrumb (position:absolute in the sheet)
+ *      > .index                       (empty on this page)
+ *      > div                          the card column
+ *          .title + .data > h1.on     the type badge and the title
+ *          #main-info.data.top-props  creator / extent / scans / summary rows
+ *          #perma.data                permalink, export metadata, cite
+ *          .data.mid-props            "Other versions" — a searchkit panel, not the
+ *                                     mockup's two-column grid, so it is repainted
+ *                                     rather than rebuilt
+ *          .data.bot-props            title / event / publisher rows
+ *          .data.legal-props          the dark licence band
+ *          #ext-info.data.ext-props   "Extended Properties" + its rows
+ *          .data.ext-props
+ *
+ * The mockup's <main> is 1000px wide with a 24px gutter, so the sheet's 1160+140
+ * column becomes 952+24 and the blocks' 100px inner gutter becomes the card's 52px.
+ */
+
+:root {
+   --living-page: #eae3d5; /* the ground behind the card */
+   --living-hair: rgba(42, 18, 8, 0.1); /* row rules and the card border */
+   --living-label: #3b2414; /* property labels */
+   --living-sub: #7d6350; /* sub-labels, the breadcrumb, captions */
+   --living-band-warm: #f4ebda; /* the permalink strip */
+   --living-panel: #f1e9da; /* the extended-properties panel */
+   --living-badge: #f1e7d6; /* the "Text" chip */
+   --living-card-pad: 96px; /* the card's side padding, see the column block below */
+   --living-gap: 28px; /* the band between two detached blocks */
+   --living-seam: #e2dacc; /* that band's colour: the darkest tone of the page ground */
+   --living-inset: #faf5ea; /* a block set into the card: the associated-results panel */
+}
+
+/* ---- the page column ----
+ *
+ * The sheet centres a 1160px content-box with 140px rails and lays it out as a flex
+ * row (.ariane is absolute, .index is empty, the card is the third child). Block
+ * layout is enough once the column is the mockup's width, and it lets the breadcrumb
+ * back into the flow below.
+ *
+ * Scoped away from the pages that reuse .resource with a layout of their own — the
+ * etext reader, the user profile, and the hover-panel/preview renderings.
+ */
+
+#root > div > .resource:not(.etext-view):not(.user):not(.preview):not(.simple):not(#a),
+#root > div > .infoPanel + .resource:not(.etext-view):not(.user):not(.preview):not(.simple):not(#a) {
+   display: block;
+   width: auto;
+   max-width: none;
+   padding: 30px 40px 64px;
+   background-color: var(--living-page);
+}
+
+/* The column is the topbar's text width: 1440 minus its 40px gutter, so the card, the
+ * bar above it and the footer below share one edge (120..1480 at 1600, 40..1400 at
+ * 1440, and the .resource padding below keeps that to the gutter under 1440).
+ * The mockup's 952 was its own <main> width and left the card floating in the middle
+ * of the page with the data column squeezed to 646px.
+ *
+ * :has(> .data) rather than :has(> #main-info): the ontology individuals
+ * (/show/bdr:ContentMethod_ComputerInput and the like) have no #main-info block, so
+ * they missed this rule entirely and their card spanned the full 1600.
+ *
+ * The sheet gives the card column a margin-right of its own under 1440px, hence the
+ * shorthand rather than margin-left/right. */
+#root > div > .resource > .ariane:not(#a),
+#root > div > .resource:not(.etext-view):not(.user):not(.preview):not(.simple) > div:has(> .data):not(#a) {
+   width: 100%;
+   max-width: 1360px;
+   /* :not(#a) because .over-nav ~ div .resource > .index + div:not(#a) (top of this
+      file) pins margin-left to 0, which left the column flush against the gutter with
+      all the slack on its right */
+   margin: 0 auto;
+}
+
+#root > div > .resource > .ariane:not(#a) { margin-bottom: 22px; }
+
+/* ---- the breadcrumb ---- */
+
+.resource:not(.etext-view):not(.user) > .ariane:not(#a) {
+   position: static;
+   width: 100%;
+   max-width: none;
+   padding: 0;
+   margin: 0 0 22px;
+   font-size: 13.5px;
+   line-height: 1.5;
+   color: var(--living-sub);
+}
+
+.resource > .ariane a:not(#a) {
+   color: var(--living-brand);
+   font-weight: 600;
+   text-decoration: none;
+   border-bottom: none;
+}
+
+.resource > .ariane a:hover:not(#a) { text-decoration: underline; }
+
+.resource > .ariane > span.can-shrink:not(#a) { color: var(--living-ink-soft); }
+
+/* ---- the card: one box, painted block by block ----
+ *
+ * Each .data block keeps its own background in the sheet, so the card's border is the
+ * blocks' left and right edges, its corners are the first and last block's, and the
+ * shadow is a drop-shadow on the column: applied to the union of what the children
+ * paint, it wraps the article and the extended-properties panel separately and leaves
+ * the 28px gap between them clean, which one box-shadow per block could not do.
+ */
+
+/* box-shadow on the column, not one per block and not a filter.
+ *
+ * Per block, every block casts into the ground gap under it: measured, the middle of
+ * the 28px gaps went from #eae3d5 to #e0d9cb, so the gaps stopped being page
+ * background. On the column the shadow is cast by one rectangle whose inside is
+ * transparent, so the gaps stay exactly the ground (verified across 121..1479 on all
+ * four of them) and only a 2px trail shows beside the card, outside it.
+ *
+ * Not a filter: drop-shadow on the column would make it a containing block for the
+ * absolutely positioned bits the related-versions panel puts in its rows (its search
+ * box left the row it belongs to).
+ */
+#root > div > .resource:not(.etext-view):not(.user):not(.preview):not(.simple) > div:has(> .data) {
+   box-shadow: 0 12px 40px rgba(42, 18, 8, 0.09);
+   /* the column paints the bands between its blocks: they are margins, so nothing but
+      the column itself can colour them, and the blocks are opaque over the rest of it */
+   background-color: var(--living-seam);
+}
+
+#root > div > .resource > div > .data:not(#a) {
+   box-sizing: border-box;
+   width: 100%;
+   /* the blocks' own 20px top/bottom broke the 18px row rhythm at every seam between
+      two .data blocks; the rows' rules carry the rhythm on their own */
+   padding-top: 0;
+   padding-bottom: 0;
+   /* wide enough to hold the "< Back" anchor, which the sheet hangs 79px to the left
+      of the text edge and which used to sit outside the white */
+   padding-left: var(--living-card-pad);
+   padding-right: var(--living-card-pad);
+   background-color: var(--living-box);
+   border-left: 1px solid var(--living-hair);
+   border-right: 1px solid var(--living-hair);
+   color: var(--living-ink);
+}
+
+/* the title block opens the card */
+#root > div > .resource > div > .title + .data:not(#a) {
+   padding-top: 44px;
+   padding-bottom: 30px; /* the mockup's margin under the h1, before the first row rule */
+   border-top: 1px solid var(--living-hair);
+   border-radius: 4px 4px 0 0;
+}
+
+/* ---- the type badge and the title ---- */
+
+.resource .data > h1.on:not(#a) {
+   margin: 0;
+   font-size: 44px;
+   font-weight: 400;
+   line-height: 1.06;
+   color: var(--living-ink);
+   text-wrap: balance;
+}
+
+/* Ogg is latin-only: romanised titles take the serif, bo/zh stay on the Noto stack
+   (the .resource * rule at the top of this file sets that stack with !important, which
+   is also why the nested span — work titles wrap theirs in a .placeType — has to be
+   named here instead of inheriting). */
+.resource .data > h1.on > span:not(.newT):not(.lang):not([lang="bo"]):not([lang^="zh"]):not([lang^="km"]),
+.resource .data > h1.on > span:not(.newT):not(.lang):not([lang="bo"]):not([lang^="zh"]):not([lang^="km"])
+   > span:not([lang="bo"]):not([lang^="zh"]):not([lang^="km"]) {
+   font-family: var(--living-serif) !important;
+   letter-spacing: 0.01em;
+}
+
+/* The sheet's badge is span.newT > span.space-fix > span, and it paints the middle
+ * one (#dddddd, 1px 4px). The chip has to land on that same middle span only — set on
+ * every descendant it draws a chip inside a chip — and the innermost span goes back to
+ * being plain text. The 4 :not(#a) are there to out-specify the searchkit sheet's
+ * :not(#a):not(#b):not(#c) font-size rule under 1024px.
+ */
+.resource .data > h1.on > .newT:not(#a) {
+   display: block;
+   margin: 0 0 16px;
+   line-height: 1;
+}
+
+#root .resource .data > h1.on > .newT > span:not(#a):not(#b):not(#c):not(#d) {
+   display: inline-block;
+   padding: 4px 11px;
+   font-size: 11px;
+   font-weight: 700;
+   line-height: 1.1;
+   letter-spacing: 0.14em;
+   text-transform: uppercase;
+   color: var(--living-ink-soft);
+   background-color: var(--living-badge);
+   border: 1px solid rgba(42, 18, 8, 0.16);
+   border-radius: 2px;
+   vertical-align: baseline;
+}
+
+#root .resource .data > h1.on > .newT > span > span:not(#a):not(#b):not(#c):not(#d) {
+   padding: 0;
+   font-size: inherit;
+   font-weight: inherit;
+   letter-spacing: inherit;
+   background: none;
+   border: none;
+   border-radius: 0;
+}
+
+/* ---- the property rows ----
+ *
+ * The sheet draws the rule as a ::after inside each row, indented to the value column
+ * (margin-left:190px) — which leaves the last row of a block with no space under it,
+ * right against the licence band. The mockup rules every row from the top instead, so
+ * the pseudo-element goes and the row carries a border-top and 18px of padding.
+ */
+
+/* Rooted at the card column on purpose: the related-versions panel inside the
+ * "Other versions" row carries the .data class too (.AppSK.InnerSearchPage.data), so a
+ * .data-anchored rule ruled and padded its internals as if they were property rows.
+ */
+#root > div > .resource > div > .data:not(#perma) > div:not(.firstImage):not(.browse):not(.header)::after {
+   display: none;
+}
+
+#root > div > .resource > div > .data:not(#perma):not(.legal-props) > div:not(.firstImage):not(.browse):not(.header):not(#a) {
+   padding-top: 18px;
+   padding-bottom: 18px;
+   border-top: 1px solid var(--living-hair);
+}
+
+.resource .data > div > h3:not(#a) {
+   width: 172px;
+   padding-right: 28px;
+   font-size: 13.5px;
+   line-height: 1.5;
+   color: var(--living-label);
+}
+
+.resource .data > div > h3 span:not(#a) { font-weight: 700; }
+
+/* The labels that are property links (a.propref / button.propref — "Has Creator",
+ * "Extent", "Scans"…) kept the sheet's 16px from the <a>/<button> defaults, so they
+ * read two sizes bigger than the plain-text labels next to them ("Outline", "Outline
+ * Search"). They inherit the h3's 13.5 like the rest.
+ */
+.resource .data > div > h3 .propref:not(#a),
+.resource .data > div > h3 .propref span:not(#a) { font-size: inherit; }
+
+.resource .data > div > h3 .propref:not(#a) {
+   color: var(--living-label);
+   text-decoration-color: rgba(59, 36, 20, 0.4);
+}
+
+.resource .data > div > .group:not(#a) {
+   width: calc(100% - 172px - 28px);
+   font-size: 15px;
+   color: var(--living-ink);
+}
+
+/* Stacked values inside one row (Cover Title / Title Page Title, the identifiers) are
+ * separated by a rule and 20px in the sheet; the mockup just gaps them by 14px.
+ */
+.resource .data > :not([data-prop="bdo:note"]) .sub:not(:first-of-type):not(#a) {
+   margin-top: 14px;
+   padding-top: 0;
+   border-top: none;
+}
+
+.resource .data > :not([data-prop="bdo:note"]) .sub:not(:last-child):not(#a) { margin-bottom: 0; }
+
+/* the value column's own labels ("main author:", "Cover Title:") — the mockup runs a
+   150px column, 120px on the creator row */
+.resource .data .sub > h4.first:not(#a) {
+   width: 150px;
+   margin-right: 20px;
+   padding-right: 0;
+   color: var(--living-sub);
+   font-size: 14.5px;
+}
+
+/* on the creator row the sheet puts "main author:" in .subgroup > .subsub:first-child
+   (the h4.first there is the bare colon), and the mockup runs that one at 120px */
+.resource .data > [data-prop="bdo:creator"] .subgroup .subsub:first-child:not(#a) {
+   width: 120px;
+   margin-right: 20px;
+   padding-right: 0;
+}
+
+.resource .data .sub h4.first .propref:not(#a),
+.resource .data .sub h4.first > a:not(#a),
+.resource .data .subsub > h4.first .propref:not(#a) { color: var(--living-sub); text-decoration-color: rgba(125, 99, 80, 0.4); }
+
+.resource .data a:not(#a),
+.resource .data .urilink:not(#a) { color: var(--living-brand); }
+.resource .data a:hover:not(#a) { color: var(--living-brand-hover); border-bottom-color: var(--living-brand-hover); }
+
+/* ---- the permalink strip ---- */
+
+#root > div > .resource .data#perma:not(#a) {
+   padding: 14px var(--living-card-pad);
+   background-color: var(--living-band-warm);
+   border-top: 1px solid var(--living-hair);
+   border-bottom: 1px solid var(--living-hair);
+}
+
+.resource .data#perma > div:not(#a) {
+   padding: 0;
+   background-color: transparent;
+   border: none;
+   box-shadow: none;
+   gap: 22px;
+}
+
+.resource .data#perma #permalink:not(#a) {
+   background-color: var(--living-brand);
+   border-radius: 2px;
+   letter-spacing: 0.04em;
+}
+
+.resource .data#perma #permalink:hover:not(#a) { background-color: var(--living-brand-hover); }
+
+/* everything in the row lines up on the value column: the band's first item takes the
+   label column's width, so bdr:… starts where the property values do (the sheet gives
+   #rid a 57px margin of its own instead) */
+#root > div > .resource .data#perma #permalink:not(#a) {
+   min-width: 178px;
+   justify-content: center;
+}
+
+#root > div > .resource .data#perma #rid:not(#a) { margin-left: 0; }
+
+.resource .data#perma #DL:not(#a),
+.resource .data#perma #cite:not(#a) { color: var(--living-label); font-weight: 600; font-size: 13.5px; }
+
+.resource .data#perma > div > #rid:not(#a) {
+   font-family: ui-monospace, Menlo, monospace;
+   font-size: 13.5px;
+   color: var(--living-ink-soft);
+   letter-spacing: 0.02em;
+}
+
+/* ---- "Other versions" ---- */
+
+#root > div > .resource .data.mid-props:not(#a) { padding-top: 36px; padding-bottom: 8px; }
+
+/* The panel is a two-column grid of search hits (searchkit's sheet, .ais-Hits-list).
+ * In the mockup's narrower card each card is a 58x74 spine plus its title, so the
+ * sheet's 100px square thumbnail has to come down or the title column is left with
+ * ~120px and wraps a word per line.
+ */
+.resource .data.mid-props .AppSK .images-thumb:not(#a),
+.resource .data .AppSK [data-prop="bdo:workHasInstance"] .images-thumb:not(#a) {
+   width: 58px;
+   height: 74px;
+   margin-right: 14px;
+   border-radius: 1px;
+}
+
+.resource .data.mid-props .AppSK .ais-Hits-list:not(#a) { column-gap: 32px; }
+
+/* The version cards are search-result rows, so the results page's 24px serif title
+ * applies to them. In the mockup they are a maroon 13.5px sans line next to a 58x74
+ * spine, so both the title and the sheet's 100px square thumbnail come down.
+ */
+html:not([lang="bo"]):not([lang^="zh"]):not([lang="km"])
+   #root .resource .data .AppSK .result .data > a:not(#a),
+html:not([lang="bo"]):not([lang^="zh"]):not([lang="km"])
+   #root .resource .data .AppSK .result .data > a > span[lang]:not(#a),
+html:not([lang="bo"]):not([lang^="zh"]):not([lang="km"])
+   #root .resource .data .AppSK .result .data > a > span:not(.T):not(#a) span:not(#a) {
+   font-family: var(--buda-sans) !important;
+   font-size: 13.5px !important;
+   font-weight: 600;
+   line-height: 1.3;
+   letter-spacing: 0;
+   color: var(--living-brand);
+}
+
+/* "Scans: ... / Etext: ..." under the spine */
+#root .resource .data .AppSK .result .data .names:not(#a),
+#root .resource .data .AppSK .result .thumb .names:not(#a),
+#root .resource .data .AppSK .result .data .names > .label:not(#a),
+#root .resource .data .AppSK .result .data .names > .label + span:not(#a) {
+   font-size: 11.5px;
+   line-height: 1.5;
+   color: var(--living-sub);
+}
+
+#root .resource .data .AppSK .result .data .names > .label:not(#a) { color: var(--living-ink-soft); }
+
+/* the spine is 58px, but the "Scans: / Etext:" lines the sheet puts under it need
+   about a hundred to stay on one line each */
+/* the sheet insets every hit by 24px, which pushed the spines 24px right of the value
+   column and 24px below the row's rule; the gap between grid rows moves to the bottom */
+#root .resource .data .AppSK .ais-Hits-item:not(#a) { padding: 0 4px 22px 0; }
+
+#root .resource .data .AppSK .main-content .result .thumb:not(#a),
+#root .resource .data .AppSK .main-content .result .thumb a:not(#a) { width: 104px; }
+
+#root .resource .data .AppSK .main-content .result .thumb.hasImg a .img:not(#a) {
+   width: 58px;
+   height: 74px;
+   overflow: hidden;
+   border: 1px solid rgba(42, 18, 8, 0.16);
+   border-radius: 1px;
+   box-shadow: 0 2px 6px rgba(42, 18, 8, 0.1);
+}
+
+#root .resource .data .AppSK .main-content .result .thumb.hasImg a .img img:not(#a) {
+   height: 74px;
+   width: 58px;
+   object-fit: cover;
+}
+
+/* the panel is on the card, not on its own white sheet */
+.resource .data .AppSK.InnerSearchPage:not(#a),
+.resource .data .AppSK .result .data:not(#a) { background-color: transparent; }
+
+/* the results header ("Showing the most popular items …" + the hits count) is a search
+   page's furniture; the mockup's row is just the grid */
+#root .resource .data .AppSK .main-content > header:not(#a) { display: none; }
+
+/* the row under the grid: "see N more" on the left, "Browse all N" on the right */
+.resource .data .other-versions-nav a:not(#a) {
+   padding: 9px 18px;
+   background-color: var(--living-brand);
+   border-radius: 2px;
+   font-size: 12.5px;
+   font-weight: 700;
+   text-transform: uppercase;
+   letter-spacing: 0.08em;
+   color: var(--living-cream);
+}
+
+.resource .data .other-versions-nav a:hover:not(#a) {
+   background-color: var(--living-brand-hover);
+   color: var(--living-cream);
+}
+
+.resource .data .other-versions-nav > span:first-child:not(#a) {
+   color: var(--living-brand);
+   font-size: 13.5px;
+   font-weight: 600;
+}
+
+/* ---- the outline ----
+ *
+ * The mockup's outline is a warm panel with a hairline; the sheet already boxes it
+ * (#fcf5e2, 25px 20px), so this is a repaint and a tighter inset.
+ */
+
+.resource .data#outline > div:not(#a) {
+   padding: 16px 18px;
+   background-color: #fbf3de;
+   border: 1px solid var(--living-band-line);
+   border-radius: 3px;
+}
+
+/* the type chips: COL maroon on the root line, SEC gold on the sections, at the
+   mockup's 9px/700 rather than the sheet's 26x20 grey box */
+.resource .data#outline .parTy:not(#a) {
+   width: auto;
+   height: auto;
+   padding: 2px 6px;
+   margin-right: 8px;
+   background: var(--living-brand);
+   border-radius: 2px;
+   vertical-align: 1px;
+}
+
+.resource .data#outline .parTy div:not(#a) {
+   font-size: 9px;
+   font-weight: 700;
+   letter-spacing: 0.08em;
+   color: var(--living-cream);
+}
+
+.resource .data#outline .root + div .parTy:not(#a) { background: #c99a2e; }
+.resource .data#outline .root + div .parTy div:not(#a) { color: #3a2708; }
+
+/* the root line and the sections: 14.5 / 14px, and the mockup's 22px indent (the
+   sheet writes the 45px inline on the wrapper, hence the !important) */
+.resource .data#outline .root:not(#a) { font-size: 14.5px; }
+.resource .data#outline .root > .parTy + .on:not(#a) a span { font-weight: 600; }
+/* 22px of indent past the root's own arrow (17px), not the sheet's 45 — written
+   inline on the wrapper, hence the !important */
+.resource .data#outline .root + div:not(#a) { padding-left: 39px !important; }
+.resource .data#outline .root + div .top:not(#a) {
+   font-size: 14px;
+   line-height: 1.5;
+   padding: 3px 0;
+   margin-top: 1px;
+}
+
+/* the outline's own search field: the mockup's underlined input */
+.resource [data-prop="tmp:outlineSearch"] .search input:not(#a) {
+   max-width: 420px;
+   padding-top: 8px;
+   padding-bottom: 8px;
+   background-color: transparent;
+   border: none;
+   border-bottom: 1px solid rgba(42, 18, 8, 0.28);
+   border-radius: 0;
+   font-size: 14.5px;
+   line-height: 24px;
+   color: var(--living-ink);
+}
+
+/* ---- the licence band ---- */
+
+#root > div > .resource > div > .data.legal-props:not(#a) { padding-left: 0; padding-right: 0; }
+
+.resource .data.legal-props > div:not(#a) {
+   padding: 22px var(--living-card-pad);
+   background-color: var(--living-maroon);
+   color: var(--living-cream);
+}
+
+/* the label keeps the width every other row's label has, so the CC0 mark that opens
+   this row's value starts on the same edge as the values above it (width:auto here
+   sized the label to its own text and pulled the value 31px to the left) */
+/* two ids and an explicit box-sizing: the searchkit sheet re-sizes this label below
+   1024px (150px, border-box) and again lower down, which shifted the row's value off
+   the column the other rows keep */
+#root > div > .resource .data.legal-props > div h3:not(#a) {
+   width: 172px;
+   padding-right: 28px;
+   box-sizing: content-box;
+   color: var(--living-gold);
+   font-size: 14px;
+}
+
+.resource .data.legal-props > div h3 span:not(#a) { color: var(--living-gold); }
+.resource .data.legal-props > div h4:not(#a) { font-size: 13.5px; color: var(--living-cream-dim); }
+.resource .data.legal-props > div a:not(#a) { color: var(--living-cream-dim); }
+
+/* the licence band stands on its own too, the same ground gap above it as the
+   permalink strip has — overflow:hidden so the maroon inside takes the corners */
+#root > div > .resource > div > .data.legal-props:not(#a) {
+   margin-top: var(--living-gap);
+   border: 1px solid var(--living-hair);
+   border-radius: 4px;
+   overflow: hidden;
+}
+
+#root > div > .resource > div > .data:has(+ .legal-props):not(#a) {
+   border-bottom: 1px solid var(--living-hair);
+   border-radius: 0 0 4px 4px;
+}
+
+/* ---- the extended-properties panel ---- */
+
+#root > div > .resource > div > .data.ext-props:not(#a) {
+   background-color: var(--living-panel);
+   border-color: rgba(42, 18, 8, 0.1);
+}
+
+#root > div > .resource > div > #ext-info.data.ext-props:not(#a) {
+   margin-top: var(--living-gap);
+   padding-top: 40px;
+   border-top: 1px solid var(--living-hair);
+   border-radius: 4px 4px 0 0;
+}
+
+#root > div > .resource > div > .data.ext-props:last-child:not(#a) {
+   padding-bottom: 44px;
+   border-bottom: 1px solid var(--living-hair);
+   border-radius: 0 0 4px 4px;
+}
+
+/* on a work page the licence band is the last block, and the sheet leaves 45px of
+   white under it */
+#root > div > .resource > div > .data.legal-props:last-child:not(#a) { padding-bottom: 0; }
+
+/* the panel's rows are on the sheet's #f0f0f0 inner div, not on .data itself */
+#root > div > .resource .data.ext-props > div:not(#a) { background-color: transparent; padding-left: 0; padding-right: 0; }
+.resource .data.ext-props:last-child > div:last-child:not(#a) { padding-bottom: 0; }
+
+.resource .data.ext-props h2:not(#a) {
+   margin: 0 0 22px;
+   font-family: var(--living-serif) !important;
+   /* The mockup's 30px is Prata; Ogg is optically smaller at the same size (cap height
+      20 vs 24, "Extended Properties" 268px wide vs 298 at 30px), so 34 lands on the
+      mockup's presence — width 304, cap 22.7. */
+   font-size: 34px;
+   font-weight: 400;
+   color: var(--living-ink);
+}
+
+.resource .data.ext-props > div:not(#a) { border-top-color: rgba(42, 18, 8, 0.12); }
+
+/* the block that only holds the "Extended Properties" heading is not a row */
+#root > div > .resource .data > div:has(> h2):not(#a):not(#b):not(#c) {
+   padding-top: 0;
+   padding-bottom: 0;
+   border-top: none;
+}
+
+/* ---- narrow viewports: the column gives up its fixed width ---- */
+
+@media (max-width: 1024px) {
+   #root > div > .resource:not(.etext-view):not(.user):not(.preview):not(.simple):not(#a) {
+      width: 100%;
+      padding: 24px 16px 48px;
+   }
+
+   #root > div > .resource > div > .data:not(#a) { padding-left: 24px; padding-right: 24px; }
+   #root > div > .resource .data#perma:not(#a) { padding-left: 24px; padding-right: 24px; }
+   .resource .data.legal-props > div:not(#a) { padding-left: 24px; padding-right: 24px; }
+}
+
+/* ---- the resource card on narrower screens ----
+ *
+ * The 96px that hold the "< Back" anchor are desktop room. Below 1024px the searchkit
+ * sheet takes the card's side padding over with a 24px gutter of its own (an id-level
+ * rule in a later sheet, so --living-card-pad does not reach there) — which is the
+ * right figure for a phone anyway. Only the ground's gutter follows the bars down.
+ */
+
+@media (max-width: 600px) {
+   #root > div > .resource:not(.etext-view):not(.user):not(.preview):not(.simple):not(#a),
+   #root > div > .infoPanel + .resource:not(.etext-view):not(.user):not(.preview):not(.simple):not(#a) {
+      padding-left: 20px;
+      padding-right: 20px;
+   }
+}
+
+/* ---- ontology individuals ----
+ *
+ * /show/bdr:ContentMethod_ComputerInput and its kind are individuals from the
+ * ontology, not entities: getEntiType matches on the RID's first letter, so they come
+ * back typed — "ContentMethod_..." as Corporation — and the card announced that in its
+ * badge. ResourceViewer now marks them (isOntologyIndividual, api.js) and the wrong
+ * badge goes; the rest of the page is a normal property list and reads as one.
+ */
+#root > div > .resource.ontology .data > h1.on > .newT { display: none; }
+
+/* the outline search field was capped at the mockup's 420px while its own magnifier
+   is absolute at the right of the row, so the wider value column left the two 300px
+   apart. The field takes the row and the button sits back at its end. */
+#root > div > .resource .data > div > .group > .search > div > input:not(#a) {
+   width: calc(100% - 56px);
+   max-width: none;
+}
+
+/* ---- the breadcrumb on the card's text edge ----
+ *
+ * It shared the column's box, so it started on the card's border while everything
+ * inside the card starts one border plus the card's padding further in. Same offset
+ * here, which is why the knob is re-declared below 1024 where the searchkit sheet
+ * takes the card's own padding down to 24px.
+ */
+#root > div > .resource > .ariane:not(#a) {
+   box-sizing: border-box;
+   padding-left: calc(var(--living-card-pad) + 1px);
+   padding-right: calc(var(--living-card-pad) + 1px);
+}
+
+@media (max-width: 1024px) {
+   :root { --living-card-pad: 24px; }
+}
+
+/* ---- the permalink band stands on its own ----
+ *
+ * It was a warm strip inside the card, held between two hairlines. The same ground gap
+ * the extended-properties panel already has above it detaches it top and bottom, so
+ * the column reads as three pieces on the ground rather than one stack with a stripe
+ * in it. The blocks on either side round the corners they now expose — by adjacency,
+ * so a page whose order differs (or that has no #perma at all) is unaffected.
+ */
+
+#root > div > .resource > div > #perma.data:not(#a) {
+   margin: var(--living-gap) 0;
+   border: 1px solid var(--living-hair);
+   border-radius: 4px;
+}
+
+#root > div > .resource > div > .data:has(+ #perma):not(#a) {
+   border-bottom: 1px solid var(--living-hair);
+   border-radius: 0 0 4px 4px;
+}
+
+#root > div > .resource > div > #perma + .data:not(#a) {
+   border-top: 1px solid var(--living-hair);
+   border-radius: 4px 4px 0 0;
+}
+
+/* the same gap over the card, so the breadcrumb sits as far from it as the blocks
+   inside sit from each other */
+#root > div > .resource > .ariane:not(#a) { margin-bottom: var(--living-gap); }
+
+/* ---- the CC0 mark in the licence band ----
+ *
+ * It is a ::before on the licence link, pulled out of the flow by margin-left:-45px
+ * against the link's own 24px of padding — which put the disc 21px left of the value
+ * column every other row starts on (measured: disc at 396, values at 417). Both go,
+ * so the disc opens the value column and the text follows it.
+ */
+#root > div > .resource .data.legal-props > div h4 > .ulink > a:first-child:not(#a) { padding-left: 0; }
+
+/* the mark itself is drawn per provider (a long list of [href*=...]::before rules
+   around line 5934), so the reset goes on whichever link opens the row */
+#root > div > .resource .data.legal-props > div h4 > .ulink > a:first-child::before,
+#root > div > .resource .data.legal-props > div h4 > .ulink > [href]:first-child::before {
+   margin-left: 0;
+   margin-right: 12px;
+}
+
+/* ---- "Other versions": the row hover ----
+ *
+ * The tint was the li's own background, and in this panel the li carries padding on
+ * only two sides (0 4px 22px 0), so it hugged the thumbnail and the title on the left
+ * and top and hung 22px below them. Each result already has a full-row link in
+ * absolute (a.BG-link, drawn under the thumbnail and the text since it comes first in
+ * the row): it takes the tint, expanded past the content on all four sides, which is
+ * the padding the li could not give it.
+ */
+#root .resource .data .AppSK .ais-Hits-item:hover:not(#a) { background-color: transparent; }
+
+/* the link is anchored to the row, not to its content: the grid cell is 467px wide
+   whatever the title's length, so every row lights up the same rectangle instead of
+   one that hugs its own text. .main is the only positioned ancestor between the two
+   and nothing else is anchored to it (checked: the row's other absolutes hang off the
+   thumbnail, the data column or the link itself). */
+#root .resource .data .AppSK .result .main:not(#a) { position: static; }
+
+#root .resource .data .AppSK .result .main > a.BG-link:not(#a) {
+   /* the row's own box starts at its content, so the air above and to the left is
+      still negative; right and bottom reach the cell, 4px clear of its hairline */
+   top: -12px;
+   left: -12px;
+   right: 0;
+   bottom: 4px;
+   /* the sheet sizes this link with width/height:100%, which makes the box
+      over-constrained: the right and bottom insets are dropped and the tint slides up
+      and left instead of growing */
+   width: auto;
+   height: auto;
+   border-radius: 3px;
+   transition: background-color 0.25s ease;
+}
+
+#root .resource .data .AppSK .ais-Hits-item:hover .result .main > a.BG-link:not(#a) {
+   background-color: var(--living-seam);
+}
+
+/* the panel's .content is overflow:hidden (the sheet clips the filter drawer with it),
+   and its box starts exactly at the first row's top-left corner — so the tint's 12px
+   of air was cut off above and to the left of the first row and the first column. The
+   drawer it clips is display:none in this panel: there are no filters here. */
+#root .resource .data .AppSK .content:not(#a) { overflow: visible; }
+
+/* ---- air at the end of a run of white blocks ----
+ *
+ * The blocks carry no vertical padding of their own (the rows' 18px rhythm does the
+ * work at every seam between two of them), which leaves the last row of a run sitting
+ * ~18px from the block's edge — visibly tight where the run ends on a gap. The block
+ * that closes a run takes the extra; the ones inside a run must not, or the seam
+ * between two blocks doubles up.
+ */
+#root > div > .resource > div > .data:not(.legal-props):not(.ext-props):not(#perma):is(
+   :has(+ #perma), :has(+ .legal-props), :has(+ .ext-props), :last-child):not(#a) {
+   padding-bottom: 20px;
+}
+
+/* ...and no rule at the start of one: a block that opens a run after a ground band
+   had its first row's top border sitting right on its own edge, reading as a stray
+   hairline. Inside a run that same border is the seam between two blocks, so it only
+   goes where the run begins. */
+#root > div > .resource > div > #perma + .data > div:first-child:not(#a):not(#b),
+#root > div > .resource > div > .legal-props + .data:not(.ext-props) > div:first-child:not(#a):not(#b) {
+   /* the rule that draws the row borders counts three ids as well and five classes to
+      these three, hence the second :not() */
+   border-top: none;
+}
+
+/* ---- the associated-results block ----
+ *
+ * On a person, a place or a topic the card carries a search over what is attached to
+ * the resource (.AppSK.InnerSearchPage.data: the field, then its results). It is a
+ * panel inside the card rather than a property list, so it takes a tint of its own —
+ * one step from the card, well short of the permalink strip's.
+ *
+ * The tint goes on the row inside the block, not on the block: the block keeps the
+ * card's white, which then shows all around the panel. The row is pulled 16px wider
+ * than its own padding so the panel breathes without moving the content — the field
+ * and the results stay on the value column.
+ */
+/* :not(#b):not(#c) — the rule that pads the end of a run counts three ids and five
+   classes; the padding-bottom here has to out-specify it */
+#root > div > .resource > div > .AppSK.InnerSearchPage.data:not(#a):not(#b):not(#c) {
+   padding-top: 14px;
+   /* more air under the panel than over it: the block closes a run, so this white is
+      also what separates the panel from the ground band below */
+   padding-bottom: 34px;
+}
+
+/* the wrapper stays plain: the search field belongs to the card, not to the panel */
+#root > div > .resource > div > .AppSK.InnerSearchPage.data > div:not(.loadedContent):not(#a):not(#b):not(#c) {
+   margin: 0;
+   padding: 0;
+   background: none;
+   border: none;
+}
+
+/* the panel is the results themselves — the filters column and the rows — which the
+   sheet already lays out 18px wider than the text column on either side. The vertical
+   padding is there so the rows' hover tint, which overhangs its row by 12px, stays
+   inside the panel. */
+#root > div > .resource > div > .AppSK.InnerSearchPage.data .content:not(#a) {
+   margin-top: 16px;
+   padding-top: 14px;
+   padding-bottom: 14px;
+   background-color: var(--living-inset);
+   border: 1px solid rgba(42, 18, 8, 0.09);
+   border-radius: 3px;
+}
+
+/* the block opens on an empty .loadedContent div — no content, but the row rules give
+   it a hairline and 36px of height, so the block began with two rules and a gap.
+   !important because those rules set display:flex the same way. */
+#root > div > .resource > div > .AppSK.InnerSearchPage.data > .loadedContent:empty:not(#a) {
+   display: none !important;
+}
+
+/* ---- the licence band's second line ----
+ *
+ * A row whose provider comes from a "sameAs" link is built differently: its mark is a
+ * span.before element rather than the ::before of the first row, and the whole .ulink
+ * is pulled 21px left of the value column. Zeroing that pull and matching the mark's
+ * gap to the first row's puts the two marks and the two labels on the same edges.
+ */
+#root > div > .resource .data.legal-props .group > h4 > .ulink:not(#a) { margin-left: 0; }
+
+#root > div > .resource .data.legal-props .ulink > span.hasIcon:not(#a) { margin-right: 12px; }
+
+/* the results inside the panel: .resource .data paints every card block white, and the
+   result's own data column is a .data too, so each row carried a white slab across the
+   tint. The card blocks keep their white; this one is a column inside a result. */
+#root .resource .AppSK .result .data:not(#a) { background-color: transparent; }
+
+/* the "sameAs" rows carry their provider mark twice: once as the span.before element
+   the row is built with, once as the ::before the sheet hangs on any licence link
+   (both /WD.svg here). The two used to sit on top of each other, hidden by the -21px
+   pull on .ulink that the alignment above removes — so the spare one goes. */
+#root > div > .resource .data.legal-props .ulink:has(> span.hasIcon) > a::before {
+   display: none;
+}
+
+/* ---- property values that carry a collapse ----
+ *
+ * .propCollapseHeader (and .propCollapse once open) is sized calc(100% - 190px), which
+ * was the sheet's label column. This skin's is 200px, so 200 + 976 came to 10px more
+ * than the row and the value wrapped under its own label — "Teacher", "Students" and
+ * any other property with a collapsible list. It takes the room that is left instead.
+ */
+#root > div > .resource > div > .data > div > .propCollapseHeader:not(#a),
+#root > div > .resource > div > .data > div > .propCollapse:not(#a) {
+   flex: 1 1 0;
+   width: auto;
+   min-width: 0;
+}
+
+/* ---- property rows sit on the baseline ----
+ *
+ * The rows are flex boxes and the label and its value have different type sizes, so
+ * top alignment left the value 3px below the label's line. Baseline puts the two on
+ * the same line, and the rows whose value is a block (an image, an outline, a panel)
+ * are excluded: for those the first line is not what should align.
+ */
+#root > div > .resource > div > .data > div:not(.firstImage):not(.browse):not(.header):not(#a) {
+   align-items: baseline;
+}
+
+/* ---- the filter column of the associated-results panel ----
+ *
+ * The sheet positions .filter absolutely and clears it with a left margin on
+ * .main-content, so the panel's height follows the results alone: when the filter list
+ * is the taller of the two it runs past the bottom border (13px on this page).
+ *
+ * Two things I tried and backed out, both worse: clipping the panel cuts a filter
+ * label in half, and laying the two columns out as a flex row (with .filter static)
+ * collides with the sheet's own widths and margins — the labels ended up under the
+ * thumbnails. Left as a small overhang until the panel's layout is rebuilt.
+ */
+
+/* Every filter group's heading carries a 26px top margin, so the column started 26px
+   below the results' first line. The column moves up by that much rather than the
+   first heading losing its margin: zeroing it there needs a selector that reaches only
+   the first of them, and the one I tried caught every group — "AUTHOR" ended up flush
+   against the item above it. */
+#root > div > .resource > div > .AppSK.InnerSearchPage.data .content .filter:not(.mobile):not(#a) {
+   margin-top: -26px;
 }
