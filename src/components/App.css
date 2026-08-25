@@ -12279,3 +12279,660 @@ html:not([lang="bo"]):not([lang^="zh"]):not([lang="km"])
 #root > div > .resource > div > .AppSK.InnerSearchPage.data .content .filter:not(.mobile):not(#a) {
    margin-top: -26px;
 }
+
+/* ============================================================================
+ * The etext reader
+ * ----------------------------------------------------------------------------
+ * Mockup: "BUDA Etext.dc.html" in the design project. The page is
+ *
+ *    .ISB.etextNav-true          the search band (already skinned)
+ *    .etext-header-breadcrumbs   the breadcrumb, on the page ground
+ *    .etext-header               the card: Back, type badge, title
+ *    .etext-nav-parent
+ *       .etext-header.sticky     the compact header, pinned once scrolled
+ *       #etext-nav               the reader's toolbar
+ *    .resource.etext-outline     the volume/text outline
+ *    .withOutline
+ *       .resource.etext-view     the pages themselves
+ *       .ETSBresults             search results inside the etext
+ *       .monlamResults           the dictionary panel
+ *
+ * The sheet paints all of that in the old greys (#efefef, #dddddd) with a dark
+ * teal toolbar; the mockup puts it on the same ground, card and maroon as the
+ * rest of the skin.
+ * ========================================================================== */
+
+:root {
+   --living-outline: #fbf3de; /* the outline column, one step warmer than the card */
+}
+
+/* ---- the breadcrumb strip and the header card ---- */
+
+#root .etext-header-breadcrumbs:not(#a),
+#root .etext-header:not(.sticky):not(#a) {
+   width: 100%;
+   max-width: 1440px;
+   background: none;
+   box-sizing: border-box;
+   padding-left: 40px;
+   padding-right: 40px;
+}
+
+#root .etext-header-breadcrumbs:not(#a) {
+   height: auto;
+   padding-top: 26px;
+   padding-bottom: 0;
+}
+
+#root .etext-header-breadcrumbs .ariane:not(#a) {
+   width: 100%;
+   max-width: none;
+   padding: 0;
+   margin: 0 0 18px;
+   font-size: 13.5px;
+   color: var(--living-sub);
+}
+
+#root .etext-header-breadcrumbs .ariane a:not(#a),
+#root .etext-header .ariane a:not(#a) {
+   color: var(--living-brand);
+   font-weight: 600;
+}
+
+#root .etext-header:not(.sticky):not(#a) { padding-top: 0; }
+
+/* the card itself is the inner div the sheet paints white */
+#root .etext-header:not(.sticky) > div:not(#a) {
+   width: 100%;
+   background: var(--living-box);
+   border: 1px solid var(--living-hair);
+   border-radius: 4px 4px 0 0;
+   box-shadow: 0 12px 40px rgba(42, 18, 8, 0.06);
+   padding: 30px 44px 26px;
+   box-sizing: border-box;
+}
+
+#root .etext-header h1:not(#a) {
+   font-size: 38px;
+   font-weight: 400;
+   line-height: 1.08;
+   color: var(--living-ink);
+}
+
+html:not([lang="bo"]):not([lang^="zh"]):not([lang="km"])
+   #root .etext-header h1:not([lang="bo"]):not([lang^="zh"]):not([lang^="km"]) {
+   font-family: var(--living-serif) !important;
+}
+
+/* the type chip above the title — same three-span recipe as the resource page: the
+   wrapper stays a plain block, the middle span is the chip, the innermost is text */
+#root .etext-header h1 .newT:not(#a) {
+   display: block;
+   margin: 0 0 14px;
+   line-height: 1;
+   background: none;
+   border: none;
+}
+
+#root .etext-header h1 .newT > span:not(#a):not(#b):not(#c):not(#d) {
+   display: inline-block;
+   padding: 4px 11px;
+   font-size: 11px;
+   font-weight: 700;
+   line-height: 1.1;
+   letter-spacing: 0.14em;
+   text-transform: uppercase;
+   color: var(--living-ink-soft);
+   background-color: var(--living-badge);
+   border: 1px solid rgba(42, 18, 8, 0.16);
+   border-radius: 2px;
+   vertical-align: baseline;
+}
+
+#root .etext-header h1 .newT > span > span:not(#a):not(#b):not(#c):not(#d) {
+   padding: 0;
+   font-size: inherit;
+   letter-spacing: inherit;
+   background: none;
+   border: none;
+}
+
+#root .etext-header .backLink:not(#a) {
+   color: var(--living-brand);
+   font-weight: 700;
+   font-size: 14px;
+}
+
+/* ---- the compact header, once the page scrolls ---- */
+
+/* The sheet keeps the compact bar in the flow at 40px and hides its contents with
+   visibility until the page scrolls — but not every descendant obeys that, so the
+   copy of the title and the breadcrumb showed through over the header card. It
+   collapses to nothing instead, and opens to the mockup's 64px once .someClass says
+   the reader is scrolled. */
+#root .etext-nav-parent:not(.someClass) .etext-header.sticky:not(#a) {
+   height: 0;
+   overflow: hidden;
+   background: none;
+   border: none;
+}
+
+#root .etext-nav-parent.someClass .etext-header.sticky:not(#a) {
+   height: 64px;
+   overflow: hidden;
+   background: var(--living-box);
+   border-bottom: 1px solid var(--living-hair);
+}
+
+#root .etext-nav-parent.someClass .etext-header.sticky > div:not(#a) {
+   background: var(--living-box);
+}
+
+/* ---- the toolbar ---- */
+
+#root #etext-nav:not(#a) {
+   width: 100%;
+   max-width: 100%;
+   background: var(--living-maroon);
+   color: var(--living-cream);
+}
+
+#root #etext-nav > div:not(#a) {
+   width: 100%;
+   max-width: 1440px;
+   margin: 0 auto;
+   padding: 0 40px;
+   box-sizing: border-box;
+}
+
+#root #etext-nav:not(#a) span,
+#root #etext-nav:not(#a) button,
+#root #etext-nav:not(#a) a {
+   color: var(--living-cream);
+   font-size: 14px;
+   font-weight: 600;
+}
+
+/* the dividers the sheet draws between the toolbar's groups */
+#root #etext-nav > div > *:not(#a):not(:first-child) {
+   border-left-color: rgba(251, 244, 232, 0.18);
+}
+
+/* the toolbar's icons already ship light for the dark bar the sheet had — no invert */
+
+#root #etext-nav .etext-search input:not(#a) {
+   background: var(--living-box);
+   border: 1px solid rgba(251, 244, 232, 0.3);
+   border-radius: 2px;
+   color: var(--living-ink);
+   font-size: 15px;
+}
+
+/* ---- the outline column ---- */
+
+#root .resource.etext-outline:not(#a) {
+   background: var(--living-outline);
+   border-right: 1px solid var(--living-hair);
+}
+
+#root .resource.etext-outline .simplebar-content:not(#a) { color: var(--living-ink); }
+
+/* ---- the reading area and the side panels ---- */
+
+/* the outline already draws the hairline on its own right edge — the reading area's
+   left border landed right beside it and read as a double rule */
+#root .withOutline .resource.etext-view:not(#a) {
+   background: var(--living-box);
+   border-left: 0;
+}
+
+#root .withOutline .ETSBresults > div:not(#a),
+#root .withOutline .monlamResults > div:not(#a) {
+   background: var(--living-box);
+   border-left: 1px solid var(--living-hair);
+}
+
+/* ---- the pages themselves ----
+ *
+ * EtextPage.js renders, per page: .etextPage > .imagePage > a > img.page for the scan,
+ * an h5 with the page number, a .button that shows or hides the scan, and the text.
+ * The mockup pairs a framed scan with the text beside it; the DOM keeps them stacked
+ * or side by side depending on the image's orientation (.imagePage.portrait), so this
+ * only paints what is there rather than rebuilding the pairing.
+ *
+ * Not verified against a live page: every etext I could open in this session is either
+ * access-restricted or fails to load its chunks, so the reading area never rendered.
+ * The selectors come from EtextPage.js and the mockup, and the rules are cosmetic
+ * (colour, border, type) — nothing here moves the layout.
+ */
+
+#root .etext-view #etext-scroll .etextPage:not(#a) {
+   color: var(--living-ink);
+}
+
+/* the scan: the sheet gives it a hard black drop shadow */
+#root .etext-view .etextPage .imagePage:not(#a) {
+   background: #fdfbf5;
+   border: 1px solid rgba(42, 18, 8, 0.14);
+   border-radius: 2px;
+   box-shadow: 0 3px 12px rgba(42, 18, 8, 0.08);
+   padding: 10px;
+   box-sizing: border-box;
+}
+
+#root .etext-view .etextPage .imagePage img.page:not(#a) {
+   box-shadow: none;
+   border-radius: 1px;
+   max-width: 100%;
+}
+
+/* the page number over each block */
+#root .etext-view .etextPage h5:not(#a) {
+   font-size: 13.5px;
+   font-weight: 700;
+   color: var(--living-label);
+}
+
+#root .etext-view .etextPage h5 .a:not(#a) { color: var(--living-brand); }
+
+/* the search match inside the text */
+#root .etext-view .etextPage mark:not(#a),
+#root .etext-view .etextPage .highlight:not(#a) {
+   background: rgba(229, 168, 50, 0.45);
+   color: var(--living-ink);
+   border-radius: 1px;
+   padding: 0 2px;
+}
+
+/* the row of paging links above the text */
+#root .etext-view #etext-scroll > div:first-child a:not(#a),
+#root .etext-view .etext-continue a:not(#a) {
+   color: var(--living-brand);
+   font-weight: 600;
+}
+
+/* ---- the search-results panel ---- */
+
+#root .withOutline .ETSBresults .simplebar-content > div:not(#a) {
+   background: none;
+}
+
+/* each hit is a .ETSBresult holding a .ETSBheader line and the snippet: the mockup's
+   cream card, the page line above a hairline, the match in gold */
+#root .withOutline .ETSBresults .ETSBresult:not(#a) {
+   background: var(--living-outline);
+   border: 1px solid rgba(139, 30, 43, 0.14);
+   border-radius: 2px;
+   color: var(--living-ink);
+   padding: 14px 16px;
+   box-sizing: border-box;
+}
+
+#root .withOutline .ETSBresults .ETSBresult:hover:not(#a) { border-color: rgba(139, 30, 43, 0.35); }
+
+#root .withOutline .ETSBresults .ETSBheader span:not(#a) { color: inherit; }
+
+#root .withOutline .ETSBresults .ETSBheader:not(#a) {
+   padding-bottom: 10px;
+   margin-bottom: 10px;
+   border-bottom: 1px solid rgba(42, 18, 8, 0.12);
+   font-size: 14px;
+   font-weight: 700;
+   color: var(--living-ink);
+}
+
+#root .withOutline .ETSBresults .ETSBresult em:not(#a),
+#root .withOutline .ETSBresults .ETSBresult mark:not(#a) {
+   background: rgba(229, 168, 50, 0.45);
+   color: var(--living-brand);
+   font-style: normal;
+   font-weight: 600;
+   padding: 0 2px;
+   border-radius: 1px;
+}
+
+#root .withOutline .ETSBresults .close-etext-results:not(#a) { color: var(--living-muted); }
+
+/* ---- the reader's frame, measured against the mockup ----
+ *
+ * The sheet reserves a fixed 120px for .etext-nav-parent (40 of sticky bar + 80 of
+ * toolbar) plus a 20px margin under it — with the compact bar collapsed that left 79px
+ * of empty page between the toolbar and the text. The parent hugs its children instead,
+ * so the columns start right under the bar as they do in the mockup.
+ */
+#root .etext-nav-parent:not(#a) {
+   height: auto;
+   margin-bottom: 0;
+}
+
+/* the compact bar centres its row over its 64px */
+#root .etext-nav-parent.someClass .etext-header.sticky > div:not(#a) {
+   display: flex;
+   align-items: center;
+   height: 64px;
+   box-sizing: border-box;
+}
+
+/* room for "Back" inside the card: the sheet hangs it to the left of the content, and
+   with the mockup's 44px of padding it sat half outside the card */
+#root .etext-header:not(.sticky) > div:not(#a) { padding-left: 116px; }
+
+/* ---- the three columns ----
+ *
+ * The mockup runs them edge to edge inside one card: no white frame around the
+ * outline, no inner padding on the panels' own wrappers, and the centre on the
+ * mockup's 26px/30px.
+ */
+#root .resource.etext-outline .simplebar-content > *:not(#a) {
+   background: none;
+   padding: 18px 16px;
+   box-sizing: border-box;
+}
+
+#root .withOutline .resource.etext-view:not(#a) { padding: 0; }
+
+#root .withOutline .resource.etext-view .data:not(#a) {
+   padding: 26px 30px;
+}
+
+#root .withOutline .resource.etext-view #etext-scroll:not(#a) {
+   margin-left: 0;
+   margin-right: 0;
+   padding-left: 0;
+   padding-right: 0;
+}
+
+#root .withOutline .ETSBresults > div:not(#a),
+#root .withOutline .monlamResults > div:not(#a) {
+   padding: 18px 20px;
+   box-sizing: border-box;
+}
+
+/* The floating "show outline" button is an inline-flex in a block flow, so its line box
+   was adding ~20px of air between the toolbar and the columns. As a block it costs
+   nothing — and its -60px bottom margin, which tucks the button over the outline's top
+   corner, then pulled the columns 20px *under* the bar, hence the -40 here. */
+#root .show-outline-etext:not(#a) {
+   display: flex;
+   margin-bottom: -40px;
+}
+
+/* the outline sticks under the bar: the sheet's 120px was the old fixed height of
+   .etext-nav-parent, which is now 80px at rest and 145px once the compact bar opens */
+#root .resource.etext-outline:not(#a) { top: 145px; }
+
+/* ---- the compact bar's row ----
+ *
+ * The markup nests everything inside the h1 — the type badge, the breadcrumb (inside
+ * the badge's own span) and the title — so the bar showed whichever line happened to
+ * land in its 64px, the breadcrumb. Laid out as one row it carries what the mockup
+ * has: Back, the badge, the breadcrumb, and the title against the right edge.
+ */
+#root .etext-nav-parent.someClass .etext-header.sticky h1:not(#a) {
+   display: flex;
+   align-items: center;
+   gap: 16px;
+   height: 64px;
+   margin: 0;
+   overflow: hidden;
+   font-size: 17px;
+   line-height: 1.2;
+}
+
+#root .etext-nav-parent.someClass .etext-header.sticky h1 > .newT:not(#a) {
+   display: flex;
+   align-items: center;
+   gap: 16px;
+   margin: 0;
+   min-width: 0;
+   flex: 1 1 auto;
+}
+
+#root .etext-nav-parent.someClass .etext-header.sticky h1 > .newT > span:not(#a):not(#b):not(#c):not(#d) {
+   padding: 3px 8px;
+   font-size: 10px;
+   letter-spacing: 0.12em;
+   flex-shrink: 0;
+}
+
+#root .etext-nav-parent.someClass .etext-header.sticky .ariane:not(#a) {
+   margin: 0;
+   min-width: 0;
+   font-size: 12.5px;
+   white-space: nowrap;
+   overflow: hidden;
+   text-overflow: ellipsis;
+}
+
+/* the title takes what is left, on the right, as in the mockup */
+#root .etext-nav-parent.someClass .etext-header.sticky h1 > span:not(.newT):not(#a) {
+   margin-left: auto;
+   max-width: 40%;
+   white-space: nowrap;
+   overflow: hidden;
+   text-overflow: ellipsis;
+   font-size: 17px;
+}
+
+/* Back is a sibling of the h1 inside the bar's wrapper span, so the wrapper has to be
+   the row as well — otherwise it floats above the line the rest sits on */
+#root .etext-nav-parent.someClass .etext-header.sticky > div > span:not(#a) {
+   display: flex;
+   align-items: center;
+   gap: 14px;
+   width: 100%;
+   height: 64px;
+}
+
+#root .etext-nav-parent.someClass .etext-header.sticky .backLink:not(#a) {
+   flex-shrink: 0;
+   font-size: 13px;
+}
+
+/* the breadcrumb keeps the height it has in the full header, which sat it ~13px below
+   the row's centre line in the compact bar */
+#root .etext-nav-parent.someClass .etext-header.sticky .ariane:not(#a) {
+   align-self: center;
+   height: auto;
+   line-height: 1.2;
+   padding: 0;
+}
+
+/* One line box for every piece of the row.
+ *
+ * align-items:baseline cannot do this job here: Back is itself a flex box whose first
+ * item is the chevron svg, so its baseline is its bottom edge, and the breadcrumb is a
+ * flex item of the chip's own span — measured, the four sat on 92 / 82 / 109 / 89.
+ * With the same line-height on all of them, centring their boxes puts the text on one
+ * line: 20px, and the chip keeps its own padding.
+ */
+#root .etext-nav-parent.someClass .etext-header.sticky > div:not(#a) {
+   align-items: center;
+}
+
+#root .etext-nav-parent.someClass .etext-header.sticky .backLink:not(#a),
+#root .etext-nav-parent.someClass .etext-header.sticky .ariane:not(#a),
+#root .etext-nav-parent.someClass .etext-header.sticky h1 > span:not(.newT):not(#a) {
+   margin-top: 0;
+   margin-bottom: 0;
+   line-height: 20px;
+   height: 20px;
+   display: flex;
+   align-items: center;
+}
+
+/* The crumbs stay in normal inline flow: as flex items their ">" separators turned
+   into flex children, which drops them out of the atomic-inline exception and lets the
+   link's underline and colour bleed onto them, and a flex box has no text-overflow, so
+   the long crumb was cut mid-glyph instead of getting its ellipsis. */
+#root .etext-nav-parent.someClass .etext-header.sticky .ariane:not(#a) { gap: 0; }
+
+#root .etext-nav-parent.someClass .etext-header.sticky .ariane > a:not(#a),
+#root .etext-nav-parent.someClass .etext-header.sticky .ariane > span:not(#a) {
+   display: block;
+   height: 20px;
+   line-height: 20px;
+   min-width: 0;
+   max-width: 100%;
+   flex: 0 1 auto;
+   white-space: nowrap;
+   overflow: hidden;
+   text-overflow: ellipsis;
+}
+
+/* only the two long crumbs give ground — Home / Etext / Volume N keep their full text
+   instead of every crumb shrinking to "Ho…" together */
+#root .etext-nav-parent.someClass .etext-header.sticky .ariane > :not(.can-shrink):not(#a) {
+   flex: 0 0 auto;
+}
+
+#root .etext-nav-parent.someClass .etext-header.sticky .ariane > :not(:first-child)::before {
+   color: var(--living-sub);
+   text-decoration: none;
+   margin: 0 8px;
+}
+
+/* The real offender: between the chip and .ariane sits .etext-header-breadcrumbs, the
+   same wrapper the full header uses on the page ground, where it carries the 26px that
+   separates the strip from the topbar. In the compact bar that padding pushed the
+   breadcrumb 26px down — measured, .ariane at y=75 against y=62 for Back, chip and
+   title — which is the whole misalignment. Flatten it to the row's line box. */
+#root .etext-nav-parent.someClass .etext-header.sticky .etext-header-breadcrumbs:not(#a):not(#b) {
+   display: flex;
+   align-items: center;
+   height: 20px;
+   min-width: 0;
+   padding: 0;
+   margin: 0;
+}
+
+/* The breadcrumb's last crumb is the current etext, which the compact bar already
+   shows in full against the right edge — drop it (and its separator) here only. */
+#root .etext-nav-parent.someClass .etext-header.sticky .ariane > span:last-child:not(#a) {
+   display: none;
+}
+
+/* the breadcrumb strip lines up with the card's text edge, not with the card's own
+   left edge: the card indents its content by 116px for the Back link's gutter */
+#root .etext-header-breadcrumbs:not(#a):not(#b) { padding-left: 157px; }
+
+#root .etext-nav-parent.someClass .etext-header.sticky .etext-header-breadcrumbs:not(#a):not(#b):not(#c) {
+   padding-left: 0;
+}
+
+/* the toolbar's paging label ("1 / 8 pages") sits under the search input and was
+   crossing the bar's bottom edge — the bar takes the height its content needs */
+#root #etext-nav:not(#a) {
+   height: auto;
+   min-height: 96px;
+   display: flex;
+   align-items: center;
+}
+
+/* ---- the side panels' scrolling, spacing and close button ---- */
+
+/* SimpleBar wraps its own scroller inside the panel, so the panel itself must not
+   scroll: with overflow:auto still on it the browser drew a second, native pair of
+   bars — the vertical one with arrows down the right edge and a horizontal one along
+   the bottom that had nothing to scroll (scrollWidth == clientWidth). */
+#root .withOutline .ETSBresults > div:not(#a),
+#root .withOutline .monlamResults > div:not(#a),
+#root .resource.etext-outline:not(#a) {
+   overflow: hidden;
+}
+
+/* the horizontal track SimpleBar keeps in the DOM for a row that never overflows */
+#root .withOutline .ETSBresults .simplebar-track.simplebar-horizontal:not(#a),
+#root .withOutline .monlamResults .simplebar-track.simplebar-horizontal:not(#a),
+#root .resource.etext-outline .simplebar-track.simplebar-horizontal:not(#a) {
+   display: none;
+}
+
+/* 5px between two hits left a sliver of panel that read as an empty bordered row */
+#root .withOutline .ETSBresults .ETSBresult + .ETSBresult:not(#a) {
+   margin-top: 14px;
+}
+
+/* the close button is absolute against the panel's outer box, so it ignored the
+   panel's own padding and sat on its very corner, half over the toolbar's edge — the
+   panel opens a row for it and the button sits inside the white */
+/* the close button carries its own white disc and floats over the first card, so the
+   panel keeps its normal 18px rhythm instead of reserving a band for it */
+#root .withOutline .ETSBresults > div:not(#a):not(#b) {
+   padding-top: 18px;
+}
+
+/* SimpleBar's scroller is position:relative, so it was the button's containing block
+   and the button scrolled away with the hits — measured at y=-2198 after a scroll.
+   Static, the anchor falls back to .simplebar-offset, which is the panel's own fixed
+   frame, and the button stays in the panel's top-right corner. */
+#root .withOutline .ETSBresults .simplebar-content-wrapper:not(#a) {
+   position: static;
+}
+
+/* tucked into the panel's top-right corner, against both edges: the hits scroll under
+   it, so the disc carries the panel's own white plus a hairline and a soft shadow to
+   lift it off them */
+#root .withOutline .ETSBresults .close-etext-results:not(#a) {
+   top: 0;
+   right: 0;
+   width: 40px;
+   height: 40px;
+   background: var(--living-box);
+   border: 1px solid var(--living-hair);
+   border-radius: 50%;
+   box-shadow: 0 1px 4px rgba(42, 18, 8, 0.07);
+}
+
+/* the sticky toolbar loses 5px top and bottom */
+#root .etext-nav-parent.someClass #etext-nav:not(#a) {
+   min-height: 86px;
+}
+
+/* The etext sidebar's tree carries id="outline" too, so the resource page's outline
+   card — warm fill plus a hairline — was drawn a second time inside a panel that is
+   already that panel: a box outlining the whole tree, 368px wide inside 400. */
+#root .resource.etext-outline .data#outline > div:not(#a):not(#b) {
+   border: 0;
+   border-radius: 0;
+   background: none;
+   padding: 0;
+}
+
+/* the type chip is a flex item on the title's row, so it stretched to the height of a
+   title that wraps — measured 40px tall for a 13px chip */
+#root .resource .data#outline .parTy:not(#a):not(#b) {
+   align-self: flex-start;
+}
+
+/* ---- where the columns stick ----
+ *
+ * The bar's height is not a constant: the compact header adds a row on top of the
+ * toolbar, and whatever chrome stays stuck above shifts the whole thing down, so every
+ * hardcoded offset here was right in one state and wrong in another. StickyElement
+ * publishes the bar's live bottom edge as --etext-bar-bottom while it is stuck, and
+ * removes it otherwise — the 120px fallback is the sheet's own at-rest offset, which
+ * is where the columns' flow already puts them. */
+#root .resource.etext-outline:not(#a):not(#b),
+#root .withOutline .ETSBresults > div:not(#a):not(#b),
+#root .withOutline .monlamResults > div:not(#a):not(#b) {
+   top: var(--etext-bar-bottom, 120px);
+   height: calc(100vh - var(--etext-bar-bottom, 120px));
+}
+
+/* The outline is a sibling of the bar, so its sticky offset alone moves it clear. The
+   panels on the right are not: they sit in the columns wrapper, which the app pins at
+   120 whatever the scroll, and a sticky box can only slide down as far as its
+   container's bottom edge — panel and container being the same height, there was
+   nowhere to go. The margin moves the panel's flow position instead; holding the
+   container to a fixed height did it too, but it broke the pinning the app relies on
+   and the panel scrolled away with the page. */
+#root .withOutline .ETSBresults > div:not(#a):not(#b):not(#c),
+#root .withOutline .monlamResults > div:not(#a):not(#b):not(#c) {
+   margin-top: calc(var(--etext-bar-bottom, 120px) - 120px);
+}
+
+/* the reading column is not sticky at all, so it takes the difference as a margin */
+#root .withOutline .resource.etext-view:not(#a):not(#b) {
+   margin-top: calc(var(--etext-bar-bottom, 120px) - 120px);
+}
