@@ -647,3 +647,48 @@ body.auto_rela .inApp.mirador-container .slotIconContainer { position:absolute !
 }
 
 #viewer #feedbucket svg { fill: var(--v-brand); }
+
+/* ---- the home link in the viewer's top bar ----
+ *
+ * The mockup's header carries the same lockup as the site's own top bar: the plain
+ * endless knot, BUDA in the heading serif, and the caption as a small uppercase
+ * eyebrow. Here the bar is the light surface, so the knot keeps its black and the
+ * eyebrow is maroon rather than the gold it takes on the maroon bar.
+ *
+ * The mark is swapped in CSS: the <img> lives in the mirador bundle, which is not
+ * tracked, so the rules point at the same /logo.svg the app's top bar uses
+ * (App.js, #logo) instead of editing the template.
+ */
+
+/* the home bar's own dimensions rather than the mockup's: 50px tall (65.6 wide at
+   this svg's ratio) and the same 14px gap */
+#viewer .nav-bar-top #logo #buda {
+    width: 65.6px;
+    height: 50px;
+    margin-right: 14px;
+    background: url(/logo.svg) center / contain no-repeat;
+}
+
+#viewer .nav-bar-top #logo #buda img { display: none; }
+
+#viewer .nav-bar-top #logo #buda + a span {
+    /* the sheet sets the Noto stack on the bar with !important */
+    font-family: var(--living-serif, "Ogg", Georgia, serif) !important;
+    font-size: 28px;
+    font-weight: 400;
+    line-height: 1;
+    letter-spacing: 0.04em;
+    color: var(--v-title);
+}
+
+#viewer .nav-bar-top #logo #buda + a span::after {
+    margin-top: 2px;
+    padding-left: 0;
+    font-family: "Hanken Grotesk", "Noto Sans", sans-serif !important;
+    font-size: 10.5px;
+    font-weight: 600;
+    line-height: 1.2;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: var(--v-brand);
+}
