@@ -53,7 +53,7 @@
             "text":"<parag>គន្ថនិទ្ទេសដែលពាក់ព័ន្ធ និងធនធានបន្ទាប់បន្សំដែលទាក់ទងនឹងសាស្ត្រាស្លឹករឹតកម្ពុជា <nbsp>—មកដល់ឆាប់ៗនេះ</nbsp>។ </parag>"
          }
       },
-      "help":"<bold>Please consult the <lk href='/buda-user-guide'>user guide</lk> and <lk href='https://www.bdrc.io/buda-user-guide/frequently-asked-questions/'>FAQ</lk> to learn more about BUDA</bold>",
+      "help":"<bold>Please consult the <lk href='/buda-user-guide'>user guide</lk> and <lk href='https://www.bdrc.io/buda-user-guide/frequently-asked-questions/?living=true'>FAQ</lk> to learn more about BUDA</bold>",
       "all-collections":"All collections",
       "female-authors":"Female authors",
       "works-by-female-authors":"Works by female authors",
@@ -948,7 +948,7 @@
       "credentials": "ប្រសិនបើអ្នកមានព័ត៌មានបញ្ជាក់គ្រប់គ្រាន់ក្នុងការចូលប្រើប្រាស់ចំពោះឯកសារស្កែនទាំងអស់នេះពីកាងារនេះ។",
       "notyet": "មិនទាន់មានរូបភាព។",
       "error": "An error occurred while trying to access the images",
-      "generic": "BDRC បានរឹតត្បិតការចូលប្រើប្រាស់ការងារនេះដោយយោងទៅតាមគោលការណ៍ចូលប្រើប្រាស់របស់យើង។ អ្នកអាចអានគោលការណ៍ទាំងនោះនៅទីនេះ៖ <policies href='https://bdrc.io/access-policies/' target='_blank'>https://bdrc.io/access-policies/</policies>",
+      "generic": "BDRC បានរឹតត្បិតការចូលប្រើប្រាស់ការងារនេះដោយយោងទៅតាមគោលការណ៍ចូលប្រើប្រាស់របស់យើង។ អ្នកអាចអានគោលការណ៍ទាំងនោះនៅទីនេះ៖ <policies href='https://bdrc.io/access-policies/?living=true' target='_blank'>https://bdrc.io/access-policies/</policies>",
       "OCR": "",
       "quality0": "We apologize for the poor quality of these scans, which might be in the wrong order or have other issues which may make them difficult to read. Because these may still be useful for scholarship, research or practice, we have chosen to make these available, while we continue to search for higher quality images.",
       "fairUseIA1": "ការងារនេះគឺ<bold>ត្រូវបានរក្សាសិទ្ធិដោយភាគីទីបី</bold>។ ជាលទ្ធផល BDRC អាចត្រឹមតែផ្តល់ជូនផ្នែកមួយចំនួនដែលមានការកំណត់សម្រាប់ការសិក្សា និងស្រាវជ្រាវឯកជនប៉ុណ្ណោះ។ អត្ថបទពេញលេញនៃការងារនេះអាចរកបាននៅលើ បណ្ណសារអ៊ីនធឺណិតដែលជាដៃគូជិតស្និទ្ធរបស់យើង តាមរយៈកម្មវិធីបណ្ណាល័យបើកចំហរបស់ពួកគេ។",

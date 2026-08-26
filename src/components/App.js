@@ -98,6 +98,7 @@ import StickyElement from './StickyElement';
 import {getQueryParam} from './GuidedSearch';
 import {getEntiType, logError, staticQueries} from '../lib/api';
 import {narrowWithString} from "../lib/langdetect"
+import {livingTheme} from "../lib/corpoLink"
 import {sortLangScriptLabels, extendedPresets, getMainLabel} from '../lib/transliterators';
 import './App.css';
 import Footer from "./Footer"
@@ -1257,8 +1258,8 @@ export function top_right_menu(that,etextTitle,backUrl,etextres,isMirador,locati
                {/* <a id="by">
                   <span>by</span></a>
                { !onZhMirror && [
-                  <a href={"https://bdrc.io/"} target="_blank" id="BDRC"><span>BDRC</span></a>,
-                  <a href={"https://bdrc.io/"} target="_blank"><img alt="BDRC logo" src="/BDRC-Logo_.png"/></a>
+                  <a href={livingTheme("https://bdrc.io/")} target="_blank" id="BDRC"><span>BDRC</span></a>,
+                  <a href={livingTheme("https://bdrc.io/")} target="_blank"><img alt="BDRC logo" src="/BDRC-Logo_.png"/></a>
                ]}
                { onZhMirror && [
                   <Link to={"/static/about"} id="BDRC"><span className="visually-hidden">Go to BDRC About page</span><span>BDRC</span></Link>,
@@ -1269,8 +1270,8 @@ export function top_right_menu(that,etextTitle,backUrl,etextres,isMirador,locati
    ]
    if(onKhmerServer) {
       logo = <div id="logo" class="khmer">                              
-               <a href={"https://bdrc.io/"} target="_blank" rel="noopener noreferrer"><span className="visually-hidden">Go to BDRC homepage</span><img alt="BDRC logo" src="/BDRC-Logo_.png"/></a>
-               <a href={"https://bdrc.io/"} target="_blank" rel="noopener noreferrer" id="BDRC"><span className="visually-hidden">Go to BDRC homepage</span><span>BDRC</span></a>               
+               <a href={livingTheme("https://bdrc.io/")} target="_blank" rel="noopener noreferrer"><span className="visually-hidden">Go to BDRC homepage</span><img alt="BDRC logo" src="/BDRC-Logo_.png"/></a>
+               <a href={livingTheme("https://bdrc.io/")} target="_blank" rel="noopener noreferrer" id="BDRC"><span className="visually-hidden">Go to BDRC homepage</span><span>BDRC</span></a>               
             </div> 
    }
 
@@ -1315,12 +1316,12 @@ export function top_right_menu(that,etextTitle,backUrl,etextres,isMirador,locati
             <div>
                <div><i>{I18n.t("topbar.preserving")}</i></div>
                <div style={{ textTransform: "capitalize" }}>
-                  <a href={"https://www.bdrc.io?lang="+corpo_lang} target="_blank" rel="noopener noreferrer" /*rel="nofollow"*/ class="BDRC-link"><span className="visually-hidden">Go to BDRC homepage</span><img alt="BDRC logo" src="/BDRC-Logo_.png"/>{I18n.t("topbar.BDRC")}</a>
-                  <a href={"https://www.bdrc.io/buda-archive?lang="+corpo_lang} target="_blank" rel="noopener noreferrer" /*rel="nofollow"*/><span className="visually-hidden">Go to About BUDA page</span>{I18n.t("topbar.aboutB")}</a>
-                  <a href={"https://www.bdrc.io/news?lang="+corpo_lang} target="_blank" rel="noopener noreferrer" /*rel="nofollow"*/><span className="visually-hidden">Go to News page</span>{I18n.t("topbar.news")}</a>
-                  <a href={"https://www.bdrc.io/programs?lang="+corpo_lang} target="_blank" rel="noopener noreferrer" /*rel="nofollow"*/><span className="visually-hidden">Go to Programs page</span>{I18n.t("topbar.programs")}</a>
+                  <a href={livingTheme("https://www.bdrc.io?lang="+corpo_lang)} target="_blank" rel="noopener noreferrer" /*rel="nofollow"*/ class="BDRC-link"><span className="visually-hidden">Go to BDRC homepage</span><img alt="BDRC logo" src="/BDRC-Logo_.png"/>{I18n.t("topbar.BDRC")}</a>
+                  <a href={livingTheme("https://www.bdrc.io/buda-archive?lang="+corpo_lang)} target="_blank" rel="noopener noreferrer" /*rel="nofollow"*/><span className="visually-hidden">Go to About BUDA page</span>{I18n.t("topbar.aboutB")}</a>
+                  <a href={livingTheme("https://www.bdrc.io/news?lang="+corpo_lang)} target="_blank" rel="noopener noreferrer" /*rel="nofollow"*/><span className="visually-hidden">Go to News page</span>{I18n.t("topbar.news")}</a>
+                  <a href={livingTheme("https://www.bdrc.io/programs?lang="+corpo_lang)} target="_blank" rel="noopener noreferrer" /*rel="nofollow"*/><span className="visually-hidden">Go to Programs page</span>{I18n.t("topbar.programs")}</a>
                   {/* <Link to="/buda-user-guide">{I18n.t("topbar.guide")}</Link> */}
-                  <a href={"https://bdrc.io/donation?lang="+corpo_lang} target="_blank" rel="noopener noreferrer" /*rel="nofollow"*/ ><span className="visually-hidden">Go to Donation page</span><span style={{ textTransform: "capitalize", display: "inline-block" }}>{I18n.t("topbar.donate")}</span></a>
+                  <a href={livingTheme("https://bdrc.io/donation?lang="+corpo_lang)} target="_blank" rel="noopener noreferrer" /*rel="nofollow"*/ ><span className="visually-hidden">Go to Donation page</span><span style={{ textTransform: "capitalize", display: "inline-block" }}>{I18n.t("topbar.donate")}</span></a>
                </div>
             </div>
          </div>
@@ -1537,7 +1538,7 @@ export function top_right_menu(that,etextTitle,backUrl,etextres,isMirador,locati
          ev.preventDefault()
       } 
 
-      const aboutLink = (id) => <a {...{id}}  href={"https://bdrc.io"} target="_blank" rel="noopener noreferrer"><span className="visually-hidden">Go to BDRC About page</span>{I18n.t("topbar.about")}</a>
+      const aboutLink = (id) => <a {...{id}}  href={livingTheme("https://bdrc.io")} target="_blank" rel="noopener noreferrer"><span className="visually-hidden">Go to BDRC About page</span>{I18n.t("topbar.about")}</a>
 
       const newSearchLink = (id) => <Link {...{id}} to={HOME_PATH} onClick={newSearchFunc}>
             <span className="visually-hidden">Go to search page</span>
@@ -1627,7 +1628,7 @@ export function top_right_menu(that,etextTitle,backUrl,etextres,isMirador,locati
 
          {(false && that.props.auth && isGroup(that.props.auth, "fullaccess")) 
             ? <a target="_blank" rel="noopener noreferrer" href="https://beta.bdrc.io/" id="donate" ><span className="visually-hidden">Go to BUDA beta page</span><img alt="BUDA icon" style={{background:"white",borderRadius:"3px",verticalAlign:"-11px"}} width="33" src="/icons/BUDA-small.svg"/>BETA</a>
-            : (!that.props.config || !that.props.config.chineseMirror) && <a target="_blank" rel="noopener noreferrer" href="https://bdrc.io/donation/" id="donate"><span className="visually-hidden">Go to Donation page</span><img alt="donate icon" src="/donate.svg"/>{I18n.t("topbar.donate")}</a>
+            : (!that.props.config || !that.props.config.chineseMirror) && <a target="_blank" rel="noopener noreferrer" href={livingTheme("https://bdrc.io/donation/")} id="donate"><span className="visually-hidden">Go to Donation page</span><img alt="donate icon" src="/donate.svg"/>{I18n.t("topbar.donate")}</a>
          }
 
 
@@ -8220,7 +8221,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                               <span class="eyebrow">{I18n.t("topbar.support")}</span>
                               <span class="support-title" lang={this.props.locale}>{I18n.t("home.support.title")}</span>
                            </div>
-                           <a href={"https://bdrc.io/donation?lang="+corpo_lang} target="_blank" rel="noopener noreferrer" /*rel="nofollow"*/>{I18n.t("topbar.donate2")}</a>
+                           <a href={livingTheme("https://bdrc.io/donation?lang="+corpo_lang)} target="_blank" rel="noopener noreferrer" /*rel="nofollow"*/>{I18n.t("topbar.donate2")}</a>
                            <span className="visually-hidden">Go to Donation page</span>
                         </div>
                         {/* Anchor target: the landing page links here as

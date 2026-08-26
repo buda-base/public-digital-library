@@ -4,6 +4,7 @@ import I18n from 'i18next';
 import { Cookies } from 'react-cookie-consent';
 import ShareIcon from '@material-ui/icons/Share';
 import MailOutlineIcon from '@material-ui/icons/MailOutline';
+import {livingTheme} from "../lib/corpoLink"
 
 /*
  * Same footer as the landing page (ratnasagara/src/components/Footer.tsx): a brand
@@ -65,11 +66,12 @@ class Footer extends Component<Props,State> {
         this.state = {}
     }
 
-    /** bdrc.io reads ?lang=; this site's own paths do not. */
+    /** bdrc.io reads ?lang=; this site's own paths do not. The WordPress site also
+     *  reads ?living=true to serve the Living Library theme. */
     href(link : Object) {
         if(!/(^|\/\/|\.)bdrc\.io/i.test(link.href)) return link.href
         const lang = this.props.locale === "zh" ? "zh-hans" : this.props.locale
-        return link.href + (link.href.includes("?") ? "&" : "?") + "lang=" + lang
+        return livingTheme(link.href + (link.href.includes("?") ? "&" : "?") + "lang=" + lang)
     }
 
     openCookieSettings() {
