@@ -422,3 +422,228 @@ body.auto_rela .inApp.mirador-container .slotIconContainer { position:absolute !
 
     .inApp .mirador-main-menu-bar .X { margin-left:8px; margin-top:-2px;}
 }       
+/* ==========================================================================
+ * Living Library palette for the image viewer
+ *
+ * Colour only — no layout, no geometry. The three states of the mockup
+ * (BUDA Viewer.dc.html: collection / volume / page) share one palette:
+ *
+ *   canvas   #1A1613   the dark ground everything sits on
+ *   panel    #2C2622   the tree and the thumbnail rail
+ *   bar      #341010   the bottom toolbar, brand maroon at full depth
+ *   header   #FBF8F2   the top bar, the one light surface
+ *   brand    #8B1E2B   the rail's edge strip, the active crumb
+ *   gold     #E5A832   hover and the current item
+ *   cream    #FBF4E8   text on the dark
+ *
+ * This file is the last stylesheet the viewer loads, so plain selectors win
+ * over mirador-combined.css without any specificity games.
+ * ========================================================================== */
+
+#viewer.mirador-container {
+    --v-canvas: #1A1613;
+    --v-panel: #2C2622;
+    --v-bar: #341010;
+    --v-header: #FBF8F2;
+    --v-brand: #8B1E2B;
+    --v-brand-hover: #A42A39;
+    --v-gold: #E5A832;
+    --v-cream: #FBF4E8;
+    --v-title: #2A1512;
+    --v-muted: #5C4A42;
+}
+
+/* ---- the ground, in all three states ---- */
+
+#viewer.mirador-container,
+#viewer .mirador-viewer,
+#viewer #manifest-select-menu,
+#viewer .member-select-results,
+#viewer .window,
+#viewer .scroll-view,
+#viewer .image-view,
+#viewer .mirador-osd {
+    background-color: var(--v-canvas);
+}
+
+/* ---- the top bar ---- */
+
+#viewer .mirador-main-menu-bar {
+    background-color: var(--v-header);
+    border-bottom: 1px solid rgba(42, 18, 8, 0.12);
+}
+
+#viewer #logo,
+#viewer #logo a,
+#viewer #logo span {
+    color: var(--v-title);
+}
+
+#viewer #logo span::after { color: var(--v-brand); }
+
+#viewer #breadcrumbs,
+#viewer #breadcrumbs a,
+#viewer #breadcrumbs a span {
+    color: var(--v-muted);
+}
+
+#viewer #breadcrumbs a.on,
+#viewer #breadcrumbs a.on span {
+    color: var(--v-brand);
+}
+
+#viewer .nav-bar-top .X { color: var(--v-title); }
+#viewer .nav-bar-top .X:hover { color: var(--v-brand); }
+
+/* ---- collection: the tree, its maroon edge, the volume rows ---- */
+
+#viewer #collection-tree-resizer,
+#viewer .sidePanel,
+#viewer .sidePanel .tabContentArea {
+    background-color: var(--v-panel);
+}
+
+#viewer .collec-tree-open-close,
+#viewer .thumbnails-open-close {
+    background-color: var(--v-brand);
+}
+
+#viewer #collection-tree .jstree-anchor {
+    color: rgba(251, 244, 232, 0.82);
+}
+
+#viewer #collection-tree > ul > li > .jstree-anchor,
+#viewer #collection-tree .jstree-anchor.jstree-clicked {
+    color: var(--v-cream);
+    background: none;
+}
+
+#viewer #collection-tree .jstree-anchor:hover {
+    background-color: rgba(229, 168, 50, 0.08);
+    color: var(--v-cream);
+}
+
+#viewer #collection-tree .jstree-ocl { color: #B7975A; }
+
+#viewer .items-listing > li { background-color: transparent; }
+#viewer .items-listing > li:nth-child(2n) { background-color: rgba(255, 255, 255, 0.025); }
+#viewer .items-listing > li:hover { background-color: rgba(255, 255, 255, 0.045); }
+
+#viewer .manifest-title h3 { color: var(--v-cream); }
+
+#viewer .canvas-count {
+    background-color: #3A3430;
+    border: 1px solid rgba(229, 168, 50, 0.3);
+    color: var(--v-gold);
+}
+
+/* ---- volume and page: the bottom toolbar ---- */
+
+#viewer .view-nav,
+#viewer .mirador-hud {
+    background-color: var(--v-bar);
+    border-top: 1px solid rgba(229, 168, 50, 0.25);
+}
+
+#viewer .view-nav a,
+#viewer .view-nav span,
+#viewer .view-nav div,
+#viewer .mirador-hud a,
+#viewer .mirador-hud span,
+#viewer .mirador-hud div {
+    color: var(--v-cream);
+}
+
+#viewer .view-nav a:hover,
+#viewer .view-nav span:hover,
+#viewer .mirador-hud a:hover,
+#viewer .mirador-hud span:hover {
+    color: var(--v-gold);
+}
+
+/* the zoom readout was a black chip on the teal bar */
+#viewer #Zmenu > span {
+    background-color: transparent;
+    border: 1px solid rgba(251, 244, 232, 0.3);
+    color: var(--v-cream);
+}
+
+#viewer .view-nav .mirador-btn,
+#viewer .mirador-hud .mirador-btn,
+#viewer a.mirador-osd-fullscreen {
+    background-color: transparent;
+    color: rgba(251, 244, 232, 0.6);
+}
+
+#viewer .view-nav .mirador-btn:hover,
+#viewer .mirador-hud .mirador-btn:hover,
+#viewer a.mirador-osd-fullscreen:hover {
+    color: var(--v-gold);
+}
+
+/* ---- page: the thumbnail rail ---- */
+
+#viewer .bottomPanel,
+#viewer .panel-thumbnail-view {
+    background-color: var(--v-panel);
+}
+
+#viewer .panel-thumbnail-view .thumb-label { color: rgba(251, 244, 232, 0.6); }
+
+#viewer .panel-thumbnail-view li.highlight .thumb-label {
+    color: var(--v-gold);
+}
+
+/* outline rather than border: the current image keeps its box */
+#viewer .panel-thumbnail-view img.thumbnail-image.highlight {
+    outline: 2px solid var(--v-gold);
+    outline-offset: -2px;
+}
+
+/* ---- the custom scrollbars, off the old red ---- */
+
+.mirador-container .member-select-results .ps__rail-y::after,
+.mirador-container .panel-thumbnail-view .ps__rail-y::after {
+    background-color: rgba(251, 244, 232, 0.12);
+}
+
+.mirador-container .member-select-results .ps__rail-y .ps__thumb-y,
+.mirador-container .panel-thumbnail-view .ps__rail-y .ps__thumb-y,
+.mirador-container .member-select-results .ps__rail-y .ps__thumb-y::before,
+.mirador-container .panel-thumbnail-view .ps__rail-y .ps__thumb-y::before {
+    background-color: rgba(251, 244, 232, 0.28);
+}
+
+/* the "go to image" field: white with the old red rule around it — the sheet sets
+   that border colour with !important, so this has to answer in kind */
+#viewer #gotoPage,
+#viewer .mirador-hud > .goto-page input {
+    background-color: #FFFEFA;
+    border: 1px solid rgba(251, 244, 232, 0.3) !important;
+    color: var(--v-title);
+}
+
+/* ---- what is left of the old brand red (#d73449) inside the viewer ----
+ * the small chrome the mockup does not draw but that still has to belong:
+ * badges, popups, menu buttons, the mobile close strip, breadcrumb hover. */
+
+#viewer .nav-bar-top #breadcrumbs a:hover { color: var(--v-brand-hover); }
+
+#viewer .view-nav .X,
+#viewer .mirador-hud .X,
+#viewer .view-nav .lowQ,
+#viewer .view-nav > div > .DL:not(.on)::after,
+#viewer ul.select > [data-init='1'] button {
+    background-color: var(--v-brand);
+}
+
+#viewer #popupIA > div { border-color: var(--v-brand); }
+
+#viewer #popupIA > div a,
+#viewer ul.select.login.notInList a,
+#viewer ul.select.login.notInList a:hover,
+#viewer #feedbucket {
+    color: var(--v-brand);
+}
+
+#viewer #feedbucket svg { fill: var(--v-brand); }
