@@ -13,6 +13,7 @@
                   "lang": "bo-x-ewts"
                 }
               ],
+              "kind": "kangyurDerge",
               "to": "/show/bdr:MW22084"
             },
             {
@@ -26,16 +27,19 @@
                   "lang": "zh-hans"
                 }
               ],
+              "kind": "tengyurDerge",
               "to": "/show/bdr:MW23703"
             },
             {
               "id": "allK",
               "_old_to": "/search?i=bdr:WA0BC001&t=Work",
+              "kind": "editions",
               "to": "/osearch/associated/WA0BC001/search"
             },
             {
               "id": "allT",
               "_old_to": "/search?i=bdr:WA0BC002&t=Work",
+              "kind": "editions",
               "to": "/osearch/associated/WA0BC002/search"
             },
             {
@@ -45,6 +49,7 @@
                   "lang": "bo-x-ewts"
                 }
               ],
+              "kind": "commentary",
               "to": "/show/bdr:MW00KG0545"
             }
           ]
@@ -119,6 +124,7 @@
         {
           "id": "all",
           "classes": "display-block",
+          "kind": "texts",
           "content": [
             {
               "id": "byTopic",
@@ -141,6 +147,7 @@
         {
           "id": "persons",
           "classes": "display-block",
+          "kind": "persons",
           "content": [
             {
               "id": "school",
@@ -155,6 +162,7 @@
         {
           "id": "places",
           "classes": "display-block",
+          "kind": "places",
           "content": [
             {
               "id": "type",
@@ -16392,6 +16400,7 @@
             "_old_to": "/search?r=:id&t=Place&u=Place&f=placeType,inc,:id",
             "to": "/osearch/search?type%5B0%5D=Place&placeType%5B0%5D=:rid",
             "parent": "type",
+            "kind": "place",
             "content": [
               {
                 "id": "bdr:PT0044"
@@ -16434,6 +16443,7 @@
             "_old_to": "/search?r=:id&t=Place&u=Place&f=placeType,inc,:id",
             "to": "/osearch/search?type%5B0%5D=Place&placeType%5B0%5D=:rid",
             "parent": "type",
+            "kind": "place",
             "content": [
               {
                 "id": "bdr:PT0078"
@@ -16512,6 +16522,7 @@
             "_old_to": "/search?r=:id&t=Place&u=Place&f=placeType,inc,:id",
             "to": "/osearch/search?type%5B0%5D=Place&placeType%5B0%5D=:rid",
             "parent": "type",
+            "kind": "place",
             "content": [
               {
                 "id": "bdr:PT0037"
@@ -16626,6 +16637,7 @@
             "_old_to": "/search?r=:id&t=Place&u=Place&f=placeType,inc,:id",
             "to": "/osearch/search?type%5B0%5D=Place&placeType%5B0%5D=:rid",
             "parent": "type",
+            "kind": "place",
             "content": [
               {
                 "id": "bdr:PT0060"

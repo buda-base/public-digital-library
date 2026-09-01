@@ -868,6 +868,35 @@
          "zhT":"Chinese Tradition",
          "recent":"Recent Acquisitions"
       },
+      "desc":{
+         "boT":"The largest corpus in the archive: canonical collections, collected works, and the writings of every school — from Bon to the Rime movement."
+      },
+      "eyebrow":{
+         "recent":"The living archive",
+         "bo":{
+            "selected":"Twelve doors"
+         }
+      },
+      "blurb":{
+         "bo":{
+            "selected":"Each door opens on a curated selection: the root texts, collected works, and commentaries that define the lineage."
+         }
+      },
+      "searchTopic":"Search the texts",
+      "nTexts":"{{count}} text",
+      "nTexts_plural":"{{count}} texts",
+      "nTopics":"{{count}} topic",
+      "nTopics_plural":"{{count}} topics",
+      "kind":{
+         "kangyurDerge":"Derge Kangyur",
+         "tengyurDerge":"Derge Tengyur",
+         "editions":"Editions",
+         "commentary":"Commentary",
+         "texts":"Texts",
+         "persons":"Persons",
+         "places":"Places",
+         "place":"Place"
+      },
       "all":"All texts",
       "links":"Quick Links",
       "persons":"Persons",

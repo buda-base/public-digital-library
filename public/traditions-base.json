@@ -9,25 +9,30 @@
                   "label":[
                      { "value":"bka' 'gyur (sde dge par phud)", "lang":"bo-x-ewts" }
                   ],
+                  "kind":"kangyurDerge",
                   "to":"/show/bdr:MW22084"
                },{
                   "label":[
                      { "value":"bstan 'gyur/ (sde dge/)", "lang":"bo-x-ewts" },
                      { "value":"丹珠尔(德格版)", "lang":"zh-hans" }
                   ],
+                  "kind":"tengyurDerge",
                   "to":"/show/bdr:MW23703"
                },{
                   "id":"allK",
+                  "kind":"editions",
                   "_old_to":"/search?i=bdr:WA0BC001&t=Work",
                   "to":"/osearch/associated/WA0BC001/search"
                },{
                   "id":"allT",
+                  "kind":"editions",
                   "_old_to":"/search?i=bdr:WA0BC002&t=Work",
                   "to":"/osearch/associated/WA0BC002/search"
                },{
                   "label":[
                      { "value":"kun dpal spyod 'jug", "lang":"bo-x-ewts" }
                   ],
+                  "kind":"commentary",
                   "to":"/show/bdr:MW00KG0545"
                }]
             },{
@@ -88,6 +93,7 @@
             },{
                "id":"all",
                "classes":"display-block",
+               "kind":"texts",
                "content":[{
                   "id":"byTopic",
                   "to":"texts/topic/",
@@ -105,6 +111,7 @@
             },{
                "id":"persons",
                "classes":"display-block",
+               "kind":"persons",
                "content":[{
                   "id":"school",
                   "to":"persons/school/"
@@ -115,6 +122,7 @@
             },{
                "id":"places",
                "classes":"display-block",
+               "kind":"places",
                "content":[{
                   "id":"type",
                   "to":"places/type/"
@@ -329,6 +337,7 @@
                "natural-features":{
                   "id":"placesNaturalFeatures",                  
                   "classes":"display-block",
+                  "kind":"place",
                   "_old_to":"/search?r=:id&t=Place&u=Place&f=placeType,inc,:id",
                   "to":"/osearch/search?type%5B0%5D=Place&placeType%5B0%5D=:rid",
                   "parent":"type",
@@ -359,6 +368,7 @@
                "regions":{
                   "id":"placesRegions",                  
                   "classes":"display-block",
+                  "kind":"place",
                   "_old_to":"/search?r=:id&t=Place&u=Place&f=placeType,inc,:id",
                   "to":"/osearch/search?type%5B0%5D=Place&placeType%5B0%5D=:rid",
                   "parent":"type",
@@ -413,6 +423,7 @@
                "sites":{
                   "id":"placesSites",                  
                   "classes":"display-block",
+                  "kind":"place",
                   "_old_to":"/search?r=:id&t=Place&u=Place&f=placeType,inc,:id",
                   "to":"/osearch/search?type%5B0%5D=Place&placeType%5B0%5D=:rid",
                   "parent":"type",
@@ -491,6 +502,7 @@
                "contemporary-places":{
                   "id":"placesContemporary",                  
                   "classes":"display-block",
+                  "kind":"place",
                   "_old_to":"/search?r=:id&t=Place&u=Place&f=placeType,inc,:id",
                   "to":"/osearch/search?type%5B0%5D=Place&placeType%5B0%5D=:rid",
                   "parent":"type",

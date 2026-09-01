@@ -6,8 +6,8 @@ import I18n from 'i18next';
 import _ from "lodash";
 import $ from 'jquery' ;
 import logdown from 'logdown'
-import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
+import ChevronLeft from '@material-ui/icons/ChevronLeft';
 import { Helmet } from "react-helmet"
 
 //import history from "../history"
@@ -38,6 +38,14 @@ let _that, already
 
 let xml, tbrc
 const purl = "https://purl.bdrc.io/resource/"
+
+// a card whose cover 404s — an id with no scan behind it — falls back to the plain
+// card the sheet paints when the anchor carries .no-img
+const onImgError = (ev) => {
+  const card = ev.target.closest("a")
+  if(card) card.classList.add("no-img")
+  ev.target.remove()
+}
 async function buildTree(id, glob, parent) {
 
   const nsResolver = (prefix) => {
@@ -158,6 +166,9 @@ buildTree("O9TAXTBRC201605", newTopics).then(() => { console.log("topics:",newTo
 */
 
 
+// "tmp:tradiCat0_9" is "tradiCat0_9" in a url
+const catSlug = (id) => (id ?? "").replace(/^[a-z]+:/, "")
+
 const len = (k, topics) => {
   if(topics[k]) {
     if(topics[k].parent) return [k].concat(len(topics[k].parent, topics))
@@ -192,7 +203,10 @@ export class TraditionViewer extends Component<State, Props>
   }
 
 
-  renderContent(t, route, storage = this.state.storage){ 
+  /* `groups`, when it is there, turns the nested entries of a section into cards that
+     open a page of their own ({ href, img }) instead of a heading with its works under
+     it: a school page is a page of categories, and each category its own page. */
+  renderContent(t, route, storage = this.state.storage, groups = null){
     return (t.content ?? t)?.map(c => {
       let label = { value: "", lang: this.props.locale }, rid = (c.id ?? "").split(":")[1] ?? ""
       if(t.id && c.id && storage && storage[c.id.replace(/^bdr:/,"")] && !c.label?.length) label = getLangLabel(this,skos+"prefLabel",storage[c.id.replace(/^bdr:/,"")].label ?? [], false, true)
@@ -217,20 +231,69 @@ export class TraditionViewer extends Component<State, Props>
       //if(e.depth > 0) res.push(<h5 onClick={() => this.setState({collapse:{...this.state.collapse,[e.rank+"_"+e.value]:!this.state.collapse[e.rank+"_"+e.value]}})} class={"collapse-"+(!!this.state.collapse[e.rank+"_"+e.value])} lang={e.lang}><ExpandLess/>{e.value}</h5>)// | {e.rank}</h5>)
       
       if(c.content) {
-        this.goFetch(c.content.filter(i => !i.label?.length).map(i => i.id.split(":")[1]),c.id)
-        return <>
-          <h5 onClick={() => !c.img && this.setState({collapse:{...this.state.collapse,[c.id]:!this.state.collapse[c.id]}})} class={"collapse-"+(!!this.state.collapse[c.id])} className={(c.img ? "has-img ":"")+(c.classes??"")+" collapse-"+(!!this.state.collapse[c.id])}>
-            { c.img ? <img alt="tradition item thumbnail" src={c.img}/> : <ExpandLess/>}
-            <span lang={label?.lang}>{label?.value}</span>
-          </h5>
-          {this.state.collapse[c.id] && this.renderContent(c, route, storage)}
-        </>
-      } else return <Link to={link} className={(c.img ? "has-img ":"")+(c.classes??"")} onClick={scrollToTop}>
-          { c.img && <img alt="tradition item thumbnail" src={c.img}/> }
+        if(groups) return <Link to={groups.href(c)} className="has-img" onClick={scrollToTop}>
+          { groups.img && <img alt="tradition item thumbnail" src={groups.img} loading="lazy" onError={onImgError}/> }
           <span lang={label?.lang}>{label?.value}</span>
+          <span className="tradi-kind">{I18n.t("tradition.nTexts", { count: c.content.length })}</span>
           <span className="visually-hidden">Go to {label?.value} page</span>
         </Link>
-    })     
+
+        this.goFetch(c.content.filter(i => !i.label?.length).map(i => i.id.split(":")[1]),c.id)
+        // a group left on its own page is a heading over its cards, not a toggle: the
+        // page opened on closed rows and showed nothing of what it holds
+        return <>
+          <h5 className={(c.img ? "has-img ":"")+(c.classes??"")}>
+            { c.img && <img alt="tradition item thumbnail" src={c.img}/> }
+            <span lang={label?.lang}>{label?.value}</span>
+          </h5>
+          {this.renderContent(c, route, storage)}
+        </>
+      } else {
+        /* The card can carry a second line: the Wylie name under the school's English
+           one, or the kind of thing the link opens ("Derge Kangyur", "Editions",
+           "Places"). Both are optional — a tradition whose json has no kind keeps a
+           one-line card.
+
+           A cover is different: it is the scan's own first page rather than a picture
+           chosen for the card, as often a white title sheet as a painted board, so it
+           takes the book card (.has-cover) whose title is read under the image. */
+        const cover = c.img ? null : this.iiifThumb(c.id)
+        const img = c.img ?? cover
+        const kind = this.optLabel("tradition.kind."+(c.kind ?? t.kind), c.kind ?? t.kind)
+        return <Link to={link} className={(img ? "has-img ":"")+(cover ? "has-cover ":"")+(c.classes??"")} onClick={scrollToTop}>
+          { img && <img alt="tradition item thumbnail" src={img} loading="lazy" onError={onImgError}/> }
+          <span lang={label?.lang}>{label?.value}</span>
+          { kind && <span className="tradi-kind">{kind}</span> }
+          <span className="visually-hidden">Go to {label?.value} page</span>
+        </Link>
+      }
+    })
+  }
+
+  // The works a school page lists have no image in the json, but they all have a cover
+  // in the same thumbnail service the search results read (see CustomHit): the card
+  // shows the volume instead of a line of text, and falls back to a plain card when
+  // there is no scan behind the id (onImgError, below).
+  iiifThumb(id) {
+    if(!/^bdr:M?W[0-9]/.test(id ?? "")) return null
+    const iiif = this.props.config?.iiif?.endpoints?.[this.props.config?.iiif?.index] ?? "//iiif.bdrc.io"
+    return iiif+"/"+id+"::thumbnail/full/full/0/default.jpg"
+  }
+
+  /* "< Back", one step up: a category page goes back to its school, a school or an index
+     to the tradition, a topic page to the topic above it. */
+  backLink(to, name) {
+    return <Link className="tradi-back" data-lang={this.props.locale} to={to}>
+      <ChevronLeft/>{I18n.t("resource.goB")}<span className="visually-hidden">Go back to {name}</span>
+    </Link>
+  }
+
+  // an i18n key that may not be there: I18n.t hands the key itself back when it misses,
+  // and the fallback is what the json had (a raw kind, or nothing at all)
+  optLabel(key, fallback = null) {
+    if(!key || key.endsWith("undefined")) return null
+    const res = I18n.t(key)
+    return res.startsWith("tradition.") ? fallback : res
   }
 
   getIdAsText(id) {
@@ -240,46 +303,43 @@ export class TraditionViewer extends Component<State, Props>
     return res
   }
 
+  /* The page shows the children of the topic it is on, one card each — the tree used to
+     be walked two levels deep and folded into collapsing rows, which meant a page opened
+     on four closed headings and a reader had to click to see anything. A child that has
+     children of its own opens its own page; a child that has none opens the search for
+     it, which is where the tree ended anyway. */
   renderSubTopic(t, listing, depth = 0){
-    
-    const topic = topics[t], label = getPropLabel(this, fullUri("bdr:"+t), false, true), MAXNL=100000
 
-    console.log("topic:", depth, t, topic, label)
-    
-    if(topic?.sub?.length) {
-      if(depth < 2) {
-        const sublist = []
-        topic.sub.map(s => this.renderSubTopic(s, sublist, depth+1))
-        //if(depth > 0) listing.push(<h5>{ getPropLabel(this, fullUri("bdr:"+t)) }</h5>)
-        //listing.push(sublist)
-        listing.push({...label, rank:topic.rank ?? MAXNL, sublist, depth, hasSub:1}) 
-      } else {
-        //listing.push(<Link to={"../bdr:"+t+"/"}>{ getPropLabel(this, fullUri("bdr:"+t)) } [{topic?.sub?.length}]</Link>)  
-        listing.push({...label, rank:topic.rank ?? MAXNL, to:"./../bdr:"+t+"/", depth, hasSub:1, length:topic?.sub?.length }) 
-      }
-    } else {
-      //listing.push(<Link to={"/search?r=bdr:"+t+"&t=Work"}>{ getPropLabel(this, fullUri("bdr:"+t)) }</Link>)
-      listing.push({...label, rank:topic.rank ?? MAXNL, to: "/osearch/associated/"+t+"/search" /*"/search?r=bdr:"+t+"&t=Work"*/, depth, hasSub:depth>1?1:0})
-    }    
-  }
-  
-  
-  renderList(listing) {
+    const topic = topics[t], MAXNL = 100000
 
-    const sort = _.orderBy(listing, ["depth", "hasSub", /*"lang",*/ "rank"], ["asc", "asc", /*"desc",*/ "asc"])
-
-    console.log("rl:",listing, sort)
-
-    const res = []
-    for(const e of sort) {
-      if(e.sublist) {
-        if(e.depth > 0) res.push(<h5 onClick={() => this.setState({collapse:{...this.state.collapse,[e.rank+"_"+e.value]:!this.state.collapse[e.rank+"_"+e.value]}})} class={"collapse-"+(!!this.state.collapse[e.rank+"_"+e.value])} lang={e.lang}><ExpandLess/>{e.value}</h5>)// | {e.rank}</h5>)
-        if(e.depth === 0 || this.state.collapse[e.rank+"_"+e.value]) res.push(this.renderList(e.sublist))
-      }
-      else if(e.to) res.push(<Link data-lang={e.lang} to={e.to}>{e.value}{e.length?" ["+e.length+"]":""}<span className="visually-hidden">Go to {e.value} page</span></Link>)// | {e.rank}</Link>)
-      else res.push(<i>{e.value} {e.lang}</i>)// | {e.rank}</i>)
+    if(depth === 0) {
+      if(topic?.sub?.length) topic.sub.forEach(s => this.renderSubTopic(s, listing, depth + 1))
+      // a topic with no children of its own: the page is the one card that leaves it
+      else listing.push({ ...getPropLabel(this, fullUri("bdr:"+t), false, true), rank: 0, to: "/osearch/associated/"+t+"/search" })
+      return
     }
-    return res
+
+    listing.push({
+      ...getPropLabel(this, fullUri("bdr:"+t), false, true),
+      rank: topic?.rank ?? MAXNL,
+      to: topic?.sub?.length ? "./../bdr:"+t+"/" : "/osearch/associated/"+t+"/search",
+      length: topic?.sub?.length,
+    })
+  }
+
+
+  renderList(listing, img) {
+
+    const sort = _.orderBy(listing, ["rank"], ["asc"])
+
+    return sort.map(e => e.to
+      ? <Link className="has-img" data-lang={e.lang} to={e.to}>
+          { img && <img alt="" src={img} loading="lazy" onError={onImgError}/> }
+          <span lang={e.lang}>{e.value}</span>
+          <span className="tradi-kind">{ e.length ? I18n.t("tradition.nTopics", { count: e.length }) : I18n.t("tradition.searchTopic") }</span>
+          <span className="visually-hidden">Go to {e.value} page</span>
+        </Link>
+      : <i>{e.value} {e.lang}</i>)
   }
 
 
@@ -290,6 +350,12 @@ export class TraditionViewer extends Component<State, Props>
     
     let t = this.props.root.split(":")
     t = t.pop()
+
+    // the sub-topics have no image of their own, so a card takes the photograph of the
+    // top-level topic its page sits under — the one the "By Topic" grid shows
+    const ancestors = len(t, topics)
+    const topLevel = tradi?.subContent?.[this.props.type]?.[this.props.id]?.content ?? []
+    const img = topLevel.find(i => ancestors.includes((i.id ?? "").split(":")[1]))?.img
 
     let path = len(t, topics)
     path.pop()
@@ -308,9 +374,12 @@ export class TraditionViewer extends Component<State, Props>
 
     content.push(<>
         {/* <h1 style={{width:"100%"}}>{I18n.t("tradition."+this.props.tradition+"T")} &ndash; {I18n.t("tradition.t_"+this.props.type)} &ndash; {rootid}</h1> */}
-        <h1 style={{width:"100%"}}>{rootid}</h1> 
-        <div className={"tradi-content listing display-block"}>
-          {this.renderList(listing)}
+        { path.length
+          ? this.backLink("./../bdr:"+path[path.length - 1]+"/", this.getIdAsText("bdr:"+path[path.length - 1]))
+          : this.backLink("./../", I18n.t("tradition.t_"+this.props.type)+" ("+id+")") }
+        <h1 style={{width:"100%"}}>{rootid}</h1>
+        <div className={"tradi-content listing tradi-cards tradi-plates"}>
+          {this.renderList(listing, img)}
         </div>
       </>)
 
@@ -320,7 +389,23 @@ export class TraditionViewer extends Component<State, Props>
   renderSubLevel(tradi, {content, breadcrumbs}) {
 
     let subContent, id, classes
-         
+
+    const entry = tradi.subContent?.[this.props.type]?.[this.props.id]
+
+    /* A category of a school ("Collected Writings", "Revelations of Concealed
+       Teachings"): the school page lists them as cards, and this is one of them opened
+       on its own — the works of that category and of no other. The url is the section's
+       fourth segment, the group's id without its tmp: prefix. */
+    const group = this.props.root && Array.isArray(entry?.content)
+      ? entry.content.find(c => catSlug(c.id) === this.props.root)
+      : null
+    const groupLabel = group ? getLangLabel(this, skos+"prefLabel", group.label ?? [], false, true) : null
+
+    // the school's own photograph, from the grid on the tradition page: its categories
+    // have no picture of their own and each takes a detail of it
+    const plate = tradi.content?.find(s => s.id === "selected")?.content
+      ?.find(s => (s.to ?? "").endsWith("/"+this.props.id))?.img
+
     if(this.props.type === "selected" && tradi.subContent[this.props.type][this.props.id]) {
       id = this.getIdAsText(tradi.subContent[this.props.type][this.props.id].id) 
     } else if(!(this.props.type === "school")) {
@@ -333,8 +418,12 @@ export class TraditionViewer extends Component<State, Props>
 
     if(tradi.subContent && tradi.subContent[this.props.type] && tradi.subContent[this.props.type][this.props.id]) {
 
-      if(typeof tradi.subContent[this.props.type][this.props.id].content === "string") subContent = this.renderContent(tradi.content?.find(t => t.id === tradi.subContent[this.props.type][this.props.id].content), tradi.subContent[this.props.type][this.props.id].to)       
-      else subContent = this.renderContent(tradi.subContent[this.props.type][this.props.id]) 
+      if(typeof entry.content === "string") subContent = this.renderContent(tradi.content?.find(t => t.id === entry.content), entry.to)
+      else if(group) subContent = this.renderContent(group, group.to ?? entry.to)
+      else subContent = this.renderContent(entry, undefined, undefined, this.props.type === "selected" ? {
+        href: c => "/tradition/"+this.props.tradition+"/"+this.props.type+"/"+this.props.id+"/"+catSlug(c.id)+"/",
+        img: plate,
+      } : null)
 
       classes = tradi.subContent[this.props.type][this.props.id].classes
 
@@ -352,14 +441,31 @@ export class TraditionViewer extends Component<State, Props>
       breadcrumbs.push(<span>{I18n.t("tradition.t_"+this.props.type)} ({id})</span>)                    
     }
 
-    if(this.props.root) {
+    if(group) {
+      // the school, which was the last crumb, becomes the way back to its categories
+      breadcrumbs.pop()
+      breadcrumbs.push(<Link data-lang={this.props.locale} to={"/tradition/"+this.props.tradition+"/"+this.props.id}>{I18n.t("tradition.t_"+this.props.type)} ({id})<span className="visually-hidden">Go to {I18n.t("tradition.t_"+this.props.type)} page</span></Link>)
+      breadcrumbs.push(<span lang={groupLabel?.lang}>{groupLabel?.value}</span>)
+    }
+
+    if(this.props.root && !group) {
       
       this.renderTopic({tradi, id}, {content, breadcrumbs})
 
     } else {          
+      // a category page is still the school's page: the school names it, the category is
+      // its heading, and the way back to the other categories is over the title
       content.push(<>
-          <h1 style={{width:"100%"}}>{/*{I18n.t("tradition."+this.props.tradition+"T")} &ndash; */}{I18n.t("tradition.t_"+this.props.type)} &ndash; {id}</h1>
-          <div className={"tradi-content main "+(classes ?? "")}>
+          { group
+            ? this.backLink("/tradition/"+this.props.tradition+"/"+this.props.id, I18n.t("tradition.t_"+this.props.type)+" ("+id+")")
+            : this.backLink("/tradition/"+this.props.tradition+"/", I18n.t("tradition."+this.props.tradition+"T")) }
+          <h1 style={{width:"100%"}}>{ group
+            ? <>{I18n.t("tradition.t_"+this.props.type)} ({id})</>
+            : <>{I18n.t("tradition.t_"+this.props.type)} &ndash; {id}</> }</h1>
+          {/* tradi-plates: the cards of a school page all take a detail of the one
+              photograph, the way a topic's sub-topics do */}
+          <div className={"tradi-content main tradi-cards "+(!group && this.props.type === "selected" ? "tradi-plates " : "")+(classes ?? "")}>
+            { group && <h2 lang={groupLabel?.lang}>{groupLabel?.value}</h2> }
             {subContent}
           </div>
         </>)
@@ -377,11 +483,25 @@ export class TraditionViewer extends Component<State, Props>
 
     breadcrumbs.push(<span>{I18n.t("tradition."+this.props.tradition+"T")}</span>)
 
+    // the standfirst under the title, the eyebrow over a section and the line under its
+    // heading are all optional i18n keys: only the Tibetan tradition has them for now,
+    // and a tradition without them renders exactly as it did before
+    const standfirst = this.optLabel("tradition.desc."+this.props.tradition+"T")
+
     content.push(<>
       <h1 style={{width:"100%"}}>{I18n.t("tradition.title."+this.props.tradition+"T")}</h1>
+      { standfirst && <p className="tradi-standfirst">{standfirst}</p> }
       { tradi && tradi.content?.map(t => {
-        return <div id={"tradi-"+t.id} className={"tradi-content "+(t.classes ?? "")}>
+        // a tradition may word a section its own way ("Twelve doors" counts the Tibetan
+        // schools), so its own key wins over the one shared by all four
+        const eyebrow = this.optLabel("tradition.eyebrow."+this.props.tradition+"."+t.id, this.optLabel("tradition.eyebrow."+t.id)),
+              blurb = this.optLabel("tradition.blurb."+this.props.tradition+"."+t.id, this.optLabel("tradition.blurb."+t.id))
+        // tradi-cards: the sections the mockup lays out as a grid of cards, which the
+        // sub-pages' listings (.main, .listing) are not
+        return <div id={"tradi-"+t.id} className={"tradi-content tradi-cards "+(t.classes ?? "")}>
+          { eyebrow && <span className="tradi-eyebrow">{eyebrow}</span> }
           <h2>{I18n.t("tradition."+t.id)}</h2>
+          { blurb && <p className="tradi-blurb">{blurb}</p> }
           {this.renderContent(t)}
         </div>
       })}
@@ -389,7 +509,8 @@ export class TraditionViewer extends Component<State, Props>
         <InnerSearchPageContainer /*history={this.props.history} */  location={this.props.location} auth={this.props.auth} isOsearch={true} recent={false} /*sortByDefault={true}*/ customFilters={filters[this.props.tradition]} customPholder={I18n.t("resource.searchTtrad", {trad:I18n.t("tradition.title."+this.props.tradition+"T"),interpolation: {escapeValue: false} }) }/>          
       </div> }
       <div id="tradi-recent" className="tradi-content">
-        <h2>{I18n.t("tradition.recent")}</h2> 
+        { this.optLabel("tradition.eyebrow.recent") && <span className="tradi-eyebrow">{this.optLabel("tradition.eyebrow.recent")}</span> }
+        <h2>{I18n.t("tradition.recent")}</h2>
         <InnerSearchPageContainer /*history={this.props.history} */ customPholder={I18n.t("resource.searchTtrad", {trad:I18n.t("tradition.title."+(this.props.tradition=== "bo"?"recent":this.props.tradition+"T")),interpolation: {escapeValue: false} }) } forceSearch={this.props.tradition === "bo"} location={this.props.location} auth={this.props.auth} isOsearch={true} recent={true} customFilters={filters[this.props.tradition]}/>          
       </div>
     </>)
@@ -484,11 +605,15 @@ export class TraditionViewer extends Component<State, Props>
               <div class="SearchPane">
                 <div className="static-container">
                   <div id="samples">
-                    <div style={{display:"flex",flexWrap:"wrap"}}>
-                      <div id="tradition-breadcrumbs">                          
+                    {/* block, not the flex row it used to be: the breadcrumb and the
+                        card below it are the only two children now */}
+                    <div>
+                      <div id="tradition-breadcrumbs">
                         { breadcrumbs }
                       </div>
-                      {content}
+                      {/* the card the sections are painted on, so the breadcrumb can stay
+                          out of it on the page ground, as on a resource page */}
+                      <div className="tradi-card">{content}</div>
                     </div>
                   </div>
                 </div> 

@@ -12936,3 +12936,615 @@ html:not([lang="bo"]):not([lang^="zh"]):not([lang="km"])
 #root .withOutline .resource.etext-view:not(#a):not(#b) {
    margin-top: calc(var(--etext-bar-bottom, 120px) - 120px);
 }
+
+
+/* ============================================================================
+ * The tradition page
+ * ----------------------------------------------------------------------------
+ * Mockup: "BUDA Tradition Tibetan.dc.html" in the design project. It lays the
+ * page out as full-bleed 1200px sections on the cream ground; here the page
+ * keeps the resource pages' frame instead — breadcrumb on the ground, one card
+ * centred under it — and the mockup's sections are painted inside that card.
+ *
+ * The markup the component gives us:
+ *
+ *    .App.tradition .SearchPane
+ *       .static-container > #samples > div        the page column
+ *          #tradition-breadcrumbs                 the breadcrumb, on the ground
+ *          .tradi-card                            the card
+ *             h1 + p.tradi-standfirst             title and standfirst
+ *             #tradi-links      .tradi-content    "Quick links", five cards
+ *             #tradi-selected   .tradi-content    the twelve schools, image cards
+ *             #tradi-all
+ *             #tradi-persons
+ *             #tradi-places     .tradi-content    the browse indexes, four per row
+ *             #tradi-recent     .tradi-content    "Recent Acquisitions" + the
+ *                                                 searchkit block, repainted only
+ *
+ * Every section is a .tradi-content whose children are the <a> the json lists,
+ * so the grid is on the section and each card is one anchor: the two lines of a
+ * card are the label span plus .tradi-kind or .tradi-ewts next to it.
+ * ========================================================================== */
+
+/* ---- the page ground and the column ----
+ *
+ * The sheet paints .SearchPane white at a fixed 1440 and #samples white again at
+ * 1220 with 60px of its own; both become transparent so the ground shows, and the
+ * column is the resource pages' 1360 so card, topbar text and footer share an edge.
+ */
+
+/* ---- the page fills the viewport, and stops there ----
+ *
+ * The sheet gives the pane a min-height of 100vh minus 80 and the .App around it a full
+ * 100vh, both under a topbar 264px tall: a short page — a school with three categories —
+ * was a viewport and a half long, the extra being ground with nothing on it (and, before
+ * this, the body's pale cream under that). The column stretches to the viewport instead
+ * and no further: #root is the column, the wrapper holding the .App takes what the
+ * topbar leaves, and the two min-heights go.
+ */
+
+#root:has(> div > .App.tradition) { display: flex; flex-direction: column; min-height: 100vh; }
+
+#root > div:has(> .App.tradition) { flex: 1 1 auto; background: var(--living-page); }
+
+#root .App.tradition:not(#a) { min-height: 0; background: var(--living-page); }
+
+#root .App.tradition .SearchPane:not(#a) {
+   box-sizing: border-box;
+   width: 100%;
+   max-width: none;
+   /* the ground runs edge to edge, as on a resource page: at 1440 the sheet held the
+      pane to that width and the two rails outside it stayed the body's pale cream */
+   padding: 30px 40px 64px;
+   /* the sheet's .SearchPane rule sets padding-top:0 !important */
+   padding-top: 30px !important;
+   min-height: 0;
+   /* the sheet keeps 80px under the pane, which showed as a band of the body's pale
+      cream under the ground once the ground ran edge to edge */
+   margin: 0;
+   background: var(--living-page);
+}
+
+.App.tradition .static-container:not(#a),
+.App.tradition #samples:not(#a) {
+   width: 100%;
+   max-width: none;
+   margin: 0;
+   padding: 0;
+   background: none;
+}
+
+/* the flex wrapper the component puts around breadcrumb and card, with the
+   font-size:0 the old sheet used to kill inline whitespace between the links */
+.App.tradition #samples > div:not(#a) {
+   display: block;
+   box-sizing: border-box;
+   width: 100%;
+   max-width: 1360px;
+   /* the sheet gives this wrapper 30px of its own on a content-box, which put the
+      card 60px wider than the column once the rails were the page's */
+   padding: 0;
+   margin: 0 auto;
+   font-size: 16px;
+}
+
+/* ---- the breadcrumb ---- */
+
+/* on the card's text edge and a card-gap above it, the way the resource page's
+   .ariane sits over its own card */
+.App.tradition #tradition-breadcrumbs:not(#a) {
+   box-sizing: border-box;
+   padding: 0 calc(var(--living-card-pad) + 1px);
+   margin: 0 0 var(--living-gap);
+   font-size: 13.5px;
+   line-height: 1.5;
+   color: var(--living-sub);
+}
+
+.App.tradition #tradition-breadcrumbs a:not(#a) {
+   color: var(--living-brand);
+   font-weight: 600;
+   text-decoration: none;
+}
+
+.App.tradition #tradition-breadcrumbs a:hover:not(#a) { text-decoration: underline; }
+
+.App.tradition #tradition-breadcrumbs span:not(#a) { color: var(--living-ink-soft); }
+
+.App.tradition #tradition-breadcrumbs a:not(:first-child)::before,
+.App.tradition #tradition-breadcrumbs span:not(:first-child)::before {
+   color: var(--living-muted);
+}
+
+/* ---- the card ----
+ *
+ * One box, unlike the resource page's stack of blocks: nothing here detaches from
+ * the article, so a single background and one shadow are enough. The side padding
+ * is the resource card's, which leaves 1168px for the grids — the mockup's own
+ * content width, give or take its gutter.
+ */
+
+.App.tradition .tradi-card {
+   box-sizing: border-box;
+   background: #fff;
+   border-radius: 2px;
+   padding: 56px var(--living-card-pad) 72px;
+   box-shadow: 0 12px 40px rgba(42, 18, 8, 0.09);
+}
+
+/* ---- the title and the standfirst ---- */
+
+/* the sheet sets the Noto stack with !important on everything under .App, so every
+   serif rule below has to say it too; Ogg is latin-only, hence the lang guards */
+.App.tradition .tradi-card h1:not([lang="bo"]):not([lang^="zh"]):not(#a) {
+   font-family: var(--living-serif) !important;
+   font-weight: 400;
+   font-size: 46px;
+   line-height: 1.05;
+   color: var(--living-ink);
+   margin: 0 0 10px;
+}
+
+.App.tradition .tradi-standfirst {
+   max-width: 640px;
+   margin: 0;
+   font-size: 16.5px;
+   line-height: 1.65;
+   color: var(--living-sub);
+   text-wrap: pretty;
+}
+
+/* ---- the way back out of a category ----
+ *
+ * A category page (a school's "Collected Writings", say) is one page of the school's,
+ * so it carries the school's own title and this link back to its other categories,
+ * over the title the way the resource page hangs its "< Back".
+ */
+
+.App.tradition .tradi-card .tradi-back:not(#a) {
+   display: inline-flex;
+   align-items: center;
+   margin: 0 0 14px -6px;
+   font-size: 14px;
+   font-weight: 600;
+   color: var(--living-brand);
+   text-decoration: none;
+}
+
+.App.tradition .tradi-card .tradi-back:hover:not(#a) { color: var(--living-brand-hover); }
+
+.App.tradition .tradi-card .tradi-back > svg:not(#a) { width: 20px; height: 20px; }
+
+/* ---- the sections ----
+ *
+ * .tradi-content is flex in the sheet (and block when the json asks for
+ * "display-block"). The sections the component marks .tradi-cards — the ones the
+ * mockup draws as cards — become a grid instead, so their heading and the lines
+ * above and below it have to span the row. The sub-pages' listings (.main and
+ * .listing, a school's works or a topic tree) keep the layout they had and take
+ * only the card and the typography.
+ */
+
+.App.tradition .tradi-card .tradi-content:not(#a) {
+   width: 100%;
+   margin: 0 0 56px;
+}
+
+.App.tradition .tradi-card .tradi-cards:not(#a) {
+   display: grid;
+   grid-template-columns: repeat(4, 1fr);
+   gap: 14px;
+}
+
+.App.tradition .tradi-card .tradi-content:last-child:not(#a) { margin-bottom: 0; }
+
+.App.tradition .tradi-card .tradi-cards > h2:not(#a),
+.App.tradition .tradi-card .tradi-eyebrow,
+.App.tradition .tradi-card .tradi-blurb {
+   grid-column: 1 / -1;
+}
+
+.App.tradition .tradi-card .tradi-content > h2:not(#a) {
+   font-family: var(--living-serif) !important;
+   font-weight: 400;
+   font-size: 28px;
+   line-height: 1.2;
+   color: var(--living-ink);
+   margin: 0 0 6px;
+}
+
+.App.tradition .tradi-card .tradi-eyebrow {
+   display: block;
+   font-size: 11.5px;
+   font-weight: 700;
+   text-transform: uppercase;
+   letter-spacing: 0.2em;
+   color: var(--living-brand);
+   margin-bottom: 10px;
+}
+
+/* in a grid section the row gap comes on top of these margins, which put the heading a
+   full line away from its eyebrow, and the line under it a full line away again */
+.App.tradition .tradi-card .tradi-cards > .tradi-eyebrow:not(#a) { margin-bottom: -12px; }
+.App.tradition .tradi-card .tradi-cards > .tradi-blurb:not(#a) { margin-top: -14px; }
+
+.App.tradition .tradi-card .tradi-blurb {
+   max-width: 620px;
+   margin: 0 0 12px;
+   font-size: 16px;
+   line-height: 1.6;
+   color: var(--living-sub);
+   text-wrap: pretty;
+}
+
+/* the first section starts further down: the standfirst above it is the end of
+   the title block, not the top of a section */
+.App.tradition .tradi-card .tradi-standfirst + .tradi-content:not(#a) { margin-top: 44px; }
+
+/* the sub-pages have no standfirst: the heading is the whole of the title block */
+.App.tradition .tradi-card h1 + .tradi-content:not(#a) { margin-top: 32px; }
+
+/* ---- the link cards ----
+ *
+ * Quick links and the three browse indexes share one card: a cream tile with the
+ * brand hanging down its left edge, the title in the serif and the kind under it.
+ * The sheet's list rules (a 20px indent, a 36px line, display:block) are what the
+ * same anchors carried as plain links.
+ */
+
+.App.tradition .tradi-card .tradi-cards > a:not(.has-img):not(#a) {
+   display: block;
+   box-sizing: border-box;
+   margin: 0;
+   padding: 16px 18px 18px;
+   line-height: normal;
+   background: var(--living-inset);
+   border: 1px solid rgba(42, 18, 8, 0.12);
+   border-left: 4px solid var(--living-brand);
+   border-radius: 2px;
+   text-decoration: none;
+   transition: background .2s, border-color .2s, transform .2s, box-shadow .2s;
+}
+
+.App.tradition .tradi-card .tradi-cards > a:not(.has-img):hover:not(#a) {
+   background: #fff;
+   border-left-color: var(--living-gold);
+   transform: translateY(-2px);
+   box-shadow: 0 10px 24px rgba(42, 18, 8, 0.09);
+}
+
+.App.tradition .tradi-card .tradi-cards > a:not(.has-img) > span:not([lang="bo"]):not([lang^="zh"]):not([lang^="km"]):not(#a) {
+   font-family: var(--living-serif) !important;
+}
+
+.App.tradition .tradi-card .tradi-cards > a:not(.has-img) > span:not(#a) {
+   display: block;
+   width: auto;
+   font-size: 17px;
+   line-height: 1.25;
+   color: var(--living-ink);
+   margin: 0 0 6px;
+   text-align: left;
+}
+
+/* :not(#a):not(#b) to out-specify the serif rule above, which catches every span in
+   the card that carries no lang of its own — the kind is the one that stays sans */
+.App.tradition .tradi-card .tradi-cards > a .tradi-kind:not(#a):not(#b) {
+   font-family: var(--buda-sans) !important;
+   font-size: 12px;
+   font-weight: 600;
+   text-transform: uppercase;
+   letter-spacing: 0.12em;
+   color: var(--living-muted);
+   margin: 0;
+}
+
+/* five across, since the json lists five of them */
+.App.tradition .tradi-card #tradi-links:not(#a) { grid-template-columns: repeat(5, 1fr); }
+
+/* ---- the image cards ----
+ *
+ * The mockup's twelve doors: a 4/3 image with the name and its Wylie sitting on a
+ * gradient at the bottom. The sheet had them as 75px thumbnails with a caption
+ * underneath, so the anchor becomes the frame and the labels are moved onto it.
+ *
+ * The same card carries every other page of the section: the "By Topic" and
+ * "By Collection" indexes, the century and school portraits, a topic's sub-topics
+ * (which have no image of their own and borrow their top-level topic's, hence the
+ * crops below), and the works a school page lists (whose cover comes from the
+ * thumbnail service, and which fall back to .no-img when there is no scan).
+ */
+
+.App.tradition .tradi-card .tradi-cards:has(a.has-img):not(#a) {
+   grid-template-columns: repeat(4, 1fr);
+   gap: 22px;
+}
+
+.App.tradition .tradi-card #tradi-selected > h2:not(#a) {
+   font-size: 38px;
+   line-height: 1.1;
+   margin-bottom: 10px;
+}
+
+/* the group headings of a school page ("Collected Writings", "Revelations…"), which
+   used to be the collapsing rows */
+.App.tradition .tradi-card .tradi-cards > h5:not(#a) {
+   grid-column: 1 / -1;
+   margin: 22px 0 0;
+   font-family: var(--living-serif) !important;
+   font-size: 24px;
+   font-weight: 400;
+   line-height: 1.2;
+   color: var(--living-ink);
+}
+
+.App.tradition .tradi-card .tradi-cards > h5:first-child:not(#a) { margin-top: 0; }
+
+/* the sheet sets the sans on every span under .App with !important, and the label of a
+   group heading is one */
+.App.tradition .tradi-card .tradi-cards > h5 > span:not([lang="bo"]):not([lang^="zh"]):not([lang^="km"]):not(#a) {
+   font-family: var(--living-serif) !important;
+   font-weight: 400;
+}
+
+/* the anchor holds the shape, so a card whose cover never arrives keeps it */
+.App.tradition .tradi-card .tradi-cards a.has-img:not(#a) {
+   position: relative;
+   display: block;
+   aspect-ratio: 4 / 3;
+   margin: 0;
+   border-radius: 2px;
+   overflow: hidden;
+   background: var(--living-maroon);
+   box-shadow: 0 6px 20px rgba(42, 18, 8, 0.08);
+   transition: box-shadow .3s, transform .3s;
+}
+
+.App.tradition .tradi-card .tradi-cards a.has-img:hover:not(#a) {
+   box-shadow: 0 18px 44px rgba(42, 18, 8, 0.18);
+   transform: translateY(-4px);
+}
+
+/* image-rendering, because these files are 140px squares blown up to a 275px card: the
+   mockup's cards keep the archive's own low-resolution look — hard pixels rather than
+   the browser's smoothing, which turns a thangka detail into a blurred photograph.
+   (The mockup gets there by drawing the file at an eighth and scaling it back up by 8;
+   in Chrome that composites from the source and changes nothing, the sampling rule is
+   what does the work.) */
+.App.tradition .tradi-card .tradi-cards a.has-img img:not(#a) {
+   position: absolute;
+   inset: 0;
+   display: block;
+   width: 100%;
+   height: 100%;
+   object-fit: cover;
+   margin: 0;
+   image-rendering: pixelated;
+}
+
+/* no cover behind the id: the plate the label sits on is the card itself */
+.App.tradition .tradi-card .tradi-cards a.has-img.no-img:not(#a) {
+   background:
+      radial-gradient(120% 90% at 50% 0%, rgba(229, 168, 50, 0.20), rgba(229, 168, 50, 0) 62%),
+      linear-gradient(160deg, #4a1717 0%, var(--living-maroon) 62%);
+}
+
+/* the gradient the mockup puts in a span of its own: there is no such element
+   here, and the anchor's own ::after is over the image and under the labels */
+.App.tradition .tradi-card .tradi-cards a.has-img::after {
+   content: "";
+   position: absolute;
+   inset: 0;
+   background: linear-gradient(180deg, rgba(52, 16, 16, 0) 38%, rgba(52, 16, 16, 0.86) 100%);
+   pointer-events: none;
+}
+
+.App.tradition .tradi-card .tradi-cards a.has-img:not(.has-cover) > span:not(.visually-hidden):not(#a) {
+   position: absolute;
+   left: 18px;
+   right: 18px;
+   z-index: 1;
+   display: block;
+   width: auto;
+   margin: 0;
+   text-align: left;
+}
+
+/* the name sits on the second line's height, and that line on the card's floor */
+.App.tradition .tradi-card .tradi-cards a.has-img:not(.has-cover) > span:not(.visually-hidden):not(.tradi-kind):not([lang="bo"]):not([lang^="zh"]):not(#a) {
+   font-family: var(--living-serif) !important;
+}
+
+.App.tradition .tradi-card .tradi-cards a.has-img:not(.has-cover) > span:not(.visually-hidden):not(.tradi-kind):not(#a) {
+   bottom: 33px;
+   font-size: 23px;
+   line-height: 1.15;
+   color: var(--living-cream);
+}
+
+/* a card with no second line puts its name on the floor instead */
+.App.tradition .tradi-card .tradi-cards a.has-img:not(.has-cover):not(:has(.tradi-kind)) > span:not(.visually-hidden):not(#a) {
+   bottom: 14px;
+}
+
+.App.tradition .tradi-card .tradi-cards a.has-img > .tradi-kind:not(#a):not(#b) {
+   bottom: 14px;
+   font-size: 12.5px;
+   font-weight: 400;
+   font-style: italic;
+   line-height: 1.5;
+   letter-spacing: 0;
+   text-transform: none;
+   color: var(--living-gold-soft);
+}
+
+/* Tibetan script needs the room the romanisation does not */
+.App.tradition .tradi-card .tradi-cards a.has-img:not(.has-cover) > span[lang="bo"]:not(.visually-hidden):not(#a) {
+   font-size: 20px;
+   line-height: 1.45;
+}
+
+/* ---- the works a school page lists ----
+ *
+ * Their picture is the scan's own first page, which is as often a white title sheet
+ * as a painted cover: a title written over it would be unreadable, so the card is a
+ * book instead of a plate — the page above, the title on the card under it.
+ */
+
+.App.tradition .tradi-card .tradi-cards a.has-cover:not(#a) {
+   aspect-ratio: auto;
+   background: var(--living-inset);
+   border: 1px solid var(--living-hair);
+   box-shadow: none;
+}
+
+.App.tradition .tradi-card .tradi-cards a.has-cover:hover:not(#a) {
+   box-shadow: 0 10px 24px rgba(42, 18, 8, 0.09);
+}
+
+.App.tradition .tradi-card .tradi-cards a.has-cover img:not(#a) {
+   position: static;
+   aspect-ratio: 4 / 3;
+   width: 100%;
+   height: auto;
+   image-rendering: auto;
+   transform: none;
+   /* a pecha thumbnail is a wide strip: it is taken at full resolution and centred in
+      the card's window, both ways */
+   object-position: 50% 50%;
+   background: var(--living-maroon);
+}
+
+.App.tradition .tradi-card .tradi-cards a.has-cover::after { content: none; }
+
+.App.tradition .tradi-card .tradi-cards a.has-cover > span:not(.visually-hidden):not(#a) {
+   position: static;
+   /* the sheet's caption is a 75px flex box centred under a thumbnail; a title is a
+      block of text read from the left */
+   display: block;
+   width: auto;
+   padding: 12px 16px 14px;
+   margin: 0;
+   text-align: left;
+   font-size: 15px;
+   line-height: 1.35;
+   color: var(--living-ink);
+}
+
+.App.tradition .tradi-card .tradi-cards a.has-cover > span[lang="bo"]:not(.visually-hidden):not(#a) {
+   font-size: 17px;
+   line-height: 1.55;
+}
+
+/* nothing scanned behind the id: the title stands on the plate on its own */
+.App.tradition .tradi-card .tradi-cards a.has-cover.no-img:not(#a) {
+   display: flex;
+   align-items: flex-end;
+   min-height: 140px;
+   border-color: transparent;
+}
+
+.App.tradition .tradi-card .tradi-cards a.has-cover.no-img > span:not(.visually-hidden):not(#a) {
+   color: var(--living-cream);
+}
+
+/* ---- the cards that share one photograph ----
+ *
+ * A topic's sub-topics borrow the top-level topic's picture, a school's categories the
+ * school's: the card is dimmed to a ground the label can sit on, and each takes a
+ * different detail of it — a dozen identical thumbnails read as a mistake, a dozen
+ * crops read as a plate.
+ */
+
+.App.tradition .tradi-card .tradi-plates a.has-img img:not(#a) {
+   opacity: 0.45;
+   filter: saturate(0.85);
+   transition: opacity .3s, transform .3s;
+}
+
+.App.tradition .tradi-card .tradi-plates a.has-img:hover img:not(#a) { opacity: 0.62; }
+
+.App.tradition .tradi-card .tradi-plates a.has-img:nth-child(6n+1) img:not(#a) { object-position: 50% 16%; transform: scale(1.00); }
+.App.tradition .tradi-card .tradi-plates a.has-img:nth-child(6n+2) img:not(#a) { object-position: 14% 55%; transform: scale(1.35); }
+.App.tradition .tradi-card .tradi-plates a.has-img:nth-child(6n+3) img:not(#a) { object-position: 86% 38%; transform: scale(1.15); }
+.App.tradition .tradi-card .tradi-plates a.has-img:nth-child(6n+4) img:not(#a) { object-position: 38% 84%; transform: scale(1.55); }
+.App.tradition .tradi-card .tradi-plates a.has-img:nth-child(6n+5) img:not(#a) { object-position: 72% 72%; transform: scale(1.20); }
+.App.tradition .tradi-card .tradi-plates a.has-img:nth-child(6n+6) img:not(#a) { object-position: 26% 26%; transform: scale(1.45); }
+
+/* ---- Recent Acquisitions ----
+ *
+ * Only repainted: the searchkit block inside it is the results page's, already
+ * skinned. It is set into the card the way the resource page sets its associated
+ * results in, so it spans the card's padding and stands on its own ground.
+ */
+
+.App.tradition .tradi-card #tradi-recent:not(#a) {
+   display: block;
+   /* width:auto, or the section's own width:100% would hold the band to the card's
+      text column and the negative margins would only slide it left */
+   width: auto;
+   margin: 72px calc(-1 * var(--living-card-pad)) -72px;
+   padding: 56px var(--living-card-pad) 64px;
+   background: var(--living-inset);
+   border-top: 1px solid var(--living-hair);
+   border-radius: 0 0 2px 2px;
+}
+
+.App.tradition .tradi-card #tradi-recent > h2:not(#a) {
+   font-size: 42px;
+   line-height: 1.08;
+   text-align: center;
+   margin: 0 0 26px;
+}
+
+.App.tradition .tradi-card #tradi-recent > .tradi-eyebrow:not(#a) {
+   text-align: center;
+}
+
+/* ---- narrower viewports ----
+ *
+ * The card keeps the resource page's behaviour: its side padding gives way first,
+ * then the grids drop a column at a time.
+ */
+
+@media screen and (max-width: 1200px) {
+   .App.tradition .tradi-card #tradi-links:not(#a) { grid-template-columns: repeat(3, 1fr); }
+   .App.tradition .tradi-card #tradi-selected:not(#a) { grid-template-columns: repeat(3, 1fr); }
+}
+
+@media screen and (max-width: 900px) {
+   /* ---- the page fills the viewport, and stops there ----
+ *
+ * The sheet gives the pane a min-height of 100vh minus 80 and the .App around it a full
+ * 100vh, both under a topbar 264px tall: a short page — a school with three categories —
+ * was a viewport and a half long, the extra being ground with nothing on it (and, before
+ * this, the body's pale cream under that). The column stretches to the viewport instead
+ * and no further: #root is the column, the wrapper holding the .App takes what the
+ * topbar leaves, and the two min-heights go.
+ */
+
+#root:has(> div > .App.tradition) { display: flex; flex-direction: column; min-height: 100vh; }
+
+#root > div:has(> .App.tradition) { flex: 1 1 auto; background: var(--living-page); }
+
+#root .App.tradition:not(#a) { min-height: 0; background: var(--living-page); }
+
+#root .App.tradition .SearchPane:not(#a) { padding: 24px 20px 48px; padding-top: 24px !important; }
+   .App.tradition .tradi-card { padding-top: 40px; padding-bottom: 48px; }
+   .App.tradition .tradi-card h1:not(#a) { font-size: 36px; }
+   .App.tradition .tradi-card .tradi-cards:not(#a) { grid-template-columns: repeat(2, 1fr); }
+   .App.tradition .tradi-card #tradi-links:not(#a),
+   .App.tradition .tradi-card #tradi-selected:not(#a) { grid-template-columns: repeat(2, 1fr); }
+   .App.tradition .tradi-card #tradi-selected > h2:not(#a) { font-size: 30px; }
+   .App.tradition .tradi-card #tradi-recent:not(#a) {
+      padding-top: 40px;
+      padding-bottom: 48px;
+   }
+   .App.tradition .tradi-card #tradi-recent > h2:not(#a) { font-size: 32px; }
+}
+
+@media screen and (max-width: 620px) {
+   .App.tradition .tradi-card .tradi-cards:not(#a),
+   .App.tradition .tradi-card #tradi-links:not(#a),
+   .App.tradition .tradi-card #tradi-selected:not(#a) { grid-template-columns: 1fr; }
+}
