@@ -12422,6 +12422,9 @@ html:not([lang="bo"]):not([lang^="zh"]):not([lang="km"])
    overflow: hidden;
    background: var(--living-box);
    border-bottom: 1px solid var(--living-hair);
+   /* The sheet inset the bar by calc(100% - 200px); the mockup runs it edge to
+      edge like the toolbar right under it, and its bottom hairline with it. */
+   max-width: 100%;
 }
 
 #root .etext-nav-parent.someClass .etext-header.sticky > div:not(#a) {
@@ -12605,12 +12608,41 @@ html:not([lang="bo"]):not([lang^="zh"]):not([lang="km"])
    margin-bottom: 0;
 }
 
-/* the compact bar centres its row over its 64px */
+/* The compact bar's row, on the same grid as the toolbar below it.
+ *
+ * The sheet had the bar on a grid of its own — a calc(100% - 200px) bar with a
+ * fixed 1224px row inside — while #etext-nav > div runs on max-width 1440 with
+ * 40px of padding. The two rows were inset 68px from each other, so neither edge
+ * lined up: "Back" sat right of the toolbar's first control and the title ended
+ * short of Next. The mockup gives both rows the same gutters, and this is that,
+ * on the 1440/40 grid the rest of the skin uses. */
 #root .etext-nav-parent.someClass .etext-header.sticky > div:not(#a) {
    display: flex;
    align-items: center;
    height: 64px;
    box-sizing: border-box;
+   width: 100%;
+   max-width: 1440px;
+   margin: 0 auto;
+   padding: 0 40px;
+}
+
+/* Back hangs outside the row on the resource page (right: calc(100% + 20px) from
+   the legacy sheet) — in the compact bar that put it left of the bar's own edge,
+   where overflow:hidden clipped it to "ack". The mockup has it as the row's first
+   item, which is also what the row's flex gap expects. */
+#root .etext-nav-parent.someClass .etext-header.sticky .backLink:not(#a) {
+   position: static;
+}
+
+/* Under 1280 the sheet gives #etext-nav a 24px gutter of its own (the rule at the
+   top of this file, in the same media query); the bar takes it too, or the two
+   rows part company again by exactly that much. */
+@media (max-width: 1280px) {
+   #root .etext-nav-parent.someClass .etext-header.sticky:not(#a) {
+      padding: 0 24px;
+      box-sizing: border-box;
+   }
 }
 
 /* room for "Back" inside the card: the sheet hangs it to the left of the content, and
@@ -12677,6 +12709,15 @@ html:not([lang="bo"]):not([lang^="zh"]):not([lang="km"])
    overflow: hidden;
    font-size: 17px;
    line-height: 1.2;
+   /* The h1 is itself a flex item of the bar's wrapper span, so without this it
+      shrink-wraps its content: the row is 1224px but the h1 only as wide as badge
+      + breadcrumb + title, and the title's margin-left:auto below has no free
+      space to push into. A short title then stopped mid-row — measured, it ended
+      574px short of the right edge — while a long one reached it, which is why
+      the misalignment only showed on some texts. min-width:0 keeps the crumbs
+      and the title able to ellipsize inside it. */
+   flex: 1 1 auto;
+   min-width: 0;
 }
 
 #root .etext-nav-parent.someClass .etext-header.sticky h1 > .newT:not(#a) {

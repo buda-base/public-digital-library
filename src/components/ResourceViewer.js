@@ -137,6 +137,7 @@ import { Helmet } from "react-helmet"
 // => fixed by upgrading react-scripts
 import Cite from 'citation-js'
 import { HOME_PATH } from "../lib/appPath"
+import { rootCrumbs, rootCrumbsData } from "../lib/breadcrumbs"
 let citationConfig ;
 
 // for full debug, type this in the console:
@@ -10969,28 +10970,26 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
          }
       }
 
-      const breadcrumbs = [
-         <Link to={HOME_PATH} onClick={(ev) => { 
+      // "Home > BUDA > …": the first crumb leaves for the landing page at the
+      // shared root, the second is this app's home (see lib/breadcrumbs).
+      const breadcrumbs = rootCrumbs({
+         locale: this.props.locale,
+         onHome: (ev) => {
             this.props.navigate({pathname: HOME_PATH, search:""}); 
             if(this.props.keyword) { this.props.onResetSearch(); } 
             this.setState({blurSearch:false, forceFocus: true})
             ev.preventDefault()
             ev.stopPropagation()
             return false
-         }}>{I18n.t("topbar.home")}</Link>         
-      ]
+         },
+      })
 
       const breadcrumbsData = {
          "@context": "https://schema.org",
          "@type": "BreadcrumbList",
          "itemListElement": []
       }
-      breadcrumbsData.itemListElement.push({
-         "@type": "ListItem",
-         "position": 1,
-         "name": I18n.t("topbar.home"),
-         "item": "https://library.bdrc.io/"
-      })
+      breadcrumbsData.itemListElement.push(...rootCrumbsData())
 
       if(!this.props.simple && (this.props.previewEtext || this.props.disableInfiniteScroll || topLevel || this.props.openEtext || hasChunks && hasChunks.length && this.state.openEtext)) {         
 
@@ -11361,12 +11360,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
             "@type": "BreadcrumbList",
             "itemListElement": []
          }
-         breadcrumbsData.itemListElement.push({
-            "@type": "ListItem",
-            "position": 1,
-            "name": I18n.t("topbar.home"),
-            "item": "https://library.bdrc.io/"
-         })
+         breadcrumbsData.itemListElement.push(...rootCrumbsData())
 
          if(iof) { 
             breadcrumbs.push(<Link to={"/show/"+iof} class="can-shrink"><Trans i18nKey="resource.wPageO" values={{of: bcLabel?.value, interpolation: {escapeValue: false}}} components={{nomob:<u/>,sp: <i/>}} /></Link>)

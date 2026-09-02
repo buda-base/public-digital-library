@@ -38,6 +38,18 @@ export const HOME_PATHS = ["/", "/buda"]
  */
 export const HOME_PATH = process.env.REACT_APP_HOME_PATH || "/buda"
 
+/*
+ * The landing page (see the ratnasagara repo) at the shared server root. It is a
+ * separate app: breadcrumbs start there and put BUDA's own home below it, as
+ * "Home > BUDA > …".
+ *
+ * Empty on an install that owns "/" itself (REACT_APP_HOME_PATH=/, e.g. the
+ * Khmer server): there is no separate landing to point at, so the trail keeps
+ * the single home crumb it always had.
+ */
+export const LANDING_PATH =
+  process.env.REACT_APP_LANDING_PATH || (HOME_PATH === "/" ? "" : "/")
+
 export function isHomePath(pathname) {
   return HOME_PATHS.includes(appPathname(pathname))
 }

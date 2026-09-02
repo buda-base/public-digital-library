@@ -1807,11 +1807,19 @@ header .SRHloader {
   */
 }
 
+/* The nth-child halves count from the start of the trail, so they shift by one
+   wherever the trail opens with "Home > BUDA" instead of "Home" alone (see
+   lib/breadcrumbs). Both sets are listed: an install owning "/" still has the
+   one-crumb shapes. */
 #root .ariane .can-shrink:nth-last-child(3):nth-child(2),
 #root .ariane .can-shrink:nth-last-child(1):nth-child(4),
 #root .ariane .can-shrink:nth-last-child(4):nth-child(2),
 #root .ariane .can-shrink:nth-last-child(2):nth-child(4),
-#root .ariane .can-shrink:nth-last-child(1):nth-child(5) {
+#root .ariane .can-shrink:nth-last-child(1):nth-child(5),
+#root .ariane .can-shrink:nth-last-child(3):nth-child(3),
+#root .ariane .can-shrink:nth-last-child(4):nth-child(3),
+#root .ariane .can-shrink:nth-last-child(2):nth-child(5),
+#root .ariane .can-shrink:nth-last-child(1):nth-child(6) {
   max-width:30%;
   display: inline;
   text-overflow: ellipsis;
@@ -1820,7 +1828,8 @@ header .SRHloader {
 }
 
 #root .ariane .can-shrink:nth-last-child(3):nth-child(2),
-#root .ariane .can-shrink:nth-last-child(1):nth-child(4) {
+#root .ariane .can-shrink:nth-last-child(1):nth-child(4),
+#root .ariane .can-shrink:nth-last-child(3):nth-child(3) {
   max-width:40%;
 }
 

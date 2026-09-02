@@ -23,6 +23,7 @@ import { fetchLabels } from "../lib/searchkit/api/LabelAPI";
 
 import { topics } from "../lib/topics"
 import { HOME_PATH } from "../lib/appPath"
+import { rootCrumbs } from "../lib/breadcrumbs"
 
 const loggergen = new logdown('gen', { markdown: false });
 
@@ -579,7 +580,8 @@ export class TraditionViewer extends Component<State, Props>
       */
 
       const tradi = this.props.config?.tradition && this.props.config?.tradition[this.props.tradition]    
-      let content = [], breadcrumbs = [<Link data-lang={this.props.locale} to={HOME_PATH}>{I18n.t("topbar.home")}<span className="visually-hidden">Go to home page</span></Link>]                
+      // "Home > BUDA > …", same root crumbs as a resource page (lib/breadcrumbs)
+      let content = [], breadcrumbs = rootCrumbs({ locale: this.props.locale })                
 
       //console.log("tradi:",tradi,content,this.props)
 
