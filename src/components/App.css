@@ -17,6 +17,10 @@
    end of this file). Same request as ratnasagara/index.html. */
 @import url('https://fonts.googleapis.com/css2?family=Hanken+Grotesk:ital,wght@0,300..800;1,300..800&display=swap');
 
+/* landing page skin: the heading serif (see --living-serif below). Same request as
+   ratnasagara/index.html. */
+@import url('https://fonts.googleapis.com/css2?family=Literata:ital,opsz,wght@0,7..72,200..900;1,7..72,200..900&display=swap');
+
 
 /* @import url('//fonts.googleapis.com/earlyaccess/notosanstibetan.css'); */
 
@@ -9207,12 +9211,15 @@ a.result + #matches.mobile,
    }
 }
 
-/* ---- headings font: Ogg by default, swappable with ?font= ----
+/* ---- headings font: Literata by default, swappable with ?font= ----
  *
  * Same mechanism as the landing page: src/lib/serifFont.js reads the param and
- * overrides --living-serif on <html> (?font=prata, ?font=Cormorant, or a full
- * fonts.googleapis.com URL). Ogg is latin-only, so Tibetan and Chinese titles
- * keep the Noto stack.
+ * overrides --living-serif on <html> (?font=prata, ?font=Cormorant, ?font=ogg, or
+ * a full fonts.googleapis.com URL). The serif is latin-only, so Tibetan and
+ * Chinese titles keep the Noto stack.
+ *
+ * Ogg was the previous default and stays self-hosted below, reachable with
+ * ?font=ogg.
  */
 
 @font-face {
@@ -9223,12 +9230,12 @@ a.result + #matches.mobile,
    src: url("/fonts/ogg-regular.ttf") format("truetype");
 }
 
-/* Ogg is latin-only. The Noto faces that follow are the ones the sans stack uses
-   for the scripts it has no glyphs for, so a title that mixes romanisation and
-   script (hani, mymr, and any tag not caught by the guards on the rules below)
+/* Literata is latin/greek/cyrillic. The Noto faces that follow are the ones the sans
+   stack uses for the scripts it has no glyphs for, so a title that mixes romanisation
+   and script (hani, mymr, and any tag not caught by the guards on the rules below)
    resolves to the same faces it would in the sans, instead of a generic serif. */
 :root {
-   --living-serif: "Ogg", "Noto Serif Tibetan", "Noto Serif Khmer", "Noto Sans Mongolian",
+   --living-serif: "Literata", "Noto Serif Tibetan", "Noto Serif Khmer", "Noto Sans Mongolian",
       Georgia, "Times New Roman", serif;
 }
 
@@ -9362,8 +9369,8 @@ a.result + #matches.mobile,
    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
 }
 
-/* italic serif, latin only: Ogg has no Tibetan or Chinese glyphs (and no italic
-   face either, the browser slants the regular one) */
+/* italic serif, latin only: the serif has no Tibetan or Chinese glyphs. Literata
+   ships a real italic (Ogg did not — the browser slanted its regular). */
 .App:not(.khmerServer) .SearchPane #logo h1:not([lang="bo"]):not([lang^="zh"]) + div {
    font-family: var(--living-serif) !important;
    font-style: italic;
@@ -9641,7 +9648,7 @@ html:not([lang="bo"]):not([lang^="zh"]):not([lang="km"]) #root #search-bar > h2 
    justify-content: center;
 }
 
-/* Ogg is latin-only, so the Tibetan / Chinese / Khmer UI keeps the Noto stack */
+/* the serif is latin-only, so the Tibetan / Chinese / Khmer UI keeps the Noto stack */
 html:not([lang="bo"]):not([lang^="zh"]):not([lang="km"])
    #root .App.home .ISB .ais-SearchBox-form h2 {
    font-family: var(--living-serif) !important;
@@ -10972,7 +10979,7 @@ html:not([lang="bo"]):not([lang^="zh"]):not([lang="km"])
 }
 
 /* the titles carry their own lang: bo-x-ewts is romanised and takes the serif,
-   the scripts Ogg has no glyphs for keep the Noto stack */
+   the scripts the serif has no glyphs for keep the Noto stack */
 html:not([lang="bo"]):not([lang^="zh"]):not([lang="km"])
    #root .App .SearchPane.resultPage .result-content .contenu h3:not([lang="bo"]):not([lang="zh"]):not([lang^="zh-han"]):not([lang="km"]):not([lang$="-khmr"]),
 html:not([lang="bo"]):not([lang^="zh"]):not([lang="km"])
@@ -11545,7 +11552,7 @@ html:not([lang="bo"]):not([lang^="zh"]):not([lang="km"])
    text-wrap: balance;
 }
 
-/* Ogg is latin-only: romanised titles take the serif, bo/zh stay on the Noto stack
+/* the serif is latin-only: romanised titles take the serif, bo/zh stay on the Noto stack
    (the .resource * rule at the top of this file sets that stack with !important, which
    is also why the nested span — work titles wrap theirs in a .placeType — has to be
    named here instead of inheriting). */
@@ -11966,9 +11973,10 @@ html:not([lang="bo"]):not([lang^="zh"]):not([lang="km"])
 .resource .data.ext-props h2:not(#a) {
    margin: 0 0 22px;
    font-family: var(--living-serif) !important;
-   /* The mockup's 30px is Prata; Ogg is optically smaller at the same size (cap height
-      20 vs 24, "Extended Properties" 268px wide vs 298 at 30px), so 34 lands on the
-      mockup's presence — width 304, cap 22.7. */
+   /* The mockup's 30px is Prata; 34 was measured on Ogg, which is optically smaller at
+      the same size (cap height 20 vs 24, "Extended Properties" 268px wide vs 298 at
+      30px), so 34 landed on the mockup's presence — width 304, cap 22.7. Literata is
+      the default now and has a larger cap height, so this may want re-measuring. */
    font-size: 34px;
    font-weight: 400;
    color: var(--living-ink);
@@ -13116,7 +13124,7 @@ html:not([lang="bo"]):not([lang^="zh"]):not([lang="km"])
 /* ---- the title and the standfirst ---- */
 
 /* the sheet sets the Noto stack with !important on everything under .App, so every
-   serif rule below has to say it too; Ogg is latin-only, hence the lang guards */
+   serif rule below has to say it too; the serif is latin-only, hence the lang guards */
 .App.tradition .tradi-card h1:not([lang="bo"]):not([lang^="zh"]):not(#a) {
    font-family: var(--living-serif) !important;
    font-weight: 400;
@@ -13477,6 +13485,35 @@ html:not([lang="bo"]):not([lang^="zh"]):not([lang="km"])
    line-height: 1.55;
 }
 
+/* ---- the author of a work ----
+ *
+ * A second line under the title, in the sans and a tone down, the way the result cards
+ * carry theirs. Only the works whose json has an author get one; the title gives up its
+ * bottom padding to it so the two read as one block.
+ */
+
+.App.tradition .tradi-card .tradi-cards a.has-cover > span:has(+ .tradi-author):not(#a):not(#b) {
+   padding-bottom: 2px;
+}
+
+.App.tradition .tradi-card .tradi-cards a.has-cover > .tradi-author:not(#a):not(#b) {
+   position: static;
+   display: block;
+   width: auto;
+   margin: 0;
+   padding: 0 16px 14px;
+   font-family: var(--buda-sans) !important;
+   font-size: 13px;
+   line-height: 1.4;
+   color: var(--living-sub);
+   text-align: left;
+}
+
+.App.tradition .tradi-card .tradi-cards a.has-cover > .tradi-author[lang="bo"]:not(#a):not(#b) {
+   font-size: 14.5px;
+   line-height: 1.5;
+}
+
 /* nothing scanned behind the id: the title stands on the plate on its own */
 .App.tradition .tradi-card .tradi-cards a.has-cover.no-img:not(#a) {
    display: flex;
@@ -13487,6 +13524,10 @@ html:not([lang="bo"]):not([lang^="zh"]):not([lang="km"])
 
 .App.tradition .tradi-card .tradi-cards a.has-cover.no-img > span:not(.visually-hidden):not(#a) {
    color: var(--living-cream);
+}
+
+.App.tradition .tradi-card .tradi-cards a.has-cover.no-img > .tradi-author:not(#a):not(#b) {
+   color: var(--living-cream-dim);
 }
 
 /* ---- the cards that share one photograph ----

@@ -167,6 +167,11 @@ buildTree("O9TAXTBRC201605", newTopics).then(() => { console.log("topics:",newTo
 */
 
 
+/* Two names are the same name when what is left of them is: the shelf number a
+   collected-works title carries ("zhe chen rgyal tshab_04"), the syllable-final tsheg and
+   the punctuation are not part of it. */
+const plainName = (v) => (v ?? "").toLowerCase().replace(/[_0-9]+/g, "").replace(/[^\p{L}\p{M}'+ ]+/gu, "").replace(/\s+/g, " ").trim()
+
 // "tmp:tradiCat0_9" is "tradiCat0_9" in a url
 const catSlug = (id) => (id ?? "").replace(/^[a-z]+:/, "")
 
@@ -261,9 +266,15 @@ export class TraditionViewer extends Component<State, Props>
         const cover = c.img ? null : this.iiifThumb(c.id)
         const img = c.img ?? cover
         const kind = this.optLabel("tradition.kind."+(c.kind ?? t.kind), c.kind ?? t.kind)
+        // the author the json carries for a work, under its title on the card — unless the
+        // title already names them, which is the rule rather than the exception for a
+        // gsung 'bum ("sog bzlog pa blo gros rgyal mtshan gyi gsung 'bum")
+        let author = c.author ? getLangLabel(this, skos+"prefLabel", c.author, false, true) : null
+        if(author?.value && label?.value && plainName(label.value).includes(plainName(author.value))) author = null
         return <Link to={link} className={(img ? "has-img ":"")+(cover ? "has-cover ":"")+(c.classes??"")} onClick={scrollToTop}>
           { img && <img alt="tradition item thumbnail" src={img} loading="lazy" onError={onImgError}/> }
           <span lang={label?.lang}>{label?.value}</span>
+          { author?.value && <span className="tradi-author" lang={author.lang}>{author.value}</span> }
           { kind && <span className="tradi-kind">{kind}</span> }
           <span className="visually-hidden">Go to {label?.value} page</span>
         </Link>

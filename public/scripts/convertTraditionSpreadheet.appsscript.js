@@ -11,7 +11,8 @@
  *      each turned into { id: "bdr:Tradition…", classes, content: [ category →
  *      the work ids under it ] };
  *   2. downloads a FRESH copy of `traditions-base.json` from GitHub, branch
- *      `master` (see the `url` below) — a branch, not the working copy;
+ *      `feature-living-library-route` (see the `url` below) — a branch, not the
+ *      working copy;
  *   3. assigns the sheet output to ONE path of that document:
  *
  *          jsonData.tradition.bo.subContent.selected
@@ -19,11 +20,18 @@
  *   4. writes the whole thing to Drive as `traditions.json`, which then gets
  *      copied over `public/traditions.json` in this repo.
  *
+ * The columns `processSheetData()` reads, per row: A = the category label (en) and
+ * the marker of a category row, B = the bo label (the category's on a category row,
+ * the work's on a work row), C = the work RID, D = the cell whose presence marks a
+ * work row, E = the author — optional, and emitted only when the cell is non-empty,
+ * as `author: [{ lang: "bo", value }]` on the work entry. Nothing reads `author`
+ * yet: TraditionViewer renders a card's `label` and `kind` only.
+ *
  * So the generated region is `tradition.bo.subContent.selected` and nothing
  * else. Every other part of `traditions.json` — the links row, the `all` /
  * `persons` / `places` sections, `subContent.texts`, `subContent.persons`,
  * `subContent.places`, and the `sa` / `zh` locales — is whatever
- * `traditions-base.json` on master happens to contain at run time.
+ * `traditions-base.json` on that branch happens to contain at run time.
  *
  * Consequence, and the reason this note exists: hand-editing
  * `public/traditions.json` outside `subContent.selected` is silently undone by
@@ -31,13 +39,17 @@
  * belong in `public/traditions-base.json`.
  *
  * And since the base comes from a branch, an edit sitting only in a working copy
- * or on a feature branch is invisible here: it has to reach master.
+ * is invisible here: it has to be pushed to the branch the `url` names.
  *
  * The URL pointed at `new-UX` until 2026-09-01. That branch was merged into
  * master (48d7cd6, 2025-05-19) and has had no commit since, so it would have
  * frozen the base while master moved on; the file was byte-identical on both at
  * the time of the switch (last touched by 5c9101b6, 2025-01-27), so repointing
- * changed nothing in the output.
+ * to master changed nothing in the output.
+ *
+ * It moved again on 2026-09-07, to `feature-living-library-route`: the `kind`
+ * markers below live there and nowhere else, so master would drop them. Move the
+ * URL back to master once that branch is merged.
  *
  *   change wanted                                  | edit
  *   -----------------------------------------------|-------------------------------
@@ -55,8 +67,9 @@
  * under `tradition.bo.subContent.places.*`. None of them sit inside
  * `subContent.selected`, so all twelve came from the base file and all twelve
  * would have been dropped on the next run. They now live in
- * `public/traditions-base.json` as well — in the working copy only, so they
- * still have to reach whichever branch the `url` below names.
+ * `public/traditions-base.json` as well, committed and pushed to
+ * `feature-living-library-route` (d3d6f97a) — which is why the `url` below names
+ * that branch rather than master.
  *
  * Note that the sheet-generated categories need no `kind` of their own:
  *   - a card falls back to its section's kind (`c.kind ?? t.kind`,
@@ -201,13 +214,27 @@ function processSheetData() {
       }
       
       if (row[3] !== '') {
-        currentItem.content.push({
+        var work = {
           "id": "bdr:"+row[2],
           "label": [{ 
             "lang": "bo",
             "value": row[1]
           }]
-        });
+        };
+        
+        // Column E, the author: optional, so the key is only written when the cell
+        // holds something. Same shape as `label` — an array of tagged values — so the
+        // Tibetan name keeps its `lang` (getValues can hand back a number or a Date
+        // for an oddly formatted cell, hence the String()).
+        var author = String(row[4] ?? '').trim();
+        if (author !== '') {
+          work.author = [{
+            "lang": "bo",
+            "value": author
+          }];
+        }
+        
+        currentItem.content.push(work);
       }
     }
     
@@ -225,9 +252,11 @@ function startConversionThenDownloadResultsJSON() {
   var globalResults = processSheetData();
 
   // A branch, not the working copy: a change to traditions-base.json reaches this
-  // script only once it is pushed to master. Was `new-UX` until 2026-09-01 — merged
-  // into master and frozen since, see the header note.
-  var url = 'https://raw.githubusercontent.com/buda-base/public-digital-library/refs/heads/master/public/traditions-base.json';
+  // script only once it is pushed to the branch named here. Points at
+  // `feature-living-library-route` since 2026-09-07 — that is the only branch with the
+  // `kind` markers; master has none of them yet. Was `master` before that, and `new-UX`
+  // until 2026-09-01. See the header note.
+  var url = 'https://raw.githubusercontent.com/buda-base/public-digital-library/refs/heads/feature-living-library-route/public/traditions-base.json';
   var response = UrlFetchApp.fetch(url);
   var jsonData = JSON.parse(response.getContentText());
   

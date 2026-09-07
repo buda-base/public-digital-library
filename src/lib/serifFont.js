@@ -4,19 +4,20 @@
  * the same URL param.
  *
  * Examples:
- *   ?font=prata           preset (prata | playfair | newsreader | ogg)
+ *   ?font=prata           preset (literata | prata | playfair | newsreader | ogg)
  *   ?font=Cormorant       any Google Fonts family (loaded on the fly)
  *   ?font=Cormorant+Garamond
  *   ?font=https://fonts.googleapis.com/css2?family=Lora:wght@400..700
  *
- * Default (no param) keeps Ogg, the self-hosted heading font (@font-face in
- * App.css, used through the --living-serif variable).
+ * Default (no param) keeps Literata (@import in App.css, used through the
+ * --living-serif variable); ?font=ogg goes back to the self-hosted Ogg.
  */
 
 const GF = "https://fonts.googleapis.com/css2?family="
 
 const PRESETS = {
    ogg: { family: "Ogg" }, // self-hosted — no external load
+   literata: { family: "Literata" }, // the default — already imported in App.css
    prata: { family: "Prata", href: `${GF}Prata&display=swap` },
    playfair: {
       family: "Playfair Display",

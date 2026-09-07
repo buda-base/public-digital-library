@@ -673,7 +673,7 @@ body.auto_rela .inApp.mirador-container .slotIconContainer { position:absolute !
 
 #viewer .nav-bar-top #logo #buda + a span {
     /* the sheet sets the Noto stack on the bar with !important */
-    font-family: var(--living-serif, "Ogg", Georgia, serif) !important;
+    font-family: var(--living-serif, "Literata", Georgia, serif) !important;
     font-size: 28px;
     font-weight: 400;
     line-height: 1;
