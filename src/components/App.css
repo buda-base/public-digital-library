@@ -13233,6 +13233,15 @@ html:not([lang="bo"]):not([lang^="zh"]):not([lang="km"])
 /* the sub-pages have no standfirst: the heading is the whole of the title block */
 .App.tradition .tradi-card h1 + .tradi-content:not(#a) { margin-top: 32px; }
 
+/* The sheet underlines every link under #samples on hover (line ~3740). A card is not
+   a line of text: it answers by lifting, by lighting its edge, or by brightening its
+   picture, and an underline across a title — or under the author's name below it — is
+   just noise on the card. */
+.App.tradition .tradi-card .tradi-cards a:hover:not(#a),
+.App.tradition .tradi-card .tradi-cards a:hover > span:not(#a) {
+   text-decoration: none;
+}
+
 /* ---- the link cards ----
  *
  * Quick links and the three browse indexes share one card: a cream tile with the
