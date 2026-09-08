@@ -41,6 +41,7 @@ import { searchClient, HitsWithLabels, filters, FiltersSidebar, sortItems, MyCon
 import RefinementListWithLocalLabels from "../components/RefinementListWithLocalLabels";
 import CustomDateRange from "../components/CustomDateRange";
 import SearchResultsHeader from "../components/SearchResultsHeader"
+import HitsPerPage, { getStoredHitsPerPage } from "../components/HitsPerPage"
 
 // PDL
 import qs from 'query-string'
@@ -91,6 +92,10 @@ function MaskWhenNoResult({ setEmpty }) {
   return null
 }
 
+const innerDefaultHitsPerPage = (recent) => recent ? 20 : 5
+
+const innerStorageKey = (recent) => "hits_per_page_inner_" + innerDefaultHitsPerPage(recent)
+
 export class InnerSearchPage extends Component<State, Props>
 {
   _urlParams = {}
@@ -100,7 +105,8 @@ export class InnerSearchPage extends Component<State, Props>
       
       this._urlParams = qs.parse(props.location.search) 
       
-      this.state = { collapse:{} } 
+      this.state = { collapse:{},
+        ...props.isOtherVersions ? {} : { hitsPerPage: getStoredHitsPerPage(innerStorageKey(props.recent), innerDefaultHitsPerPage(props.recent)) } } 
 
       if(!this.props.config) store.dispatch(initiateApp(this._urlParams,null,null,"tradition"))
       
@@ -225,14 +231,19 @@ export class InnerSearchPage extends Component<State, Props>
                   <div className="hits">
                     
                     {/* DONE: use MyConfigure once bug with sorting is fixed (#1029) */}
-                    <MyConfigure hitsPerPage={isOtherVersions ? 11 * (this.state.toggled ? 2 : 1) : (recent ? 20 : 5)} { ...{ pageFilters } }  />
+                    <MyConfigure hitsPerPage={isOtherVersions
+                        ? 11 * (this.state.toggled ? 2 : 1)
+                        : (this.state.hitsPerPage ?? innerDefaultHitsPerPage(recent))} { ...{ pageFilters } }  />
                     {/* <Configure hitsPerPage={isOtherVersions ? 11 * (this.state.toggled ? 2 : 1) : (recent ? 20 : 5)}  filters={pageFilters} /> */}
                     
                     <HitsWithLabels that={this} {...{ routing, recent:recent&&!sortByDefault, storageRef, isOtherVersions, srcVersionID }} />
                     { isOtherVersions 
                       ? <OtherVersionsNav {...{ that:this, RID, srcVersionID } }/>
-                      : <div className="pagination">
-                        <Pagination padding={window.innerWidth <= 665 ? 1 : 3}/>
+                      : <div className="pagination-bar">
+                        <div className="pagination">
+                          <Pagination padding={window.innerWidth <= 665 ? 1 : 3}/>
+                        </div>
+                        <HitsPerPage that={this} defaultValue={innerDefaultHitsPerPage(recent)} storageKey={innerStorageKey(recent)} />
                       </div> }
                   </div>
                 </div>
