@@ -429,6 +429,7 @@
       "hit":"{{count}} hit",
       "hit_plural":"{{count}} hits",
       "filter":"Filter Results",
+      "perPage":"Results per page",
       "search":"Search Results",
       "hitKW":"{{count}} hit for \"{{kw}}\"",
       "hitKW_plural":"{{count}} hits for \"{{kw}}\"",

@@ -9908,6 +9908,66 @@ html:not([lang="bo"]):not([lang^="zh"]):not([lang="km"])
    cursor: pointer;
 }
 
+/* ---- results per page ----
+   The select sits at the right end of the page-buttons row. The three columns
+   are what keep the buttons centred on the full width: they stay in the middle
+   one whatever the select's width, and column 1 is deliberately empty. */
+#root .AppSK .pagination-bar {
+   display: grid;
+   grid-template-columns: 1fr auto 1fr;
+   align-items: center;
+}
+
+#root .AppSK .pagination-bar > .pagination {
+   grid-column: 2;
+}
+
+#root .AppSK .pagination-bar > .hits-per-page {
+   grid-column: 3;
+   justify-self: end;
+}
+
+#root .AppSK .hits-per-page label {
+   display: flex;
+   align-items: center;
+   gap: 10px;
+   white-space: nowrap;
+   font-size: 12px;
+   font-weight: 700;
+   text-transform: uppercase;
+   letter-spacing: 0.14em;
+   color: #3b2414;
+   cursor: pointer;
+}
+
+#root .AppSK .hits-per-page select:not(#a) {
+   padding: 7px 10px;
+   font-weight: 400;
+   letter-spacing: 0;
+   text-transform: none;
+}
+
+/* no room beside the page buttons: the select drops onto its own line */
+@media (max-width: 900px) {
+   #root .AppSK .pagination-bar {
+      grid-template-columns: 1fr;
+   }
+
+   #root .AppSK .pagination-bar > .pagination,
+   #root .AppSK .pagination-bar > .hits-per-page {
+      grid-column: 1;
+   }
+
+   #root .AppSK .pagination-bar > .pagination {
+      margin-bottom: 0;
+   }
+
+   #root .AppSK .pagination-bar > .hits-per-page {
+      margin-top: 16px;
+      margin-bottom: 20px;
+   }
+}
+
 #root .AppSK .ais-RefinementList-label {
    /* baseline, not flex-start: the box, the label's first line and the count are three
       different type sizes, and top-aligning them left all three on slightly different

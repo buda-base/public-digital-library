@@ -42,6 +42,7 @@ import CustomDateRange from "../components/CustomDateRange";
 import SearchBoxAutocomplete from "../components/SearchBoxAutocomplete";
 import RefinementListWithLocalLabels from "../components/RefinementListWithLocalLabels";
 import SearchResultsHeader from "../components/SearchResultsHeader"
+import HitsPerPage, { getStoredHitsPerPage, DEFAULT_HITS_PER_PAGE } from "../components/HitsPerPage"
 
 // PDL
 import { top_right_menu, getPropLabel, fullUri, highlight, renderBanner } from '../../../components/App'
@@ -449,7 +450,7 @@ export class SearchPage extends Component<State, Props>
       
       this._urlParams = qs.parse(this.props.location.search) 
       
-      this.state = { collapse:{}, advanced: this._urlParams.advanced == "true" ? "true" : undefined } 
+      this.state = { collapse:{}, advanced: this._urlParams.advanced == "true" ? "true" : undefined, hitsPerPage: getStoredHitsPerPage() } 
 
       if(!this.props.config) store.dispatch(initiateApp(this._urlParams,null,null,"tradition"))
       
@@ -549,13 +550,17 @@ export class SearchPage extends Component<State, Props>
                   </div>
 
 
-                  <MyConfigure hitsPerPage={window.innerWidth <= 665 ? 20 : 20} { ...{ pageFilters } }/>
+                  <MyConfigure hitsPerPage={this.state.hitsPerPage ?? DEFAULT_HITS_PER_PAGE} { ...{ pageFilters } }/>
                     {/* DONE: disable sending exclude_etexts while debugging (#1029) */}
                   {/* <Configure hitsPerPage={window.innerWidth <= 665 ? 20 : 20} filters={pageFilters} /> */}
 
                   <HitsWithLabels that={this} {...{ routing, sortItems, storageRef }} />
-                  <div className="pagination" onClick={scrollToTop}>
-                    <Pagination padding={window.innerWidth <= 665 ? 1 : 3}/>
+                  <div className="pagination-bar">
+                    <div className="pagination" onClick={scrollToTop}>
+                      <Pagination padding={window.innerWidth <= 665 ? 1 : 3}/>
+                    </div>
+                    {/* outside the .pagination div: clicking it must not scroll to the top */}
+                    <HitsPerPage that={this} />
                   </div>
                 </div>
               </div>
