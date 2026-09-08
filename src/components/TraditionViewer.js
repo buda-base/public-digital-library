@@ -21,6 +21,7 @@ import InnerSearchPageContainer from '../containers/InnerSearchPageContainer'
 
 import { fetchLabels } from "../lib/searchkit/api/LabelAPI";
 
+import { fromWylie, ewtsToDisplay } from "../lib/transliterators"
 import { topics } from "../lib/topics"
 import { HOME_PATH } from "../lib/appPath"
 import { rootCrumbs } from "../lib/breadcrumbs"
@@ -167,6 +168,17 @@ buildTree("O9TAXTBRC201605", newTopics).then(() => { console.log("topics:",newTo
 */
 
 
+/* A work can name several authors, and tools/fill_authors.py puts them on one line, each
+   after the shad it carries ("… rin chen/ mkhas grub rje …") or behind a semicolon when
+   it carries none. The card gives them a line each, so this takes that line apart again:
+   the sentinel is there because splitting on the shad itself would eat it, and it belongs
+   to the name. */
+const splitNames = (value) => (value ?? "")
+  .replace(/([/།༎])[ \t]+/g, "$1\u0000")
+  .split(/\u0000|\s*;\s*/)
+  .map(n => n.trim())
+  .filter(Boolean)
+
 /* Two names are the same name when what is left of them is: the shelf number a
    collected-works title carries ("zhe chen rgyal tshab_04"), the syllable-final tsheg and
    the punctuation are not part of it. */
@@ -237,12 +249,16 @@ export class TraditionViewer extends Component<State, Props>
       //if(e.depth > 0) res.push(<h5 onClick={() => this.setState({collapse:{...this.state.collapse,[e.rank+"_"+e.value]:!this.state.collapse[e.rank+"_"+e.value]}})} class={"collapse-"+(!!this.state.collapse[e.rank+"_"+e.value])} lang={e.lang}><ExpandLess/>{e.value}</h5>)// | {e.rank}</h5>)
       
       if(c.content) {
-        if(groups) return <Link to={groups.href(c)} className="has-img" onClick={scrollToTop}>
+        if(groups) {
+          const tib = this.tibName(c.label)
+          return <Link to={groups.href(c)} className="has-img" onClick={scrollToTop}>
           { groups.img && <img alt="tradition item thumbnail" src={groups.img} loading="lazy" onError={onImgError}/> }
+          { tib && <span className="tradi-tib" lang="bo" aria-hidden="true">{tib}</span> }
           <span lang={label?.lang}>{label?.value}</span>
           <span className="tradi-kind">{I18n.t("tradition.nTexts", { count: c.content.length })}</span>
           <span className="visually-hidden">Go to {label?.value} page</span>
         </Link>
+        }
 
         this.goFetch(c.content.filter(i => !i.label?.length).map(i => i.id.split(":")[1]),c.id)
         // a group left on its own page is a heading over its cards, not a toggle: the
@@ -266,15 +282,24 @@ export class TraditionViewer extends Component<State, Props>
         const cover = c.img ? null : this.iiifThumb(c.id)
         const img = c.img ?? cover
         const kind = this.optLabel("tradition.kind."+(c.kind ?? t.kind), c.kind ?? t.kind)
-        // the author the json carries for a work, under its title on the card — unless the
-        // title already names them, which is the rule rather than the exception for a
-        // gsung 'bum ("sog bzlog pa blo gros rgyal mtshan gyi gsung 'bum")
-        let author = c.author ? getLangLabel(this, skos+"prefLabel", c.author, false, true) : null
+        /* The author the json carries for a work, under its title on the card. `author`
+           is what a librarian typed in the spreadsheet and always wins; `authorBatch` is
+           what tools/fill_authors.py read out of BDRC's own data for the works the sheet
+           leaves blank, so a name added to the sheet later takes over on its own.
+
+           Either way it is dropped when the title already names them, which is the rule
+           rather than the exception for a gsung 'bum ("sog bzlog pa blo gros rgyal
+           mtshan gyi gsung 'bum"). */
+        const authorLabels = c.author ?? c.authorBatch
+        let author = authorLabels ? getLangLabel(this, skos+"prefLabel", authorLabels, false, true) : null
         if(author?.value && label?.value && plainName(label.value).includes(plainName(author.value))) author = null
+        const authorNames = author?.value ? splitNames(author.value) : []
         return <Link to={link} className={(img ? "has-img ":"")+(cover ? "has-cover ":"")+(c.classes??"")} onClick={scrollToTop}>
           { img && <img alt="tradition item thumbnail" src={img} loading="lazy" onError={onImgError}/> }
           <span lang={label?.lang}>{label?.value}</span>
-          { author?.value && <span className="tradi-author" lang={author.lang}>{author.value}</span> }
+          { authorNames.length > 0 && <span className="tradi-author" lang={author.lang}>
+            { authorNames.map(name => <span className="tradi-author-name">{name}</span>) }
+          </span> }
           { kind && <span className="tradi-kind">{kind}</span> }
           <span className="visually-hidden">Go to {label?.value} page</span>
         </Link>
@@ -298,6 +323,23 @@ export class TraditionViewer extends Component<State, Props>
     return <Link className="tradi-back" data-lang={this.props.locale} to={to}>
       <ChevronLeft/>{I18n.t("resource.goB")}<span className="visually-hidden">Go back to {name}</span>
     </Link>
+  }
+
+  /* The name in Tibetan script, written over the picture of a plate card. A category
+     carries it in the json (label: [{lang:"bo"}, {lang:"en"}]); a topic has only the
+     romanisation in ../lib/topics, so that one is converted. jsEWTS loads
+     asynchronously (see lib/transliterators), hence the guard: on the first paint the
+     name may not be there yet, and the next render puts it in. */
+  tibName(labels) {
+    if(!labels) return null
+    if(!Array.isArray(labels)) labels = [ labels ]
+    const lang = (l) => l.lang ?? l["@language"]
+    const val = (l) => l?.value ?? l?.["@value"]
+    const bo = labels.find(l => lang(l) === "bo")
+    if(val(bo)) return val(bo)
+    const ewts = labels.find(l => lang(l) === "bo-x-ewts")
+    if(!val(ewts)) return null
+    try { return fromWylie(ewtsToDisplay(val(ewts))) } catch(e) { return null }
   }
 
   // an i18n key that may not be there: I18n.t hands the key itself back when it misses,
@@ -327,13 +369,16 @@ export class TraditionViewer extends Component<State, Props>
     if(depth === 0) {
       if(topic?.sub?.length) topic.sub.forEach(s => this.renderSubTopic(s, listing, depth + 1))
       // a topic with no children of its own: the page is the one card that leaves it
-      else listing.push({ ...getPropLabel(this, fullUri("bdr:"+t), false, true), rank: 0, to: "/osearch/associated/"+t+"/search" })
+      else listing.push({ ...getPropLabel(this, fullUri("bdr:"+t), false, true), rank: 0, rid: t, tib: this.tibName(topic?.label), to: "/osearch/associated/"+t+"/search" })
       return
     }
 
     listing.push({
       ...getPropLabel(this, fullUri("bdr:"+t), false, true),
       rank: topic?.rank ?? MAXNL,
+      rid: t,
+      // the same name in Tibetan, for the plate written over the picture
+      tib: this.tibName(topic?.label),
       to: topic?.sub?.length ? "./../bdr:"+t+"/" : "/osearch/associated/"+t+"/search",
       length: topic?.sub?.length,
     })
@@ -347,6 +392,7 @@ export class TraditionViewer extends Component<State, Props>
     return sort.map(e => e.to
       ? <Link className="has-img" data-lang={e.lang} to={e.to}>
           { img && <img alt="" src={img} loading="lazy" onError={onImgError}/> }
+          { e.tib && <span className="tradi-tib" lang="bo" aria-hidden="true">{e.tib}</span> }
           <span lang={e.lang}>{e.value}</span>
           <span className="tradi-kind">{ e.length ? I18n.t("tradition.nTopics", { count: e.length }) : I18n.t("tradition.searchTopic") }</span>
           <span className="visually-hidden">Go to {e.value} page</span>

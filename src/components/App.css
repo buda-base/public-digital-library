@@ -38,6 +38,22 @@
 }
 */
 
+/* ---- the Tibetan calligraphic face ----
+ *
+ * A 'khyug hand, for the name written over a card's picture on the pages where every
+ * card borrows the same picture (see "the plates' Tibetan name" further down). Five
+ * others were tried side by side and live in public/fonts — Bhozuk Panchen Chyagtarma,
+ * Calligraphy_of_Thonmi-SlevuBris_VkhyugsYig, GologDernangSadris-Yigchung,
+ * Monlam Uni Dutsa2, Riwoche Dhodri-Yigchung — each one @font-face and a family name
+ * away if the choice is revisited.
+ */
+
+@font-face {
+   font-family: 'Khampa Dedri-Chuyig';
+   src: url('/fonts/Khampa Dedri-Chuyig Regular.ttf') format('truetype');
+   font-display: swap;
+}
+
 @font-face {
    font-family: 'Noto Sans SemCond';
    src: url('/fonts/NotoSans-SemiCondensedBold.woff2') format('woff2'),
@@ -13518,6 +13534,16 @@ html:not([lang="bo"]):not([lang^="zh"]):not([lang="km"])
    text-align: left;
 }
 
+/* several authors: a line each, not a run of names with punctuation between them.
+   The sheet's caption rule catches every span under a thumbnail anchor, nested ones
+   included, and makes it a centred 75px flex box — hence the reset. */
+.App.tradition .tradi-card .tradi-cards a.has-cover .tradi-author-name:not(#a):not(#b) {
+   display: block;
+   width: auto;
+   margin: 0;
+   text-align: left;
+}
+
 .App.tradition .tradi-card .tradi-cards a.has-cover > .tradi-author[lang="bo"]:not(#a):not(#b) {
    font-size: 14.5px;
    line-height: 1.5;
@@ -13542,25 +13568,78 @@ html:not([lang="bo"]):not([lang^="zh"]):not([lang="km"])
 /* ---- the cards that share one photograph ----
  *
  * A topic's sub-topics borrow the top-level topic's picture, a school's categories the
- * school's: the card is dimmed to a ground the label can sit on, and each takes a
- * different detail of it — a dozen identical thumbnails read as a mistake, a dozen
- * crops read as a plate.
+ * school's. They all take the same crop of it — the one the card they came from shows —
+ * and what tells them apart is their own name, written across the picture in one of the
+ * Tibetan hands in public/fonts. The picture is dimmed to a ground both that name and
+ * the label on the floor of the card can sit on.
  */
 
 .App.tradition .tradi-card .tradi-plates a.has-img img:not(#a) {
-   opacity: 0.45;
+   opacity: 0.48;
    filter: saturate(0.85);
-   transition: opacity .3s, transform .3s;
+   /* the crop of the card this page came from: no per-card framing any more */
+   object-position: 50% 50%;
+   transform: none;
+   transition: opacity .3s;
 }
 
 .App.tradition .tradi-card .tradi-plates a.has-img:hover img:not(#a) { opacity: 0.62; }
 
-.App.tradition .tradi-card .tradi-plates a.has-img:nth-child(6n+1) img:not(#a) { object-position: 50% 16%; transform: scale(1.00); }
-.App.tradition .tradi-card .tradi-plates a.has-img:nth-child(6n+2) img:not(#a) { object-position: 14% 55%; transform: scale(1.35); }
-.App.tradition .tradi-card .tradi-plates a.has-img:nth-child(6n+3) img:not(#a) { object-position: 86% 38%; transform: scale(1.15); }
-.App.tradition .tradi-card .tradi-plates a.has-img:nth-child(6n+4) img:not(#a) { object-position: 38% 84%; transform: scale(1.55); }
-.App.tradition .tradi-card .tradi-plates a.has-img:nth-child(6n+5) img:not(#a) { object-position: 72% 72%; transform: scale(1.20); }
-.App.tradition .tradi-card .tradi-plates a.has-img:nth-child(6n+6) img:not(#a) { object-position: 26% 26%; transform: scale(1.45); }
+/* ---- the plates' Tibetan name ----
+ *
+ * Over the picture, under the label: the mockup's own device on the school cards (a
+ * romanisation set large and half-transparent behind the name), in Tibetan and in a
+ * calligraphic hand. aria-hidden in the markup — it says again what the label says, and
+ * a screen reader has no use for it twice.
+ */
+.App.tradition .tradi-card .tradi-plates a.has-img > .tradi-tib:not(#a):not(#b) {
+   position: absolute;
+   inset: 0;
+   z-index: 0;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   width: auto;
+   margin: 0;
+   padding: 14px 16px 34px;
+   box-sizing: border-box;
+   font-size: 73px;
+   font-weight: 400;
+   line-height: 1.35;
+   text-align: center;
+   /* one line, whatever its length: the card clips it left and right, and a name too
+      long for the frame reads as an inscription larger than the card rather than as a
+      paragraph set in it */
+   white-space: nowrap;
+   text-transform: none;
+   letter-spacing: 0;
+   /* White through difference, which is what CSS has where an image editor would say
+      divide: every stroke comes out as the inverse of whatever it crosses, so it stands
+      off a dark robe and a pale halo alike and needs no shadow of its own. (color-dodge
+      is nearer to divide proper, but it burns out over the light parts of a thangka and
+      the name disappears there.) The label over it keeps its own shadow, below. */
+   color: white;
+   mix-blend-mode: difference;
+   opacity: 1;
+   text-shadow: none;
+   overflow: hidden;
+   pointer-events: none;
+   text-shadow: 0 0 5px white;
+   
+}
+
+/* the label and the caption over the calligraphy: the shadow is what keeps them legible
+   wherever a stroke runs under them */
+.App.tradition .tradi-card .tradi-plates a.has-img > span:not(.tradi-tib):not(#a) {
+   text-shadow: 0 1px 8px rgba(52, 16, 16, 0.75), 0 0 2px rgba(52, 16, 16, 0.6);
+}
+
+.App.tradition .tradi-plates .tradi-tib:not(#a):not(#b) {
+   font-family: 'Khampa Dedri-Chuyig', 'Noto Serif Tibetan', serif !important;
+}
+
+/* the label and its caption stay over the name */
+.App.tradition .tradi-card .tradi-plates a.has-img > span:not(.tradi-tib):not(#a) { z-index: 1; }
 
 /* ---- Recent Acquisitions ----
  *
@@ -13639,3 +13718,5 @@ html:not([lang="bo"]):not([lang^="zh"]):not([lang="km"])
    .App.tradition .tradi-card #tradi-links:not(#a),
    .App.tradition .tradi-card #tradi-selected:not(#a) { grid-template-columns: 1fr; }
 }
+
+

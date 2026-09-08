@@ -37,3 +37,7 @@ public/config*v2.json
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# tools/fill_authors.py keeps the purl.bdrc.io documents it reads, so a second run is free
+/tools/.authors-cache.json
+/tools/.authors-cache.json.tmp

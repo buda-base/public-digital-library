@@ -1493,6 +1493,12 @@
                         "lang": "bo",
                         "value": "སྨིན་གླིང་གཏེར་ཆེན་རིག་འཛིན་འགྱུར་མེད་རྡོ་རྗེའི་གསུང་འབུམ།"
                       }
+                    ],
+                    "authorBatch": [
+                      {
+                        "lang": "bo-x-ewts",
+                        "value": "gter bdag gling pa 'gyur med rdo rje/"
+                      }
                     ]
                   },
                   {
@@ -1501,6 +1507,12 @@
                       {
                         "lang": "bo",
                         "value": "ཀཿཐོག་དགེ་རྩེ་མ་ཧཱ་པཎྜི་ཏའི་གསུང་འབུམ།"
+                      }
+                    ],
+                    "authorBatch": [
+                      {
+                        "lang": "bo-x-ewts",
+                        "value": "dge rtse paN chen 'gyur med tshe dbang mchog grub/"
                       }
                     ]
                   },
@@ -1511,6 +1523,12 @@
                         "lang": "bo",
                         "value": "ཞབས་དཀར་ཚོགས་དྲུག་རང་གྲོལ་གྱི་གསུང་འབུམ།"
                       }
+                    ],
+                    "authorBatch": [
+                      {
+                        "lang": "bo-x-ewts",
+                        "value": "zhabs dkar ba tshogs drug rang grol/"
+                      }
                     ]
                   },
                   {
@@ -1519,6 +1537,12 @@
                       {
                         "lang": "bo",
                         "value": "རྫོགས་ཆེན་མཁན་པོ་པདྨ་བཛྲའི་གསུང་འབུམ།"
+                      }
+                    ],
+                    "authorBatch": [
+                      {
+                        "lang": "bo-x-ewts",
+                        "value": "mkhan chen pad+ma badz+ra/"
                       }
                     ]
                   },
@@ -1529,6 +1553,12 @@
                         "lang": "bo",
                         "value": "སྤྲུལ་སྐུ་ཚུལ་ཁྲིམས་བཟང་པོའི་གསུང་འབུམ།"
                       }
+                    ],
+                    "authorBatch": [
+                      {
+                        "lang": "bo-x-ewts",
+                        "value": "sprul sku tshul lo/"
+                      }
                     ]
                   },
                   {
@@ -1537,6 +1567,12 @@
                       {
                         "lang": "bo",
                         "value": "གཏེར་རྟ་མཁན་པོ་འཇིགས་མེད་ཕུན་ཚོགས་འབྱུང་གནས་ཀྱི་གསུང་འབུམ།"
+                      }
+                    ],
+                    "authorBatch": [
+                      {
+                        "lang": "bo",
+                        "value": "འཇིགས་མེད་ཕུན་ཚོགས་འབྱུང་གནས།"
                       }
                     ]
                   }
@@ -1563,6 +1599,12 @@
                         "lang": "bo",
                         "value": "གཏེར་གསར་ཆོས་མཛོད་ཆེན་མོ།"
                       }
+                    ],
+                    "authorBatch": [
+                      {
+                        "lang": "bo-x-ewts",
+                        "value": "mkhan po a khyung /"
+                      }
                     ]
                   },
                   {
@@ -1586,6 +1628,12 @@
                       {
                         "lang": "bo",
                         "value": "མཆོག་གླིང་གཏེར་གསར།"
+                      }
+                    ],
+                    "authorBatch": [
+                      {
+                        "lang": "bo-x-ewts",
+                        "value": "gter ston mchog gyur gling pa/"
                       }
                     ]
                   },
@@ -1700,6 +1748,12 @@
                       {
                         "lang": "bo",
                         "value": "མི་ཉག་ར་ཤལ་དགོན་པའི་བླ་མེད་ཟབ་དགུའི་གཏེར་ཆོས།"
+                      }
+                    ],
+                    "authorBatch": [
+                      {
+                        "lang": "bo-x-ewts",
+                        "value": "rig 'dzin hUM ral bdud 'dul/"
                       }
                     ]
                   },
@@ -1890,6 +1944,12 @@
                         "lang": "bo",
                         "value": "གཏེར་ཆེན་བདུད་འདུལ་རྡོ་རྗེའི་གཏེར་ཆོས།"
                       }
+                    ],
+                    "authorBatch": [
+                      {
+                        "lang": "bo-x-ewts",
+                        "value": "spo bo gter ston bdud 'dul rdo rje/"
+                      }
                     ]
                   },
                   {
@@ -1944,6 +2004,12 @@
                         "lang": "bo",
                         "value": "ཇ་བཟི་སྤྲུལ་སྐུ་པདྨ་གར་དབང་གླིང་པའི་གཏེར་ཆོས།"
                       }
+                    ],
+                    "authorBatch": [
+                      {
+                        "lang": "bo-x-ewts",
+                        "value": "ja bzi sprul sku pad+ma gar dbang gling pa/"
+                      }
                     ]
                   },
                   {
@@ -1952,6 +2018,12 @@
                       {
                         "lang": "bo",
                         "value": "ཁམས་པ་རིག་འཛིན་ཉི་མ་གྲགས་པ་རྩལ་གྱི་ཟབ་གཏེར།"
+                      }
+                    ],
+                    "authorBatch": [
+                      {
+                        "lang": "bo-x-ewts",
+                        "value": "rig 'dzin nyi ma grags pa/"
                       }
                     ]
                   },
@@ -1976,6 +2048,12 @@
                       {
                         "lang": "bo",
                         "value": "གཏེར་ཆེན་བདེ་བའི་རྡོ་རྗེའི་ཟབ་གཏེར་སྐོར།"
+                      }
+                    ],
+                    "authorBatch": [
+                      {
+                        "lang": "bo-x-ewts",
+                        "value": "gter chen 'bar ba'i rdo rje/"
                       }
                     ]
                   },
@@ -2015,6 +2093,12 @@
                       {
                         "lang": "bo",
                         "value": "གཏེར་སྟོན་རིན་ཆེན་གླིང་པའི་གཏེར་ཆོས།"
+                      }
+                    ],
+                    "authorBatch": [
+                      {
+                        "lang": "bo-x-ewts",
+                        "value": "gter ston rin chen gling pa/"
                       }
                     ]
                   },
@@ -2100,6 +2184,12 @@
                         "lang": "bo",
                         "value": "ཐུགས་སྒྲུབ་དྲག་པོ་རྩལ་གྱི་ཆོས་སྐོར།"
                       }
+                    ],
+                    "authorBatch": [
+                      {
+                        "lang": "bo-x-ewts",
+                        "value": "rig 'dzin rgod kyi ldem 'phru can/"
+                      }
                     ]
                   },
                   {
@@ -2138,6 +2228,12 @@
                       {
                         "lang": "bo",
                         "value": "གཏེར་སྟོན་པདྨ་ལས་འབྲེལ་རྩལ་གྱི་གཏེར་ཆོས། "
+                      }
+                    ],
+                    "authorBatch": [
+                      {
+                        "lang": "bo",
+                        "value": "གཏེར་སྟོན་པདྨ་ལས་འབྲེལ་རྩལ།"
                       }
                     ]
                   },
@@ -2178,6 +2274,12 @@
                         "lang": "bo",
                         "value": "བཀའ་བརྒྱད་བདེ་གཤེགས་འདུས་པའི་ཆོས་སྐོར།"
                       }
+                    ],
+                    "authorBatch": [
+                      {
+                        "lang": "bo-x-ewts",
+                        "value": "myang nyi ma 'od zer/"
+                      }
                     ]
                   },
                   {
@@ -2186,6 +2288,12 @@
                       {
                         "lang": "bo",
                         "value": "ཀློང་ཆེན་སྙིང་ཐིག་གི་འདོན་ཆ། ༼རྡོ་གྲུབ་དགོན་གྱི་ལུགས།༽"
+                      }
+                    ],
+                    "authorBatch": [
+                      {
+                        "lang": "bo-x-ewts",
+                        "value": "kun mkhyen 'jigs med gling pa/"
                       }
                     ]
                   }
@@ -2242,6 +2350,12 @@
                         "lang": "bo",
                         "value": "སྙིང་ཐིག་ཡ་བཞི།"
                       }
+                    ],
+                    "authorBatch": [
+                      {
+                        "lang": "bo-x-ewts",
+                        "value": "klong chen rab 'byams pa dri med 'od zer/"
+                      }
                     ]
                   },
                   {
@@ -2250,6 +2364,12 @@
                       {
                         "lang": "bo",
                         "value": "རྫོགས་པ་ཆེན་པོ་ཡེ་ཤེས་བླ་མའི་སྤྱི་དོན་སྙིང་ཐིག་མ་བུའི་ལྡེ་མིག་ཀུན་བཟང་ཐུགས་ཀྱི་ཊི་ཀ"
+                      }
+                    ],
+                    "authorBatch": [
+                      {
+                        "lang": "bo-x-ewts",
+                        "value": "mkhan po ngag dga'"
                       }
                     ]
                   },
@@ -2260,6 +2380,12 @@
                         "lang": "bo",
                         "value": "རྫོགས་པ་ཆེན་པོ་ངལ་གསོ་སྐོར་གསུམ་དང་རང་གྲོལ་སྐོར་གསུམ་བཅས་པོད་གསུམ།"
                       }
+                    ],
+                    "authorBatch": [
+                      {
+                        "lang": "bo-x-ewts",
+                        "value": "klong chen rab 'byams pa dri med 'od zer/"
+                      }
                     ]
                   },
                   {
@@ -2268,6 +2394,12 @@
                       {
                         "lang": "bo",
                         "value": "གཉུག་སེམས་སྐོར་གསུམ་དང་གཞུང་སྤྱིའི་དཀའ་གནད།"
+                      }
+                    ],
+                    "authorBatch": [
+                      {
+                        "lang": "bo-x-ewts",
+                        "value": "'ju mi pham 'jam dbyangs rnam rgyal rgya mtsho/"
                       }
                     ]
                   }
@@ -2317,6 +2449,12 @@
                       {
                         "lang": "bo",
                         "value": "ས་སྐྱའི་ལམ་འབྲས། ༼གློག་ཀླད་པར་མ།༽"
+                      }
+                    ],
+                    "authorBatch": [
+                      {
+                        "lang": "bo-x-ewts",
+                        "value": "sga ston ngag dbang legs pa/ ngor mkhan chen 65 ngag dbang blo gros snying po/ ngor pa dpon slob blo gter dbang po/"
                       }
                     ]
                   },
@@ -3237,6 +3375,12 @@
                         "lang": "bo",
                         "value": "ལོཀཏྲི་པ་ལའི་ཆོས་སྐོར།"
                       }
+                    ],
+                    "authorBatch": [
+                      {
+                        "lang": "bo-x-ewts",
+                        "value": "myang nyi ma 'od zer/ gu ru chos dbang /"
+                      }
                     ]
                   },
                   {
@@ -3477,6 +3621,12 @@
                       {
                         "lang": "bo",
                         "value": "ཀརྨ་པ་མི་བསྐྱོད་རྡོ་རྗེ་སོགས་ཀཾ་ཚང་མཁས་པའི་གསུང་ཕྱོགས་བསྡུས།"
+                      }
+                    ],
+                    "authorBatch": [
+                      {
+                        "lang": "bo-x-ewts",
+                        "value": "karma pa 08 mi bskyod rdo rje/"
                       }
                     ]
                   },
@@ -5237,6 +5387,12 @@
                         "lang": "bo",
                         "value": "སྐུ་གསུམ་ངོ་སྤྲོད་ཀྱི་རྣམ་པར་བཤད་པ་མདོ་རྒྱུད་བསྟན་པ་མཐའ་དག་གི་ཨེ་ཝམ་ཕྱག་རྒྱ།"
                       }
+                    ],
+                    "authorBatch": [
+                      {
+                        "lang": "bo-x-ewts",
+                        "value": "karma pa 08 mi bskyod rdo rje/"
+                      }
                     ]
                   },
                   {
@@ -5678,6 +5834,12 @@
                         "lang": "bo",
                         "value": "དགོངས་པ་ཡང་ཟབ་གྱི་གཏེར་ཆོས་སྐོར།"
                       }
+                    ],
+                    "authorBatch": [
+                      {
+                        "lang": "bo-x-ewts",
+                        "value": "rgyal dbang rin chen phun tshogs/"
+                      }
                     ]
                   },
                   {
@@ -5803,6 +5965,12 @@
                       {
                         "lang": "bo",
                         "value": "དམ་ཆོས་དགོངས་པ་ཡང་ཟབ་ཀྱི་ཁྲིད་དང་སྒྲུབ་སྐོར།"
+                      }
+                    ],
+                    "authorBatch": [
+                      {
+                        "lang": "bo-x-ewts",
+                        "value": "rgyal dbang rin chen phun tshogs/"
                       }
                     ]
                   },
@@ -6160,6 +6328,12 @@
                       {
                         "lang": "bo",
                         "value": "དཔལ་ལྡན་ཤངས་པའི་ཆོས་སྐོར་རྣམ་ལྔའི་རྒྱ་གཞུང་།"
+                      }
+                    ],
+                    "authorBatch": [
+                      {
+                        "lang": "bo-x-ewts",
+                        "value": "'jam mgon kong sprul blo gros mtha' yas/"
                       }
                     ]
                   },
@@ -6977,6 +7151,12 @@
                       {
                         "lang": "bo",
                         "value": "སངས་རྒྱས་རས་ཆེན་གྱི་རྣམ་ཐར་བདུད་རྩིའི་བུམ་བཟང་།"
+                      }
+                    ],
+                    "authorBatch": [
+                      {
+                        "lang": "bo-x-ewts",
+                        "value": "zhwa dmar 02 mkha' spyod dbang po/"
                       }
                     ]
                   },
@@ -11624,6 +11804,12 @@
                         "lang": "bo",
                         "value": "རྗེ་ཙོང་ཁ་པ་ཡབ་སྲས་གསུམ་གྱིས་མཛད་པའི་གསང་བ་འདུས་པའི་སྐོར་གྱི་ཡིག་ཆ་ཕྱོགས་བསྡུས།"
                       }
+                    ],
+                    "authorBatch": [
+                      {
+                        "lang": "bo-x-ewts",
+                        "value": "rgyal tshab dar ma rin chen/ mkhas grub rje dge legs dpal bzang / tsong kha pa blo bzang grags pa/"
+                      }
                     ]
                   },
                   {
@@ -11632,6 +11818,12 @@
                       {
                         "lang": "bo",
                         "value": "རྗེ་ཙོང་ཁ་པ་ཡབ་སྲས་ཀྱི་ཚད་གཞུང་ཡིག་ཆ་ཕྱོགས་བསྡེབས།"
+                      }
+                    ],
+                    "authorBatch": [
+                      {
+                        "lang": "bo-x-ewts",
+                        "value": "mkhas grub rje dge legs dpal bzang / rgyal tshab dar ma rin chen/ dge 'dun grub pa/ tsong kha pa blo bzang grags pa/"
                       }
                     ]
                   },
@@ -11731,6 +11923,12 @@
                       {
                         "lang": "bo",
                         "value": "བཀྲ་ཤིས་ལྷུན་པོ་དཀྱིལ་ཁང་གྲྭ་ཚང་གི་དབུ་མའི་ཡིག་ཆ།"
+                      }
+                    ],
+                    "authorBatch": [
+                      {
+                        "lang": "bo-x-ewts",
+                        "value": "shan+ti pa blo gros rgyal mtshan/"
                       }
                     ]
                   },
@@ -12561,6 +12759,12 @@
                         "lang": "bo",
                         "value": "རྗེ་བཙུན་དམ་པ་ཤེས་རབ་བཀྲ་ཤིས་ཀྱི་རྣམ་ཐར།"
                       }
+                    ],
+                    "authorBatch": [
+                      {
+                        "lang": "bo-x-ewts",
+                        "value": "rong po grub chen 02 ngag dbang 'phrin las rgya mtsho/"
+                      }
                     ]
                   },
                   {
@@ -12584,6 +12788,12 @@
                       {
                         "lang": "bo",
                         "value": "ཤེལ་དཀར་བཀའ་འགྱུར་བླ་མ་ངག་དབང་བློ་བཟང་བསྟན་འཛིན་ཚུལ་ཁྲིམས་རྒྱལ་མཚན་གྱི་རྣམ་ཐར་གྱི་ཁ་སྐོང་།"
+                      }
+                    ],
+                    "authorBatch": [
+                      {
+                        "lang": "bo-x-ewts",
+                        "value": "shel dkar bka' 'gyur bla ma ngag dbang blo bzang bstan 'dzin tshul khrims rgyal mtshan/"
                       }
                     ]
                   },
@@ -13901,6 +14111,12 @@
                         "lang": "bo",
                         "value": "སངས་རྒྱས་མཚན་མདོ།"
                       }
+                    ],
+                    "authorBatch": [
+                      {
+                        "lang": "bo-x-ewts",
+                        "value": "sprul sku blo ldan snying po/"
+                      }
                     ]
                   },
                   {
@@ -14074,6 +14290,12 @@
                         "lang": "bo",
                         "value": "རྫོགས་ཆེན་ཡང་རྩེ་ལྟ་བ་ཐོག་དབབ་རྩ་འགྲེལ།"
                       }
+                    ],
+                    "authorBatch": [
+                      {
+                        "lang": "bo-x-ewts",
+                        "value": "rgyal rong pa rig pa rang shar/"
+                      }
                     ]
                   },
                   {
@@ -14113,6 +14335,12 @@
                         "lang": "bo",
                         "value": "རྫོགས་ཆེན་གསེར་གྱི་ཐུར་མ།"
                       }
+                    ],
+                    "authorBatch": [
+                      {
+                        "lang": "bo-x-ewts",
+                        "value": "bon zhig g.yung drung gling pa/"
+                      }
                     ]
                   },
                   {
@@ -14130,6 +14358,12 @@
                       {
                         "lang": "bo",
                         "value": "རྫོགས་ཆེན་བསྒྲགས་པ་སྐོར་གསུམ།"
+                      }
+                    ],
+                    "authorBatch": [
+                      {
+                        "lang": "bo-x-ewts",
+                        "value": "ston pa gshen rab/"
                       }
                     ]
                   },
@@ -14203,6 +14437,12 @@
                       {
                         "lang": "bo",
                         "value": "རྣམ་ཐར་གཡུང་དྲུང་གསང་བའི་མཛོད་ཆེན།"
+                      }
+                    ],
+                    "authorBatch": [
+                      {
+                        "lang": "bo-x-ewts",
+                        "value": "nyag rong gter ston gsang sngags gling pa/"
                       }
                     ]
                   },
@@ -14396,6 +14636,12 @@
                         "lang": "bo",
                         "value": "མཁའ་འགྲོ་རྒྱ་མཚོའི་རྣམ་ཐར།"
                       }
+                    ],
+                    "authorBatch": [
+                      {
+                        "lang": "bo-x-ewts",
+                        "value": "mkha' 'gro bde chen dbang mo/"
+                      }
                     ]
                   },
                   {
@@ -14509,6 +14755,12 @@
                       {
                         "lang": "bo",
                         "value": "སྲིད་པ་རྒྱུད་ཀྱི་ཁ་བྱང་ཆེན་མོ།"
+                      }
+                    ],
+                    "authorBatch": [
+                      {
+                        "lang": "bo-x-ewts",
+                        "value": "lo tsA ba dran pa nam mkha'"
                       }
                     ]
                   }
@@ -14710,6 +14962,12 @@
                         "lang": "bo",
                         "value": "རྣམ་ཐར་གཡུང་དྲུང་གསང་བའི་མཛོད་ཆེན།"
                       }
+                    ],
+                    "authorBatch": [
+                      {
+                        "lang": "bo-x-ewts",
+                        "value": "nyag rong gter ston gsang sngags gling pa/"
+                      }
                     ]
                   },
                   {
@@ -14718,6 +14976,12 @@
                       {
                         "lang": "bo",
                         "value": "ཞི་ཁྲོ་དགོངས་པ་ཀུན་འདུས་དང་མ་མོ་རྦོད་གཏོང་།"
+                      }
+                    ],
+                    "authorBatch": [
+                      {
+                        "lang": "bo-x-ewts",
+                        "value": "rig 'dzin kun grol grags pa/"
                       }
                     ]
                   },
@@ -14728,6 +14992,12 @@
                         "lang": "bo",
                         "value": "བདེར་གཤེགས་རིག་འཛིན་དགོངས་པ་ཀུན་འདུས་འཆི་མེད་གསང་བ་གསུམ་དྲིལ།"
                       }
+                    ],
+                    "authorBatch": [
+                      {
+                        "lang": "bo-x-ewts",
+                        "value": "spa tshang gter chen ye shes g.yung drung /"
+                      }
                     ]
                   },
                   {
@@ -14736,6 +15006,12 @@
                       {
                         "lang": "bo",
                         "value": "མཁའ་འགྲོ་དགོངས་པ་ཀུན་འདུས་ཀྱི་སྐོར།"
+                      }
+                    ],
+                    "authorBatch": [
+                      {
+                        "lang": "bo-x-ewts",
+                        "value": "bde chen gling pa/"
                       }
                     ]
                   },
@@ -14791,6 +15067,12 @@
                       {
                         "lang": "bo",
                         "value": "ཡུལ་ཤུལ་བོད་ཀྱི་རིག་གནས་དམངས་སྲོལ་བཤམས་སྟོན་ཁང་གི་དཔེ་རྙིང་ཕྱོགས་བསྡེབས། ༼དང་པོ།༽"
+                      }
+                    ],
+                    "authorBatch": [
+                      {
+                        "lang": "bo-x-ewts",
+                        "value": "karma bsod nams seng+ge"
                       }
                     ]
                   },
@@ -15668,6 +15950,12 @@
                         "lang": "bo",
                         "value": "ཕུང་པོ་གཟན་སྐྱུར་གྱི་རྣམ་བཤད་གཅོད་ཀྱི་དོན་གསལ་བྱེད།"
                       }
+                    ],
+                    "authorBatch": [
+                      {
+                        "lang": "bo-x-ewts",
+                        "value": "ma cig lab kyi sgron ma/"
+                      }
                     ]
                   },
                   {
@@ -15878,6 +16166,12 @@
                         "lang": "bo",
                         "value": "ཟབ་དོན་སྙན་བརྒྱུད་ཀྱི་གཅོད་གཞུང་ཟབ་མོ་གཅོད་ཀྱི་མན་ངག་བློ་གྲོས་མིག་འབྱེད།"
                       }
+                    ],
+                    "authorBatch": [
+                      {
+                        "lang": "bo-x-ewts",
+                        "value": "dkon mchog rgyal mtshan/ ma cig lab kyi sgron ma/"
+                      }
                     ]
                   },
                   {
@@ -15895,6 +16189,12 @@
                       {
                         "lang": "bo",
                         "value": "གསང་སྤྱོད་སྙན་རྒྱུད་ལས་ཆུ་མིག་བརྒྱ་རྩ་སྒྲུབ་པའི་ཞལ་བཀོད་སོགས།"
+                      }
+                    ],
+                    "authorBatch": [
+                      {
+                        "lang": "bo-x-ewts",
+                        "value": "gshongs chen pa bstan pa'i rgyal mtshan/"
                       }
                     ]
                   },
@@ -16162,6 +16462,12 @@
                       {
                         "lang": "bo",
                         "value": "ཟབ་གསང་གཅོད་ཀྱི་གདམས་པའི་སྐོར།"
+                      }
+                    ],
+                    "authorBatch": [
+                      {
+                        "lang": "bo-x-ewts",
+                        "value": "mkha' 'gro bde chen dbang mo/"
                       }
                     ]
                   },
@@ -16512,6 +16818,12 @@
                         "lang": "bo",
                         "value": "གཅོད་ཚོགས་གཅོད་ཁྲིད་སོགས།"
                       }
+                    ],
+                    "authorBatch": [
+                      {
+                        "lang": "bo-x-ewts",
+                        "value": "gnas mdo karma chags med/"
+                      }
                     ]
                   },
                   {
@@ -16520,6 +16832,12 @@
                       {
                         "lang": "bo",
                         "value": "རོལ་པ་ཟང་ཐལ་གྱི་གཅོད་སྐོར།"
+                      }
+                    ],
+                    "authorBatch": [
+                      {
+                        "lang": "bo-x-ewts",
+                        "value": "nyag rong gter ston gsang sngags gling pa/"
                       }
                     ]
                   },
@@ -17435,6 +17753,12 @@
                       {
                         "lang": "bo",
                         "value": "སྙན་དངགས་མེ་ལོང་གི་གཞུང་ཤོངས་འགྱུར། དཔང་ལོའི་འགྱུར་ཁྱད་མཆན་དུ་བཀོད་པ།"
+                      }
+                    ],
+                    "authorBatch": [
+                      {
+                        "lang": "bo-x-ewts",
+                        "value": "dpang lo tsA ba blo gros brtan pa/"
                       }
                     ]
                   },
@@ -19557,6 +19881,12 @@
                         "lang": "bo",
                         "value": "བཀའ་ཐང་སྡེ་ལྔ། ༼ཞོལ་པར་ཆ་ཚང་སྤུས་ལེགས།༽"
                       }
+                    ],
+                    "authorBatch": [
+                      {
+                        "lang": "bo-x-ewts",
+                        "value": "yar rje o rgyan gling pa/"
+                      }
                     ]
                   },
                   {
@@ -20443,6 +20773,12 @@
                         "lang": "bo",
                         "value": "ཆོས་རྒྱལ་མེས་དབོན་རྣམ་གསུམ་གྱི་རྣམ་ཐར་རིན་པོ་ཆེའི་འཕྲེང་བ།"
                       }
+                    ],
+                    "authorBatch": [
+                      {
+                        "lang": "bo-x-ewts",
+                        "value": "myang nyi ma 'od zer/"
+                      }
                     ]
                   },
                   {
@@ -20481,6 +20817,12 @@
                       {
                         "lang": "bo",
                         "value": "ཏུན་ཧོང་ནས་ཐོན་པའི་བོད་ཀྱི་ལོ་རྒྱུས་ཡིག་ཆ།"
+                      }
+                    ],
+                    "authorBatch": [
+                      {
+                        "lang": "bo-x-ewts",
+                        "value": "dbang rgyal/ bsod nams skyid/"
                       }
                     ]
                   },
@@ -21902,6 +22244,12 @@
                         "lang": "bo",
                         "value": "བྱ་རུང་ཁ་ཤོར་གྱི་ལོ་རྒྱུས།"
                       }
+                    ],
+                    "authorBatch": [
+                      {
+                        "lang": "bo-x-ewts",
+                        "value": "lha btsun sngon po/ khams sprul bstan 'dzin chos kyi nyi ma/ yol mo sprul sku 01 shAkya bzang po/"
+                      }
                     ]
                   }
                 ]
@@ -22479,6 +22827,12 @@
                         "lang": "bo",
                         "value": "དགའ་ལྡན་ཆོས་འབྱུང་བཻ་ཌཱུ་རྱ་སེར་པོ།"
                       }
+                    ],
+                    "authorBatch": [
+                      {
+                        "lang": "bo-x-ewts",
+                        "value": "sde srid sangs rgyas rgya mtsho/"
+                      }
                     ]
                   },
                   {
@@ -22981,6 +23335,12 @@
                       {
                         "lang": "bo",
                         "value": "སྡེ་དགེའི་བསྟན་འགྱུར་གྱི་དཀར་ཆག"
+                      }
+                    ],
+                    "authorBatch": [
+                      {
+                        "lang": "bo-x-ewts",
+                        "value": "zhu chen tshul khrims rin chen/"
                       }
                     ]
                   },

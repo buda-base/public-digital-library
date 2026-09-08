@@ -58,6 +58,20 @@
  *   anything else in the document                  | `traditions-base.json`, on the branch the `url` names
  *
  * ---------------------------------------------------------------------------
+ * The authors this script does NOT write: `authorBatch`
+ * ---------------------------------------------------------------------------
+ * Column E leaves some 420 of the 1662 works without an author.
+ * ../../tools/fill_authors.py reads the creator of the work behind those instances out
+ * of BDRC's own data and writes it as `authorBatch` — a field of its own, never mixed
+ * with column E's `author`, which always wins where both exist (TraditionViewer reads
+ * `author ?? authorBatch`).
+ *
+ * Because step 3 below rebuilds `subContent.selected` from the sheet, an `authorBatch`
+ * does not survive a run of this script: re-run that tool afterwards (its cache makes
+ * the second run a matter of seconds), or paste the names it lists in
+ * tools/authors-from-rdf.csv into column E, which is where they belong for good.
+ *
+ * ---------------------------------------------------------------------------
  * Worked example: the `kind` markers (2026-09-01)
  * ---------------------------------------------------------------------------
  * `TraditionViewer` gained a second line on its cards, fed by a `"kind"` key —
