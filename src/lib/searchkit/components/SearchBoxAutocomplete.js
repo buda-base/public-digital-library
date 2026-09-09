@@ -5,7 +5,9 @@ import AccessTimeIcon from '@material-ui/icons/AccessTime';
 import CloseIcon from '@material-ui/icons/Close';
 import IconButton from '@material-ui/core/IconButton';
 import qs from "query-string"
-import I18n from 'i18next';
+import I18n from 'i18next'
+
+import { GettingStartedLink } from "../../gettingStarted";
 import { Trans } from 'react-i18next'
 import Paper from '@material-ui/core/Paper';
 
@@ -461,12 +463,15 @@ const SearchBoxAutocomplete = (props) => {
           <div class="popHowTo bg" onClick={() => setHowTo(false)}></div>
           <Paper 
             id="popHowTo" 
-            onBlur={() => alert("blur")}
           >
             <div>
               <IconButton onClick={() => setHowTo(false)}>
                 <CloseIcon /> 
-              </IconButton>{
+              </IconButton>
+              {/* This panel is the syntax; the orientation page is the why and the
+                  what-next. They answer different questions, so it opens on one. */}
+              <GettingStartedLink className="gs-howto" slug="search" labelKey="gettingStarted.searchPage" />
+              {
               ["tibetan","codes","AND","chinese","sanskrit","khmer","scope"].map(k => <div>
                 <p style={{margin:"1em 0"}}>
                   <b>{I18n.t("topbar.how."+k+".title")}</b>
@@ -474,7 +479,8 @@ const SearchBoxAutocomplete = (props) => {
                   <Trans i18nKey={"topbar.how."+k+".body"} components={{ nl : <br />, ita: <i /> }}/>
                 </p>
               </div>)
-            }</div>
+            }
+            </div>
           </Paper>
         </> }
       </> 

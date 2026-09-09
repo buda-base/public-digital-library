@@ -4825,6 +4825,23 @@ body > [id^="menu-cita"] { z-index:1001000; }
 #menu-interest ul li.selected::after { background: url(/icons/check-black.svg); }
 
 
+/* the orientation line that closes the syntax panel */
+#popHowTo .gs-howto:not(#a) {
+   display: inline-block;
+   margin: 4px 0 6px;
+   font-size: 13px;
+   font-weight: 700;
+   text-transform: uppercase;
+   letter-spacing: 0.1em;
+   color: var(--living-brand, #8b1e2b);
+   text-decoration: none;
+}
+/* The gap before the arrow is two non-breaking spaces inside the content, not
+   padding or margin: Chrome paints the hover underline across text but across
+   neither of those, which left a hole in the middle of the rule. */
+#popHowTo .gs-howto:not(#a)::after { content: "\00a0\00a0\2192"; }
+#popHowTo .gs-howto:not(#a):hover { text-decoration: underline; }
+
 #popHowTo > div:last-child {
    text-align:left;
 }
@@ -9178,6 +9195,22 @@ a.result + #matches.mobile,
 .nav #lang:hover,
 .nav #login:hover { background-color: rgba(229, 168, 50, 0.14); }
 
+/* the orientation button, left of the language selector. An inline MUI glyph on
+   currentColor, so unlike its black neighbours it needs no invert. Sized like the
+   icon buttons in the mockup's own bar: 38px square, 2px radius, gold hover. */
+.nav #gs-help:not(#a) {
+   display: flex; align-items: center; justify-content: center;
+   width: 38px; height: 38px; flex-shrink: 0;
+   border-radius: 2px;
+   color: var(--living-cream);
+   cursor: pointer;
+}
+.nav #gs-help:not(#a):hover {
+   background-color: rgba(229, 168, 50, 0.14);
+   color: var(--living-gold);
+}
+.nav #gs-help svg { width: 25px; height: 25px; }
+
 /* the burger's close state is a rotated "+" glyph, not an icon */
 .nav > div > .close { color: var(--living-cream); }
 
@@ -10648,6 +10681,84 @@ html:not([lang="bo"]):not([lang^="zh"]):not([lang="km"])
    justify-content: space-between;
    gap: 8px;
 }
+
+/* ---- links to the orientation pages (lib/gettingStarted) ----
+ *
+ * Two shapes: .gs-section closes a section intro or a standfirst, .gs-hero sits
+ * under the home standfirst on the dark hero. Both read as a quiet call, not a
+ * button — the sections around them already carry the weight.
+ */
+#root .gs-section:not(#a) {
+   /* inline-block, not inline-flex: as a flex item the arrow was a box of its own
+      and painted its own underline, leaving a gap in the middle of the rule on
+      hover. Inline-block keeps the vertical margins and puts the arrow back in the
+      line box, so the underline runs through. */
+   display: inline-block;
+   margin-top: 14px;
+   font-size: 13px;
+   font-weight: 700;
+   text-transform: uppercase;
+   letter-spacing: 0.1em;
+   color: var(--living-brand);
+   text-decoration: none;
+}
+#root .gs-section:not(#a)::after { content: "\00a0\00a0\2192"; }
+#root .gs-section:not(#a):hover { text-decoration: underline; }
+
+/* On a tradition page the headings follow one another closely, so the link is
+   floated out of the flow into the space beside the standfirst: the column keeps
+   exactly the height it had before, and the text wraps around it if it ever grows
+   that wide. */
+#root .App.tradition .gs-tradition:not(#a) {
+   float: right;
+   margin: 8px 0 0 24px;
+}
+
+#root .gs-hero:not(#a) {
+   display: inline-block;
+   margin-top: 18px;
+   font-size: 13px;
+   font-weight: 700;
+   text-transform: uppercase;
+   letter-spacing: 0.1em;
+   color: var(--living-gold);
+   text-decoration: none;
+}
+#root .gs-hero:not(#a)::after { content: "\00a0\00a0\2192"; }
+#root .gs-hero:not(#a):hover { color: var(--living-cream); text-decoration: underline; }
+
+/* The no-result div is rendered empty whenever there are hits, and as a flex item
+   it still claimed a slot — which is what pushed the count against the title and
+   left the orientation link mid-row. Out of the flow, space-between has three real
+   items to distribute: the heading, the count, the link. */
+#root .AppSK .main-content header > div[class=""] { display: none; }
+
+/* the orientation link opposite the count, a peer of it in weight */
+#root .AppSK .main-content header .gs-results:not(#a),
+#root .AppSK header .gs-results:not(#a) {
+   display: inline-flex;
+   align-items: center;
+   gap: 6px;
+   font-size: 12px;
+   font-weight: 700;
+   text-transform: uppercase;
+   letter-spacing: 0.12em;
+   color: var(--living-brand);
+   white-space: nowrap;
+   text-decoration: none;
+}
+/* the row keeps its flex layout for the icon, so the underline goes on the words
+   alone — on the anchor it would decorate each flex item separately, icon
+   included, with the gap showing between them */
+/* An embedded list carries a long "showing the most popular items…" line and the
+   count, so the link cannot fit that row and wraps: auto keeps it on the column's
+   right edge instead of dropping to the left. On the standalone page the three
+   items do fit, and space-between spaces them evenly — hence no auto there. */
+#root .AppSK header .gs-results-inner:not(#a) { margin-left: auto; }
+
+#root .AppSK header .gs-results:not(#a):hover { text-decoration: none; }
+#root .AppSK header .gs-results:not(#a):hover .gs-label { text-decoration: underline; }
+#root .AppSK header .gs-results svg { width: 17px; height: 17px; }
 
 #root .AppSK .main-content header .hits-count {
    font-size: 12px;

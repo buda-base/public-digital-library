@@ -25,6 +25,10 @@ import { fromWylie, ewtsToDisplay } from "../lib/transliterators"
 import { topics } from "../lib/topics"
 import { HOME_PATH } from "../lib/appPath"
 import { rootCrumbs } from "../lib/breadcrumbs"
+import { GettingStartedLink } from "../lib/gettingStarted"
+
+/* BUDA's tradition code to its orientation page */
+const GS_TRADITION = { bo: "tradition-tibetan", pi: "tradition-pali", sa: "tradition-sanskrit", zh: "tradition-chinese" }
 
 const loggergen = new logdown('gen', { markdown: false });
 
@@ -548,6 +552,11 @@ export class TraditionViewer extends Component<State, Props>
 
     content.push(<>
       <h1 style={{width:"100%"}}>{I18n.t("tradition.title."+this.props.tradition+"T")}</h1>
+      {/* The orientation page for this tradition, on the landing (lib/gettingStarted).
+          Before the standfirst on purpose: floated right from here it takes the dead
+          space beside it and costs the column no height, where in the flow it pushed
+          the first heading down. */}
+      <GettingStartedLink className="gs-section gs-tradition" slug={GS_TRADITION[this.props.tradition]} labelKey="gettingStarted.orientation" />
       { standfirst && <p className="tradi-standfirst">{standfirst}</p> }
       { tradi && tradi.content?.map(t => {
         // a tradition may word a section its own way ("Twelve doors" counts the Tibetan

@@ -5,6 +5,7 @@ import TextField from '@material-ui/core/TextField';
 import type Auth from '../Auth';
 import _ from "lodash";
 import { appPathname, isHomePath, HOME_PATH } from "../lib/appPath";
+import { GettingStartedLink } from "../lib/gettingStarted";
 import IconButton from '@material-ui/core/IconButton';
 import Tooltip from '@material-ui/core/Tooltip';
 import React, { Component } from 'react';
@@ -32,6 +33,7 @@ import TranslateIcon from '@material-ui/icons/Translate';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import Apps from '@material-ui/icons/Apps';
 import Close from '@material-ui/icons/Close';
+import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
 import Cancel from '@material-ui/icons/Cancel';
 import ImportExport from '@material-ui/icons/ImportExport';
 import ExpandLess from '@material-ui/icons/ExpandLess';
@@ -1619,6 +1621,13 @@ export function top_right_menu(that,etextTitle,backUrl,etextres,isMirador,locati
 
          <div id="lang-login">
          {/* { feedbucketTop }  */}
+         {/* Orientation pages, on the landing page (see lib/gettingStarted). It sits
+             inside #lang-login on purpose: the rule at the top of App.css hides every
+             other child of the nav, which is what has kept the user-guide link out of
+             sight for so long. */}
+         <GettingStartedLink id="gs-help" titleKey="gettingStarted.help">
+            <HelpOutlineIcon />
+         </GettingStartedLink>
          { lang_selec(that) }
          { that.props.auth && login }
          <IconButton id="burger" onClick={() => that.setState({collapse:{...that.state.collapse,burgerOn:!that.state.collapse.burgerOn}})}>
@@ -7817,6 +7826,8 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                               <h1 lang={this.props.locale}>{ I18n.t("home.buda") }</h1>                              
                               <div>{ I18n.t("home.by") }</div>
                               <span>{ I18n.t("home.subtitle_new") }</span>
+                              {/* the front door of the orientation set, under the standfirst */}
+                              <GettingStartedLink className="gs-hero" slug="welcome" labelKey="gettingStarted.newHere" />
                            </div>
                         </div>
                      </span>
@@ -8202,6 +8213,10 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                            <span class="eyebrow" lang={this.props.locale}>{I18n.t("home.tradi.eyebrow")}</span>
                            <h2 lang={this.props.locale}>{I18n.t("home.tradi.title")}</h2>
                            <p lang={this.props.locale}>{I18n.t("home.tradi.intro")}</p>
+                           {/* the four doors each have an orientation page; the index
+                               lists them, and the pages themselves link on from there
+                               (a link inside a plate would nest an <a> in the <Link>) */}
+                           <GettingStartedLink className="gs-section" labelKey="gettingStarted.start" />
                         </div>
 
                         <div class="home-tradi-grid">
@@ -8233,6 +8248,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
                            <span class="eyebrow" lang={this.props.locale}>{I18n.t("home.recent.eyebrow")}</span>
                            <h3 id="recent-acquisitions">{I18n.t("tradition.recent")}</h3>
                            <p lang={this.props.locale}>{I18n.t("home.recent.intro")}</p>
+                           <GettingStartedLink className="gs-section" slug="recent-acquisitions" labelKey="gettingStarted.orientation" />
                         </div>
                         <InnerSearchPageContainer /*noScrollFilters={true}*/ customPholder={I18n.t("resource.searchTtrad", {trad:I18n.t("tradition.title.recent"),interpolation: {escapeValue: false} }) } forceSearch={true} location={this.props.location} auth={this.props.auth} isOsearch={true} recent={true} />
                            

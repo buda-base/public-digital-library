@@ -117,6 +117,14 @@
       "collection_plural":"Collections",
       "tradition":"Tradition"
    },
+   "gettingStarted": {
+      "help":"Help",
+      "start":"Getting started",
+      "howToRead":"How to read this page",
+      "orientation":"Orientation",
+      "searchPage":"Orientation: searching the archives",
+      "newHere":"New here? Find your way in"
+   },
    "topbar": {
       "about": "about us",
       "search": "new search",

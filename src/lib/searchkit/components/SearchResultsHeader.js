@@ -10,6 +10,9 @@ import I18n from 'i18next';
 import Loader from 'react-loader';
 
 import Close from '@material-ui/icons/Close';
+import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
+
+import { GettingStartedLink } from "../../gettingStarted"
 
 import { getPropLabel, fullUri } from '../../../components/App'
 
@@ -59,6 +62,11 @@ function SearchResultsHeader(props) {
     }
   }, [results])
 
+  /* Nearly every door in the archive lands on a result list — the standalone page,
+     Recent Acquisitions on the home page, the lists embedded in a person's or a
+     place's record — so the orientation for reading one hangs in every one of them,
+     opposite the count. The header is already a space-between row, which is what
+     puts it in the corner. */
   return <header data-hits={results?.nbHits} data-status={status}>    
     { ["loading"].includes(status) && <Loader className="SRHloader"/>  }
     { !inner && <>{ config.length > 1 && config[0] === "associated_res" 
@@ -88,9 +96,11 @@ function SearchResultsHeader(props) {
               <span class="hits-count" lang={that.props.locale}>
                 {results.nbHits.toLocaleString(that.props.locale)} {I18n.t("types.instance_plural")}
               </span> }
+            <GettingStartedLink className="gs-results gs-results-inner" slug="reading-a-results-page" labelKey="gettingStarted.howToRead"><HelpOutlineIcon /></GettingStartedLink>
           </>
           : <>
             <h3>{I18n.t("result.hit"+(results.query?"KW":""),{count:results?.nbHits, interpolation: {escapeValue: false}, ...results.query?{kw:results.query}:{}})}</h3> 
+            <GettingStartedLink className="gs-results" slug="reading-a-results-page" labelKey="gettingStarted.howToRead"><HelpOutlineIcon /></GettingStartedLink>
             <div class={results?.nbHits === 0 ? "no-result inAppSK":""}>{ results?.nbHits === 0 &&  <Trans i18nKey="search.filters.generic" components={{ newline: <br />, parag: <span class={"noR"}/>, list:<li/>, ita:<i/>}} /> }</div>
           </> 
         )
