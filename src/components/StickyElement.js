@@ -59,11 +59,55 @@ function usePublishBarBottom(ref, isSticky, enabled) {
   }, [ref, isSticky, enabled])
 }
 
-function StickyElement({ className = '', children, rootMarginTop }) {
+/* The top bar slides away while scrolling down and comes back as soon as the visitor
+ * scrolls up (App.css, .nav.autoHide). Not in the etext reader nor over the image
+ * viewer, which have their own chrome: top_right_menu leaves it off there. */
+const SCROLL_SLOP = 8 // px of travel before a direction counts: ignores touch bounce
+
+function useAutoHide(ref, enabled) {
+  const [hidden, setHidden] = useState(false)
+
+  useEffect(() => {
+    if (!enabled) {
+      setHidden(false)
+      return
+    }
+    let last = window.scrollY
+    let frame
+    const onScroll = () => {
+      if (frame !== undefined) return
+      frame = requestAnimationFrame(() => {
+        frame = undefined
+        const y = window.scrollY
+        const el = ref.current
+        // never hide while the bar still sits in its own place at the top of the page
+        const home = el ? el.getBoundingClientRect().height + (el.previousElementSibling?.offsetHeight ?? 0) : 0
+        if (y <= home) {
+          setHidden(false)
+          last = y
+        } else if (Math.abs(y - last) > SCROLL_SLOP) {
+          setHidden(y > last)
+          last = y
+        }
+      })
+    }
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => {
+      window.removeEventListener('scroll', onScroll)
+      if (frame !== undefined) cancelAnimationFrame(frame)
+    }
+  }, [ref, enabled])
+
+  return [hidden, setHidden]
+}
+
+function StickyElement({ className = '', children, rootMarginTop, autoHide = false }) {
 
   const {ref, isSticky} = useSticky({ rootMarginTop })
 
   usePublishBarBottom(ref, isSticky, className.indexOf('etext-nav-parent') !== -1)
+
+  const [hidden, setHidden] = useAutoHide(ref, autoHide)
 
   /*
   useEffect(() => {
@@ -73,7 +117,12 @@ function StickyElement({ className = '', children, rootMarginTop }) {
   */
    
   return (
-      <div ref={ref} className={`${className} ${isSticky ? 'someClass' : ''}`}>
+      <div
+        ref={ref}
+        className={`${className} ${isSticky ? 'someClass' : ''}${autoHide ? ' autoHide' : ''}${hidden ? ' navHidden' : ''}`}
+        // keyboard focus landing in the hidden bar brings it back
+        onFocus={autoHide ? () => setHidden(false) : undefined}
+      >
           { children  }
       </div>
   )

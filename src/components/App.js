@@ -1567,7 +1567,7 @@ export function top_right_menu(that,etextTitle,backUrl,etextres,isMirador,locati
       overNav,
       <StickyElement className={"nav"+(onZhMirror?" zhMirror":"")+ (that.state.collapse.navMenu?" on":"")+(onKhmerServer||onKhmerUrl?" khmerServer":"")
                +(msgPopupOn?" msgPopupOn":"")+(that.state.collapse.burgerOn?" on":"")
-         }  rootMarginTop={60} style={{ ...isMirador?{position:"absolute"}:{} }} >
+         }  rootMarginTop={60} autoHide={!etextres && !isMirador} style={{ ...isMirador?{position:"absolute"}:{} }} >
           <div>
          {logo}
 

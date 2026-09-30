@@ -11566,6 +11566,69 @@ html:not([lang="bo"]):not([lang^="zh"]):not([lang="km"])
    }
 }
 
+/* ---- the header slides away on scroll down, back on scroll up ----
+ *
+ * StickyElement adds .autoHide (everywhere but the etext reader and the image viewer)
+ * and .navHidden while the visitor scrolls down. On desktop the header used to scroll
+ * away with the page. The strip and the bar are siblings, not one box: both stick,
+ * the bar right under the strip, and they leave and come back together, as the
+ * landing page's header does.
+ */
+
+#root .over-nav:has(+ .nav.autoHide):not(#a),
+#root .over-nav + .nav.autoHide:not(#a):not(#b) {
+   position: sticky;
+   transition: transform 0.3s ease;
+}
+
+#root .over-nav:has(+ .nav.autoHide):not(#a) { top: 0; z-index: 100002; }
+#root .over-nav + .nav.autoHide:not(#a):not(#b) { top: 32px; }
+
+/* each travels its own way out in the same 0.3s, so the strip trails the bar: the
+   staggered look is on purpose (the landing's header does the same).
+   The open burger menu keeps the header on screen. */
+#root .over-nav:has(+ .nav.autoHide.navHidden:not(.on)):not(#a) {
+   transform: translateY(-100%);
+}
+#root .over-nav + .nav.autoHide.navHidden:not(.on):not(#a):not(#b) {
+   transform: translateY(calc(-100% - 32px));
+}
+
+@media (prefers-reduced-motion: reduce) {
+   #root .over-nav:has(+ .nav.autoHide):not(#a),
+   #root .over-nav + .nav.autoHide:not(#a):not(#b) { transition: none; }
+}
+
+/* Under 1024px the sheet sticks the bar at top:-61px, pushes its row back down with
+   top:60px, and once stuck (.someClass) shrinks it to the floating 60px burger. The
+   whole bar comes back instead: undo the offset and the collapse, keep the paint of
+   the unstuck bar. */
+@media (max-width: 1024px) {
+   #root .over-nav + .nav.autoHide:not(#a):not(#b) {
+      width: 100%;
+      left: 0;
+   }
+
+   #root .over-nav + .nav.autoHide:not(#a):not(#b) > div {
+      top: 0;
+      background: var(--living-maroon);
+      border-bottom: 1px solid var(--living-gold-line);
+      box-sizing: border-box;
+   }
+
+   #root .over-nav + .nav.autoHide.someClass:not(.on):not(#a):not(#b) > div > #logo,
+   #root .over-nav + .nav.autoHide.someClass:not(.on):not(#a):not(#b) #lang-login > #gs-help { display: flex; }
+
+   #root .over-nav + .nav.autoHide.someClass:not(.on):not(#a):not(#b) #lang-login > #lang,
+   #root .over-nav + .nav.autoHide.someClass:not(.on):not(#a):not(#b) #lang-login > #login { display: block; }
+
+   /* the floating burger's round maroon badge and shadow belong to the collapse */
+   #root .over-nav + .nav.autoHide.someClass:not(.on):not(#a):not(#b) #lang-login #burger:not(#a) {
+      border-radius: 0;
+      box-shadow: none;
+   }
+}
+
 /* --------------------------------------------------------------------------------------------------------------------- the text page
  *
  * Mockup: the "BDRC library HTML" design project, BUDA Text Page.dc.html — a
