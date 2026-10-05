@@ -12252,6 +12252,62 @@ html:not([lang="bo"]):not([lang^="zh"]):not([lang="km"])
    #root > div > .resource > div > .data:not(#a) { padding-left: 24px; padding-right: 24px; }
    #root > div > .resource .data#perma:not(#a) { padding-left: 24px; padding-right: 24px; }
    .resource .data.legal-props > div:not(#a) { padding-left: 24px; padding-right: 24px; }
+
+   /* the round filters button shows here, sticky and so still in the flow: the sheet
+      pulls the panel back over its height (#settings + .content, -55px), which the
+      panel's 16px above out-specified — 46px of button stood empty over the results */
+   #root > div > .resource > div > .AppSK.InnerSearchPage.data #settings + .content:not(#a) {
+      margin-top: calc(16px - 46px);
+   }
+}
+
+/* ---- phones: the rows stack ----
+ *
+ * The sheet's 665px block puts the label over the value (h3 at 100%, value indented
+ * 20px), but the fixed 172px label column and the value width above are :not(#a)
+ * rules outside any media query, so they won and squeezed the value into what was
+ * left of a phone — one or two words per line. Same stacking as master, restated here.
+ */
+@media (max-width: 665px) {
+   .resource .data > h1.on:not(#a) { font-size: 32px; }
+
+   .resource .data > div > h3:not(#a) {
+      width: 100%;
+      padding-right: 0;
+      margin-bottom: 5px;
+   }
+
+   .resource .data > div > .group:not(#a) { width: 100%; }
+
+   .resource .data .sub > h4.first:not(#a),
+   .resource .data > [data-prop="bdo:creator"] .subgroup .subsub:first-child:not(#a) {
+      width: 100%;
+      margin-right: 0;
+      margin-bottom: 5px;
+   }
+
+   /* the results panel nested four insets (the card's 24px, the sheet's 10px on
+      .main-content, the row's 24px, the panel's border), which left a 280px row and a
+      128px title column next to the 130px thumbnail. The panel takes half the card's
+      gutter back and the insets inside it come down to one 12px pad. */
+   #root > div > .resource > div > .AppSK.InnerSearchPage.data .content:not(#a) {
+      margin-left: -12px;
+      margin-right: -12px;
+   }
+
+   #root > div > .resource > div > .AppSK.InnerSearchPage.data .content .main-content:not(#a) {
+      padding-left: 0;
+      padding-right: 0;
+   }
+
+   #root > div > .resource > div > .AppSK.InnerSearchPage.data .ais-Hits-item:not(#a) {
+      padding: 20px 12px;
+   }
+
+   #root > div > .resource > div > .AppSK.InnerSearchPage.data .main-content > header:not(#a) {
+      padding-left: 12px;
+      padding-right: 12px;
+   }
 }
 
 /* ---- the resource card on narrower screens ----
@@ -12434,7 +12490,10 @@ html:not([lang="bo"]):not([lang^="zh"]):not([lang="km"])
 /* :not(#b):not(#c) — the rule that pads the end of a run counts three ids and five
    classes; the padding-bottom here has to out-specify it */
 #root > div > .resource > div > .AppSK.InnerSearchPage.data:not(#a):not(#b):not(#c) {
-   padding-top: 14px;
+   /* the field is ruled like a property row (below), so the block sits flush under the
+      last row instead of being pulled 30px into it */
+   margin-top: 0;
+   padding-top: 0;
    /* more air under the panel than over it: the block closes a run, so this white is
       also what separates the panel from the ground band below */
    padding-bottom: 34px;
@@ -12446,6 +12505,12 @@ html:not([lang="bo"]):not([lang^="zh"]):not([lang="km"])
    padding: 0;
    background: none;
    border: none;
+}
+
+/* the field opens with the same hairline and 18px as the property rows above it */
+#root > div > .resource > div > .AppSK.InnerSearchPage.data > div[data-prop="tmp:search"]:not(#a):not(#b):not(#c) {
+   padding-top: 18px;
+   border-top: 1px solid var(--living-hair);
 }
 
 /* the panel is the results themselves — the filters column and the rows — which the
