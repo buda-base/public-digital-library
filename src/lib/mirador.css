@@ -461,10 +461,13 @@ body.auto_rela .inApp.mirador-container .slotIconContainer { position:absolute !
 #viewer .member-select-results,
 #viewer .window,
 #viewer .scroll-view,
-#viewer .image-view,
 #viewer .mirador-osd {
     background-color: var(--v-canvas);
 }
+
+/* .image-view spans the whole window above the thumbnail column (same z-index, later in
+   the DOM, pointer-events:none so clicks still reach it): any ground on it hides the
+   column's thumbnails. .window and .mirador-osd paint the ground instead. */
 
 /* ---- the top bar ---- */
 

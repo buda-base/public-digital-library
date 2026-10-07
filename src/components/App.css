@@ -11973,6 +11973,17 @@ html:not([lang="bo"]):not([lang^="zh"]):not([lang="km"])
 
 #root > div > .resource .data#perma #rid:not(#a) { margin-left: 0; }
 
+/* One text line for the whole strip.
+ *
+ * The property rows' align-items:baseline also reaches this row, and it cannot work
+ * here: Permalink, Export and Cite are flex boxes whose first item is their icon, so
+ * their baseline is the icon's bottom edge and bdr:… dropped 9-13px below the others.
+ * With the same line-height on every text, centring the boxes puts them on one baseline.
+ */
+#root > div > .resource > div > .data#perma > div:not(#a) { align-items: center; }
+
+#root > div > .resource .data#perma :is(#permalink span, #rid, #DL, #cite):not(#a) { line-height: 20px; }
+
 .resource .data#perma #DL:not(#a),
 .resource .data#perma #cite:not(#a) { color: var(--living-label); font-weight: 600; font-size: 13.5px; }
 
@@ -14019,3 +14030,14 @@ html:not([lang="bo"]):not([lang^="zh"]):not([lang="km"])
 }
 
 
+
+/* ---- one type size for property labels and values (trial: 15px) ----
+ *
+ * Labels were 13.5px and values a mix of 14, 14.5 and 15px depending on which sheet
+ * rule reached them. The small language tags (.lang) and runs in another script
+ * ([lang], sized for their own glyphs) keep their sizes.
+ */
+#root > div > .resource > div > .data > div[data-prop]:not(#a),
+#root > div > .resource > div > .data > div[data-prop]:not(#a) :is(h3, h4, a, span, div):not(.lang):not([lang]:not([lang=""])) {
+   font-size: 15px;
+}

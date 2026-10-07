@@ -4835,7 +4835,7 @@ class ResourceViewer extends Component<Props,State>
                      {
                         if(noteData[bdo+"noteSource"]) 
                         {
-                           workuri = <div><Tag style={{fontSize:"14px"}}>(from {this.uriformat(bdo+"noteSource",noteData[bdo+"noteSource"])}{loca})</Tag></div>
+                           workuri = <div><Tag>(from {this.uriformat(bdo+"noteSource",noteData[bdo+"noteSource"])}{loca})</Tag></div>
                         }
 
                         let text = getLangLabel(this,"",[ noteData[bdo+"noteText"] ])
@@ -4875,7 +4875,7 @@ class ResourceViewer extends Component<Props,State>
                      }
                      else if(noteData[bdo+"noteSource"]) // case when only source, no text
                      {
-                        workuri = <div><Tag style={{fontSize:"14px"}}>({I18n.t("misc.from")} {this.uriformat(bdo+"noteSource",noteData[bdo+"noteSource"])}{loca})</Tag></div>
+                        workuri = <div><Tag>({I18n.t("misc.from")} {this.uriformat(bdo+"noteSource",noteData[bdo+"noteSource"])}{loca})</Tag></div>
 
                         let sav = [
                            <Tag  className="first type">{I18n.t("punc.num",{num:nbN++}) /*this.proplink(bdo+"noteSource","Note")*/}</Tag>,
