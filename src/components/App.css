@@ -11922,6 +11922,22 @@ html:not([lang="bo"]):not([lang^="zh"]):not([lang="km"])
    font-size: 14.5px;
 }
 
+/* When a label repeats (two "Title Page Title" values), the first .sub (.willK) takes its
+   h4.first out of the flow and pushes the value by the sheet's 160+15px, while the next
+   one (.keep) keeps its hidden h4.first in the flow: 150+20px here. Same offset for both,
+   or the first value sits 5px right of the others. Below 665px the sheet zeroes it. */
+@media (min-width: 666px) {
+   .resource .data [data-prop="bf:identifiedBy"] .sub.keep > h4.first + .subgroup:not(#a),
+   .resource .data .sub.willK:not(.keep) > h4.first + .subgroup:not(#a),
+   .resource .data .sub.willK:not(.keep) > h4.first + h4.label:not(#a) { margin-left: 170px; }
+}
+
+/* the sheet caps the value at 100% - 145px up to 1024px (its 120+15px label); with the
+   170px label here the .keep value no longer fits and wraps under its hidden label */
+@media (min-width: 666px) and (max-width: 1024px) {
+   .resource .sub > h4.label:not(:first-of-type):not(#a) { max-width: calc(100% - 170px); }
+}
+
 /* on the creator row the sheet puts "main author:" in .subgroup > .subsub:first-child
    (the h4.first there is the bare colon), and the mockup runs that one at 120px */
 .resource .data > [data-prop="bdo:creator"] .subgroup .subsub:first-child:not(#a) {
@@ -12147,6 +12163,14 @@ html:not([lang="bo"]):not([lang^="zh"]):not([lang="km"])
    margin-top: 1px;
 }
 
+/* the sections' arrow: the sheet's top:3px was set for its own row; with the 3px
+   padding and 21px line above, its 17px box sat centred 3px over the chip and text */
+.resource .data#outline .root + div .xpd:not(#a) { top: 6px; }
+
+/* the root line is a flex row (stretch), so its chip sat 1px under the title's top
+   where the sections' sit 3px under: 2px more puts COL on the title's baseline */
+.resource .data#outline .root.is-root > .parTy:not(#a) { margin-top: 2px; }
+
 /* the outline's own search field: the mockup's underlined input */
 .resource [data-prop="tmp:outlineSearch"] .search input:not(#a) {
    max-width: 420px;
@@ -12170,6 +12194,11 @@ html:not([lang="bo"]):not([lang^="zh"]):not([lang="km"])
    background-color: var(--living-maroon);
    color: var(--living-cream);
 }
+
+/* the label sits in the middle of the band's values instead of on their first baseline:
+   centred on two values it falls between them, and on one it lands on that value's line
+   (same type size, and the 26px licence mark is centred on its text) */
+#root > div > .resource > div > .data.legal-props > div:not(#a):not(#b) { align-items: center; }
 
 /* the label keeps the width every other row's label has, so the CC0 mark that opens
    this row's value starts on the same edge as the values above it (width:auto here
@@ -12231,6 +12260,46 @@ html:not([lang="bo"]):not([lang^="zh"]):not([lang="km"])
 #root > div > .resource .data.ext-props > div:not(#a) { background-color: transparent; padding-left: 0; padding-right: 0; }
 .resource .data.ext-props:last-child > div:last-child:not(#a) { padding-bottom: 0; }
 
+/* "View commit history" (admins only) is the block's first child, set absolute at the
+   sheet's bottom:70px / left:100px, which on this padding put it over the last row; its
+   2px underline stayed black under a maroon label. left:auto keeps it on the label column
+   whatever the padding, and the block makes room for it under the last row. */
+#root > div > .resource > div > .data.ext-props:has(> a:first-child):not(#a) { padding-bottom: 90px; }
+
+#root > div > .resource .data.ext-props > a:first-child:not(#a) {
+   left: auto;
+   right: auto;
+   bottom: 44px;
+   height: auto;
+   padding-top: 0;
+   font-size: 13px;
+   font-weight: 600;
+   letter-spacing: 0.04em;
+   line-height: 20px;
+   color: var(--living-brand);
+   border-bottom: 1px solid currentColor;
+}
+
+#root > div > .resource .data.ext-props > a:first-child:hover:not(#a) { color: var(--living-brand-hover); }
+
+/* a log entry's field with two values (Date: the raw dateTime, then the formatted one):
+   the sheet sizes only the value right after the 150+15px sub-label, so the second one
+   wrapped back under "Date:" — it takes the same column (the sub-label is 100px up to
+   1024px). Stacked below 665px. */
+@media (min-width: 666px) {
+   .resource .data.ext-props > div[data-prop="adm:logEntry"]:not(#a) .sub > .subgroup > .subsub > h4.first + * ~ * {
+      margin-left: 165px;
+      width: calc(100% - 150px - 15px - 25px);
+      padding-right: 25px;
+   }
+}
+
+@media (min-width: 666px) and (max-width: 1024px) {
+   .resource .data.ext-props > div[data-prop="adm:logEntry"]:not(#a) .sub > .subgroup > .subsub > h4.first + * ~ * {
+      margin-left: 115px; /* the width stays the first value's, which the sheet keeps */
+   }
+}
+
 .resource .data.ext-props h2:not(#a) {
    margin: 0 0 22px;
    font-family: var(--living-serif) !important;
@@ -12244,6 +12313,12 @@ html:not([lang="bo"]):not([lang^="zh"]):not([lang="km"])
 }
 
 .resource .data.ext-props > div:not(#a) { border-top-color: rgba(42, 18, 8, 0.12); }
+
+/* the hover highlight behind a value: the sheet paints it white (!important) to stand
+   out of its old #f0f0f0 panel; on this beige panel it is a darker shade of the panel */
+.resource .data.ext-props [data-prop]:not(#a) ::before {
+   background-color: rgba(125, 99, 80, 0.1) !important;
+}
 
 /* the block that only holds the "Extended Properties" heading is not a row */
 #root > div > .resource .data > div:has(> h2):not(#a):not(#b):not(#c) {
@@ -12580,6 +12655,24 @@ html:not([lang="bo"]):not([lang^="zh"]):not([lang="km"])
    flex: 1 1 0;
    width: auto;
    min-width: 0;
+}
+
+/* .propCollapse is the "see more" rest of the list and belongs under the header, in the
+   value column. With flex 1 1 0 it shared the line with the header instead: an empty
+   half-width column (0px high while closed) that squeezed the header's two columns.
+   It takes a line of its own, pushed right past the 200px label column; the header's
+   basis fills the rest of the first line so the two cannot share it. */
+#root > div > .resource > div > .data > div > .propCollapseHeader:not(#a) { flex-basis: calc(100% - 200px); }
+
+#root > div > .resource > div > .data > div > .propCollapse:not(#a) {
+   flex: 0 0 calc(100% - 200px);
+   margin-left: auto;
+   box-sizing: border-box; /* its 6px right padding pushed it 6px left of the column */
+}
+
+@media (max-width: 665px) {
+   #root > div > .resource > div > .data > div > .propCollapseHeader:not(#a),
+   #root > div > .resource > div > .data > div > .propCollapse:not(#a) { flex-basis: 100%; }
 }
 
 /* ---- property rows sit on the baseline ----
@@ -14035,9 +14128,11 @@ html:not([lang="bo"]):not([lang^="zh"]):not([lang="km"])
  *
  * Labels were 13.5px and values a mix of 14, 14.5 and 15px depending on which sheet
  * rule reached them. The small language tags (.lang) and runs in another script
- * ([lang], sized for their own glyphs) keep their sizes.
+ * ([lang], sized for their own glyphs) keep their sizes, and so do the search-result
+ * cards embedded in a row (.AppSK, e.g. Other Versions) and the etext outline set into
+ * one (#outline, its COL/TOC/TXT badges are 11px), which have their own scale.
  */
 #root > div > .resource > div > .data > div[data-prop]:not(#a),
-#root > div > .resource > div > .data > div[data-prop]:not(#a) :is(h3, h4, a, span, div):not(.lang):not([lang]:not([lang=""])) {
+#root > div > .resource > div > .data > div[data-prop]:not(#a) :is(h3, h4, a, span, div):not(.lang):not([lang]:not([lang=""])):not(.AppSK, .AppSK *):not(#outline, #outline *) {
    font-size: 15px;
 }
