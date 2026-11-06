@@ -421,7 +421,7 @@
       "hitKW_plural":"\"{{kw}}\"ཆེད་དུ་བསྣུན་པའི་ {{count}} ",
       "added":"{{date}}",
       "inRootInstanceS": "ནང་དུ།",
-      "nHitET":"Match in etext",
+      "nHitET":"ཡིག་རྐྱང་ནང་མཚུངས།",
       "nHitET_plural":"Matches in etext",
       "inSeries":"{{issueName}} in "
    },
