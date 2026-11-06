@@ -804,7 +804,7 @@
       "fullR":"ཟིན་བྲིས་ཆ་ཚང་།",
       "notInList":"PDF འདི་ཁྱེད་ཀྱི་སློབ་གླིང་གིས་སྔོན་མངགས་བྱས་པའི་དཔེ་ཚོགས་ཤིག་གི་ཆ་ཤས་མིན། <nl/> <lk> BDRC དྲ་སྟེགས་སུ་ཕེབས་ཏེ་</lk> ཆོག་མཆན་ཐོབ་ཕྱིར་ནང་འཛུལ་བྱོས།",
       "continue":"མུ་མཐུད་ཀློག།",
-      "seeIn":"See this text in {{- txt}}",
+      "seeIn":"དཔེ་དེབ་འདི་ {{- txt}} ནང་གཟིགས།",
       "closeO":"Close outline",
       "downloadFU": "Download Preview",
       "findT":"Find Texts Related to this {{type}}",
