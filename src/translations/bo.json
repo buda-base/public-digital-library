@@ -273,7 +273,7 @@
       "bdo:instanceOf": "$t(types.instance) Of",
       "tmp:hasOpen": "$t(copyright.open)",
       "bdo:personTeacherOf": "སློབ་མ།",
-      "bdo:personTeacherOf_plural": "སློབ་ཕྲུག",
+      "bdo:personTeacherOf_plural": "སློབ་མ།",
       "bdo:personStudentOf": "དགེ་རྒན།",
       "bdo:personStudentOf_plural": "དགེ་རྒན།",
       "bdo:biblioNote": "དཔེ་ཐོའི་ཟུར་མཆན།",
