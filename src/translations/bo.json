@@ -357,7 +357,7 @@
       "tmp:hasInstance_plural":"བརྩམས་ཆོས་འདིའི་དཔེ་རྒྱུན།",
       "tmp:noPagination": "ཁྱེད་རང་གིས་ཤོག་ངོས་འོས་འཚམ་དེ་རང་ཉིད་ཀྱིས་འཚོལ་དགོས་སྲིད། རྒྱུ་མཚན་ནི་འདི་ནི་ཕྲེང་སྒྲིག་མེད་པའི་འཕྲུལ་ཡིག་ཅིག་ཡིན།",
       "tmp:BDRCworkId":"བརྩམས་ཆོས་ཀྱི་ཤོག་ངོས།",
-      "bdr:PartTypeCodicologicalVolume": "Codicological volume",
+      "bdr:PartTypeCodicologicalVolume": "ལག་བྲིས་སོགས་ལ་དཔྱད་པའི་རིག་པའི་འབོར་ཚད།",
       "tmp:topic": "Is About",
       "tmp:by":" | by: ",
       "tmp:notAvailableYet":"Not available yet"
