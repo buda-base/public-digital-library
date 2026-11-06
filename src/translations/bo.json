@@ -821,7 +821,7 @@
       "noR":"འཚོལ་འབྲས་མ་རྙེད།",
       "pageRvol":"པོད་ {{v}} གྱི་ཆོས་ཚན་ {{e}} ནས་ཤོག་གྲངས་ {{p}}",
       "explain":"ཡོངས་གྲགས་ཆེ་ཤོས་ཀྱི་དོན་ཚན་སྟོན་པ། འཚོལ་ཞིབ་གསར་པ་ཞིག་བྱེད་པའམ་ཡང་ན་གཡོན་ཕྱོགས་ཀྱི་ཚགས་སྒྲིག་དེ་བེད་སྤྱད་དེ་ཁྱེད་ཀྱིས་འཚོལ་བཞིན་པ་དེ་འཚོལ་རོགས།",
-      "explainR":"Showing the most recent items. Use the filters on the left to find what you are looking for.",
+      "explainR":"ཉེ་དུས་ཀྱི་དོན་ཚན་རྣམས་སྟོན་པ། གཡོན་ཕྱོགས་ཀྱི་ཚགས་སྒྲིག་དེ་བེད་སྤྱད་དེ་ཁྱེད་ཀྱིས་འཚོལ་བཞིན་པ་དེ་འཚོལ་རོགས།",
       "searchTn":{
          "topic": "Search texts about this topic",
          "person": "Search texts by this person or about this person",
