@@ -832,7 +832,7 @@
       "inCollection_plural":"ཕྱོགས་བསྒྲིགས་ནང་།",
       "outLn":"{{n}})",
       "checkET":"ཡོད་མེད་ཞིབ་བཤེར་སླད་འདིར་ཐུག་ཙམ་གནོན།",
-      "checkETlong":"Click to check the availability of another etext",
+      "checkETlong":"ཡིག་རྐྱང་འཕྲུལ་དེབ་གཞན་ཡོད་མེད་ཞིབ་བཤེར་སླད་འདིར་ཐུག་ཙམ་གནོན།",
       "noOtherET":"No other etext available",
       "loginToPreview":"You must be logged in to open preview on BDRC",
       "helpWorkId":"A <italic>Work</italic> in the BDRC context represents the conceptual essence of the cataloged resource: authors, languages, and what it is about (subjects). It connects together all the versions. See the user guide for more.",
