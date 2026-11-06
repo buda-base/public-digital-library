@@ -923,7 +923,7 @@
       "increaseFont": "ཡིག་གཟུགས་ཆེ་རུ་ཐོངས།",
       "decreaseFont": "ཡིག་གཟུགས་ཆུང་དུ་ཐོངས།",
       "downloadE": "ཡིག་རྐྱང་ཕབ་ལེན།",
-      "saveF": "Save downloaded file",
+      "saveF": "ཕབ་ལེན་བྱས་པའི་ཡིག་ཆ་ཉར་འཚག་གྱིས།",
       "noDL": "Download available from the viewer",
       "noDLviewer": "Please select a volume or a text within a volume for download"
    },
