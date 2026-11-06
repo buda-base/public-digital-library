@@ -149,7 +149,7 @@
          },
          "AND": {
             "title":"Exact match and query combination",
-            "body":"Surrounding your query in double quotes (<ita>\"</ita>) will only find matches that are strictly identical to your query. Combining two or more phrases with the keyword <ita>AND</ita> (upper cased, as in <ita>sde dge AND bka' 'gyur</ita>) will find results that contain all the phrases but not necessarily adjacent (for instance they can be in different fields)."
+            "body":"ཁྱེད་ཀྱི་འདྲི་ཞིབ་དེ་ཚེག་གཉིས་ཀྱི་མཐའ་འཁོར་དུ་(<ita>\"</ita>)བསྐོར་ན་ཁྱེད་ཀྱི་འདྲི་ཞིབ་དང་གཅིག་མཚུངས་ཡིན་པའི་མཐུན་པ་ཁོ་ན་འཚོལ་ཐུབ། ཚིག་གྲུབ་གཉིས་སམ་དེ་ལས་མང་བ་གནད་ཚིག་<ita>AND</ita>གི་མཉམ་དུ་སྦྱར་ན་ (མགོ་ཡིག་ཅན། དཔེར་ན། <ita>སྡེ་དགེ་ AND བཀའ་འགྱུར་</ita>) འདིས་ཚིག་གྲུབ་ཚང་མ་ཡོད་པའི་གྲུབ་འབྲས་འཚོལ་ཐུབ། འོན་ཀྱང་ཉེ་འགྲམ་དུ་གནས་པའི་ཚིག་སྒྲུབ་འཚོལ་བའི་དགོས་དོན་མེད། (དཔེར་ན། དེ་དག་ཁྱབ་ཁོངས་མི་འདྲ་བའི་ནང་དུ་ཡོད་སྲིད།)"
          },
          "chinese": {
             "title":"རྒྱ་སྐད།",
