@@ -423,7 +423,7 @@
       "inRootInstanceS": "ནང་དུ།",
       "nHitET":"ཡིག་རྐྱང་ནང་མཚུངས།",
       "nHitET_plural":"ཡིག་རྐྱང་ནང་མཚུངས།",
-      "inSeries":"{{issueName}}ནང་།"
+      "inSeries":"{{issueName}} ནང་།"
    },
    "map": {
       "touch": "Use two fingers to move the map",
