@@ -808,7 +808,7 @@
       "closeO":"ས་བཅད་དཀར་ཆག་སྒོ་རྒྱོབ།",
       "downloadFU": "ཕབ་ལེན་སྔོན་ལྟ།",
       "findT":"{{type}} འདི་དང་འབྲེལ་བའི་བརྩམས་ཆོས་རྣམས་འཚོལ།",
-      "findTP":"Find Material Related to this {{type}}",
+      "findTP":"{{type}} འདི་དང་འབྲེལ་བའི་རྒྱུ་ཆ་རྣམས་འཚོལ།",
       "findTbyP":"Find texts created by this person",
       "findTaboutT":"Find texts about this topic",
       "findTrecent":"Find Texts in the Recent Acquisitions",
