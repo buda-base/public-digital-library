@@ -418,7 +418,7 @@
       "filter":"Filter Results",
       "search":"Search Results",
       "hitKW":"\"{{kw}}\"ཆེད་དུ་བསྣུན་པའི་ {{count}} ",
-      "hitKW_plural":"{{count}} hits for \"{{kw}}\"",
+      "hitKW_plural":"\"{{kw}}\"ཆེད་དུ་བསྣུན་པའི་ {{count}} ",
       "added":"{{date}}",
       "inRootInstanceS": "in",
       "nHitET":"Match in etext",
