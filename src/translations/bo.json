@@ -152,7 +152,7 @@
             "body":"Surrounding your query in double quotes (<ita>\"</ita>) will only find matches that are strictly identical to your query. Combining two or more phrases with the keyword <ita>AND</ita> (upper cased, as in <ita>sde dge AND bka' 'gyur</ita>) will find results that contain all the phrases but not necessarily adjacent (for instance they can be in different fields)."
          },
          "chinese": {
-            "title":"Chinese",
+            "title":"རྒྱ་སྐད།",
             "body":"The search will return the same results for Traditional and Simplified characters but Pinyin search is not implemented."
          },
          "sanskrit": {
