@@ -145,7 +145,7 @@
          },
          "codes": {
             "title":"Codes and dates",
-            "body":"Searching ISBN numbers, BDRC numbers (ex: <ita>MW22084</ita>), Derge Canon numbers (ex: <ita>D24</ita>) and several other systems is supported. Dates should also return relevant results directly (ex: <ita>1745</ita>)."
+            "body":"རྒྱལ་སྤྱིའི་ཚད་ལྡན་དེབ་ཨང་འཚོལ་ཞིབ་དང་། ནང་བསྟན་དཔེ་ཚོགས་ལྟེ་གནས་ཀྱི་དཔེ་དེབ་ཨང་གྲངས་ (ex: <ita>MW22084</ita>) དང་། སྡེ་དེག་བཀའ་བསྟན་ཨང་ (ex: <ita>D24</ita>) དེ་བཞིན་མ་ལག་གཞན་ཁ་ཤས་ལ་རྒྱབ་སྐྱོར་བྱེད་ཀྱི་ཡོད། ཚེས་གྲངས་ཀྱང་ཐད་ཀར་འབྲེལ་ཡོད་གྲུབ་འབྲས་ཕྱིར་ལོག་བྱེད་དགོས། (ex: <ita>1745</ita>)"
          },
          "AND": {
             "title":"Exact match and query combination",
