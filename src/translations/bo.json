@@ -5,7 +5,7 @@
       "num": "{{num,counttobo}}",
       "lpar": "（",
       "rpar": "）",
-      "semic": "; ",
+      "semic": ";",
       "nth": "{{num}}.",
       "comma": ", "
    },
