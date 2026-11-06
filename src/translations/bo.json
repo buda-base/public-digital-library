@@ -842,7 +842,7 @@
       "searchTtrad":"{{type}} འདི་འཚོལ། ",
       "wPageO":"<nomob>(</nomob>Work<nomob>)</nomob><sp> {{of}}</sp>",
       "firstPof": "ཤོག་གྲངས་དང་པོའི་ {{type}}",
-      "lastPof": "Last page of {{type}}"
+      "lastPof": "ཤོག་ངོས་མཇུག་གི་ {{type}}"
    },
    "tradition":{
       "boT":"Tibetan Tradition",
