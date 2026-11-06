@@ -140,7 +140,7 @@
       "new":"གསར་པ།",
       "how":{
          "tibetan":{
-            "title":"Tibetan: Unicode, Wylie or English phonetics",
+            "title":"བོད་ཡིག: Unicode, Wylie ཡང་ན་དབྱིན་ཡིག་གི་སྒྲ་གདངས་རིག་པ།",
             "body":"Searching in Tibetan do not require exact orthography. Phonetics in English (ex: <ita>Chenrezig</ita>), approximate spelling in Tibetan or Wylie work.<nl/><nl/>Partial matches are returned in titles and names but only full matches are returned in etexts."
          },
          "codes": {
