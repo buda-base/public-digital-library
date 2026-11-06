@@ -809,7 +809,7 @@
       "downloadFU": "ཕབ་ལེན་སྔོན་ལྟ།",
       "findT":"{{type}} འདི་དང་འབྲེལ་བའི་བརྩམས་ཆོས་རྣམས་འཚོལ།",
       "findTP":"{{type}} འདི་དང་འབྲེལ་བའི་རྒྱུ་ཆ་རྣམས་འཚོལ།",
-      "findTbyP":"Find texts created by this person",
+      "findTbyP":"རྩོམ་པ་པོ་འདིའི་བརྩམས་ཆོས་འཚོལ།",
       "findTaboutT":"Find texts about this topic",
       "findTrecent":"Find Texts in the Recent Acquisitions",
       "searchT":"Search this {{type}}",
