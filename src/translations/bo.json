@@ -924,7 +924,7 @@
       "decreaseFont": "ཡིག་གཟུགས་ཆུང་དུ་ཐོངས།",
       "downloadE": "ཡིག་རྐྱང་ཕབ་ལེན།",
       "saveF": "ཕབ་ལེན་བྱས་པའི་ཡིག་ཆ་ཉར་འཚག་གྱིས།",
-      "noDL": "Download available from the viewer",
+      "noDL": "སྟོན་ཆས་ནས་ཕབ་ལེན་བྱེད་ཐུབ།",
       "noDLviewer": "Please select a volume or a text within a volume for download"
    },
    "access": {
