@@ -678,7 +678,7 @@
       "toggleM": "ས་ཁྲའི་ཐེབས།",
       "kw":"(Search any)",
       "nocomm_search":{
-         "true":"Exclude commentaries"
+         "true":"འགྲེལ་བཤད་ཁོངས་ནས་འདོན་པ།"
       },
       "etext_search":{
          "true":"Search inside etext, exclude titles and metadata"
