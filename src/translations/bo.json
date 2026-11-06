@@ -415,7 +415,7 @@
       "assocNoT": "འབྲེལ་ཡོད་འཚོལ་ཞིབ་གྲུབ་འབྲས།<res>{{- name}}</res>",
       "hit":"{{count}} རྡེག་པ།",
       "hit_plural":"{{count}} རྡེག་པ།",
-      "filter":"Filter Results",
+      "filter":"ཚགས་སྒྲིག་གི་གྲུབ་འབྲས།",
       "search":"Search Results",
       "hitKW":"\"{{kw}}\"ཆེད་དུ་བསྣུན་པའི་ {{count}} ",
       "hitKW_plural":"\"{{kw}}\"ཆེད་དུ་བསྣུན་པའི་ {{count}} ",
