@@ -416,7 +416,7 @@
       "hit":"{{count}} རྡེག་པ།",
       "hit_plural":"{{count}} རྡེག་པ།",
       "filter":"ཚགས་སྒྲིག་གི་གྲུབ་འབྲས།",
-      "search":"Search Results",
+      "search":"འཚོལ་འབྲས།",
       "hitKW":"\"{{kw}}\"ཆེད་དུ་བསྣུན་པའི་ {{count}} ",
       "hitKW_plural":"\"{{kw}}\"ཆེད་དུ་བསྣུན་པའི་ {{count}} ",
       "added":"{{date}}",
