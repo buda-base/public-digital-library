@@ -417,7 +417,7 @@
       "hit_plural":"{{count}} རྡེག་པ།",
       "filter":"Filter Results",
       "search":"Search Results",
-      "hitKW":"{{count}} hit for \"{{kw}}\"",
+      "hitKW":"\"{{kw}}\"ཆེད་དུ་བསྣུན་པའི་ {{count}} ",
       "hitKW_plural":"{{count}} hits for \"{{kw}}\"",
       "added":"{{date}}",
       "inRootInstanceS": "in",
