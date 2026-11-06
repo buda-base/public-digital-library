@@ -835,7 +835,7 @@
       "checkETlong":"ཡིག་རྐྱང་འཕྲུལ་དེབ་གཞན་ཡོད་མེད་ཞིབ་བཤེར་སླད་འདིར་ཐུག་ཙམ་གནོན།",
       "noOtherET":"ཡིག་རྐྱང་གཞན་མེད།",
       "loginToPreview":"BDRCདྲྭ་ཚིགས་ཐོག་སྔོན་ལྟ་ཁ་ཕྱེ་བར་ཐོ་འགོད་བྱེད་དགོས།",
-      "helpWorkId":"A <italic>Work</italic> in the BDRC context represents the conceptual essence of the cataloged resource: authors, languages, and what it is about (subjects). It connects together all the versions. See the user guide for more.",
+      "helpWorkId":"སྐབས་འདིར་ནང་བསྟན་དཔེ་ཚོགས་ལྟེ་གནས་ཀྱི་<italic>Work</italic> འདིས་མཚན་བྱང་གཅིག་པའི་དཀར་ཆག་གི་ངོ་བོ་མཚོན་གྱི་ཡོད། དེ་ཡང་རྩོམ་པ་པོ་དང་། སྐད་ཡིག། དེ་བཞིན་གང་གི་སྐོར་ཡིན་པ་༼བརྗོད་བྱ་༽། དེས་དཔེ་རྒྱུན་ཚང་མ་མཉམ་དུ་མཐུད། མང་ཙམ་ཤེས་འདོད་ན་བཀོལ་སྤྱོད་ཀྱི་ལམ་སྟོན་ལ་གཟིགས།",
       "workId1":"See the \"work\" page which combines all the different versions of this text.",
       "workId2":"The ID of this version is {{ id }}.",
       "workId3":"The overarching work ID is {{ id }}",
