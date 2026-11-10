@@ -9141,6 +9141,55 @@ a.result + #matches.mobile,
 /* the knot is the main bar's mark now, so the strip keeps the wordmark only */
 .over-nav .BDRC-link img { display: none; }
 
+/* ---- the strip, the same on the three sites ----
+ *
+ * The tagline, then the three sites (the landing page, BUDA, bdrc.io) with the
+ * current one underlined in gold, the language menu, Donate: the landing page's
+ * Header.tsx and the bdrc.io skin carry the same row. */
+.over-nav .sites { display: flex; align-items: center; gap: 20px; }
+/* the sheet spaces the strip links with margin-left:50px */
+.over-nav .sites a:not(#a) { margin: 0; }
+.over-nav .sites a[aria-current] {
+   text-decoration: underline;
+   text-decoration-color: var(--living-gold);
+   text-decoration-thickness: 1.5px;
+   text-underline-offset: 5px;
+}
+.over-nav .topbar-lang {
+   display: inline-flex; align-items: center; gap: 2px;
+   height: 32px; padding: 0; border: 0; background: none; cursor: pointer;
+   color: rgba(255, 250, 245, 0.92);
+   font-size: 12px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase;
+   transition: color 0.3s ease;
+}
+.over-nav .topbar-lang:hover { color: var(--living-gold-soft); }
+.over-nav .topbar-lang svg { width: 16px; height: 16px; }
+/* uppercase and letter-spacing mean nothing to Tibetan and Chinese */
+html[lang="bo"] .over-nav > div a,
+html[lang="bo"] .over-nav .topbar-lang,
+html[lang^="zh"] .over-nav > div a,
+html[lang^="zh"] .over-nav .topbar-lang { text-transform: none; letter-spacing: normal; }
+html[lang="bo"] .over-nav > div > div:first-child i,
+html[lang^="zh"] .over-nav > div > div:first-child i { font-style: normal; }
+
+/* ---- the top of the page in the header's colours ----
+ *
+ * The strip and the bar slide away on scroll and come back (StickyElement). Near the
+ * top of the page their spots stay in the flow while they move, and for those 0.3s
+ * what showed through was the page's own background: a white flash under the
+ * header. The top of the page is painted strip then bar, as on the landing page:
+ * 32px of brand red, then the maroon bar and its 1px hairline (80 + 1). */
+body {
+   background:
+      linear-gradient(var(--living-brand) 0 32px, var(--living-maroon) 32px 100%)
+         top / 100% 113px no-repeat,
+      #fff;
+}
+/* below 1024px the bar is 60px (+ its hairline) */
+@media (max-width: 1024px) {
+   body { background-size: 100% 92px, auto; }
+}
+
 /* ---- main bar: maroon, gold hairline instead of the grey shadow ----
  *
  * Height stays 80px: the landing page is at 84px (16px padding + 52px logo), but
@@ -10831,8 +10880,8 @@ html:not([lang="bo"]):not([lang^="zh"]):not([lang="km"])
    #root .over-nav > div:not(#a),
    #root .over-nav + .nav:not(#a) > div { padding: 0 40px; }
 
-   /* the strip links are the only way left to About BUDA / News / Programs / Donate:
-      the sheet hides all but BDRC here, and the burger holds the traditions only */
+   /* the sheet hides every strip link but the first one here; Donate is one of
+      the strip's own now, and the language menu's only place */
    #root .over-nav > div > div + div > a:not(:first-child) { display: flex; }
 
    /* the sheet's 30px on #res-container (10px below 800px) stacked with the 40px the
@@ -10949,11 +10998,9 @@ html:not([lang="bo"]):not([lang^="zh"]):not([lang="km"])
 @media (max-width: 480px) {
    #root .nav #logo a:first-child .buda-caption > span:first-child + .buda-small { display: none; }
 
-   /* the five links overflow the strip here (381px of labels for 335px of room):
-      BDRC and Donate stay, the three bdrc.io pages in between go — the footer's
-      Organization column is where they are reachable from at this width */
-   #root .over-nav > div > div + div > a:not(:first-child):not(:last-child) { display: none; }
-   #root .over-nav > div > div:last-child { gap: 16px; }
+   /* the three sites, the language and Donate on a phone's width */
+   #root .over-nav > div > div:last-child { gap: 14px; }
+   #root .over-nav .sites { gap: 14px; }
 }
 
 /* --------------------------------------------------------------------------------------------------------------------- the advanced search results

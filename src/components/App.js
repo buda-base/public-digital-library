@@ -4,7 +4,7 @@ import { ResizableBox } from 'react-resizable';
 import TextField from '@material-ui/core/TextField';
 import type Auth from '../Auth';
 import _ from "lodash";
-import { appPathname, isHomePath, HOME_PATH } from "../lib/appPath";
+import { appPathname, isHomePath, HOME_PATH, LANDING_PATH } from "../lib/appPath";
 import { GettingStartedLink } from "../lib/gettingStarted";
 import IconButton from '@material-ui/core/IconButton';
 import Tooltip from '@material-ui/core/Tooltip';
@@ -890,7 +890,7 @@ export function lang_selec(that,black:boolean = false,inPopup:false, useCheckbox
 
                         let label = "English";
                         if (i === "bo") label="བོད་ཡིག";
-                        if (i === "zh") label="中文";;
+                        if (i === "zh") label="简体中文";
                         if (i === "fr") label="Français";
                         if (i === "km") label = "ភាសាខ្មែរ";
                         let disab = ["fr"].indexOf(i) !== -1
@@ -1284,7 +1284,9 @@ export function top_right_menu(that,etextTitle,backUrl,etextres,isMirador,locati
    let uiLangPopup
    if(!that.state?.collapse?.uiLangPopup && !localStorage.getItem('uilang') && !isProxied(that)) {
       uiLangPopup = <div id="uiLangPopup">
-         <div class="bg" onClick={() => that.setState({collapse:{...that.state?.collapse,uiLangPopup:true}})}></div>
+         {/* Closing the popup keeps the language on screen as the visitor's choice:
+             unsaved, it came back on every full page load. */}
+         <div class="bg" onClick={() => { localStorage.setItem('uilang', that.props.locale); that.setState({collapse:{...that.state?.collapse,uiLangPopup:true}}) }}></div>
          <div class="fg">
             <div>
                {I18n.t("home.choose")}
@@ -1313,17 +1315,36 @@ export function top_right_menu(that,etextTitle,backUrl,etextres,isMirador,locati
    if(corpo_lang.startsWith("bo")) corpo_lang = "bo"
    else if(corpo_lang.startsWith("zh")) corpo_lang = "zh-hans"
 
+   // The red strip, the same on the three sites (the landing page, BUDA, bdrc.io):
+   // the tagline, then the three sites with the current one marked, the language
+   // menu, Donate. The language menu used to be an icon in the main bar.
+   const langLabel = { en: "English", bo: "བོད་ཡིག", zh: "简体中文", fr: "Français", km: "ភាសាខ្មែរ" }
    const overNav = (
          <div class={"over-nav mirador-"+isMirador + " simpleAdvanced-"+that?.props.simple} style={{ ...isMirador?{position:"absolute"}:{} }}>
             <div>
                <div><i>{I18n.t("topbar.preserving")}</i></div>
-               <div style={{ textTransform: "capitalize" }}>
-                  <a href={livingTheme("https://www.bdrc.io?lang="+corpo_lang)} target="_blank" rel="noopener noreferrer" /*rel="nofollow"*/ class="BDRC-link"><span className="visually-hidden">Go to BDRC homepage</span><img alt="BDRC logo" src="/BDRC-Logo_.png"/>{I18n.t("topbar.BDRC")}</a>
-                  <a href={livingTheme("https://www.bdrc.io/buda-archive?lang="+corpo_lang)} target="_blank" rel="noopener noreferrer" /*rel="nofollow"*/><span className="visually-hidden">Go to About BUDA page</span>{I18n.t("topbar.aboutB")}</a>
-                  <a href={livingTheme("https://www.bdrc.io/news?lang="+corpo_lang)} target="_blank" rel="noopener noreferrer" /*rel="nofollow"*/><span className="visually-hidden">Go to News page</span>{I18n.t("topbar.news")}</a>
-                  <a href={livingTheme("https://www.bdrc.io/programs?lang="+corpo_lang)} target="_blank" rel="noopener noreferrer" /*rel="nofollow"*/><span className="visually-hidden">Go to Programs page</span>{I18n.t("topbar.programs")}</a>
-                  {/* <Link to="/buda-user-guide">{I18n.t("topbar.guide")}</Link> */}
-                  <a href={livingTheme("https://bdrc.io/donation?lang="+corpo_lang)} target="_blank" rel="noopener noreferrer" /*rel="nofollow"*/ ><span className="visually-hidden">Go to Donation page</span><span style={{ textTransform: "capitalize", display: "inline-block" }}>{I18n.t("topbar.donate")}</span></a>
+               <div>
+                  <nav class="sites" aria-label="Sites">
+                     { LANDING_PATH && <a href={LANDING_PATH}>{I18n.t("topbar.home")}</a> }
+                     <Link to={HOME_PATH} aria-current="true">{I18n.t("topbar.buda")}</Link>
+                     <a href={livingTheme("https://www.bdrc.io/?lang="+corpo_lang)} target="_blank" rel="noopener noreferrer">{I18n.t("topbar.BDRC")}</a>
+                  </nav>
+                  <button type="button" class="topbar-lang" aria-haspopup="true" aria-expanded={!!that.state.collapse?.lang} title={I18n.t("home.choose")}
+                     onClick={(e) => that.setState({...that.state, anchorLang:e.currentTarget, collapse: {...that.state.collapse, lang:!that.state.collapse?.lang } })}>
+                     {langLabel[that.props.locale] ?? langLabel.en}<ExpandMore />
+                  </button>
+                  <Popover
+                     id="popLang"
+                     open={!!that.state.collapse?.lang}
+                     transformOrigin={{vertical:'top',horizontal:'right'}}
+                     anchorOrigin={{vertical:'bottom',horizontal:'right'}}
+                     anchorEl={that.state.anchorLang}
+                     onClose={() => that.setState({...that.state, anchorLang:null, collapse: {...that.state.collapse, lang:false } })}
+                  >
+                     { lang_selec(that, false, true) }
+                  </Popover>
+                  { (!that.props.config || !that.props.config.chineseMirror) &&
+                     <a class="donate" href={livingTheme("https://www.bdrc.io/donation/?lang="+corpo_lang)} target="_blank" rel="noopener noreferrer">{I18n.t("topbar.donate")}</a> }
                </div>
             </div>
          </div>
@@ -1628,7 +1649,6 @@ export function top_right_menu(that,etextTitle,backUrl,etextres,isMirador,locati
          <GettingStartedLink id="gs-help" titleKey="gettingStarted.help">
             <HelpOutlineIcon />
          </GettingStartedLink>
-         { lang_selec(that) }
          { that.props.auth && login }
          <IconButton id="burger" onClick={() => that.setState({collapse:{...that.state.collapse,burgerOn:!that.state.collapse.burgerOn}})}>
             { !that.state.collapse.burgerOn ? <img alt="burger icon" src="/icons/burger.svg" /> : <Close style={{color:"#222222"}}/> }

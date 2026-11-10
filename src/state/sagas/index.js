@@ -179,8 +179,14 @@ async function initiateApp(params,iri,myprops,route,isAuthCallback) {
          if(config && config.chineseMirror) locale = "zh"
 
          // 1-url param
-         if(params && params.uilang && ['bo','en','zh','km'].concat(config.khmerServer?['fr']:[]).includes(params.uilang)) locale = params.uilang
-         // 2-saved preference
+         if(params && params.uilang && ['bo','en','zh','km'].concat(config.khmerServer?['fr']:[]).includes(params.uilang)) {
+            locale = params.uilang
+            // Remembered, as a choice in the language menu is: the landing page and
+            // bdrc.io hand their language over this way, and without it the
+            // "Choose language" popup opened on every page load.
+            localStorage.setItem('uilang', locale)
+         }
+         // 2-saved preference (shared with the landing page, same origin)
          else if(val = localStorage.getItem('uilang')) locale = val
          // 3-browser default
          else if(['bo','en','zh','km'].concat(config.khmerServer?['fr']:[]).includes(val = window.navigator.language.slice(0, 2))) locale = val
@@ -193,6 +199,15 @@ async function initiateApp(params,iri,myprops,route,isAuthCallback) {
          store.dispatch(i18nextChangeLanguage(locale));
          
          // set data language preferences
+         // The language menu saves the UI language as the preset too. When the
+         // language came another way (?uilang=, or the landing page writing the
+         // shared 'uilang'), a preset left from an earlier choice would show the
+         // titles in the previous language: follow the UI language, unless the
+         // preset is a custom one.
+         const presetNow = localStorage.getItem('langpreset')
+         if(presetNow && presetNow !== locale && ['bo','en','zh','km','fr'].includes(presetNow) && config.language.data.presets[locale]) {
+            localStorage.setItem('langpreset', locale)
+         }
          // 1-saved preference
          let list, uival = val
          if((val = localStorage.getItem('langpreset')) && ((list = localStorage.getItem('langs')) || (list = [ ...config.language.data.presets[val]?.[uival] ?? [] ]).length > 0)) {
