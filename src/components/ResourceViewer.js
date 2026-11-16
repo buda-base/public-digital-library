@@ -5661,7 +5661,8 @@ class ResourceViewer extends Component<Props,State>
          if(elem[0] && elem[0].value && !this.props.manifestError && !this.props.imageAsset) {
             if(rid !== this.props.IRI) this.setState({...this.state, imageLoaded:false})
             //this.props.onHasImageAsset(elem[0].value,rid,iiifThumb);
-            assetUrl = elem[0].value
+            // Mirador 2 / BUDA only read IIIF Presentation 2: ask v2 when the provider offers both (ex. Leiden)
+            assetUrl = elem[0].value.replace(/([?&]iiifVersion=)3\b/, "$12")
          }
       }
       else if(kZprop.indexOf(bdo+"contentLocation") !== -1)

@@ -252,6 +252,13 @@ export default class API {
          if(urlParams.v) url += (url.includes("?")?"&":"?")+"v="+urlParams.v
 
          let response = await this._fetch( url, { method:"GET",headers:new Headers(head), ...xhrArgs } )
+         // retry when rate-limited (429) or temporarily unavailable (503), honoring Retry-After
+         for(let attempt = 0 ; attempt < 10 && (response.status === 429 || response.status === 503) ; attempt ++) {
+            let retryAfter = Number(response.headers.get("Retry-After"))
+            let delay = Math.min(3000, retryAfter > 0 ? retryAfter * 1000 : 1000 * Math.pow(2, attempt) * (0.75 + Math.random() * 0.5))
+            await new Promise(r => setTimeout(r, delay))
+            response = await this._fetch( url, { method:"GET",headers:new Headers(head), ...xhrArgs } )
+         }
          //loggergen.log("response:",response,etag)
          
          if (!response.ok) {
@@ -356,6 +363,11 @@ export default class API {
        {
 
             let manif =  JSON.parse(await this.getURLContents(url,false,null,["bo-Tibt"]));
+            // BUDA and Mirador 2 only read IIIF Presentation 2: when we got a v3 manifest from a provider
+            // that also serves v2 (ex. iiifpres 302 to Leiden ...?iiifVersion=3), load the v2 one instead
+            if(manif && !manif["@id"] && typeof manif.id === "string" && manif.id.match(/[?&]iiifVersion=3\b/)) {
+               manif = JSON.parse(await this.getURLContents(manif.id.replace(/([?&]iiifVersion=)3\b/, "$12"),false,null,["bo-Tibt"]));
+            }
             //loggergen.log("manif",manif)
             return manif ;
       }
