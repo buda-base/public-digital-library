@@ -211,6 +211,7 @@ type State = {
    ready? : boolean,
    imageLoaded:boolean,
    openMirador?:boolean,
+   iiifOverloaded?:boolean,
    openUV?:boolean,
    UVcanLoad?:boolean,
    openDiva?:boolean,
@@ -275,6 +276,12 @@ const xsd   = "http://www.w3.org/2001/XMLSchema#" ;
 
 //other
 const cbeta = "http://cbetaonline.dila.edu.tw/"
+
+// volumes of an etext instance that actually have etext data, ordered by volume number:
+// instanceHasVolume can list volumes that are missing from the etextrefs graph (ex: bdr:IE1KG14)
+const orderedETVolumes = (graph, instanceIRI) => _.orderBy(
+   (graph ?? []).filter(n => n.volumeOf === instanceIRI && n.sliceEndChar !== undefined),
+   [ "volumeNumber", "sliceStartChar" ], [ "asc", "asc" ])
 
 //const prefixes = { adm, bdac, bdan, bda, bdo, bdr, foaf, oa, owl, rdf, rdfs, skos, xsd, tmp, dila }
 
@@ -1235,6 +1242,8 @@ let oldScrollTop = 0, ETreinit
 class ResourceViewer extends Component<Props,State>
 {
    _annoPane = [] ;
+   _iiifOverloadProbePending = false ;
+   _iiifOverloadProbeReset ;
    //_leafletMap = null ;
    _properties = {} ;
    _dontMatchProp = "" ;
@@ -1245,7 +1254,7 @@ class ResourceViewer extends Component<Props,State>
    {
       super(props);
 
-      this.state = { uviewer:false, imageLoaded:false, collapse:{etextNav:true}, pdfOpen:false, showAnno:true, errors:{},updates:{},title:{}, anchorEl:{}, enableDicoSearch: false /* // #1028 // true*/ }
+      this.state = { uviewer:false, imageLoaded:false, iiifOverloaded:false, collapse:{etextNav:true}, pdfOpen:false, showAnno:true, errors:{},updates:{},title:{}, anchorEl:{}, enableDicoSearch: false /* // #1028 // true*/ }
 
       loggergen.log("props",props)
 
@@ -2090,9 +2099,43 @@ class ResourceViewer extends Component<Props,State>
       if(window.initFeedbucket) window.initFeedbucket()
    }
 
+   handleIIIFImageError = async (event) => {
+      const target = event && event.target
+      if(!target || target.tagName !== "IMG" || this._iiifOverloadProbePending) return
+
+      const src = target.currentSrc || target.src
+      let url
+      try {
+         url = new URL(src)
+      } catch(e) {
+         return
+      }
+      if(!/^iiif(-dev)?[.]bdrc[.]io$/.test(url.hostname)) return
+
+      this._iiifOverloadProbePending = true
+      try {
+         const response = await fetch(url.toString(), {
+            method:"HEAD",
+            credentials:"include",
+            cache:"no-store"
+         })
+         if([429,503].includes(response.status) || response.headers.get("X-IIIF-Overloaded") === "true") {
+            this.setState({iiifOverloaded:true})
+         }
+      } catch(e) {
+         // A network failure is not necessarily an overloaded image service.
+      } finally {
+         this._iiifOverloadProbeReset = setTimeout(() => {
+            this._iiifOverloadProbePending = false
+         }, 10000)
+      }
+   }
+
    componentWillUnmount() {
       //console.log("cwu:openMirador",this.props.IRI, this.props.pdfDownloadOnly, this.state.openMirador)
       window.removeEventListener('popstate', this.onBackButtonEvent);
+      window.removeEventListener('error', this.handleIIIFImageError, true);
+      if(this._iiifOverloadProbeReset) clearTimeout(this._iiifOverloadProbeReset)
 
       /* // not what's needed to reset the preview when only changing startChar
       if(this.props.disableInfiniteScroll?.outETvol?.length) {
@@ -2108,6 +2151,7 @@ class ResourceViewer extends Component<Props,State>
       //console.log("cdm:openMirador",this.props.IRI,this.props.pdfDownloadOnly,this.state.openMirador)
       
       window.addEventListener('popstate', this.onBackButtonEvent);  
+      window.addEventListener('error', this.handleIIIFImageError, true);
 
       //console.log("props:", this.props)
 
@@ -5619,7 +5663,8 @@ class ResourceViewer extends Component<Props,State>
          if(elem[0] && elem[0].value && !this.props.manifestError && !this.props.imageAsset) {
             if(rid !== this.props.IRI) this.setState({...this.state, imageLoaded:false})
             //this.props.onHasImageAsset(elem[0].value,rid,iiifThumb);
-            assetUrl = elem[0].value
+            // Mirador 2 / BUDA only read IIIF Presentation 2: ask v2 when the provider offers both (ex. Leiden)
+            assetUrl = elem[0].value.replace(/([?&]iiifVersion=)3\b/, "$12")
          }
       }
       else if(kZprop.indexOf(bdo+"contentLocation") !== -1)
@@ -5830,11 +5875,15 @@ class ResourceViewer extends Component<Props,State>
       return { doMap, doRegion, regBox }
    }
 
-   getWorkLocation = (elem, withTag = true, node) => {
+   getWorkLocation = (elem, withTag = true, node, cls = "") => {
       let _elem = elem
       if(elem && Array.isArray(elem) && elem[0]) {
-         
-         if(elem.length > 1) elem = _.orderBy(elem, ["value"], ["desc"])
+
+         if(elem.length > 1) elem = _.orderBy(elem, ["value"], [withTag && !node ? "asc" : "desc"])
+
+         // list every contentLocation, not only the first one
+         if(elem.length > 1 && withTag && !node)
+            return elem.reduce((acc,e) => [ ...acc, ...(this.getWorkLocation([e], withTag, undefined, "multiple") || []) ], [])
 
          if(!node) elem = this.getResourceBNode(elem[0].value)
          else elem = node
@@ -5847,7 +5896,7 @@ class ResourceViewer extends Component<Props,State>
 
          //loggergen.log("loca:",_elem,elem,monoVol,withTag,node)
 
-         if(!elem) return [<h4><Link to={"/show/"+shortUri(_elem[0].value)}>{shortUri(_elem[0].value)}<span className="visually-hidden">Go to {shortUri(_elem[0].value)} page</span></Link></h4>]
+         if(!elem) return [<h4 class={cls}><Link to={"/show/"+shortUri(_elem[0].value)}>{shortUri(_elem[0].value)}<span className="visually-hidden">Go to {shortUri(_elem[0].value)} page</span></Link></h4>]
 
          let loca = s => (elem && elem[bdo+"contentLocation"+s] && elem[bdo+"contentLocation"+s][0] && elem[bdo+"contentLocation"+s][0]["value"] ? elem[bdo+"contentLocation"+s][0]["value"]:null)
                
@@ -5904,11 +5953,11 @@ class ResourceViewer extends Component<Props,State>
                               {eL && <div><span>{I18n.t("location.endL",{num:eL})}</span></div>}
                            </div>
                         }>
-                           <h4>{str}{/*str && w && <span class="of"> {I18n.t("misc.of")}</span>} {w && this.uriformat(bdo+"contentLocationInstance",{value:w})*/}{this.hoverMenu()}</h4>
+                           <h4 class={cls}>{str}{/*str && w && <span class="of"> {I18n.t("misc.of")}</span>} {w && this.uriformat(bdo+"contentLocationInstance",{value:w})*/}{this.hoverMenu()}</h4>
                      </Tooltip>]
                );
             else if(w)
-               return [<h4>{this.uriformat(bdo+"contentLocationInstance",{value:w})}</h4>]
+               return [<h4 class={cls}>{this.uriformat(bdo+"contentLocationInstance",{value:w})}</h4>]
          }
          else return loca("Volume") //str.replace(/^Vol[.]/,"")
       }
@@ -7562,13 +7611,13 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
       let pagScope, volNavFirst = this.props.IRI, volNavLast = this.props.IRI, navFirstC = firstC, navLastC = lastC
       if(scopeInfo?.[0]?.instanceHasVolume) {
          pagScope = "collection"
-         let vols = this.getResourceElem(bdo+"instanceHasVolume") ?? []
-         if(vols.length) {
-            volNavFirst = shortUri(vols[0].value)
-            volNavLast = shortUri(vols[vols.length - 1].value)
-            const colScopeInfo = ETinfo.filter(e => e["@id"] === volNavLast)
+         const volNodes = orderedETVolumes(ETinfo, scopeInfo[0]["@id"])
+         if(volNodes.length) {
+            const lastVolNode = volNodes[volNodes.length - 1]
+            volNavFirst = volNodes[0]["@id"]
+            volNavLast = lastVolNode["@id"]
             navFirstC = 0
-            navLastC = colScopeInfo[0].sliceEndChar 
+            navLastC = lastVolNode.sliceEndChar 
             let loca = { ...this.props.location }  
             let search = loca.search.replace(/(^[?])|(&*startChar=[^&]+)|(&*lastVol=[^&]+)(&&+)?/g,"")
             firstPageUrl = "?startChar="+(navFirstC ?? 0)+(search?"&"+search:"") + "#open-viewer"
@@ -7842,7 +7891,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                   }           
                   else if(k == bdo+"contentLocation")
                   {
-                     tags = this.getWorkLocation(elem)
+                     tags = this.getWorkLocation(elem) || []
                   }             
                   
                   if((!this.props.config || !this.props.config.chineseMirror) && (k == bdo+"placeRegionPoly" || (k == bdo+"placeLong" && !doRegion))) {
@@ -8378,9 +8427,31 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
    } 
 
    renderMirador = (isMirador) => {
+      const authenticated = this.props.auth && this.props.auth.isAuthenticated()
+      const overloadNotice = this.state.iiifOverloaded &&
+         <Paper role="alert" style={{
+            position:"fixed", zIndex:10000, top:"75px", left:"50%",
+            transform:"translateX(-50%)", maxWidth:"680px", width:"calc(100% - 40px)",
+            padding:"16px 20px", border:"2px solid #d73449"
+         }}>
+            <strong>The image server is under very heavy load.</strong>
+            <div style={{marginTop:"6px"}}>
+               {authenticated
+                  ? "Your requests have priority; please retry shortly."
+                  : "Signed-in users currently receive priority access. Please log in, or retry shortly."}
+            </div>
+            <div style={{marginTop:"10px", textAlign:"right"}}>
+               {!authenticated &&
+                  <Button color="primary" onClick={() => this.props.auth.login(this.props.location)}>
+                     Log in for priority access
+                  </Button>}
+               <Button onClick={() => this.setState({iiifOverloaded:false})}>Dismiss</Button>
+            </div>
+         </Paper>
       
       if(isMirador)
-         return [<div id="fond" >
+         return [overloadNotice,
+               <div id="fond" >
                   <Loader loaded={false} color="#fff"/>
                </div>,
                <div id="viewer"></div>,
@@ -8390,6 +8461,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                <link rel="stylesheet" type="text/css" href="../scripts/src/lib/mirador.css"/>,
                <Script url={"../scripts/mirador/mirador.js"} onLoad={(e) => { require("@dbmdz/mirador-keyboardnavigation"); }} />,
             ]
+      return overloadNotice
    }
 
    callMonlam = (data = this.state.monlam) => {
@@ -8960,9 +9032,14 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                }
             }
             if(get.lastVol === "true") {
-               let vols = this.getResourceElem(bdo+"instanceHasVolume")
-               if(vols.length) {
-                  loadETres = shortUri(vols[vols.length - 1].value)
+               const volNodes = orderedETVolumes(this.props.eTextRefs?.["@graph"], root)
+               if(volNodes.length) {
+                  loadETres = volNodes[volNodes.length - 1]["@id"]
+               } else {
+                  let vols = this.getResourceElem(bdo+"instanceHasVolume")
+                  if(vols?.length) {
+                     loadETres = shortUri(vols[vols.length - 1].value)
+                  }
                }
             }
             if(loadETres && this.state.currentText != loadETres) {
@@ -9610,7 +9687,15 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                      else return []
                   }
 
-                  //let node = elem.filter(e => e["@id"] === top)                  
+                  // a part can have several contentLocation, return them all (sorted, resolved when possible)
+                  const locaNodes = (g) => {
+                     let cl = g.contentLocation
+                     if(!cl) return []
+                     if(!Array.isArray(cl)) cl = [ cl ]
+                     return _.orderBy(cl).map(c => ({ id:c, node:mapElem(c)[0] }))
+                  }
+
+                  //let node = elem.filter(e => e["@id"] === top)
                   let node = mapElem(top)
 
                   //loggergen.log("mapelem:",top,node,elem_map)
@@ -9750,12 +9835,10 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                               //loggergen.log("showD:",g["@id"], g.hasMatch, g)
 
                               if(g.contentLocation) {
-                                 let loca = g.contentLocation
-                                 if(!Array.isArray(loca)) loca = [ loca ]
-                                 loca = _.orderBy(loca).map(mapElem).map(l => l[0])
-                                 if(loca.length && loca[0].contentLocationVolume) {
+                                 let loca = locaNodes(g).map(l => l.node)
+                                 if(loca.length && loca[0]?.contentLocationVolume) {
                                     g.useVolumeNumber = loca[0].contentLocationVolume
-                                 }                                            
+                                 }
                               }
 
                               subtime(1)
@@ -9764,8 +9847,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                                  g.checkDLD = (ev) => {
                                     //loggergen.log("CDLD:",this.props.useDLD,g)
 
-                                    let loca = mapElem(g.contentLocation), go
-                                    if(loca?.length) loca = loca[0]
+                                    let loca = locaNodes(g)[0]?.node, go
                                     if(loca && loca.contentLocationInstance) {
                                        //loggergen.log("root:",loca)
 
@@ -9840,26 +9922,18 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                                  }
                               }
                               if(warn) {
-                                 if(Array.isArray(g.contentLocation) && g.contentLocation?.length > 1) { 
-                                    g.contentLocation = _.orderBy(g.contentLocation, ["value"], ["desc"])
-                                    g.contentLocation = g.contentLocation[0]
-                                 }
-                                 let loca = mapElem(g.contentLocation)
-                                 if(loca?.length) loca = loca[0]
-                                 if(loca && loca.contentLocationVolume && !loca.contentLocationPage) {
-                                    let ptype = g.partType
-                                    //loggergen.log("root:",loca,ptype,g)
-                                    if(ptype && !["bdr:PartTypeVolume","bdr:PartTypeSection"].includes(ptype)) {
-                                       nav.push(<div class="outline-warn"><Tooltip placement="top-end" title={
-                                          <div style={{margin:"10px"}}><Trans i18nKey="location.tooltip" components={{ newL: <br /> }} /></div>
-                                       }><WarnIcon/></Tooltip></div>)
-                                    } 
-                                 } else if(loca && Array.isArray(loca) && !loca.length){
-                                    //loggergen.log("warn:",loca,g)                                    
+                                 const locas = locaNodes(g)
+                                 // no page indication in any of the locations
+                                 const noPage = locas.length && locas.every(l => l.node?.contentLocationVolume && !l.node?.contentLocationPage)
+                                 // location(s) not resolved in the returned graph
+                                 const noLoca = g.contentLocation && (!locas.length || locas.every(l => !l.node))
+                                 let ptype = g.partType
+                                 //loggergen.log("root:",locas,ptype,g)
+                                 if(noPage && ptype && !["bdr:PartTypeVolume","bdr:PartTypeSection"].includes(ptype) || noLoca) {
                                     nav.push(<div class="outline-warn"><Tooltip placement="top-end" title={
                                        <div style={{margin:"10px"}}><Trans i18nKey="location.tooltip" components={{ newL: <br /> }} /></div>
-                                    }><WarnIcon/></Tooltip></div>)                                 
-                                 } 
+                                    }><WarnIcon/></Tooltip></div>)
+                                 }
                               }
 
 
@@ -9873,9 +9947,8 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                                     nav.push(<Link to={"/show/"+g["@id"].split(/;/)[0]} class="ulink">{I18n.t("resource.openR")}</Link>)
 
                                     if(hasIA) {
-                                       let loca = mapElem(g.contentLocation)
-                                       if(loca?.length) loca = loca[0]
-                                       let IAlink = this.getIAlink(loca)                                       
+                                       let loca = locaNodes(g)[0]?.node
+                                       let IAlink = this.getIAlink(loca)                                     
                                        if(nav.length) nav.push(<span>|</span>)                                    
                                        nav.push(<a target="_blank" rel="noopener noreferrer" href={IAlink} class="ulink">{I18n.t("resource.openIA")}</a>)
                                     }
@@ -9917,22 +9990,22 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                               
                               if(showDetails && g.contentLocation) {
                                  if(!g.details) g.details = []
-                                 // let loca = elem.filter(f => f["@id"] === g.contentLocation), 
-                                 if(Array.isArray(g.contentLocation) && g.contentLocation?.length > 1) { 
-                                    g.contentLocation = _.orderBy(g.contentLocation, ["value"], ["desc"])
-                                    g.contentLocation = g.contentLocation[0]
-                                 }
-                                 let loca = mapElem(g.contentLocation),
-                                    jLoca = {}
-                                 if(loca && loca.length) loca = loca[0]
-                                 for(let k of Object.keys(loca)) {
-                                    let val = "" + loca[k]
-                                    if(k.includes("content")) jLoca[bdo+k] = [ { value:(val.includes(":")?fullUri(loca[k]):loca[k]), type:"literal" } ]
-                                 }                                                             
-                                 if(g.contentLocationStatement) {
-                                    jLoca[bdo+"contentLocationStatement"] = [ { value:g.contentLocationStatement, type:"literal" } ]
-                                 }
-                                 g.details.push(<div class="sub loca"><h4 class="first type">{this.proplink(bdo+"contentLocation")}{I18n.t("punc.colon")} </h4>{this.getWorkLocation([{value:loca["@id"]}],true, jLoca)}</div>)
+                                 // list all the contentLocation of the part, not just the first one
+                                 const locas = locaNodes(g)
+                                 const locaTags = locas.reduce((acc,l) => {
+                                    let loca = l.node, jLoca = {}
+                                    if(!loca) return acc
+                                    for(let k of Object.keys(loca)) {
+                                       let val = "" + loca[k]
+                                       if(k.includes("content")) jLoca[bdo+k] = [ { value:(val.includes(":")?fullUri(loca[k]):loca[k]), type:"literal" } ]
+                                    }
+                                    if(g.contentLocationStatement) {
+                                       jLoca[bdo+"contentLocationStatement"] = [ { value:g.contentLocationStatement, type:"literal" } ]
+                                    }
+                                    return [ ...acc, ...(this.getWorkLocation([{value:loca["@id"]}],true, jLoca, locas.length > 1 ? "multiple" : "") || []) ]
+                                 }, [])
+                                 if(locaTags.length)
+                                    g.details.push(<div class="sub loca"><h4 class="first type">{this.proplink(bdo+"contentLocation")}{I18n.t("punc.colon")} </h4>{locaTags}</div>)
                               }
 
 

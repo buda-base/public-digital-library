@@ -435,10 +435,12 @@ const CustomHit = ({ hit, routing, that, sortItems, recent, storage, advanced /*
   const formatDate = useCallback((val) => {
     if((""+val).match(/^[0-9-]+T[0-9:.]+(Z+|[+][0-9:]+)$/)) {
 
+      /*
       const date = parseISO(val), codes = { "en": enUS, "zh": zhCN }
       const distance = formatDistance(date, new Date(), { addSuffix: true, locale: codes[that.props.locale] ?? enUS });
       return distance;
-      /*
+      */
+      
       let code = "en-US"
       let opt = { month: 'long', day: 'numeric' }
       if(that.props.locale === "bo") { 
@@ -451,7 +453,7 @@ const CustomHit = ({ hit, routing, that, sortItems, recent, storage, advanced /*
          val = new Date(val).toLocaleDateString(code, { month: 'long', day: 'numeric', year:'numeric' });  // does not work for tibetan
       }
       return val
-      */
+      
     }
   }, [that.props.locale])
 
