@@ -840,7 +840,7 @@
       "workId2":"{{ id }} དཔེ་རྒྱུན་འདིའི་ངོ་རྟགས་ཡིན།",
       "workId3":"{{ id }} ཁྱོན་ཡོངས་བརྩམས་ཆོས་ཀྱི་ངོ་རྟགས་ཡིན།",
       "searchTtrad":"{{type}} འདི་འཚོལ། ",
-      "wPageO":"<nomob>(/<nomob>བརྩམས་ཆོས།<nomob>)</nomob> <sp>{{འདིའི་}}</sp>",
+      "wPageO":"<nomob>(</nomob>Work<nomob>)</nomob><sp> {{of}}</sp>",
       "firstPof": "ཤོག་ངོས་དང་པོ་ {{type}}",
       "lastPof": "ཤོག་ངོས་མཐའ་མ་ {{type}}"
    },
