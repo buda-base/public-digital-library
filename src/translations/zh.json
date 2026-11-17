@@ -191,7 +191,7 @@
          "new": "NEW!"
       },
       "tags": {
-         "type": "དཔེ་དེབ་རིགས།",
+         "type": "Type",
          "instanceOf": "实例所属作品",
          "reset": "重置筛选",
          "include": "仅显示包含",
