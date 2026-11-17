@@ -14190,3 +14190,9 @@ html:not([lang="bo"]):not([lang^="zh"]):not([lang="km"])
 #root > div > .resource > div > .data > div[data-prop]:not(#a) :is(h3, h4, a, span, div):not(.lang):not([lang]:not([lang=""])):not(.AppSK, .AppSK *):not(#outline, #outline *) {
    font-size: 15px;
 }
+
+/* ---- /login, /logout, /auth/callback ----
+ * These pages have no header, so the header's colours painted on body (above)
+ * would sit there empty, over the message. */
+body:has(.auth-status) { background: #fff; }
+.auth-status { text-align: center; margin-top: 160px; font-size: 22px; }

@@ -169,11 +169,21 @@ export default class Auth {
     this.login = this.login.bind(this);
     this.logout = this.logout.bind(this);
     this.handleAuthentication = this.handleAuthentication.bind(this);
+    this.backToLoginPage = this.backToLoginPage.bind(this);
     this.isAuthenticated = this.isAuthenticated.bind(this);
     this.setConfig.bind(this)
     this.getProfile = this.getProfile.bind(this);
   }
 
+
+  /** Leaves /auth/callback for the page the login was started from (stored by login()). */
+  backToLoginPage() {
+    let redirect = null
+    try { redirect = JSON.parse(localStorage.getItem('auth0_redirect')) } catch(e) { }
+    if(!redirect) redirect = '/'
+    if(redirect.startsWith && redirect.startsWith("http")) window.location.href = redirect
+    else window.location.href = (redirect.pathname ?? "/") + (redirect.search ?? "")
+  }
 
   handleAuthentication(silent = false) {
     if(silent) { 
@@ -208,19 +218,17 @@ export default class Auth {
           this.getProfile(() => {
             this.checkNewUser()
           })
-          let redirect = JSON.parse(localStorage.getItem('auth0_redirect'))
-          if(!redirect) redirect = '/'
           store.dispatch(ui.logEvent(true))
-          console.log("redirect?",redirect,window.location)
-          if(redirect && redirect.startsWith && redirect.startsWith("http")) window.location.href = redirect
-          else window.location.href = (redirect.pathname ?? "/") + (redirect.search ?? "")
+          this.backToLoginPage()
           //store.dispatch(ui.loggedIn())
         } else { 
           store.dispatch(ui.logEvent(false))
-          if (err) {
-            window.history.replaceState({},"",'/');
-            loggergen.log(err);
-          }
+          if (err) loggergen.log(err);
+          // Cancelled or failed login (#error=… in the callback URL), or a callback
+          // reached without any token: go back to where the login started. A
+          // history.replaceState here would change the URL without React Router
+          // noticing, leaving the user stuck on the callback page.
+          this.backToLoginPage()
         }
       });
     }

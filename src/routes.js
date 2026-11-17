@@ -201,7 +201,7 @@ export class Redirect404 extends Component<Props>
       let redirecting = this.props.redirecting ;
       if(!redirecting) redirecting = I18n.t("resource.redirecting")
 
-      return (<div style={{textAlign:"center",marginTop:"100px",fontSize:"22px"}}>
+      return (<div className="auth-status">
          { message }
          <br/>
          { redirecting }
@@ -414,6 +414,12 @@ function StaticCompo() {
    return <StaticRouteContainer dir={"user-guide"} page={"index"} observer={true} {...{location, navigate, auth } } />
 }
 
+/** The error Auth0 sent back to /auth/callback (e.g. "access_denied" when the user cancels), if any. */
+function authError(location) {
+   const m = /[#?&]error=([^&]+)/.exec((location.hash || "") + (location.search || ""))
+   return m ? decodeURIComponent(m[1]) : null
+}
+
 function AuthCompo(props) {
    const location = useLocation();
 
@@ -425,28 +431,29 @@ function AuthCompo(props) {
          store.dispatch(initiateApp(get, undefined, undefined, get.backToViewer?"mirador":"static"));
       } else if(location.pathname === "/auth/callback") {
          store.dispatch(initiateApp(null,null,{...props, location},null,true));
-         store.dispatch(ui.logEvent(true));
+         if(!authError(location)) store.dispatch(ui.logEvent(true));
       }
    }, [location])
 
 
    if(location.pathname === "/logout") {
       return (
-         <div style={{textAlign:"center",marginTop:"100px",fontSize:"22px"}}>
+         <div className="auth-status">
             You have been logged out <br/>
             Redirecting...
          </div>
       )
    } else if(location.pathname === "/login") {
       return ( 
-         <div style={{textAlign:"center",marginTop:"100px",fontSize:"22px"}}>                              
+         <div className="auth-status">                              
             Redirecting...
          </div>
       )
    } else if(location.pathname === "/auth/callback") {
+      const error = authError(location)
       return (
-         <div style={{textAlign:"center",marginTop:"100px",fontSize:"22px"}}>
-            Successfully logged, redirecting...
+         <div className="auth-status">
+            { !error ? "Successfully logged" : error === "access_denied" ? "Login cancelled" : "Login failed" }, redirecting...
          </div>
       )
    }

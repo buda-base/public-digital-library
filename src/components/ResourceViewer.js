@@ -61,6 +61,7 @@ import CheckIcon from '@material-ui/icons/Check';
 import PhotoIcon from '@material-ui/icons/PhotoSizeSelectActual';
 import Script from 'react-load-script'
 import React, { Component } from 'react';
+import ReactDOM from 'react-dom';
 import qs from 'query-string'
 import Button from '@material-ui/core/Button';
 import Fade from '@material-ui/core/Fade';
@@ -8428,11 +8429,12 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
 
    renderMirador = (isMirador) => {
       const authenticated = this.props.auth && this.props.auth.isAuthenticated()
-      const overloadNotice = this.state.iiifOverloaded &&
+      const overloadNotice = this.state.iiifOverloaded && ReactDOM.createPortal(
          <Paper role="alert" style={{
-            position:"fixed", zIndex:10000, top:"75px", left:"50%",
+            position:"fixed", zIndex:100000000, top:"150px", left:"50%",
             transform:"translateX(-50%)", maxWidth:"680px", width:"calc(100% - 40px)",
-            padding:"16px 20px", border:"2px solid #d73449"
+            padding:"16px 20px", border:"2px solid #d73449",
+            background:"#fff", opacity:1, boxShadow:"0 4px 20px rgba(0,0,0,0.25)"
          }}>
             <strong>The image server is under very heavy load.</strong>
             <div style={{marginTop:"6px"}}>
@@ -8447,7 +8449,7 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
                   </Button>}
                <Button onClick={() => this.setState({iiifOverloaded:false})}>Dismiss</Button>
             </div>
-         </Paper>
+         </Paper>, document.body)
       
       if(isMirador)
          return [overloadNotice,
