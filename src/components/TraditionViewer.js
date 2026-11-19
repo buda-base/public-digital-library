@@ -23,9 +23,17 @@ import { fetchLabels } from "../lib/searchkit/api/LabelAPI";
 
 import { fromWylie, ewtsToDisplay } from "../lib/transliterators"
 import { topics } from "../lib/topics"
-import { HOME_PATH } from "../lib/appPath"
+import { HOME_PATH, LANDING_PATH } from "../lib/appPath"
 import { rootCrumbs } from "../lib/breadcrumbs"
 import { GettingStartedLink } from "../lib/gettingStarted"
+
+/* A card of the json can open a page of the landing instead (`landing`: an exhibition,
+   an orientation page), the same rule the landing follows for its own collection links
+   (ratnasagara, src/lib/collectionPage.ts): a collection opens its exhibition, else its
+   orientation page, else its record here. The landing is another app on the shared root,
+   so the link is a plain <a>; where there is no landing (LANDING_PATH empty, e.g. the
+   Khmer server) the card keeps its `to` and opens the collection in BUDA. */
+const landingUrl = (path) => LANDING_PATH && path ? LANDING_PATH.replace(/\/+$/, "") + path : null
 
 /* BUDA's tradition code to its orientation page */
 const GS_TRADITION = { bo: "tradition-tibetan", pi: "tradition-pali", sa: "tradition-sanskrit", zh: "tradition-chinese" }
@@ -298,7 +306,9 @@ export class TraditionViewer extends Component<State, Props>
         let author = authorLabels ? getLangLabel(this, skos+"prefLabel", authorLabels, false, true) : null
         if(author?.value && label?.value && plainName(label.value).includes(plainName(author.value))) author = null
         const authorNames = author?.value ? splitNames(author.value) : []
-        return <Link to={link} className={(img ? "has-img ":"")+(cover ? "has-cover ":"")+(c.classes??"")} onClick={scrollToTop}>
+        const landing = landingUrl(c.landing)
+        const Card = landing ? "a" : Link, target = landing ? { href: landing } : { to: link, onClick: scrollToTop }
+        return <Card {...target} className={(img ? "has-img ":"")+(cover ? "has-cover ":"")+(c.classes??"")}>
           { img && <img alt="tradition item thumbnail" src={img} loading="lazy" onError={onImgError}/> }
           <span lang={label?.lang}>{label?.value}</span>
           { authorNames.length > 0 && <span className="tradi-author" lang={author.lang}>
@@ -306,9 +316,40 @@ export class TraditionViewer extends Component<State, Props>
           </span> }
           { kind && <span className="tradi-kind">{kind}</span> }
           <span className="visually-hidden">Go to {label?.value} page</span>
-        </Link>
+        </Card>
       }
     })
+  }
+
+  /* Full-width entries for online exhibitions, drawn like the entries of the landing's
+     /exhibitions page (picture left, text right, the whole of it a link): a section of
+     kind "feature", whose `content` lists the exhibitions by their landing slug. Each
+     entry's text is the i18n keys tradition.feature.<slug>.{eyebrow,title,lead,body}
+     (the landing's own wording); its picture is the landing's, served on the shared
+     root, with an IIIF fallback where there is no landing. */
+  renderFeature(t) {
+    // same as the cards' (renderContent): a link inside the app lands at the top of the page
+    const scrollToTop = () => document.querySelector("#root > .over-nav")?.scrollIntoView()
+    const heading = this.optLabel("tradition."+t.id)
+    return <div id={"tradi-"+t.id} className="tradi-content tradi-feature">
+      { heading && <h2>{heading}</h2> }
+      { (t.content ?? []).map(e => {
+        const k = "tradition.feature."+e.slug+"."
+        const landing = landingUrl(e.landing)
+        const Card = landing ? "a" : Link, target = landing ? { href: landing } : { to: e.to, onClick: scrollToTop }
+        const onError = (ev) => { if(e.imgFallback && ev.target.src !== e.imgFallback) ev.target.src = e.imgFallback }
+        return <Card key={e.slug} {...target} className="tradi-feature-entry">
+          <span className="pic"><img src={landing ? e.img : e.imgFallback ?? e.img} alt="" loading="lazy" onError={onError} style={e.position ? { objectPosition: e.position } : undefined}/></span>
+          <span className="txt">
+            <span className="eyebrow">{I18n.t(k+"eyebrow")}</span>
+            <span className="title">{I18n.t(k+"title")}</span>
+            <span className="lead">{I18n.t(k+"lead")}</span>
+            <span className="body">{I18n.t(k+"body")}</span>
+            <span className="go">{I18n.t("tradition.feature.go")}</span>
+          </span>
+        </Card>
+      }) }
+    </div>
   }
 
   // The works a school page lists have no image in the json, but they all have a cover
@@ -464,9 +505,10 @@ export class TraditionViewer extends Component<State, Props>
     const groupLabel = group ? getLangLabel(this, skos+"prefLabel", group.label ?? [], false, true) : null
 
     // the school's own photograph, from the grid on the tradition page: its categories
-    // have no picture of their own and each takes a detail of it
-    const plate = tradi.content?.find(s => s.id === "selected")?.content
-      ?.find(s => (s.to ?? "").endsWith("/"+this.props.id))?.img
+    // have no picture of their own and each takes a detail of it. Looked for in every
+    // section, since the genres (poetry, history, karchak) have a section of their own.
+    const plate = tradi.content?.flatMap(s => Array.isArray(s.content) ? s.content : [])
+      .find(s => (s.to ?? "").endsWith("/"+this.props.id))?.img
 
     if(this.props.type === "selected" && tradi.subContent[this.props.type][this.props.id]) {
       id = this.getIdAsText(tradi.subContent[this.props.type][this.props.id].id) 
@@ -559,12 +601,13 @@ export class TraditionViewer extends Component<State, Props>
       <GettingStartedLink className="gs-section gs-tradition" slug={GS_TRADITION[this.props.tradition]} labelKey="gettingStarted.orientation" />
       { standfirst && <p className="tradi-standfirst">{standfirst}</p> }
       { tradi && tradi.content?.map(t => {
-        // a tradition may word a section its own way ("Twelve doors" counts the Tibetan
+        // a tradition may word a section its own way ("Nine doors" counts the Tibetan
         // schools), so its own key wins over the one shared by all four
         const eyebrow = this.optLabel("tradition.eyebrow."+this.props.tradition+"."+t.id, this.optLabel("tradition.eyebrow."+t.id)),
               blurb = this.optLabel("tradition.blurb."+this.props.tradition+"."+t.id, this.optLabel("tradition.blurb."+t.id))
         // tradi-cards: the sections the mockup lays out as a grid of cards, which the
         // sub-pages' listings (.main, .listing) are not
+        if(t.kind === "feature") return this.renderFeature(t)
         return <div id={"tradi-"+t.id} className={"tradi-content tradi-cards "+(t.classes ?? "")}>
           { eyebrow && <span className="tradi-eyebrow">{eyebrow}</span> }
           <h2>{I18n.t("tradition."+t.id)}</h2>
@@ -572,14 +615,20 @@ export class TraditionViewer extends Component<State, Props>
           {this.renderContent(t)}
         </div>
       })}
-      { this.props.tradition != "bo" && <div id="tradi-recent" className="tradi-content">
+      {/* One list of texts, not two: the other traditions had the full search and, under
+          it, "Recent acquisitions" on the same filter, two blocks that looked the same.
+          They keep the full search (sorted by the url, as the landing's links ask for the
+          latest scans first); the Tibetan page, too large for a full list here, keeps
+          the recent one. */}
+      { this.props.tradition != "bo" ? <div id="tradi-recent" className="tradi-content">
+        <h2>{I18n.t("tradition.all")}</h2>
         <InnerSearchPageContainer /*history={this.props.history} */  location={this.props.location} auth={this.props.auth} isOsearch={true} recent={false} /*sortByDefault={true}*/ customFilters={filters[this.props.tradition]} customPholder={I18n.t("resource.searchTtrad", {trad:I18n.t("tradition.title."+this.props.tradition+"T"),interpolation: {escapeValue: false} }) }/>          
-      </div> }
-      <div id="tradi-recent" className="tradi-content">
+      </div>
+      : <div id="tradi-recent" className="tradi-content">
         { this.optLabel("tradition.eyebrow.recent") && <span className="tradi-eyebrow">{this.optLabel("tradition.eyebrow.recent")}</span> }
         <h2>{I18n.t("tradition.recent")}</h2>
-        <InnerSearchPageContainer /*history={this.props.history} */ customPholder={I18n.t("resource.searchTtrad", {trad:I18n.t("tradition.title."+(this.props.tradition=== "bo"?"recent":this.props.tradition+"T")),interpolation: {escapeValue: false} }) } forceSearch={this.props.tradition === "bo"} location={this.props.location} auth={this.props.auth} isOsearch={true} recent={true} customFilters={filters[this.props.tradition]}/>          
-      </div>
+        <InnerSearchPageContainer /*history={this.props.history} */ customPholder={I18n.t("resource.searchTtrad", {trad:I18n.t("tradition.title.recent"),interpolation: {escapeValue: false} }) } forceSearch={true} location={this.props.location} auth={this.props.auth} isOsearch={true} recent={true} customFilters={filters[this.props.tradition]}/>          
+      </div> }
     </>)
   }
 

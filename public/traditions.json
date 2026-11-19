@@ -60,19 +60,9 @@
           "to": "/osearch/search?associatedTradition%5B0%5D=:rid&type%5B0%5D=Instance",
           "content": [
             {
-              "id": "bdr:TraditionBon",
-              "img": "/tbrc/bon.jpg",
-              "to": "/tradition/bo/bon"
-            },
-            {
               "id": "bdr:TraditionNyingma",
               "img": "/tbrc/nyingma.jpg",
               "to": "/tradition/bo/nyingma"
-            },
-            {
-              "id": "bdr:TraditionGeluk",
-              "img": "/tbrc/gelug.jpg",
-              "to": "/tradition/bo/geluk"
             },
             {
               "id": "bdr:TraditionKagyu",
@@ -83,6 +73,16 @@
               "id": "bdr:TraditionSakya",
               "img": "/tbrc/sakya.jpg",
               "to": "/tradition/bo/sakya"
+            },
+            {
+              "id": "bdr:TraditionGeluk",
+              "img": "/tbrc/gelug.jpg",
+              "to": "/tradition/bo/geluk"
+            },
+            {
+              "id": "bdr:TraditionBon",
+              "img": "/tbrc/bon.jpg",
+              "to": "/tradition/bo/bon"
             },
             {
               "id": "bdr:TraditionJonang",
@@ -103,7 +103,13 @@
               "id": "bdr:TraditionZhije",
               "img": "/tbrc/shije.jpg",
               "to": "/tradition/bo/zhije"
-            },
+            }
+          ]
+        },
+        {
+          "id": "genres",
+          "to": "/osearch/search?associatedTradition%5B0%5D=:rid&type%5B0%5D=Instance",
+          "content": [
             {
               "id": "tmp:T281",
               "img": "/tbrc/poetry.jpg",
@@ -23940,24 +23946,54 @@
                 "img": "/tbrc/352-thumb.jpg"
               },
               {
-                "id": "bdr:PR1FPL01",
+                "id": "bdr:PR3KG13",
                 "label": [
                   {
-                    "value": "Fragile Palm Leaves Project Collection",
+                    "value": "Gene Smith's Personal Collection",
                     "lang": "en"
                   }
                 ],
-                "img": "/tbrc/358-thumb.jpg"
+                "img": "https://iiif.bdrc.io/bdr:I3KG1180::I3KG11800001.jpg/pct:0,0,55,100/!800,800/0/default.jpg"
               },
               {
-                "id": "bdr:PR1EAP1150",
+                "id": "bdr:PR3KG1",
                 "label": [
                   {
-                    "value": "British Library Endangered Archives Program #1150",
+                    "value": "Sera Jey Rigzod Chenmo",
                     "lang": "en"
                   }
                 ],
-                "img": "/tbrc/756-thumb.jpg"
+                "img": "https://iiif.bdrc.io/bdr:W3KG354::thumbnail/pct:15,0,40,100/!800,800/0/default.jpg"
+              },
+              {
+                "id": "bdr:PR3KG2",
+                "label": [
+                  {
+                    "value": "Yeshe De Text Preservation Project",
+                    "lang": "en"
+                  }
+                ],
+                "img": "https://iiif.bdrc.io/bdr:W3KG231::thumbnail/full/!800,800/0/default.jpg"
+              },
+              {
+                "id": "bdr:PR3KG3",
+                "label": [
+                  {
+                    "value": "rgyud stod dpe mdzod khang /",
+                    "lang": "bo-x-ewts"
+                  }
+                ],
+                "img": "https://iiif.bdrc.io/bdr:W3KG198::thumbnail/full/!800,800/0/default.jpg"
+              },
+              {
+                "id": "bdr:PR3KG4",
+                "label": [
+                  {
+                    "value": "Densa Palchen Chosling Monastery",
+                    "lang": "en"
+                  }
+                ],
+                "img": "https://iiif.bdrc.io/bdr:W3KG264::thumbnail/full/!800,800/0/default.jpg"
               },
               {
                 "id": "bdr:PR1NGMPP00",
@@ -24468,8 +24504,238 @@
         }
       }
     },
-    "pi": {},
-    "sa": {},
-    "zh": {}
+    "pi": {
+      "content": [
+        {
+          "id": "exhibitions",
+          "kind": "feature",
+          "content": [
+            {
+              "slug": "fpl",
+              "img": "/assets/exhibition.jpg",
+              "imgFallback": "/tbrc/358-thumb.jpg",
+              "to": "/show/bdr:PR1FPL01",
+              "landing": "/exhibition/fpl"
+            },
+            {
+              "slug": "khmer",
+              "img": "/assets/exhibitions/khmer/process-scanning.jpg",
+              "imgFallback": "https://iiif.bdrc.io/bdr:MW1FEMC039097::thumbnail/full/!1000,1000/0/default.jpg",
+              "to": "/show/bdr:PR1KDPP00",
+              "landing": "/exhibition/khmer",
+              "position": "70% center"
+            },
+            {
+              "slug": "vessantara",
+              "img": "/assets/exhibitions/vessantara/slide.jpg",
+              "imgFallback": "https://iiif.bdrc.io/bdr:MW1FEMC040012::thumbnail/full/!1000,1000/0/default.jpg",
+              "to": "/osearch/associated/WA1FEMC050001/search",
+              "landing": "/exhibition/vessantara"
+            }
+          ]
+        },
+        {
+          "id": "known",
+          "content": [
+            {
+              "id": "bdr:MW1FEMC010474",
+              "label": [
+                {
+                  "value": "Dhammacakka­ppavattana Sutta",
+                  "lang": "en"
+                }
+              ],
+              "to": "/show/bdr:MW1FEMC010474",
+              "img": "https://iiif.bdrc.io/bdr:MW1FEMC010474::thumbnail/pct:25,0,40,100/!1000,1000/0/default.jpg"
+            },
+            {
+              "id": "bdr:MW1FEMC010665",
+              "label": [
+                {
+                  "value": "Dhammapada Commentary",
+                  "lang": "en"
+                }
+              ],
+              "to": "/show/bdr:MW1FEMC010665",
+              "img": "https://iiif.bdrc.io/bdr:MW1FEMC010665::thumbnail/pct:25,0,40,100/!1000,1000/0/default.jpg"
+            },
+            {
+              "id": "bdr:MW1FPL1831",
+              "label": [
+                {
+                  "value": "Pārājika, Vinaya Piṭaka",
+                  "lang": "en"
+                }
+              ],
+              "to": "/show/bdr:MW1FPL1831",
+              "img": "https://iiif.bdrc.io/bdr:MW1FPL1831::thumbnail/full/!1000,1000/0/default.jpg"
+            },
+            {
+              "id": "bdr:MW1FEMC011169",
+              "label": [
+                {
+                  "value": "The Seven Books of the Abhidhamma",
+                  "lang": "en"
+                }
+              ],
+              "to": "/show/bdr:MW1FEMC011169",
+              "img": "https://iiif.bdrc.io/bdr:MW1FEMC011169::thumbnail/pct:25,0,40,100/!1000,1000/0/default.jpg"
+            }
+          ]
+        }
+      ]
+    },
+    "sa": {
+      "content": [
+        {
+          "id": "exhibitions",
+          "kind": "feature",
+          "content": [
+            {
+              "slug": "nepal",
+              "img": "/assets/exhibitions/nepal/process-station.jpg",
+              "imgFallback": "https://iiif.bdrc.io/bdr:MW1NPL14::thumbnail/full/!1000,1000/0/default.jpg",
+              "to": "/show/bdr:PR1NEPAL00",
+              "landing": "/exhibition/nepal",
+              "position": "85% center"
+            },
+            {
+              "slug": "namasamgiti",
+              "img": "/assets/exhibitions/namasamgiti/slide.jpg",
+              "imgFallback": "https://iiif.bdrc.io/bdr:MW1NLM1927::thumbnail/full/!1000,1000/0/default.jpg",
+              "to": "/osearch/associated/WA0RK0360/search",
+              "landing": "/exhibition/namasamgiti"
+            }
+          ]
+        },
+        {
+          "id": "known",
+          "content": [
+            {
+              "id": "bdr:MWEAP676-12-15",
+              "label": [
+                {
+                  "value": "Aṣṭasāhasrikā Prajñāpāramitā",
+                  "lang": "en"
+                }
+              ],
+              "to": "/show/bdr:MWEAP676-12-15",
+              "img": "https://images.eap.bl.uk/EAP676/EAP676_12_15/2.jp2/pct:6,20,82,58/!800,800/0/default.jpg"
+            },
+            {
+              "id": "bdr:MWEAP676-14-14",
+              "label": [
+                {
+                  "value": "Lalitavistara",
+                  "lang": "en"
+                }
+              ],
+              "to": "/show/bdr:MWEAP676-14-14",
+              "img": "https://images.eap.bl.uk/EAP676/EAP676_14_14/4.jp2/pct:5,12,80,76/!800,800/0/default.jpg"
+            },
+            {
+              "id": "bdr:MWEAP676-12-2",
+              "label": [
+                {
+                  "value": "Saddharmapuṇḍarīka, the Lotus Sūtra",
+                  "lang": "en"
+                }
+              ],
+              "to": "/show/bdr:MWEAP676-12-2",
+              "img": "https://images.eap.bl.uk/EAP676/EAP676_12_2/4.jp2/pct:5,12,80,76/!800,800/0/default.jpg"
+            },
+            {
+              "id": "bdr:MWEAP676-17-1",
+              "label": [
+                {
+                  "value": "Suvarṇaprabhāsa, the Golden Light Sūtra",
+                  "lang": "en"
+                }
+              ],
+              "to": "/show/bdr:MWEAP676-17-1",
+              "img": "https://images.eap.bl.uk/EAP676/EAP676_17_1/4.jp2/pct:5,12,80,76/!800,800/0/default.jpg"
+            }
+          ]
+        }
+      ]
+    },
+    "zh": {
+      "content": [
+        {
+          "id": "exhibitions",
+          "kind": "feature",
+          "content": [
+            {
+              "slug": "chinese-canon",
+              "img": "/assets/exhibitions/chinese-canon/slide.jpg",
+              "imgFallback": "https://iiif.bdrc.io/bdr:MW3CN27191::thumbnail/full/!1000,1000/0/default.jpg",
+              "to": "/osearch/associated/WA0BC003/search",
+              "landing": "/exhibition/chinese-canon"
+            }
+          ]
+        },
+        {
+          "id": "known",
+          "content": [
+            {
+              "id": "bdr:MW2KG229491",
+              "label": [
+                {
+                  "value": "Diamond Sūtra",
+                  "lang": "en"
+                },
+                {
+                  "value": "金刚般若波罗蜜经",
+                  "lang": "zh-hans"
+                }
+              ],
+              "to": "/show/bdr:MW2KG229491"
+            },
+            {
+              "id": "bdr:MW3CN2181",
+              "label": [
+                {
+                  "value": "Mañjuśrī-nāmasaṃgīti",
+                  "lang": "en"
+                },
+                {
+                  "value": "圣妙吉祥真实名经",
+                  "lang": "zh-hans"
+                }
+              ],
+              "to": "/show/bdr:MW3CN2181"
+            },
+            {
+              "id": "bdr:MW3CN1625",
+              "label": [
+                {
+                  "value": "Praise of the Twenty-One Tārās",
+                  "lang": "en"
+                },
+                {
+                  "value": "二十一度母礼赞",
+                  "lang": "zh-hans"
+                }
+              ],
+              "to": "/show/bdr:MW3CN1625"
+            },
+            {
+              "id": "bdr:MW3CN27465",
+              "label": [
+                {
+                  "value": "Zangyao, Selected Tripiṭaka",
+                  "lang": "en"
+                },
+                {
+                  "value": "藏要",
+                  "lang": "zh-hans"
+                }
+              ],
+              "to": "/show/bdr:MW3CN27465"
+            }
+          ]
+        }
+      ]
+    }
   }
 }

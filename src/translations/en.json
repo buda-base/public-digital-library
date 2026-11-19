@@ -191,7 +191,8 @@
       },
       "donate2":"Donate to BDRC",
       "support":"We need your support",
-      "placeHda":"Search the Digital Archives"
+      "placeHda":"Search the Digital Archives",
+      "placeCollections":"Search the collections"
    },
    "Lsidebar": {
       "sortBy": {
@@ -867,6 +868,46 @@
       "lastPof": "Last page of {{type}}"
    },
    "tradition":{
+      "feature":{
+         "go":"Enter the exhibition →",
+         "chinese-canon":{
+            "eyebrow":"Chinese · China, Korea, Japan",
+            "title":"The Chinese Buddhist Canon",
+            "lead":"One canon, fourteen editions: a thousand years of carving, printing and reprinting the Buddhist scriptures in Chinese.",
+            "body":"From the Kaibao canon, the first ever printed, to the Taishō of the 1920s — scrolls, folded books, stone rubbings and modern sets, each edition reproduced in the BDRC library."
+         },
+         "nepal":{
+            "eyebrow":"Sanskrit · Nepal",
+            "title":"Sanskrit Manuscripts of Nepal",
+            "lead":"Two hundred Buddhist manuscripts from Newar family collections, photographed in Kathmandu.",
+            "body":"Ritual manuals, stories, hymns and sūtras in Sanskrit, written in Newa and Devanagari script and copied between the seventeenth and the twentieth century, from a tradition that kept Sanskrit Buddhism alive when it had died out in India."
+         },
+         "namasamgiti":{
+            "eyebrow":"Sanskrit & Tibetan · Nepal to Mongolia",
+            "title":"Chanting the Names of Mañjuśrī",
+            "lead":"The Nāmasaṃgīti, one short tantra in Newar manuscripts, at the head of the Kangyur's tantras, and in Mongolian prints.",
+            "body":"A hymn of names to the bodhisattva of wisdom: Sanskrit copies from the Kathmandu Valley in three scripts, its place at the opening of the tantras in ten Kangyurs, and the prints and manuscripts Mongolian readers recited every day."
+         },
+         "khmer":{
+            "eyebrow":"Khmer & Pali · Cambodia",
+            "title":"Khmer Manuscripts",
+            "lead":"Twelve thousand palm-leaf manuscripts from Cambodia's monasteries, read online.",
+            "body":"Doctrine and verse, codes of conduct and classical novels, the Vessantara and the seven books of the Abhidhamma, copied on palm leaf and folding paper: what Cambodia's monasteries kept, photographed in the field and recovered from the films of the 1990s."
+         },
+         "vessantara":{
+            "eyebrow":"Khmer · Cambodia",
+            "title":"The Great Birth",
+            "lead":"The Vessantara Jātaka, the prince who gave everything away, in 159 Cambodian palm-leaf manuscripts.",
+            "body":"The last life of the Buddha-to-be before his awakening, told in thirteen sections and recited in full every year: lacquered bundles tied with coloured cords, incised leaves, copies in Pali, and the same manuscripts filmed decades ago and photographed again in colour."
+         },
+         "fpl":{
+            "eyebrow":"Pali · Myanmar",
+            "title":"Fragile Palm Leaves",
+            "lead":"Eleven thousand palm-leaf bundles, catalogued in Nonthaburi and photographed leaf by leaf.",
+            "body":"Explore a curated digital experience of Southeast Asian Buddhist manuscripts. Discover the intricate script work, ancient conservation techniques, and the diverse regional traditions preserved on these delicate organic materials from the Pali tradition."
+         }
+      },
+      "exhibitions":"Online exhibitions",
       "boT":"Tibetan Tradition",
       "piT":"Pali / SEA Tradition",
       "saT":"Sanskrit Tradition",
@@ -879,15 +920,19 @@
          "recent":"Recent Acquisitions"
       },
       "desc":{
-         "boT":"The largest corpus in the archive: canonical collections, collected works, and the writings of every school — from Bon to the Rime movement."
+         "boT":"The largest corpus in the archive: canonical collections, collected works, and the writings of every school — from Bon to the Rime movement.",
+         "piT":"Palm-leaf manuscripts and printed texts of the Theravāda world — Thailand, Cambodia, Laos and Burma — in Pali and in the languages and scripts of the region.",
+         "saT":"Buddhist texts in Sanskrit, the language of much of the Indian canon, many of them palm-leaf and paper manuscripts preserved in Nepal.",
+         "zhT":"The Buddhist scriptures in Chinese, carved again and again over a thousand years: from the Kaibao canon, the first ever printed, to the Taishō of the 1920s — scrolls, folded books, stone rubbings and modern typeset sets."
       },
       "eyebrow":{
          "recent":"The living archive",
          "bo":{
-            "selected":"Twelve doors"
+            "selected":"Nine doors"
          }
       },
       "blurb":{
+         "known":"A few celebrated texts, their scans open to all.",
          "bo":{
             "selected":"Each door opens on a curated selection: the root texts, collected works, and commentaries that define the lineage."
          }
@@ -912,6 +957,8 @@
       "persons":"Persons",
       "places":"Places",
       "selected":"Selected Works by School",
+      "genres":"Poetry, History and Catalogues",
+      "known":"Well-known texts",
       "recent":"Recent Acquisitions",
       "byTopic":"By Topic",
       "byAuthor":"By Author",

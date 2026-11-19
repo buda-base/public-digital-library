@@ -22,7 +22,7 @@ import { debounce } from "../helpers/utils";
 import { lucenequerytokeyword } from "../../../components/App"
 
 // api
-import { getAutocompleteRequest } from "../api/AutosuggestAPI";
+import { getAutocompleteRequest, getCollectionAutocompleteRequest } from "../api/AutosuggestAPI";
 
 
 export function updateHistory(query, pageFilters) {
@@ -226,6 +226,16 @@ const SearchBoxAutocomplete = (props) => {
 
   const { refine: clearRefine } = useClearRefinements(props);
 
+  /* A new search starts from a clean slate (every filter is cleared), except on the
+     list of collections (type=Collection and nothing else): there the box searches
+     the collections by keyword, so the type filter stays. */
+  const typeFilter = indexUiState?.refinementList?.type ?? []
+  const collectionsOnly = typeFilter.length === 1 && typeFilter[0] === "Collection"
+  const { refine: clearKeepType } = useClearRefinements({ ...props, excludedAttributes: ["query", "type"] });
+  const clearFilters = collectionsOnly ? clearKeepType : clearRefine
+  // and the suggestions under the box are collections too, not any string of the catalogue
+  const suggest = (q) => (collectionsOnly ? getCollectionAutocompleteRequest(q) : getAutocompleteRequest(q, pageFilters)).catch(() => [])
+
   const navigate = useNavigate()
   const location = useLocation()
   
@@ -249,7 +259,7 @@ const SearchBoxAutocomplete = (props) => {
  
   useEffect(() => {
     if (query !== "") {
-      getAutocompleteRequest(query, pageFilters).then((requests) => {
+      suggest(query).then((requests) => {
         setSuggestions(requests);
       });
     }    
@@ -283,12 +293,12 @@ const SearchBoxAutocomplete = (props) => {
 
   const debouncedHandleChange = useCallback(
     debounce((newValue) => {
-      getAutocompleteRequest(newValue, pageFilters).then((requests) => {
+      suggest(newValue).then((requests) => {
         //console.log("debounced:", newValue, pageFilters)
         setSuggestions(requests);
       });
     }, 350),
-    [ pageFilters ]
+    [ pageFilters, collectionsOnly ]
   );
 
   const debouncedHandleClick = useCallback(
@@ -300,12 +310,12 @@ const SearchBoxAutocomplete = (props) => {
   );
   const handleClick = useCallback((item) => {
     if(!inner) that.props.onAdvancedSearch(false, undefined)
-    clearRefine([])
+    clearFilters()
     const newQuery = formatResponseForURLSearchParams(item.res);
     setQuery(newQuery);
     setIsFocused(false);
     redirect(refine, newQuery, pageFilters, navigate, location, forceSearch);    
-  }, [refine, pageFilters])
+  }, [refine, pageFilters, clearFilters])
 
   const handleChange = useCallback((newQuery) => {
     setSelected(-1)
@@ -367,7 +377,7 @@ const SearchBoxAutocomplete = (props) => {
         }, 200);
       }}
       onSubmit={(event) => {
-        clearRefine([])
+        clearFilters()
         event.preventDefault();
         event.stopPropagation();
 
@@ -398,7 +408,7 @@ const SearchBoxAutocomplete = (props) => {
         type="search"
         name="q"
         value={inputValue}
-        {...placeholder ? { placeholder} : { placeholder: I18n.t("topbar.placeHda") } }
+        {...placeholder ? { placeholder} : { placeholder: I18n.t(collectionsOnly ? "topbar.placeCollections" : "topbar.placeHda") } }
         onFocus={(ev) => {
           setIsFocused(true);
           handleChange(inputValue)

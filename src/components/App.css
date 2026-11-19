@@ -380,7 +380,10 @@ body { overflow:auto !important;padding-right:0 !important; /*font-family:"Robot
 .msg-popup .front p > br + a:last-child { color:white; text-transform: uppercase; text-decoration: none; font-weight: 700; padding:10px 15px; background: #d73449; border-radius: 5px; 
    display: inline-block; margin-top: 10px;
 }
-.msg-popup .front .close { color:#555; position:absolute; right:15px; top:15px; cursor: pointer;}
+.msg-popup .front .close { color:#555; position:absolute; right:10px; top:10px; cursor: pointer; background:none; border:0; padding:5px; margin:0; line-height:0; border-radius:3px; }
+.msg-popup .front .close:hover { color:#000; }
+.msg-popup .front .close:focus-visible,
+.msg-popup .front a:focus-visible { outline:2px solid #d73449; outline-offset:2px; }
 
 :not(.advanced) > .nav.nav:not(.etext-nav).msgPopupOn ~ :not(.etext-outline) + div:last-child {
    position: relative;
@@ -9267,6 +9270,35 @@ body {
 }
 .nav #gs-help svg { width: 25px; height: 25px; }
 
+/* the Search button, the landing page's own: brand red, uppercase, the glyph then the
+   word (the word goes on narrow screens). Back to the home's search box, focused. */
+.nav #topbar-search:not(#a) {
+   display: inline-flex; align-items: center; gap: 8px; flex-shrink: 0;
+   margin-left: 10px;
+   padding: 9px 18px;
+   border: 1px solid var(--living-brand);
+   border-radius: 2px;
+   background: var(--living-brand);
+   box-shadow: 0 6px 16px rgba(139, 30, 43, 0.35);
+   color: var(--living-cream);
+   text-decoration: none;
+   transition: background-color .3s, border-color .3s;
+}
+.nav #topbar-search:not(#a):hover {
+   background: var(--living-brand-hover);
+   border-color: var(--living-brand-hover);
+}
+.nav #topbar-search svg { width: 19px; height: 19px; fill: currentColor; }
+.nav #topbar-search > span:not(#a) {
+   color: var(--living-cream);
+   font-size: 13px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
+   line-height: 1;
+}
+@media screen and (max-width: 640px) {
+   .nav #topbar-search:not(#a) { padding: 9px; }
+   .nav #topbar-search > span:not(#a) { display: none; }
+}
+
 /* the burger's close state is a rotated "+" glyph, not an icon */
 .nav > div > .close { color: var(--living-cream); }
 
@@ -11003,7 +11035,11 @@ html:not([lang="bo"]):not([lang^="zh"]):not([lang="km"])
 /* the wordmark's gold caption is what the language and account buttons were
    overlapping at this width */
 @media (max-width: 480px) {
-   #root .nav #logo a:first-child .buda-caption > span:first-child + .buda-small { display: none; }
+   /* on a phone the gold caption goes, and the wordmark is centred on the knot rather
+      than hanging from the top of the caption's box */
+   #root .nav #logo a:first-child:not(#a) { align-items: center; }
+   #root .nav #logo a:first-child .buda-caption:not(#a) { justify-content: center; height: auto; }
+   #root .nav #logo a:first-child .buda-caption > span:first-child + .buda-small:not(#a) { display: none; }
 
    /* the three sites, the language and Donate on a phone's width */
    #root .over-nav > div > div:last-child { gap: 14px; }
@@ -13791,6 +13827,12 @@ html:not([lang="bo"]):not([lang^="zh"]):not([lang="km"])
    gap: 22px;
 }
 
+/* the nine Tibetan schools ("Nine doors"): a square of three by three rather than two
+   rows of four and a stray ninth (Élie's feedback), each card the width of a card in
+   the four-column grids around it (Poetry, History…): three of the four columns,
+   the fourth left empty. Below 1200px the media queries take over (three, two, one). */
+.App.tradition .tradi-card #tradi-selected:not(#a):not(#b) { grid-template-columns: repeat(3, calc((100% - 3 * 22px) / 4)); }
+
 .App.tradition .tradi-card #tradi-selected > h2:not(#a) {
    font-size: 38px;
    line-height: 1.1;
@@ -14136,7 +14178,7 @@ html:not([lang="bo"]):not([lang^="zh"]):not([lang="km"])
 
 @media screen and (max-width: 1200px) {
    .App.tradition .tradi-card #tradi-links:not(#a) { grid-template-columns: repeat(3, 1fr); }
-   .App.tradition .tradi-card #tradi-selected:not(#a) { grid-template-columns: repeat(3, 1fr); }
+   .App.tradition .tradi-card #tradi-selected:not(#a):not(#b) { grid-template-columns: repeat(3, 1fr); }
 }
 
 @media screen and (max-width: 900px) {
@@ -14161,7 +14203,7 @@ html:not([lang="bo"]):not([lang^="zh"]):not([lang="km"])
    .App.tradition .tradi-card h1:not(#a) { font-size: 36px; }
    .App.tradition .tradi-card .tradi-cards:not(#a) { grid-template-columns: repeat(2, 1fr); }
    .App.tradition .tradi-card #tradi-links:not(#a),
-   .App.tradition .tradi-card #tradi-selected:not(#a) { grid-template-columns: repeat(2, 1fr); }
+   .App.tradition .tradi-card #tradi-selected:not(#a):not(#b) { grid-template-columns: repeat(2, 1fr); }
    .App.tradition .tradi-card #tradi-selected > h2:not(#a) { font-size: 30px; }
    .App.tradition .tradi-card #tradi-recent:not(#a) {
       padding-top: 40px;
@@ -14173,7 +14215,7 @@ html:not([lang="bo"]):not([lang^="zh"]):not([lang="km"])
 @media screen and (max-width: 620px) {
    .App.tradition .tradi-card .tradi-cards:not(#a),
    .App.tradition .tradi-card #tradi-links:not(#a),
-   .App.tradition .tradi-card #tradi-selected:not(#a) { grid-template-columns: 1fr; }
+   .App.tradition .tradi-card #tradi-selected:not(#a):not(#b) { grid-template-columns: 1fr; }
 }
 
 
@@ -14196,3 +14238,58 @@ html:not([lang="bo"]):not([lang^="zh"]):not([lang="km"])
  * would sit there empty, over the message. */
 body:has(.auth-status) { background: #fff; }
 .auth-status { text-align: center; margin-top: 160px; font-size: 22px; }
+
+/* ---- the tradition pages' exhibition entries (TraditionViewer.renderFeature) ----
+ *
+ * The entries of the landing's /exhibitions page (ratnasagara, exhibition/list.css):
+ * picture left, text right, the whole entry a link. :not(#a) and !important for
+ * the same reasons as the cards above (the sheet's span and font rules).
+ */
+.App.tradition .tradi-card .tradi-feature:not(#a) { display: grid; gap: 22px; }
+.App.tradition .tradi-card .tradi-feature > h2:not(#a) { margin-bottom: 0; }
+
+.App.tradition .tradi-card .tradi-feature-entry:not(#a) {
+   display: grid;
+   grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+   min-height: 320px;
+   margin: 0;
+   background: var(--living-cream-bg);
+   border: 1px solid var(--living-band-line);
+   border-radius: 2px;
+   overflow: hidden;
+   text-decoration: none;
+   transition: box-shadow .25s, transform .25s, border-color .25s;
+}
+.App.tradition .tradi-card .tradi-feature-entry:hover:not(#a) {
+   transform: translateY(-2px);
+   box-shadow: 0 14px 34px rgba(42, 18, 8, 0.13);
+   border-color: rgba(139, 30, 43, 0.35);
+}
+.App.tradition .tradi-feature-entry .pic:not(#a) { position: relative; display: block; overflow: hidden; background: var(--living-band); }
+.App.tradition .tradi-feature-entry .pic img:not(#a) {
+   position: absolute; inset: 0; width: 100%; height: 100%; margin: 0;
+   object-fit: cover; transition: transform 1.2s;
+}
+.App.tradition .tradi-feature-entry:hover .pic img:not(#a) { transform: scale(1.04); }
+.App.tradition .tradi-feature-entry .txt:not(#a) { display: flex; flex-direction: column; justify-content: center; padding: 36px 44px; }
+.App.tradition .tradi-feature-entry .txt > span:not(#a) { display: block; }
+.App.tradition .tradi-feature-entry .eyebrow:not(#a) {
+   margin-bottom: 14px; font-size: 11.5px; font-weight: 700; text-transform: uppercase;
+   letter-spacing: 0.2em; color: var(--living-brand);
+}
+.App.tradition .tradi-feature-entry .title:not(#a) {
+   margin-bottom: 12px; font-family: var(--living-serif) !important; font-size: 34px;
+   line-height: 1.1; color: var(--living-ink);
+}
+.App.tradition .tradi-feature-entry .lead:not(#a) { margin-bottom: 12px; font-size: 16.5px; line-height: 1.55; color: var(--living-ink-soft); }
+.App.tradition .tradi-feature-entry .body:not(#a) { font-size: 15px; line-height: 1.65; color: var(--living-ink-soft); }
+.App.tradition .tradi-feature-entry .go:not(#a) {
+   margin-top: 22px; font-size: 12px; font-weight: 700; text-transform: uppercase;
+   letter-spacing: 0.14em; color: var(--living-brand);
+}
+@media screen and (max-width: 860px) {
+   .App.tradition .tradi-card .tradi-feature-entry:not(#a) { grid-template-columns: 1fr; }
+   .App.tradition .tradi-feature-entry .pic:not(#a) { height: 220px; }
+   .App.tradition .tradi-feature-entry .txt:not(#a) { padding: 26px 22px 30px; }
+   .App.tradition .tradi-feature-entry .title:not(#a) { font-size: 28px; }
+}

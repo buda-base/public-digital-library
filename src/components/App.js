@@ -419,10 +419,32 @@ export const langProfile = [
 ]
 */
 
+/*
+ * The popup message of config.msg (the donation ask) shows on BUDA's home and
+ * tradition pages only, never on records, the reader or search results, where it
+ * got in the way of the work (testing feedback, 2026-10). It waits for the
+ * visitor's second page view, and counts as seen as soon as it shows: closing it
+ * is not needed for it to stay away for showEveryNDay days.
+ */
+const MSG_POPUP_VIEWS = "msg-popup-views"
+let lastCountedPage = null
+const msgPopupShownThisLoad = new Set()
+
+const storageGet = (k) => { try { return localStorage.getItem(k) } catch(e) { return null } }
+const storageSet = (k, v) => { try { localStorage.setItem(k, v) } catch(e) { } }
+
+// once per page (path + query), however many times it renders
+export const countPageView = () => {
+   const page = window.location.pathname + window.location.search
+   if(page === lastCountedPage) return
+   lastCountedPage = page
+   storageSet(MSG_POPUP_VIEWS, String((Number(storageGet(MSG_POPUP_VIEWS)) || 0) + 1))
+}
+
+const msgPopupAllowedHere = () => isHomePath(window.location.pathname) || window.location.pathname.startsWith("/tradition/")
+
 export const popupIsHidden = (that, m, lab) => {
 
-   //console.log("pih:",that,m,lab)
-   
    // condition to show popup 
    let condition      
    if(!m.condition) 
@@ -430,33 +452,77 @@ export const popupIsHidden = (that, m, lab) => {
    else if(m.condition && m.condition.match(/^[.a-zA-Z]+$/)) {         
       condition = eval(m.condition) ? true: false;
    } 
-   //loggergen.log("condition:", m.condition, condition)
 
-   let hidden = that.state.collapse?.["msgPopup"+(m.id?"-"+m.id:"")]
+   const id = m.id ? "-" + m.id : ""
+   let hidden = that.state.collapse?.["msgPopup" + id]
+   const onProxiedDonation = isProxied(that) && lab?.value?.includes("/donation/")
 
-   if(m.popup) {         
-      let showEveryNDay = 30
-      if(m.showEveryNDay != undefined) showEveryNDay = m.showEveryNDay
-      const wasClosed = localStorage.getItem("msg-popup-closed"+(m.id?"-"+m.id:"")) 
-      const tooOld = showEveryNDay != -1 && Date.now() - wasClosed > showEveryNDay * 24 * 3600 * 1000
-      //loggergen.log("sENd:",m.id,hidden,showEveryNDay,m.showEveryNDay,wasClosed,Date.now(),tooOld)         
-      if(!hidden && condition && (!wasClosed || tooOld)) {
-         //loggergen.log("show!",hidden) 
-         hidden = false               
-      } else if(condition === undefined && !hidden || condition == false && !hidden || condition && wasClosed && !tooOld && !hidden) {
-         //loggergen.log("hide!")                
-         hidden = true
-      } else if(condition && hidden && !wasClosed) {
-         hidden = false
-         //loggergen.log("show!!",hidden) 
-      }
+   if(!m.popup) return hidden || onProxiedDonation
+
+   if(hidden || !condition || onProxiedDonation) return true
+
+   // the unconditional ask (donation) only; a conditional one (welcome after
+   // registering) is an answer to what the visitor just did and shows at once
+   if(!m.condition) {
+      if(!msgPopupAllowedHere()) return true
+      countPageView()
+      if((Number(storageGet(MSG_POPUP_VIEWS)) || 0) < 2) return true
    }
-   
-   hidden = hidden || isProxied(that) && lab.value.includes("/donation/") 
 
-   //console.log("pih!",hidden)
+   const key = "msg-popup-closed" + id
+   if(msgPopupShownThisLoad.has(key)) return false
 
-   return hidden
+   const showEveryNDay = m.showEveryNDay != undefined ? m.showEveryNDay : 30
+   const lastShown = Number(storageGet(key)) || 0
+   const tooOld = showEveryNDay != -1 && Date.now() - lastShown > showEveryNDay * 24 * 3600 * 1000
+   if(lastShown && !tooOld) return true
+
+   msgPopupShownThisLoad.add(key)
+   storageSet(key, String(Date.now()))
+   return false
+}
+
+/*
+ * The popup as a modal dialog: focus moves into it, Tab stays inside, Esc and a
+ * click outside close it, and focus goes back where it was.
+ */
+const MsgPopup = ({ onClose, children }) => {
+   const frontRef = React.useRef(null)
+   const closeRef = React.useRef(null)
+   const onCloseRef = React.useRef(onClose)
+   onCloseRef.current = onClose
+   const textId = React.useRef("msg-popup-text-" + Math.random().toString(36).slice(2)).current
+
+   React.useEffect(() => {
+      const previous = document.activeElement
+      if(closeRef.current) closeRef.current.focus()
+      const onKey = (e) => {
+         if(e.key === "Escape" || e.key === "Esc") {
+            e.stopPropagation()
+            onCloseRef.current()
+         } else if(e.key === "Tab" && frontRef.current) {
+            const items = Array.from(frontRef.current.querySelectorAll('a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])'))
+            if(!items.length) return
+            const first = items[0], last = items[items.length - 1]
+            if(!frontRef.current.contains(document.activeElement)) { e.preventDefault(); first.focus() }
+            else if(e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus() }
+            else if(!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus() }
+         }
+      }
+      document.addEventListener("keydown", onKey, true)
+      return () => {
+         document.removeEventListener("keydown", onKey, true)
+         if(previous && previous.focus && document.body.contains(previous)) previous.focus()
+      }
+   }, [])
+
+   return <div class="msg-popup">
+      <div class="back" onClick={onClose}></div>
+      <div class="front" ref={frontRef} role="dialog" aria-modal="true" aria-describedby={textId}>
+         <button type="button" class="close" ref={closeRef} onClick={onClose} aria-label={I18n.t("viewer.close")}><Close aria-hidden="true"/></button>
+         {children(textId)}
+      </div>
+   </div>
 }
 
 export const renderBanner = (that, infoPanel, isResourcePage) => {
@@ -480,7 +546,12 @@ export const renderBanner = (that, infoPanel, isResourcePage) => {
          let content = [], str = lab.value
          while(link = str.match(/([^!]|^|\n)(\[([^\]]+?)\]\(([^)]+?)\))/m)) {
             let arr = str.split(link[2])
-            content = content.concat([ arr[0], <a href={link[4]} target="_blank" rel="noopener noreferrer"><span className="visually-hidden">Go to {link[3]}</span>{link[3]}</a> ])
+            let href = livingTheme(link[4])
+            if(href !== link[4] && !/[?&]lang=/.test(href)) {
+               const lg = that.props.locale || "en"
+               href = href.replace(/([?&]living=true)/, "$1&lang=" + (lg.startsWith("bo") ? "bo" : lg.startsWith("zh") ? "zh-hans" : lg))
+            }
+            content = content.concat([ arr[0], <a href={href} target="_blank" rel="noopener noreferrer"><span className="visually-hidden">Go to {link[3]}</span>{link[3]}</a> ])
             str = arr.slice(1).join(" ")
          }
          if(str) content.push(str)
@@ -516,17 +587,14 @@ export const renderBanner = (that, infoPanel, isResourcePage) => {
          const closePopup = (ev) => {
             //console.log("cpp:",that,m)            
             that.setState({collapse:{ ...that.state.collapse, ["msgPopup"+(m.id?"-"+m.id:"")]: true }})
-            localStorage.setItem("msg-popup-closed"+(m.id?"-"+m.id:""), Date.now())
+            storageSet("msg-popup-closed"+(m.id?"-"+m.id:""), String(Date.now()))
          }
          
          // layout
          if(!m.popup) return <p>{icon}{content}</p>
-         else if(!hidden) return <div class="msg-popup">
-            <div class="back" onClick={closePopup}></div>
-            <div class="front">
-               <Close className="close" onClick={closePopup}/>
+         else if(!hidden) return <MsgPopup onClose={closePopup}>{ (textId) => <>
                { icon && <p>{icon}</p> }
-               <p>{content.map(c => { 
+               <p id={textId}>{content.map(c => { 
                   // handle newlines
                   if(c?.match && c.match(/\n/)) {
                      const p = c.split("\n")
@@ -537,8 +605,7 @@ export const renderBanner = (that, infoPanel, isResourcePage) => {
                   }
                   else return c
                })}</p>
-            </div>
-         </div>
+            </> }</MsgPopup>
       }
    }) }</div>)
 
@@ -905,7 +972,7 @@ export function lang_selec(that,black:boolean = false,inPopup:false, useCheckbox
                            
                            if(list && that.props.langIndex != "custom") localStorage.setItem("customlangpreset",list)
 
-                           that.setState({...that.state,anchorLang:null,collapse: {...that.state.collapse, lang:false, uiLangPopup:true }, titles:false, ldspdi:false }); 
+                           that.setState({...that.state,anchorLang:null,collapse: {...that.state.collapse, lang:false }, titles:false, ldspdi:false }); 
                            document.documentElement.lang = i
 
                            that.props.onSetLocale(i);
@@ -1200,6 +1267,7 @@ function InstantSearchBox(props) {
 
 export function top_right_menu(that,etextTitle,backUrl,etextres,isMirador,location,infoPanel,sourcePage)
 {
+   countPageView()
    let onZhMirror = (that.props.config && that.props.config.chineseMirror)
    let onKhmerServer = (that.props.config && that.props.config.khmerServer)
 
@@ -1280,22 +1348,6 @@ export function top_right_menu(that,etextTitle,backUrl,etextres,isMirador,locati
    let profileName = I18n.t("topbar.profile")
    if(that.props.profileName) profileName = that.props.profileName
 
-
-   let uiLangPopup
-   if(!that.state?.collapse?.uiLangPopup && !localStorage.getItem('uilang') && !isProxied(that)) {
-      uiLangPopup = <div id="uiLangPopup">
-         {/* Closing the popup keeps the language on screen as the visitor's choice:
-             unsaved, it came back on every full page load. */}
-         <div class="bg" onClick={() => { localStorage.setItem('uilang', that.props.locale); that.setState({collapse:{...that.state?.collapse,uiLangPopup:true}}) }}></div>
-         <div class="fg">
-            <div>
-               {I18n.t("home.choose")}
-               <span id="lang"  style={{margin:"0 0 0 10px"}}><img alt="language icon" src={"/icons/LANGUE"+(onKhmerUrl?"km":"")+".svg"}/></span>
-            </div>
-            <div>{ lang_selec(that, false, true) }</div>
-         </div>
-      </div>
-   }
 
    // no need anymore
    const portrait = null //<div class="portrait-warn" onClick={()=>store.dispatch(closePortraitPopup())}><div><span></span><p data-tilt1={I18n.t("misc.tilt1")} data-tilt2={I18n.t("misc.tilt2")}></p></div></div>
@@ -1378,7 +1430,6 @@ export function top_right_menu(that,etextTitle,backUrl,etextres,isMirador,locati
       return (<>
       {!that.props.portraitPopupClosed && portrait}
       {/* <div class={"mobile-button top"+(!that.state.collapse.navMenu?" off":" on")} onClick={()=>that.setState({collapse:{...that.state.collapse,navMenu:!that.state.collapse.navMenu}})}><img alt="burger icon" src="/icons/burger.svg" /></div>       */}
-      {uiLangPopup}
       {overNav}
       <StickyElement className={"nav etext-nav"+(onZhMirror?" zhMirror":"")+(that.state.collapse.navMenu?" on":"") +(msgPopupOn?" msgPopupOn":"") }>
          <div>
@@ -1561,6 +1612,27 @@ export function top_right_menu(that,etextTitle,backUrl,etextres,isMirador,locati
          ev.preventDefault()
       } 
 
+      /* The Search button of the bar, as on the landing page: back to the home's search
+         box, focused. The box exists only once the home has rendered, so it is looked
+         for until it appears (the home's own box, not the Recent Acquisitions one in
+         #samples), rather than after a fixed delay. */
+      const topSearchFunc = (ev) => {
+         ev.preventDefault()
+         if(that.state.collapse.burgerOn) that.setState({collapse:{...that.state.collapse, burgerOn:false}})
+         if(!isHomePath()) {
+            that.props.navigate({pathname: HOME_PATH, search:""})
+            if(that.props.keyword) that.props.onResetSearch()
+         }
+         let tries = 0
+         const focus = () => {
+            const input = isHomePath() && [...document.querySelectorAll(".ais-SearchBox-input")].find(i => i.offsetParent && !i.closest("#samples"))
+            if(!input) { if(++tries < 50) setTimeout(focus, 100); return }
+            input.scrollIntoView({block: "center", behavior: "smooth"})
+            input.focus({preventScroll: true})
+         }
+         setTimeout(focus, 50)
+      }
+
       const aboutLink = (id) => <a {...{id}}  href={livingTheme("https://bdrc.io")} target="_blank" rel="noopener noreferrer"><span className="visually-hidden">Go to BDRC About page</span>{I18n.t("topbar.about")}</a>
 
       const newSearchLink = (id) => <Link {...{id}} to={HOME_PATH} onClick={newSearchFunc}>
@@ -1584,7 +1656,6 @@ export function top_right_menu(that,etextTitle,backUrl,etextres,isMirador,locati
       return ([
       !that.props.portraitPopupClosed? portrait:null,
       // <div class={"mobile-button top"+(!that.state.collapse.navMenu?" off":" on")} onClick={() => that.setState({collapse:{...that.state.collapse,navMenu:!that.state.collapse.navMenu}})}><img alt="burger icon" src="/icons/burger.svg" /></div>,
-      uiLangPopup,
       overNav,
       <StickyElement className={"nav"+(onZhMirror?" zhMirror":"")+ (that.state.collapse.navMenu?" on":"")+(onKhmerServer||onKhmerUrl?" khmerServer":"")
                +(msgPopupOn?" msgPopupOn":"")+(that.state.collapse.burgerOn?" on":"")
@@ -1650,6 +1721,9 @@ export function top_right_menu(that,etextTitle,backUrl,etextres,isMirador,locati
             <HelpOutlineIcon />
          </GettingStartedLink>
          { that.props.auth && login }
+         { !onKhmerServer && <Link id="topbar-search" to={HOME_PATH} onClick={topSearchFunc} title={I18n.t("home.search")}>
+            <SearchIcon /><span>{I18n.t("home.search")}</span>
+         </Link> }
          <IconButton id="burger" onClick={() => that.setState({collapse:{...that.state.collapse,burgerOn:!that.state.collapse.burgerOn}})}>
             { !that.state.collapse.burgerOn ? <img alt="burger icon" src="/icons/burger.svg" /> : <Close style={{color:"#222222"}}/> }
          </IconButton>         

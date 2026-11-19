@@ -3,6 +3,10 @@
  * the file that drives the Tibetan tradition page (src/components/TraditionViewer.js,
  * loaded through src/lib/api.js).
  *
+ * READ ../../TRADITIONS.md BEFORE CHANGING THIS SCRIPT: it lists what traditions.json
+ * holds outside the path generated here (sections, the pi/sa/zh pages, the collection
+ * lists, the card fields), all of which has to survive a run.
+ *
  * ---------------------------------------------------------------------------
  * What it generates, and what it does NOT
  * ---------------------------------------------------------------------------
