@@ -75,7 +75,7 @@ function applySerif(def) {
    // latin-only too, and titles mix romanisation with Tibetan / Khmer / Mongolian
    document.documentElement.style.setProperty(
       "--living-serif",
-      `"${def.family}", "Noto Serif Tibetan", "Noto Serif Khmer", "Noto Sans Mongolian", Georgia, "Times New Roman", serif`,
+      `"${def.family}", "Literata IAST fallback", "Noto Serif Tibetan", "Noto Serif Khmer", "Noto Sans Mongolian", Georgia, "Times New Roman", serif`,
    )
 }
 

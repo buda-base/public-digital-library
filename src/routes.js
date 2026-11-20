@@ -155,7 +155,7 @@ class LogErrorBoundary extends React.Component {
         // Vous pouvez afficher n'importe quelle UI de repli.
         // Raw href (full page load), so it needs the PUBLIC_URL prefix that
         // react-router's basename adds for <Link>.
-        return <h1>We're sorry but the website encountered an unexpected error.<br/>Go to <a href={PUBLIC_PREFIX + HOME_PATH}><span className="visually-hidden">Go to homepage</span>homepage</a></h1>
+        return <h1 className="app-crash">We're sorry but the website encountered an unexpected error.<br/>Go to <a href={PUBLIC_PREFIX + HOME_PATH}><span className="visually-hidden">Go to homepage</span>homepage</a></h1>
       }
   
       return this.props.children;
@@ -189,7 +189,8 @@ export class Redirect404 extends Component<Props>
             }
             window.top.postMessage(JSON.stringify(msg), "*")
          } else {            
-            that.props.navigate(to)             
+            if(that.props.navigate) that.props.navigate(to)
+            else window.location.href = to
          }
       } })(this), delay) ;
    }
@@ -197,7 +198,7 @@ export class Redirect404 extends Component<Props>
    render()
    {
       let message = this.props.message ;
-      if(!message) message = "Page not found: "+this.props.location.pathname ;
+      if(!message) message = "Page not found: "+(this.props.location ?? window.location).pathname ;
 
       let redirecting = this.props.redirecting ;
       if(!redirecting) redirecting = I18n.t("resource.redirecting")

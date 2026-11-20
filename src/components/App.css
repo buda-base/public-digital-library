@@ -9082,8 +9082,32 @@ a.result + #matches.mobile,
  * latin-only, so Tibetan, Khmer, Mongolian and Chinese still fall through to Noto
  * exactly as before. Loaded by the @import at the top of this file.
  */
+/* Hanken Grotesk has no dotted IAST letters (ṁ ṃ ṇ ḍ ḥ ṛ ṝ ṣ ṭ ḷ ḹ), which then fell
+ * through to the self-hosted Noto Sans — taller and wider, so they stuck out. Same
+ * Noto Sans, but scaled to Hanken's x-height (m: 502u vs 549u) and limited by
+ * unicode-range to Latin Extended Additional, so it only fills Hanken's gaps.
+ */
+@font-face {
+  font-family: "Hanken IAST fallback";
+  font-style: normal;
+  font-weight: 100 900;
+  size-adjust: 91%;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/notosans/v42/o-0bIpQlx3QUlC5A4PNB6Ryti20_6n1iPHjc5aDdu2ui.woff2) format('woff2');
+  unicode-range: U+1E00-1EFF;
+}
+@font-face {
+  font-family: "Hanken IAST fallback";
+  font-style: italic;
+  font-weight: 100 900;
+  size-adjust: 91%;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/notosans/v42/o-0ZIpQlx3QUlC5A4PNr4C5OaxRsfNNlKbCePevtt3OmDyw.woff2) format('woff2');
+  unicode-range: U+1E00-1EFF;
+}
+
 :root {
-   --buda-sans: "Hanken Grotesk", "Noto Sans", "Noto Serif Tibetan", "Noto Serif Khmer", "Noto Sans Mongolian", "Roboto", "Helvetica", "Arial", sans-serif;
+   --buda-sans: "Hanken Grotesk", "Hanken IAST fallback", "Noto Sans", "Noto Serif Tibetan", "Noto Serif Khmer", "Noto Sans Mongolian", "Roboto", "Helvetica", "Arial", sans-serif;
 }
 
 :root {
@@ -9371,8 +9395,30 @@ body {
    stack uses for the scripts it has no glyphs for, so a title that mixes romanisation
    and script (hani, mymr, and any tag not caught by the guards on the rules below)
    resolves to the same faces it would in the sans, instead of a generic serif. */
+/* Literata has no ṁ/Ṁ (U+1E41/1E40, IAST anusvara variant common in Nepalese mss.
+   titles), so the browser fell back to a random font for that one glyph. Borrow it
+   from Noto Serif, restricted by unicode-range so nothing else is downloaded. */
+@font-face {
+  font-family: "Literata IAST fallback";
+  font-style: normal;
+  font-weight: 100 900;
+  size-adjust: 96%; /* Noto Serif m is 546u tall vs ~525u in Literata */
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/notoserif/v33/ga6daw1J5X9T9RW6j9bNVls-hfgvz8JcMofYTYf0D33Esw.woff2) format('woff2');
+  unicode-range: U+1E40-1E41;
+}
+@font-face {
+  font-family: "Literata IAST fallback";
+  font-style: italic;
+  font-weight: 100 900;
+  size-adjust: 96%; /* Noto Serif m is 546u tall vs ~525u in Literata */
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/notoserif/v33/ga6faw1J5X9T9RW6j9bNfFIMZhhWnFTyNZIQD1-_P3Hct-FG.woff2) format('woff2');
+  unicode-range: U+1E40-1E41;
+}
+
 :root {
-   --living-serif: "Literata", "Noto Serif Tibetan", "Noto Serif Khmer", "Noto Sans Mongolian",
+   --living-serif: "Literata", "Literata IAST fallback", "Noto Serif Tibetan", "Noto Serif Khmer", "Noto Sans Mongolian",
       Georgia, "Times New Roman", serif;
 }
 
@@ -14332,10 +14378,12 @@ html:not([lang="bo"]):not([lang^="zh"]):not([lang="km"])
    font-size: 15px;
 }
 
-/* ---- /login, /logout, /auth/callback ----
+/* ---- /login, /logout, /auth/callback, 404 and the crash page (LogErrorBoundary) ----
  * These pages have no header, so the header's colours painted on body (above)
  * would sit there empty, over the message. */
-body:has(.auth-status) { background: #fff; }
+body:has(.auth-status), body:has(.app-crash) { background: #fff; }
+.app-crash { text-align: center; margin: 160px 16px 0; font-size: 22px; font-weight: 500; line-height: 1.5; }
+.app-crash a { color: var(--living-brand); }
 .auth-status { text-align: center; margin-top: 160px; font-size: 22px; }
 
 /* ---- the tradition pages' exhibition entries (TraditionViewer.renderFeature) ----

@@ -675,7 +675,7 @@ export class TraditionViewer extends Component<State, Props>
     }
 
     if(this.props.config?.tradition && this.props.tradition && !this.props.config?.tradition[this.props.tradition]) 
-      return <Redirect404  /*history={history}*/  auth={auth}/>
+      return <Redirect404 navigate={this.props.navigate} location={this.props.location} auth={auth}/>
     else  {
       
       console.log("lsn:",this.props.latestSyncs,this.props.latestSyncsMeta,this.props.latestSyncsNb)

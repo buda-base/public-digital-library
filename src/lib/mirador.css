@@ -687,7 +687,7 @@ body.auto_rela .inApp.mirador-container .slotIconContainer { position:absolute !
 #viewer .nav-bar-top #logo #buda + a span::after {
     margin-top: 2px;
     padding-left: 0;
-    font-family: "Hanken Grotesk", "Noto Sans", sans-serif !important;
+    font-family: "Hanken Grotesk", "Hanken IAST fallback", "Noto Sans", sans-serif !important;
     font-size: 10.5px;
     font-weight: 600;
     line-height: 1.2;
