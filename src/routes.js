@@ -49,6 +49,7 @@ import analytics from './components/Analytics'
 import "./lib/searchkit/index.css";
 import "./lib/searchkit/App.css";
 import SearchPageContainer from "./containers/SearchPageContainer";
+import IIIFOverloadNotice from "./components/IIIFOverloadNotice";
 
 const loggergen = new logdown('gen', { markdown: false });
 
@@ -724,6 +725,7 @@ const makeMainRoutes = () => {
                         <Route path="/scripts/" onEnter={() => window.location.reload(true)} /> 
                         */}
                      </Routes>
+                     <IIIFOverloadNotice auth={auth} />
                   </BrowserRouter>
                </LogErrorBoundary>
             </MuiThemeProvider>

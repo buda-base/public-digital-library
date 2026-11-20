@@ -103,6 +103,7 @@ import {narrowWithString} from "../lib/langdetect"
 import {livingTheme} from "../lib/corpoLink"
 import {sortLangScriptLabels, extendedPresets, getMainLabel} from '../lib/transliterators';
 import './App.css';
+import RetryImg from './RetryImg'
 import Footer from "./Footer"
 import store from "../index"
 import {closePortraitPopup} from "../state/ui/actions"
@@ -5015,7 +5016,7 @@ handleCheck = (ev:Event,lab:string,val:boolean,params:{}) => {
             <div id="num-box" class={(this.state.checked[prettId] === true?"checked":"")} style={{flexShrink:0}} onClick={(e) => this.setState({repage:true,checked:{...this.state.checked,[prettId]:!this.state.checked[prettId]}})}>{warnStatus}{I18n.t("punc.num",{num:n})}</div>,         
             <div id="icon" class={enType + (hasCopyR?" wCopyR":"")+(hasThumb.length > 0 ? "" : " noThumb")}>
                { hasThumb.length > 0  && <div class="thumb" title={I18n.t("copyright.view")}>{
-                   getIconLink(viewUrl?viewUrl:resUrl+"#open-viewer", <LazyLoad height={130} offset={500}><img alt="thumbnail" src={hasThumb}/></LazyLoad>)
+                   getIconLink(viewUrl?viewUrl:resUrl+"#open-viewer", <LazyLoad height={130} offset={500}><RetryImg alt="thumbnail" src={hasThumb}/></LazyLoad>)
                   }</div> }
                { hasThumb.length === 0 && [
                   <div>{

@@ -9,6 +9,7 @@ import logdown from 'logdown'
 import ExpandMore from '@material-ui/icons/ExpandMore';
 import ChevronLeft from '@material-ui/icons/ChevronLeft';
 import { Helmet } from "react-helmet"
+import RetryImg from './RetryImg'
 
 //import history from "../history"
 import store from '../index';
@@ -264,7 +265,7 @@ export class TraditionViewer extends Component<State, Props>
         if(groups) {
           const tib = this.tibName(c.label)
           return <Link to={groups.href(c)} className="has-img" onClick={scrollToTop}>
-          { groups.img && <img alt="tradition item thumbnail" src={groups.img} loading="lazy" onError={onImgError}/> }
+          { groups.img && <RetryImg alt="tradition item thumbnail" src={groups.img} loading="lazy" onError={onImgError}/> }
           { tib && <span className="tradi-tib" lang="bo" aria-hidden="true">{tib}</span> }
           <span lang={label?.lang}>{label?.value}</span>
           <span className="tradi-kind">{I18n.t("tradition.nTexts", { count: c.content.length })}</span>
@@ -277,7 +278,7 @@ export class TraditionViewer extends Component<State, Props>
         // page opened on closed rows and showed nothing of what it holds
         return <>
           <h5 className={(c.img ? "has-img ":"")+(c.classes??"")}>
-            { c.img && <img alt="tradition item thumbnail" src={c.img}/> }
+            { c.img && <RetryImg alt="tradition item thumbnail" src={c.img}/> }
             <span lang={label?.lang}>{label?.value}</span>
           </h5>
           {this.renderContent(c, route, storage)}
@@ -309,7 +310,7 @@ export class TraditionViewer extends Component<State, Props>
         const landing = landingUrl(c.landing)
         const Card = landing ? "a" : Link, target = landing ? { href: landing } : { to: link, onClick: scrollToTop }
         return <Card {...target} className={(img ? "has-img ":"")+(cover ? "has-cover ":"")+(c.classes??"")}>
-          { img && <img alt="tradition item thumbnail" src={img} loading="lazy" onError={onImgError}/> }
+          { img && <RetryImg alt="tradition item thumbnail" src={img} loading="lazy" onError={onImgError}/> }
           <span lang={label?.lang}>{label?.value}</span>
           { authorNames.length > 0 && <span className="tradi-author" lang={author.lang}>
             { authorNames.map(name => <span className="tradi-author-name">{name}</span>) }
@@ -436,7 +437,7 @@ export class TraditionViewer extends Component<State, Props>
 
     return sort.map(e => e.to
       ? <Link className="has-img" data-lang={e.lang} to={e.to}>
-          { img && <img alt="" src={img} loading="lazy" onError={onImgError}/> }
+          { img && <RetryImg alt="" src={img} loading="lazy" onError={onImgError}/> }
           { e.tib && <span className="tradi-tib" lang="bo" aria-hidden="true">{e.tib}</span> }
           <span lang={e.lang}>{e.value}</span>
           <span className="tradi-kind">{ e.length ? I18n.t("tradition.nTopics", { count: e.length }) : I18n.t("tradition.searchTopic") }</span>

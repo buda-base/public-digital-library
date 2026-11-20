@@ -21,6 +21,7 @@ import { etext_tooltips } from "../pages/Search";
 import { getPropLabel, fullUri, getLangLabel, /*highlight,*/ renderDates } from '../../../components/App'
 import { dPrefix } from '../../api'
 import TextToggle from '../../../components/TextToggle'
+import RetryImg from '../../../components/RetryImg'
 import { sortLangScriptLabels, extendedPresets } from '../../../lib/transliterators'
 
 
@@ -530,7 +531,7 @@ const CustomHit = ({ hit, routing, that, sortItems, recent, storage, advanced /*
             {I18n.t("types.etext")}
           </span>}
         <Link to={link} onClick={scrollToTop}>
-          { !imgError && img && <span class="img"><img alt="result thumbnail" src={img} onError={() => setImgError(true)}/></span> }
+          { !imgError && img && <span class="img"><RetryImg alt="result thumbnail" src={img} onError={() => setImgError(true)}/></span> }
           <span class="RID">{hit.objectID}</span>
           <span className="visually-hidden">Go to result page</span>
           { (hit.scans_access <= 5 || hit.scans_quality) && <span>

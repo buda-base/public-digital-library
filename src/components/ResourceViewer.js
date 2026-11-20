@@ -212,7 +212,6 @@ type State = {
    ready? : boolean,
    imageLoaded:boolean,
    openMirador?:boolean,
-   iiifOverloaded?:boolean,
    openUV?:boolean,
    UVcanLoad?:boolean,
    openDiva?:boolean,
@@ -1243,8 +1242,6 @@ let oldScrollTop = 0, ETreinit
 class ResourceViewer extends Component<Props,State>
 {
    _annoPane = [] ;
-   _iiifOverloadProbePending = false ;
-   _iiifOverloadProbeReset ;
    //_leafletMap = null ;
    _properties = {} ;
    _dontMatchProp = "" ;
@@ -1255,7 +1252,7 @@ class ResourceViewer extends Component<Props,State>
    {
       super(props);
 
-      this.state = { uviewer:false, imageLoaded:false, iiifOverloaded:false, collapse:{etextNav:true}, pdfOpen:false, showAnno:true, errors:{},updates:{},title:{}, anchorEl:{}, enableDicoSearch: false /* // #1028 // true*/ }
+      this.state = { uviewer:false, imageLoaded:false, collapse:{etextNav:true}, pdfOpen:false, showAnno:true, errors:{},updates:{},title:{}, anchorEl:{}, enableDicoSearch: false /* // #1028 // true*/ }
 
       loggergen.log("props",props)
 
@@ -2100,43 +2097,9 @@ class ResourceViewer extends Component<Props,State>
       if(window.initFeedbucket) window.initFeedbucket()
    }
 
-   handleIIIFImageError = async (event) => {
-      const target = event && event.target
-      if(!target || target.tagName !== "IMG" || this._iiifOverloadProbePending) return
-
-      const src = target.currentSrc || target.src
-      let url
-      try {
-         url = new URL(src)
-      } catch(e) {
-         return
-      }
-      if(!/^iiif(-dev)?[.]bdrc[.]io$/.test(url.hostname)) return
-
-      this._iiifOverloadProbePending = true
-      try {
-         const response = await fetch(url.toString(), {
-            method:"HEAD",
-            credentials:"include",
-            cache:"no-store"
-         })
-         if([429,503].includes(response.status) || response.headers.get("X-IIIF-Overloaded") === "true") {
-            this.setState({iiifOverloaded:true})
-         }
-      } catch(e) {
-         // A network failure is not necessarily an overloaded image service.
-      } finally {
-         this._iiifOverloadProbeReset = setTimeout(() => {
-            this._iiifOverloadProbePending = false
-         }, 10000)
-      }
-   }
-
    componentWillUnmount() {
       //console.log("cwu:openMirador",this.props.IRI, this.props.pdfDownloadOnly, this.state.openMirador)
       window.removeEventListener('popstate', this.onBackButtonEvent);
-      window.removeEventListener('error', this.handleIIIFImageError, true);
-      if(this._iiifOverloadProbeReset) clearTimeout(this._iiifOverloadProbeReset)
 
       /* // not what's needed to reset the preview when only changing startChar
       if(this.props.disableInfiniteScroll?.outETvol?.length) {
@@ -2152,7 +2115,6 @@ class ResourceViewer extends Component<Props,State>
       //console.log("cdm:openMirador",this.props.IRI,this.props.pdfDownloadOnly,this.state.openMirador)
       
       window.addEventListener('popstate', this.onBackButtonEvent);  
-      window.addEventListener('error', this.handleIIIFImageError, true);
 
       //console.log("props:", this.props)
 
@@ -8429,27 +8391,8 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
 
    renderMirador = (isMirador) => {
       const authenticated = this.props.auth && this.props.auth.isAuthenticated()
-      const overloadNotice = this.state.iiifOverloaded && ReactDOM.createPortal(
-         <Paper role="alert" style={{
-            position:"fixed", zIndex:100000000, top:"150px", left:"50%",
-            transform:"translateX(-50%)", maxWidth:"680px", width:"calc(100% - 40px)",
-            padding:"16px 20px", border:"2px solid #d73449",
-            background:"#fff", opacity:1, boxShadow:"0 4px 20px rgba(0,0,0,0.25)"
-         }}>
-            <strong>The image server is under very heavy load.</strong>
-            <div style={{marginTop:"6px"}}>
-               {authenticated
-                  ? "Your requests have priority; please retry shortly."
-                  : "Signed-in users currently receive priority access. Please log in, or retry shortly."}
-            </div>
-            <div style={{marginTop:"10px", textAlign:"right"}}>
-               {!authenticated &&
-                  <Button color="primary" onClick={() => this.props.auth.login(this.props.location)}>
-                     Log in for priority access
-                  </Button>}
-               <Button onClick={() => this.setState({iiifOverloaded:false})}>Dismiss</Button>
-            </div>
-         </Paper>, document.body)
+      // the heavy load notice is now rendered once for the whole app (IIIFOverloadNotice in routes.js)
+      const overloadNotice = null
       
       if(isMirador)
          return [overloadNotice,
