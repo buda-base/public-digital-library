@@ -8462,10 +8462,11 @@ perma_menu(pdfLink,monoVol,fairUse,other,accessET, onlyDownload)
          else url = fullUri(id).replace(/^http:/,"https:")+".txt"
          url = url.replace(/^\/\//,"https://")
       }
+      const dlLabel = I18n.t(!noDL?"mirador.downloadE":this.props.disableInfiniteScroll?"mirador.noDL":"mirador.noDLviewer")
       return (
-         <span id="DL" class={!accessError&&!noDL?"on a":"a"} onClick={(e) => !noDL && this.setState({...this.state,anchorLangDL:e.currentTarget, collapse: {...this.state.collapse, langDL:!this.state.collapse.langDL } } ) }>
+         <span id="DL" class={!accessError&&!noDL?"on a":"a"} title={dlLabel} aria-label={dlLabel} onClick={(e) => !noDL && this.setState({...this.state,anchorLangDL:e.currentTarget, collapse: {...this.state.collapse, langDL:!this.state.collapse.langDL } } ) }>
             {etext_lang_selec(this,true,<>
-                  {I18n.t(!noDL?"mirador.downloadE":this.props.disableInfiniteScroll?"mirador.noDL":"mirador.noDLviewer")}
+                  {dlLabel}
                   {!noIcon && <img alt="download icon" src="/icons/DLw.png"/>}
                </>, url)}
             </span>

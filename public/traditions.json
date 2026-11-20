@@ -23957,6 +23957,8 @@
               },
               {
                 "id": "bdr:PR3KG1",
+                "_note": "inCollection missing in index (associated_res ok), back to group link once reindexed",
+                "to": "/osearch/associated/PR3KG1/search",
                 "label": [
                   {
                     "value": "Sera Jey Rigzod Chenmo",
@@ -23967,6 +23969,8 @@
               },
               {
                 "id": "bdr:PR3KG2",
+                "_note": "inCollection missing in index (associated_res ok), back to group link once reindexed",
+                "to": "/osearch/associated/PR3KG2/search",
                 "label": [
                   {
                     "value": "Yeshe De Text Preservation Project",
@@ -23977,6 +23981,8 @@
               },
               {
                 "id": "bdr:PR3KG3",
+                "_note": "inCollection missing in index (associated_res ok), back to group link once reindexed",
+                "to": "/osearch/associated/PR3KG3/search",
                 "label": [
                   {
                     "value": "rgyud stod dpe mdzod khang /",
@@ -23987,6 +23993,8 @@
               },
               {
                 "id": "bdr:PR3KG4",
+                "_note": "inCollection missing in index (associated_res ok), back to group link once reindexed",
+                "to": "/osearch/associated/PR3KG4/search",
                 "label": [
                   {
                     "value": "Densa Palchen Chosling Monastery",
@@ -24006,7 +24014,7 @@
                 "img": "/tbrc/928-thumb.jpg"
               },
               {
-                "id": "bdr:PR1PEMAKO00",
+                "id": "bdr:PR1PEMAKOD00",
                 "label": [
                   {
                     "value": "Pemako Collection",

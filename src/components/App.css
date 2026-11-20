@@ -13046,6 +13046,41 @@ html:not([lang="bo"]):not([lang^="zh"]):not([lang="km"])
    max-width: 100%;
 }
 
+/* A portrait scan sits beside its text on wide screens (the #807 rules, which float
+   both halves at 50%). The sheet spaced them with a margin on the img, which the frame
+   above now holds inside itself, so the text ran right up against the frame: the
+   text half takes the gutter instead, on the side facing the scan — and so does the
+   row above it (show-scans icon + "img. N from text…"), a plain block that would
+   otherwise start under the float's edge; flow-root sets it beside the float. */
+@media (min-width: 1225px) {
+   #root .etext-view .etextPage > .imagePage.portrait:not(.right) ~ .overpage:not(#a),
+   #root .etext-view .etextPage > .imagePage.portrait:not(.right) ~ div:not(.overpage):not(#a) {
+      display: flow-root;
+      padding-left: 28px;
+      box-sizing: border-box;
+   }
+   #root .etext-view .etextPage > .imagePage.portrait.right ~ .overpage:not(#a),
+   #root .etext-view .etextPage > .imagePage.portrait.right ~ div:not(.overpage):not(#a) {
+      display: flow-root;
+      padding-right: 28px;
+      box-sizing: border-box;
+   }
+}
+@media (min-width: 1025px) {
+   #root > :not(.withMonlam) .etext-view .etextPage > .imagePage.portrait:not(.right) ~ .overpage:not(#a),
+   #root > :not(.withMonlam) .etext-view .etextPage > .imagePage.portrait:not(.right) ~ div:not(.overpage):not(#a) {
+      display: flow-root;
+      padding-left: 28px;
+      box-sizing: border-box;
+   }
+   #root > :not(.withMonlam) .etext-view .etextPage > .imagePage.portrait.right ~ .overpage:not(#a),
+   #root > :not(.withMonlam) .etext-view .etextPage > .imagePage.portrait.right ~ div:not(.overpage):not(#a) {
+      display: flow-root;
+      padding-right: 28px;
+      box-sizing: border-box;
+   }
+}
+
 /* the page number over each block */
 #root .etext-view .etextPage h5:not(#a) {
    font-size: 13.5px;
@@ -13494,6 +13529,70 @@ html:not([lang="bo"]):not([lang^="zh"]):not([lang="km"])
 #root .withOutline .resource.etext-view:not(#a):not(#b) {
    margin-top: calc(var(--etext-bar-bottom, 120px) - 120px);
 }
+
+/* ---- phones ----
+ *
+ * Everything above is laid out for a desktop: 40px gutters, a 116px gutter inside the
+ * card for "Back" and a breadcrumb indented 157px to match it. At 375px that left the
+ * title a 133px column, one word per line. The toolbar's download notice is a nowrap
+ * line wider than the screen, and the formatted pages keep their nowrap lines, so the
+ * document measured 1038px wide (feedback F21). Under 665px: 16px gutters, Back in the
+ * card's flow, the notice wraps, and long lines wrap inside each page instead of
+ * scrolling sideways (the line breaks of the original page are kept: each line is its
+ * own block).
+ */
+@media (max-width: 665px) {
+   #root .etext-header-breadcrumbs:not(#a):not(#b):not(#c),
+   #root .etext-header:not(.sticky):not(#a):not(#b) {
+      padding-left: 16px;
+      padding-right: 16px;
+   }
+
+   #root .etext-header-breadcrumbs .ariane:not(#a) {
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+      row-gap: 4px;
+   }
+
+   #root .etext-header:not(.sticky) > div:not(#a):not(#b) {
+      padding: 20px 18px 18px;
+   }
+
+   #root .etext-header:not(.sticky) h1:not(#a):not(#b) {
+      font-size: 26px;
+      line-height: 1.15;
+      overflow-wrap: anywhere;
+   }
+
+   #root #etext-nav > div:not(#a):not(#b) {
+      padding: 8px 16px;
+   }
+
+   /* the notice ("Please select a volume…" / "Download etext") took two rows of a bar
+      that sticks to the top of a 800px screen: the icon alone stays, the words move
+      to the span's title and aria-label */
+   #root #etext-nav #DL:not(#a) {
+      font-size: 0;
+      max-width: 100%;
+   }
+
+   #root .etext-view .etextPage h4.page:not(#a) {
+      white-space: normal;
+      display: block;
+   }
+
+   #root .withOutline .resource.etext-view .data:not(#a) {
+      padding: 20px 16px;
+   }
+
+   /* the outline opens full width, and its hairline made it 1px wider than that */
+   #root .resource.etext-outline:not(#a):not(#b) { box-sizing: border-box; }
+}
+
+/* A shortened crumb clips its text with an ellipsis, but its .visually-hidden label is
+   absolute against some far ancestor, so it still sat at the end of the full, unclipped
+   title: 897px out on a phone, widening the whole document. The crumb holds it. */
+#root .ariane .can-shrink:not(#a) { position: relative; }
 
 
 /* ============================================================================
