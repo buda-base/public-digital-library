@@ -39,6 +39,9 @@ const landingUrl = (path) => LANDING_PATH && path ? LANDING_PATH.replace(/\/+$/,
 /* BUDA's tradition code to its orientation page */
 const GS_TRADITION = { bo: "tradition-tibetan", pi: "tradition-pali", sa: "tradition-sanskrit", zh: "tradition-chinese" }
 
+// facets checked by default on a bare tradition page (see applyDefaultRefinements)
+const DEFAULT_REFINEMENTS = { bo: { "type[0]": "Instance", "language[0]": "LangBo" } }
+
 const loggergen = new logdown('gen', { markdown: false });
 
 window.ResizeObserver = ResizeObserver;
@@ -577,6 +580,25 @@ export class TraditionViewer extends Component<State, Props>
     }      
   }
 
+  // Facets pre-checked when a tradition page is opened bare (/tradition/bo/), so links
+  // to it don't have to carry them. Written into the URL with replaceState before the
+  // search mounts, because the instantsearch router reads its initial state from
+  // window.location; once there they are ordinary refinements the user can uncheck.
+  // Applied once per page view, so unchecking everything doesn't bring them back.
+  applyDefaultRefinements() {
+    const defaults = DEFAULT_REFINEMENTS[this.props.tradition]
+    if(!defaults || this._defaultsAppliedFor === this.props.tradition) return
+    this._defaultsAppliedFor = this.props.tradition
+
+    const params = new URLSearchParams(window.location.search)
+    // only a bare page: any query, refinement, sort or page in the url wins
+    const searchKeys = [...params.keys()].filter(k => !["uilang"].includes(k))
+    if(searchKeys.length) return
+
+    for(const [k, v] of Object.entries(defaults)) params.set(k, v)
+    window.history.replaceState(window.history.state, "", window.location.pathname+"?"+params.toString()+window.location.hash)
+  }
+
   renderTopLevel(tradi, {content, breadcrumbs}) {
 
     const filters = {
@@ -585,6 +607,8 @@ export class TraditionViewer extends Component<State, Props>
       "sa":"language:LangSa",
       "zh":"language:LangZh"
     }
+
+    this.applyDefaultRefinements()
 
     breadcrumbs.push(<span>{I18n.t("tradition."+this.props.tradition+"T")}</span>)
 
