@@ -33,9 +33,10 @@ const COLUMNS = [
     {
         titleKey: "footer.columns.resources",
         links: [
-            { labelKey: "footer.links.readingRoom", href: "/reading" },
+            // Reading room off until it exists, as on the landing — re-enable with its /reading page.
+            // { labelKey: "footer.links.readingRoom", href: "/reading" },
             { labelKey: "footer.links.apiDocs", href: "https://github.com/buda-base/" },
-            { labelKey: "footer.links.librarian", href: "#" }, // TODO: à définir avec l'équipe
+            { labelKey: "footer.links.librarian", href: "https://www.bdrc.io/contact/" },
             { labelKey: "footer.links.etexts", href: "/osearch/search?etext_access%5B0%5D=3" },
         ],
     },
@@ -52,7 +53,8 @@ const COLUMNS = [
         titleKey: "footer.columns.legal",
         links: [
             { labelKey: "footer.links.privacy", href: "https://www.bdrc.io/privacy-policy/" },
-            { labelKey: "footer.links.terms", href: "#" }, // TODO: à définir avec l'équipe
+            // Terms of Access hidden until bdrc.io has a page for it (it pointed at "#").
+            // { labelKey: "footer.links.terms", href: "" },
             { labelKey: "footer.links.cookies", action: "cookie-settings" },
         ],
     },
