@@ -572,7 +572,11 @@ export class TraditionViewer extends Component<State, Props>
             : <>{I18n.t("tradition.t_"+this.props.type)} &ndash; {id}</> }</h1>
           {/* tradi-plates: the cards of a school page all take a detail of the one
               photograph, the way a topic's sub-topics do */}
-          <div className={"tradi-content main tradi-cards "+(!group && this.props.type === "selected" ? "tradi-plates " : "")+(classes ?? "")}>
+          {/* tradi-doors: a page listing the nine schools themselves (persons and
+              monasteries by school, whose json content is "selected") takes the
+              tradition page's 3×3 grid */}
+          <div className={"tradi-content main tradi-cards "+(!group && this.props.type === "selected" ? "tradi-plates " : "")
+              +(!group && tradi?.subContent?.[this.props.type]?.[this.props.id]?.content === "selected" ? "tradi-doors " : "")+(classes ?? "")}>
             { group && <h2 lang={groupLabel?.lang}>{groupLabel?.value}</h2> }
             {subContent}
           </div>

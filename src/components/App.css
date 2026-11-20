@@ -13976,7 +13976,8 @@ html:not([lang="bo"]):not([lang^="zh"]):not([lang="km"])
    rows of four and a stray ninth (Élie's feedback), each card the width of a card in
    the four-column grids around it (Poetry, History…): three of the four columns,
    the fourth left empty. Below 1200px the media queries take over (three, two, one). */
-.App.tradition .tradi-card #tradi-selected:not(#a):not(#b) { grid-template-columns: repeat(3, calc((100% - 3 * 22px) / 4)); }
+.App.tradition .tradi-card #tradi-selected:not(#a):not(#b),
+.App.tradition .tradi-card .tradi-doors:not(#a):not(#b) { grid-template-columns: repeat(3, calc((100% - 3 * 22px) / 4)); }
 
 .App.tradition .tradi-card #tradi-selected > h2:not(#a) {
    font-size: 38px;
@@ -14323,7 +14324,8 @@ html:not([lang="bo"]):not([lang^="zh"]):not([lang="km"])
 
 @media screen and (max-width: 1200px) {
    .App.tradition .tradi-card #tradi-links:not(#a) { grid-template-columns: repeat(3, 1fr); }
-   .App.tradition .tradi-card #tradi-selected:not(#a):not(#b) { grid-template-columns: repeat(3, 1fr); }
+   .App.tradition .tradi-card #tradi-selected:not(#a):not(#b),
+   .App.tradition .tradi-card .tradi-doors:not(#a):not(#b) { grid-template-columns: repeat(3, 1fr); }
 }
 
 @media screen and (max-width: 900px) {
@@ -14348,7 +14350,8 @@ html:not([lang="bo"]):not([lang^="zh"]):not([lang="km"])
    .App.tradition .tradi-card h1:not(#a) { font-size: 36px; }
    .App.tradition .tradi-card .tradi-cards:not(#a) { grid-template-columns: repeat(2, 1fr); }
    .App.tradition .tradi-card #tradi-links:not(#a),
-   .App.tradition .tradi-card #tradi-selected:not(#a):not(#b) { grid-template-columns: repeat(2, 1fr); }
+   .App.tradition .tradi-card #tradi-selected:not(#a):not(#b),
+   .App.tradition .tradi-card .tradi-doors:not(#a):not(#b) { grid-template-columns: repeat(2, 1fr); }
    .App.tradition .tradi-card #tradi-selected > h2:not(#a) { font-size: 30px; }
    .App.tradition .tradi-card #tradi-recent:not(#a) {
       padding-top: 40px;
@@ -14360,7 +14363,8 @@ html:not([lang="bo"]):not([lang^="zh"]):not([lang="km"])
 @media screen and (max-width: 620px) {
    .App.tradition .tradi-card .tradi-cards:not(#a),
    .App.tradition .tradi-card #tradi-links:not(#a),
-   .App.tradition .tradi-card #tradi-selected:not(#a):not(#b) { grid-template-columns: 1fr; }
+   .App.tradition .tradi-card #tradi-selected:not(#a):not(#b),
+   .App.tradition .tradi-card .tradi-doors:not(#a):not(#b) { grid-template-columns: 1fr; }
 }
 
 
