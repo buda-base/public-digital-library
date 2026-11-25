@@ -4,7 +4,7 @@ import { ResizableBox } from 'react-resizable';
 import TextField from '@material-ui/core/TextField';
 import type Auth from '../Auth';
 import _ from "lodash";
-import { appPathname, isHomePath, HOME_PATH, LANDING_PATH } from "../lib/appPath";
+import { appPathname, isHomePath, HOME_PATH } from "../lib/appPath";
 import { GettingStartedLink } from "../lib/gettingStarted";
 import IconButton from '@material-ui/core/IconButton';
 import Tooltip from '@material-ui/core/Tooltip';
@@ -1369,18 +1369,21 @@ export function top_right_menu(that,etextTitle,backUrl,etextres,isMirador,locati
    else if(corpo_lang.startsWith("zh")) corpo_lang = "zh-hans"
 
    // The red strip, the same on the three sites (the landing page, BUDA, bdrc.io):
-   // the tagline, then the three sites with the current one marked, the language
-   // menu, Donate. The language menu used to be an icon in the main bar.
+   // the tagline, then BUDA, About us, Contact us, News, then the language menu.
+   // No Home, BDRC or Donate: the landing page, now the BDRC home, dropped them
+   // (Donate is in the main bar). Contact gives way on phones, as there.
    const langLabel = { en: "English", bo: "བོད་ཡིག", zh: "简体中文", fr: "Français", km: "ភាសាខ្មែរ" }
+   const bdrcPage = (path) => livingTheme("https://www.bdrc.io/"+path+"?lang="+corpo_lang)
    const overNav = (
          <div class={"over-nav mirador-"+isMirador + " simpleAdvanced-"+that?.props.simple} style={{ ...isMirador?{position:"absolute"}:{} }}>
             <div>
                <div><i>{I18n.t("topbar.preserving")}</i></div>
                <div>
-                  <nav class="sites" aria-label="Sites">
-                     { LANDING_PATH && <a href={LANDING_PATH}>{I18n.t("topbar.home")}</a> }
+                  <nav class="sites" aria-label="BDRC">
                      <Link to={HOME_PATH} aria-current="true">{I18n.t("topbar.buda")}</Link>
-                     <a href={livingTheme("https://www.bdrc.io/?lang="+corpo_lang)} target="_blank" rel="noopener noreferrer">{I18n.t("topbar.BDRC")}</a>
+                     <a href={bdrcPage("about-us/")}>{I18n.t("topbar.about")}</a>
+                     <a class="not-phone" href={bdrcPage("contact/")}>{I18n.t("footer.links.contact")}</a>
+                     <a href={bdrcPage("news/")}>{I18n.t("topbar.news")}</a>
                   </nav>
                   <button type="button" class="topbar-lang" aria-haspopup="true" aria-expanded={!!that.state.collapse?.lang} title={I18n.t("home.choose")}
                      onClick={(e) => that.setState({...that.state, anchorLang:e.currentTarget, collapse: {...that.state.collapse, lang:!that.state.collapse?.lang } })}>
@@ -1396,8 +1399,6 @@ export function top_right_menu(that,etextTitle,backUrl,etextres,isMirador,locati
                   >
                      { lang_selec(that, false, true) }
                   </Popover>
-                  { (!that.props.config || !that.props.config.chineseMirror) &&
-                     <a class="donate" href={livingTheme("https://www.bdrc.io/donation/?lang="+corpo_lang)} target="_blank" rel="noopener noreferrer">{I18n.t("topbar.donate")}</a> }
                </div>
             </div>
          </div>

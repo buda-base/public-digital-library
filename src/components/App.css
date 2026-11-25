@@ -9146,10 +9146,11 @@ a.result + #matches.mobile,
    min-width: 0; flex: 1;
    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
-/* the links are a 22px-gap row (the sheet spaces them with margin-left:50px) */
+/* the links are a 24px-gap row, as on the landing page (the sheet spaces them
+   with margin-left:50px) */
 .over-nav > div > div:last-child {
    flex-shrink: 0; white-space: nowrap;
-   display: flex; align-items: center; gap: 22px;
+   display: flex; align-items: center; gap: 24px;
 }
 .over-nav > div > div:last-child > a { margin: 0; }
 
@@ -9166,28 +9167,27 @@ a.result + #matches.mobile,
 }
 .over-nav > div a:hover { color: var(--living-gold-soft); }
 
-/* the donation link is the last one, gold like on the landing page. Its label
-   carries an inline text-transform:capitalize, hence the !important. */
-.over-nav > div > div:last-child > a:last-child { color: var(--living-gold-soft); font-weight: 700; }
-.over-nav > div > div:last-child > a:last-child span { text-transform: uppercase !important; }
-.over-nav > div > div:last-child > a:last-child:hover { color: #ffdf9e; }
-
 /* the knot is the main bar's mark now, so the strip keeps the wordmark only */
 .over-nav .BDRC-link img { display: none; }
 
 /* ---- the strip, the same on the three sites ----
  *
- * The tagline, then the three sites (the landing page, BUDA, bdrc.io) with the
- * current one underlined in gold, the language menu, Donate: the landing page's
- * Header.tsx and the bdrc.io skin carry the same row. */
-.over-nav .sites { display: flex; align-items: center; gap: 20px; }
+ * The tagline, then BUDA, About us, Contact us, News, and the language menu: the
+ * landing page's Header.tsx and the bdrc.io skin carry the same row. No site is
+ * marked current, as on the landing page. */
+.over-nav .sites { display: flex; align-items: center; gap: 24px; }
 /* the sheet spaces the strip links with margin-left:50px */
 .over-nav .sites a:not(#a) { margin: 0; }
-.over-nav .sites a[aria-current] {
-   text-decoration: underline;
-   text-decoration-color: var(--living-gold);
-   text-decoration-thickness: 1.5px;
-   text-underline-offset: 5px;
+/* phones, as on the landing page: the tagline gives way below 768px, Contact
+   below 640px */
+@media (max-width: 767px) {
+   .over-nav > div > div:first-child { display: none; }
+   .over-nav > div > div:last-child { margin-left: auto; }
+}
+@media (max-width: 639px) {
+   .over-nav .sites a.not-phone { display: none; }
+   .over-nav .sites,
+   .over-nav > div > div:last-child { gap: 14px; }
 }
 .over-nav .topbar-lang {
    display: inline-flex; align-items: center; gap: 2px;
