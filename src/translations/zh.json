@@ -1131,7 +1131,9 @@
          "contact": "联系我们",
          "privacy": "隐私政策",
          "terms": "使用条款",
-         "cookies": "Cookie 设置"
+         "cookies": "Cookie 设置",
+         "ocr": "OCR 与 AI 工具",
+         "tools": "工具"
       }
    },
    "viewer":{

@@ -1130,10 +1130,14 @@
       "description": "Digitizing and preserving the world's Buddhist textual heritage since 1999. A 501(c)(3) non-profit organization.",
       "shareAria": "Share this page",
       "emailAria": "Email BDRC",
+      "facebookAria": "BDRC on Facebook",
+      "linkedinAria": "BDRC on LinkedIn",
+      "instagramAria": "BDRC on Instagram",
       "copyright": "© 2026 Buddhist Digital Resource Center. All rights reserved.",
       "columns": {
          "resources": "Resources",
          "organization": "Organization",
+         "support": "Support",
          "legal": "Legal"
       },
       "links": {
@@ -1147,7 +1151,16 @@
          "contact": "Contact Us",
          "privacy": "Privacy Policy",
          "terms": "Terms of Access",
-         "cookies": "Cookie Settings"
+         "cookies": "Cookie Settings",
+         "ocr": "OCR & AI Tools",
+         "tools": "Tools",
+         "programs": "Programs",
+         "news": "News & blog",
+         "partners": "Partners",
+         "donate": "Donate",
+         "dharmaProtectors": "Dharma Protectors' Circle",
+         "print": "Order printed copies",
+         "newsletter": "Newsletter"
       }
    },
    "viewer":{

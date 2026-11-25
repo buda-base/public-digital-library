@@ -10397,7 +10397,7 @@ html:not([lang="bo"]):not([lang^="zh"]):not([lang="km"])
 /* the 40px gutter is inside the 1440 box, as in the mockup */
 #root footer#site-footer .ft-cols {
    display: grid;
-   grid-template-columns: 1.4fr 1fr 1fr 1fr;
+   grid-template-columns: 1.4fr 1fr 1fr 1fr 1fr;
    gap: 48px;
    max-width: 1440px;
    margin: 0 auto;
@@ -10470,6 +10470,8 @@ html:not([lang="bo"]):not([lang^="zh"]):not([lang="km"])
 }
 
 #root footer#site-footer .ft-social svg { font-size: 19px; }
+/* the social glyphs are drawn at 17px, as on the landing */
+#root footer#site-footer .ft-social svg[width="17"] { width: 17px; height: 17px; font-size: inherit; }
 
 /* link columns */
 
