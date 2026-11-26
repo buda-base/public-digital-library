@@ -4,7 +4,7 @@ import { ResizableBox } from 'react-resizable';
 import TextField from '@material-ui/core/TextField';
 import type Auth from '../Auth';
 import _ from "lodash";
-import { appPathname, isHomePath, HOME_PATH } from "../lib/appPath";
+import { appPathname, isHomePath, HOME_PATH, LANDING_PATH } from "../lib/appPath";
 import { GettingStartedLink } from "../lib/gettingStarted";
 import IconButton from '@material-ui/core/IconButton';
 import Tooltip from '@material-ui/core/Tooltip';
@@ -1369,9 +1369,10 @@ export function top_right_menu(that,etextTitle,backUrl,etextres,isMirador,locati
    else if(corpo_lang.startsWith("zh")) corpo_lang = "zh-hans"
 
    // The red strip, the same on the three sites (the landing page, BUDA, bdrc.io):
-   // the tagline, then BUDA, About us, Contact us, News, then the language menu.
-   // No Home, BDRC or Donate: the landing page, now the BDRC home, dropped them
-   // (Donate is in the main bar). Contact gives way on phones, as there.
+   // the tagline, then Home (the landing page), About us, Contact us, News, then
+   // the language menu.
+   // No BDRC or Donate: the landing page, now the BDRC home, dropped them (Donate
+   // is in the main bar). Contact gives way on phones, as there.
    const langLabel = { en: "English", bo: "བོད་ཡིག", zh: "简体中文", fr: "Français", km: "ភាសាខ្មែរ" }
    const bdrcPage = (path) => livingTheme("https://www.bdrc.io/"+path+"?lang="+corpo_lang)
    const overNav = (
@@ -1380,7 +1381,12 @@ export function top_right_menu(that,etextTitle,backUrl,etextres,isMirador,locati
                <div><i>{I18n.t("topbar.preserving")}</i></div>
                <div>
                   <nav class="sites" aria-label="BDRC">
-                     <Link to={HOME_PATH} aria-current="true">{I18n.t("topbar.buda")}</Link>
+                     {/* Home: the landing page, the BDRC home (a separate app, hence a
+                         plain link). Where there is no landing page (an install owning
+                         "/" itself), the library's own home instead. */}
+                     { LANDING_PATH
+                        ? <a href={LANDING_PATH}>{I18n.t("topbar.home")}</a>
+                        : <Link to={HOME_PATH} aria-current="true">{I18n.t("topbar.buda")}</Link> }
                      <a href={bdrcPage("about-us/")}>{I18n.t("topbar.about")}</a>
                      <a class="not-phone" href={bdrcPage("contact/")}>{I18n.t("footer.links.contact")}</a>
                      <a href={bdrcPage("news/")}>{I18n.t("topbar.news")}</a>
