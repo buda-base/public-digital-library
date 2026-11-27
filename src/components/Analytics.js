@@ -1,6 +1,5 @@
 /* example file src/analytics.js */
 import Analytics from 'analytics'
-import { logError } from '../lib/api'
 
 const MIN_TIME_VIEWER = 30, MIN_TIME_PAGE = 5
 let observer, pages = {}
@@ -122,7 +121,6 @@ function myProviderPlugin(userConfig) {
     track: ({ payload }) => {
       // call provider specific event tracking
       //console.log("track:", payload, Date.now())
-      logError({message:"analytics"},{payload})
 
       let selec = ""
       if(payload.event === "page loaded") { 

@@ -103,64 +103,116 @@ export const staticQueries = {
    //"instances-by-female-authors": ["instancesByFemaleAuthor", "Instance"]    // returns 500
 }
 
+const CLIENT_ERROR_URL = "https://editserv.bdrc.io/logClientException"
+const CLIENT_ERROR_LIMIT = 10
+const CLIENT_ERROR_WINDOW_MS = 60 * 1000
+const CLIENT_ERROR_DEDUP_MS = 5 * 60 * 1000
+const CLIENT_ERROR_MAX_BODY = 16 * 1024
+const recentClientErrors = new Map()
+let clientErrorTimes = []
+
+const truncateErrorValue = (value, maxLength) => {
+   if(value === undefined || value === null) return value
+   if(typeof value !== "string") {
+      try {
+         value = JSON.stringify(value)
+      } catch(e) {
+         value = String(value)
+      }
+   }
+   return value.length > maxLength ? value.slice(0, maxLength) + "…" : value
+}
+
 export async function logError(error, json) {
-   
-   
-   if(!json) json = {}
-   
-   json.message = error.message
-   json.stack = error.stack
-   json.location = window.location.href
-   json.version = localStorage.getItem('APP_VERSION')
-   json.userAgent = window.navigator.userAgent
+   const context = json || {}
+   const message = truncateErrorValue(error && error.message || context.messageOrEvent || error || "Unknown client error", 1000)
+   const stack = truncateErrorValue(error && error.stack, 6000)
+   const now = Date.now()
+   const fingerprint = message + "\n" + (stack || "") + "\n" + (context.source || "")
+
+   for(const [key, timestamp] of recentClientErrors) {
+      if(now - timestamp >= CLIENT_ERROR_DEDUP_MS) recentClientErrors.delete(key)
+   }
+   if(recentClientErrors.has(fingerprint)) return
+
+   clientErrorTimes = clientErrorTimes.filter(timestamp => now - timestamp < CLIENT_ERROR_WINDOW_MS)
+   if(clientErrorTimes.length >= CLIENT_ERROR_LIMIT) return
+
+   recentClientErrors.set(fingerprint, now)
+   clientErrorTimes.push(now)
+
+   const report = {
+      message,
+      stack,
+      location: truncateErrorValue(window.location.href, 1500),
+      version: truncateErrorValue(localStorage.getItem('APP_VERSION'), 100),
+      userAgent: truncateErrorValue(window.navigator.userAgent, 500)
+   }
 
    const lang = localStorage.getItem('langs');
    const uilang = localStorage.getItem('uilang');
    const langpreset = localStorage.getItem('langpreset');
    const customlangpreset = localStorage.getItem('customlangpreset');
    
-   if(!json.payload) json.localStorage = { lang, uilang, langpreset, customlangpreset }
+   report.localStorage = {
+      lang: truncateErrorValue(lang, 250),
+      uilang: truncateErrorValue(uilang, 250),
+      langpreset: truncateErrorValue(langpreset, 250),
+      customlangpreset: truncateErrorValue(customlangpreset, 250)
+   }
 
    const state = store?.getState()
 
-   if(state && !json.payload) {
+   if(state) {
       const locale = state.i18next?.lang
       const langIndex = state.ui?.langIndex
       const langPreset = state.ui?.langPreset   
       const userID = state.ui?.userID
-      let profile 
-      if(state.data?.resources) profile = state.data.resources[userID]
       
-      json.user = { locale, langIndex, langPreset, userID, profile }
+      report.user = {
+         locale: truncateErrorValue(locale, 100),
+         langIndex,
+         langPreset: truncateErrorValue(langPreset, 500),
+         userID: truncateErrorValue(userID, 250)
+      }
    }
 
-   //const user = store.getState().ui
-
-   const url = "https://editserv.bdrc.io/logClientException"
-
-   const id_token = localStorage.getItem('id_token');
-
-   //const { isAuthenticated } = auth;
+   const allowedContext = ["previousLocation", "messageOrEvent", "source", "noligne", "nocolonne"]
+   report.context = allowedContext.reduce((result, key) => {
+      if(context[key] !== undefined) result[key] = truncateErrorValue(context[key], 500)
+      return result
+   }, {})
 
    const queryString = window.location.search;
    const urlParams = new URLSearchParams(queryString);
    
    if(window.location.hostname != "localhost" && urlParams.get("prerender") != "true") {
-      
-      let response = await fetch( url, {
-         method: 'POST',
-         headers: new Headers({
-            "Content-Type": "application/json",
-            //...( isAuthenticated() && {"Authorization":"Bearer "+id_token } )
-         }),
-         body: JSON.stringify(json),
-         keepalive:true // #864 executed even after closing the tab (see navigator.sendBeacon)
-      })
+      let body = JSON.stringify(report)
+      if(body.length > CLIENT_ERROR_MAX_BODY) {
+         report.stack = truncateErrorValue(report.stack, 1000)
+         delete report.localStorage
+         delete report.user
+         body = JSON.stringify(report)
+      }
+
+      try {
+         await fetch(CLIENT_ERROR_URL, {
+            method: 'POST',
+            headers: new Headers({
+               // A CORS-safelisted content type avoids an OPTIONS request for every report.
+               "Content-Type": "text/plain;charset=UTF-8",
+            }),
+            body,
+            keepalive:true // #864 executed even after closing the tab (see navigator.sendBeacon)
+         })
+      } catch(e) {
+         console.warn("Could not send client error report", e)
+      }
    } else {
       loggergen.log("(localhost/not sending)")
    }
 
-   console.error("sent:",json)
+   console.error("client error:", report)
 }
 window.logError = logError
 

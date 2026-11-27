@@ -37,6 +37,8 @@ import { composeWithDevTools } from 'redux-devtools-extension';
 import uiReducer from './state/ui/reducers';
 import dataReducer from './state/data/reducers';
 import * as data from './state/data/actions' ;
+import { TYPES as UI_ACTION_TYPES } from './state/ui/actions';
+import analytics from './components/Analytics';
 
 
 //import history from './history'
@@ -159,6 +161,15 @@ const logger = store => next => action => {
   return result
 }
 
+const appReadyMiddleware = store => next => action => {
+   const result = next(action)
+   if(action.type === UI_ACTION_TYPES.loading && action.payload && !action.payload.isLoading) {
+      window.__APP_READY__ = true
+      analytics.track('page loaded', { target: action.payload.keyword })
+   }
+   return result
+}
+
 const sagaMiddleware = createSagaMiddleware();
 const i18nextMiddleware = createSagaMiddleware();
 
@@ -172,7 +183,7 @@ if (process.env.NODE_ENV !== 'production') {
          i18next: i18nextReducer
       }),
       //composeWithDevTools(
-         applyMiddleware(/*thunk,*/sagaMiddleware,i18nextMiddleware,logger)
+         applyMiddleware(/*thunk,*/sagaMiddleware,i18nextMiddleware,appReadyMiddleware,logger)
       //)
     );
 } else {
@@ -183,7 +194,7 @@ if (process.env.NODE_ENV !== 'production') {
          //i18n: i18nReducer,
          i18next: i18nextReducer
       }),
-        applyMiddleware(/*thunk,*/sagaMiddleware,i18nextMiddleware)
+        applyMiddleware(/*thunk,*/sagaMiddleware,i18nextMiddleware,appReadyMiddleware)
     );
 }
 
